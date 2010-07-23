@@ -57,7 +57,9 @@ int main(void)
 	uint8_t smooth = 0x00;
 
    	for(;;){
-   		for(uint8_t i=1; i < 64; i++){
+
+   		// Color depth 15-bit (5-bit on each color)
+   		for(uint8_t i=1; i < 32; i++){
    			leds = 0x0000;
 
    			if(colors[RIGHT_UP][R] > i) 	leds |= RIGHT_UP_RED_LS;

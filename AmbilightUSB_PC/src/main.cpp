@@ -158,12 +158,11 @@ int main(int argc, char **argv)
             // Find average for each led color
             for(int led_index=0; led_index < 4; led_index++){
                 for(int color=0; color < 3; color++){
-                    //colors[led_index][i] *= 60;
                     colors[led_index][color] /= PIXELS_COUNT_FOR_EACH_LED;
-//                    if(colors[led_index][i] > 0xff){
-//                        printf("%d ", colors[led_index][i]);
-//                    }
-                    //colors[led_index][i] /= 256;
+
+                    // Color depth 15-bit (5-bit on each color)
+                    // Each led color must be in 0..31
+                    colors[led_index][color] /= 8;
                 }
             }
 
