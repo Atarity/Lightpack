@@ -7,13 +7,19 @@ CONFIG += console
 CONFIG -= app_bundle
 LIBS += -lusb
 INCLUDEPATH += ./inc
-INCLUDEPATH += ../AmbilightUSB_Hardware/inc
+INCLUDEPATH += ../AmbilightUSB_Hardware/inc/
 OBJECTS_DIR = ./obj
+MOC_DIR = ./moc
 TEMPLATE = app
 SOURCES += src/hiddata.cpp \
-    src/main.cpp
-HEADERS += hidsdi.h \
-    hiddata.h \
-    RGB.h \
-    usbconfig.h \
-    inc/main.h
+    src/main.cpp \
+    src/mainwindow.cpp \
+    src/ambilightusb.cpp
+HEADERS += inc/hidsdi.h \
+    inc/hiddata.h \
+    ../AmbilightUSB_Hardware/inc/RGB.h \
+    ../AmbilightUSB_Hardware/inc/usbconfig.h \
+    inc/mainwindow.h \
+    inc/ambilightusb.h
+FORMS += src/mainwindow.ui
+RESOURCES += icons.qrc

@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/">
+    <file>res/settings.png</file>
+    <file>res/off.png</file>
+    <file>res/on.png</file>
+  </qresource>
+</RCC>
