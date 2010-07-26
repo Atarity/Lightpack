@@ -51,7 +51,7 @@ QString ambilightUsb::usbErrorMessage(int errCode)
     return result;
 }
 
-bool ambilightUsb::openDevice(void)
+bool ambilightUsb::openDevice()
 {
     dev = NULL;
     unsigned char   rawVid[2] = {USB_CFG_VENDOR_ID}, rawPid[2] = {USB_CFG_DEVICE_ID};
@@ -68,26 +68,56 @@ bool ambilightUsb::openDevice(void)
     return true;
 }
 
-void ambilightUsb::readData(void)
+bool ambilightUsb::readDataFromDevice()
 {
     int err;
 
     int len = sizeof(read_buffer);
     if((err = usbhidGetReport(dev, 0, read_buffer, &len)) != 0){
         qWarning() << "error reading data:" << usbErrorMessage(err);
+        return false;
     }
+    return true;
 }
 
-void ambilightUsb::writeBuffer(void)
+bool ambilightUsb::writeBufferToDevice()
 {
     int err;
 
     if((err = usbhidSetReport(dev, write_buffer, sizeof(write_buffer))) != 0){   /* add a dummy report ID */
         qWarning() << "error writing data:" << usbErrorMessage(err);
+        return false;
+    }
+    return true;
+}
+
+bool ambilightUsb::tryToReopenDevice()
+{
+    qWarning() << "try to reopen device";
+    usbhidCloseDevice(dev);
+    if(openDevice()){
+        qWarning() << "reopen success";
+        return true;
+    }else{
+        qWarning() << "reopen failed";
+        return false;
     }
 }
 
-bool ambilightUsb::openX11Display(void)
+bool ambilightUsb::writeBufferToDeviceWithCheck()
+{
+    if(!writeBufferToDevice()){
+        if(tryToReopenDevice()){
+            // Repeat send buffer:
+            return writeBufferToDevice();
+        }else{
+            return false;
+        }
+    }
+    return true;
+}
+
+bool ambilightUsb::openX11Display()
 {
     display = XOpenDisplay( NULL );
     if (display == NULL)
@@ -105,15 +135,17 @@ bool ambilightUsb::openX11Display(void)
 
 
 
-void ambilightUsb::updateColorsIfChanges()
+bool ambilightUsb::updateColorsIfChanges()
 {
     if(display == (Display *) NULL){
-        qFatal("display == NULL");
-        return;
+        qFatal("X11 display didn't open.");
+        return false;
     }
     if(dev == NULL){
-        qWarning() << "AmbilightUSB device didn't open, update colors canceled";
-        return;
+        qWarning() << "AmbilightUSB device didn't open.";
+        if(!tryToReopenDevice()){
+            return false;
+        }
     }
 
     XImage *ximage;
@@ -177,7 +209,9 @@ void ambilightUsb::updateColorsIfChanges()
         write_buffer[6] = (unsigned char)colors[RIGHT_DOWN][G];
         write_buffer[7] = (unsigned char)colors[RIGHT_DOWN][B];
 
-        writeBuffer();
+        if(!writeBufferToDeviceWithCheck()){
+            return false;
+        }
 
         write_buffer[1] = CMD_LEFT_SIDE;
         write_buffer[2] = (unsigned char)colors[LEFT_UP][R];
@@ -188,15 +222,18 @@ void ambilightUsb::updateColorsIfChanges()
         write_buffer[6] = (unsigned char)colors[LEFT_DOWN][G];
         write_buffer[7] = (unsigned char)colors[LEFT_DOWN][B];
 
-        writeBuffer();
+        if(!writeBufferToDeviceWithCheck()){
+            return false;
+        }
 
         write_colors = false;
     }
+    return true;
 }
 
 
 void ambilightUsb::offLeds()
 {
     write_buffer[1] = CMD_OFF_ALL;
-    writeBuffer();
+    writeBufferToDevice();
 }

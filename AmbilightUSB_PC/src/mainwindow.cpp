@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(timer, SIGNAL(timeout()), this, SLOT(timerForUsbPoll()));
 
+    isErrorState = false;
     isAmbilightOn = false;
     ambilightOn();
     trayIcon->show();
@@ -80,9 +81,15 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::ambilightOn()
 {
+    if(isErrorState){
+        timer->start(USB_TIMER_MS);
+        isAmbilightOn = true;
+        return;
+    }
+
     if(!isAmbilightOn){
         trayIcon->setIcon(QIcon(":/res/on.png"));
-        trayIcon->setToolTip("Ambilight USB ON");
+        trayIcon->setToolTip("Ambilight USB. On state.");
 
         timer->start(USB_TIMER_MS);
         isAmbilightOn = true;
@@ -93,10 +100,14 @@ void MainWindow::ambilightOff()
 {
     if(isAmbilightOn){
         trayIcon->setIcon(QIcon(":/res/off.png"));
-        trayIcon->setToolTip("Ambilight USB OFF");
+        trayIcon->setToolTip("Ambilight USB. Off state.");
 
         timer->stop();
-        ambilight_usb->offLeds();
+        if(!isErrorState){
+            ambilight_usb->offLeds();
+        }else{
+            isErrorState = false;
+        }
         isAmbilightOn = false;
     }
 }
@@ -111,8 +122,24 @@ void MainWindow::showSettings()
 
 void MainWindow::timerForUsbPoll()
 {
-    ambilight_usb->updateColorsIfChanges();
-    timer->start( USB_TIMER_MS );
+    if(ambilight_usb->updateColorsIfChanges()){
+        if(isErrorState){
+            isErrorState = false;
+            trayIcon->setIcon(QIcon(":/res/on.png"));
+            trayIcon->setToolTip("Ambilight USB. On state.");
+            qWarning() << "Ambilight USB. On state.";
+        }
+        timer->start( USB_TIMER_MS );
+    }else{
+        if(!isErrorState){
+            isErrorState = true;
+            trayIcon->setIcon(QIcon(":/res/error.png"));
+            trayIcon->setToolTip("Ambilight USB. Error state.");
+            qWarning() << "Ambilight USB. Error state.";
+        }
+
+        timer->start( USB_RECONNECT_TIMER_MS );
+    }
 }
 
 

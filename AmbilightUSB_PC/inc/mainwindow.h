@@ -15,7 +15,8 @@
 
 #include "ambilightusb.h"
 
-#define USB_TIMER_MS 10
+#define USB_TIMER_MS            50
+#define USB_RECONNECT_TIMER_MS  2000
 
 namespace Ui {
     class MainWindow;
@@ -57,6 +58,7 @@ private:
 
     ambilightUsb *ambilight_usb;
     bool isAmbilightOn;
+    bool isErrorState;
 };
 
 #endif // MAINWINDOW_H

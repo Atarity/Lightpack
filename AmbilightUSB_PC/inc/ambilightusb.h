@@ -38,14 +38,16 @@ public:
     ~ambilightUsb();
     bool deviceOpened();
     bool openDevice();
-    void updateColorsIfChanges();
+    bool updateColorsIfChanges();
     void offLeds();
 
 private:
     bool openX11Display();
 
-    void readData();
-    void writeBuffer();
+    bool readDataFromDevice();
+    bool writeBufferToDevice();
+    bool writeBufferToDeviceWithCheck();
+    bool tryToReopenDevice();
     QString usbErrorMessage(int errCode);
 
     usbDevice_t *dev;
