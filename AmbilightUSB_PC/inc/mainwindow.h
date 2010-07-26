@@ -15,7 +15,7 @@
 
 #include "ambilightusb.h"
 
-#define USB_TIMER_MS 100
+#define USB_TIMER_MS 10
 
 namespace Ui {
     class MainWindow;
@@ -38,10 +38,6 @@ private slots:
     void showSettings();
     void timerForUsbPoll();
 
-//    void messageClicked();
-//    void showMessage();
-//    void setIcon(int index);
-
 
 private:
     void createTrayIcon();
@@ -60,6 +56,7 @@ private:
     QTimer *timer;
 
     ambilightUsb *ambilight_usb;
+    bool isAmbilightOn;
 };
 
 #endif // MAINWINDOW_H

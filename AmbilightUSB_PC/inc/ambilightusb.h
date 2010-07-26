@@ -39,7 +39,7 @@ public:
     bool deviceOpened();
     bool openDevice();
     void updateColorsIfChanges();
-    void ambilightOffLeds();
+    void offLeds();
 
 private:
     bool openX11Display();

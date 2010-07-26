@@ -64,8 +64,7 @@ bool ambilightUsb::openDevice(void)
         qWarning() << "error finding " << productName << ": " << usbErrorMessage(err);
         return false;
     }
-    qDebug() << productName << vendorName <<
-            "(PID: 0x" << hex << pid << "; VID: 0x" << vid << ") opened.";
+    qDebug("%s %s (PID: 0x%04x; VID: 0x%04x) opened.", productName, vendorName, pid, vid);
     return true;
 }
 
@@ -196,7 +195,7 @@ void ambilightUsb::updateColorsIfChanges()
 }
 
 
-void ambilightUsb::ambilightOffLeds()
+void ambilightUsb::offLeds()
 {
     write_buffer[1] = CMD_OFF_ALL;
     writeBuffer();

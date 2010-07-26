@@ -62,8 +62,7 @@ int main(int argc, char **argv)
     }
     QApplication::setQuitOnLastWindowClosed(false);
 
-    MainWindow window;
-    window.show();
-
+    MainWindow window;          /* Create MainWindow */
+    window.setVisible(false);   /* And load to tray. */
     return app.exec();
 }

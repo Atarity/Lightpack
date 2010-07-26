@@ -18,18 +18,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //this->hide();
 
     createActions();
     createTrayIcon();
 
-    timer = new QTimer(this);
-    timer->start(USB_TIMER_MS);
     ambilight_usb = new ambilightUsb();
+    timer = new QTimer(this);
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(timer, SIGNAL(timeout()), this, SLOT(timerForUsbPoll()));
 
+    isAmbilightOn = false;
     ambilightOn();
     trayIcon->show();
 }
@@ -53,20 +52,23 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    QApplication::exit();
-//    if (trayIcon->isVisible()) {
-//        hide();
-//        event->ignore();
-//    }
+    if (trayIcon->isVisible()) {
+        hide();
+        event->ignore();
+    }
 }
 
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
-    case QSystemTrayIcon::Trigger:
+    case QSystemTrayIcon::Trigger: break;
     case QSystemTrayIcon::DoubleClick:
-        // TODO
+        if(isAmbilightOn){
+            ambilightOff();
+        }else{
+            ambilightOn();
+        }
         break;
     case QSystemTrayIcon::MiddleClick:
         QMessageBox::information(0, tr("Systray"), tr("Hello. MiddleClick!"));
@@ -78,21 +80,32 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::ambilightOn()
 {
-    trayIcon->setIcon(QIcon(":/res/on.png"));
-    trayIcon->setToolTip("Ambilight USB ON");
-    // TODO
+    if(!isAmbilightOn){
+        trayIcon->setIcon(QIcon(":/res/on.png"));
+        trayIcon->setToolTip("Ambilight USB ON");
+
+        timer->start(USB_TIMER_MS);
+        isAmbilightOn = true;
+    }
 }
 
 void MainWindow::ambilightOff()
 {
-    trayIcon->setIcon(QIcon(":/res/off.png"));
-    trayIcon->setToolTip("Ambilight USB OFF");
-    // TODO
+    if(isAmbilightOn){
+        trayIcon->setIcon(QIcon(":/res/off.png"));
+        trayIcon->setToolTip("Ambilight USB OFF");
+
+        timer->stop();
+        ambilight_usb->offLeds();
+        isAmbilightOn = false;
+    }
 }
 
 void MainWindow::showSettings()
 {
-    QMessageBox::information(0, tr("Settings"), tr("TODO"));
+    this->move(QApplication::desktop()->width() / 2 - this->width() / 2,
+            QApplication::desktop()->height() / 2 - this->height() / 2);
+    this->show();
 }
 
 
