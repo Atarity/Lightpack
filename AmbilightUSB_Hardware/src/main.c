@@ -11,6 +11,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h> /* for sei() */
+#include <util/delay.h>
 
 #include "main.h"
 #include "74HC595.h"    /* RGB leds connects to ATtiny44 through 74HC595 */
@@ -30,6 +31,70 @@ volatile uint8_t colors[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
 // Contains new colors (comes from PC) for update with smooth (if it is used)
 volatile uint8_t colors_new[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
 
+// Current PWM generation level
+volatile uint8_t pwm_level = 0x00;
+
+// Smoothly changing colors index
+volatile uint8_t smooth = 0x00;
+
+
+static inline void PWM()
+{
+	if(++pwm_level >= PWM_LEVEL){
+		pwm_level = 0x00;
+	}
+
+	uint16_t leds = 0x0000;
+
+	if(colors[RIGHT_UP][R] > pwm_level) 	leds |= RIGHT_UP_RED_LS;
+	if(colors[RIGHT_UP][G] > pwm_level) 	leds |= RIGHT_UP_GREEN_LS;
+	if(colors[RIGHT_UP][B] > pwm_level) 	leds |= RIGHT_UP_BLUE_LS;
+
+	if(colors[RIGHT_DOWN][R] > pwm_level) 	leds |= RIGHT_DOWN_RED_LS;
+	if(colors[RIGHT_DOWN][G] > pwm_level) 	leds |= RIGHT_DOWN_GREEN_LS;
+	if(colors[RIGHT_DOWN][B] > pwm_level) 	leds |= RIGHT_DOWN_BLUE_LS;
+
+	if(colors[LEFT_DOWN][R] > pwm_level) 	leds |= LEFT_DOWN_RED_LS;
+	if(colors[LEFT_DOWN][G] > pwm_level) 	leds |= LEFT_DOWN_GREEN_LS;
+	if(colors[LEFT_DOWN][B] > pwm_level) 	leds |= LEFT_DOWN_BLUE_LS;
+
+	if(colors[LEFT_UP][R] > pwm_level) 		leds |= LEFT_UP_RED_LS;
+	if(colors[LEFT_UP][G] > pwm_level) 		leds |= LEFT_UP_GREEN_LS;
+	if(colors[LEFT_UP][B] > pwm_level) 		leds |= LEFT_UP_BLUE_LS;
+
+	// RGB leds connects with common anode
+	HC595_PutUInt16((uint16_t)~leds);
+}
+
+static inline void smoothlyChangeColors()
+{
+	// Check if we have new colors
+	if(update_colors){
+		if(++smooth >= SMOOTHLY_DELAY){
+			update_colors = FALSE;
+			for(uint8_t led_index=0; led_index < 4; led_index++){
+				for(uint8_t color=0; color < 3; color++){
+					if(colors[led_index][color] < colors_new[led_index][color]){
+						colors[led_index][color]++;
+						update_colors = TRUE;
+					}
+					if(colors[led_index][color] > colors_new[led_index][color]){
+						colors[led_index][color]--;
+						update_colors = TRUE;
+					}
+				}
+			}
+			smooth = 0x00;
+		}
+	}
+
+//	// Without smooth
+//	for(uint8_t led_index=0; led_index < 4; led_index++){
+//		for(uint8_t color=0; color < 3; color++){
+//			colors[led_index][color] = colors_new[led_index][color];
+//		}
+//	}
+}
 
 //
 //	Initializing I/O, USB and starts PWM generation
@@ -50,69 +115,18 @@ int main(void)
     HC595_Init();
 
     // Enable interrupts
-	sei();
+	sei(); // USB using INT0
 
-
-	uint16_t leds = 0x0000;
-	uint8_t smooth = 0x00;
 
    	for(;;){
+   		/* Hey, PC! I'm alive! :) */
+   		usbPoll();
 
-   		// Color depth 15-bit (5-bit on each color)
-   		for(uint8_t i=1; i < 32; i++){
-   			leds = 0x0000;
+   		/* Update leds */
+   		PWM();
 
-   			if(colors[RIGHT_UP][R] > i) 	leds |= RIGHT_UP_RED_LS;
-   			if(colors[RIGHT_UP][G] > i) 	leds |= RIGHT_UP_GREEN_LS;
-   			if(colors[RIGHT_UP][B] > i) 	leds |= RIGHT_UP_BLUE_LS;
-
-   			if(colors[RIGHT_DOWN][R] > i) 	leds |= RIGHT_DOWN_RED_LS;
-   			if(colors[RIGHT_DOWN][G] > i) 	leds |= RIGHT_DOWN_GREEN_LS;
-   			if(colors[RIGHT_DOWN][B] > i) 	leds |= RIGHT_DOWN_BLUE_LS;
-
-
-   			if(colors[LEFT_DOWN][R] > i) 	leds |= LEFT_DOWN_RED_LS;
-   			if(colors[LEFT_DOWN][G] > i) 	leds |= LEFT_DOWN_GREEN_LS;
-   			if(colors[LEFT_DOWN][B] > i) 	leds |= LEFT_DOWN_BLUE_LS;
-
-   			if(colors[LEFT_UP][R] > i) 	leds |= LEFT_UP_RED_LS;
-   			if(colors[LEFT_UP][G] > i) 	leds |= LEFT_UP_GREEN_LS;
-   			if(colors[LEFT_UP][B] > i) 	leds |= LEFT_UP_BLUE_LS;
-
-   			// RGB leds connects with common anode
-   			HC595_PutUInt16((uint16_t)~leds);
-
-   			usbPoll(); /* Hey! PC! We are alive! :) */
-   		}
-
-   		// Check if we have new colors
-   		if(update_colors){
-
-   			// Smothly change colors
-   			if(++smooth == 4){
-   				update_colors = FALSE;
-   				for(uint8_t led_index=0; led_index < 4; led_index++){
-   					for(uint8_t color=0; color < 3; color++){
-   						if(colors[led_index][color] < colors_new[led_index][color]){
-   							colors[led_index][color]++;
-   							update_colors = TRUE;
-   						}
-   						if(colors[led_index][color] > colors_new[led_index][color]){
-   							colors[led_index][color]--;
-   							update_colors = TRUE;
-   						}
-   					}
-   				}
-   				smooth = 0x00;
-   			}
-
-//   			// Without smooth
-//   			for(uint8_t led_index=0; led_index < 4; led_index++){
-//   				for(uint8_t color=0; color < 3; color++){
-//   					colors[led_index][color] = colors_new[led_index][color];
-//   				}
-//   			}
-   		}
+   		/* If have new colors, update it smoothly */
+   		smoothlyChangeColors();
 	}
 
 	return 0;

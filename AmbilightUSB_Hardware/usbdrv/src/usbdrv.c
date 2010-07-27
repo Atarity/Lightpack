@@ -594,8 +594,8 @@ uint8_t   i;
             goto isNotReset;
     }
     /* RESET condition, called multiple times during reset */
-    usbNewDeviceAddr = 0;
-    usbDeviceAddr = 0;
+    usbNewDeviceAddr 	= 0;
+    usbDeviceAddr 		= 0;
     usbResetStall();
     DBG1(0xff, 0, 0);
 isNotReset:
