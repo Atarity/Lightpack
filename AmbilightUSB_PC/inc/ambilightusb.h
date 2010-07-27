@@ -40,6 +40,7 @@ public:
     bool openDevice();
     bool updateColorsIfChanges();
     void offLeds();
+    void clearColorSave();
 
 private:
     bool openX11Display();
@@ -58,7 +59,7 @@ private:
     char read_buffer[1 + 7];    /* 0-system, 1..7-data */
     char write_buffer[1 + 7];   /* 0-system, 1..7-data */
 
-    //  colors[LED_INDEX][COLOR]
+    //  colors_save[LED_INDEX][COLOR]
     int colors_save[4][3];
 };
 

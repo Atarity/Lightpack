@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Mon Jul 26 23:17:07 2010
+** Created: Tue Jul 27 23:01:16 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -36,6 +36,8 @@ static const uint qt_meta_data_MainWindow[] = {
       82,   11,   11,   11, 0x08,
       97,   11,   11,   11, 0x08,
      112,   11,   11,   11, 0x08,
+     130,   11,   11,   11, 0x08,
+     154,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -45,6 +47,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "iconActivated(QSystemTrayIcon::ActivationReason)\0"
     "ambilightOn()\0ambilightOff()\0"
     "showSettings()\0timerForUsbPoll()\0"
+    "usbTimerDelayMsChange()\0"
+    "usbTimerReconnectDelayMsChange()\0"
 };
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -81,9 +85,11 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 2: ambilightOff(); break;
         case 3: showSettings(); break;
         case 4: timerForUsbPoll(); break;
+        case 5: usbTimerDelayMsChange(); break;
+        case 6: usbTimerReconnectDelayMsChange(); break;
         default: ;
         }
-        _id -= 5;
+        _id -= 7;
     }
     return _id;
 }

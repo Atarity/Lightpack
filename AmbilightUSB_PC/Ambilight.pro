@@ -14,12 +14,15 @@ TEMPLATE = app
 SOURCES += src/hiddata.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
-    src/ambilightusb.cpp
+    src/ambilightusb.cpp \
+    src/rectgetpixel.cpp
 HEADERS += inc/hidsdi.h \
     inc/hiddata.h \
     ../AmbilightUSB_Hardware/inc/RGB.h \
     ../AmbilightUSB_Hardware/inc/usbconfig.h \
     inc/mainwindow.h \
-    inc/ambilightusb.h
+    inc/ambilightusb.h \
+    inc/rectgetpixel.h \
+    inc/version.h
 FORMS += src/mainwindow.ui
 RESOURCES += icons.qrc

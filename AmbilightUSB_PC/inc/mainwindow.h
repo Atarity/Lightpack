@@ -15,8 +15,6 @@
 
 #include "ambilightusb.h"
 
-#define USB_TIMER_MS            50
-#define USB_RECONNECT_TIMER_MS  2000
 
 namespace Ui {
     class MainWindow;
@@ -38,6 +36,8 @@ private slots:
     void ambilightOff();
     void showSettings();
     void timerForUsbPoll();
+    void usbTimerDelayMsChange();
+    void usbTimerReconnectDelayMsChange();
 
 
 private:
@@ -59,6 +59,9 @@ private:
     ambilightUsb *ambilight_usb;
     bool isAmbilightOn;
     bool isErrorState;
+
+    int usbTimerDelayMs;
+    int usbTimerReconnectDelayMs;
 };
 
 #endif // MAINWINDOW_H

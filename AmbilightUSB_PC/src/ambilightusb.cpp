@@ -20,16 +20,28 @@ ambilightUsb::ambilightUsb()
     openDevice();
     openX11Display();
 
-//    for(int i=0; i < 4; i++){
-//        for(int d=0; d < 3; d++){
-//            colors_save[i][d] = 0;
-//        }
-//    }
-//    memset(write_buffer, 0, sizeof(write_buffer));
+    clearColorSave();
+
+    for(uint i=0; i<sizeof(write_buffer); i++){
+        write_buffer[i] = 0;
+    }
+
+    for(uint i=0; i<sizeof(read_buffer); i++){
+        read_buffer[i] = 0;
+    }
 }
 
 ambilightUsb::~ambilightUsb(){
     usbhidCloseDevice(dev);
+}
+
+void ambilightUsb::clearColorSave()
+{
+    for(int i=0; i < 4; i++){
+        for(int d=0; d < 3; d++){
+            colors_save[i][d] = 0;
+        }
+    }
 }
 
 bool ambilightUsb::deviceOpened()
@@ -153,7 +165,7 @@ bool ambilightUsb::updateColorsIfChanges()
 
     //  colors[LED_INDEX][COLOR]
     int colors[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
-    bool write_colors = true;
+    bool write_colors = false;
 
     for(int x=0; x < PIXELS_X; x += X_STEP){
         for(int y=0; y < PIXELS_Y; y += Y_STEP){

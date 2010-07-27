@@ -4,5 +4,6 @@
         <file>res/off.png</file>
         <file>res/on.png</file>
         <file>res/error.png</file>
+        <file>res/ambilight_icon.png</file>
     </qresource>
 </RCC>

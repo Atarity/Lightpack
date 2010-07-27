@@ -13,37 +13,40 @@
 #include <iostream>
 #include "mainwindow.h"
 
+#include "version.h"
+#include "rectgetpixel.h"
+#include "ambilightusb.h"
+
 using namespace std;
 
 QTextStream logStream;
 
 
-static void showHelpMessage(char *myName)
+static void showHelpMessage()
 {
+    fprintf(stderr, "\n");
     fprintf(stderr, "Project : AmbilightUSB \n");
     fprintf(stderr, "Author  : brunql \n");
-    fprintf(stderr, "Version : 2.1 \n");
+    fprintf(stderr, "Version : %s\n", VERSION_STR);
     fprintf(stderr, "\n");
-    fprintf(stderr, "Usage:\n");
-    fprintf(stderr, "  %s --help  - show this help \n", myName);
-    fprintf(stderr, "  %s         - start application \n", myName);
-    fprintf(stderr, "  sudo %s    - if can't open device, try this \n", myName);
+    fprintf(stderr, "Options:\n");
+    fprintf(stderr, "  --off    - off leds \n");
+    fprintf(stderr, "  --help   - show this help \n");
+    fprintf(stderr, "\n");
+    fprintf(stderr, "sudo ./Ambilight    - try this if can't open device \n");
 }
 
 bool openLogFile()
 {
-    QString filePath = QDir::currentPath();
-    QDir dirLogs(filePath);
-    if(!dirLogs.exists(filePath  + "/AmbilightLogs/")){
-        dirLogs.mkdir("AmbilightLogs");
-    }
-    filePath +=  "/AmbilightLogs/" + QDateTime::currentDateTime().date().toString("yyyy_MM_dd") + ".log";
+    QString filePath = QDir::homePath() + "/.ambilight.log";
 
     cout << "Writing logs to: " << filePath.toStdString() << endl;
 
     QFile *logFile = new QFile(filePath);
     if(logFile->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)){
         logStream.setDevice(logFile);
+        logStream << QDateTime::currentDateTime().date().toString("yyyy_MM_dd") << " ";
+        logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Ambilight v" << VERSION_STR << endl;
     }else{
         cerr << "Error open file for write: " << filePath.toStdString() << endl;
         return false;
@@ -80,21 +83,27 @@ void messageOutput(QtMsgType type, const char *msg)
 
 int main(int argc, char **argv)
 {
-    if(argc > 1){
-        showHelpMessage(argv[0]);
-        return 1;
-    }
-
     if(!openLogFile()){
         cerr << "Log file didn't opened. Exit." << endl;
         return 2;
     }
 
+    if(argc > 1){
+        if(strcmp(argv[1], "--off") == 0){
+            ambilightUsb ambilight_usb;
+            ambilight_usb.offLeds();
+            return 0;
+        }else{
+            showHelpMessage();
+            return 1;
+        }
+    }
+
 
     Q_INIT_RESOURCE(icons);
+    QApplication app(argc, argv);
 
     qInstallMsgHandler(messageOutput);
-    QApplication app(argc, argv);
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         QMessageBox::critical(0, QObject::tr("Ambilight"),
                               QObject::tr("I couldn't detect any system tray on this system."));
