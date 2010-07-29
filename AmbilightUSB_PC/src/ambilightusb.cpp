@@ -11,10 +11,6 @@
 
 #include <QtDebug>
 
-#include "RGB.h"        /* Leds defines, CMD defines */
-#include "usbconfig.h"  /* For device VID, PID, vendor name and product name */
-#include "hiddata.h"    /* USB HID */
-
 
 ambilightUsb::ambilightUsb()
 {
@@ -22,6 +18,8 @@ ambilightUsb::ambilightUsb()
     openX11Display();
 
     clearColorSave();
+
+    readSettings();    
 
     for(uint i=0; i<sizeof(write_buffer); i++){
         write_buffer[i] = 0;
@@ -43,6 +41,16 @@ void ambilightUsb::clearColorSave()
             colors_save[i][d] = 0;
         }
     }
+}
+
+void ambilightUsb::readSettings()
+{
+    step_x = settings->value("StepX").toInt();
+    step_y = settings->value("StepY").toInt();
+    ambilight_width = settings->value("WidthAmbilight").toInt();
+    ambilight_height = settings->value("HeightAmbilight").toInt();
+
+    pixels_count_for_each_led = (ambilight_width / step_y) * (ambilight_height / step_x);
 }
 
 bool ambilightUsb::deviceOpened()
@@ -168,13 +176,21 @@ bool ambilightUsb::updateColorsIfChanges()
     int colors[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
     bool write_colors = false;
 
-    for(int x=0; x < PIXELS_X; x += X_STEP){
-        for(int y=0; y < PIXELS_Y; y += Y_STEP){
+    int desktop_width = QApplication::desktop()->width();
+    int desktop_height = QApplication::desktop()->height();
+
+    for(int x=0; x < ambilight_width; x += step_x){
+        for(int y=0; y < ambilight_height; y += step_y){
             for(int led_index=0; led_index < 4; led_index++){
 
                 ximage=XGetImage(display,root_window,
-                                 ((led_index==LEFT_UP || led_index==LEFT_DOWN)?x:1279-x),
-                                 ((led_index==LEFT_UP || led_index==RIGHT_UP)?y:799-y),
+                                 ((led_index==LEFT_UP || led_index==LEFT_DOWN)?
+                                        x :
+                                        (desktop_width-1) - x),
+                                 ((led_index==LEFT_UP || led_index==RIGHT_UP)?
+                                        (desktop_height/2) - y :
+                                        (desktop_height/2) + y
+                                      ),
                                  1,1,AllPlanes,ZPixmap);
 
                 color.pixel=XGetPixel(ximage,0,0);
@@ -194,7 +210,7 @@ bool ambilightUsb::updateColorsIfChanges()
     // Find average for each led color
     for(int led_index=0; led_index < 4; led_index++){
         for(int color=0; color < 3; color++){
-            colors[led_index][color] /= PIXELS_COUNT_FOR_EACH_LED;
+            colors[led_index][color] /= pixels_count_for_each_led;
 
             // Color depth 15-bit (5-bit on each color)
             // Each led color must be in 0..31

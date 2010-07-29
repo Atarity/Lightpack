@@ -8,24 +8,30 @@
  */
 
 #include "rectgetpixel.h"
-#include "ambilightusb.h"
 
 
 RectGetPixel::RectGetPixel(QWidget *parent)
     : QLabel(parent, Qt::FramelessWindowHint | Qt::Window)
 {
-    this->resize(PIXELS_X, PIXELS_Y);
+    QPalette pal = this->palette();
+    pal.setBrush(this->backgroundRole(), QBrush(Qt::black, Qt::SolidPattern));
+    this->setPalette(pal);
 
-    QImage im(PIXELS_X, PIXELS_Y, QImage::Format_ARGB32);
+    settingsChangedUpdateImage();
+}
 
-    for(int x=0; x < PIXELS_X; x+=X_STEP){
-        for(int y=0; y < PIXELS_Y; y+=Y_STEP){
-            im.setPixel(x, y, 0xffff0000 /* Black opaque */);
-        }
-    }
+void RectGetPixel::closeEvent(QCloseEvent *event)
+{
+    hide();
+    event->ignore();
+}
 
-    QPixmap pix = QPixmap::fromImage(im);
-    this->setPixmap(pix);
+void RectGetPixel::readSettings()
+{
+    step_x = settings->value("StepX").toInt();
+    step_y = settings->value("StepY").toInt();
+    ambilight_width = settings->value("WidthAmbilight").toInt();
+    ambilight_height = settings->value("HeightAmbilight").toInt();
 }
 
 void RectGetPixel::setTransparent(bool transparent)
@@ -36,3 +42,32 @@ void RectGetPixel::setTransparent(bool transparent)
         this->clearMask();
     }
 }
+
+void RectGetPixel::settingsChangedUpdateImage()
+{
+    readSettings();
+
+    int desktop_width = QApplication::desktop()->width();
+    int desktop_height = QApplication::desktop()->height();
+    this->resize(desktop_width, desktop_height);
+
+    QImage im(desktop_width, desktop_height, QImage::Format_ARGB32);
+    for(int x=0; x < ambilight_width; x+=step_x){
+        for(int y=0; y < ambilight_height; y+=step_y){
+            // LEFT_UP - red
+            im.setPixel(x, (desktop_height / 2) - y, 0xffff0000);
+            // LEFT_DOWN - green
+            im.setPixel(x, (desktop_height / 2) + y, 0xff00ff00);
+
+            // RIGHT_UP - blue
+            im.setPixel(desktop_width-1 - x, (desktop_height / 2) - y, 0xff0000ff);
+            // RIGHT_DOWN - white
+            im.setPixel(desktop_width-1 - x, (desktop_height / 2) + y, 0xffffffff);
+        }
+    }
+
+    QPixmap pix = QPixmap::fromImage(im);
+    this->setPixmap(pix);
+}
+
+

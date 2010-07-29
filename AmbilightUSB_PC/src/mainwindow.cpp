@@ -21,20 +21,37 @@ MainWindow::MainWindow(QWidget *parent) :
     createTrayIcon();
 
     ambilight_usb = new ambilightUsb();
+    rect_get_pixel = new RectGetPixel();    
     timer = new QTimer(this);
+
+    loadSettingsToForm();
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(timer, SIGNAL(timeout()), this, SLOT(timerForUsbPoll()));
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), this, SLOT(usbTimerDelayMsChange()));
     connect(ui->spinBox_ReconnectDelay, SIGNAL(valueChanged(int)), this, SLOT(usbTimerReconnectDelayMsChange()));
     connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->checkBox_ShowPixelsAmbilight, SIGNAL(toggled(bool)), this, SLOT(settingsShowPixelsForAmbilight(bool)));
+    connect(ui->checkBox_ShowPixelsTransparentBackground, SIGNAL(toggled(bool)), this, SLOT(settingsShowPixelsWithTransparentBackground(bool)));
+    connect(ui->spinBox_StepX, SIGNAL(valueChanged(int)), this, SLOT(settingsStepXChange()));
+    connect(ui->spinBox_StepY, SIGNAL(valueChanged(int)), this, SLOT(settingsStepYChange()));
+    connect(ui->spinBox_WidthAmbilight, SIGNAL(valueChanged(int)), this, SLOT(settingsWidthAmbilightChange()));
+    connect(ui->spinBox_HeightAmbilight, SIGNAL(valueChanged(int)), this, SLOT(settingsHeightAmbilightChange()));
 
-    usbTimerDelayMsChange();
-    usbTimerReconnectDelayMsChange();
+
+    usbTimerDelayMs = settings->value("RefreshAmbilightDelayMs").toInt();
+    usbTimerReconnectDelayMs = settings->value("ReconnectAmbilightUSBDelayMs").toInt();
+
 
     isErrorState = false;
-    isAmbilightOn = false;
-    ambilightOn();
+    isAmbilightOn = settings->value("IsAmbilightOn").toBool();
+    if(isAmbilightOn){
+        isAmbilightOn = false; // ambilightOn() check this and if this true, return
+        ambilightOn();
+    }else{
+        isAmbilightOn = true; // ambilightOn() check this and if this false, return
+        ambilightOff();
+    }
     trayIcon->show();
 }
 
@@ -58,6 +75,7 @@ void MainWindow::changeEvent(QEvent *e)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (trayIcon->isVisible()) {
+        settingsShowPixelsForAmbilight(false);
         hide();
         event->ignore();
     }
@@ -87,15 +105,13 @@ void MainWindow::ambilightOn()
     if(isErrorState){
         timer->start(usbTimerDelayMs);
         isAmbilightOn = true;
-        return;
-    }
-
-    if(!isAmbilightOn){
+    }else if(!isAmbilightOn){
         trayAmbilightOn();
 
         timer->start(usbTimerDelayMs);
         isAmbilightOn = true;
     }
+    settings->setValue("IsAmbilightOn", isAmbilightOn);
 }
 
 void MainWindow::ambilightOff()
@@ -105,12 +121,15 @@ void MainWindow::ambilightOff()
 
         timer->stop();
         if(!isErrorState){
-            ambilight_usb->offLeds();
+            if(ambilight_usb->deviceOpened()){
+                ambilight_usb->offLeds();
+            }
         }else{
             isErrorState = false;
         }
         isAmbilightOn = false;
     }
+    settings->setValue("IsAmbilightOn", isAmbilightOn);
 }
 
 void MainWindow::trayAmbilightOn()
@@ -137,9 +156,27 @@ void MainWindow::showSettings()
 {
     this->move(QApplication::desktop()->width() / 2 - this->width() / 2,
             QApplication::desktop()->height() / 2 - this->height() / 2);
+    settingsShowPixelsForAmbilight(ui->checkBox_ShowPixelsAmbilight->isChecked());
     this->show();
 }
 
+void MainWindow::settingsShowPixelsForAmbilight(bool state)
+{
+    rect_get_pixel->move(0,0);
+    if(state){
+        rect_get_pixel->setFocusPolicy(Qt::NoFocus);
+        rect_get_pixel->setTransparent(ui->checkBox_ShowPixelsTransparentBackground->isChecked());
+        rect_get_pixel->showFullScreen();
+        this->setFocus();
+    }else{
+        rect_get_pixel->hide();
+    }
+}
+
+void MainWindow::settingsShowPixelsWithTransparentBackground(bool state)
+{
+    rect_get_pixel->setTransparent(state);
+}
 
 void MainWindow::timerForUsbPoll()
 {
@@ -169,12 +206,40 @@ void MainWindow::timerForUsbPoll()
 
 void MainWindow::usbTimerDelayMsChange()
 {
-    usbTimerDelayMs = 1000 / ui->spinBox_UpdateDelay->value(); /* hz to ms */
+    int ms = 1000 / ui->spinBox_UpdateDelay->value(); /* hz to ms */
+    settings->setValue("RefreshAmbilightDelayMs", ms);
+    usbTimerDelayMs = ms;
 }
 
 void MainWindow::usbTimerReconnectDelayMsChange()
 {
-    usbTimerReconnectDelayMs = ui->spinBox_ReconnectDelay->value() * 1000; /* sec to ms */
+    int ms = ui->spinBox_ReconnectDelay->value() * 1000; /* sec to ms */
+    settings->setValue("ReconnectAmbilightUSBDelayMs", ms);
+    usbTimerReconnectDelayMs = ms;
+}
+
+void MainWindow::settingsStepXChange()
+{
+    settings->setValue("StepX", ui->spinBox_StepX->value());
+    rect_get_pixel->settingsChangedUpdateImage();
+}
+
+void MainWindow::settingsStepYChange()
+{
+    settings->setValue("StepY", ui->spinBox_StepY->value());
+    rect_get_pixel->settingsChangedUpdateImage();
+}
+
+void MainWindow::settingsWidthAmbilightChange()
+{
+    settings->setValue("WidthAmbilight", ui->spinBox_WidthAmbilight->value() );
+    rect_get_pixel->settingsChangedUpdateImage();
+}
+
+void MainWindow::settingsHeightAmbilightChange()
+{
+    settings->setValue("HeightAmbilight", ui->spinBox_HeightAmbilight->value() );
+    rect_get_pixel->settingsChangedUpdateImage();
 }
 
 
@@ -207,4 +272,16 @@ void MainWindow::createTrayIcon()
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
+}
+
+void MainWindow::loadSettingsToForm()
+{
+    ui->spinBox_UpdateDelay->setValue( 1000 / settings->value("RefreshAmbilightDelayMs").toInt() /* ms to hz */);
+    ui->spinBox_ReconnectDelay->setValue( settings->value("ReconnectAmbilightUSBDelayMs").toInt() / 1000 /* ms to sec */ );
+
+    ui->spinBox_StepX->setValue( settings->value("StepX").toInt() );
+    ui->spinBox_StepY->setValue( settings->value("StepY").toInt() );
+
+    ui->spinBox_WidthAmbilight->setValue( settings->value("WidthAmbilight").toInt() );
+    ui->spinBox_HeightAmbilight->setValue( settings->value("HeightAmbilight").toInt() );
 }

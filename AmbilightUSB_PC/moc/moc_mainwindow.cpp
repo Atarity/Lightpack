@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Thu Jul 29 15:15:59 2010
+** Created: Thu Jul 29 19:37:02 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+      13,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -35,12 +35,15 @@ static const uint qt_meta_data_MainWindow[] = {
       68,   11,   11,   11, 0x08,
       82,   11,   11,   11, 0x08,
       97,   11,   11,   11, 0x08,
-     115,   11,   11,   11, 0x08,
-     134,   11,   11,   11, 0x08,
-     155,   11,   11,   11, 0x08,
-     170,   11,   11,   11, 0x08,
-     188,   11,   11,   11, 0x08,
-     212,   11,   11,   11, 0x08,
+     112,   11,   11,   11, 0x08,
+     130,   11,   11,   11, 0x08,
+     154,   11,   11,   11, 0x08,
+     193,  187,   11,   11, 0x08,
+     230,  187,   11,   11, 0x08,
+     280,   11,   11,   11, 0x08,
+     302,   11,   11,   11, 0x08,
+     324,   11,   11,   11, 0x08,
+     355,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -49,10 +52,14 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0reason\0"
     "iconActivated(QSystemTrayIcon::ActivationReason)\0"
     "ambilightOn()\0ambilightOff()\0"
-    "trayAmbilightOn()\0trayAmbilightOff()\0"
-    "trayAmbilightError()\0showSettings()\0"
-    "timerForUsbPoll()\0usbTimerDelayMsChange()\0"
-    "usbTimerReconnectDelayMsChange()\0"
+    "showSettings()\0timerForUsbPoll()\0"
+    "usbTimerDelayMsChange()\0"
+    "usbTimerReconnectDelayMsChange()\0state\0"
+    "settingsShowPixelsForAmbilight(bool)\0"
+    "settingsShowPixelsWithTransparentBackground(bool)\0"
+    "settingsStepXChange()\0settingsStepYChange()\0"
+    "settingsWidthAmbilightChange()\0"
+    "settingsHeightAmbilightChange()\0"
 };
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -87,16 +94,19 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 0: iconActivated((*reinterpret_cast< QSystemTrayIcon::ActivationReason(*)>(_a[1]))); break;
         case 1: ambilightOn(); break;
         case 2: ambilightOff(); break;
-        case 3: trayAmbilightOn(); break;
-        case 4: trayAmbilightOff(); break;
-        case 5: trayAmbilightError(); break;
-        case 6: showSettings(); break;
-        case 7: timerForUsbPoll(); break;
-        case 8: usbTimerDelayMsChange(); break;
-        case 9: usbTimerReconnectDelayMsChange(); break;
+        case 3: showSettings(); break;
+        case 4: timerForUsbPoll(); break;
+        case 5: usbTimerDelayMsChange(); break;
+        case 6: usbTimerReconnectDelayMsChange(); break;
+        case 7: settingsShowPixelsForAmbilight((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 8: settingsShowPixelsWithTransparentBackground((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 9: settingsStepXChange(); break;
+        case 10: settingsStepYChange(); break;
+        case 11: settingsWidthAmbilightChange(); break;
+        case 12: settingsHeightAmbilightChange(); break;
         default: ;
         }
-        _id -= 10;
+        _id -= 13;
     }
     return _id;
 }

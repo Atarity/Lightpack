@@ -24,6 +24,7 @@ HEADERS += inc/hidsdi.h \
     inc/mainwindow.h \
     inc/ambilightusb.h \
     inc/rectgetpixel.h \
-    inc/version.h
+    inc/version.h \
+    inc/settings.h
 FORMS += src/mainwindow.ui
 RESOURCES += icons.qrc

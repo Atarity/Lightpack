@@ -11,7 +11,9 @@
 #define MAINWINDOW_H
 
 #include <QtGui>
+#include "settings.h"
 #include "ambilightusb.h"
+#include "rectgetpixel.h"
 
 
 namespace Ui {
@@ -32,19 +34,28 @@ private slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void ambilightOn();
     void ambilightOff();
+
+    void showSettings();
+
+    void timerForUsbPoll();
+    void usbTimerDelayMsChange();
+    void usbTimerReconnectDelayMsChange();
+    void settingsShowPixelsForAmbilight(bool state);
+    void settingsShowPixelsWithTransparentBackground(bool state);
+    void settingsStepXChange();
+    void settingsStepYChange();
+    void settingsWidthAmbilightChange();
+    void settingsHeightAmbilightChange();
+
+
+private:
     void trayAmbilightOn();
     void trayAmbilightOff();
     void trayAmbilightError();
 
-    void showSettings();
-    void timerForUsbPoll();
-    void usbTimerDelayMsChange();
-    void usbTimerReconnectDelayMsChange();
-
-
-private:
     void createTrayIcon();
     void createActions();
+    void loadSettingsToForm();
 
     Ui::MainWindow *ui;
 
@@ -59,6 +70,7 @@ private:
     QTimer *timer;
 
     ambilightUsb *ambilight_usb;
+    RectGetPixel *rect_get_pixel;
     bool isAmbilightOn;
     bool isErrorState;
 

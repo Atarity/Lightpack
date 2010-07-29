@@ -13,14 +13,18 @@
 #include <iostream>
 #include "mainwindow.h"
 
+#include "settings.h"
 #include "version.h"
 #include "rectgetpixel.h"
 #include "ambilightusb.h"
 
+
 using namespace std;
 
-QTextStream logStream;
+// Public visible object, #include "settings.h" for use it
+QSettings *settings;
 
+QTextStream logStream;
 
 static void showHelpMessage()
 {
@@ -43,7 +47,13 @@ bool openLogFile()
     cout << "Writing logs to: " << filePath.toStdString() << endl;
 
     QFile *logFile = new QFile(filePath);
-    if(logFile->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)){
+    QIODevice::OpenMode openFileAppendOrTruncateFlag = QIODevice::Append;
+    QFileInfo info(filePath);
+    if(info.size() > 1*1024*1024){
+        fprintf(stderr, "Log file size > 1 Mb. I'm going to clear it. Now!\n");
+        openFileAppendOrTruncateFlag = QIODevice::Truncate;
+    }
+    if(logFile->open(QIODevice::WriteOnly | openFileAppendOrTruncateFlag | QIODevice::Text)){
         logStream.setDevice(logFile);
         logStream << QDateTime::currentDateTime().date().toString("yyyy_MM_dd") << " ";
         logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Ambilight v" << VERSION_STR << endl;
@@ -80,6 +90,49 @@ void messageOutput(QtMsgType type, const char *msg)
     logStream.flush();
 }
 
+//
+//  Check and/or initialize settings
+//
+void settingsInit()
+{
+    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "brunql.dev", "AmbilightUSB");
+    if(settings->value("RefreshAmbilightDelayMs") == QVariant()){
+        qDebug() << "Settings: 'RefreshAmbilightDelayMs' not found. Set it to default value:"
+                << REFRESH_AMBILIGHT_MS_DEFAULT_VALUE;
+        settings->setValue("RefreshAmbilightDelayMs", REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
+    }
+    if(settings->value("ReconnectAmbilightUSBDelayMs") == QVariant()){
+        qDebug() << "Settings: 'ReconnectAmbilightUSBDelayMs' not found. Set it to default value:"
+                << RECONNECT_USB_MS_DEFAULT_VALUE;
+        settings->setValue("ReconnectAmbilightUSBDelayMs", RECONNECT_USB_MS_DEFAULT_VALUE);
+    }
+    if(settings->value("StepX") == QVariant()){
+        qDebug() << "Settings: 'StepX' not found. Set it to default value:"
+                << STEP_X_DEFAULT_VALUE;
+        settings->setValue("StepX", STEP_X_DEFAULT_VALUE);
+    }
+    if(settings->value("StepY") == QVariant()){
+        qDebug() << "StepY: 'StepY' not found. Set it to default value:"
+                << STEP_Y_DEFAULT_VALUE;
+        settings->setValue("StepY", STEP_Y_DEFAULT_VALUE);
+    }
+    if(settings->value("WidthAmbilight") == QVariant()){
+        qDebug() << "Settings: 'WidthAmbilight' not found. Set it to default value:"
+                << WIDTH_AMBILIGHT_DEFAULT_VALUE;
+        settings->setValue("WidthAmbilight", WIDTH_AMBILIGHT_DEFAULT_VALUE);
+    }
+    if(settings->value("HeightAmbilight") == QVariant()){
+        qDebug() << "Settings: 'HeightAmbilight' not found. Set it to default value:"
+                << HEIGHT_AMBILIGHT_DEFAULT_VALUE;
+        settings->setValue("HeightAmbilight", HEIGHT_AMBILIGHT_DEFAULT_VALUE);
+    }
+    if(settings->value("IsAmbilightOn") == QVariant()){
+        qDebug() << "Settings: 'IsAmbilightOn' not found. Set it to default value:"
+                << IS_AMBILIGHT_ON_DEFAULT_VALUE;
+        settings->setValue("IsAmbilightOn", IS_AMBILIGHT_ON_DEFAULT_VALUE);
+    }
+
+}
 
 int main(int argc, char **argv)
 {
@@ -122,6 +175,8 @@ int main(int argc, char **argv)
         qWarning() << "Load translation for locale" << locale << "failed. Using defaults.";
     }
     app.installTranslator(&translator);
+
+    settingsInit();
 
     MainWindow window;          /* Create MainWindow */
     window.setVisible(false);   /* And load to tray. */
