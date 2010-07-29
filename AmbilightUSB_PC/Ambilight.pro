@@ -16,7 +16,8 @@ SOURCES += src/hiddata.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
     src/ambilightusb.cpp \
-    src/rectgetpixel.cpp
+    src/rectgetpixel.cpp \
+    src/aboutdialog.cpp
 HEADERS += inc/hidsdi.h \
     inc/hiddata.h \
     ../AmbilightUSB_Hardware/inc/RGB.h \
@@ -25,6 +26,8 @@ HEADERS += inc/hidsdi.h \
     inc/ambilightusb.h \
     inc/rectgetpixel.h \
     inc/version.h \
-    inc/settings.h
-FORMS += src/mainwindow.ui
+    inc/settings.h \
+    inc/aboutdialog.h
+FORMS += src/mainwindow.ui \
+    src/aboutdialog.ui
 RESOURCES += icons.qrc

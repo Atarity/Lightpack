@@ -11,6 +11,7 @@
 #define MAINWINDOW_H
 
 #include <QtGui>
+#include "aboutdialog.h"
 #include "settings.h"
 #include "ambilightusb.h"
 #include "rectgetpixel.h"
@@ -35,6 +36,7 @@ private slots:
     void ambilightOn();
     void ambilightOff();
 
+    void showAbout();
     void showSettings();
 
     void timerForUsbPoll();
@@ -62,6 +64,7 @@ private:
     QAction *onAmbilightAction;
     QAction *offAmbilightAction;
     QAction *settingsAction;
+    QAction *aboutAction;
     QAction *quitAction;
 
     QSystemTrayIcon *trayIcon;

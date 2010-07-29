@@ -2,12 +2,9 @@ Ambilight USB
 =============
 
 This project makes ambilight for you PC. Watching films now can be more fun. 
-Using ATtiny44 for hardware and C/C++, ubuntu with Qt for software.
+Hardware: ATtiny44, 74HC595 and 4 RGB leds. Soft for hardware writed in C. Using V-USB (HID Class device).
+PC software: C++, Qt, X11 (GUI tested in Ubuntu 10.04)
 
-Now state:
+For more information see sources.
 
-* 2 RGB leds x 2 side (left and right)
-* Terminal soft for Ubuntu (tested in 10.04)
-* Using V-USB as HID
-
-
+Have fun!

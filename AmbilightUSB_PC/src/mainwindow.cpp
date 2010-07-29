@@ -152,6 +152,12 @@ void MainWindow::trayAmbilightError()
 
 
 
+void MainWindow::showAbout()
+{
+    aboutDialog *about = new aboutDialog(this);
+    about->show();
+}
+
 void MainWindow::showSettings()
 {
     this->move(QApplication::desktop()->width() / 2 - this->width() / 2,
@@ -250,13 +256,16 @@ void MainWindow::createActions()
     onAmbilightAction = new QAction(tr("&On ambilight"), this);
     connect(onAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOn()));
 
-    offAmbilightAction = new QAction(trUtf8("O&ff ambilight"), this);
+    offAmbilightAction = new QAction(tr("O&ff ambilight"), this);
     connect(offAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOff()));
 
-    settingsAction = new QAction(trUtf8("&Settings"), this);
+    settingsAction = new QAction(tr("&Settings"), this);
     connect(settingsAction, SIGNAL(triggered()), this, SLOT(showSettings()));
 
-    quitAction = new QAction(trUtf8("&Quit"), this);
+    aboutAction = new QAction(tr("&About"), this);
+    connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAbout()));
+
+    quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
@@ -267,6 +276,7 @@ void MainWindow::createTrayIcon()
     trayIconMenu->addAction(offAmbilightAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(settingsAction);
+    trayIconMenu->addAction(aboutAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
 
