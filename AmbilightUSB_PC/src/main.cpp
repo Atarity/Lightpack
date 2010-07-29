@@ -83,6 +83,8 @@ void messageOutput(QtMsgType type, const char *msg)
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
+
     if(!openLogFile()){
         cerr << "Log file didn't opened. Exit." << endl;
         return 2;
@@ -101,15 +103,25 @@ int main(int argc, char **argv)
 
 
     Q_INIT_RESOURCE(icons);
-    QApplication app(argc, argv);
 
     qInstallMsgHandler(messageOutput);
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
-        QMessageBox::critical(0, QObject::tr("Ambilight"),
-                              QObject::tr("I couldn't detect any system tray on this system."));
+        QMessageBox::critical(0, "AmbilightUSB",
+                              "I couldn't detect any system tray on this system.");
         return 1;
     }
     QApplication::setQuitOnLastWindowClosed(false);
+
+
+    QString locale = QLocale::system().name();
+
+    QTranslator translator;
+    if(translator.load(QString("Ambilight_") + locale)){
+        qDebug() << "Load translation for locale" << locale;
+    }else{
+        qWarning() << "Load translation for locale" << locale << "failed. Using defaults.";
+    }
+    app.installTranslator(&translator);
 
     MainWindow window;          /* Create MainWindow */
     window.setVisible(false);   /* And load to tray. */

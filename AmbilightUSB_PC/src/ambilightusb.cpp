@@ -7,8 +7,9 @@
  *      Project: AmbilightUSB
  */
 
-#include <QtDebug>
 #include "ambilightusb.h"
+
+#include <QtDebug>
 
 #include "RGB.h"        /* Leds defines, CMD defines */
 #include "usbconfig.h"  /* For device VID, PID, vendor name and product name */

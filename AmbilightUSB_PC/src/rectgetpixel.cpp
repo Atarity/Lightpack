@@ -7,10 +7,8 @@
  *      Project: AmbilightUSB
  */
 
-#include <QtGui>
-
-#include "ambilightusb.h"
 #include "rectgetpixel.h"
+#include "ambilightusb.h"
 
 
 RectGetPixel::RectGetPixel(QWidget *parent)

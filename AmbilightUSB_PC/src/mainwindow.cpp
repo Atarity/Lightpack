@@ -7,8 +7,6 @@
  *      Project: AmbilightUSB
  */
 
-#include <QtGui>
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -69,7 +67,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
-    case QSystemTrayIcon::Trigger: break;
     case QSystemTrayIcon::DoubleClick:
         if(isAmbilightOn){
             ambilightOff();
@@ -78,10 +75,8 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
         }
         break;
     case QSystemTrayIcon::MiddleClick:
-        QMessageBox::information(0, tr("Systray"), tr("Hello. MiddleClick!"));
-        break;
-    default:
-        ;
+    case QSystemTrayIcon::Trigger:
+    default: break;
     }
 }
 
@@ -96,8 +91,7 @@ void MainWindow::ambilightOn()
     }
 
     if(!isAmbilightOn){
-        trayIcon->setIcon(QIcon(":/res/on.png"));
-        trayIcon->setToolTip("Ambilight USB. On state.");
+        trayAmbilightOn();
 
         timer->start(usbTimerDelayMs);
         isAmbilightOn = true;
@@ -107,8 +101,7 @@ void MainWindow::ambilightOn()
 void MainWindow::ambilightOff()
 {
     if(isAmbilightOn){
-        trayIcon->setIcon(QIcon(":/res/off.png"));
-        trayIcon->setToolTip("Ambilight USB. Off state.");
+        trayAmbilightOff();
 
         timer->stop();
         if(!isErrorState){
@@ -119,6 +112,26 @@ void MainWindow::ambilightOff()
         isAmbilightOn = false;
     }
 }
+
+void MainWindow::trayAmbilightOn()
+{
+    trayIcon->setIcon(QIcon(":/res/on.png"));
+    trayIcon->setToolTip(tr("Ambilight USB. On state."));
+}
+
+void MainWindow::trayAmbilightOff()
+{
+    trayIcon->setIcon(QIcon(":/res/off.png"));
+    trayIcon->setToolTip(tr("Ambilight USB. Off state."));
+}
+
+void MainWindow::trayAmbilightError()
+{
+    trayIcon->setIcon(QIcon(":/res/error.png"));
+    trayIcon->setToolTip(tr("Ambilight USB. Error state."));
+}
+
+
 
 void MainWindow::showSettings()
 {
@@ -136,8 +149,8 @@ void MainWindow::timerForUsbPoll()
         if(isErrorState){
             isErrorState = false;
             
-            trayIcon->setIcon(QIcon(":/res/on.png"));
-            trayIcon->setToolTip("Ambilight USB. On state.");
+            trayAmbilightOn();
+
             qWarning() << "Ambilight USB. On state.";
             ambilight_usb->clearColorSave();
         }
@@ -146,9 +159,9 @@ void MainWindow::timerForUsbPoll()
         if(!isErrorState){
             isErrorState = true;
             
-            trayIcon->setIcon(QIcon(":/res/error.png"));
-            trayIcon->setToolTip("Ambilight USB. Error state.");
-            qWarning() << "Ambilight USB. Error state.";            
+            trayAmbilightError();
+
+            qWarning() << "Ambilight USB. Error state.";
         }
         timer->start( usbTimerReconnectDelayMs );
     }
@@ -169,16 +182,16 @@ void MainWindow::usbTimerReconnectDelayMsChange()
 
 void MainWindow::createActions()
 {
-    onAmbilightAction = new QAction(trUtf8("&Включить"), this);
+    onAmbilightAction = new QAction(tr("&On ambilight"), this);
     connect(onAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOn()));
 
-    offAmbilightAction = new QAction(trUtf8("В&ыключить"), this);
+    offAmbilightAction = new QAction(trUtf8("O&ff ambilight"), this);
     connect(offAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOff()));
 
-    settingsAction = new QAction(trUtf8("&Настройки"), this);
+    settingsAction = new QAction(trUtf8("&Settings"), this);
     connect(settingsAction, SIGNAL(triggered()), this, SLOT(showSettings()));
 
-    quitAction = new QAction(trUtf8("&Выход"), this);
+    quitAction = new QAction(trUtf8("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 

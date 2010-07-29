@@ -6,16 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>376</width>
-    <height>156</height>
+    <width>274</width>
+    <height>136</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Ambilight USB - Настройки</string>
+   <string>Ambilight USB - Settings</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../icons.qrc">
     <normaloff>:/res/settings.png</normaloff>:/res/settings.png</iconset>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -24,7 +27,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_UpdateDelay">
         <property name="text">
-         <string>Обновление подсветки</string>
+         <string>Refresh ambilight</string>
         </property>
        </widget>
       </item>
@@ -44,14 +47,14 @@
       <item row="0" column="2">
        <widget class="QLabel" name="label_hz">
         <property name="text">
-         <string>Гц</string>
+         <string>Hz</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_Reconnect">
         <property name="text">
-         <string>Задержка переподключения к USB</string>
+         <string>Reconnect USB delay</string>
         </property>
        </widget>
       </item>
@@ -68,7 +71,7 @@
       <item row="1" column="2">
        <widget class="QLabel" name="label_sec">
         <property name="text">
-         <string>сек</string>
+         <string>secs</string>
         </property>
        </widget>
       </item>

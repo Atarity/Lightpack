@@ -10,9 +10,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QSystemTrayIcon>
-
+#include <QtGui>
 #include "ambilightusb.h"
 
 
@@ -34,6 +32,10 @@ private slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void ambilightOn();
     void ambilightOff();
+    void trayAmbilightOn();
+    void trayAmbilightOff();
+    void trayAmbilightError();
+
     void showSettings();
     void timerForUsbPoll();
     void usbTimerDelayMsChange();

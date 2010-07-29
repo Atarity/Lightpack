@@ -3,6 +3,7 @@
 # -------------------------------------------------
 DESTDIR = ./build
 TARGET = Ambilight
+TRANSLATIONS = ./translations/Ambilight_ru_RU.ts
 CONFIG += console
 CONFIG -= app_bundle
 LIBS += -lusb

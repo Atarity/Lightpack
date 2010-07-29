@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Jul 27 23:26:59 2010
+** Created: Wed Jul 28 16:35:20 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -10,6 +10,7 @@
 #ifndef UI_MAINWINDOW_H
 #define UI_MAINWINDOW_H
 
+#include <QtCore/QLocale>
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
@@ -49,10 +50,11 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(376, 156);
+        MainWindow->resize(274, 136);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/res/settings.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
+        MainWindow->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -128,11 +130,11 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Ambilight USB - \320\235\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\270", 0, QApplication::UnicodeUTF8));
-        label_UpdateDelay->setText(QApplication::translate("MainWindow", "\320\236\320\261\320\275\320\276\320\262\320\273\320\265\320\275\320\270\320\265 \320\277\320\276\320\264\321\201\320\262\320\265\321\202\320\272\320\270", 0, QApplication::UnicodeUTF8));
-        label_hz->setText(QApplication::translate("MainWindow", "\320\223\321\206", 0, QApplication::UnicodeUTF8));
-        label_Reconnect->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\264\320\265\321\200\320\266\320\272\320\260 \320\277\320\265\321\200\320\265\320\277\320\276\320\264\320\272\320\273\321\216\321\207\320\265\320\275\320\270\321\217 \320\272 USB", 0, QApplication::UnicodeUTF8));
-        label_sec->setText(QApplication::translate("MainWindow", "\321\201\320\265\320\272", 0, QApplication::UnicodeUTF8));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Ambilight USB - Settings", 0, QApplication::UnicodeUTF8));
+        label_UpdateDelay->setText(QApplication::translate("MainWindow", "Refresh ambilight", 0, QApplication::UnicodeUTF8));
+        label_hz->setText(QApplication::translate("MainWindow", "Hz", 0, QApplication::UnicodeUTF8));
+        label_Reconnect->setText(QApplication::translate("MainWindow", "Reconnect USB delay", 0, QApplication::UnicodeUTF8));
+        label_sec->setText(QApplication::translate("MainWindow", "secs", 0, QApplication::UnicodeUTF8));
         pushButton_Close->setText(QApplication::translate("MainWindow", "Close", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
