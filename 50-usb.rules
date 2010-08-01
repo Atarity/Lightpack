@@ -1,0 +1,14 @@
+#
+# /etc/udev/rules.d/50-usb.rules
+#
+#     Author: brunql
+# Created on: 2.08.10
+#
+# I'm using this USB VID (voti.nl) and PID (shared for HIDs) from obdev for Ambilight project
+# Let's edit this file!
+
+# Ambilight
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",SYSFS{idVendor}=="16c0" , SYSFS{idProduct}=="05df", MODE="0666"
+
+# UsbAsp
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",SYSFS{idVendor}=="16c0" , SYSFS{idProduct}=="05dc", MODE="0666"
