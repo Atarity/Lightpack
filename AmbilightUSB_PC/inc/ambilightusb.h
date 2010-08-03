@@ -15,9 +15,11 @@
 
 #include "settings.h"
 
-#include "RGB.h"        /* Leds defines, CMD defines */
 #include "usbconfig.h"  /* For device VID, PID, vendor name and product name */
 #include "hiddata.h"    /* USB HID */
+
+#include "commands.h"   /* CMD defines */
+#include "RGB.h"        /* Led defines */
 
 
 class ambilightUsb
@@ -31,6 +33,7 @@ public:
     void offLeds();
     void clearColorSave();
     void readSettings();
+    QString hardwareVersion();
 
 private:
     bool openX11Display();

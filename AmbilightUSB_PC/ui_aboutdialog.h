@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'aboutdialog.ui'
 **
-** Created: Thu Jul 29 20:56:04 2010
+** Created: Wed Aug 4 02:05:24 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -19,6 +19,7 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
+#include <QtGui/QSpacerItem>
 #include <QtGui/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
@@ -27,24 +28,88 @@ class Ui_aboutDialog
 {
 public:
     QVBoxLayout *verticalLayout;
+    QLabel *label_2;
+    QLabel *label_3;
     QLabel *label;
+    QLabel *label_6;
+    QLabel *label_5;
+    QLabel *labelVersionSoftware;
+    QLabel *labelVersionHardware;
+    QLabel *label_4;
+    QSpacerItem *verticalSpacer;
     QPushButton *pushButton;
 
     void setupUi(QDialog *aboutDialog)
     {
         if (aboutDialog->objectName().isEmpty())
             aboutDialog->setObjectName(QString::fromUtf8("aboutDialog"));
-        aboutDialog->resize(396, 353);
+        aboutDialog->resize(418, 407);
         aboutDialog->setMinimumSize(QSize(394, 342));
         aboutDialog->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
         verticalLayout = new QVBoxLayout(aboutDialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        label_2 = new QLabel(aboutDialog);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setMargin(10);
+
+        verticalLayout->addWidget(label_2);
+
+        label_3 = new QLabel(aboutDialog);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(label_3->sizePolicy().hasHeightForWidth());
+        label_3->setSizePolicy(sizePolicy);
+        label_3->setAlignment(Qt::AlignJustify|Qt::AlignVCenter);
+        label_3->setWordWrap(true);
+        label_3->setMargin(3);
+
+        verticalLayout->addWidget(label_3);
+
         label = new QLabel(aboutDialog);
         label->setObjectName(QString::fromUtf8("label"));
-        label->setMinimumSize(QSize(378, 291));
+        sizePolicy.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy);
+        label->setMinimumSize(QSize(0, 0));
+        label->setAlignment(Qt::AlignJustify|Qt::AlignTop);
         label->setWordWrap(true);
+        label->setMargin(3);
 
         verticalLayout->addWidget(label);
+
+        label_6 = new QLabel(aboutDialog);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+        label_6->setMargin(3);
+
+        verticalLayout->addWidget(label_6);
+
+        label_5 = new QLabel(aboutDialog);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setMargin(3);
+
+        verticalLayout->addWidget(label_5);
+
+        labelVersionSoftware = new QLabel(aboutDialog);
+        labelVersionSoftware->setObjectName(QString::fromUtf8("labelVersionSoftware"));
+        labelVersionSoftware->setMargin(3);
+
+        verticalLayout->addWidget(labelVersionSoftware);
+
+        labelVersionHardware = new QLabel(aboutDialog);
+        labelVersionHardware->setObjectName(QString::fromUtf8("labelVersionHardware"));
+        labelVersionHardware->setMargin(3);
+
+        verticalLayout->addWidget(labelVersionHardware);
+
+        label_4 = new QLabel(aboutDialog);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+
+        verticalLayout->addWidget(label_4);
+
+        verticalSpacer = new QSpacerItem(50, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout->addItem(verticalSpacer);
 
         pushButton = new QPushButton(aboutDialog);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
@@ -61,21 +126,21 @@ public:
     void retranslateUi(QDialog *aboutDialog)
     {
         aboutDialog->setWindowTitle(QApplication::translate("aboutDialog", "AmbilightUSB - About", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("aboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        label_2->setText(QApplication::translate("aboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; font-weight:600;\">Ambilight USB</span> </p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This project makes ambilight for you PC. Watching films now can be more fun. </p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-bl"
-                        "ock-indent:0; text-indent:0px;\"></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Hardware</span>: ATtiny44, 74HC595 and 4 RGB leds. Soft for hardware write in C. Using V-USB (HID Class device). </p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">PC software</span>: C++, Qt, X11 (GUI tested in Ubuntu 10.04) </p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Author</span>: "
-                        "brunql </p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; font-weight:600;\">Ambilight USB</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("aboutDialog", "This project makes ambilight for you PC. Watching films now can be more fun. ", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("aboutDialog", "<b>Hardware:</b> ATtiny44, 74HC595 and 4 RGB leds. Using V-USB (HID Class device). ", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("aboutDialog", "<b>PC software:</b> C++, Qt, X11 (GUI tested in Ubuntu 10.04) ", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("aboutDialog", "<b>Author:</b> brunql", 0, QApplication::UnicodeUTF8));
+        labelVersionSoftware->setText(QString());
+        labelVersionHardware->setText(QString());
+        label_4->setText(QApplication::translate("aboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">Have fun!</span></p>\n"
 "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;\"></p>\n"
 "<p align=\"right\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">AmbilightUSB (<span style=\" font-style:italic;\">copyleft</span>) 2010 </p></body></html>", 0, QApplication::UnicodeUTF8));

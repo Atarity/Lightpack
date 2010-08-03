@@ -18,6 +18,10 @@
 #include "rectgetpixel.h"
 #include "ambilightusb.h"
 
+#include <sys/time.h>
+#include "time.h"
+
+
 
 using namespace std;
 
@@ -180,5 +184,6 @@ int main(int argc, char **argv)
 
     MainWindow window;          /* Create MainWindow */
     window.setVisible(false);   /* And load to tray. */
+
     return app.exec();
 }

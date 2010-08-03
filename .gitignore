@@ -30,3 +30,4 @@ build/
 .settings/
 Makefile
 *.lay
+*.qm

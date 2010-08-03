@@ -10,10 +10,10 @@
 
 #include "RGB.h"
 
-//   Hardware version format:
-// major = VERSION_OF_HARDWARE >> 8;
-// minor = VERSION_OF_HARDWARE & 0xff;
-#define VERSION_OF_HARDWARE		(0x0205UL)
+//   Hardware version:
+#define VERSION_OF_HARDWARE				(0x0206UL)
+#define VERSION_OF_HARDWARE_MAJOR		((VERSION_OF_HARDWARE >> 8) & 0xff)
+#define VERSION_OF_HARDWARE_MINOR		(VERSION_OF_HARDWARE & 0x00ff)
 
 
 // Delay for next smoothly change colors

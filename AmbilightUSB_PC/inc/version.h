@@ -11,6 +11,6 @@
 #define VERSION_H
 
 // Current version of Ambilight soft
-#define VERSION_STR     "2.7"
+#define VERSION_STR     "2.7.1"
 
 #endif // VERSION_H

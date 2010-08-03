@@ -10,7 +10,7 @@ namespace Ui {
 class aboutDialog : public QDialog {
     Q_OBJECT
 public:
-    aboutDialog(QWidget *parent = 0);
+    aboutDialog(QString hardwareVersion, QWidget *parent = 0);
     ~aboutDialog();
 
 protected:

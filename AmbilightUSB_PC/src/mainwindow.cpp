@@ -154,7 +154,8 @@ void MainWindow::trayAmbilightError()
 
 void MainWindow::showAbout()
 {
-    aboutDialog *about = new aboutDialog(this);
+    QString hardwareVerison = ambilight_usb->hardwareVersion();
+    aboutDialog *about = new aboutDialog(hardwareVerison, this);
     about->show();
 }
 
@@ -228,24 +229,28 @@ void MainWindow::settingsStepXChange()
 {
     settings->setValue("StepX", ui->spinBox_StepX->value());
     rect_get_pixel->settingsChangedUpdateImage();
+    ambilight_usb->readSettings();
 }
 
 void MainWindow::settingsStepYChange()
 {
     settings->setValue("StepY", ui->spinBox_StepY->value());
     rect_get_pixel->settingsChangedUpdateImage();
+    ambilight_usb->readSettings();
 }
 
 void MainWindow::settingsWidthAmbilightChange()
 {
     settings->setValue("WidthAmbilight", ui->spinBox_WidthAmbilight->value() );
     rect_get_pixel->settingsChangedUpdateImage();
+    ambilight_usb->readSettings();
 }
 
 void MainWindow::settingsHeightAmbilightChange()
 {
     settings->setValue("HeightAmbilight", ui->spinBox_HeightAmbilight->value() );
     rect_get_pixel->settingsChangedUpdateImage();
+    ambilight_usb->readSettings();
 }
 
 

@@ -13,6 +13,7 @@
 #include "main.h"
 #include "vusb.h"
 #include "74HC595.h"
+#include "commands.h"
 
 // USB HID Report descriptor
 PROGMEM char usbHidReportDescriptor[22] = {    /* USB report descriptor */
@@ -32,6 +33,10 @@ PROGMEM char usbHidReportDescriptor[22] = {    /* USB report descriptor */
 uint8_t   usbFunctionRead(uint8_t *data, uint8_t len)
 {
 	// TODO: return info from temperature sensor ATtiny44 (ADC8)
+	if(len >= 2){
+		data[0] = VERSION_OF_HARDWARE_MAJOR;
+		data[1] = VERSION_OF_HARDWARE_MINOR;
+	}
 	return len;
 }
 

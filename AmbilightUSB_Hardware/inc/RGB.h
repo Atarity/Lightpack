@@ -53,11 +53,6 @@
 #define LEFT_UP_GREEN_LS	(GREEN_LEFT << 0)
 #define LEFT_UP_BLUE_LS		(BLUE_LEFT 	<< 0)
 
-// Commands to device, sends it in first byte of data[]
-#define CMD_RIGHT_SIDE 0x01 /* all data for right side of screen */
-#define CMD_LEFT_SIDE  0x02 /* all data for left side of screen */
-#define CMD_OFF_ALL    0x03 /* switch off all leds */
-
 // Be sure that this is defined
 #ifndef TRUE
 #	define TRUE 	0xff
