@@ -26,6 +26,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadSettingsToForm();
 
+    refresh_ambilight_evaluated_indx = 0;
+    for(int i=0; i<10; i++){
+        refresh_ambilight_evaluated[i] = 0;
+    }
+
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(timer, SIGNAL(timeout()), this, SLOT(timerForUsbPoll()));
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), this, SLOT(usbTimerDelayMsChange()));
@@ -187,9 +192,9 @@ void MainWindow::settingsShowPixelsWithTransparentBackground(bool state)
 
 void MainWindow::timerForUsbPoll()
 {
-    bool updateResult = ambilight_usb->updateColorsIfChanges();
+    double updateResult_ms = ambilight_usb->updateColorsIfChanges();
 
-    if(updateResult == true){
+    if(updateResult_ms > 0){
         if(isErrorState){
             isErrorState = false;
             
@@ -198,6 +203,7 @@ void MainWindow::timerForUsbPoll()
             qWarning() << "Ambilight USB. On state.";
             ambilight_usb->clearColorSave();
         }
+        ui->lineEdit_RefreshAmbilihtEvaluated->setText(refreshAmbilightEvaluated(updateResult_ms));
         timer->start( usbTimerDelayMs );
     }else{
         if(!isErrorState){
@@ -207,8 +213,28 @@ void MainWindow::timerForUsbPoll()
 
             qWarning() << "Ambilight USB. Error state.";
         }
+        ui->lineEdit_RefreshAmbilihtEvaluated->setText("");
         timer->start( usbTimerReconnectDelayMs );
     }
+}
+
+QString MainWindow::refreshAmbilightEvaluated(double updateResult_ms)
+{
+    if(++refresh_ambilight_evaluated_indx > 10){
+        refresh_ambilight_evaluated_indx = 0;
+    }
+    refresh_ambilight_evaluated[refresh_ambilight_evaluated_indx] = updateResult_ms;
+    double avg = 0;
+    for(int i=0; i<10; i++){
+        avg += refresh_ambilight_evaluated[i];
+    }
+    avg /= 10;
+
+    if(avg > 0){
+        avg = 1000 / avg;
+    }
+
+    return QString::number(avg); /* ms to hz */
 }
 
 void MainWindow::usbTimerDelayMsChange()

@@ -13,6 +13,8 @@
 #include <QtGui> // QApplication::desktop()->width();
 #include <X11/Xutil.h>
 
+#include "timeevaluations.h"
+
 #include "settings.h"
 
 #include "usbconfig.h"  /* For device VID, PID, vendor name and product name */
@@ -29,7 +31,7 @@ public:
     ~ambilightUsb();
     bool deviceOpened();
     bool openDevice();
-    bool updateColorsIfChanges();
+    double updateColorsIfChanges();
     void offLeds();
     void clearColorSave();
     void readSettings();
@@ -61,6 +63,8 @@ private:
     int ambilight_height;
 
     int pixels_count_for_each_led;
+
+    TimeEvaluations *timeEval;
 };
 
 #endif // AMBILIGHTUSB_H

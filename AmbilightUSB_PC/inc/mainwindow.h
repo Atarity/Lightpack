@@ -59,6 +59,8 @@ private:
     void createActions();
     void loadSettingsToForm();
 
+    QString refreshAmbilightEvaluated(double updateResult_ms);
+
     Ui::MainWindow *ui;
 
     QAction *onAmbilightAction;
@@ -79,6 +81,9 @@ private:
 
     int usbTimerDelayMs;
     int usbTimerReconnectDelayMs;
+
+    int refresh_ambilight_evaluated_indx;
+    int refresh_ambilight_evaluated[10];
 };
 
 #endif // MAINWINDOW_H

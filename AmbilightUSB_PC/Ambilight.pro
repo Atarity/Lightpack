@@ -28,7 +28,8 @@ HEADERS += inc/hidsdi.h \
     inc/rectgetpixel.h \
     inc/version.h \
     inc/settings.h \
-    inc/aboutdialog.h
+    inc/aboutdialog.h \
+    inc/timeevaluations.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui
 RESOURCES += icons.qrc
