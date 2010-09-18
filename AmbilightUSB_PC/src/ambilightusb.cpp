@@ -12,10 +12,19 @@
 #include <QtDebug>
 
 
+#ifdef WIN32
+#   include <QPixmap>
+#   include <QImage>
+#   include <QRgb>
+#endif
+
 ambilightUsb::ambilightUsb()
 {
     openDevice();
+
+#ifndef WIN32
     openX11Display();
+#endif
 
     timeEval = new TimeEvaluations();
 
@@ -140,6 +149,7 @@ bool ambilightUsb::writeBufferToDeviceWithCheck()
     return true;
 }
 
+#ifndef WIN32
 bool ambilightUsb::openX11Display()
 {
     display = XOpenDisplay( NULL );
@@ -154,6 +164,7 @@ bool ambilightUsb::openX11Display()
 
     return true;
 }
+#endif
 
 
 QString ambilightUsb::hardwareVersion()
@@ -184,11 +195,8 @@ QString ambilightUsb::hardwareVersion()
 double ambilightUsb::updateColorsIfChanges()
 {
     timeEval->howLongItStart();
+    bool write_colors = false;
 
-    if(display == (Display *) NULL){
-        qFatal("X11 display didn't open.");
-        return -2;
-    }
     if(dev == NULL){
         qWarning() << "AmbilightUSB device didn't open.";
         if(!tryToReopenDevice()){
@@ -196,15 +204,50 @@ double ambilightUsb::updateColorsIfChanges()
         }
     }
 
-    bool write_colors = false;
+    int desktop_width = QApplication::desktop()->width();
+    int desktop_height = QApplication::desktop()->height();
+    int colors[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
+
+
+#ifdef WIN32
+
+
+    for(int led_index=0; led_index < 4; led_index++){
+        for(int x=0; x <= ambilight_width; x += step_x){
+            for(int y=0; y <= ambilight_height; y += step_y){
+
+                QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
+                                                  ((led_index==LEFT_UP || led_index==LEFT_DOWN)?
+                                                   x :
+                                                   (desktop_width-1) - x),
+
+                                                  ((led_index==LEFT_UP || led_index==RIGHT_UP)?
+                                                   (desktop_height/2) - y :
+                                                   (desktop_height/2) + y
+                                                   ),
+
+                                        1,1);
+                QImage im = pix.toImage();
+                QRgb rgb = im.pixel(0,0);
+                colors[led_index][R]+=(rgb >> 16) & 0xff;
+                colors[led_index][G]+=(rgb >> 8) & 0xff;
+                colors[led_index][B]+=(rgb) & 0xff;
+            }
+        }
+    }
+
+
+#else
+
+    if(display == (Display *) NULL){
+        qFatal("X11 display didn't open.");
+        return -2;
+    }
+
 
     // 85 ms
     XImage *ximage;
     XColor  xcolors[4 * pixels_count_for_each_led];
-
-    int desktop_width = QApplication::desktop()->width();
-    int desktop_height = QApplication::desktop()->height();
-    int colors[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
 
     int xcol_indx=0;
 
@@ -293,6 +336,8 @@ double ambilightUsb::updateColorsIfChanges()
 //            }
 //        }
 //    }
+
+#endif /* WIN32 */
 
     // Find average for each led color
     for(int led_index=0; led_index < 4; led_index++){

@@ -22,17 +22,7 @@ echo "Generating release translation files for Ambilight project:"
 echo 
 lrelease Ambilight.pro
 
-echo 
-echo "============================================="
-echo "Copying translation files to build directory:"
-
-for file in $TRANSLATION_FILES
-do
-	echo "    $file"
-	cp "$TRANSLATION_DIR/$file" "build/$file"
-done
-
 echo
-	
+
 exit 0
 

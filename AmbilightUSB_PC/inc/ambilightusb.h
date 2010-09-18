@@ -11,7 +11,10 @@
 #define AMBILIGHTUSB_H
 
 #include <QtGui> // QApplication::desktop()->width();
-#include <X11/Xutil.h>
+
+#ifndef WIN32
+#   include <X11/Xutil.h>
+#endif
 
 #include "timeevaluations.h"
 
@@ -47,9 +50,11 @@ private:
     QString usbErrorMessage(int errCode);
 
     usbDevice_t *dev;
+#ifndef WIN32
     Display *display;
     Colormap cmap;
     Window root_window;
+#endif
 
     char read_buffer[1 + 7];    /* 0-system, 1..7-data */
     char write_buffer[1 + 7];   /* 0-system, 1..7-data */

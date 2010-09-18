@@ -29,7 +29,7 @@
 
 static void convertUniToAscii(char *buffer)
 {
-unsigned short  *uni = (void *)buffer;
+unsigned short  *uni = (unsigned short *)buffer;
 char            *ascii = buffer;
 
     while(*uni != 0){
@@ -68,7 +68,7 @@ HIDD_ATTRIBUTES                     deviceAttributes;
         SetupDiGetDeviceInterfaceDetail(deviceInfoList, &deviceInfo, NULL, 0, &size, NULL);
         if(deviceDetails != NULL)
             free(deviceDetails);
-        deviceDetails = malloc(size);
+        deviceDetails = (SP_DEVICE_INTERFACE_DETAIL_DATA*)malloc(size);
         deviceDetails->cbSize = sizeof(*deviceDetails);
         /* this call is for real: */
         SetupDiGetDeviceInterfaceDetail(deviceInfoList, &deviceInfo, deviceDetails, size, &size, NULL);

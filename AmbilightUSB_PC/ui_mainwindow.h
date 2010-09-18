@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Aug 4 23:44:47 2010
+** Created: Sat Sep 18 12:29:37 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -38,7 +38,7 @@ public:
     QGridLayout *gridLayout;
     QLabel *label_UpdateDelay;
     QSpinBox *spinBox_UpdateDelay;
-    QLabel *label_hz;
+    QLabel *label_ms;
     QLabel *label_Reconnect;
     QSpinBox *spinBox_ReconnectDelay;
     QLabel *label_sec;
@@ -58,7 +58,7 @@ public:
     QCheckBox *checkBox_ShowPixelsTransparentBackground;
     QLabel *label_UpdateDelayEval;
     QLineEdit *lineEdit_RefreshAmbilihtEvaluated;
-    QLabel *label_hz_2;
+    QLabel *label_hz;
     QSpacerItem *verticalSpacer;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_2;
@@ -87,16 +87,16 @@ public:
 
         spinBox_UpdateDelay = new QSpinBox(centralwidget);
         spinBox_UpdateDelay->setObjectName(QString::fromUtf8("spinBox_UpdateDelay"));
-        spinBox_UpdateDelay->setMinimum(1);
+        spinBox_UpdateDelay->setMinimum(0);
         spinBox_UpdateDelay->setMaximum(1000);
         spinBox_UpdateDelay->setValue(20);
 
         gridLayout->addWidget(spinBox_UpdateDelay, 0, 1, 1, 1);
 
-        label_hz = new QLabel(centralwidget);
-        label_hz->setObjectName(QString::fromUtf8("label_hz"));
+        label_ms = new QLabel(centralwidget);
+        label_ms->setObjectName(QString::fromUtf8("label_ms"));
 
-        gridLayout->addWidget(label_hz, 0, 2, 1, 1);
+        gridLayout->addWidget(label_ms, 0, 2, 1, 1);
 
         label_Reconnect = new QLabel(centralwidget);
         label_Reconnect->setObjectName(QString::fromUtf8("label_Reconnect"));
@@ -207,10 +207,10 @@ public:
 
         gridLayout->addWidget(lineEdit_RefreshAmbilihtEvaluated, 1, 1, 1, 1);
 
-        label_hz_2 = new QLabel(centralwidget);
-        label_hz_2->setObjectName(QString::fromUtf8("label_hz_2"));
+        label_hz = new QLabel(centralwidget);
+        label_hz->setObjectName(QString::fromUtf8("label_hz"));
 
-        gridLayout->addWidget(label_hz_2, 1, 2, 1, 1);
+        gridLayout->addWidget(label_hz, 1, 2, 1, 1);
 
 
         verticalLayout->addLayout(gridLayout);
@@ -255,8 +255,8 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Ambilight USB - Settings", 0, QApplication::UnicodeUTF8));
-        label_UpdateDelay->setText(QApplication::translate("MainWindow", "Refresh ambilight", 0, QApplication::UnicodeUTF8));
-        label_hz->setText(QApplication::translate("MainWindow", "Hz", 0, QApplication::UnicodeUTF8));
+        label_UpdateDelay->setText(QApplication::translate("MainWindow", "Refresh ambilight delay", 0, QApplication::UnicodeUTF8));
+        label_ms->setText(QApplication::translate("MainWindow", "ms", 0, QApplication::UnicodeUTF8));
         label_Reconnect->setText(QApplication::translate("MainWindow", "Reconnect USB delay", 0, QApplication::UnicodeUTF8));
         label_sec->setText(QApplication::translate("MainWindow", "secs", 0, QApplication::UnicodeUTF8));
         label_x_step->setText(QApplication::translate("MainWindow", "Step X", 0, QApplication::UnicodeUTF8));
@@ -269,8 +269,8 @@ public:
         label_sec_5->setText(QApplication::translate("MainWindow", "pixels", 0, QApplication::UnicodeUTF8));
         checkBox_ShowPixelsAmbilight->setText(QApplication::translate("MainWindow", "Show pixels for ambilight", 0, QApplication::UnicodeUTF8));
         checkBox_ShowPixelsTransparentBackground->setText(QApplication::translate("MainWindow", "Show pixels with transparent background", 0, QApplication::UnicodeUTF8));
-        label_UpdateDelayEval->setText(QApplication::translate("MainWindow", "Refresh ambilight evaluated:", 0, QApplication::UnicodeUTF8));
-        label_hz_2->setText(QApplication::translate("MainWindow", "Hz", 0, QApplication::UnicodeUTF8));
+        label_UpdateDelayEval->setText(QApplication::translate("MainWindow", "Refresh ambilight evaluated", 0, QApplication::UnicodeUTF8));
+        label_hz->setText(QApplication::translate("MainWindow", "Hz", 0, QApplication::UnicodeUTF8));
         pushButton_Close->setText(QApplication::translate("MainWindow", "Close", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

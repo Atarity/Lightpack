@@ -14,7 +14,7 @@
    <string>Ambilight USB - Settings</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../icons.qrc">
+   <iconset>
     <normaloff>:/res/settings.png</normaloff>:/res/settings.png</iconset>
   </property>
   <property name="locale">
@@ -27,14 +27,14 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_UpdateDelay">
         <property name="text">
-         <string>Refresh ambilight</string>
+         <string>Refresh ambilight delay</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QSpinBox" name="spinBox_UpdateDelay">
         <property name="minimum">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="maximum">
          <number>1000</number>
@@ -45,9 +45,9 @@
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="QLabel" name="label_hz">
+       <widget class="QLabel" name="label_ms">
         <property name="text">
-         <string>Hz</string>
+         <string>ms</string>
         </property>
        </widget>
       </item>
@@ -194,7 +194,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_UpdateDelayEval">
         <property name="text">
-         <string>Refresh ambilight evaluated:</string>
+         <string>Refresh ambilight evaluated</string>
         </property>
        </widget>
       </item>
@@ -209,7 +209,7 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QLabel" name="label_hz_2">
+       <widget class="QLabel" name="label_hz">
         <property name="text">
          <string>Hz</string>
         </property>

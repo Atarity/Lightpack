@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>translations/Ambilight_ru_RU.qm</file>
+        <file>icons/ambilight_icon.png</file>
+        <file>icons/error.png</file>
+        <file>icons/off.png</file>
+        <file>icons/on.png</file>
+        <file>icons/settings.png</file>
+    </qresource>
+</RCC>

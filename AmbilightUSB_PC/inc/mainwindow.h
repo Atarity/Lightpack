@@ -81,9 +81,6 @@ private:
 
     int usbTimerDelayMs;
     int usbTimerReconnectDelayMs;
-
-    int refresh_ambilight_evaluated_indx;
-    int refresh_ambilight_evaluated[10];
 };
 
 #endif // MAINWINDOW_H

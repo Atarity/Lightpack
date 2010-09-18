@@ -9,12 +9,7 @@
         <translation type="unfinished">Ambilight USB - Настройки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="30"/>
-        <source>Refresh ambilight</source>
-        <translation type="unfinished">Частота обновления подсветки</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="50"/>
+        <location filename="../src/mainwindow.ui" line="214"/>
         <source>Hz</source>
         <translation type="unfinished">Гц</translation>
     </message>
@@ -22,6 +17,16 @@
         <location filename="../src/mainwindow.ui" line="57"/>
         <source>Reconnect USB delay</source>
         <translation type="unfinished">Переподключение к USB каждые</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="30"/>
+        <source>Refresh ambilight delay</source>
+        <translation type="unfinished">Задержка обновления ambilight</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="50"/>
+        <source>ms</source>
+        <translation type="unfinished">мс</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="74"/>
@@ -67,47 +72,52 @@
         <translation type="unfinished">Показать точки с прозрачным фоном</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="227"/>
+        <location filename="../src/mainwindow.ui" line="197"/>
+        <source>Refresh ambilight evaluated</source>
+        <translation type="unfinished">Частота обновления ambilight</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="251"/>
         <source>Close</source>
         <translation type="unfinished">Закрыть</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="138"/>
+        <location filename="../src/mainwindow.cpp" line="143"/>
         <source>Ambilight USB. On state.</source>
         <translation type="unfinished">Ambilight USB. Включен.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="144"/>
+        <location filename="../src/mainwindow.cpp" line="149"/>
         <source>Ambilight USB. Off state.</source>
         <translation type="unfinished">Ambilight USB. Выключен.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="150"/>
+        <location filename="../src/mainwindow.cpp" line="155"/>
         <source>Ambilight USB. Error state.</source>
         <translation type="unfinished">Ambilight USB. Ошибка подключения к USB.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="261"/>
+        <location filename="../src/mainwindow.cpp" line="287"/>
         <source>&amp;On ambilight</source>
         <translation type="unfinished">&amp;Включить ambilight</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="264"/>
+        <location filename="../src/mainwindow.cpp" line="290"/>
         <source>O&amp;ff ambilight</source>
         <translation type="unfinished">&amp;Выключить ambilight</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="267"/>
+        <location filename="../src/mainwindow.cpp" line="293"/>
         <source>&amp;Settings</source>
         <translation type="unfinished">&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="270"/>
+        <location filename="../src/mainwindow.cpp" line="296"/>
         <source>&amp;About</source>
         <translation type="unfinished">&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="273"/>
+        <location filename="../src/mainwindow.cpp" line="299"/>
         <source>&amp;Quit</source>
         <translation type="unfinished">&amp;Выход</translation>
     </message>
@@ -115,12 +125,12 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../src/ambilightusb.cpp" line="193"/>
+        <location filename="../src/ambilightusb.cpp" line="175"/>
         <source>open device fail!</source>
         <translation type="unfinished">устройство не найдено!</translation>
     </message>
     <message>
-        <location filename="../src/ambilightusb.cpp" line="204"/>
+        <location filename="../src/ambilightusb.cpp" line="186"/>
         <source>request fail!</source>
         <translation type="unfinished">запрос провален!</translation>
     </message>

@@ -158,8 +158,7 @@ int main(int argc, char **argv)
         }
     }
 
-
-    Q_INIT_RESOURCE(icons);
+    Q_INIT_RESOURCE(res_ambilight);
 
     qInstallMsgHandler(messageOutput);
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
@@ -171,12 +170,13 @@ int main(int argc, char **argv)
 
 
     QString locale = QLocale::system().name();
+    QString pathToLocale = QString(":/translations/Ambilight_") + locale;
 
     QTranslator translator;
-    if(translator.load(QString("Ambilight_") + locale)){
+    if(translator.load(pathToLocale)){
         qDebug() << "Load translation for locale" << locale;
     }else{
-        qWarning() << "Load translation for locale" << locale << "failed. Using defaults.";
+        qWarning() << "Locale:" << pathToLocale << "not found. Using defaults.";
     }
     app.installTranslator(&translator);
 

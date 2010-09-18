@@ -139,19 +139,19 @@ void MainWindow::ambilightOff()
 
 void MainWindow::trayAmbilightOn()
 {
-    trayIcon->setIcon(QIcon(":/res/on.png"));
+    trayIcon->setIcon(QIcon(":/icons/on.png"));
     trayIcon->setToolTip(tr("Ambilight USB. On state."));
 }
 
 void MainWindow::trayAmbilightOff()
 {
-    trayIcon->setIcon(QIcon(":/res/off.png"));
+    trayIcon->setIcon(QIcon(":/icons/off.png"));
     trayIcon->setToolTip(tr("Ambilight USB. Off state."));
 }
 
 void MainWindow::trayAmbilightError()
 {
-    trayIcon->setIcon(QIcon(":/res/error.png"));
+    trayIcon->setIcon(QIcon(":/icons/error.png"));
     trayIcon->setToolTip(tr("Ambilight USB. Error state."));
 }
 
@@ -220,26 +220,18 @@ void MainWindow::timerForUsbPoll()
 
 QString MainWindow::refreshAmbilightEvaluated(double updateResult_ms)
 {
-    if(++refresh_ambilight_evaluated_indx > 10){
-        refresh_ambilight_evaluated_indx = 0;
-    }
-    refresh_ambilight_evaluated[refresh_ambilight_evaluated_indx] = updateResult_ms;
-    double avg = 0;
-    for(int i=0; i<10; i++){
-        avg += refresh_ambilight_evaluated[i];
-    }
-    avg /= 10;
+    double hz = updateResult_ms + usbTimerDelayMs;
 
-    if(avg > 0){
-        avg = 1000 / avg;
+    if(hz != 0){
+        hz = 1000 / hz;
     }
 
-    return QString::number(avg); /* ms to hz */
+    return QString::number(hz,'f', 4); /* ms to hz */
 }
 
 void MainWindow::usbTimerDelayMsChange()
 {
-    int ms = 1000 / ui->spinBox_UpdateDelay->value(); /* hz to ms */
+    int ms = ui->spinBox_UpdateDelay->value();
     settings->setValue("RefreshAmbilightDelayMs", ms);
     usbTimerDelayMs = ms;
 }
@@ -317,7 +309,7 @@ void MainWindow::createTrayIcon()
 
 void MainWindow::loadSettingsToForm()
 {
-    ui->spinBox_UpdateDelay->setValue( 1000 / settings->value("RefreshAmbilightDelayMs").toInt() /* ms to hz */);
+    ui->spinBox_UpdateDelay->setValue( settings->value("RefreshAmbilightDelayMs").toInt() );
     ui->spinBox_ReconnectDelay->setValue( settings->value("ReconnectAmbilightUSBDelayMs").toInt() / 1000 /* ms to sec */ );
 
     ui->spinBox_StepX->setValue( settings->value("StepX").toInt() );

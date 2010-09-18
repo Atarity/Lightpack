@@ -6,6 +6,12 @@ TARGET = Ambilight
 TRANSLATIONS = ./translations/Ambilight_ru_RU.ts
 CONFIG += console
 CONFIG -= app_bundle
+
+# TODO: Check defined WIN32
+# LIBS = -lhid \
+# -lusbcamd \
+# -lsetupapi
+# else for Linux:
 LIBS += -lusb
 INCLUDEPATH += ./inc
 INCLUDEPATH += ../AmbilightUSB_Hardware/inc/
@@ -32,4 +38,4 @@ HEADERS += inc/hidsdi.h \
     inc/timeevaluations.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui
-RESOURCES += icons.qrc
+RESOURCES += res_ambilight.qrc
