@@ -53,6 +53,13 @@ MainWindow::MainWindow(QWidget *parent) :
         ambilightOff();
     }
     trayIcon->show();
+
+    // Initialize limits of height and width
+    ui->spinBox_StepX->setMaximum( QApplication::desktop()->width() / 2 );
+    ui->spinBox_WidthAmbilight->setMaximum( QApplication::desktop()->width() / 2 );
+
+    ui->spinBox_StepY->setMaximum( QApplication::desktop()->height() / 2 );
+    ui->spinBox_HeightAmbilight->setMaximum( QApplication::desktop()->height() / 2 );
 }
 
 MainWindow::~MainWindow()
@@ -172,9 +179,9 @@ void MainWindow::settingsShowPixelsForAmbilight(bool state)
     rect_get_pixel->move(0,0);
     if(state){
         rect_get_pixel->setFocusPolicy(Qt::NoFocus);
-        rect_get_pixel->setTransparent(ui->checkBox_ShowPixelsTransparentBackground->isChecked());
+        rect_get_pixel->setTransparent(true);
+        ui->checkBox_ShowPixelsTransparentBackground->setChecked(true);
         rect_get_pixel->showFullScreen();
-        this->setFocus();
     }else{
         rect_get_pixel->hide();
     }
