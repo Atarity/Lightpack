@@ -82,42 +82,42 @@
         <translation type="unfinished">Закрыть</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="143"/>
+        <location filename="../src/mainwindow.cpp" line="138"/>
         <source>Ambilight USB. On state.</source>
         <translation type="unfinished">Ambilight USB. Включен.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="149"/>
+        <location filename="../src/mainwindow.cpp" line="144"/>
         <source>Ambilight USB. Off state.</source>
         <translation type="unfinished">Ambilight USB. Выключен.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="155"/>
+        <location filename="../src/mainwindow.cpp" line="150"/>
         <source>Ambilight USB. Error state.</source>
         <translation type="unfinished">Ambilight USB. Ошибка подключения к USB.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="287"/>
+        <location filename="../src/mainwindow.cpp" line="274"/>
         <source>&amp;On ambilight</source>
         <translation type="unfinished">&amp;Включить ambilight</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="290"/>
+        <location filename="../src/mainwindow.cpp" line="277"/>
         <source>O&amp;ff ambilight</source>
         <translation type="unfinished">&amp;Выключить ambilight</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="293"/>
+        <location filename="../src/mainwindow.cpp" line="280"/>
         <source>&amp;Settings</source>
         <translation type="unfinished">&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="296"/>
+        <location filename="../src/mainwindow.cpp" line="283"/>
         <source>&amp;About</source>
         <translation type="unfinished">&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="299"/>
+        <location filename="../src/mainwindow.cpp" line="286"/>
         <source>&amp;Quit</source>
         <translation type="unfinished">&amp;Выход</translation>
     </message>

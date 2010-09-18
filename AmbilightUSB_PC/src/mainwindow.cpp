@@ -26,11 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadSettingsToForm();
 
-    refresh_ambilight_evaluated_indx = 0;
-    for(int i=0; i<10; i++){
-        refresh_ambilight_evaluated[i] = 0;
-    }
-
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(timer, SIGNAL(timeout()), this, SLOT(timerForUsbPoll()));
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), this, SLOT(usbTimerDelayMsChange()));
