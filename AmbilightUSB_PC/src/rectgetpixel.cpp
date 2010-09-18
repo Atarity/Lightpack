@@ -17,6 +17,9 @@ RectGetPixel::RectGetPixel(QWidget *parent)
     pal.setBrush(this->backgroundRole(), QBrush(Qt::black, Qt::SolidPattern));
     this->setPalette(pal);
 
+    QIcon settingsIcon(":/icons/settings.png");
+    this->setWindowIcon(settingsIcon);
+
     settingsChangedUpdateImage();
 }
 
@@ -55,19 +58,36 @@ void RectGetPixel::settingsChangedUpdateImage()
     for(int x=0; x < ambilight_width; x+=step_x){
         for(int y=0; y < ambilight_height; y+=step_y){
             // LEFT_UP - red
-            im.setPixel(x, (desktop_height / 2) - y, 0xffff0000);
+            drawBigPoint(im, x, (desktop_height / 2) - y, 0xffff0000);
             // LEFT_DOWN - green
-            im.setPixel(x, (desktop_height / 2) + y, 0xff00ff00);
+            drawBigPoint(im, x, (desktop_height / 2) + y, 0xff00ff00);
 
             // RIGHT_UP - blue
-            im.setPixel(desktop_width-1 - x, (desktop_height / 2) - y, 0xff0000ff);
+            drawBigPoint(im, desktop_width-1 - x, (desktop_height / 2) - y, 0xff0000ff);
             // RIGHT_DOWN - white
-            im.setPixel(desktop_width-1 - x, (desktop_height / 2) + y, 0xffffffff);
+            drawBigPoint(im, desktop_width-1 - x, (desktop_height / 2) + y, 0xffffffff);
         }
     }
 
     QPixmap pix = QPixmap::fromImage(im);
     this->setPixmap(pix);
+}
+
+
+void RectGetPixel::drawBigPoint(QImage &im, int x, int y, int color)
+{
+    if(x <= im.width()-1  && y <= im.height()-1){
+        im.setPixel(x, y, color);
+    }
+    if(x+1 <= im.width()-1  && y <= im.height()-1){
+        im.setPixel(x+1, y, color);
+    }
+    if(x <= im.width()-1  && y+1 <= im.height()-1){
+        im.setPixel(x, y+1, color);
+    }
+    if(x+1 <= im.width()-1  && y+1 <= im.height()-1){
+        im.setPixel(x+1, y+1, color);
+    }
 }
 
 

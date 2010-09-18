@@ -48,6 +48,7 @@ private slots:
     void settingsStepYChange();
     void settingsWidthAmbilightChange();
     void settingsHeightAmbilightChange();
+    void settingsUsbSendDataTimeoutChange();
 
 
 private:

@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->spinBox_StepY, SIGNAL(valueChanged(int)), this, SLOT(settingsStepYChange()));
     connect(ui->spinBox_WidthAmbilight, SIGNAL(valueChanged(int)), this, SLOT(settingsWidthAmbilightChange()));
     connect(ui->spinBox_HeightAmbilight, SIGNAL(valueChanged(int)), this, SLOT(settingsHeightAmbilightChange()));
-
+    connect(ui->doubleSpinBoxUsbSendDataTimeout, SIGNAL(valueChanged(double)), this, SLOT(settingsUsbSendDataTimeoutChange()));
 
     usbTimerDelayMs = settings->value("RefreshAmbilightDelayMs").toInt();
     usbTimerReconnectDelayMs = settings->value("ReconnectAmbilightUSBDelayMs").toInt();
@@ -266,6 +266,11 @@ void MainWindow::settingsHeightAmbilightChange()
     ambilight_usb->readSettings();
 }
 
+void MainWindow::settingsUsbSendDataTimeoutChange()
+{
+    settings->setValue("UsbSendDataTimeout", (int)(ui->doubleSpinBoxUsbSendDataTimeout->value() * 1000));
+    ambilight_usb->readSettings();
+}
 
 
 
@@ -312,4 +317,6 @@ void MainWindow::loadSettingsToForm()
 
     ui->spinBox_WidthAmbilight->setValue( settings->value("WidthAmbilight").toInt() );
     ui->spinBox_HeightAmbilight->setValue( settings->value("HeightAmbilight").toInt() );
+
+    ui->doubleSpinBoxUsbSendDataTimeout->setValue( settings->value("UsbSendDataTimeout").toInt() / 1000.0 /* ms to sec */ );
 }

@@ -27,6 +27,7 @@ protected:
 
 private:
     void readSettings();
+    void drawBigPoint(QImage &im, int x, int y, int color);
 
     int step_x;
     int step_y;

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'aboutdialog.ui'
 **
-** Created: Sat Sep 18 13:22:48 2010
+** Created: Sat Sep 18 17:38:50 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -44,7 +44,10 @@ public:
         if (aboutDialog->objectName().isEmpty())
             aboutDialog->setObjectName(QString::fromUtf8("aboutDialog"));
         aboutDialog->resize(418, 407);
-        aboutDialog->setMinimumSize(QSize(394, 342));
+        aboutDialog->setMinimumSize(QSize(400, 342));
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/icons/ambilight_icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        aboutDialog->setWindowIcon(icon);
         aboutDialog->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
         verticalLayout = new QVBoxLayout(aboutDialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -80,7 +83,13 @@ public:
 
         label_6 = new QLabel(aboutDialog);
         label_6->setObjectName(QString::fromUtf8("label_6"));
+        sizePolicy.setHeightForWidth(label_6->sizePolicy().hasHeightForWidth());
+        label_6->setSizePolicy(sizePolicy);
+        label_6->setFrameShape(QFrame::NoFrame);
+        label_6->setFrameShadow(QFrame::Plain);
+        label_6->setScaledContents(false);
         label_6->setMargin(3);
+        label_6->setIndent(-1);
 
         verticalLayout->addWidget(label_6);
 
@@ -92,6 +101,7 @@ public:
 
         labelVersionSoftware = new QLabel(aboutDialog);
         labelVersionSoftware->setObjectName(QString::fromUtf8("labelVersionSoftware"));
+        labelVersionSoftware->setScaledContents(true);
         labelVersionSoftware->setMargin(3);
 
         verticalLayout->addWidget(labelVersionSoftware);
@@ -116,6 +126,8 @@ public:
 
         verticalLayout->addWidget(pushButton);
 
+#ifndef QT_NO_SHORTCUT
+#endif // QT_NO_SHORTCUT
 
         retranslateUi(aboutDialog);
         QObject::connect(pushButton, SIGNAL(clicked()), aboutDialog, SLOT(close()));

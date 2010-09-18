@@ -9,12 +9,12 @@
         <translation type="unfinished">Ambilight USB - Настройки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="214"/>
+        <location filename="../src/mainwindow.ui" line="207"/>
         <source>Hz</source>
         <translation type="unfinished">Гц</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="57"/>
+        <location filename="../src/mainwindow.ui" line="214"/>
         <source>Reconnect USB delay</source>
         <translation type="unfinished">Переподключение к USB каждые</translation>
     </message>
@@ -29,55 +29,61 @@
         <translation type="unfinished">мс</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="74"/>
+        <location filename="../src/mainwindow.ui" line="67"/>
+        <location filename="../src/mainwindow.ui" line="228"/>
         <source>secs</source>
         <translation type="unfinished">сек</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="81"/>
+        <location filename="../src/mainwindow.ui" line="74"/>
         <source>Step X</source>
         <translation type="unfinished">Шаг по оси X</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="88"/>
-        <location filename="../src/mainwindow.ui" line="105"/>
-        <location filename="../src/mainwindow.ui" line="149"/>
-        <location filename="../src/mainwindow.ui" line="176"/>
+        <location filename="../src/mainwindow.ui" line="81"/>
+        <location filename="../src/mainwindow.ui" line="98"/>
+        <location filename="../src/mainwindow.ui" line="142"/>
+        <location filename="../src/mainwindow.ui" line="169"/>
         <source>pixels</source>
         <translation type="unfinished">точек</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="122"/>
+        <location filename="../src/mainwindow.ui" line="115"/>
         <source>Step Y</source>
         <translation type="unfinished">Шаг по оси Y</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="129"/>
+        <location filename="../src/mainwindow.ui" line="122"/>
         <source>Height</source>
         <translation type="unfinished">Высота</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="156"/>
+        <location filename="../src/mainwindow.ui" line="149"/>
         <source>Width</source>
         <translation type="unfinished">Ширина</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="183"/>
+        <location filename="../src/mainwindow.ui" line="176"/>
         <source>Show pixels for ambilight</source>
         <translation type="unfinished">Показать точки используемые для подсветки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="190"/>
+        <location filename="../src/mainwindow.ui" line="183"/>
         <source>Show pixels with transparent background</source>
         <translation type="unfinished">Показать точки с прозрачным фоном</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="197"/>
+        <location filename="../src/mainwindow.ui" line="190"/>
         <source>Refresh ambilight evaluated</source>
         <translation type="unfinished">Частота обновления ambilight</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="251"/>
+        <location filename="../src/mainwindow.ui" line="221"/>
+        <source>USB send data timeout</source>
+        <translation type="unfinished">Timeout USB посылки</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="281"/>
         <source>Close</source>
         <translation type="unfinished">Закрыть</translation>
     </message>
@@ -97,27 +103,27 @@
         <translation type="unfinished">Ambilight USB. Ошибка подключения к USB.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="274"/>
+        <location filename="../src/mainwindow.cpp" line="279"/>
         <source>&amp;On ambilight</source>
         <translation type="unfinished">&amp;Включить ambilight</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="277"/>
+        <location filename="../src/mainwindow.cpp" line="282"/>
         <source>O&amp;ff ambilight</source>
         <translation type="unfinished">&amp;Выключить ambilight</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="280"/>
+        <location filename="../src/mainwindow.cpp" line="285"/>
         <source>&amp;Settings</source>
         <translation type="unfinished">&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="283"/>
+        <location filename="../src/mainwindow.cpp" line="288"/>
         <source>&amp;About</source>
         <translation type="unfinished">&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="286"/>
+        <location filename="../src/mainwindow.cpp" line="291"/>
         <source>&amp;Quit</source>
         <translation type="unfinished">&amp;Выход</translation>
     </message>
@@ -126,13 +132,13 @@
     <name>QApplication</name>
     <message>
         <location filename="../src/ambilightusb.cpp" line="175"/>
-        <source>open device fail!</source>
-        <translation type="unfinished">устройство не найдено!</translation>
+        <source>device unavailable</source>
+        <translation type="unfinished">устройство не доступно</translation>
     </message>
     <message>
-        <location filename="../src/ambilightusb.cpp" line="186"/>
-        <source>request fail!</source>
-        <translation type="unfinished">запрос провален!</translation>
+        <location filename="../src/ambilightusb.cpp" line="181"/>
+        <source>read device fail</source>
+        <translation type="unfinished">устройство не отвечает</translation>
     </message>
 </context>
 <context>
@@ -143,7 +149,7 @@
         <translation type="unfinished">AmbilightUSB - About</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="29"/>
+        <location filename="../src/aboutdialog.ui" line="33"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -156,27 +162,27 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;Ambilight USB&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="49"/>
+        <location filename="../src/aboutdialog.ui" line="53"/>
         <source>This project makes ambilight for you PC. Watching films now can be more fun. </source>
         <translation type="unfinished">Программно-аппаратный комплекс, превращающий практически любой персональный компьютер в телевизор Philips&lt;sup&gt;&amp;reg;&lt;/sup&gt; с Ambilight&lt;sup&gt;TM&amp;reg;&amp;copy;&lt;/sup&gt;-подсветкой. </translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="77"/>
+        <location filename="../src/aboutdialog.ui" line="81"/>
         <source>&lt;b&gt;Hardware:&lt;/b&gt; ATtiny44, 74HC595 and 4 RGB leds. Using V-USB (HID Class device). </source>
         <translation type="unfinished">&lt;b&gt;Железо:&lt;/b&gt; ATtiny44, 74HC595 и 4 RGB светодиода. В проекте используется V-USB (HID Class device). </translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="93"/>
+        <location filename="../src/aboutdialog.ui" line="109"/>
         <source>&lt;b&gt;PC software:&lt;/b&gt; C++, Qt, X11 (GUI tested in Ubuntu 10.04) </source>
         <translation type="unfinished">&lt;b&gt;Софт:&lt;/b&gt; C++, Qt, X11 (GUI протестировано в Ubuntu 10.04)</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="103"/>
+        <location filename="../src/aboutdialog.ui" line="128"/>
         <source>&lt;b&gt;Author:&lt;/b&gt; brunql</source>
         <translation type="unfinished">&lt;b&gt;Автор:&lt;/b&gt; brunql</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="133"/>
+        <location filename="../src/aboutdialog.ui" line="161"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -193,7 +199,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;right&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;AmbilightUSB (&lt;span style=&quot; font-style:italic;&quot;&gt;copyleft&lt;/span&gt;) 2010 &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="162"/>
+        <location filename="../src/aboutdialog.ui" line="190"/>
         <source>Ok, close it!</source>
         <translation type="unfinished">Самоликвидируйся!</translation>
     </message>

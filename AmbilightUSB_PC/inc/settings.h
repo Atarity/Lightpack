@@ -19,6 +19,7 @@
 #define WIDTH_AMBILIGHT_DEFAULT_VALUE           300
 #define HEIGHT_AMBILIGHT_DEFAULT_VALUE          300
 #define IS_AMBILIGHT_ON_DEFAULT_VALUE           true
+#define USB_SEND_DATA_TIMEOUT                   1500
 
 extern QSettings *settings;
 

@@ -135,6 +135,11 @@ void settingsInit()
                 << IS_AMBILIGHT_ON_DEFAULT_VALUE;
         settings->setValue("IsAmbilightOn", IS_AMBILIGHT_ON_DEFAULT_VALUE);
     }
+    if(settings->value("UsbSendDataTimeout") == QVariant()){
+        qDebug() << "Settings: 'UsbSendDataTimeout' not found. Set it to default value:"
+                << USB_SEND_DATA_TIMEOUT;
+        settings->setValue("UsbSendDataTimeout", USB_SEND_DATA_TIMEOUT);
+    }
 
 }
 

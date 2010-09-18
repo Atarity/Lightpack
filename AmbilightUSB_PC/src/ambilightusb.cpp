@@ -61,6 +61,8 @@ void ambilightUsb::readSettings()
     ambilight_width = settings->value("WidthAmbilight").toInt();
     ambilight_height = settings->value("HeightAmbilight").toInt();
 
+    usb_send_data_timeout = settings->value("UsbSendDataTimeout").toInt();
+
     pixels_count_for_each_led = ((int)ambilight_width / step_y + 1) * ((int)ambilight_height / step_x +1);
 }
 
@@ -116,7 +118,7 @@ bool ambilightUsb::writeBufferToDevice()
 {
     int err;
 
-    if((err = usbhidSetReport(dev, write_buffer, sizeof(write_buffer))) != 0){   /* add a dummy report ID */
+    if((err = usbhidSetReport(dev, write_buffer, sizeof(write_buffer), usb_send_data_timeout)) != 0){   /* add a dummy report ID */
         qWarning() << "error writing data:" << usbErrorMessage(err);
         return false;
     }
@@ -125,13 +127,12 @@ bool ambilightUsb::writeBufferToDevice()
 
 bool ambilightUsb::tryToReopenDevice()
 {
-    qWarning() << "try to reopen device";
-    usbhidCloseDevice(dev);
+    qWarning() << "AmbilightUSB device didn't open. Try to reopen device...";    
+    usbhidCloseDevice(dev); // TODO: need this?
     if(openDevice()){
         qWarning() << "reopen success";
         return true;
     }else{
-        qWarning() << "reopen failed";
         return false;
     }
 }
@@ -170,23 +171,19 @@ bool ambilightUsb::openX11Display()
 QString ambilightUsb::hardwareVersion()
 {
     if(dev == NULL){
-        qWarning() << "AmbilightUSB device didn't open.";
         if(!tryToReopenDevice()){
-            return QApplication::tr("open device fail!");
+            return QApplication::tr("device unavailable");
         }
     }
     // TODO: write command CMD_GET_VERSION to device
     bool result = readDataFromDevice();
-    if(result){
-        int major = read_buffer[1];
-        int minor = read_buffer[2];
-        return QString::number(major) + "." + QString::number(minor);
-    }else{
-        qWarning() << "Get hardware version failed!";
-        return QString(QApplication::tr("request fail!"));
-    }
+    if(!result){
+        return QApplication::tr("read device fail");
+    }    
 
-    // not reachable
+    int major = read_buffer[1];
+    int minor = read_buffer[2];
+    return QString::number(major) + "." + QString::number(minor);
 }
 
 
@@ -198,7 +195,6 @@ double ambilightUsb::updateColorsIfChanges()
     bool write_colors = false;
 
     if(dev == NULL){
-        qWarning() << "AmbilightUSB device didn't open.";
         if(!tryToReopenDevice()){
             return -2;
         }

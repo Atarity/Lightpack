@@ -49,7 +49,9 @@ int usbhidOpenDevice(usbDevice_t **device, int vendorID, char *vendorName, int p
 void    usbhidCloseDevice(usbDevice_t *device);
 /* Every device opened with usbhidOpenDevice() must be closed with this function.
  */
-int usbhidSetReport(usbDevice_t *device, char *buffer, int len);
+
+/* brunql edited: add timeout */
+int usbhidSetReport(usbDevice_t *device, char *buffer, int len, int timeout);
 /* This function sends a feature report to the device. The report ID must be
  * in the first byte of buffer and the length 'len' of the report is specified
  * including this report ID. If no report IDs are used, buffer[0] must be set

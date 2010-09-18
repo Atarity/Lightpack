@@ -67,6 +67,8 @@ private:
     int ambilight_width;
     int ambilight_height;
 
+    int usb_send_data_timeout;
+
     int pixels_count_for_each_led;
 
     TimeEvaluations *timeEval;
