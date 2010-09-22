@@ -63,7 +63,33 @@ void ambilightUsb::readSettings()
 
     usb_send_data_timeout = settings->value("UsbSendDataTimeout").toInt();
 
-    pixels_count_for_each_led = ((int)ambilight_width / step_y + 1) * ((int)ambilight_height / step_x +1);
+//    step_x = 6;
+//    step_y = 1;
+//    ambilight_width = 5;
+//    ambilight_height = 5;
+
+
+    int x_pixels = (ambilight_width / step_x);
+    int y_pixels = (ambilight_height / step_y);
+    if(ambilight_width % step_x != 0){
+        x_pixels++;
+    }
+    if(ambilight_height % step_y != 0){
+        y_pixels++;
+    }
+    pixels_count_for_each_led = x_pixels * y_pixels;
+
+//    int count = 0;
+//    for(int x=0; x < ambilight_width; x += step_x){
+//        for(int y=0; y < ambilight_width; y += step_y){
+//            count++;
+//        }
+//    }
+//    qDebug() << pixels_count_for_each_led;
+//    qDebug() << count;
+//    exit(0);
+
+
 }
 
 bool ambilightUsb::deviceOpened()
@@ -187,8 +213,13 @@ QString ambilightUsb::hardwareVersion()
 }
 
 
+
+//
+// Main AmbilightUSB function: update colors if it changes
+//
 // if error, return number lower than zero;
 // else return how long it in ms;
+//
 double ambilightUsb::updateColorsIfChanges()
 {
     timeEval->howLongItStart();
@@ -203,7 +234,6 @@ double ambilightUsb::updateColorsIfChanges()
     int desktop_width = QApplication::desktop()->width();
     int desktop_height = QApplication::desktop()->height();
     int colors[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
-
 
 #ifdef WIN32
 
@@ -245,12 +275,12 @@ double ambilightUsb::updateColorsIfChanges()
     XImage *ximage;
     XColor  xcolors[4 * pixels_count_for_each_led];
 
+
     int xcol_indx=0;
 
     for(int led_index=0; led_index < 4; led_index++){
-        for(int x=0; x <= ambilight_width; x += step_x){
-            for(int y=0; y <= ambilight_height; y += step_y){
-
+        for(int x=0; x < ambilight_width; x += step_x){
+            for(int y=0; y < ambilight_height; y += step_y){
                 ximage=XGetImage(display,root_window,
 
                                  ((led_index==LEFT_UP || led_index==LEFT_DOWN)?
@@ -274,12 +304,18 @@ double ambilightUsb::updateColorsIfChanges()
     }
 
 
-    // delete me start
-    if(xcol_indx != 4 * pixels_count_for_each_led){
-        qDebug() << "xcol_index =" << xcol_indx;
-        qDebug() << "4*pixels_count_for_each_led" << 4*pixels_count_for_each_led;
+#if 1
+    if(xcol_indx != 4*pixels_count_for_each_led){
+        qDebug() << "Bug:";
+        qDebug() << "  step_x =" << step_x;
+        qDebug() << "  step_y =" << step_y;
+        qDebug() << "  ambilight_width =" << ambilight_width;
+        qDebug() << "  ambilight_height =" << ambilight_height;
+
+        qDebug() << "  xcol_index =" << xcol_indx;
+        qDebug() << "  4*pixels_count_for_each_led" << 4*pixels_count_for_each_led;
     }
-    // delete me end
+#endif
 
     XQueryColors(display, cmap, xcolors, 4*pixels_count_for_each_led);
 
@@ -290,48 +326,6 @@ double ambilightUsb::updateColorsIfChanges()
             colors[led_index][B]+=(xcolors[i + pixels_count_for_each_led * led_index].blue >> 8);
         }
     }
-
-//    // 120 ms
-//    XImage *ximage;
-//    XColor  color;
-//
-//    //  colors[LED_INDEX][COLOR]
-//    int colors[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
-//
-//    int desktop_width = QApplication::desktop()->width();
-//    int desktop_height = QApplication::desktop()->height();
-//
-//    for(int x=0; x < ambilight_width; x += step_x){
-//        for(int y=0; y < ambilight_height; y += step_y){
-//            for(int led_index=0; led_index < 4; led_index++){
-//
-//                ximage=XGetImage(display,root_window,
-//
-//                                 ((led_index==LEFT_UP || led_index==LEFT_DOWN)?
-//                                        x :
-//                                        (desktop_width-1) - x),
-//
-//                                 ((led_index==LEFT_UP || led_index==RIGHT_UP)?
-//                                        (desktop_height/2) - y :
-//                                        (desktop_height/2) + y
-//                                      ),
-//
-//                                 1,1,
-//                                 AllPlanes,ZPixmap);
-//
-//                color.pixel=XGetPixel(ximage,0,0);
-//
-//                XQueryColor(display,cmap,&color);
-//
-//                colors[led_index][R]+=(color.red >> 8);
-//                colors[led_index][G]+=(color.green >> 8);
-//                colors[led_index][B]+=(color.blue >> 8);
-//
-//                XDestroyImage(ximage);
-//
-//            }
-//        }
-//    }
 
 #endif /* WIN32 */
 
@@ -397,6 +391,11 @@ double ambilightUsb::updateColorsIfChanges()
         }
 
         write_colors = false;
+    }else{
+        // if device disconnected return error code -4
+        if(!readDataFromDevice()){
+            return -4;
+        }
     }
 
     return timeEval->howLongItEnd();

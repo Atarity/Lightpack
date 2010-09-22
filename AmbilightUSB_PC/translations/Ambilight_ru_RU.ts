@@ -80,7 +80,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="221"/>
         <source>USB send data timeout</source>
-        <translation type="unfinished">Timeout USB посылки</translation>
+        <translation type="unfinished">Таймаут USB посылки</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="281"/>
