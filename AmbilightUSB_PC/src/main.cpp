@@ -39,6 +39,8 @@ static void showHelpMessage()
     fprintf(stderr, "\n");
     fprintf(stderr, "Options:\n");
     fprintf(stderr, "  --off    - off leds \n");
+    fprintf(stderr, "  --notr   - no translate (English version)\n");
+    fprintf(stderr, "             use it if detect russian, but you want english \n");
     fprintf(stderr, "  --help   - show this help \n");
     fprintf(stderr, "\n");
     fprintf(stderr, "sudo ./Ambilight    - try this if can't open device \n");
@@ -152,11 +154,15 @@ int main(int argc, char **argv)
         return 2;
     }
 
+    QString locale = QLocale::system().name();
+
     if(argc > 1){
         if(strcmp(argv[1], "--off") == 0){
             ambilightUsb ambilight_usb;
             ambilight_usb.offLeds();
             return 0;
+        }else if(strcmp(argv[1], "--notr") == 0){
+            locale = "en_EN";
         }else{
             showHelpMessage();
             return 1;
@@ -174,16 +180,20 @@ int main(int argc, char **argv)
     QApplication::setQuitOnLastWindowClosed(false);
 
 
-    QString locale = QLocale::system().name();
+
     QString pathToLocale = QString(":/translations/Ambilight_") + locale;
 
-    QTranslator translator;
-    if(translator.load(pathToLocale)){
-        qDebug() << "Load translation for locale" << locale;
+    if(locale == "en_EN"){
+        qWarning() << "Locale: " + locale;
     }else{
-        qWarning() << "Locale:" << pathToLocale << "not found. Using defaults.";
+        QTranslator translator;
+        if(translator.load(pathToLocale)){
+            qDebug() << "Load translation for locale" << locale;
+        }else{
+            qWarning() << "Locale:" << pathToLocale << "not found. Using defaults.";
+        }
+        app.installTranslator(&translator);
     }
-    app.installTranslator(&translator);
 
     settingsInit();
 
