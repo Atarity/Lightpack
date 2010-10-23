@@ -234,106 +234,126 @@ double ambilightUsb::updateColorsIfChanges()
     int desktop_width = QApplication::desktop()->width();
     int desktop_height = QApplication::desktop()->height();
     int colors[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
+//
+//#ifdef WIN32
+//
+//
+//    for(int led_index=0; led_index < 4; led_index++){
+//        for(int x=0; x <= ambilight_width; x += step_x){
+//            for(int y=0; y <= ambilight_height; y += step_y){
+//
+//                QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
+//                                                  ((led_index==LEFT_UP || led_index==LEFT_DOWN)?
+//                                                   x :
+//                                                   (desktop_width-1) - x),
+//
+//                                                  ((led_index==LEFT_UP || led_index==RIGHT_UP)?
+//                                                   (desktop_height/2) - y :
+//                                                   (desktop_height/2) + y
+//                                                   ),
+//
+//                                        1,1);
+//                QImage im = pix.toImage();
+//                QRgb rgb = im.pixel(0,0);
+//                colors[led_index][R]+=(rgb >> 16) & 0xff;
+//                colors[led_index][G]+=(rgb >> 8) & 0xff;
+//                colors[led_index][B]+=(rgb) & 0xff;
+//            }
+//        }
+//    }
+//
+//
+//#else
+//
+//    if(display == (Display *) NULL){
+//        qFatal("X11 display didn't open.");
+//        return -2;
+//    }
+//
+//
+//    // 85 ms
+//    XImage *ximage;
+//    XColor  xcolors[4 * pixels_count_for_each_led];
+//
+//
+//    int xcol_indx=0;
+//
+//    for(int led_index=0; led_index < 4; led_index++){
+//        for(int x=0; x < ambilight_width; x += step_x){
+//            for(int y=0; y < ambilight_height; y += step_y){
+//                ximage=XGetImage(display,root_window,
+//
+//                                 ((led_index==LEFT_UP || led_index==LEFT_DOWN)?
+//                                        x :
+//                                        (desktop_width-1) - x),
+//
+//                                 ((led_index==LEFT_UP || led_index==RIGHT_UP)?
+//                                        (desktop_height/2) - y :
+//                                        (desktop_height/2) + y
+//                                      ),
+//                                 1,1,
+//                                 AllPlanes,ZPixmap);
+//
+//                xcolors[xcol_indx].pixel=XGetPixel(ximage,0,0);
+//
+//                XDestroyImage(ximage);
+//
+//                xcol_indx++;
+//            }
+//        }
+//    }
+//
+//
+//#if 1
+//    if(xcol_indx != 4*pixels_count_for_each_led){
+//        qDebug() << "Bug:";
+//        qDebug() << "  step_x =" << step_x;
+//        qDebug() << "  step_y =" << step_y;
+//        qDebug() << "  ambilight_width =" << ambilight_width;
+//        qDebug() << "  ambilight_height =" << ambilight_height;
+//
+//        qDebug() << "  xcol_index =" << xcol_indx;
+//        qDebug() << "  4*pixels_count_for_each_led" << 4*pixels_count_for_each_led;
+//    }
+//#endif
+//
+//    XQueryColors(display, cmap, xcolors, 4*pixels_count_for_each_led);
+//
+//    for(int led_index=0; led_index<4; led_index++){
+//        for(int i=0; i < pixels_count_for_each_led; i++){
+//            colors[led_index][R]+=(xcolors[i + pixels_count_for_each_led * led_index].red >> 8);
+//            colors[led_index][G]+=(xcolors[i + pixels_count_for_each_led * led_index].green >> 8);
+//            colors[led_index][B]+=(xcolors[i + pixels_count_for_each_led * led_index].blue >> 8);
+//        }
+//    }
+//
+//#endif /* WIN32 */
 
-#ifdef WIN32
 
-
-    for(int led_index=0; led_index < 4; led_index++){
-        for(int x=0; x <= ambilight_width; x += step_x){
-            for(int y=0; y <= ambilight_height; y += step_y){
-
-                QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
-                                                  ((led_index==LEFT_UP || led_index==LEFT_DOWN)?
-                                                   x :
-                                                   (desktop_width-1) - x),
-
-                                                  ((led_index==LEFT_UP || led_index==RIGHT_UP)?
-                                                   (desktop_height/2) - y :
-                                                   (desktop_height/2) + y
-                                                   ),
-
-                                        1,1);
-                QImage im = pix.toImage();
-                QRgb rgb = im.pixel(0,0);
-                colors[led_index][R]+=(rgb >> 16) & 0xff;
-                colors[led_index][G]+=(rgb >> 8) & 0xff;
-                colors[led_index][B]+=(rgb) & 0xff;
-            }
-        }
-    }
-
-
-#else
-
-    if(display == (Display *) NULL){
-        qFatal("X11 display didn't open.");
-        return -2;
-    }
-
-
-    // 85 ms
-    XImage *ximage;
-    XColor  xcolors[4 * pixels_count_for_each_led];
-
-
-    int xcol_indx=0;
-
-    for(int led_index=0; led_index < 4; led_index++){
-        for(int x=0; x < ambilight_width; x += step_x){
-            for(int y=0; y < ambilight_height; y += step_y){
-                ximage=XGetImage(display,root_window,
-
-                                 ((led_index==LEFT_UP || led_index==LEFT_DOWN)?
-                                        x :
-                                        (desktop_width-1) - x),
-
-                                 ((led_index==LEFT_UP || led_index==RIGHT_UP)?
-                                        (desktop_height/2) - y :
-                                        (desktop_height/2) + y
-                                      ),
-                                 1,1,
-                                 AllPlanes,ZPixmap);
-
-                xcolors[xcol_indx].pixel=XGetPixel(ximage,0,0);
-
-                XDestroyImage(ximage);
-
-                xcol_indx++;
-            }
-        }
-    }
-
-
-#if 1
-    if(xcol_indx != 4*pixels_count_for_each_led){
-        qDebug() << "Bug:";
-        qDebug() << "  step_x =" << step_x;
-        qDebug() << "  step_y =" << step_y;
-        qDebug() << "  ambilight_width =" << ambilight_width;
-        qDebug() << "  ambilight_height =" << ambilight_height;
-
-        qDebug() << "  xcol_index =" << xcol_indx;
-        qDebug() << "  4*pixels_count_for_each_led" << 4*pixels_count_for_each_led;
-    }
-#endif
-
-    XQueryColors(display, cmap, xcolors, 4*pixels_count_for_each_led);
 
     for(int led_index=0; led_index<4; led_index++){
-        for(int i=0; i < pixels_count_for_each_led; i++){
-            colors[led_index][R]+=(xcolors[i + pixels_count_for_each_led * led_index].red >> 8);
-            colors[led_index][G]+=(xcolors[i + pixels_count_for_each_led * led_index].green >> 8);
-            colors[led_index][B]+=(xcolors[i + pixels_count_for_each_led * led_index].blue >> 8);
-        }
+        QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
+                                          ((led_index==LEFT_UP || led_index==LEFT_DOWN)?
+                                           0 :
+                                           (desktop_width-1) - ambilight_width),
+
+                                          ((led_index==LEFT_UP || led_index==RIGHT_UP)?
+                                           (desktop_height/2) - ambilight_height :
+                                           (desktop_height/2)
+                                           ),
+                                          ambilight_width, ambilight_height);
+        QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        QImage im = scaledPix.toImage();
+
+        colors[led_index][R] = (im.pixel(0,0) >> 0x10) & 0xff;
+        colors[led_index][G] = (im.pixel(0,0) >> 0x08) & 0xff;
+        colors[led_index][B] = (im.pixel(0,0) >> 0x00) & 0xff;
     }
 
-#endif /* WIN32 */
 
     // Find average for each led color
     for(int led_index=0; led_index < 4; led_index++){
         for(int color=0; color < 3; color++){
-            colors[led_index][color] /= pixels_count_for_each_led;
-
             // Color depth 15-bit (5-bit on each color)
             // Each led color must be in 0..31
             colors[led_index][color] /= 8;
@@ -343,7 +363,6 @@ double ambilightUsb::updateColorsIfChanges()
             //colors[led_index][color] = 32;
         }
     }
-
 
     // White balance
     for(int led_index=0; led_index < 4; led_index++){
@@ -361,7 +380,14 @@ double ambilightUsb::updateColorsIfChanges()
                 break;
             }
         }
-    }
+    }    
+
+
+//    double timeLong = timeEval->howLongItEnd();
+//    qDebug() << timeLong;
+//    usleep(100000);
+//
+//    return timeLong;
 
     if(write_colors){
         write_buffer[1] = CMD_RIGHT_SIDE;

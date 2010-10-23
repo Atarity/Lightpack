@@ -155,7 +155,6 @@ int main(int argc, char **argv)
     }
 
     QString locale = QLocale::system().name();
-
     if(argc > 1){
         if(strcmp(argv[1], "--off") == 0){
             ambilightUsb ambilight_usb;
@@ -189,10 +188,10 @@ int main(int argc, char **argv)
         QTranslator translator;
         if(translator.load(pathToLocale)){
             qDebug() << "Load translation for locale" << locale;
+            app.installTranslator(&translator);
         }else{
             qWarning() << "Locale:" << pathToLocale << "not found. Using defaults.";
-        }
-        app.installTranslator(&translator);
+        }        
     }
 
     settingsInit();

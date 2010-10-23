@@ -11,8 +11,10 @@
 
 
 RectGetPixel::RectGetPixel(QWidget *parent)
-    : QLabel(parent, Qt::FramelessWindowHint | Qt::Window)
+    : QGraphicsView(parent, Qt::FramelessWindowHint | Qt::Window)
 {
+    this->setScene(new QGraphicsScene(this));
+
     QPalette pal = this->palette();
     pal.setBrush(this->backgroundRole(), QBrush(Qt::black, Qt::SolidPattern));
     this->setPalette(pal);
@@ -31,8 +33,8 @@ void RectGetPixel::closeEvent(QCloseEvent *event)
 
 void RectGetPixel::readSettings()
 {
-    step_x = settings->value("StepX").toInt();
-    step_y = settings->value("StepY").toInt();
+//    step_x = settings->value("StepX").toInt();
+//    step_y = settings->value("StepY").toInt();
     ambilight_width = settings->value("WidthAmbilight").toInt();
     ambilight_height = settings->value("HeightAmbilight").toInt();
 }
@@ -54,23 +56,26 @@ void RectGetPixel::settingsChangedUpdateImage()
     int desktop_height = QApplication::desktop()->height();
     this->resize(desktop_width, desktop_height);
 
-    QImage im(desktop_width, desktop_height, QImage::Format_ARGB32);
-    for(int x=0; x < ambilight_width; x+=step_x){
-        for(int y=0; y < ambilight_height; y+=step_y){
-            // LEFT_UP - red
-            drawBigPoint(im, x, (desktop_height / 2) - y, 0xffff0000);
-            // LEFT_DOWN - green
-            drawBigPoint(im, x, (desktop_height / 2) + y, 0xff00ff00);
 
-            // RIGHT_UP - blue
-            drawBigPoint(im, desktop_width-1 - x, (desktop_height / 2) - y, 0xff0000ff);
-            // RIGHT_DOWN - white
-            drawBigPoint(im, desktop_width-1 - x, (desktop_height / 2) + y, 0xffffffff);
-        }
-    }
-
-    QPixmap pix = QPixmap::fromImage(im);
-    this->setPixmap(pix);
+//    QImage im(desktop_width, desktop_height, QImage::Format_ARGB32);
+//    im
+//
+//    for(int x=0; x < ambilight_width; x+=step_x){
+//        for(int y=0; y < ambilight_height; y+=step_y){
+//            // LEFT_UP - red
+//            drawBigPoint(im, x, (desktop_height / 2) - y, 0xffff0000);
+//            // LEFT_DOWN - green
+//            drawBigPoint(im, x, (desktop_height / 2) + y, 0xff00ff00);
+//
+//            // RIGHT_UP - blue
+//            drawBigPoint(im, desktop_width-1 - x, (desktop_height / 2) - y, 0xff0000ff);
+//            // RIGHT_DOWN - white
+//            drawBigPoint(im, desktop_width-1 - x, (desktop_height / 2) + y, 0xffffffff);
+//        }
+//    }
+//
+//    QPixmap pix = QPixmap::fromImage(im);
+//    this->setPixmap(pix);
 }
 
 

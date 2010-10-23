@@ -15,7 +15,7 @@
 #include "ambilightusb.h"
 
 
-class RectGetPixel : public QLabel {
+class RectGetPixel : public QGraphicsView {
 
 public:
     RectGetPixel(QWidget *parent = 0);
