@@ -8,6 +8,7 @@
 #ifndef RGB_H_
 #define RGB_H_
 
+#define LEDS_COUNT       4
 
 // On this "screen", digit is number of led (leds behind of screen)
 //   ╔═════════╗
@@ -23,7 +24,6 @@
 #define R	0
 #define G	1
 #define B	2
-
 
 // Hardware RGB bits definitions:
 

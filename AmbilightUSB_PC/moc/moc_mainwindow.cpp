@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sat Sep 18 17:46:10 2010
+** Created: Sat Oct 23 21:58:39 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-      15,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -40,12 +40,9 @@ static const uint qt_meta_data_MainWindow[] = {
      142,   11,   11,   11, 0x08,
      166,   11,   11,   11, 0x08,
      205,  199,   11,   11, 0x08,
-     242,  199,   11,   11, 0x08,
-     292,   11,   11,   11, 0x08,
-     314,   11,   11,   11, 0x08,
-     336,   11,   11,   11, 0x08,
-     367,   11,   11,   11, 0x08,
-     399,   11,   11,   11, 0x08,
+     242,   11,   11,   11, 0x08,
+     273,   11,   11,   11, 0x08,
+     305,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -58,8 +55,6 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "usbTimerDelayMsChange()\0"
     "usbTimerReconnectDelayMsChange()\0state\0"
     "settingsShowPixelsForAmbilight(bool)\0"
-    "settingsShowPixelsWithTransparentBackground(bool)\0"
-    "settingsStepXChange()\0settingsStepYChange()\0"
     "settingsWidthAmbilightChange()\0"
     "settingsHeightAmbilightChange()\0"
     "settingsUsbSendDataTimeoutChange()\0"
@@ -103,15 +98,12 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 6: usbTimerDelayMsChange(); break;
         case 7: usbTimerReconnectDelayMsChange(); break;
         case 8: settingsShowPixelsForAmbilight((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 9: settingsShowPixelsWithTransparentBackground((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 10: settingsStepXChange(); break;
-        case 11: settingsStepYChange(); break;
-        case 12: settingsWidthAmbilightChange(); break;
-        case 13: settingsHeightAmbilightChange(); break;
-        case 14: settingsUsbSendDataTimeoutChange(); break;
+        case 9: settingsWidthAmbilightChange(); break;
+        case 10: settingsHeightAmbilightChange(); break;
+        case 11: settingsUsbSendDataTimeoutChange(); break;
         default: ;
         }
-        _id -= 15;
+        _id -= 12;
     }
     return _id;
 }

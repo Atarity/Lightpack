@@ -14,8 +14,6 @@
 
 #define RECONNECT_USB_MS_DEFAULT_VALUE          2000
 #define REFRESH_AMBILIGHT_MS_DEFAULT_VALUE      50
-#define STEP_X_DEFAULT_VALUE                    30
-#define STEP_Y_DEFAULT_VALUE                    30
 #define WIDTH_AMBILIGHT_DEFAULT_VALUE           300
 #define HEIGHT_AMBILIGHT_DEFAULT_VALUE          300
 #define IS_AMBILIGHT_ON_DEFAULT_VALUE           true

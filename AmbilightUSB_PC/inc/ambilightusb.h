@@ -44,6 +44,7 @@ private:
     bool openX11Display();
 
     bool readDataFromDevice();
+    bool readDataFromDeviceWithCheck();
     bool writeBufferToDevice();
     bool writeBufferToDeviceWithCheck();
     bool tryToReopenDevice();
@@ -60,7 +61,7 @@ private:
     char write_buffer[1 + 7];   /* 0-system, 1..7-data */
 
     //  colors_save[LED_INDEX][COLOR]
-    int colors_save[4][3];
+    int colors_save[LEDS_COUNT][3];
 
     int step_x;
     int step_y;

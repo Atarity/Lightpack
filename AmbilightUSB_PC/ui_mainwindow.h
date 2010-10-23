@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Sep 18 17:38:50 2010
+** Created: Sat Oct 23 21:58:26 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -24,6 +24,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QMainWindow>
 #include <QtGui/QPushButton>
+#include <QtGui/QSlider>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
 #include <QtGui/QVBoxLayout>
@@ -42,12 +43,6 @@ public:
     QLabel *label_ms;
     QSpinBox *spinBox_ReconnectDelay;
     QLabel *label_sec;
-    QLabel *label_x_step;
-    QLabel *label_sec_2;
-    QSpinBox *spinBox_StepY;
-    QLabel *label_sec_3;
-    QSpinBox *spinBox_StepX;
-    QLabel *label_y_step;
     QLabel *label_height;
     QSpinBox *spinBox_HeightAmbilight;
     QLabel *label_sec_4;
@@ -55,7 +50,6 @@ public:
     QSpinBox *spinBox_WidthAmbilight;
     QLabel *label_sec_5;
     QCheckBox *checkBox_ShowPixelsAmbilight;
-    QCheckBox *checkBox_ShowPixelsTransparentBackground;
     QLabel *label_UpdateDelayEval;
     QLineEdit *lineEdit_RefreshAmbilihtEvaluated;
     QLabel *label_hz;
@@ -63,6 +57,8 @@ public:
     QLabel *label_USBSendDataTimeout;
     QLabel *label_sec_6;
     QDoubleSpinBox *doubleSpinBoxUsbSendDataTimeout;
+    QSlider *horizontalSliderWidth;
+    QSlider *horizontalSliderHeight;
     QSpacerItem *verticalSpacer;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_2;
@@ -114,44 +110,10 @@ public:
 
         gridLayout->addWidget(label_sec, 2, 2, 1, 1);
 
-        label_x_step = new QLabel(centralwidget);
-        label_x_step->setObjectName(QString::fromUtf8("label_x_step"));
-
-        gridLayout->addWidget(label_x_step, 7, 0, 1, 1);
-
-        label_sec_2 = new QLabel(centralwidget);
-        label_sec_2->setObjectName(QString::fromUtf8("label_sec_2"));
-
-        gridLayout->addWidget(label_sec_2, 7, 2, 1, 1);
-
-        spinBox_StepY = new QSpinBox(centralwidget);
-        spinBox_StepY->setObjectName(QString::fromUtf8("spinBox_StepY"));
-        spinBox_StepY->setMinimum(1);
-        spinBox_StepY->setValue(20);
-
-        gridLayout->addWidget(spinBox_StepY, 8, 1, 1, 1);
-
-        label_sec_3 = new QLabel(centralwidget);
-        label_sec_3->setObjectName(QString::fromUtf8("label_sec_3"));
-
-        gridLayout->addWidget(label_sec_3, 8, 2, 1, 1);
-
-        spinBox_StepX = new QSpinBox(centralwidget);
-        spinBox_StepX->setObjectName(QString::fromUtf8("spinBox_StepX"));
-        spinBox_StepX->setMinimum(1);
-        spinBox_StepX->setValue(20);
-
-        gridLayout->addWidget(spinBox_StepX, 7, 1, 1, 1);
-
-        label_y_step = new QLabel(centralwidget);
-        label_y_step->setObjectName(QString::fromUtf8("label_y_step"));
-
-        gridLayout->addWidget(label_y_step, 8, 0, 1, 1);
-
         label_height = new QLabel(centralwidget);
         label_height->setObjectName(QString::fromUtf8("label_height"));
 
-        gridLayout->addWidget(label_height, 9, 0, 1, 1);
+        gridLayout->addWidget(label_height, 6, 0, 1, 1);
 
         spinBox_HeightAmbilight = new QSpinBox(centralwidget);
         spinBox_HeightAmbilight->setObjectName(QString::fromUtf8("spinBox_HeightAmbilight"));
@@ -159,17 +121,17 @@ public:
         spinBox_HeightAmbilight->setMaximum(800);
         spinBox_HeightAmbilight->setValue(400);
 
-        gridLayout->addWidget(spinBox_HeightAmbilight, 9, 1, 1, 1);
+        gridLayout->addWidget(spinBox_HeightAmbilight, 6, 1, 1, 1);
 
         label_sec_4 = new QLabel(centralwidget);
         label_sec_4->setObjectName(QString::fromUtf8("label_sec_4"));
 
-        gridLayout->addWidget(label_sec_4, 9, 2, 1, 1);
+        gridLayout->addWidget(label_sec_4, 6, 2, 1, 1);
 
         label_width = new QLabel(centralwidget);
         label_width->setObjectName(QString::fromUtf8("label_width"));
 
-        gridLayout->addWidget(label_width, 10, 0, 1, 1);
+        gridLayout->addWidget(label_width, 8, 0, 1, 1);
 
         spinBox_WidthAmbilight = new QSpinBox(centralwidget);
         spinBox_WidthAmbilight->setObjectName(QString::fromUtf8("spinBox_WidthAmbilight"));
@@ -177,22 +139,17 @@ public:
         spinBox_WidthAmbilight->setMaximum(1280);
         spinBox_WidthAmbilight->setValue(200);
 
-        gridLayout->addWidget(spinBox_WidthAmbilight, 10, 1, 1, 1);
+        gridLayout->addWidget(spinBox_WidthAmbilight, 8, 1, 1, 1);
 
         label_sec_5 = new QLabel(centralwidget);
         label_sec_5->setObjectName(QString::fromUtf8("label_sec_5"));
 
-        gridLayout->addWidget(label_sec_5, 10, 2, 1, 1);
+        gridLayout->addWidget(label_sec_5, 8, 2, 1, 1);
 
         checkBox_ShowPixelsAmbilight = new QCheckBox(centralwidget);
         checkBox_ShowPixelsAmbilight->setObjectName(QString::fromUtf8("checkBox_ShowPixelsAmbilight"));
 
         gridLayout->addWidget(checkBox_ShowPixelsAmbilight, 5, 0, 1, 3);
-
-        checkBox_ShowPixelsTransparentBackground = new QCheckBox(centralwidget);
-        checkBox_ShowPixelsTransparentBackground->setObjectName(QString::fromUtf8("checkBox_ShowPixelsTransparentBackground"));
-
-        gridLayout->addWidget(checkBox_ShowPixelsTransparentBackground, 6, 0, 1, 3);
 
         label_UpdateDelayEval = new QLabel(centralwidget);
         label_UpdateDelayEval->setObjectName(QString::fromUtf8("label_UpdateDelayEval"));
@@ -235,6 +192,24 @@ public:
 
         gridLayout->addWidget(doubleSpinBoxUsbSendDataTimeout, 3, 1, 1, 1);
 
+        horizontalSliderWidth = new QSlider(centralwidget);
+        horizontalSliderWidth->setObjectName(QString::fromUtf8("horizontalSliderWidth"));
+        horizontalSliderWidth->setMinimum(1);
+        horizontalSliderWidth->setMaximum(1280);
+        horizontalSliderWidth->setValue(200);
+        horizontalSliderWidth->setOrientation(Qt::Horizontal);
+
+        gridLayout->addWidget(horizontalSliderWidth, 9, 0, 1, 3);
+
+        horizontalSliderHeight = new QSlider(centralwidget);
+        horizontalSliderHeight->setObjectName(QString::fromUtf8("horizontalSliderHeight"));
+        horizontalSliderHeight->setMinimum(1);
+        horizontalSliderHeight->setMaximum(800);
+        horizontalSliderHeight->setValue(400);
+        horizontalSliderHeight->setOrientation(Qt::Horizontal);
+
+        gridLayout->addWidget(horizontalSliderHeight, 7, 0, 1, 3);
+
 
         verticalLayout->addLayout(gridLayout);
 
@@ -263,14 +238,15 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         QWidget::setTabOrder(spinBox_UpdateDelay, spinBox_ReconnectDelay);
         QWidget::setTabOrder(spinBox_ReconnectDelay, checkBox_ShowPixelsAmbilight);
-        QWidget::setTabOrder(checkBox_ShowPixelsAmbilight, checkBox_ShowPixelsTransparentBackground);
-        QWidget::setTabOrder(checkBox_ShowPixelsTransparentBackground, spinBox_StepX);
-        QWidget::setTabOrder(spinBox_StepX, spinBox_StepY);
-        QWidget::setTabOrder(spinBox_StepY, spinBox_HeightAmbilight);
+        QWidget::setTabOrder(checkBox_ShowPixelsAmbilight, spinBox_HeightAmbilight);
         QWidget::setTabOrder(spinBox_HeightAmbilight, spinBox_WidthAmbilight);
         QWidget::setTabOrder(spinBox_WidthAmbilight, pushButton_Close);
 
         retranslateUi(MainWindow);
+        QObject::connect(horizontalSliderWidth, SIGNAL(valueChanged(int)), spinBox_WidthAmbilight, SLOT(setValue(int)));
+        QObject::connect(horizontalSliderHeight, SIGNAL(valueChanged(int)), spinBox_HeightAmbilight, SLOT(setValue(int)));
+        QObject::connect(spinBox_WidthAmbilight, SIGNAL(valueChanged(int)), horizontalSliderWidth, SLOT(setValue(int)));
+        QObject::connect(spinBox_HeightAmbilight, SIGNAL(valueChanged(int)), horizontalSliderHeight, SLOT(setValue(int)));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -281,16 +257,11 @@ public:
         label_UpdateDelay->setText(QApplication::translate("MainWindow", "Refresh ambilight delay", 0, QApplication::UnicodeUTF8));
         label_ms->setText(QApplication::translate("MainWindow", "ms", 0, QApplication::UnicodeUTF8));
         label_sec->setText(QApplication::translate("MainWindow", "secs", 0, QApplication::UnicodeUTF8));
-        label_x_step->setText(QApplication::translate("MainWindow", "Step X", 0, QApplication::UnicodeUTF8));
-        label_sec_2->setText(QApplication::translate("MainWindow", "pixels", 0, QApplication::UnicodeUTF8));
-        label_sec_3->setText(QApplication::translate("MainWindow", "pixels", 0, QApplication::UnicodeUTF8));
-        label_y_step->setText(QApplication::translate("MainWindow", "Step Y", 0, QApplication::UnicodeUTF8));
         label_height->setText(QApplication::translate("MainWindow", "Height", 0, QApplication::UnicodeUTF8));
         label_sec_4->setText(QApplication::translate("MainWindow", "pixels", 0, QApplication::UnicodeUTF8));
         label_width->setText(QApplication::translate("MainWindow", "Width", 0, QApplication::UnicodeUTF8));
         label_sec_5->setText(QApplication::translate("MainWindow", "pixels", 0, QApplication::UnicodeUTF8));
         checkBox_ShowPixelsAmbilight->setText(QApplication::translate("MainWindow", "Show pixels for ambilight", 0, QApplication::UnicodeUTF8));
-        checkBox_ShowPixelsTransparentBackground->setText(QApplication::translate("MainWindow", "Show pixels with transparent background", 0, QApplication::UnicodeUTF8));
         label_UpdateDelayEval->setText(QApplication::translate("MainWindow", "Refresh ambilight evaluated", 0, QApplication::UnicodeUTF8));
         label_hz->setText(QApplication::translate("MainWindow", "Hz", 0, QApplication::UnicodeUTF8));
         label_Reconnect->setText(QApplication::translate("MainWindow", "Reconnect USB delay", 0, QApplication::UnicodeUTF8));

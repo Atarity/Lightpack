@@ -15,7 +15,6 @@
 
 #include "settings.h"
 #include "version.h"
-#include "rectgetpixel.h"
 #include "ambilightusb.h"
 
 #include <sys/time.h>
@@ -112,16 +111,6 @@ void settingsInit()
                 << RECONNECT_USB_MS_DEFAULT_VALUE;
         settings->setValue("ReconnectAmbilightUSBDelayMs", RECONNECT_USB_MS_DEFAULT_VALUE);
     }
-    if(settings->value("StepX") == QVariant()){
-        qDebug() << "Settings: 'StepX' not found. Set it to default value:"
-                << STEP_X_DEFAULT_VALUE;
-        settings->setValue("StepX", STEP_X_DEFAULT_VALUE);
-    }
-    if(settings->value("StepY") == QVariant()){
-        qDebug() << "StepY: 'StepY' not found. Set it to default value:"
-                << STEP_Y_DEFAULT_VALUE;
-        settings->setValue("StepY", STEP_Y_DEFAULT_VALUE);
-    }
     if(settings->value("WidthAmbilight") == QVariant()){
         qDebug() << "Settings: 'WidthAmbilight' not found. Set it to default value:"
                 << WIDTH_AMBILIGHT_DEFAULT_VALUE;
@@ -176,9 +165,6 @@ int main(int argc, char **argv)
                               "I couldn't detect any system tray on this system.");
         return 1;
     }
-    QApplication::setQuitOnLastWindowClosed(false);
-
-
 
     QString pathToLocale = QString(":/translations/Ambilight_") + locale;
 
@@ -195,6 +181,8 @@ int main(int argc, char **argv)
     }
 
     settingsInit();
+
+    QApplication::setQuitOnLastWindowClosed(false);
 
     MainWindow window;          /* Create MainWindow */
     window.setVisible(false);   /* And load to tray. */

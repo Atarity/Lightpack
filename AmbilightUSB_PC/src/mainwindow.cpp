@@ -21,10 +21,13 @@ MainWindow::MainWindow(QWidget *parent) :
     createTrayIcon();
 
     ambilight_usb = new ambilightUsb();
-    rect_get_pixel = new RectGetPixel();    
     timer = new QTimer(this);
 
     loadSettingsToForm();
+
+
+    // Show getPixelsRects then open settings
+    ui->checkBox_ShowPixelsAmbilight->setChecked(true);
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(timer, SIGNAL(timeout()), this, SLOT(timerForUsbPoll()));
@@ -32,9 +35,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->spinBox_ReconnectDelay, SIGNAL(valueChanged(int)), this, SLOT(usbTimerReconnectDelayMsChange()));
     connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->checkBox_ShowPixelsAmbilight, SIGNAL(toggled(bool)), this, SLOT(settingsShowPixelsForAmbilight(bool)));
-    connect(ui->checkBox_ShowPixelsTransparentBackground, SIGNAL(toggled(bool)), this, SLOT(settingsShowPixelsWithTransparentBackground(bool)));
-    connect(ui->spinBox_StepX, SIGNAL(valueChanged(int)), this, SLOT(settingsStepXChange()));
-    connect(ui->spinBox_StepY, SIGNAL(valueChanged(int)), this, SLOT(settingsStepYChange()));
     connect(ui->spinBox_WidthAmbilight, SIGNAL(valueChanged(int)), this, SLOT(settingsWidthAmbilightChange()));
     connect(ui->spinBox_HeightAmbilight, SIGNAL(valueChanged(int)), this, SLOT(settingsHeightAmbilightChange()));
     connect(ui->doubleSpinBoxUsbSendDataTimeout, SIGNAL(valueChanged(double)), this, SLOT(settingsUsbSendDataTimeoutChange()));
@@ -55,11 +55,67 @@ MainWindow::MainWindow(QWidget *parent) :
     trayIcon->show();
 
     // Initialize limits of height and width
-    ui->spinBox_StepX->setMaximum( QApplication::desktop()->width() / 2 );
+    ui->horizontalSliderWidth->setMaximum( QApplication::desktop()->width() / 2 );
     ui->spinBox_WidthAmbilight->setMaximum( QApplication::desktop()->width() / 2 );
 
-    ui->spinBox_StepY->setMaximum( QApplication::desktop()->height() / 2 );
-    ui->spinBox_HeightAmbilight->setMaximum( QApplication::desktop()->height() / 2 );
+    // 25px - default height of panels in Ubuntu 10.04
+    ui->horizontalSliderHeight->setMaximum( QApplication::desktop()->height() / 2  - 25);
+    ui->spinBox_HeightAmbilight->setMaximum( QApplication::desktop()->height() / 2 - 25);
+
+    initGetPixelsRects();        
+    settingsShowPixelsForAmbilight(false);
+
+    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);    
+}
+
+void MainWindow::initGetPixelsRects()
+{    
+    for(int i=0; i<labelGetPixelsRects.count(); i++){
+        labelGetPixelsRects[i]->close();
+    }
+
+    labelGetPixelsRects.clear();
+
+    for(int i=0; i<LEDS_COUNT; i++){
+        labelGetPixelsRects.append(new QLabel(this, Qt::FramelessWindowHint | Qt::SplashScreen));
+        labelGetPixelsRects.last()->setFocusPolicy(Qt::NoFocus);
+    }    
+
+    updateSizesGetPixelsRects();
+}
+
+void MainWindow::updateSizesGetPixelsRects()
+{
+    int ambilight_width = settings->value("WidthAmbilight").toInt();
+    int ambilight_height = settings->value("HeightAmbilight").toInt();
+    int desktop_height = QApplication::desktop()->height();
+    int desktop_width = QApplication::desktop()->width();
+
+
+    for(int i=0; i<LEDS_COUNT; i++){
+        labelGetPixelsRects[i]->setFixedWidth(ambilight_width);
+        labelGetPixelsRects[i]->setFixedHeight(ambilight_height);
+    }
+
+    QPixmap rectPix(ambilight_width, ambilight_height);
+
+    rectPix.fill(Qt::blue);
+    labelGetPixelsRects[RIGHT_UP]->setPixmap(rectPix);
+    labelGetPixelsRects[RIGHT_UP]->move(desktop_width - ambilight_width, desktop_height / 2 - ambilight_height);
+
+    rectPix.fill(Qt::yellow);
+    labelGetPixelsRects[RIGHT_DOWN]->setPixmap(rectPix);
+    labelGetPixelsRects[RIGHT_DOWN]->move(desktop_width - ambilight_width, desktop_height / 2);
+
+    rectPix.fill(Qt::red);
+    labelGetPixelsRects[LEFT_UP]->setPixmap(rectPix);
+    labelGetPixelsRects[LEFT_UP]->move(0, QApplication::desktop()->height() / 2 - ambilight_height);
+
+    rectPix.fill(Qt::green);
+    labelGetPixelsRects[LEFT_DOWN]->setPixmap(rectPix);
+    labelGetPixelsRects[LEFT_DOWN]->move(0, QApplication::desktop()->height() / 2);
+
+    this->activateWindow();
 }
 
 MainWindow::~MainWindow()
@@ -176,20 +232,15 @@ void MainWindow::showSettings()
 
 void MainWindow::settingsShowPixelsForAmbilight(bool state)
 {
-    rect_get_pixel->move(0,0);
-    if(state){
-        rect_get_pixel->setFocusPolicy(Qt::NoFocus);
-        rect_get_pixel->setTransparent(true);
-        ui->checkBox_ShowPixelsTransparentBackground->setChecked(true);
-        rect_get_pixel->showFullScreen();
+    if(state){        
+        for(int i=0; i<LEDS_COUNT; i++){
+            labelGetPixelsRects[i]->show();
+        }
     }else{
-        rect_get_pixel->hide();
+        for(int i=0; i<LEDS_COUNT; i++){
+            labelGetPixelsRects[i]->hide();
+        }
     }
-}
-
-void MainWindow::settingsShowPixelsWithTransparentBackground(bool state)
-{
-    rect_get_pixel->setTransparent(state);
 }
 
 void MainWindow::timerForUsbPoll()
@@ -245,32 +296,19 @@ void MainWindow::usbTimerReconnectDelayMsChange()
     usbTimerReconnectDelayMs = ms;
 }
 
-void MainWindow::settingsStepXChange()
-{
-    settings->setValue("StepX", ui->spinBox_StepX->value());
-    rect_get_pixel->settingsChangedUpdateImage();
-    ambilight_usb->readSettings();
-}
-
-void MainWindow::settingsStepYChange()
-{
-    settings->setValue("StepY", ui->spinBox_StepY->value());
-    rect_get_pixel->settingsChangedUpdateImage();
-    ambilight_usb->readSettings();
-}
 
 void MainWindow::settingsWidthAmbilightChange()
 {
-    settings->setValue("WidthAmbilight", ui->spinBox_WidthAmbilight->value() );
-    rect_get_pixel->settingsChangedUpdateImage();
+    settings->setValue("WidthAmbilight",  ui->spinBox_WidthAmbilight->value());
     ambilight_usb->readSettings();
+    updateSizesGetPixelsRects();
 }
 
 void MainWindow::settingsHeightAmbilightChange()
 {
     settings->setValue("HeightAmbilight", ui->spinBox_HeightAmbilight->value() );
-    rect_get_pixel->settingsChangedUpdateImage();
     ambilight_usb->readSettings();
+    updateSizesGetPixelsRects();
 }
 
 void MainWindow::settingsUsbSendDataTimeoutChange()
@@ -318,9 +356,6 @@ void MainWindow::loadSettingsToForm()
 {
     ui->spinBox_UpdateDelay->setValue( settings->value("RefreshAmbilightDelayMs").toInt() );
     ui->spinBox_ReconnectDelay->setValue( settings->value("ReconnectAmbilightUSBDelayMs").toInt() / 1000 /* ms to sec */ );
-
-    ui->spinBox_StepX->setValue( settings->value("StepX").toInt() );
-    ui->spinBox_StepY->setValue( settings->value("StepY").toInt() );
 
     ui->spinBox_WidthAmbilight->setValue( settings->value("WidthAmbilight").toInt() );
     ui->spinBox_HeightAmbilight->setValue( settings->value("HeightAmbilight").toInt() );

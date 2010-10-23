@@ -14,8 +14,6 @@
 #include "aboutdialog.h"
 #include "settings.h"
 #include "ambilightusb.h"
-#include "rectgetpixel.h"
-
 
 namespace Ui {
     class MainWindow;
@@ -43,22 +41,21 @@ private slots:
     void usbTimerDelayMsChange();
     void usbTimerReconnectDelayMsChange();
     void settingsShowPixelsForAmbilight(bool state);
-    void settingsShowPixelsWithTransparentBackground(bool state);
-    void settingsStepXChange();
-    void settingsStepYChange();
     void settingsWidthAmbilightChange();
     void settingsHeightAmbilightChange();
     void settingsUsbSendDataTimeoutChange();
 
 
 private:
+    void initGetPixelsRects();
+    void updateSizesGetPixelsRects();
     void trayAmbilightOn();
     void trayAmbilightOff();
     void trayAmbilightError();
 
     void createTrayIcon();
     void createActions();
-    void loadSettingsToForm();
+    void loadSettingsToForm();    
 
     QString refreshAmbilightEvaluated(double updateResult_ms);
 
@@ -75,8 +72,9 @@ private:
 
     QTimer *timer;
 
+    QList<QLabel *> labelGetPixelsRects;
+
     ambilightUsb *ambilight_usb;
-    RectGetPixel *rect_get_pixel;
     bool isAmbilightOn;
     bool isErrorState;
 
