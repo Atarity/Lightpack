@@ -165,6 +165,24 @@ QString ambilightUsb::hardwareVersion()
     return QString::number(major) + "." + QString::number(minor);
 }
 
+bool ambilightUsb::offLeds()
+{
+    write_buffer[1] = CMD_OFF_ALL;
+
+    return writeBufferToDeviceWithCheck();
+}
+
+
+bool ambilightUsb::setTimerOptions(enum PRESCALLERS prescaller, int outputCompareRegValue)
+{
+    // TODO: get names for each index
+    write_buffer[1] = CMD_SET_TIMER_OPTIONS;
+    write_buffer[2] = (char)prescaller;
+    write_buffer[3] = (char)outputCompareRegValue;
+
+    return writeBufferToDeviceWithCheck();
+}
+
 
 
 //
@@ -281,11 +299,4 @@ double ambilightUsb::updateColorsIfChanges()
     }
 
     return timeEval->howLongItEnd();
-}
-
-
-void ambilightUsb::offLeds()
-{
-    write_buffer[1] = CMD_OFF_ALL;
-    writeBufferToDevice();
 }

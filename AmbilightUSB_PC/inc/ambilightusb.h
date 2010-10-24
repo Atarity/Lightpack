@@ -12,10 +12,6 @@
 
 #include <QtGui> // QApplication::desktop()->width();
 
-#ifndef WIN32
-#   include <X11/Xutil.h>
-#endif
-
 #include "timeevaluations.h"
 
 #include "settings.h"
@@ -34,15 +30,19 @@ public:
     ~ambilightUsb();
     bool deviceOpened();
     bool openDevice();
-    double updateColorsIfChanges();
-    void offLeds();
-    void clearColorSave();
-    void readSettings();
+
     QString hardwareVersion();
 
-private:
-    bool openX11Display();
+    bool offLeds();
+    bool setTimerOptions(enum PRESCALLERS prescaller, int outputCompareRegValue);
+    double updateColorsIfChanges();
 
+    void clearColorSave();
+    void readSettings();    
+
+
+
+private:
     bool readDataFromDevice();
     bool readDataFromDeviceWithCheck();
     bool writeBufferToDevice();
@@ -51,18 +51,12 @@ private:
     QString usbErrorMessage(int errCode);
 
     usbDevice_t *dev;
-#ifndef WIN32
-    Display *display;
-    Colormap cmap;
-    Window root_window;
-#endif
 
     char read_buffer[1 + 7];    /* 0-system, 1..7-data */
     char write_buffer[1 + 7];   /* 0-system, 1..7-data */
 
     //  colors_save[LED_INDEX][COLOR]
     int colors_save[LEDS_COUNT][3];
-
 
     // Settings:
     int ambilight_width;
