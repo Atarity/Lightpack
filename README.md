@@ -9,6 +9,17 @@ Software: `C++`, `Qt`, `X11` (GUI tested in Ubuntu 10.04)
 
 Software versions:
 ==================
+Version 2.7.5
+-------------
+Update GUI:
+
+* All settings now in 2 tabs (software and hardware settings)
+* Added new settings 'white balance' (red, green and blue coefs)
+* Added new settings 'timer prescaler' (1, 8, 64, 256, 1024) and 'timer OCR' (Output Compare Register) settings
+* Eval PWM generation frequency and show it in hardware settings
+
+Timer settings for controlling the PWM frequency
+
 Version 2.7.4
 -------------
 Rewrote the code to grab screen image and find the average color value of exciting fields
@@ -17,10 +28,12 @@ Added scroll bars to change the width and height of the exciting fields
 
 Version 2.7.3
 -------------
-Sets configurations of:   
-*   delay between updates   
-*   count of pixels (by setting size and steps)  
-*   show/hide transparent/black background of catching pixels  
+Sets configurations of:
+
+* delay between updates
+* count of pixels (by setting size and steps)
+* show/hide transparent/black background of catching pixels
+
 Shows FPS   
 Added logging to `${HOME}/.ambilight.log`   
 Added saving configurations in `${HOME}/.config/brunql.dev/AmbilightUSB.ini`   
@@ -57,7 +70,7 @@ Version 1.*
 -----------
 Prototyping on ATmega32 with DM134B   
 
-For more information see sources and [downloads](http://github.com/brunql/AmbilightUSB/downloads)
-
 Have fun!
 =========
+
+For more information see sources and [downloads](http://github.com/brunql/AmbilightUSB/downloads)
