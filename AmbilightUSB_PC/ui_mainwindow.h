@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Oct 24 20:02:20 2010
+** Created: Sun Oct 24 20:50:28 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -76,13 +76,17 @@ public:
     QLabel *label_HW_TimerOCR;
     QSpinBox *spinBox_HW_OCR;
     QLabel *label_HW_Ticks;
-    QSlider *horizontalSlider_HW_OCR;
     QLabel *label_Reconnect;
     QSpinBox *spinBox_ReconnectDelay;
     QLabel *label_sec;
     QLabel *label_USBSendDataTimeout;
     QDoubleSpinBox *doubleSpinBoxUsbSendDataTimeout;
     QLabel *label_sec_6;
+    QSlider *horizontalSlider_HW_OCR;
+    QLabel *label_PWM_Frequency;
+    QLabel *label_4;
+    QLabel *label;
+    QLabel *label_2;
     QSpacerItem *verticalSpacer_2;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_2;
@@ -92,7 +96,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(350, 390);
+        MainWindow->resize(356, 390);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/icons/settings.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -314,16 +318,6 @@ public:
 
         gridLayout_2->addWidget(label_HW_Ticks, 4, 2, 1, 1);
 
-        horizontalSlider_HW_OCR = new QSlider(tabHardwareOptions);
-        horizontalSlider_HW_OCR->setObjectName(QString::fromUtf8("horizontalSlider_HW_OCR"));
-        horizontalSlider_HW_OCR->setMinimum(1);
-        horizontalSlider_HW_OCR->setMaximum(255);
-        horizontalSlider_HW_OCR->setPageStep(1);
-        horizontalSlider_HW_OCR->setValue(7);
-        horizontalSlider_HW_OCR->setOrientation(Qt::Horizontal);
-
-        gridLayout_2->addWidget(horizontalSlider_HW_OCR, 5, 0, 1, 3);
-
         label_Reconnect = new QLabel(tabHardwareOptions);
         label_Reconnect->setObjectName(QString::fromUtf8("label_Reconnect"));
 
@@ -359,6 +353,36 @@ public:
         label_sec_6->setObjectName(QString::fromUtf8("label_sec_6"));
 
         gridLayout_2->addWidget(label_sec_6, 1, 2, 1, 1);
+
+        horizontalSlider_HW_OCR = new QSlider(tabHardwareOptions);
+        horizontalSlider_HW_OCR->setObjectName(QString::fromUtf8("horizontalSlider_HW_OCR"));
+        horizontalSlider_HW_OCR->setMinimum(1);
+        horizontalSlider_HW_OCR->setMaximum(255);
+        horizontalSlider_HW_OCR->setPageStep(1);
+        horizontalSlider_HW_OCR->setValue(7);
+        horizontalSlider_HW_OCR->setOrientation(Qt::Horizontal);
+
+        gridLayout_2->addWidget(horizontalSlider_HW_OCR, 5, 0, 1, 3);
+
+        label_PWM_Frequency = new QLabel(tabHardwareOptions);
+        label_PWM_Frequency->setObjectName(QString::fromUtf8("label_PWM_Frequency"));
+
+        gridLayout_2->addWidget(label_PWM_Frequency, 9, 1, 1, 1);
+
+        label_4 = new QLabel(tabHardwareOptions);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+
+        gridLayout_2->addWidget(label_4, 9, 2, 1, 1);
+
+        label = new QLabel(tabHardwareOptions);
+        label->setObjectName(QString::fromUtf8("label"));
+
+        gridLayout_2->addWidget(label, 10, 0, 1, 3);
+
+        label_2 = new QLabel(tabHardwareOptions);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        gridLayout_2->addWidget(label_2, 9, 0, 1, 1);
 
 
         verticalLayout_3->addLayout(gridLayout_2);
@@ -426,7 +450,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         label_HW_TimPrescaller->setToolTip(QApplication::translate("MainWindow", "Sets prescaller of the timer that generates PWM on HC595", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        label_HW_TimPrescaller->setText(QApplication::translate("MainWindow", "Timer prescaller                 ", 0, QApplication::UnicodeUTF8));
+        label_HW_TimPrescaller->setText(QApplication::translate("MainWindow", "Timer prescaller", 0, QApplication::UnicodeUTF8));
         comboBox_HW_Prescaller->clear();
         comboBox_HW_Prescaller->insertItems(0, QStringList()
          << QApplication::translate("MainWindow", "1", 0, QApplication::UnicodeUTF8)
@@ -444,6 +468,10 @@ public:
         label_sec->setText(QApplication::translate("MainWindow", "secs", 0, QApplication::UnicodeUTF8));
         label_USBSendDataTimeout->setText(QApplication::translate("MainWindow", "USB send data timeout", 0, QApplication::UnicodeUTF8));
         label_sec_6->setText(QApplication::translate("MainWindow", "secs", 0, QApplication::UnicodeUTF8));
+        label_PWM_Frequency->setText(QString());
+        label_4->setText(QApplication::translate("MainWindow", "Hz", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("MainWindow", "System clock: 12 MHz", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWindow", "Frequency of PWM generation:", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tabHardwareOptions), QApplication::translate("MainWindow", "Hardware options", 0, QApplication::UnicodeUTF8));
         pushButton_Close->setText(QApplication::translate("MainWindow", "Close", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

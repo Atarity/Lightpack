@@ -7,7 +7,7 @@ aboutDialog::aboutDialog(QString hardwareVersion, QWidget *parent) :
     ui(new Ui::aboutDialog)
 {
     ui->setupUi(this);
-    ui->labelVersionSoftware->setText(tr("<b>Software version:</b> ") + QString(VERSION_STR));
+    ui->labelVersionSoftware->setText(tr("<b>Software version:</b> ") + QApplication::applicationVersion());
     ui->labelVersionHardware->setText(tr("<b>Hardware version:</b> ") + hardwareVersion);
 }
 

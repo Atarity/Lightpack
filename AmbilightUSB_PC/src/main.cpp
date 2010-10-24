@@ -125,7 +125,8 @@ void settingsInit()
 
 int main(int argc, char **argv)
 {
-    QApplication app(argc, argv);
+    QApplication app(argc, argv);    
+    app.setApplicationVersion(VERSION_STR);
 
     if(!openLogFile()){
         cerr << "Log file didn't opened. Exit." << endl;

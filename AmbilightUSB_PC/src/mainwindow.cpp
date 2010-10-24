@@ -72,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
     initGetPixelsRects();        
     settingsShowPixelsForAmbilight(false);
 
-    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Window);
+    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Window);    
 }
 
 void MainWindow::initGetPixelsRects()
@@ -342,6 +342,8 @@ void MainWindow::settingsWhiteBalanceBlueChange()
     ambilight_usb->readSettings();
 }
 
+
+// Send settings to device and update evaluated Hz of the PWM generation
 void MainWindow::settingsHwTimerOptionsChange()
 {
     int timerPrescallerIndex = ui->comboBox_HW_Prescaller->currentIndex();
@@ -349,6 +351,20 @@ void MainWindow::settingsHwTimerOptionsChange()
     settings->setValue("HwTimerPrescallerIndex", timerPrescallerIndex);
     settings->setValue("HwTimerOCR", timerOutputCompareRegValue);
     ambilight_usb->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
+
+    // TODO: add PWM level max value to settings
+    double pwmFreq = 12000000 / 64; // 64 - PWM level max value;
+    switch(timerPrescallerIndex){
+        case CMD_SET_PRESCALLER_1:      break;
+        case CMD_SET_PRESCALLER_8:      pwmFreq /= 8; break;
+        case CMD_SET_PRESCALLER_64:     pwmFreq /= 64;break;
+        case CMD_SET_PRESCALLER_256:    pwmFreq /= 256;break;
+        case CMD_SET_PRESCALLER_1024:   pwmFreq /= 1024;break;
+        default: qWarning() << "bad value of 'timerPrescallerIndex' =" << timerPrescallerIndex; break;
+    }
+    pwmFreq /= timerOutputCompareRegValue;
+
+    ui->label_PWM_Frequency->setText(QString::number(pwmFreq,'g',3));
 }
 
 
@@ -395,4 +411,11 @@ void MainWindow::loadSettingsToForm()
     ui->spinBox_HeightAmbilight->setValue( settings->value("HeightAmbilight").toInt() );
 
     ui->doubleSpinBoxUsbSendDataTimeout->setValue( settings->value("UsbSendDataTimeout").toInt() / 1000.0 /* ms to sec */ );
+
+    ui->spinBox_HW_OCR->setValue( settings->value("HwTimerOCR").toInt());
+    ui->comboBox_HW_Prescaller->setCurrentIndex( settings->value("HwTimerPrescallerIndex").toInt());
+
+    ui->doubleSpinBox_WB_Red->setValue(settings->value("WhiteBalanceCoefRed").toDouble());
+    ui->doubleSpinBox_WB_Green->setValue(settings->value("WhiteBalanceCoefGreen").toDouble());
+    ui->doubleSpinBox_WB_Blue->setValue(settings->value("WhiteBalanceCoefBlue").toDouble());
 }

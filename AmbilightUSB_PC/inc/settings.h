@@ -24,8 +24,8 @@
 #define USB_SEND_DATA_TIMEOUT_DEFAULT_VALUE     1500
 #define RECONNECT_USB_MS_DEFAULT_VALUE          2000
 
-#define HW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE     2 /* 64 */
-#define HW_TIMER_OCR_DEFAULT_VALUE                  7
+#define HW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE     1 /* 8 */
+#define HW_TIMER_OCR_DEFAULT_VALUE                  234
 
 extern QSettings *settings;
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>350</width>
+    <width>356</width>
     <height>390</height>
    </rect>
   </property>
@@ -309,7 +309,7 @@
              <string>Sets prescaller of the timer that generates PWM on HC595</string>
             </property>
             <property name="text">
-             <string>Timer prescaller                 </string>
+             <string>Timer prescaller</string>
             </property>
            </widget>
           </item>
@@ -394,25 +394,6 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="0" colspan="3">
-           <widget class="QSlider" name="horizontalSlider_HW_OCR">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="pageStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>7</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_Reconnect">
             <property name="text">
@@ -464,6 +445,53 @@
            <widget class="QLabel" name="label_sec_6">
             <property name="text">
              <string>secs</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0" colspan="3">
+           <widget class="QSlider" name="horizontalSlider_HW_OCR">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>255</number>
+            </property>
+            <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="value">
+             <number>7</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLabel" name="label_PWM_Frequency">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="2">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Hz</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0" colspan="3">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>System clock: 12 MHz</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Frequency of PWM generation:</string>
             </property>
            </widget>
           </item>

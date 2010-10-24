@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'aboutdialog.ui'
 **
-** Created: Sun Oct 24 11:35:05 2010
+** Created: Sun Oct 24 20:50:28 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -31,6 +31,7 @@ public:
     QLabel *label_2;
     QLabel *label_3;
     QLabel *label;
+    QLabel *label_7;
     QLabel *label_6;
     QLabel *label_5;
     QLabel *labelVersionSoftware;
@@ -80,6 +81,12 @@ public:
         label->setMargin(3);
 
         verticalLayout->addWidget(label);
+
+        label_7 = new QLabel(aboutDialog);
+        label_7->setObjectName(QString::fromUtf8("label_7"));
+        label_7->setMargin(3);
+
+        verticalLayout->addWidget(label_7);
 
         label_6 = new QLabel(aboutDialog);
         label_6->setObjectName(QString::fromUtf8("label_6"));
@@ -144,8 +151,21 @@ public:
 "</style></head><body style=\" font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; font-weight:600;\">Ambilight USB</span></p></body></html>", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("aboutDialog", "This project makes ambilight for you PC. Watching films now can be more fun. ", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("aboutDialog", "<b>Hardware:</b> ATtiny44, 74HC595 and 4 RGB leds. Using V-USB (HID Class device). ", 0, QApplication::UnicodeUTF8));
-        label_6->setText(QApplication::translate("aboutDialog", "<b>PC software:</b> C++, Qt, X11 (GUI tested in Ubuntu 10.04) ", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("aboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Hardware:</span> ATtiny44, 74HC595 and 4 RGB LEDs</p></body></html>", 0, QApplication::UnicodeUTF8));
+        label_7->setText(QApplication::translate("aboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Firmware:</span> C, V-USB (HID)</p></body></html>", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("aboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Software:</span> C++, Qt 4.6</p></body></html>", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("aboutDialog", "<b>Author:</b> brunql", 0, QApplication::UnicodeUTF8));
         labelVersionSoftware->setText(QString());
         labelVersionHardware->setText(QString());
