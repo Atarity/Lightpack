@@ -21,9 +21,9 @@
 #define LEFT_UP		3
 
 // Define indexes for colors and colors_new arrays
-#define R	0
+#define R	2
 #define G	1
-#define B	2
+#define B	0
 
 // Hardware RGB bits definitions:
 

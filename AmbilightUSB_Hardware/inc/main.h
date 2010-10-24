@@ -19,9 +19,6 @@
 // Delay for next smoothly change colors
 #define SMOOTHLY_DELAY	32
 
-// Color max value, i.e. 0 <= color[led][c] < PWM_LEVEL
-#define PWM_LEVEL		32
-
 // Test pin on PORTA.7 using for debugging and evaluation time intervals
 #define TEST_PIN_DDR_INIT()		{ DDRA |= _BV(PA7); }
 #define TEST_UP()				{ PORTA |= _BV(PA7); }
@@ -34,5 +31,8 @@ extern volatile uint8_t update_colors;
 
 // Save new colors comes from PC
 extern volatile uint8_t colors_new[4][3];
+
+// Color max value, i.e. 0 <= color[led][c] < pwm_level_max
+extern volatile uint8_t pwm_level_max;
 
 #endif /* MAIN_H_ */

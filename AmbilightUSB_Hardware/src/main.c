@@ -33,192 +33,67 @@ volatile uint8_t colors_new[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
 
 // Current PWM generation level
 volatile uint8_t pwm_level = 0x00;
+volatile uint8_t pwm_level_max = 64;
 
 // Smoothly changing colors index
 volatile uint8_t smooth = 0x00;
 
 
+#define CHECK_PWM_LEVEL_AND_SET_HC595_OUT( LED_INDEX, COLOR_INDEX ) {\
+		HC595_CLK_DOWN; \
+		if(colors_new[LED_INDEX][COLOR_INDEX] > pwm_level){ \
+			HC595_PORT &= (uint8_t)~HC595_DATA_PIN; \
+		}else{ \
+			HC595_PORT |= HC595_DATA_PIN; \
+		} \
+		HC595_CLK_UP;\
+	}
+
+
 static inline void PWM()
 {
-	if(++pwm_level >= PWM_LEVEL){
+	if(++pwm_level >= pwm_level_max){
 		pwm_level = 0x00;
 	}
 
-//	uint16_t leds = 0x0000;
-
-//	// Right side
-//	#define RED_RIGHT 		0b0100ul
-//	#define GREEN_RIGHT 	0b0010ul
-//	#define BLUE_RIGHT 		0b0001ul
-//
-//	#define RIGHT_UP_RED_LS		(RED_RIGHT 		<< 12)
-//	#define RIGHT_UP_GREEN_LS	(GREEN_RIGHT 	<< 12)
-//	#define RIGHT_UP_BLUE_LS	(BLUE_RIGHT 	<< 12)
-//
-//	#define RIGHT_DOWN_RED_LS	(RED_RIGHT 		<< 8)
-//	#define RIGHT_DOWN_GREEN_LS	(GREEN_RIGHT 	<< 8)
-//	#define RIGHT_DOWN_BLUE_LS	(BLUE_RIGHT 	<< 8)
-//
-//	// Left side
-//	#define RED_LEFT 	0b1000ul
-//	#define GREEN_LEFT 	0b0100ul
-//	#define BLUE_LEFT 	0b0010ul
-//
-//	#define LEFT_DOWN_RED_LS	(RED_LEFT 	<< 4)
-//	#define LEFT_DOWN_GREEN_LS	(GREEN_LEFT << 4)
-//	#define LEFT_DOWN_BLUE_LS	(BLUE_LEFT 	<< 4)
-//
-//	#define LEFT_UP_RED_LS		(RED_LEFT 	<< 0)
-//	#define LEFT_UP_GREEN_LS	(GREEN_LEFT << 0)
-//	#define LEFT_UP_BLUE_LS		(BLUE_LEFT 	<< 0)
-
-
 	// LEFT_UP
-
 	HC595_CLK_DOWN;
 	HC595_PORT |= HC595_DATA_PIN;
 	HC595_CLK_UP;
 
-	HC595_CLK_DOWN;
-	if(colors_new[LEFT_UP][B] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
+	for(uint8_t color=0; color<3; color++){
+		CHECK_PWM_LEVEL_AND_SET_HC595_OUT(LEFT_UP, color);
 	}
-	HC595_CLK_UP;
-
-	HC595_CLK_DOWN;
-	if(colors_new[LEFT_UP][G] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
-	}
-	HC595_CLK_UP;
-
-	HC595_CLK_DOWN;
-	if(colors_new[LEFT_UP][R] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
-	}
-	HC595_CLK_UP;
-
 
 	// LEFT_DOWN
-
 	HC595_CLK_DOWN;
 	HC595_PORT |= HC595_DATA_PIN;
 	HC595_CLK_UP;
 
-	HC595_CLK_DOWN;
-	if(colors_new[LEFT_DOWN][B] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
+	for(uint8_t color=0; color<3; color++){
+		CHECK_PWM_LEVEL_AND_SET_HC595_OUT(LEFT_DOWN, color);
 	}
-	HC595_CLK_UP;
 
-	HC595_CLK_DOWN;
-	if(colors_new[LEFT_DOWN][G] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
-	}
-	HC595_CLK_UP;
-
-	HC595_CLK_DOWN;
-	if(colors_new[LEFT_DOWN][R] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
-	}
-	HC595_CLK_UP;
 
 
 	// RIGHT_DOWN
-
-	HC595_CLK_DOWN;
-	if(colors_new[RIGHT_DOWN][B] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
+	for(uint8_t color=0; color<3; color++){
+		CHECK_PWM_LEVEL_AND_SET_HC595_OUT(RIGHT_DOWN, color);
 	}
-	HC595_CLK_UP;
-
-	HC595_CLK_DOWN;
-	if(colors_new[RIGHT_DOWN][G] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
-	}
-	HC595_CLK_UP;
-
-	HC595_CLK_DOWN;
-	if(colors_new[RIGHT_DOWN][R] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
-	}
-	HC595_CLK_UP;
-
 	HC595_CLK_DOWN;
 	HC595_PORT |= HC595_DATA_PIN;
 	HC595_CLK_UP;
 
 
 	// RIGHT_UP
-
-	HC595_CLK_DOWN;
-	if(colors_new[RIGHT_UP][B] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
+	for(uint8_t color=0; color<3; color++){
+		CHECK_PWM_LEVEL_AND_SET_HC595_OUT(RIGHT_UP, color);
 	}
-	HC595_CLK_UP;
-
-	HC595_CLK_DOWN;
-	if(colors_new[RIGHT_UP][G] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
-	}
-	HC595_CLK_UP;
-
-	HC595_CLK_DOWN;
-	if(colors_new[RIGHT_UP][R] > pwm_level){
-		HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-	}else{
-		HC595_PORT |= HC595_DATA_PIN;
-	}
-	HC595_CLK_UP;
-
 	HC595_CLK_DOWN;
 	HC595_PORT |= HC595_DATA_PIN;
 	HC595_CLK_UP;
 
 	HC595_LATCH_PULSE;
-
-
-//	if(colors_new[RIGHT_UP][R] > pwm_level) 	leds |= RIGHT_UP_RED_LS;
-//	if(colors_new[RIGHT_UP][G] > pwm_level) 	leds |= RIGHT_UP_GREEN_LS;
-//	if(colors_new[RIGHT_UP][B] > pwm_level) 	leds |= RIGHT_UP_BLUE_LS;
-//
-//	if(colors_new[RIGHT_DOWN][R] > pwm_level) 	leds |= RIGHT_DOWN_RED_LS;
-//	if(colors_new[RIGHT_DOWN][G] > pwm_level) 	leds |= RIGHT_DOWN_GREEN_LS;
-//	if(colors_new[RIGHT_DOWN][B] > pwm_level) 	leds |= RIGHT_DOWN_BLUE_LS;
-//
-//	if(colors_new[LEFT_DOWN][R] > pwm_level) 	leds |= LEFT_DOWN_RED_LS;
-//	if(colors_new[LEFT_DOWN][G] > pwm_level) 	leds |= LEFT_DOWN_GREEN_LS;
-//	if(colors_new[LEFT_DOWN][B] > pwm_level) 	leds |= LEFT_DOWN_BLUE_LS;
-//
-//	if(colors_new[LEFT_UP][R] > pwm_level) 		leds |= LEFT_UP_RED_LS;
-//	if(colors_new[LEFT_UP][G] > pwm_level) 		leds |= LEFT_UP_GREEN_LS;
-//	if(colors_new[LEFT_UP][B] > pwm_level) 		leds |= LEFT_UP_BLUE_LS;
-//
-//
-//
-//	// RGB leds connects with common anode
-//	HC595_PutUInt16((uint16_t)~leds);
 }
 
 static inline void smoothlyChangeColors()
@@ -281,10 +156,12 @@ int main(void)
     HC595_Init();
 
     TCCR1A = 0x00;
-    TCCR1B = _BV(CS12); // 256
+    //TCCR1B = _BV(CS12); // 256
+    TCCR1B = _BV(CS11) | _BV(CS10); // 64
     TCCR1C = 0x00;
-//    OCR1A = 24; // ((12_000_000 / 256)/32) == 1464,8 / 24 == 60 Hz
-    OCR1A = 15; // ((12_000_000 / 256)/32) == 1464,8 / 15 == 100 Hz
+    //OCR1A = 24; // ((12_000_000 / 256)/32) == 1464,8 / 24 == 60 Hz
+    //OCR1A = 15; // ((12_000_000 / 256)/32) == 1464,8 / 15 == 100 Hz
+    OCR1A = 7; // ((12_000_000 / 256)/64) == 1464,8 / 7 == 100 Hz
     TCNT1 = 0x0000;
     TIMSK1 = _BV(OCIE1A);
 
