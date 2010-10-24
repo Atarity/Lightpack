@@ -38,6 +38,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->spinBox_WidthAmbilight, SIGNAL(valueChanged(int)), this, SLOT(settingsWidthAmbilightChange()));
     connect(ui->spinBox_HeightAmbilight, SIGNAL(valueChanged(int)), this, SLOT(settingsHeightAmbilightChange()));
     connect(ui->doubleSpinBoxUsbSendDataTimeout, SIGNAL(valueChanged(double)), this, SLOT(settingsUsbSendDataTimeoutChange()));
+    connect(ui->doubleSpinBox_WB_Red, SIGNAL(valueChanged(double)), this, SLOT(settingsWhiteBalanceRedChange()));
+    connect(ui->doubleSpinBox_WB_Green, SIGNAL(valueChanged(double)), this, SLOT(settingsWhiteBalanceGreenChange()));
+    connect(ui->doubleSpinBox_WB_Blue, SIGNAL(valueChanged(double)), this, SLOT(settingsWhiteBalanceBlueChange()));
 
     usbTimerDelayMs = settings->value("RefreshAmbilightDelayMs").toInt();
     usbTimerReconnectDelayMs = settings->value("ReconnectAmbilightUSBDelayMs").toInt();
@@ -314,6 +317,24 @@ void MainWindow::settingsHeightAmbilightChange()
 void MainWindow::settingsUsbSendDataTimeoutChange()
 {
     settings->setValue("UsbSendDataTimeout", (int)(ui->doubleSpinBoxUsbSendDataTimeout->value() * 1000));
+    ambilight_usb->readSettings();
+}
+
+void MainWindow::settingsWhiteBalanceRedChange()
+{
+    settings->setValue("WhiteBalanceCoefRed", ui->doubleSpinBox_WB_Red->value());
+    ambilight_usb->readSettings();
+}
+
+void MainWindow::settingsWhiteBalanceGreenChange()
+{
+    settings->setValue("WhiteBalanceCoefGreen", ui->doubleSpinBox_WB_Green->value());
+    ambilight_usb->readSettings();
+}
+
+void MainWindow::settingsWhiteBalanceBlueChange()
+{
+    settings->setValue("WhiteBalanceCoefBlue", ui->doubleSpinBox_WB_Blue->value());
     ambilight_usb->readSettings();
 }
 

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sun Oct 24 19:22:07 2010
+** Created: Sun Oct 24 19:28:12 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-      12,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -43,6 +43,9 @@ static const uint qt_meta_data_MainWindow[] = {
      242,   11,   11,   11, 0x08,
      273,   11,   11,   11, 0x08,
      305,   11,   11,   11, 0x08,
+     340,   11,   11,   11, 0x08,
+     372,   11,   11,   11, 0x08,
+     406,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -58,6 +61,9 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "settingsWidthAmbilightChange()\0"
     "settingsHeightAmbilightChange()\0"
     "settingsUsbSendDataTimeoutChange()\0"
+    "settingsWhiteBalanceRedChange()\0"
+    "settingsWhiteBalanceGreenChange()\0"
+    "settingsWhiteBalanceBlueChange()\0"
 };
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -101,9 +107,12 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 9: settingsWidthAmbilightChange(); break;
         case 10: settingsHeightAmbilightChange(); break;
         case 11: settingsUsbSendDataTimeoutChange(); break;
+        case 12: settingsWhiteBalanceRedChange(); break;
+        case 13: settingsWhiteBalanceGreenChange(); break;
+        case 14: settingsWhiteBalanceBlueChange(); break;
         default: ;
         }
-        _id -= 12;
+        _id -= 15;
     }
     return _id;
 }

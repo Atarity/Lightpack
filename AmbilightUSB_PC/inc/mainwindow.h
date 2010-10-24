@@ -44,6 +44,10 @@ private slots:
     void settingsWidthAmbilightChange();
     void settingsHeightAmbilightChange();
     void settingsUsbSendDataTimeoutChange();
+    void settingsWhiteBalanceRedChange();
+    void settingsWhiteBalanceGreenChange();
+    void settingsWhiteBalanceBlueChange();
+
 
 
 private:
