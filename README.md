@@ -5,10 +5,16 @@ This very simple project makes ambilight for you PC. Watching films now can be m
 Hardware: `ATtiny44`, `74HC595` and 4 RGB leds   
 Firmware: written in `C`, using `V-USB` (HID Class device)   
 Software: `C++`, `Qt`, `X11` (GUI tested in Ubuntu 10.04)   
-[Description of the device in pictures](http://brunql.github.com/ambilight/)   
+[Description](http://brunql.github.com/ambilight/) of the device in pictures   
 
 Software versions:
 ==================
+Version 2.7.4
+-------------
+Rewrote the code to grab screen image and find the average color value of exciting fields
+Added display of exciting fields as filled rectangles in different colors
+Added scroll bars to change the width and height of the exciting fields
+
 Version 2.7.3
 -------------
 Sets configurations of:   
