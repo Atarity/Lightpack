@@ -108,23 +108,56 @@ ISR( TIM1_COMPA_vect )
 	TCNT1 = 0x0000;
 }
 
-
-static inline void ShowRGB()
+void SetAllLedsColors(uint8_t red, uint8_t green, uint8_t blue)
 {
-	HC595_PutUInt16((uint16_t)~
-			(RIGHT_UP_RED_LS | LEFT_UP_RED_LS |
-					RIGHT_DOWN_RED_LS | LEFT_DOWN_RED_LS));
-	_delay_ms(400);
+	for(uint8_t i=0; i<4; i++){
+		colors_new[i][R] = red;
+		colors_new[i][G] = green;
+		colors_new[i][B] = blue;
+	}
+}
 
-	HC595_PutUInt16((uint16_t)~
-			(RIGHT_UP_GREEN_LS | LEFT_UP_GREEN_LS |
-					RIGHT_DOWN_GREEN_LS | LEFT_DOWN_GREEN_LS));
-	_delay_ms(400);
 
-	HC595_PutUInt16((uint16_t)~
-			(RIGHT_UP_BLUE_LS | LEFT_UP_BLUE_LS |
-					RIGHT_DOWN_BLUE_LS | LEFT_DOWN_BLUE_LS));
-	_delay_ms(400);
+//
+// When you connect the device to the USB,
+// LEDs are smoothly grow and fade the red, green and blue colors.
+//
+static inline void SmoothlyShowRGB()
+{
+	uint8_t fsm = 1, red = 0, green = 0, blue = 0;
+
+	for(;fsm != 0;){
+		switch(fsm){
+		case 1:
+			SetAllLedsColors(red++, green, blue);
+			if(red >= pwm_level_max){
+				fsm = 2;
+			}
+			break;
+		case 2:
+			SetAllLedsColors(red--, green++, blue);
+			if(red == 0){
+				fsm = 3;
+			}
+			break;
+		case 3:
+			SetAllLedsColors(red, green--, blue++);
+			if(green == 0){
+				fsm = 4;
+			}
+			break;
+		case 4:
+			SetAllLedsColors(red, green, blue--);
+			if(blue == 0){
+				fsm = 0;
+			}
+			break;
+		default: fsm = 0; break;
+		}
+		_delay_ms(3);
+	}
+
+	SetAllLedsColors(0, 0, 0);
 }
 
 static inline void TimerForPWM_Init()
@@ -133,8 +166,8 @@ static inline void TimerForPWM_Init()
 	TCCR1C = 0x00;
 
 	// Default values of timer prescaller and output compare register
-	TCCR1B = _BV(CS11) | _BV(CS10); // 64
-	OCR1A = 7;
+	TCCR1B = _BV(CS11); // 8
+	OCR1A = 100;
 
 	TCNT1 = 0x0000;
 	TIMSK1 = _BV(OCIE1A);
@@ -158,16 +191,14 @@ int main(void)
     // HC595 ports initialization
     HC595_Init();
 
-    // Swith ON all leds red, green and blue LEDs with delays
-    ShowRGB();
-
-
     // Initialize timer used to for generate the PWM
     TimerForPWM_Init();
 
-
     // Enable interrupts
 	sei(); // USB using INT0
+
+
+	SmoothlyShowRGB();
 
 
    	for(;;){
