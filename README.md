@@ -1,10 +1,13 @@
-Ambilight USB
-=============
+AmbilightUSB
+============
 
-This very simple project makes ambilight for you PC. Watching films now can be more fun.   
-Hardware: `ATtiny44`, `74HC595` and 4 RGB leds   
-Firmware: written in `C`, using `V-USB` (HID Class device)   
-Software: `C++`, `Qt`, `X11` (GUI tested in Ubuntu 10.04)   
+AmbilightUSB is a very simple implementation of the backlight for a laptop (as in Philips TV). A couple of simple printed circuit boards, controller, shift registers, a few LEDs and AmbilightUSB is ready!   
+Configuration program lives in the tray, without interfering with habitual work and watching movies.   
+
+**Hardware**: `ATtiny44`, `2 x 74HC595` and `4 x RGB LEDs`   
+**Firmware**: written in `C`, using `V-USB` (HID Class device)   
+**Software**: `C++`, `Qt` (all tested in Ubuntu 10.04)   
+
 [Description](http://brunql.github.com/ambilight/) of the device in pictures   
 
 Software versions:
@@ -74,3 +77,5 @@ Have fun!
 =========
 
 For more information see sources and [downloads](http://github.com/brunql/AmbilightUSB/downloads)
+
+Sorry for bad English (=
