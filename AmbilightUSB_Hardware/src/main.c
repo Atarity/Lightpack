@@ -96,46 +96,49 @@ static inline void PWM()
 	HC595_LATCH_PULSE;
 }
 
-static inline void smoothlyChangeColors()
-{
-	// Check if we have new colors
-	if(update_colors){
-		if(++smooth >= SMOOTHLY_DELAY){
-			update_colors = FALSE;
-			for(uint8_t led_index=0; led_index < 4; led_index++){
-				for(uint8_t color=0; color < 3; color++){
-					if(colors[led_index][color] < colors_new[led_index][color]){
-						colors[led_index][color]++;
-						update_colors = TRUE;
-					}
-					if(colors[led_index][color] > colors_new[led_index][color]){
-						colors[led_index][color]--;
-						update_colors = TRUE;
-					}
-				}
-			}
-			smooth = 0x00;
-		}
-	}
-
-//	// Without smooth
-//	for(uint8_t led_index=0; led_index < 4; led_index++){
-//		for(uint8_t color=0; color < 3; color++){
-//			colors[led_index][color] = colors_new[led_index][color];
-//		}
-//	}
-}
-
-
-
 ISR( TIM1_COMPA_vect )
 {
+	// Enable interrupts for usbPoll();
 	sei();
+
+	// Generate one PWM on all channels
 	PWM();
+
+	// Clear timer counter
 	TCNT1 = 0x0000;
 }
 
 
+static inline void ShowRGB()
+{
+	HC595_PutUInt16((uint16_t)~
+			(RIGHT_UP_RED_LS | LEFT_UP_RED_LS |
+					RIGHT_DOWN_RED_LS | LEFT_DOWN_RED_LS));
+	_delay_ms(400);
+
+	HC595_PutUInt16((uint16_t)~
+			(RIGHT_UP_GREEN_LS | LEFT_UP_GREEN_LS |
+					RIGHT_DOWN_GREEN_LS | LEFT_DOWN_GREEN_LS));
+	_delay_ms(400);
+
+	HC595_PutUInt16((uint16_t)~
+			(RIGHT_UP_BLUE_LS | LEFT_UP_BLUE_LS |
+					RIGHT_DOWN_BLUE_LS | LEFT_DOWN_BLUE_LS));
+	_delay_ms(400);
+}
+
+static inline void TimerForPWM_Init()
+{
+	TCCR1A = 0x00;
+	TCCR1C = 0x00;
+
+	// Default values of timer prescaller and output compare register
+	TCCR1B = _BV(CS11) | _BV(CS10); // 64
+	OCR1A = 7;
+
+	TCNT1 = 0x0000;
+	TIMSK1 = _BV(OCIE1A);
+}
 
 //
 //	Initializing I/O, USB and starts PWM generation
@@ -155,15 +158,13 @@ int main(void)
     // HC595 ports initialization
     HC595_Init();
 
-    TCCR1A = 0x00;
-    //TCCR1B = _BV(CS12); // 256
-    TCCR1B = _BV(CS11) | _BV(CS10); // 64
-    TCCR1C = 0x00;
-    //OCR1A = 24; // ((12_000_000 / 256)/32) == 1464,8 / 24 == 60 Hz
-    //OCR1A = 15; // ((12_000_000 / 256)/32) == 1464,8 / 15 == 100 Hz
-    OCR1A = 7; // ((12_000_000 / 256)/64) == 1464,8 / 7 == 100 Hz
-    TCNT1 = 0x0000;
-    TIMSK1 = _BV(OCIE1A);
+    // Swith ON all leds red, green and blue LEDs with delays
+    ShowRGB();
+
+
+    // Initialize timer used to for generate the PWM
+    TimerForPWM_Init();
+
 
     // Enable interrupts
 	sei(); // USB using INT0
@@ -172,12 +173,6 @@ int main(void)
    	for(;;){
    		/* Hey, PC! I'm alive! :) */
    		usbPoll();
-
-   		/* Update leds */
-//   		PWM();
-
-   		/* If have new colors, update it smoothly */
-//   		smoothlyChangeColors();
 	}
 
 	return 0;
