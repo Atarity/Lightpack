@@ -65,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     initGetPixelsRects();        
     settingsShowPixelsForAmbilight(false);
 
-    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);    
+    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Window);
 }
 
 void MainWindow::initGetPixelsRects()
@@ -235,7 +235,7 @@ void MainWindow::settingsShowPixelsForAmbilight(bool state)
     if(state){        
         for(int i=0; i<LEDS_COUNT; i++){
             labelGetPixelsRects[i]->show();
-        }
+        }                
     }else{
         for(int i=0; i<LEDS_COUNT; i++){
             labelGetPixelsRects[i]->hide();

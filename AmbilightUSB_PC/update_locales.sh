@@ -7,8 +7,8 @@
 #       Project: AmbilightUSB
 #	Description: Updating translation files for Ambilight project
 #
-TRANSLATION_DIR=translations
-TRANSLATION_FILES=Ambilight_ru_RU.qm
+# TRANSLATION_DIR=translations
+# TRANSLATION_FILES=Ambilight_ru_RU.qm
 
 echo 
 echo "================================================="

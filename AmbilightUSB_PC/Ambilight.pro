@@ -3,15 +3,9 @@
 # -------------------------------------------------
 DESTDIR = ./build
 TARGET = Ambilight
-TRANSLATIONS = ./translations/Ambilight_ru_RU.ts
+TRANSLATIONS = translations/Ambilight_ru_RU.ts
 CONFIG += console
 CONFIG -= app_bundle
-
-# TODO: Check defined WIN32
-# LIBS = -lhid \
-# -lusbcamd \
-# -lsetupapi
-# else for Linux:
 LIBS += -lusb
 INCLUDEPATH += ./inc
 INCLUDEPATH += ../AmbilightUSB_Hardware/inc/

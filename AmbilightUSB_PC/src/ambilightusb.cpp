@@ -21,15 +21,8 @@ ambilightUsb::ambilightUsb()
 
     readSettings();    
 
-    // TODO: memset
-    for(uint i=0; i<sizeof(write_buffer); i++){
-        write_buffer[i] = 0;
-    }
-
-    // TODO: memset
-    for(uint i=0; i<sizeof(read_buffer); i++){
-        read_buffer[i] = 0;
-    }
+    memset(write_buffer, 0, sizeof(write_buffer));
+    memset(read_buffer, 0, sizeof(read_buffer));
 }
 
 ambilightUsb::~ambilightUsb(){

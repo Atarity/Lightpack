@@ -165,16 +165,17 @@ int main(int argc, char **argv)
                               "I couldn't detect any system tray on this system.");
         return 1;
     }
+    QApplication::setQuitOnLastWindowClosed(false);
 
-    QString pathToLocale = QString(":/translations/Ambilight_") + locale;
+    QString pathToLocale = QString(":/translations/Ambilight_") + locale;    
 
     if(locale == "en_EN"){
         qWarning() << "Locale: " + locale;
     }else{
-        QTranslator translator;
-        if(translator.load(pathToLocale)){
+        QTranslator *translator = new QTranslator();
+        if(translator->load(pathToLocale)){
             qDebug() << "Load translation for locale" << locale;
-            app.installTranslator(&translator);
+            app.installTranslator(translator);
         }else{
             qWarning() << "Locale:" << pathToLocale << "not found. Using defaults.";
         }        
@@ -182,10 +183,9 @@ int main(int argc, char **argv)
 
     settingsInit();
 
-    QApplication::setQuitOnLastWindowClosed(false);
-
     MainWindow window;          /* Create MainWindow */
     window.setVisible(false);   /* And load to tray. */
+
 
     return app.exec();
 }
