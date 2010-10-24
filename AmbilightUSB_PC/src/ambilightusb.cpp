@@ -229,9 +229,14 @@ double ambilightUsb::updateColorsIfChanges()
     // Find average for each led color
     for(int led_index=0; led_index < LEDS_COUNT; led_index++){
         for(int color=0; color < 3; color++){
-            // Color depth 15-bit (5-bit on each color)
-            // Each led color must be in 0..31
-            colors[led_index][color] /= 8;
+
+            //
+            // TODO: add PWM level max value to settings
+            //
+
+            // Color depth 15-bit (5-bit on each color)            
+            // Each led color must be in 0..pwm_value_max
+            colors[led_index][color] >>= 2; // now pwm_value_max==64
 
             //  9.6 mA - all off
             // 90.0 mA - all on
@@ -255,13 +260,6 @@ double ambilightUsb::updateColorsIfChanges()
             }
         }
     }    
-
-
-//    double timeLong = timeEval->howLongItEnd();
-//    qDebug() << timeLong;
-//    usleep(100000);
-//
-//    return timeLong;
 
     if(write_colors){
         write_buffer[1] = CMD_RIGHT_SIDE;

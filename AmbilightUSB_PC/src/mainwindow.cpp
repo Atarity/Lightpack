@@ -418,4 +418,6 @@ void MainWindow::loadSettingsToForm()
     ui->doubleSpinBox_WB_Red->setValue(settings->value("WhiteBalanceCoefRed").toDouble());
     ui->doubleSpinBox_WB_Green->setValue(settings->value("WhiteBalanceCoefGreen").toDouble());
     ui->doubleSpinBox_WB_Blue->setValue(settings->value("WhiteBalanceCoefBlue").toDouble());
+
+    settingsHwTimerOptionsChange(); // eval PWM generation frequency and show it in settings
 }

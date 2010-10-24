@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Oct 24 20:50:28 2010
+** Created: Mon Oct 25 00:07:09 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -423,7 +423,7 @@ public:
         QObject::connect(horizontalSlider_HW_OCR, SIGNAL(valueChanged(int)), spinBox_HW_OCR, SLOT(setValue(int)));
         QObject::connect(spinBox_HW_OCR, SIGNAL(valueChanged(int)), horizontalSlider_HW_OCR, SLOT(setValue(int)));
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
         comboBox_HW_Prescaller->setCurrentIndex(2);
 
 
