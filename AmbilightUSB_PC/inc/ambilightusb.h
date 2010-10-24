@@ -63,14 +63,17 @@ private:
     //  colors_save[LED_INDEX][COLOR]
     int colors_save[LEDS_COUNT][3];
 
-    int step_x;
-    int step_y;
+
+    // Settings:
     int ambilight_width;
     int ambilight_height;
 
+    double white_balance_r;
+    double white_balance_g;
+    double white_balance_b;
+
     int usb_send_data_timeout;
 
-    int pixels_count_for_each_led;
 
     TimeEvaluations *timeEval;
 };

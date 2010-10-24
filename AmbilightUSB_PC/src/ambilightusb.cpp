@@ -40,22 +40,14 @@ void ambilightUsb::clearColorSave()
 
 void ambilightUsb::readSettings()
 {
-    step_x = settings->value("StepX").toInt();
-    step_y = settings->value("StepY").toInt();
     ambilight_width = settings->value("WidthAmbilight").toInt();
     ambilight_height = settings->value("HeightAmbilight").toInt();
 
     usb_send_data_timeout = settings->value("UsbSendDataTimeout").toInt();
 
-    int x_pixels = (ambilight_width / step_x);
-    int y_pixels = (ambilight_height / step_y);
-    if(ambilight_width % step_x != 0){
-        x_pixels++;
-    }
-    if(ambilight_height % step_y != 0){
-        y_pixels++;
-    }
-    pixels_count_for_each_led = x_pixels * y_pixels;
+    white_balance_r = settings->value("WhiteBalanceCoefRed").toDouble();
+    white_balance_g = settings->value("WhiteBalanceCoefGreen").toDouble();
+    white_balance_b = settings->value("WhiteBalanceCoefBlue").toDouble();
 }
 
 bool ambilightUsb::deviceOpened()
@@ -231,10 +223,9 @@ double ambilightUsb::updateColorsIfChanges()
 
     // White balance
     for(int led_index=0; led_index < LEDS_COUNT; led_index++){
-        // TODO: Add coefs to settings
-        colors[led_index][R] *= 0.7;
-        colors[led_index][G] *= 1;
-        colors[led_index][B] *= 1.2;
+        colors[led_index][R] *= white_balance_r;
+        colors[led_index][G] *= white_balance_g;
+        colors[led_index][B] *= white_balance_b;
     }
 
     for(int led_index=0; led_index < LEDS_COUNT; led_index++){

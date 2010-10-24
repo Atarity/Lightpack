@@ -95,43 +95,32 @@ void messageOutput(QtMsgType type, const char *msg)
     logStream.flush();
 }
 
+void setDefaultSettingIfNotFound(const QString & name, const QVariant & value)
+{
+    if(!settings->contains(name)){
+        qDebug() << "Settings:"<< name << "not found. Set it to default value: " << value.toString();
+        settings->setValue(name, value);
+    }
+}
+
 //
 //  Check and/or initialize settings
 //
 void settingsInit()
 {
     settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "brunql.dev", "AmbilightUSB");
-    if(settings->value("RefreshAmbilightDelayMs") == QVariant()){
-        qDebug() << "Settings: 'RefreshAmbilightDelayMs' not found. Set it to default value:"
-                << REFRESH_AMBILIGHT_MS_DEFAULT_VALUE;
-        settings->setValue("RefreshAmbilightDelayMs", REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
-    }
-    if(settings->value("ReconnectAmbilightUSBDelayMs") == QVariant()){
-        qDebug() << "Settings: 'ReconnectAmbilightUSBDelayMs' not found. Set it to default value:"
-                << RECONNECT_USB_MS_DEFAULT_VALUE;
-        settings->setValue("ReconnectAmbilightUSBDelayMs", RECONNECT_USB_MS_DEFAULT_VALUE);
-    }
-    if(settings->value("WidthAmbilight") == QVariant()){
-        qDebug() << "Settings: 'WidthAmbilight' not found. Set it to default value:"
-                << WIDTH_AMBILIGHT_DEFAULT_VALUE;
-        settings->setValue("WidthAmbilight", WIDTH_AMBILIGHT_DEFAULT_VALUE);
-    }
-    if(settings->value("HeightAmbilight") == QVariant()){
-        qDebug() << "Settings: 'HeightAmbilight' not found. Set it to default value:"
-                << HEIGHT_AMBILIGHT_DEFAULT_VALUE;
-        settings->setValue("HeightAmbilight", HEIGHT_AMBILIGHT_DEFAULT_VALUE);
-    }
-    if(settings->value("IsAmbilightOn") == QVariant()){
-        qDebug() << "Settings: 'IsAmbilightOn' not found. Set it to default value:"
-                << IS_AMBILIGHT_ON_DEFAULT_VALUE;
-        settings->setValue("IsAmbilightOn", IS_AMBILIGHT_ON_DEFAULT_VALUE);
-    }
-    if(settings->value("UsbSendDataTimeout") == QVariant()){
-        qDebug() << "Settings: 'UsbSendDataTimeout' not found. Set it to default value:"
-                << USB_SEND_DATA_TIMEOUT;
-        settings->setValue("UsbSendDataTimeout", USB_SEND_DATA_TIMEOUT);
-    }
-
+    
+    setDefaultSettingIfNotFound("RefreshAmbilightDelayMs",             REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("ReconnectAmbilightUSBDelayMs",        RECONNECT_USB_MS_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("WidthAmbilight",                      WIDTH_AMBILIGHT_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("HeightAmbilight",                     HEIGHT_AMBILIGHT_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("UsbSendDataTimeout",                  USB_SEND_DATA_TIMEOUT_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("WhiteBalanceCoefRed",                 WHITE_BALANCE_COEF_RED_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("WhiteBalanceCoefGreen",               WHITE_BALANCE_COEF_GREEN_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("WhiteBalanceCoefBlue",                WHITE_BALANCE_COEF_BLUE_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("HwTimerPrescallerIndex",              HW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("HwTimerOCR",                          HW_TIMER_OCR_DEFAULT_VALUE);
 }
 
 int main(int argc, char **argv)
