@@ -41,6 +41,12 @@ Using X11 library to catch pixels colors
 
 Firmware versions:
 ==================
+Version 2.7
+-----------
+New command to set prescaller and output compare register of timer that used to PWM generation.   
+New command to set color max value (pwm_level_max)   
+When you connect the device to the USB, LEDs are smoothly grow and fade the red, green and blue colors.   
+
 Version 2.6
 -----------
 Firmware using V-USB as HID.    
