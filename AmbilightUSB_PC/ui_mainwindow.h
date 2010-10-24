@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Oct 24 18:35:37 2010
+** Created: Sun Oct 24 20:02:20 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -303,7 +303,7 @@ public:
 
         spinBox_HW_OCR = new QSpinBox(tabHardwareOptions);
         spinBox_HW_OCR->setObjectName(QString::fromUtf8("spinBox_HW_OCR"));
-        spinBox_HW_OCR->setMinimum(0);
+        spinBox_HW_OCR->setMinimum(1);
         spinBox_HW_OCR->setMaximum(255);
         spinBox_HW_OCR->setValue(7);
 
@@ -316,7 +316,7 @@ public:
 
         horizontalSlider_HW_OCR = new QSlider(tabHardwareOptions);
         horizontalSlider_HW_OCR->setObjectName(QString::fromUtf8("horizontalSlider_HW_OCR"));
-        horizontalSlider_HW_OCR->setMinimum(0);
+        horizontalSlider_HW_OCR->setMinimum(1);
         horizontalSlider_HW_OCR->setMaximum(255);
         horizontalSlider_HW_OCR->setPageStep(1);
         horizontalSlider_HW_OCR->setValue(7);
@@ -394,8 +394,12 @@ public:
         QObject::connect(spinBox_WidthAmbilight, SIGNAL(valueChanged(int)), horizontalSliderWidth, SLOT(setValue(int)));
         QObject::connect(horizontalSliderHeight, SIGNAL(valueChanged(int)), spinBox_HeightAmbilight, SLOT(setValue(int)));
         QObject::connect(spinBox_HeightAmbilight, SIGNAL(valueChanged(int)), horizontalSliderHeight, SLOT(setValue(int)));
+        QObject::connect(comboBox_HW_Prescaller, SIGNAL(currentIndexChanged(int)), horizontalSlider_HW_Prescaller, SLOT(setValue(int)));
+        QObject::connect(horizontalSlider_HW_Prescaller, SIGNAL(valueChanged(int)), comboBox_HW_Prescaller, SLOT(setCurrentIndex(int)));
+        QObject::connect(horizontalSlider_HW_OCR, SIGNAL(valueChanged(int)), spinBox_HW_OCR, SLOT(setValue(int)));
+        QObject::connect(spinBox_HW_OCR, SIGNAL(valueChanged(int)), horizontalSlider_HW_OCR, SLOT(setValue(int)));
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
         comboBox_HW_Prescaller->setCurrentIndex(2);
 
 

@@ -47,6 +47,7 @@ private slots:
     void settingsWhiteBalanceRedChange();
     void settingsWhiteBalanceGreenChange();
     void settingsWhiteBalanceBlueChange();
+    void settingsHwTimerOptionsChange();
 
 
 

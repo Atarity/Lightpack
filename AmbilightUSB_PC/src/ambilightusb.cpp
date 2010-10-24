@@ -173,11 +173,11 @@ bool ambilightUsb::offLeds()
 }
 
 
-bool ambilightUsb::setTimerOptions(enum PRESCALLERS prescaller, int outputCompareRegValue)
+bool ambilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
 {
     // TODO: get names for each index
     write_buffer[1] = CMD_SET_TIMER_OPTIONS;
-    write_buffer[2] = (char)prescaller;
+    write_buffer[2] = (char)prescallerIndex;
     write_buffer[3] = (char)outputCompareRegValue;
 
     return writeBufferToDeviceWithCheck();

@@ -41,6 +41,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->doubleSpinBox_WB_Red, SIGNAL(valueChanged(double)), this, SLOT(settingsWhiteBalanceRedChange()));
     connect(ui->doubleSpinBox_WB_Green, SIGNAL(valueChanged(double)), this, SLOT(settingsWhiteBalanceGreenChange()));
     connect(ui->doubleSpinBox_WB_Blue, SIGNAL(valueChanged(double)), this, SLOT(settingsWhiteBalanceBlueChange()));
+    connect(ui->comboBox_HW_Prescaller, SIGNAL(currentIndexChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
+    connect(ui->horizontalSlider_HW_Prescaller, SIGNAL(valueChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
+    connect(ui->horizontalSlider_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
+    connect(ui->spinBox_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
 
     usbTimerDelayMs = settings->value("RefreshAmbilightDelayMs").toInt();
     usbTimerReconnectDelayMs = settings->value("ReconnectAmbilightUSBDelayMs").toInt();
@@ -336,6 +340,15 @@ void MainWindow::settingsWhiteBalanceBlueChange()
 {
     settings->setValue("WhiteBalanceCoefBlue", ui->doubleSpinBox_WB_Blue->value());
     ambilight_usb->readSettings();
+}
+
+void MainWindow::settingsHwTimerOptionsChange()
+{
+    int timerPrescallerIndex = ui->comboBox_HW_Prescaller->currentIndex();
+    int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
+    settings->setValue("HwTimerPrescallerIndex", timerPrescallerIndex);
+    settings->setValue("HwTimerOCR", timerOutputCompareRegValue);
+    ambilight_usb->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
 }
 
 

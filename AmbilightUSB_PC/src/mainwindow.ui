@@ -25,7 +25,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <attribute name="title">
@@ -33,7 +33,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" rowminimumheight="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0,0" rowminimumheight="0,0,0,0,0,0,0,0">
           <item row="0" column="0">
            <widget class="QLabel" name="label_UpdateDelay">
             <property name="text">
@@ -377,7 +377,7 @@
           <item row="4" column="1">
            <widget class="QSpinBox" name="spinBox_HW_OCR">
             <property name="minimum">
-             <number>0</number>
+             <number>1</number>
             </property>
             <property name="maximum">
              <number>255</number>
@@ -397,7 +397,7 @@
           <item row="5" column="0" colspan="3">
            <widget class="QSlider" name="horizontalSlider_HW_OCR">
             <property name="minimum">
-             <number>0</number>
+             <number>1</number>
             </property>
             <property name="maximum">
              <number>255</number>
@@ -582,6 +582,70 @@
     </hint>
     <hint type="destinationlabel">
      <x>170</x>
+     <y>210</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>comboBox_HW_Prescaller</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>horizontalSlider_HW_Prescaller</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>232</x>
+     <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>174</x>
+     <y>156</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_HW_Prescaller</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>comboBox_HW_Prescaller</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>174</x>
+     <y>156</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>232</x>
+     <y>129</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_HW_OCR</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_HW_OCR</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>174</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>232</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_HW_OCR</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSlider_HW_OCR</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>232</x>
+     <y>183</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>174</x>
      <y>210</y>
     </hint>
    </hints>

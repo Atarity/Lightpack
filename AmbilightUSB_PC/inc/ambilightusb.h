@@ -34,7 +34,7 @@ public:
     QString hardwareVersion();
 
     bool offLeds();
-    bool setTimerOptions(enum PRESCALLERS prescaller, int outputCompareRegValue);
+    bool setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     double updateColorsIfChanges();
 
     void clearColorSave();
