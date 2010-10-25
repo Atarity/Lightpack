@@ -35,6 +35,7 @@ public:
 
     bool offLeds();
     bool setTimerOptions(int prescallerIndex, int outputCompareRegValue);
+    bool setColorDepth(int colorDepth);
     double updateColorsIfChanges();
 
     void clearColorSave();
@@ -65,6 +66,8 @@ private:
     double white_balance_r;
     double white_balance_g;
     double white_balance_b;
+
+    int color_depth;
 
     int usb_send_data_timeout;
 

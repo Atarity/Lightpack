@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->horizontalSlider_HW_Prescaller, SIGNAL(valueChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
     connect(ui->horizontalSlider_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
     connect(ui->spinBox_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
+    connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
 
     usbTimerDelayMs = settings->value("RefreshAmbilightDelayMs").toInt();
     usbTimerReconnectDelayMs = settings->value("ReconnectAmbilightUSBDelayMs").toInt();
@@ -348,12 +349,14 @@ void MainWindow::settingsHwTimerOptionsChange()
 {
     int timerPrescallerIndex = ui->comboBox_HW_Prescaller->currentIndex();
     int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
+    int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
     settings->setValue("HwTimerPrescallerIndex", timerPrescallerIndex);
     settings->setValue("HwTimerOCR", timerOutputCompareRegValue);
+    settings->setValue("HwColorDepth", colorDepth);
     ambilight_usb->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
+    ambilight_usb->setColorDepth(colorDepth);
 
-    // TODO: add PWM level max value to settings
-    double pwmFreq = 12000000 / 64; // 64 - PWM level max value;
+    double pwmFreq = 12000000 / colorDepth; // colorDepth - PWM level max value;
     switch(timerPrescallerIndex){
         case CMD_SET_PRESCALLER_1:      break;
         case CMD_SET_PRESCALLER_8:      pwmFreq /= 8; break;
@@ -412,8 +415,9 @@ void MainWindow::loadSettingsToForm()
 
     ui->doubleSpinBoxUsbSendDataTimeout->setValue( settings->value("UsbSendDataTimeout").toInt() / 1000.0 /* ms to sec */ );
 
-    ui->spinBox_HW_OCR->setValue( settings->value("HwTimerOCR").toInt());
-    ui->comboBox_HW_Prescaller->setCurrentIndex( settings->value("HwTimerPrescallerIndex").toInt());
+    ui->horizontalSlider_HW_OCR->setValue( settings->value("HwTimerOCR").toInt());
+    ui->horizontalSlider_HW_Prescaller->setValue( settings->value("HwTimerPrescallerIndex").toInt());
+    ui->horizontalSlider_HW_ColorDepth->setValue( settings->value("HwColorDepth").toInt());
 
     ui->doubleSpinBox_WB_Red->setValue(settings->value("WhiteBalanceCoefRed").toDouble());
     ui->doubleSpinBox_WB_Green->setValue(settings->value("WhiteBalanceCoefGreen").toDouble());

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Oct 25 00:18:41 2010
+** Created: Mon Oct 25 14:48:55 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -87,6 +87,10 @@ public:
     QLabel *label_4;
     QLabel *label;
     QLabel *label_2;
+    QLabel *label_HW_ColorDepth;
+    QSlider *horizontalSlider_HW_ColorDepth;
+    QSpinBox *spinBox_HW_ColorDepth;
+    QLabel *label_HW_ColorDepth_counts;
     QSpacerItem *verticalSpacer_2;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_2;
@@ -367,22 +371,51 @@ public:
         label_PWM_Frequency = new QLabel(tabHardwareOptions);
         label_PWM_Frequency->setObjectName(QString::fromUtf8("label_PWM_Frequency"));
 
-        gridLayout_2->addWidget(label_PWM_Frequency, 9, 1, 1, 1);
+        gridLayout_2->addWidget(label_PWM_Frequency, 10, 1, 1, 1);
 
         label_4 = new QLabel(tabHardwareOptions);
         label_4->setObjectName(QString::fromUtf8("label_4"));
 
-        gridLayout_2->addWidget(label_4, 9, 2, 1, 1);
+        gridLayout_2->addWidget(label_4, 10, 2, 1, 1);
 
         label = new QLabel(tabHardwareOptions);
         label->setObjectName(QString::fromUtf8("label"));
 
-        gridLayout_2->addWidget(label, 10, 0, 1, 3);
+        gridLayout_2->addWidget(label, 11, 0, 1, 3);
 
         label_2 = new QLabel(tabHardwareOptions);
         label_2->setObjectName(QString::fromUtf8("label_2"));
 
-        gridLayout_2->addWidget(label_2, 9, 0, 1, 1);
+        gridLayout_2->addWidget(label_2, 10, 0, 1, 1);
+
+        label_HW_ColorDepth = new QLabel(tabHardwareOptions);
+        label_HW_ColorDepth->setObjectName(QString::fromUtf8("label_HW_ColorDepth"));
+
+        gridLayout_2->addWidget(label_HW_ColorDepth, 6, 0, 1, 1);
+
+        horizontalSlider_HW_ColorDepth = new QSlider(tabHardwareOptions);
+        horizontalSlider_HW_ColorDepth->setObjectName(QString::fromUtf8("horizontalSlider_HW_ColorDepth"));
+        horizontalSlider_HW_ColorDepth->setMinimum(2);
+        horizontalSlider_HW_ColorDepth->setMaximum(255);
+        horizontalSlider_HW_ColorDepth->setPageStep(3);
+        horizontalSlider_HW_ColorDepth->setValue(64);
+        horizontalSlider_HW_ColorDepth->setOrientation(Qt::Horizontal);
+
+        gridLayout_2->addWidget(horizontalSlider_HW_ColorDepth, 7, 0, 1, 3);
+
+        spinBox_HW_ColorDepth = new QSpinBox(tabHardwareOptions);
+        spinBox_HW_ColorDepth->setObjectName(QString::fromUtf8("spinBox_HW_ColorDepth"));
+        spinBox_HW_ColorDepth->setMinimum(2);
+        spinBox_HW_ColorDepth->setMaximum(255);
+        spinBox_HW_ColorDepth->setSingleStep(1);
+        spinBox_HW_ColorDepth->setValue(64);
+
+        gridLayout_2->addWidget(spinBox_HW_ColorDepth, 6, 1, 1, 1);
+
+        label_HW_ColorDepth_counts = new QLabel(tabHardwareOptions);
+        label_HW_ColorDepth_counts->setObjectName(QString::fromUtf8("label_HW_ColorDepth_counts"));
+
+        gridLayout_2->addWidget(label_HW_ColorDepth_counts, 6, 2, 1, 1);
 
 
         verticalLayout_3->addLayout(gridLayout_2);
@@ -422,8 +455,10 @@ public:
         QObject::connect(horizontalSlider_HW_Prescaller, SIGNAL(valueChanged(int)), comboBox_HW_Prescaller, SLOT(setCurrentIndex(int)));
         QObject::connect(horizontalSlider_HW_OCR, SIGNAL(valueChanged(int)), spinBox_HW_OCR, SLOT(setValue(int)));
         QObject::connect(spinBox_HW_OCR, SIGNAL(valueChanged(int)), horizontalSlider_HW_OCR, SLOT(setValue(int)));
+        QObject::connect(horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), spinBox_HW_ColorDepth, SLOT(setValue(int)));
+        QObject::connect(spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), horizontalSlider_HW_ColorDepth, SLOT(setValue(int)));
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
         comboBox_HW_Prescaller->setCurrentIndex(2);
 
 
@@ -472,6 +507,11 @@ public:
         label_4->setText(QApplication::translate("MainWindow", "Hz", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "System clock: 12 MHz", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWindow", "Frequency of PWM generation:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        label_HW_ColorDepth->setToolTip(QApplication::translate("MainWindow", "Sets the number of levels in PWM generation for each channel", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        label_HW_ColorDepth->setText(QApplication::translate("MainWindow", "Color depth", 0, QApplication::UnicodeUTF8));
+        label_HW_ColorDepth_counts->setText(QApplication::translate("MainWindow", "counts", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tabHardwareOptions), QApplication::translate("MainWindow", "Hardware options", 0, QApplication::UnicodeUTF8));
         pushButton_Close->setText(QApplication::translate("MainWindow", "Close", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

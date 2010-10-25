@@ -121,6 +121,7 @@ void settingsInit()
     setDefaultSettingIfNotFound("WhiteBalanceCoefBlue",                WHITE_BALANCE_COEF_BLUE_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("HwTimerPrescallerIndex",              HW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("HwTimerOCR",                          HW_TIMER_OCR_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("HwColorDepth",                          HW_COLOR_DEPTH_DEFAULT_VALUE);
 }
 
 int main(int argc, char **argv)

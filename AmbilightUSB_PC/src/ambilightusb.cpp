@@ -48,6 +48,8 @@ void ambilightUsb::readSettings()
     white_balance_r = settings->value("WhiteBalanceCoefRed").toDouble();
     white_balance_g = settings->value("WhiteBalanceCoefGreen").toDouble();
     white_balance_b = settings->value("WhiteBalanceCoefBlue").toDouble();
+
+    color_depth = settings->value("HwColorDepth").toInt();
 }
 
 bool ambilightUsb::deviceOpened()
@@ -112,7 +114,6 @@ bool ambilightUsb::writeBufferToDevice()
 bool ambilightUsb::tryToReopenDevice()
 {
     qWarning() << "AmbilightUSB device didn't open. Try to reopen device...";    
-    usbhidCloseDevice(dev); // TODO: need this?
     if(openDevice()){
         qWarning() << "reopen success";
         return true;
@@ -175,14 +176,23 @@ bool ambilightUsb::offLeds()
 
 bool ambilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
 {
-    // TODO: get names for each index
+    // TODO: set names for each index
     write_buffer[1] = CMD_SET_TIMER_OPTIONS;
-    write_buffer[2] = (char)prescallerIndex;
-    write_buffer[3] = (char)outputCompareRegValue;
+    write_buffer[2] = (unsigned char)prescallerIndex;
+    write_buffer[3] = (unsigned char)outputCompareRegValue;
 
     return writeBufferToDeviceWithCheck();
 }
 
+bool ambilightUsb::setColorDepth(int colorDepth)
+{
+    // Save new value of color depth for using in update colors
+    color_depth = colorDepth;
+
+    write_buffer[1] = CMD_SET_PWM_LEVEL_MAX_VALUE;
+    write_buffer[2] = (unsigned char)colorDepth;    
+    return writeBufferToDeviceWithCheck();
+}
 
 
 //
@@ -229,14 +239,8 @@ double ambilightUsb::updateColorsIfChanges()
     // Find average for each led color
     for(int led_index=0; led_index < LEDS_COUNT; led_index++){
         for(int color=0; color < 3; color++){
-
-            //
-            // TODO: add PWM level max value to settings
-            //
-
-            // Color depth 15-bit (5-bit on each color)            
             // Each led color must be in 0..pwm_value_max
-            colors[led_index][color] >>= 2; // now pwm_value_max==64
+            colors[led_index][color] = (int)((double)colors[led_index][color] / (256.0 / color_depth)); // now pwm_value_max==64
 
             //  9.6 mA - all off
             // 90.0 mA - all on
