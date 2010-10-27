@@ -85,7 +85,7 @@ bool AmbilightUsb::writeBufferToDevice()
 {
     int err;
 
-    if((err = usbhidSetReport(ambilightDevice, write_buffer, sizeof(write_buffer), usb_send_data_timeout)) != 0){   /* add a dummy report ID */
+    if((err = usbhidSetReport(ambilightDevice, write_buffer, sizeof(write_buffer), usb_send_data_timeout_ms)) != 0){   /* add a dummy report ID */
         qWarning() << "error writing data:" << usbErrorMessage(err);
         emit writeBufferToDeviceError();
         return false;
@@ -175,7 +175,7 @@ void AmbilightUsb::setColorDepth(int colorDepth)
 
     if(colorDepth <= 0){
         qWarning("ambilightUsb::setColorDepth(%d): This is magic, colorDepth <= 0!", colorDepth);
-        return false;
+        return;
     }
 
     // TODO: set names for each index
@@ -186,14 +186,14 @@ void AmbilightUsb::setColorDepth(int colorDepth)
 }
 
 
-void AmbilightUsb::setUsbSendDataTimeoutMs(int usb_send_data_timeout_ms)
+void AmbilightUsb::setUsbSendDataTimeoutMs(double usb_send_data_timeout_secs)
 {
-    this->usb_send_data_timeout_ms = usb_send_data_timeout_ms;
+    this->usb_send_data_timeout_ms = (int)(usb_send_data_timeout_secs * 1000.0);
 }
 
 
 
-void AmbilightUsb::updateColors(const int colors[][])
+void AmbilightUsb::updateColors(int colors[LEDS_COUNT][3])
 {
     write_buffer[1] = CMD_RIGHT_SIDE;
     write_buffer[2] = (unsigned char)colors[RIGHT_UP][R];

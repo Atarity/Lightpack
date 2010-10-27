@@ -38,8 +38,8 @@ public:
     void offLeds();
 
 public slots:
-    void updateColors(const int colors[][]);
-    void setUsbSendDataTimeoutMs(int usb_send_data_timeout_ms);
+    void updateColors(int colors[LEDS_COUNT][3]);
+    void setUsbSendDataTimeoutMs(double usb_send_data_timeout_secs);
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void setColorDepth(int colorDepth);
 

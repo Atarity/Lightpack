@@ -1,3 +1,13 @@
+/*
+ * grabdesktopwindowleds.h
+ *
+ *  Created on: 26.07.2010
+ *      Author: brunql
+ *
+ *      Project: AmbilightUSB
+ */
+
+
 #include "grabdesktopwindowleds.h"
 
 GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
@@ -9,6 +19,7 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     desktop_height = QApplication::desktop()->height();    
 
     // Read settings once
+    qDebug() << "GrabDesktopWindowLeds(): read settings";
     this->ambilight_refresh_delay_ms = settings->value("RefreshAmbilightDelayMs").toInt();
 
     this->ambilight_width = settings->value("WidthAmbilight").toInt();
@@ -21,11 +32,13 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     this->ambilight_color_depth = settings->value("HwColorDepth").toInt();
 
 
+    qDebug() << "GrabDesktopWindowLeds(): createLabelsGrabPixelsRects()";
     createLabelsGrabPixelsRects();
 
     connect(timer, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
 
     timer->start(ambilight_refresh_delay_ms);
+    qDebug() << "GrabDesktopWindowLeds(): initialized";
 }
 
 GrabDesktopWindowLeds::~GrabDesktopWindowLeds()
@@ -37,11 +50,17 @@ GrabDesktopWindowLeds::~GrabDesktopWindowLeds()
         labelGrabPixelsRects[i]->close();
     }
 
-    labelGrabPixelsRects.clear();
-
-    delete labelGrabPixelsRects;
+    labelGrabPixelsRects.clear();    
 }
 
+void GrabDesktopWindowLeds::clearColors()
+{
+    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
+        for(int color=0; color<3; color++){
+            colors[ledIndex][color] = -1;
+        }
+    }
+}
 
 void GrabDesktopWindowLeds::createLabelsGrabPixelsRects()
 {
@@ -58,8 +77,6 @@ void GrabDesktopWindowLeds::createLabelsGrabPixelsRects()
         pal.setBrush(labelGrabPixelsRects[i]->backgroundRole(), QBrush(labelsColors[i]));
         labelGrabPixelsRects[i]->setPalette(pal);
     }
-
-    delete labelsColors;
 
     updateSizesLabelsGrabPixelsRects();
 }
@@ -149,9 +166,9 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 
     // White balance
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        colors[ledIndex][R] *= white_balance_r;
-        colors[ledIndex][G] *= white_balance_g;
-        colors[ledIndex][B] *= white_balance_b;
+        colors[ledIndex][R] *= ambilight_white_balance_r;
+        colors[ledIndex][G] *= ambilight_white_balance_g;
+        colors[ledIndex][B] *= ambilight_white_balance_b;
     }
 
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
@@ -164,21 +181,36 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
     }
 
     if(needToUpdate){
-        emit updateLedsColors(colors);        
+        emit updateLedsColors( colors );
     }
     emit ambilightTimeOfUpdatingColors(timeEval->howLongItEnd());
+
+    if(isAmbilightOn) {
+        timer->start(ambilight_refresh_delay_ms);
+    }
 }
 
-
+void GrabDesktopWindowLeds::setAmbilightOn(bool state)
+{
+    if(state){
+        if(timer->isActive()){
+            timer->stop();
+        }
+        timer->start(ambilight_refresh_delay_ms);
+    }
+    isAmbilightOn = state;
+}
 
 void GrabDesktopWindowLeds::setAmbilightWidth(int w)
 {
     this->ambilight_width = w;
+    updateSizesLabelsGrabPixelsRects();
 }
 
 void GrabDesktopWindowLeds::setAmbilightHeight(int h)
 {
     this->ambilight_height = h;
+    updateSizesLabelsGrabPixelsRects();
 }
 
 void GrabDesktopWindowLeds::setAmbilightRefreshDelayMs(int ms)

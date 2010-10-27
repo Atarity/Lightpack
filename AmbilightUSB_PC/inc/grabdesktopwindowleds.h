@@ -1,8 +1,18 @@
+/*
+ * grabdesktopwindowleds.h
+ *
+ *  Created on: 26.07.2010
+ *      Author: brunql
+ *
+ *      Project: AmbilightUSB
+ */
+
 #ifndef GRABDESKTOPWINDOWLEDS_H
 #define GRABDESKTOPWINDOWLEDS_H
 
 #include <QtGui>
 #include "RGB.h"        /* Led defines */
+#include "settings.h"
 #include "timeevaluations.h"
 
 class GrabDesktopWindowLeds : public QWidget
@@ -13,7 +23,16 @@ public:
     GrabDesktopWindowLeds(QWidget *parent = 0);
     ~GrabDesktopWindowLeds();
 
+public:
+    void clearColors();
+
+signals:
+    void updateLedsColors(int colorsNew[LEDS_COUNT][3]);
+    void ambilightTimeOfUpdatingColors(double ms);
+
+
 public slots:
+    void setAmbilightOn(bool state);
     void setAmbilightWidth(int w);
     void setAmbilightHeight(int h);
     void setAmbilightRefreshDelayMs(int ms);
@@ -23,9 +42,6 @@ public slots:
     void setAmbilightWhiteBalanceB(double b);
     void setVisibleGrabPixelsRects(bool state);
 
-signals:
-    void updateLedsColors(const int colorsNew[][]);
-    void ambilightTimeOfUpdatingColors(double ms);
 
 private slots:
     void updateLedsColorsIfChanged();
@@ -44,6 +60,8 @@ private: // variables
 
     int desktop_width;
     int desktop_height;
+
+    bool isAmbilightOn;
 
     // Settings:
     int ambilight_width;

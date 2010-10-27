@@ -93,6 +93,7 @@ void messageOutput(QtMsgType type, const char *msg)
     }
     logStream << out << endl;
     logStream.flush();
+    cerr.flush();
 }
 
 void setDefaultSettingIfNotFound(const QString & name, const QVariant & value)

@@ -11,9 +11,10 @@
 #define MAINWINDOW_H
 
 #include <QtGui>
-#include "aboutdialog.h"
-#include "settings.h"
-#include "ambilightusb.h"
+#include "aboutdialog.h"            /* About dialog */
+#include "settings.h"               /* QSettings */
+#include "ambilightusb.h"           /* class AmbilightUsb */
+#include "grabdesktopwindowleds.h"  /* class GrabDesktopWindowLeds */
 
 namespace Ui {
     class MainWindow;
@@ -31,30 +32,20 @@ protected:
 
 private slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
-    void ambilightOn();
-    void ambilightOff();
+    void showAbout(); /* using in actions */
+    void showSettings(); /* using in actions */
+    void ambilightOn(); /* using in actions */
+    void ambilightOff(); /* using in actions */
 
-    void showAbout();
-    void showSettings();
-
-    void timerForUsbPoll();
-    void usbTimerDelayMsChange();
-    void usbTimerReconnectDelayMsChange();
-    void settingsShowPixelsForAmbilight(bool state);
-    void settingsWidthAmbilightChange();
-    void settingsHeightAmbilightChange();
-    void settingsUsbSendDataTimeoutChange();
-    void settingsWhiteBalanceRedChange();
-    void settingsWhiteBalanceGreenChange();
-    void settingsWhiteBalanceBlueChange();
+    void settingsSoftwareOptionsChange();
     void settingsHardwareOptionsChange();
 
 
 
-private:
+
+private:    
     void connectSignalsSlots();
-    void initGetPixelsRects();
-    void updateSizesGetPixelsRects();
+
     void trayAmbilightOn();
     void trayAmbilightOff();
     void trayAmbilightError();
@@ -63,7 +54,15 @@ private:
     void createActions();
     void loadSettingsToMainWindow();    
 
-    QString refreshAmbilightEvaluated(double updateResult_ms);
+    QString refreshAmbilightEvaluated(double updateResultMs);
+
+private:
+    AmbilightUsb *ambilightUsb;
+    GrabDesktopWindowLeds *grabDesktopWindowLeds;
+
+    bool isAmbilightOn; /* is grab desktop window ON */
+    bool isErrorState;
+
 
     Ui::MainWindow *ui;
 
@@ -74,18 +73,7 @@ private:
     QAction *quitAction;
 
     QSystemTrayIcon *trayIcon;
-    QMenu *trayIconMenu;
-
-    QTimer *timer;
-
-    QList<QLabel *> labelGetPixelsRects;
-
-    ambilightUsb *ambilight_usb;
-    bool isAmbilightOn;
-    bool isErrorState;
-
-    int usbTimerDelayMs;
-    int usbTimerReconnectDelayMs;
+    QMenu *trayIconMenu;    
 };
 
 #endif // MAINWINDOW_H
