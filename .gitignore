@@ -28,6 +28,6 @@ build/
 .cproject
 .project
 .settings/
-Makefile
+Makefile*
 *.lay
 *.qm
