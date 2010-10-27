@@ -37,6 +37,8 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
 
     connect(timer, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
 
+    clearColors();
+
     timer->start(ambilight_refresh_delay_ms);
     qDebug() << "GrabDesktopWindowLeds(): initialized";
 }
@@ -50,15 +52,15 @@ GrabDesktopWindowLeds::~GrabDesktopWindowLeds()
         labelGrabPixelsRects[i]->close();
     }
 
-    labelGrabPixelsRects.clear();    
+    labelGrabPixelsRects.clear();
 }
 
 void GrabDesktopWindowLeds::clearColors()
 {
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        for(int color=0; color<3; color++){
-            colors[ledIndex][color] = -1;
-        }
+        colors[ledIndex]->r = 0;
+        colors[ledIndex]->g = 0;
+        colors[ledIndex]->b = 0;
     }
 }
 
@@ -116,7 +118,7 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
     bool needToUpdate = false;
 
     int x = 0, y = 0;
-    int colorsNew[LEDS_COUNT][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
+    LedColors colorsNew;
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         switch(ledIndex){
@@ -146,43 +148,48 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
         QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         QImage im = scaledPix.toImage();
 
-        colors[ledIndex][R] = (im.pixel(0,0) >> 0x10) & 0xff;
-        colors[ledIndex][G] = (im.pixel(0,0) >> 0x08) & 0xff;
-        colors[ledIndex][B] = (im.pixel(0,0) >> 0x00) & 0xff;
+        colorsNew[ledIndex]->r = (im.pixel(0,0) >> 0x10) & 0xff;
+        colorsNew[ledIndex]->g = (im.pixel(0,0) >> 0x08) & 0xff;
+        colorsNew[ledIndex]->b = (im.pixel(0,0) >> 0x00) & 0xff;
     }
 
 
     // Find average for each led color
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        for(int color=0; color < 3; color++){
-            // Each led color must be in 0..pwm_value_max
-            colors[ledIndex][color] = (int)((double)colors[ledIndex][color] / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
+        colorsNew[ledIndex]->r = (int)((double)colorsNew[ledIndex]->r / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
+        colorsNew[ledIndex]->g = (int)((double)colorsNew[ledIndex]->g / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
+        colorsNew[ledIndex]->b = (int)((double)colorsNew[ledIndex]->b / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
 
-            //  9.6 mA - all off
-            // 90.0 mA - all on
-            //colors[led_index][color] = ambilight_color_depth;
-        }
+        //  9.6 mA - all off
+        // 90.0 mA - all on
+        //colorsNew[led_index][color] = ambilight_color_depth;
     }
 
     // White balance
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        colors[ledIndex][R] *= ambilight_white_balance_r;
-        colors[ledIndex][G] *= ambilight_white_balance_g;
-        colors[ledIndex][B] *= ambilight_white_balance_b;
+        colorsNew[ledIndex]->r *= ambilight_white_balance_r;
+        colorsNew[ledIndex]->g *= ambilight_white_balance_g;
+        colorsNew[ledIndex]->b *= ambilight_white_balance_b;
     }
 
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        for(int color=0; color < 3; color++){
-            if(colors[ledIndex][color] != colorsNew[ledIndex][color]){                
-                colors[ledIndex][color] = colorsNew[ledIndex][color];
-                needToUpdate = true;
-            }
+        if(colors[ledIndex]->r != colorsNew[ledIndex]->r){
+            colors[ledIndex]->r = colorsNew[ledIndex]->r;
+            needToUpdate = true;
+        }
+        if(colors[ledIndex]->g != colorsNew[ledIndex]->g){
+            colors[ledIndex]->g = colorsNew[ledIndex]->g;
+            needToUpdate = true;
+        }
+        if(colors[ledIndex]->b != colorsNew[ledIndex]->b){
+            colors[ledIndex]->b = colorsNew[ledIndex]->b;
+            needToUpdate = true;
         }
     }
 
-    if(needToUpdate){
+    if(needToUpdate){        
         emit updateLedsColors( colors );
-    }
+    }    
     emit ambilightTimeOfUpdatingColors(timeEval->howLongItEnd());
 
     if(isAmbilightOn) {
@@ -192,10 +199,10 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 
 void GrabDesktopWindowLeds::setAmbilightOn(bool state)
 {
-    if(state){
-        if(timer->isActive()){
-            timer->stop();
-        }
+    if(timer->isActive()){
+        timer->stop();
+    }
+    if(state){        
         timer->start(ambilight_refresh_delay_ms);
     }
     isAmbilightOn = state;

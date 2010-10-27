@@ -14,6 +14,7 @@
 #include "RGB.h"        /* Led defines */
 #include "settings.h"
 #include "timeevaluations.h"
+#include "ledcolors.h"
 
 class GrabDesktopWindowLeds : public QWidget
 {
@@ -27,7 +28,7 @@ public:
     void clearColors();
 
 signals:
-    void updateLedsColors(int colorsNew[LEDS_COUNT][3]);
+    void updateLedsColors(LedColors colorsNew);
     void ambilightTimeOfUpdatingColors(double ms);
 
 
@@ -55,8 +56,7 @@ private: // variables
     QList<QLabel *> labelGrabPixelsRects;
     TimeEvaluations *timeEval;
 
-    //  colors[LED_INDEX][COLOR] contains colors that already written to device
-    int colors[LEDS_COUNT][3];
+    LedColors colors;
 
     int desktop_width;
     int desktop_height;
