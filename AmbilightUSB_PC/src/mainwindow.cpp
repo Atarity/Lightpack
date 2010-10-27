@@ -26,13 +26,12 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): new ambilightUsb()";
     ambilight_usb = new ambilightUsb();
 
-
     qDebug() << "MainWindow(): loadSettingsToMainWindow()";
     loadSettingsToMainWindow();
+    
+    qDebug() << "MainWindow(): connectSignalsSlots()";
+    connectSignalsSlots();
 
-
-    // Show getPixelsRects then open settings
-    ui->checkBox_ShowPixelsAmbilight->setChecked(true);
 
     // Initialize limits of height and width
     ui->horizontalSliderWidth->setMaximum( QApplication::desktop()->width() / 2 );
@@ -42,9 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->horizontalSliderHeight->setMaximum( QApplication::desktop()->height() / 2  - 25);
     ui->spinBox_HeightAmbilight->setMaximum( QApplication::desktop()->height() / 2 - 25);
 
-
-    qDebug() << "MainWindow(): connectSignalsSlots()";
-    connectSignalsSlots();
+    
 
     usbTimerDelayMs = settings->value("RefreshAmbilightDelayMs").toInt();
     usbTimerReconnectDelayMs = settings->value("ReconnectAmbilightUSBDelayMs").toInt();
@@ -98,9 +95,16 @@ void MainWindow::initGetPixelsRects()
 
     labelGetPixelsRects.clear();
 
+    QColor labelsColors[LEDS_COUNT] = { Qt::blue, Qt::yellow, Qt::red, Qt::green };
+
     for(int i=0; i<LEDS_COUNT; i++){
         labelGetPixelsRects.append(new QLabel(this, Qt::FramelessWindowHint | Qt::SplashScreen));
         labelGetPixelsRects[i]->setFocusPolicy(Qt::NoFocus);
+
+        // Fill label with labelColors[i] color
+        QPalette pal = labelGetPixelsRects[i]->palette();
+        pal.setBrush(labelGetPixelsRects[i]->backgroundRole(), QBrush(labelsColors[i]));
+        labelGetPixelsRects[i]->setPalette(pal);
     }    
 
     updateSizesGetPixelsRects();
@@ -113,28 +117,14 @@ void MainWindow::updateSizesGetPixelsRects()
     int desktop_height = QApplication::desktop()->height();
     int desktop_width = QApplication::desktop()->width();
 
-
     for(int i=0; i<LEDS_COUNT; i++){
         labelGetPixelsRects[i]->setFixedWidth(ambilight_width);
         labelGetPixelsRects[i]->setFixedHeight(ambilight_height);
     }
 
-    QPixmap rectPix(ambilight_width, ambilight_height);
-
-    rectPix.fill(Qt::blue);
-    labelGetPixelsRects[RIGHT_UP]->setPixmap(rectPix);
     labelGetPixelsRects[RIGHT_UP]->move(desktop_width - ambilight_width, desktop_height / 2 - ambilight_height);
-
-    rectPix.fill(Qt::yellow);
-    labelGetPixelsRects[RIGHT_DOWN]->setPixmap(rectPix);
     labelGetPixelsRects[RIGHT_DOWN]->move(desktop_width - ambilight_width, desktop_height / 2);
-
-    rectPix.fill(Qt::red);
-    labelGetPixelsRects[LEFT_UP]->setPixmap(rectPix);
     labelGetPixelsRects[LEFT_UP]->move(0, QApplication::desktop()->height() / 2 - ambilight_height);
-
-    rectPix.fill(Qt::green);
-    labelGetPixelsRects[LEFT_DOWN]->setPixmap(rectPix);
     labelGetPixelsRects[LEFT_DOWN]->move(0, QApplication::desktop()->height() / 2);
 
     this->activateWindow();
@@ -370,8 +360,12 @@ void MainWindow::settingsHardwareOptionsChange()
     settings->setValue("HwTimerOCR", timerOutputCompareRegValue);
     settings->setValue("HwColorDepth", colorDepth);
 
-    ambilight_usb->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
-    ambilight_usb->setColorDepth(colorDepth);
+    if(ambilight_usb->deviceOpened()){
+        ambilight_usb->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
+        ambilight_usb->setColorDepth(colorDepth);
+    }else{
+        qWarning() << "device closed, timer options and color depth not updated";
+    }
 
     double pwmFreq = 12000000 / colorDepth; // colorDepth - PWM level max value;
 
@@ -443,5 +437,5 @@ void MainWindow::loadSettingsToMainWindow()
     ui->doubleSpinBox_WB_Green->setValue(settings->value("WhiteBalanceCoefGreen").toDouble());
     ui->doubleSpinBox_WB_Blue->setValue(settings->value("WhiteBalanceCoefBlue").toDouble());
 
-    settingsHardwareOptionsChange(); // eval PWM generation frequency and show it in settings
+//    settingsHardwareOptionsChange(); // eval PWM generation frequency and show it in settings
 }

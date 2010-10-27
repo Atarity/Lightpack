@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Oct 27 12:49:08 2010
+** Created: Wed Oct 27 14:25:41 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -100,7 +100,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(360, 390);
+        MainWindow->resize(360, 391);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/icons/settings.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -191,6 +191,7 @@ public:
 
         checkBox_ShowPixelsAmbilight = new QCheckBox(tabSoftwareOptions);
         checkBox_ShowPixelsAmbilight->setObjectName(QString::fromUtf8("checkBox_ShowPixelsAmbilight"));
+        checkBox_ShowPixelsAmbilight->setChecked(true);
 
         gridLayout->addWidget(checkBox_ShowPixelsAmbilight, 2, 0, 1, 3);
 
@@ -459,7 +460,7 @@ public:
         QObject::connect(horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), spinBox_HW_ColorDepth, SLOT(setValue(int)));
         QObject::connect(spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), horizontalSlider_HW_ColorDepth, SLOT(setValue(int)));
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
         comboBox_HW_Prescaller->setCurrentIndex(2);
 
 
