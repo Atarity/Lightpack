@@ -13,20 +13,25 @@
 
 ambilightUsb::ambilightUsb()
 {
+    qDebug() << "ambilightUsb(): openDevice()";
     openDevice();
 
     timeEval = new TimeEvaluations();
 
     clearColorSave();
 
+    qDebug() << "ambilightUsb(): readSettings()";
     readSettings();    
 
     memset(write_buffer, 0, sizeof(write_buffer));
     memset(read_buffer, 0, sizeof(read_buffer));
+
+    qDebug() << "ambilightUsb(): initialized";
 }
 
 ambilightUsb::~ambilightUsb(){
     usbhidCloseDevice(dev);
+    delete timeEval;
 }
 
 void ambilightUsb::clearColorSave()
@@ -124,28 +129,28 @@ bool ambilightUsb::tryToReopenDevice()
 
 bool ambilightUsb::readDataFromDeviceWithCheck()
 {
-    if(!readDataFromDevice()){
+    if(dev != NULL){
+        return readDataFromDevice();
+    }else{
         if(tryToReopenDevice()){
-            // Repeat send buffer:
             return readDataFromDevice();
         }else{
             return false;
         }
     }
-    return true;
 }
 
 bool ambilightUsb::writeBufferToDeviceWithCheck()
 {
-    if(!writeBufferToDevice()){
+    if(dev != NULL){
+        return writeBufferToDevice();
+    }else{
         if(tryToReopenDevice()){
-            // Repeat send buffer:
             return writeBufferToDevice();
         }else{
             return false;
         }
     }
-    return true;
 }
 
 QString ambilightUsb::hardwareVersion()
@@ -156,7 +161,7 @@ QString ambilightUsb::hardwareVersion()
         }
     }
     // TODO: write command CMD_GET_VERSION to device
-    bool result = readDataFromDevice();
+    bool result = readDataFromDeviceWithCheck();
     if(!result){
         return QApplication::tr("read device fail");
     }    
@@ -176,6 +181,8 @@ bool ambilightUsb::offLeds()
 
 bool ambilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
 {
+    qDebug("ambilightUsb::setTimerOptions(%d, %d)", prescallerIndex, outputCompareRegValue);
+
     // TODO: set names for each index
     write_buffer[1] = CMD_SET_TIMER_OPTIONS;
     write_buffer[2] = (unsigned char)prescallerIndex;
@@ -186,9 +193,16 @@ bool ambilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValu
 
 bool ambilightUsb::setColorDepth(int colorDepth)
 {
+    qDebug("ambilightUsb::setColorDepth(%d)",colorDepth);
+
+    if(colorDepth <= 0){
+        qWarning("ambilightUsb::setColorDepth(%d): colorDepth <= 0", colorDepth);
+        return false;
+    }
     // Save new value of color depth for using in update colors
     color_depth = colorDepth;
 
+    // TODO: set names for each index
     write_buffer[1] = CMD_SET_PWM_LEVEL_MAX_VALUE;
     write_buffer[2] = (unsigned char)colorDepth;    
     return writeBufferToDeviceWithCheck();
@@ -205,12 +219,6 @@ double ambilightUsb::updateColorsIfChanges()
 {
     timeEval->howLongItStart();
     bool write_colors = false;
-
-    if(dev == NULL){
-        if(!tryToReopenDevice()){
-            return -2;
-        }
-    }
 
     int desktop_width = QApplication::desktop()->width();
     int desktop_height = QApplication::desktop()->height();
