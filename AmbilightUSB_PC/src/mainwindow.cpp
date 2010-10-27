@@ -20,15 +20,57 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
     createTrayIcon();
 
-    ambilight_usb = new ambilightUsb();
     timer = new QTimer(this);
 
-    loadSettingsToForm();
+
+    qDebug() << "MainWindow(): new ambilightUsb()";
+    ambilight_usb = new ambilightUsb();
+
+
+    qDebug() << "MainWindow(): loadSettingsToMainWindow()";
+    loadSettingsToMainWindow();
 
 
     // Show getPixelsRects then open settings
     ui->checkBox_ShowPixelsAmbilight->setChecked(true);
 
+    // Initialize limits of height and width
+    ui->horizontalSliderWidth->setMaximum( QApplication::desktop()->width() / 2 );
+    ui->spinBox_WidthAmbilight->setMaximum( QApplication::desktop()->width() / 2 );
+
+    // 25px - default height of panels in Ubuntu 10.04
+    ui->horizontalSliderHeight->setMaximum( QApplication::desktop()->height() / 2  - 25);
+    ui->spinBox_HeightAmbilight->setMaximum( QApplication::desktop()->height() / 2 - 25);
+
+
+    qDebug() << "MainWindow(): connectSignalsSlots()";
+    connectSignalsSlots();
+
+    usbTimerDelayMs = settings->value("RefreshAmbilightDelayMs").toInt();
+    usbTimerReconnectDelayMs = settings->value("ReconnectAmbilightUSBDelayMs").toInt();
+
+    isErrorState = false;
+    isAmbilightOn = settings->value("IsAmbilightOn").toBool();
+    if(isAmbilightOn){
+        isAmbilightOn = false; // ambilightOn() check this and if this true, return
+        qDebug() << "MainWindow(): ambilightOn()";
+        ambilightOn();
+    }else{
+        isAmbilightOn = true; // ambilightOn() check this and if this false, return
+        qDebug() << "MainWindow(): ambilightOff()";
+        ambilightOff();
+    }
+
+
+    initGetPixelsRects();        
+
+    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Window);    
+
+    qDebug() << "MainWindow(): initialized";
+}
+
+void MainWindow::connectSignalsSlots()
+{
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(timer, SIGNAL(timeout()), this, SLOT(timerForUsbPoll()));
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), this, SLOT(usbTimerDelayMsChange()));
@@ -41,39 +83,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->doubleSpinBox_WB_Red, SIGNAL(valueChanged(double)), this, SLOT(settingsWhiteBalanceRedChange()));
     connect(ui->doubleSpinBox_WB_Green, SIGNAL(valueChanged(double)), this, SLOT(settingsWhiteBalanceGreenChange()));
     connect(ui->doubleSpinBox_WB_Blue, SIGNAL(valueChanged(double)), this, SLOT(settingsWhiteBalanceBlueChange()));
-    connect(ui->comboBox_HW_Prescaller, SIGNAL(currentIndexChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
-    connect(ui->horizontalSlider_HW_Prescaller, SIGNAL(valueChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
-    connect(ui->horizontalSlider_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
-    connect(ui->spinBox_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
-    connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHwTimerOptionsChange()));
-
-    usbTimerDelayMs = settings->value("RefreshAmbilightDelayMs").toInt();
-    usbTimerReconnectDelayMs = settings->value("ReconnectAmbilightUSBDelayMs").toInt();
-
-
-    isErrorState = false;
-    isAmbilightOn = settings->value("IsAmbilightOn").toBool();
-    if(isAmbilightOn){
-        isAmbilightOn = false; // ambilightOn() check this and if this true, return
-        ambilightOn();
-    }else{
-        isAmbilightOn = true; // ambilightOn() check this and if this false, return
-        ambilightOff();
-    }
-    trayIcon->show();
-
-    // Initialize limits of height and width
-    ui->horizontalSliderWidth->setMaximum( QApplication::desktop()->width() / 2 );
-    ui->spinBox_WidthAmbilight->setMaximum( QApplication::desktop()->width() / 2 );
-
-    // 25px - default height of panels in Ubuntu 10.04
-    ui->horizontalSliderHeight->setMaximum( QApplication::desktop()->height() / 2  - 25);
-    ui->spinBox_HeightAmbilight->setMaximum( QApplication::desktop()->height() / 2 - 25);
-
-    initGetPixelsRects();        
-    settingsShowPixelsForAmbilight(false);
-
-    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Window);    
+    connect(ui->comboBox_HW_Prescaller, SIGNAL(currentIndexChanged(int)), this, SLOT(settingsHardwareOptionsChange()));
+    connect(ui->horizontalSlider_HW_Prescaller, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareOptionsChange()));
+    connect(ui->horizontalSlider_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareOptionsChange()));
+    connect(ui->spinBox_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareOptionsChange()));
+    connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareOptionsChange()));
 }
 
 void MainWindow::initGetPixelsRects()
@@ -86,7 +100,7 @@ void MainWindow::initGetPixelsRects()
 
     for(int i=0; i<LEDS_COUNT; i++){
         labelGetPixelsRects.append(new QLabel(this, Qt::FramelessWindowHint | Qt::SplashScreen));
-        labelGetPixelsRects.last()->setFocusPolicy(Qt::NoFocus);
+        labelGetPixelsRects[i]->setFocusPolicy(Qt::NoFocus);
     }    
 
     updateSizesGetPixelsRects();
@@ -279,12 +293,13 @@ void MainWindow::timerForUsbPoll()
     }
 }
 
-QString MainWindow::refreshAmbilightEvaluated(double updateResult_ms)
+QString MainWindow::refreshAmbilightEvaluated(double updateResultMs)
 {
-    double hz = updateResult_ms + usbTimerDelayMs;
+    double secs = (updateResultMs + usbTimerDelayMs) / 1000;
+    double hz = 0;
 
-    if(hz != 0){
-        hz = 1000 / hz;
+    if(secs != 0){
+        hz = 1 / secs;
     }
 
     return QString::number(hz,'f', 4); /* ms to hz */
@@ -345,29 +360,32 @@ void MainWindow::settingsWhiteBalanceBlueChange()
 
 
 // Send settings to device and update evaluated Hz of the PWM generation
-void MainWindow::settingsHwTimerOptionsChange()
+void MainWindow::settingsHardwareOptionsChange()
 {
     int timerPrescallerIndex = ui->comboBox_HW_Prescaller->currentIndex();
     int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
     int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
+
     settings->setValue("HwTimerPrescallerIndex", timerPrescallerIndex);
     settings->setValue("HwTimerOCR", timerOutputCompareRegValue);
     settings->setValue("HwColorDepth", colorDepth);
+
     ambilight_usb->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
     ambilight_usb->setColorDepth(colorDepth);
 
     double pwmFreq = 12000000 / colorDepth; // colorDepth - PWM level max value;
+
     switch(timerPrescallerIndex){
-        case CMD_SET_PRESCALLER_1:      break;
-        case CMD_SET_PRESCALLER_8:      pwmFreq /= 8; break;
-        case CMD_SET_PRESCALLER_64:     pwmFreq /= 64;break;
-        case CMD_SET_PRESCALLER_256:    pwmFreq /= 256;break;
-        case CMD_SET_PRESCALLER_1024:   pwmFreq /= 1024;break;
-        default: qWarning() << "bad value of 'timerPrescallerIndex' =" << timerPrescallerIndex; break;
+    case CMD_SET_PRESCALLER_1:      break;
+    case CMD_SET_PRESCALLER_8:      pwmFreq /= 8; break;
+    case CMD_SET_PRESCALLER_64:     pwmFreq /= 64;break;
+    case CMD_SET_PRESCALLER_256:    pwmFreq /= 256;break;
+    case CMD_SET_PRESCALLER_1024:   pwmFreq /= 1024;break;
+    default: qWarning() << "bad value of 'timerPrescallerIndex' =" << timerPrescallerIndex; break;
     }
     pwmFreq /= timerOutputCompareRegValue;
 
-    ui->label_PWM_Frequency->setText(QString::number(pwmFreq,'g',3));
+    ui->lineEdit_PWM_Frequency->setText(QString::number(pwmFreq,'g',3));
 }
 
 
@@ -403,9 +421,11 @@ void MainWindow::createTrayIcon()
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
+    trayIcon->setIcon(QIcon(":/icons/off.png"));
+    trayIcon->show();
 }
 
-void MainWindow::loadSettingsToForm()
+void MainWindow::loadSettingsToMainWindow()
 {
     ui->spinBox_UpdateDelay->setValue( settings->value("RefreshAmbilightDelayMs").toInt() );
     ui->spinBox_ReconnectDelay->setValue( settings->value("ReconnectAmbilightUSBDelayMs").toInt() / 1000 /* ms to sec */ );
@@ -423,5 +443,5 @@ void MainWindow::loadSettingsToForm()
     ui->doubleSpinBox_WB_Green->setValue(settings->value("WhiteBalanceCoefGreen").toDouble());
     ui->doubleSpinBox_WB_Blue->setValue(settings->value("WhiteBalanceCoefBlue").toDouble());
 
-    settingsHwTimerOptionsChange(); // eval PWM generation frequency and show it in settings
+    settingsHardwareOptionsChange(); // eval PWM generation frequency and show it in settings
 }

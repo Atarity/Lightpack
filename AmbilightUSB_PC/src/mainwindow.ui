@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>356</width>
+    <width>360</width>
     <height>390</height>
    </rect>
   </property>
@@ -467,13 +467,6 @@
             </property>
            </widget>
           </item>
-          <item row="10" column="1">
-           <widget class="QLabel" name="label_PWM_Frequency">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
           <item row="10" column="2">
            <widget class="QLabel" name="label_4">
             <property name="text">
@@ -544,6 +537,13 @@
            <widget class="QLabel" name="label_HW_ColorDepth_counts">
             <property name="text">
              <string>counts</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QLineEdit" name="lineEdit_PWM_Frequency">
+            <property name="readOnly">
+             <bool>true</bool>
             </property>
            </widget>
           </item>

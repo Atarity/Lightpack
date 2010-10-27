@@ -47,11 +47,12 @@ private slots:
     void settingsWhiteBalanceRedChange();
     void settingsWhiteBalanceGreenChange();
     void settingsWhiteBalanceBlueChange();
-    void settingsHwTimerOptionsChange();
+    void settingsHardwareOptionsChange();
 
 
 
 private:
+    void connectSignalsSlots();
     void initGetPixelsRects();
     void updateSizesGetPixelsRects();
     void trayAmbilightOn();
@@ -60,7 +61,7 @@ private:
 
     void createTrayIcon();
     void createActions();
-    void loadSettingsToForm();    
+    void loadSettingsToMainWindow();    
 
     QString refreshAmbilightEvaluated(double updateResult_ms);
 

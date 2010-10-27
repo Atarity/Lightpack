@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Oct 25 14:48:55 2010
+** Created: Wed Oct 27 12:49:08 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -83,7 +83,6 @@ public:
     QDoubleSpinBox *doubleSpinBoxUsbSendDataTimeout;
     QLabel *label_sec_6;
     QSlider *horizontalSlider_HW_OCR;
-    QLabel *label_PWM_Frequency;
     QLabel *label_4;
     QLabel *label;
     QLabel *label_2;
@@ -91,6 +90,7 @@ public:
     QSlider *horizontalSlider_HW_ColorDepth;
     QSpinBox *spinBox_HW_ColorDepth;
     QLabel *label_HW_ColorDepth_counts;
+    QLineEdit *lineEdit_PWM_Frequency;
     QSpacerItem *verticalSpacer_2;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_2;
@@ -100,7 +100,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(356, 390);
+        MainWindow->resize(360, 390);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/icons/settings.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -368,11 +368,6 @@ public:
 
         gridLayout_2->addWidget(horizontalSlider_HW_OCR, 5, 0, 1, 3);
 
-        label_PWM_Frequency = new QLabel(tabHardwareOptions);
-        label_PWM_Frequency->setObjectName(QString::fromUtf8("label_PWM_Frequency"));
-
-        gridLayout_2->addWidget(label_PWM_Frequency, 10, 1, 1, 1);
-
         label_4 = new QLabel(tabHardwareOptions);
         label_4->setObjectName(QString::fromUtf8("label_4"));
 
@@ -416,6 +411,12 @@ public:
         label_HW_ColorDepth_counts->setObjectName(QString::fromUtf8("label_HW_ColorDepth_counts"));
 
         gridLayout_2->addWidget(label_HW_ColorDepth_counts, 6, 2, 1, 1);
+
+        lineEdit_PWM_Frequency = new QLineEdit(tabHardwareOptions);
+        lineEdit_PWM_Frequency->setObjectName(QString::fromUtf8("lineEdit_PWM_Frequency"));
+        lineEdit_PWM_Frequency->setReadOnly(true);
+
+        gridLayout_2->addWidget(lineEdit_PWM_Frequency, 10, 1, 1, 1);
 
 
         verticalLayout_3->addLayout(gridLayout_2);
@@ -503,7 +504,6 @@ public:
         label_sec->setText(QApplication::translate("MainWindow", "secs", 0, QApplication::UnicodeUTF8));
         label_USBSendDataTimeout->setText(QApplication::translate("MainWindow", "USB send data timeout", 0, QApplication::UnicodeUTF8));
         label_sec_6->setText(QApplication::translate("MainWindow", "secs", 0, QApplication::UnicodeUTF8));
-        label_PWM_Frequency->setText(QString());
         label_4->setText(QApplication::translate("MainWindow", "Hz", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "System clock: 12 MHz", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWindow", "Frequency of PWM generation:", 0, QApplication::UnicodeUTF8));

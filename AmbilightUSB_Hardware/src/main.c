@@ -96,6 +96,11 @@ static inline void PWM()
 	HC595_LATCH_PULSE;
 }
 
+
+
+//
+// Interrupts of the timer that generates PWM
+//
 ISR( TIM1_COMPA_vect )
 {
 	// Enable interrupts for usbPoll();
@@ -107,6 +112,9 @@ ISR( TIM1_COMPA_vect )
 	// Clear timer counter
 	TCNT1 = 0x0000;
 }
+
+
+
 
 void SetAllLedsColors(uint8_t red, uint8_t green, uint8_t blue)
 {

@@ -196,7 +196,7 @@ bool ambilightUsb::setColorDepth(int colorDepth)
     qDebug("ambilightUsb::setColorDepth(%d)",colorDepth);
 
     if(colorDepth <= 0){
-        qWarning("ambilightUsb::setColorDepth(%d): colorDepth <= 0", colorDepth);
+        qWarning("ambilightUsb::setColorDepth(%d): This is magic, colorDepth <= 0!", colorDepth);
         return false;
     }
     // Save new value of color depth for using in update colors
