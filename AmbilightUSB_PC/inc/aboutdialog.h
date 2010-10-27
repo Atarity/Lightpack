@@ -1,3 +1,12 @@
+/*
+ * aboutdialog.h
+ *
+ *  Created on: 26.07.2010
+ *      Author: brunql
+ *
+ *      Project: AmbilightUSB
+ */
+
 #ifndef ABOUTDIALOG_H
 #define ABOUTDIALOG_H
 
