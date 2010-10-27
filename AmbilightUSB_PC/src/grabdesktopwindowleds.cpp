@@ -1,18 +1,37 @@
 #include "grabdesktopwindowleds.h"
 
-GrabDesktopWindowLeds::GrabDesktopWindowLeds()
+GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
 {
     timer = new QTimer(this);
+    timeEval = new TimeEvaluations();
 
     desktop_width = QApplication::desktop()->width();
     desktop_height = QApplication::desktop()->height();    
 
+    // Read settings once
+    this->ambilight_refresh_delay_ms = settings->value("RefreshAmbilightDelayMs").toInt();
+
+    this->ambilight_width = settings->value("WidthAmbilight").toInt();
+    this->ambilight_height = settings->value("HeightAmbilight").toInt();
+
+    this->ambilight_white_balance_r = settings->value("WhiteBalanceCoefRed").toDouble();
+    this->ambilight_white_balance_g = settings->value("WhiteBalanceCoefGreen").toDouble();
+    this->ambilight_white_balance_b = settings->value("WhiteBalanceCoefBlue").toDouble();
+
+    this->ambilight_color_depth = settings->value("HwColorDepth").toInt();
+
+
     createLabelsGrabPixelsRects();
+
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
+
+    timer->start(ambilight_refresh_delay_ms);
 }
 
 GrabDesktopWindowLeds::~GrabDesktopWindowLeds()
 {
     delete timer;
+    delete timeEval;
 
     for(int i=0; i<labelGrabPixelsRects.count(); i++){
         labelGrabPixelsRects[i]->close();
@@ -40,6 +59,8 @@ void GrabDesktopWindowLeds::createLabelsGrabPixelsRects()
         labelGrabPixelsRects[i]->setPalette(pal);
     }
 
+    delete labelsColors;
+
     updateSizesLabelsGrabPixelsRects();
 }
 
@@ -54,14 +75,27 @@ void GrabDesktopWindowLeds::updateSizesLabelsGrabPixelsRects()
     labelGrabPixelsRects[RIGHT_DOWN]->move(desktop_width - ambilight_width, desktop_height / 2);
     labelGrabPixelsRects[LEFT_UP]->move(0, QApplication::desktop()->height() / 2 - ambilight_height);
     labelGrabPixelsRects[LEFT_DOWN]->move(0, QApplication::desktop()->height() / 2);
+}
 
-    this->activateWindow();
+
+void GrabDesktopWindowLeds::setVisibleGrabPixelsRects(bool state)
+{
+    for(int i=0; i<labelGrabPixelsRects.count(); i++){
+        if(state){
+            labelGrabPixelsRects[i]->show();
+        }else{
+            labelGrabPixelsRects[i]->hide();
+        }
+    }
 }
 
 
 
+
 void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
-{
+{    
+    timeEval->howLongItStart();
+
     bool needToUpdate = false;
 
     int x = 0, y = 0;
@@ -130,6 +164,44 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
     }
 
     if(needToUpdate){
-        emit updateLedsColors(colors);
+        emit updateLedsColors(colors);        
     }
+    emit ambilightTimeOfUpdatingColors(timeEval->howLongItEnd());
+}
+
+
+
+void GrabDesktopWindowLeds::setAmbilightWidth(int w)
+{
+    this->ambilight_width = w;
+}
+
+void GrabDesktopWindowLeds::setAmbilightHeight(int h)
+{
+    this->ambilight_height = h;
+}
+
+void GrabDesktopWindowLeds::setAmbilightRefreshDelayMs(int ms)
+{
+    this->ambilight_refresh_delay_ms = ms;
+}
+
+void GrabDesktopWindowLeds::setAmbilightColorDepth(int color_depth)
+{
+    this->ambilight_color_depth = color_depth;
+}
+
+void GrabDesktopWindowLeds::setAmbilightWhiteBalanceR(double r)
+{
+    this->ambilight_white_balance_r = r;
+}
+
+void GrabDesktopWindowLeds::setAmbilightWhiteBalanceG(double g)
+{
+    this->ambilight_white_balance_g = g;
+}
+
+void GrabDesktopWindowLeds::setAmbilightWhiteBalanceB(double b)
+{
+    this->ambilight_white_balance_b = b;
 }
