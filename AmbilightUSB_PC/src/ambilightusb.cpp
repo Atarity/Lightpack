@@ -11,17 +11,13 @@
 
 #include <QtDebug>
 
-AmbilightUsb::AmbilightUsb(QObject *parent) : QThread(parent)
+AmbilightUsb::AmbilightUsb(QObject *parent) :
+        QObject(parent)
 {
     qDebug() << "ambilightUsb(): openDevice()";
     openDevice();
 
-    timeEval = new TimeEvaluations();
-
-    clearColorSave();
-
-    qDebug() << "ambilightUsb(): readSettings()";
-    readSettings();    
+    usb_send_data_timeout_ms = settings->value("UsbSendDataTimeout").toInt();
 
     memset(write_buffer, 0, sizeof(write_buffer));
     memset(read_buffer, 0, sizeof(read_buffer));
@@ -30,38 +26,12 @@ AmbilightUsb::AmbilightUsb(QObject *parent) : QThread(parent)
 }
 
 AmbilightUsb::~AmbilightUsb(){
-    usbhidCloseDevice(dev);
-    delete timeEval;
-}
-
-void AmbilightUsb::clearColorSave()
-{
-    for(int i=0; i < LEDS_COUNT; i++){
-        for(int d=0; d < 3; d++){
-            colors_save[i][d] = 0;
-        }
-    }
-}
-
-void AmbilightUsb::readSettings()
-{
-    update_delay_ms = settings->value("RefreshAmbilightDelayMs").toInt();
-
-    ambilight_width = settings->value("WidthAmbilight").toInt();
-    ambilight_height = settings->value("HeightAmbilight").toInt();
-
-    usb_send_data_timeout = settings->value("UsbSendDataTimeout").toInt();
-
-    white_balance_r = settings->value("WhiteBalanceCoefRed").toDouble();
-    white_balance_g = settings->value("WhiteBalanceCoefGreen").toDouble();
-    white_balance_b = settings->value("WhiteBalanceCoefBlue").toDouble();
-
-    color_depth = settings->value("HwColorDepth").toInt();
+    usbhidCloseDevice(ambilightDevice);
 }
 
 bool AmbilightUsb::deviceOpened()
 {
-    return !(dev == NULL);
+    return !(ambilightDevice == NULL);
 }
 
 QString AmbilightUsb::usbErrorMessage(int errCode)
@@ -80,14 +50,14 @@ QString AmbilightUsb::usbErrorMessage(int errCode)
 
 bool AmbilightUsb::openDevice()
 {
-    dev = NULL;
+    ambilightDevice = NULL;
     unsigned char   rawVid[2] = {USB_CFG_VENDOR_ID}, rawPid[2] = {USB_CFG_DEVICE_ID};
     char            vendorName[] = {USB_CFG_VENDOR_NAME, 0}, productName[] = {USB_CFG_DEVICE_NAME, 0};
     int             vid = rawVid[0] + 256 * rawVid[1];
     int             pid = rawPid[0] + 256 * rawPid[1];
     int             err;
 
-    if((err = usbhidOpenDevice(&dev, vid, vendorName, pid, productName, 0)) != 0){
+    if((err = usbhidOpenDevice(&ambilightDevice, vid, vendorName, pid, productName, 0)) != 0){
         qWarning() << "error finding " << productName << ": " << usbErrorMessage(err);
         emit openDeviceError();
         return false;
@@ -102,7 +72,7 @@ bool AmbilightUsb::readDataFromDevice()
     int err;
 
     int len = sizeof(read_buffer);
-    if((err = usbhidGetReport(dev, 0, read_buffer, &len)) != 0){
+    if((err = usbhidGetReport(ambilightDevice, 0, read_buffer, &len)) != 0){
         qWarning() << "error reading data:" << usbErrorMessage(err);
         emit readBufferFromDeviceError();
         return false;
@@ -115,7 +85,7 @@ bool AmbilightUsb::writeBufferToDevice()
 {
     int err;
 
-    if((err = usbhidSetReport(dev, write_buffer, sizeof(write_buffer), usb_send_data_timeout)) != 0){   /* add a dummy report ID */
+    if((err = usbhidSetReport(ambilightDevice, write_buffer, sizeof(write_buffer), usb_send_data_timeout)) != 0){   /* add a dummy report ID */
         qWarning() << "error writing data:" << usbErrorMessage(err);
         emit writeBufferToDeviceError();
         return false;
@@ -137,7 +107,7 @@ bool AmbilightUsb::tryToReopenDevice()
 
 bool AmbilightUsb::readDataFromDeviceWithCheck()
 {
-    if(dev != NULL){
+    if(ambilightDevice != NULL){
         return readDataFromDevice();
     }else{
         if(tryToReopenDevice()){
@@ -150,7 +120,7 @@ bool AmbilightUsb::readDataFromDeviceWithCheck()
 
 bool AmbilightUsb::writeBufferToDeviceWithCheck()
 {
-    if(dev != NULL){
+    if(ambilightDevice != NULL){
         return writeBufferToDevice();
     }else{
         if(tryToReopenDevice()){
@@ -163,7 +133,7 @@ bool AmbilightUsb::writeBufferToDeviceWithCheck()
 
 QString AmbilightUsb::hardwareVersion()
 {
-    if(dev == NULL){
+    if(ambilightDevice == NULL){
         if(!tryToReopenDevice()){
             return QApplication::tr("device unavailable");
         }
@@ -179,15 +149,15 @@ QString AmbilightUsb::hardwareVersion()
     return QString::number(major) + "." + QString::number(minor);
 }
 
-bool AmbilightUsb::offLeds()
+void AmbilightUsb::offLeds()
 {
     write_buffer[1] = CMD_OFF_ALL;
 
-    return writeBufferToDeviceWithCheck();
+    writeBufferToDeviceWithCheck();
 }
 
 
-bool AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
+void AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
 {
     qDebug("ambilightUsb::setTimerOptions(%d, %d)", prescallerIndex, outputCompareRegValue);
 
@@ -196,10 +166,10 @@ bool AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValu
     write_buffer[2] = (unsigned char)prescallerIndex;
     write_buffer[3] = (unsigned char)outputCompareRegValue;
 
-    return writeBufferToDeviceWithCheck();
+    writeBufferToDeviceWithCheck();
 }
 
-bool AmbilightUsb::setColorDepth(int colorDepth)
+void AmbilightUsb::setColorDepth(int colorDepth)
 {
     qDebug("ambilightUsb::setColorDepth(%d)",colorDepth);
 
@@ -207,129 +177,44 @@ bool AmbilightUsb::setColorDepth(int colorDepth)
         qWarning("ambilightUsb::setColorDepth(%d): This is magic, colorDepth <= 0!", colorDepth);
         return false;
     }
-    // Save new value of color depth for using in update colors
-    color_depth = colorDepth;
 
     // TODO: set names for each index
     write_buffer[1] = CMD_SET_PWM_LEVEL_MAX_VALUE;
     write_buffer[2] = (unsigned char)colorDepth;    
-    return writeBufferToDeviceWithCheck();
+
+    writeBufferToDeviceWithCheck();
 }
 
 
-void AmbilightUsb::run()
+void AmbilightUsb::setUsbSendDataTimeoutMs(int usb_send_data_timeout_ms)
 {
-    while(isRun){
-        timeEval->howLongItStart();
-
-        updateColorsIfChanges();
-
-        emit ambilightTimeOfUpdatingColors( timeEval->howLongItEnd() );
-
-        // Sleep update_delay_ms miliseconds, before next update colors
-        this->msleep(update_delay_ms);
-    }
+    this->usb_send_data_timeout_ms = usb_send_data_timeout_ms;
 }
 
 
-//
-// Main AmbilightUSB function: update colors if it changes
-//
-// if error, return number lower than zero;
-// else return how long it in ms;
-//
-double AmbilightUsb::updateColorsIfChanges()
+
+void AmbilightUsb::updateColors(const int colors[][])
 {
-    bool write_colors = false;
+    write_buffer[1] = CMD_RIGHT_SIDE;
+    write_buffer[2] = (unsigned char)colors[RIGHT_UP][R];
+    write_buffer[3] = (unsigned char)colors[RIGHT_UP][G];
+    write_buffer[4] = (unsigned char)colors[RIGHT_UP][B];
 
-    int desktop_width = QApplication::desktop()->width();
-    int desktop_height = QApplication::desktop()->height();
-    int colors[LEDS_COUNT][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
+    write_buffer[5] = (unsigned char)colors[RIGHT_DOWN][R];
+    write_buffer[6] = (unsigned char)colors[RIGHT_DOWN][G];
+    write_buffer[7] = (unsigned char)colors[RIGHT_DOWN][B];
 
-    for(int led_index=0; led_index<LEDS_COUNT; led_index++){
-        // TODO: write switch on led_index with macroses LEFT_UP, etc.
-        QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
-                                          ((led_index==LEFT_UP || led_index==LEFT_DOWN)?
-                                           0 :
-                                           (desktop_width-1) - ambilight_width),
-
-                                          ((led_index==LEFT_UP || led_index==RIGHT_UP)?
-                                           (desktop_height/2) - ambilight_height :
-                                           (desktop_height/2)
-                                           ),
-                                          ambilight_width, ambilight_height);
-        QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        QImage im = scaledPix.toImage();
-
-        colors[led_index][R] = (im.pixel(0,0) >> 0x10) & 0xff;
-        colors[led_index][G] = (im.pixel(0,0) >> 0x08) & 0xff;
-        colors[led_index][B] = (im.pixel(0,0) >> 0x00) & 0xff;
-    }
+    writeBufferToDeviceWithCheck();
 
 
-    // Find average for each led color
-    for(int led_index=0; led_index < LEDS_COUNT; led_index++){
-        for(int color=0; color < 3; color++){
-            // Each led color must be in 0..pwm_value_max
-            colors[led_index][color] = (int)((double)colors[led_index][color] / (256.0 / color_depth)); // now pwm_value_max==64
+    write_buffer[1] = CMD_LEFT_SIDE;
+    write_buffer[2] = (unsigned char)colors[LEFT_UP][R];
+    write_buffer[3] = (unsigned char)colors[LEFT_UP][G];
+    write_buffer[4] = (unsigned char)colors[LEFT_UP][B];
 
-            //  9.6 mA - all off
-            // 90.0 mA - all on
-            //colors[led_index][color] = 32;
-        }
-    }
+    write_buffer[5] = (unsigned char)colors[LEFT_DOWN][R];
+    write_buffer[6] = (unsigned char)colors[LEFT_DOWN][G];
+    write_buffer[7] = (unsigned char)colors[LEFT_DOWN][B];
 
-    // White balance
-    for(int led_index=0; led_index < LEDS_COUNT; led_index++){
-        colors[led_index][R] *= white_balance_r;
-        colors[led_index][G] *= white_balance_g;
-        colors[led_index][B] *= white_balance_b;
-    }
-
-    for(int led_index=0; led_index < LEDS_COUNT; led_index++){
-        for(int color=0; color < 3; color++){
-            if(colors_save[led_index][color] != colors[led_index][color]){
-                write_colors = true;
-                colors_save[led_index][color] = colors[led_index][color];
-                break;
-            }
-        }
-    }    
-
-    if(write_colors){
-        write_buffer[1] = CMD_RIGHT_SIDE;
-        write_buffer[2] = (unsigned char)colors[RIGHT_UP][R];
-        write_buffer[3] = (unsigned char)colors[RIGHT_UP][G];
-        write_buffer[4] = (unsigned char)colors[RIGHT_UP][B];
-
-        write_buffer[5] = (unsigned char)colors[RIGHT_DOWN][R];
-        write_buffer[6] = (unsigned char)colors[RIGHT_DOWN][G];
-        write_buffer[7] = (unsigned char)colors[RIGHT_DOWN][B];
-
-        if(!writeBufferToDeviceWithCheck()){
-            return -3;
-        }
-
-        write_buffer[1] = CMD_LEFT_SIDE;
-        write_buffer[2] = (unsigned char)colors[LEFT_UP][R];
-        write_buffer[3] = (unsigned char)colors[LEFT_UP][G];
-        write_buffer[4] = (unsigned char)colors[LEFT_UP][B];
-
-        write_buffer[5] = (unsigned char)colors[LEFT_DOWN][R];
-        write_buffer[6] = (unsigned char)colors[LEFT_DOWN][G];
-        write_buffer[7] = (unsigned char)colors[LEFT_DOWN][B];
-
-        if(!writeBufferToDeviceWithCheck()){
-            return -3;
-        }
-
-        write_colors = false;
-    }else{
-        // if device disconnected return error code -4
-        if(!readDataFromDeviceWithCheck()){
-            return -4;
-        }
-    }
-
-    return 1;
+    writeBufferToDeviceWithCheck();
 }

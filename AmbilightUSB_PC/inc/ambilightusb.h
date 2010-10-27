@@ -10,7 +10,7 @@
 #ifndef AMBILIGHTUSB_H
 #define AMBILIGHTUSB_H
 
-#include <QtGui> // QApplication::desktop()->width();
+#include <QtGui>
 
 #include "timeevaluations.h"
 
@@ -23,28 +23,25 @@
 #include "RGB.h"        /* Led defines */
 
 
-class AmbilightUsb : public QThread, public QRunnable
+class AmbilightUsb : public QObject
 {
     Q_OBJECT
 
 public:
     AmbilightUsb(QObject *parent = 0);
     ~AmbilightUsb();        
+
+public:
     bool openDevice();
     bool deviceOpened();
-
-    // Start updateColorsIfChanges algorithm
-    void run();
-
     QString hardwareVersion();
+    void offLeds();
 
-    bool offLeds();
-    bool setTimerOptions(int prescallerIndex, int outputCompareRegValue);
-    bool setColorDepth(int colorDepth);
-    double updateColorsIfChanges();
-
-    void clearColorSave();
-    void readSettings();
+public slots:
+    void updateColors(const int colors[][]);
+    void setUsbSendDataTimeoutMs(int usb_send_data_timeout_ms);
+    void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
+    void setColorDepth(int colorDepth);
 
 signals:
     void openDeviceError();
@@ -53,7 +50,6 @@ signals:
     void writeBufferToDeviceSuccess();
     void readBufferFromDeviceError();
     void readBufferFromDeviceSuccess();
-    void ambilightTimeOfUpdatingColors(double ms);
 
 
 private:
@@ -64,28 +60,15 @@ private:
     bool tryToReopenDevice();
     QString usbErrorMessage(int errCode);
 
-    usbDevice_t *dev;
-    TimeEvaluations *timeEval;
+    usbDevice_t *ambilightDevice;
+
 
     char read_buffer[1 + 7];    /* 0-system, 1..7-data */
     char write_buffer[1 + 7];   /* 0-system, 1..7-data */
 
-    //  colors_save[LED_INDEX][COLOR]
-    int colors_save[LEDS_COUNT][3];
 
     // Settings:
-    int update_delay_ms;
-
-    int ambilight_width;
-    int ambilight_height;
-
-    double white_balance_r;
-    double white_balance_g;
-    double white_balance_b;
-
-    int color_depth;
-
-    int usb_send_data_timeout;    
+    int usb_send_data_timeout_ms;
 };
 
 #endif // AMBILIGHTUSB_H
