@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     timer = new QTimer(this);
 
 
-    qDebug() << "MainWindow(): new ambilightUsb()";
-    ambilight_usb = new ambilightUsb();
+    qDebug() << "MainWindow(): new AmbilightUsb()";
+    ambilight_usb = new AmbilightUsb(this);
 
     qDebug() << "MainWindow(): loadSettingsToMainWindow()";
     loadSettingsToMainWindow();

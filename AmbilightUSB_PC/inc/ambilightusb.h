@@ -23,13 +23,18 @@
 #include "RGB.h"        /* Led defines */
 
 
-class ambilightUsb
+class AmbilightUsb : public QThread, public QRunnable
 {
+    Q_OBJECT
+
 public:
-    ambilightUsb();
-    ~ambilightUsb();
-    bool deviceOpened();
+    AmbilightUsb(QObject *parent = 0);
+    ~AmbilightUsb();        
     bool openDevice();
+    bool deviceOpened();
+
+    // Start updateColorsIfChanges algorithm
+    void run();
 
     QString hardwareVersion();
 
@@ -39,8 +44,16 @@ public:
     double updateColorsIfChanges();
 
     void clearColorSave();
-    void readSettings();    
+    void readSettings();
 
+signals:
+    void openDeviceError();
+    void openDeviceSuccess();
+    void writeBufferToDeviceError();
+    void writeBufferToDeviceSuccess();
+    void readBufferFromDeviceError();
+    void readBufferFromDeviceSuccess();
+    void ambilightTimeOfUpdatingColors(double ms);
 
 
 private:
@@ -52,6 +65,7 @@ private:
     QString usbErrorMessage(int errCode);
 
     usbDevice_t *dev;
+    TimeEvaluations *timeEval;
 
     char read_buffer[1 + 7];    /* 0-system, 1..7-data */
     char write_buffer[1 + 7];   /* 0-system, 1..7-data */
@@ -60,6 +74,8 @@ private:
     int colors_save[LEDS_COUNT][3];
 
     // Settings:
+    int update_delay_ms;
+
     int ambilight_width;
     int ambilight_height;
 
@@ -69,10 +85,7 @@ private:
 
     int color_depth;
 
-    int usb_send_data_timeout;
-
-
-    TimeEvaluations *timeEval;
+    int usb_send_data_timeout;    
 };
 
 #endif // AMBILIGHTUSB_H

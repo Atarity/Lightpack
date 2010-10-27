@@ -11,7 +11,7 @@
 
 #include <QtDebug>
 
-ambilightUsb::ambilightUsb()
+AmbilightUsb::AmbilightUsb(QObject *parent) : QThread(parent)
 {
     qDebug() << "ambilightUsb(): openDevice()";
     openDevice();
@@ -29,12 +29,12 @@ ambilightUsb::ambilightUsb()
     qDebug() << "ambilightUsb(): initialized";
 }
 
-ambilightUsb::~ambilightUsb(){
+AmbilightUsb::~AmbilightUsb(){
     usbhidCloseDevice(dev);
     delete timeEval;
 }
 
-void ambilightUsb::clearColorSave()
+void AmbilightUsb::clearColorSave()
 {
     for(int i=0; i < LEDS_COUNT; i++){
         for(int d=0; d < 3; d++){
@@ -43,8 +43,10 @@ void ambilightUsb::clearColorSave()
     }
 }
 
-void ambilightUsb::readSettings()
+void AmbilightUsb::readSettings()
 {
+    update_delay_ms = settings->value("RefreshAmbilightDelayMs").toInt();
+
     ambilight_width = settings->value("WidthAmbilight").toInt();
     ambilight_height = settings->value("HeightAmbilight").toInt();
 
@@ -57,12 +59,12 @@ void ambilightUsb::readSettings()
     color_depth = settings->value("HwColorDepth").toInt();
 }
 
-bool ambilightUsb::deviceOpened()
+bool AmbilightUsb::deviceOpened()
 {
     return !(dev == NULL);
 }
 
-QString ambilightUsb::usbErrorMessage(int errCode)
+QString AmbilightUsb::usbErrorMessage(int errCode)
 {
     QString result = "";
     switch(errCode){
@@ -76,7 +78,7 @@ QString ambilightUsb::usbErrorMessage(int errCode)
     return result;
 }
 
-bool ambilightUsb::openDevice()
+bool AmbilightUsb::openDevice()
 {
     dev = NULL;
     unsigned char   rawVid[2] = {USB_CFG_VENDOR_ID}, rawPid[2] = {USB_CFG_DEVICE_ID};
@@ -87,47 +89,53 @@ bool ambilightUsb::openDevice()
 
     if((err = usbhidOpenDevice(&dev, vid, vendorName, pid, productName, 0)) != 0){
         qWarning() << "error finding " << productName << ": " << usbErrorMessage(err);
+        emit openDeviceError();
         return false;
     }
     qDebug("%s %s (PID: 0x%04x; VID: 0x%04x) opened.", productName, vendorName, pid, vid);
+    emit openDeviceSuccess();
     return true;
 }
 
-bool ambilightUsb::readDataFromDevice()
+bool AmbilightUsb::readDataFromDevice()
 {
     int err;
 
     int len = sizeof(read_buffer);
     if((err = usbhidGetReport(dev, 0, read_buffer, &len)) != 0){
         qWarning() << "error reading data:" << usbErrorMessage(err);
+        emit readBufferFromDeviceError();
         return false;
     }
+    emit readBufferFromDeviceSuccess();
     return true;
 }
 
-bool ambilightUsb::writeBufferToDevice()
+bool AmbilightUsb::writeBufferToDevice()
 {
     int err;
 
     if((err = usbhidSetReport(dev, write_buffer, sizeof(write_buffer), usb_send_data_timeout)) != 0){   /* add a dummy report ID */
         qWarning() << "error writing data:" << usbErrorMessage(err);
+        emit writeBufferToDeviceError();
         return false;
     }
+    emit writeBufferToDeviceSuccess();
     return true;
 }
 
-bool ambilightUsb::tryToReopenDevice()
+bool AmbilightUsb::tryToReopenDevice()
 {
     qWarning() << "AmbilightUSB device didn't open. Try to reopen device...";    
     if(openDevice()){
-        qWarning() << "reopen success";
+        qWarning() << "reopen success";        
         return true;
-    }else{
+    }else{        
         return false;
     }
 }
 
-bool ambilightUsb::readDataFromDeviceWithCheck()
+bool AmbilightUsb::readDataFromDeviceWithCheck()
 {
     if(dev != NULL){
         return readDataFromDevice();
@@ -140,7 +148,7 @@ bool ambilightUsb::readDataFromDeviceWithCheck()
     }
 }
 
-bool ambilightUsb::writeBufferToDeviceWithCheck()
+bool AmbilightUsb::writeBufferToDeviceWithCheck()
 {
     if(dev != NULL){
         return writeBufferToDevice();
@@ -153,7 +161,7 @@ bool ambilightUsb::writeBufferToDeviceWithCheck()
     }
 }
 
-QString ambilightUsb::hardwareVersion()
+QString AmbilightUsb::hardwareVersion()
 {
     if(dev == NULL){
         if(!tryToReopenDevice()){
@@ -171,7 +179,7 @@ QString ambilightUsb::hardwareVersion()
     return QString::number(major) + "." + QString::number(minor);
 }
 
-bool ambilightUsb::offLeds()
+bool AmbilightUsb::offLeds()
 {
     write_buffer[1] = CMD_OFF_ALL;
 
@@ -179,7 +187,7 @@ bool ambilightUsb::offLeds()
 }
 
 
-bool ambilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
+bool AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
 {
     qDebug("ambilightUsb::setTimerOptions(%d, %d)", prescallerIndex, outputCompareRegValue);
 
@@ -191,7 +199,7 @@ bool ambilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValu
     return writeBufferToDeviceWithCheck();
 }
 
-bool ambilightUsb::setColorDepth(int colorDepth)
+bool AmbilightUsb::setColorDepth(int colorDepth)
 {
     qDebug("ambilightUsb::setColorDepth(%d)",colorDepth);
 
@@ -209,15 +217,29 @@ bool ambilightUsb::setColorDepth(int colorDepth)
 }
 
 
+void AmbilightUsb::run()
+{
+    while(isRun){
+        timeEval->howLongItStart();
+
+        updateColorsIfChanges();
+
+        emit ambilightTimeOfUpdatingColors( timeEval->howLongItEnd() );
+
+        // Sleep update_delay_ms miliseconds, before next update colors
+        this->msleep(update_delay_ms);
+    }
+}
+
+
 //
 // Main AmbilightUSB function: update colors if it changes
 //
 // if error, return number lower than zero;
 // else return how long it in ms;
 //
-double ambilightUsb::updateColorsIfChanges()
+double AmbilightUsb::updateColorsIfChanges()
 {
-    timeEval->howLongItStart();
     bool write_colors = false;
 
     int desktop_width = QApplication::desktop()->width();
@@ -225,6 +247,7 @@ double ambilightUsb::updateColorsIfChanges()
     int colors[LEDS_COUNT][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
 
     for(int led_index=0; led_index<LEDS_COUNT; led_index++){
+        // TODO: write switch on led_index with macroses LEFT_UP, etc.
         QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
                                           ((led_index==LEFT_UP || led_index==LEFT_DOWN)?
                                            0 :
@@ -308,5 +331,5 @@ double ambilightUsb::updateColorsIfChanges()
         }
     }
 
-    return timeEval->howLongItEnd();
+    return 1;
 }

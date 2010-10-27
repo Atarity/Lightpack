@@ -137,7 +137,7 @@ int main(int argc, char **argv)
     QString locale = QLocale::system().name();
     if(argc > 1){
         if(strcmp(argv[1], "--off") == 0){
-            ambilightUsb ambilight_usb;
+            AmbilightUsb ambilight_usb;
             ambilight_usb.offLeds();
             return 0;
         }else if(strcmp(argv[1], "--notr") == 0){
