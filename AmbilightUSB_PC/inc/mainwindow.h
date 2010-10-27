@@ -16,6 +16,8 @@
 #include "ambilightusb.h"           /* class AmbilightUsb */
 #include "grabdesktopwindowleds.h"  /* class GrabDesktopWindowLeds */
 
+#include "ledcolors.h"
+
 namespace Ui {
     class MainWindow;
 }
@@ -25,6 +27,10 @@ class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+public slots:
+    void ambilightUsbSuccess(bool isSuccess);
+    void refreshAmbilightEvaluated(double updateResultMs);
 
 protected:
     void changeEvent(QEvent *e);
@@ -52,9 +58,7 @@ private:
 
     void createTrayIcon();
     void createActions();
-    void loadSettingsToMainWindow();    
-
-    QString refreshAmbilightEvaluated(double updateResultMs);
+    void loadSettingsToMainWindow();        
 
 private:
     AmbilightUsb *ambilightUsb;

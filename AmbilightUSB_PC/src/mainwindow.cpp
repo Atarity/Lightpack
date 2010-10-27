@@ -26,12 +26,12 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): new GrabDesktopWindowLeds(this)";
     grabDesktopWindowLeds = new GrabDesktopWindowLeds(this);
 
-    qDebug() << "MainWindow(): loadSettingsToMainWindow()";
-    loadSettingsToMainWindow();
-    
     qDebug() << "MainWindow(): connectSignalsSlots()";
     connectSignalsSlots();
 
+    qDebug() << "MainWindow(): loadSettingsToMainWindow()";
+    loadSettingsToMainWindow();
+    
 
     // Initialize limits of height and width
     ui->horizontalSliderWidth->setMaximum( QApplication::desktop()->width() / 2 );
@@ -80,7 +80,7 @@ void MainWindow::connectSignalsSlots()
     connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), grabDesktopWindowLeds, SLOT(setAmbilightColorDepth(int)));    
 
     // Connect grabDesktopWindowLeds with ambilightUsb
-    connect(grabDesktopWindowLeds, SIGNAL(updateLedsColors(int[LEDS_COUNT][3])), ambilightUsb, SLOT(updateColors(int[LEDS_COUNT][3])));
+    connect(grabDesktopWindowLeds, SIGNAL(updateLedsColors(LedColors)), ambilightUsb, SLOT(updateColors(LedColors)));
 
     // Software options
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), this, SLOT(settingsSoftwareOptionsChange()));
@@ -97,6 +97,14 @@ void MainWindow::connectSignalsSlots()
     // Software/Hardware options
     connect(ui->spinBox_ReconnectDelay, SIGNAL(valueChanged(int)), this, SLOT(settingsSoftwareOptionsChange()));
     connect(ui->doubleSpinBoxUsbSendDataTimeout, SIGNAL(valueChanged(double)), this, SLOT(settingsSoftwareOptionsChange()));
+
+    // ambilightUsb to this
+    connect(ambilightUsb, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
+    connect(ambilightUsb, SIGNAL(readBufferFromDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
+    connect(ambilightUsb, SIGNAL(writeBufferToDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
+
+    // grabDesktopWindowLeds to this
+    connect(grabDesktopWindowLeds, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
 }
 
 
@@ -219,33 +227,26 @@ void MainWindow::showSettings()
     this->show();
 }
 
-//void MainWindow::timerForUsbPoll()
-//{
-//    if(updateResult_ms > 0){
-//        if(isErrorState){
-//            isErrorState = false;
-//
-//            trayAmbilightOn();
-//
-//            qWarning() << "Ambilight USB. On state.";
-//            ambilight_usb->clearColorSave();
-//        }
-//        ui->lineEdit_RefreshAmbilihtEvaluated->setText(refreshAmbilightEvaluated(updateResult_ms));
-//        timer->start( usbTimerDelayMs );
-//    }else{
-//        if(!isErrorState){
-//            isErrorState = true;
-//
-//            trayAmbilightError();
-//
-//            qWarning() << "Ambilight USB. Error state.";
-//        }
-//        ui->lineEdit_RefreshAmbilihtEvaluated->setText("");
-//        timer->start( usbTimerReconnectDelayMs );
-//    }
-//}
 
-QString MainWindow::refreshAmbilightEvaluated(double updateResultMs)
+// SLOT
+void MainWindow::ambilightUsbSuccess(bool isSuccess)
+{    
+    if(isErrorState && isSuccess){
+        isErrorState = false;
+        trayAmbilightOn();
+
+        qWarning() << "Ambilight USB. On state.";
+        grabDesktopWindowLeds->clearColors();
+    }else if(!isErrorState && !isSuccess){
+        isErrorState = true;
+        trayAmbilightError();
+
+        qWarning() << "Ambilight USB. Error state.";
+    }    
+}
+
+// SLOT
+void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
 {    
     int usbTimerDelayMs = ui->spinBox_UpdateDelay->value();
     double secs = (updateResultMs + usbTimerDelayMs) / 1000;
@@ -255,7 +256,7 @@ QString MainWindow::refreshAmbilightEvaluated(double updateResultMs)
         hz = 1 / secs;
     }
 
-    return QString::number(hz,'f', 4); /* ms to hz */
+    ui->lineEdit_RefreshAmbilihtEvaluated->setText( QString::number(hz,'f', 4) /* ms to hz */ );
 }
 
 void MainWindow::settingsSoftwareOptionsChange()
