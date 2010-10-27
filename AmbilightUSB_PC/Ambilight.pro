@@ -29,7 +29,9 @@ HEADERS += inc/hidsdi.h \
     inc/settings.h \
     inc/aboutdialog.h \
     inc/timeevaluations.h \
-    inc/grabdesktopwindowleds.h
+    inc/grabdesktopwindowleds.h \
+    inc/struct_rgb.h \
+    inc/ledcolors.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui
 RESOURCES += res_ambilight.qrc

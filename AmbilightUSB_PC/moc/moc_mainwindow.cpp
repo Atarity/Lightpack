@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Wed Oct 27 21:03:41 2010
+** Created: Wed Oct 27 23:08:17 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-       7,   14, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -31,20 +31,23 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      19,   12,   11,   11, 0x08,
-      68,   11,   11,   11, 0x08,
-      80,   11,   11,   11, 0x08,
-      95,   11,   11,   11, 0x08,
-     109,   11,   11,   11, 0x08,
-     124,   11,   11,   11, 0x08,
-     156,   11,   11,   11, 0x08,
+      22,   12,   11,   11, 0x0a,
+      63,   48,   11,   11, 0x0a,
+     104,   97,   11,   11, 0x08,
+     153,   11,   11,   11, 0x08,
+     165,   11,   11,   11, 0x08,
+     180,   11,   11,   11, 0x08,
+     194,   11,   11,   11, 0x08,
+     209,   11,   11,   11, 0x08,
+     241,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0reason\0"
-    "iconActivated(QSystemTrayIcon::ActivationReason)\0"
+    "MainWindow\0\0isSuccess\0ambilightUsbSuccess(bool)\0"
+    "updateResultMs\0refreshAmbilightEvaluated(double)\0"
+    "reason\0iconActivated(QSystemTrayIcon::ActivationReason)\0"
     "showAbout()\0showSettings()\0ambilightOn()\0"
     "ambilightOff()\0settingsSoftwareOptionsChange()\0"
     "settingsHardwareOptionsChange()\0"
@@ -79,16 +82,18 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: iconActivated((*reinterpret_cast< QSystemTrayIcon::ActivationReason(*)>(_a[1]))); break;
-        case 1: showAbout(); break;
-        case 2: showSettings(); break;
-        case 3: ambilightOn(); break;
-        case 4: ambilightOff(); break;
-        case 5: settingsSoftwareOptionsChange(); break;
-        case 6: settingsHardwareOptionsChange(); break;
+        case 0: ambilightUsbSuccess((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 1: refreshAmbilightEvaluated((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 2: iconActivated((*reinterpret_cast< QSystemTrayIcon::ActivationReason(*)>(_a[1]))); break;
+        case 3: showAbout(); break;
+        case 4: showSettings(); break;
+        case 5: ambilightOn(); break;
+        case 6: ambilightOff(); break;
+        case 7: settingsSoftwareOptionsChange(); break;
+        case 8: settingsHardwareOptionsChange(); break;
         default: ;
         }
-        _id -= 7;
+        _id -= 9;
     }
     return _id;
 }

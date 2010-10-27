@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'ambilightusb.h'
 **
-** Created: Wed Oct 27 21:01:14 2010
+** Created: Wed Oct 27 23:08:20 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,37 +23,32 @@ static const uint qt_meta_data_AmbilightUsb[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       6,       // signalCount
+       3,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      14,   13,   13,   13, 0x05,
-      32,   13,   13,   13, 0x05,
-      52,   13,   13,   13, 0x05,
-      79,   13,   13,   13, 0x05,
-     108,   13,   13,   13, 0x05,
-     136,   13,   13,   13, 0x05,
+      24,   14,   13,   13, 0x05,
+      48,   14,   13,   13, 0x05,
+      81,   14,   13,   13, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-     173,  166,   13,   13, 0x0a,
-     233,  206,   13,   13, 0x0a,
-     303,  265,   13,   13, 0x0a,
-     339,  328,   13,   13, 0x0a,
+     122,  115,   13,   13, 0x0a,
+     173,  146,   13,   13, 0x0a,
+     243,  205,   13,   13, 0x0a,
+     279,  268,   13,   13, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_AmbilightUsb[] = {
-    "AmbilightUsb\0\0openDeviceError()\0"
-    "openDeviceSuccess()\0writeBufferToDeviceError()\0"
-    "writeBufferToDeviceSuccess()\0"
-    "readBufferFromDeviceError()\0"
-    "readBufferFromDeviceSuccess()\0colors\0"
-    "updateColors(int[LEDS_COUNT][3])\0"
+    "AmbilightUsb\0\0isSuccess\0openDeviceSuccess(bool)\0"
+    "writeBufferToDeviceSuccess(bool)\0"
+    "readBufferFromDeviceSuccess(bool)\0"
+    "colors\0updateColors(LedColors)\0"
     "usb_send_data_timeout_secs\0"
     "setUsbSendDataTimeoutMs(double)\0"
     "prescallerIndex,outputCompareRegValue\0"
@@ -90,56 +85,38 @@ int AmbilightUsb::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: openDeviceError(); break;
-        case 1: openDeviceSuccess(); break;
-        case 2: writeBufferToDeviceError(); break;
-        case 3: writeBufferToDeviceSuccess(); break;
-        case 4: readBufferFromDeviceError(); break;
-        case 5: readBufferFromDeviceSuccess(); break;
-        case 6: updateColors((*reinterpret_cast< int(*)[LEDS_COUNT][3]>(_a[1]))); break;
-        case 7: setUsbSendDataTimeoutMs((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 8: setTimerOptions((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 9: setColorDepth((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 0: openDeviceSuccess((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 1: writeBufferToDeviceSuccess((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 2: readBufferFromDeviceSuccess((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 3: updateColors((*reinterpret_cast< LedColors(*)>(_a[1]))); break;
+        case 4: setUsbSendDataTimeoutMs((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 5: setTimerOptions((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 6: setColorDepth((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 10;
+        _id -= 7;
     }
     return _id;
 }
 
 // SIGNAL 0
-void AmbilightUsb::openDeviceError()
+void AmbilightUsb::openDeviceSuccess(bool _t1)
 {
-    QMetaObject::activate(this, &staticMetaObject, 0, 0);
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 
 // SIGNAL 1
-void AmbilightUsb::openDeviceSuccess()
+void AmbilightUsb::writeBufferToDeviceSuccess(bool _t1)
 {
-    QMetaObject::activate(this, &staticMetaObject, 1, 0);
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 
 // SIGNAL 2
-void AmbilightUsb::writeBufferToDeviceError()
+void AmbilightUsb::readBufferFromDeviceSuccess(bool _t1)
 {
-    QMetaObject::activate(this, &staticMetaObject, 2, 0);
-}
-
-// SIGNAL 3
-void AmbilightUsb::writeBufferToDeviceSuccess()
-{
-    QMetaObject::activate(this, &staticMetaObject, 3, 0);
-}
-
-// SIGNAL 4
-void AmbilightUsb::readBufferFromDeviceError()
-{
-    QMetaObject::activate(this, &staticMetaObject, 4, 0);
-}
-
-// SIGNAL 5
-void AmbilightUsb::readBufferFromDeviceSuccess()
-{
-    QMetaObject::activate(this, &staticMetaObject, 5, 0);
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 2, _a);
 }
 QT_END_MOC_NAMESPACE

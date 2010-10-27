@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'grabdesktopwindowleds.h'
 **
-** Created: Wed Oct 27 21:03:45 2010
+** Created: Wed Oct 27 23:08:25 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -32,27 +32,27 @@ static const uint qt_meta_data_GrabDesktopWindowLeds[] = {
 
  // signals: signature, parameters, type, tag, flags
       33,   23,   22,   22, 0x05,
-      73,   70,   22,   22, 0x05,
+      64,   61,   22,   22, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-     117,  111,   22,   22, 0x0a,
-     140,  138,   22,   22, 0x0a,
-     165,  163,   22,   22, 0x0a,
-     189,   70,   22,   22, 0x0a,
-     233,  221,   22,   22, 0x0a,
-     263,  261,   22,   22, 0x0a,
-     299,  297,   22,   22, 0x0a,
-     335,  333,   22,   22, 0x0a,
-     369,  111,   22,   22, 0x0a,
-     401,   22,   22,   22, 0x08,
+     108,  102,   22,   22, 0x0a,
+     131,  129,   22,   22, 0x0a,
+     156,  154,   22,   22, 0x0a,
+     180,   61,   22,   22, 0x0a,
+     224,  212,   22,   22, 0x0a,
+     254,  252,   22,   22, 0x0a,
+     290,  288,   22,   22, 0x0a,
+     326,  324,   22,   22, 0x0a,
+     360,  102,   22,   22, 0x0a,
+     392,   22,   22,   22, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_GrabDesktopWindowLeds[] = {
     "GrabDesktopWindowLeds\0\0colorsNew\0"
-    "updateLedsColors(int[LEDS_COUNT][3])\0"
-    "ms\0ambilightTimeOfUpdatingColors(double)\0"
+    "updateLedsColors(LedColors)\0ms\0"
+    "ambilightTimeOfUpdatingColors(double)\0"
     "state\0setAmbilightOn(bool)\0w\0"
     "setAmbilightWidth(int)\0h\0"
     "setAmbilightHeight(int)\0"
@@ -94,7 +94,7 @@ int GrabDesktopWindowLeds::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: updateLedsColors((*reinterpret_cast< int(*)[LEDS_COUNT][3]>(_a[1]))); break;
+        case 0: updateLedsColors((*reinterpret_cast< LedColors(*)>(_a[1]))); break;
         case 1: ambilightTimeOfUpdatingColors((*reinterpret_cast< double(*)>(_a[1]))); break;
         case 2: setAmbilightOn((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 3: setAmbilightWidth((*reinterpret_cast< int(*)>(_a[1]))); break;
@@ -114,7 +114,7 @@ int GrabDesktopWindowLeds::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void GrabDesktopWindowLeds::updateLedsColors(int _t1[LEDS_COUNT][3])
+void GrabDesktopWindowLeds::updateLedsColors(LedColors _t1)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);

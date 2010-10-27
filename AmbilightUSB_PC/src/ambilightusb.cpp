@@ -59,11 +59,11 @@ bool AmbilightUsb::openDevice()
 
     if((err = usbhidOpenDevice(&ambilightDevice, vid, vendorName, pid, productName, 0)) != 0){
         qWarning() << "error finding " << productName << ": " << usbErrorMessage(err);
-        emit openDeviceError();
+        emit openDeviceSuccess(false);
         return false;
     }
     qDebug("%s %s (PID: 0x%04x; VID: 0x%04x) opened.", productName, vendorName, pid, vid);
-    emit openDeviceSuccess();
+    emit openDeviceSuccess(true);
     return true;
 }
 
@@ -74,10 +74,10 @@ bool AmbilightUsb::readDataFromDevice()
     int len = sizeof(read_buffer);
     if((err = usbhidGetReport(ambilightDevice, 0, read_buffer, &len)) != 0){
         qWarning() << "error reading data:" << usbErrorMessage(err);
-        emit readBufferFromDeviceError();
+        emit readBufferFromDeviceSuccess(false);
         return false;
     }
-    emit readBufferFromDeviceSuccess();
+    emit readBufferFromDeviceSuccess(true);
     return true;
 }
 
@@ -87,10 +87,10 @@ bool AmbilightUsb::writeBufferToDevice()
 
     if((err = usbhidSetReport(ambilightDevice, write_buffer, sizeof(write_buffer), usb_send_data_timeout_ms)) != 0){   /* add a dummy report ID */
         qWarning() << "error writing data:" << usbErrorMessage(err);
-        emit writeBufferToDeviceError();
+        emit writeBufferToDeviceSuccess(false);
         return false;
     }
-    emit writeBufferToDeviceSuccess();
+    emit writeBufferToDeviceSuccess(true);
     return true;
 }
 
@@ -193,28 +193,35 @@ void AmbilightUsb::setUsbSendDataTimeoutMs(double usb_send_data_timeout_secs)
 
 
 
-void AmbilightUsb::updateColors(int colors[LEDS_COUNT][3])
+void AmbilightUsb::updateColors(LedColors colors)
 {
     write_buffer[1] = CMD_RIGHT_SIDE;
-    write_buffer[2] = (unsigned char)colors[RIGHT_UP][R];
-    write_buffer[3] = (unsigned char)colors[RIGHT_UP][G];
-    write_buffer[4] = (unsigned char)colors[RIGHT_UP][B];
+    write_buffer[2] = (unsigned char)colors.RightUp->r;
+    write_buffer[3] = (unsigned char)colors.RightUp->g;
+    write_buffer[4] = (unsigned char)colors.RightUp->b;
 
-    write_buffer[5] = (unsigned char)colors[RIGHT_DOWN][R];
-    write_buffer[6] = (unsigned char)colors[RIGHT_DOWN][G];
-    write_buffer[7] = (unsigned char)colors[RIGHT_DOWN][B];
+    write_buffer[5] = (unsigned char)colors.RightDown->r;
+    write_buffer[6] = (unsigned char)colors.RightDown->g;
+    write_buffer[7] = (unsigned char)colors.RightDown->b;
 
     writeBufferToDeviceWithCheck();
 
 
     write_buffer[1] = CMD_LEFT_SIDE;
-    write_buffer[2] = (unsigned char)colors[LEFT_UP][R];
-    write_buffer[3] = (unsigned char)colors[LEFT_UP][G];
-    write_buffer[4] = (unsigned char)colors[LEFT_UP][B];
+    write_buffer[2] = (unsigned char)colors.LeftUp->r;
+    write_buffer[3] = (unsigned char)colors.LeftUp->g;
+    write_buffer[4] = (unsigned char)colors.LeftUp->b;
 
-    write_buffer[5] = (unsigned char)colors[LEFT_DOWN][R];
-    write_buffer[6] = (unsigned char)colors[LEFT_DOWN][G];
-    write_buffer[7] = (unsigned char)colors[LEFT_DOWN][B];
+    write_buffer[5] = (unsigned char)colors.LeftDown->r;
+    write_buffer[6] = (unsigned char)colors.LeftDown->g;
+    write_buffer[7] = (unsigned char)colors.LeftDown->b;
 
     writeBufferToDeviceWithCheck();
+
+//    qDebug() << "Came:";
+//    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+//        qDebug() << (unsigned char)colors[ledIndex]->r;
+//        qDebug() << (unsigned char)colors[ledIndex]->g;
+//        qDebug() << (unsigned char)colors[ledIndex]->b;
+//    }
 }

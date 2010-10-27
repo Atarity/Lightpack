@@ -22,6 +22,8 @@
 #include "commands.h"   /* CMD defines */
 #include "RGB.h"        /* Led defines */
 
+#include "ledcolors.h"
+
 
 class AmbilightUsb : public QObject
 {
@@ -38,18 +40,15 @@ public:
     void offLeds();
 
 public slots:
-    void updateColors(int colors[LEDS_COUNT][3]);
+    void updateColors(LedColors colors);
     void setUsbSendDataTimeoutMs(double usb_send_data_timeout_secs);
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void setColorDepth(int colorDepth);
 
 signals:
-    void openDeviceError();
-    void openDeviceSuccess();
-    void writeBufferToDeviceError();
-    void writeBufferToDeviceSuccess();
-    void readBufferFromDeviceError();
-    void readBufferFromDeviceSuccess();
+    void openDeviceSuccess(bool isSuccess);
+    void writeBufferToDeviceSuccess(bool isSuccess);
+    void readBufferFromDeviceSuccess(bool isSuccess);
 
 
 private:
