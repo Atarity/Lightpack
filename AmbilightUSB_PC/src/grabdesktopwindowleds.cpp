@@ -10,6 +10,8 @@
 
 #include "grabdesktopwindowleds.h"
 
+const QColor GrabDesktopWindowLeds::labelsColors[LEDS_COUNT] = { Qt::blue, Qt::yellow, Qt::red, Qt::green };
+
 GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
 {
     timer = new QTimer(this);
@@ -67,8 +69,6 @@ void GrabDesktopWindowLeds::clearColors()
 void GrabDesktopWindowLeds::createLabelsGrabPixelsRects()
 {
     labelGrabPixelsRects.clear();
-
-    QColor labelsColors[LEDS_COUNT] = { Qt::blue, Qt::yellow, Qt::red, Qt::green };
 
     for(int i=0; i<LEDS_COUNT; i++){
         labelGrabPixelsRects.append(new QLabel(this, Qt::FramelessWindowHint | Qt::SplashScreen));
@@ -244,3 +244,28 @@ void GrabDesktopWindowLeds::setAmbilightWhiteBalanceB(double b)
 {
     this->ambilight_white_balance_b = b;
 }
+
+void GrabDesktopWindowLeds::setColoredGrabPixelsRects(bool state)
+{
+    if(state){
+        for(int i=0; i<labelGrabPixelsRects.count(); i++){
+            // Fill label with labelColors[i] color
+            QPalette pal = labelGrabPixelsRects[i]->palette();
+            pal.setBrush(labelGrabPixelsRects[i]->backgroundRole(), QBrush(labelsColors[i]));
+            labelGrabPixelsRects[i]->setPalette(pal);
+        }
+    }
+}
+
+void GrabDesktopWindowLeds::setWhiteGrabPixelsRects(bool state)
+{
+    if(state){
+        for(int i=0; i<labelGrabPixelsRects.count(); i++){
+            // Fill labels white
+            QPalette pal = labelGrabPixelsRects[i]->palette();
+            pal.setBrush(labelGrabPixelsRects[i]->backgroundRole(), QBrush(Qt::white));
+            labelGrabPixelsRects[i]->setPalette(pal);
+        }
+    }
+}
+

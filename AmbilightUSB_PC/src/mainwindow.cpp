@@ -26,12 +26,12 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): new GrabDesktopWindowLeds(this)";
     grabDesktopWindowLeds = new GrabDesktopWindowLeds(this);
 
+    qDebug() << "MainWindow(): loadSettingsToMainWindow()";
+    loadSettingsToMainWindow();
+
     qDebug() << "MainWindow(): connectSignalsSlots()";
     connectSignalsSlots();
 
-    qDebug() << "MainWindow(): loadSettingsToMainWindow()";
-    loadSettingsToMainWindow();
-    
 
     // Initialize limits of height and width
     ui->horizontalSliderWidth->setMaximum( QApplication::desktop()->width() / 2 );
@@ -78,6 +78,8 @@ void MainWindow::connectSignalsSlots()
     connect(ui->doubleSpinBox_WB_Green, SIGNAL(valueChanged(double)), grabDesktopWindowLeds, SLOT(setAmbilightWhiteBalanceG(double)));
     connect(ui->doubleSpinBox_WB_Blue, SIGNAL(valueChanged(double)), grabDesktopWindowLeds, SLOT(setAmbilightWhiteBalanceB(double)));
     connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), grabDesktopWindowLeds, SLOT(setAmbilightColorDepth(int)));    
+    connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setColoredGrabPixelsRects(bool)));
+    connect(ui->radioButton_White, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setWhiteGrabPixelsRects(bool)));
 
     // Connect grabDesktopWindowLeds with ambilightUsb
     connect(grabDesktopWindowLeds, SIGNAL(updateLedsColors(LedColors)), ambilightUsb, SLOT(updateColors(LedColors)));
@@ -104,7 +106,7 @@ void MainWindow::connectSignalsSlots()
     connect(ambilightUsb, SIGNAL(writeBufferToDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
 
     // grabDesktopWindowLeds to this
-    connect(grabDesktopWindowLeds, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
+    connect(grabDesktopWindowLeds, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));    
 }
 
 
@@ -356,5 +358,5 @@ void MainWindow::loadSettingsToMainWindow()
     ui->doubleSpinBox_WB_Green->setValue(settings->value("WhiteBalanceCoefGreen").toDouble());
     ui->doubleSpinBox_WB_Blue->setValue(settings->value("WhiteBalanceCoefBlue").toDouble());
 
-//    settingsHardwareOptionsChange(); // eval PWM generation frequency and show it in settings
+    settingsHardwareOptionsChange(); // eval PWM generation frequency and show it in settings
 }

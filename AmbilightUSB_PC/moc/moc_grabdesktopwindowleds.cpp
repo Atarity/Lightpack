@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'grabdesktopwindowleds.h'
 **
-** Created: Wed Oct 27 23:08:25 2010
+** Created: Thu Oct 28 17:08:30 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_GrabDesktopWindowLeds[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-      12,   14, // methods
+      14,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -44,7 +44,9 @@ static const uint qt_meta_data_GrabDesktopWindowLeds[] = {
      290,  288,   22,   22, 0x0a,
      326,  324,   22,   22, 0x0a,
      360,  102,   22,   22, 0x0a,
-     392,   22,   22,   22, 0x08,
+     392,  102,   22,   22, 0x0a,
+     424,  102,   22,   22, 0x0a,
+     454,   22,   22,   22, 0x08,
 
        0        // eod
 };
@@ -62,6 +64,8 @@ static const char qt_meta_stringdata_GrabDesktopWindowLeds[] = {
     "g\0setAmbilightWhiteBalanceG(double)\0"
     "b\0setAmbilightWhiteBalanceB(double)\0"
     "setVisibleGrabPixelsRects(bool)\0"
+    "setColoredGrabPixelsRects(bool)\0"
+    "setWhiteGrabPixelsRects(bool)\0"
     "updateLedsColorsIfChanged()\0"
 };
 
@@ -105,10 +109,12 @@ int GrabDesktopWindowLeds::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 8: setAmbilightWhiteBalanceG((*reinterpret_cast< double(*)>(_a[1]))); break;
         case 9: setAmbilightWhiteBalanceB((*reinterpret_cast< double(*)>(_a[1]))); break;
         case 10: setVisibleGrabPixelsRects((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 11: updateLedsColorsIfChanged(); break;
+        case 11: setColoredGrabPixelsRects((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 12: setWhiteGrabPixelsRects((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 13: updateLedsColorsIfChanged(); break;
         default: ;
         }
-        _id -= 12;
+        _id -= 14;
     }
     return _id;
 }

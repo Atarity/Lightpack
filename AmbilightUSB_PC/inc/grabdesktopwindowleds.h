@@ -42,6 +42,8 @@ public slots:
     void setAmbilightWhiteBalanceG(double g);
     void setAmbilightWhiteBalanceB(double b);
     void setVisibleGrabPixelsRects(bool state);
+    void setColoredGrabPixelsRects(bool state);
+    void setWhiteGrabPixelsRects(bool state);
 
 
 private slots:
@@ -54,6 +56,7 @@ private:
 private: // variables
     QTimer *timer;
     QList<QLabel *> labelGrabPixelsRects;
+    const static QColor labelsColors[LEDS_COUNT];
     TimeEvaluations *timeEval;
 
     LedColors colors;

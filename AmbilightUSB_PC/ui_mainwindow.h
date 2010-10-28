@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Oct 27 23:07:27 2010
+** Created: Thu Oct 28 17:00:32 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -25,6 +25,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QMainWindow>
 #include <QtGui/QPushButton>
+#include <QtGui/QRadioButton>
 #include <QtGui/QSlider>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
@@ -55,9 +56,12 @@ public:
     QLineEdit *lineEdit_RefreshAmbilihtEvaluated;
     QLabel *label_hz;
     QSlider *horizontalSliderHeight;
-    QCheckBox *checkBox_ShowPixelsAmbilight;
     QSpinBox *spinBox_WidthAmbilight;
     QSlider *horizontalSliderWidth;
+    QCheckBox *checkBox_ShowPixelsAmbilight;
+    QHBoxLayout *horizontalLayout_2;
+    QRadioButton *radioButton_Colored;
+    QRadioButton *radioButton_White;
     QGridLayout *gridLayout_3;
     QLabel *label_WB_Red;
     QLabel *label_WB_Green;
@@ -100,7 +104,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(360, 391);
+        MainWindow->resize(362, 420);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/icons/settings.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -189,12 +193,6 @@ public:
 
         gridLayout->addWidget(horizontalSliderHeight, 5, 0, 1, 3);
 
-        checkBox_ShowPixelsAmbilight = new QCheckBox(tabSoftwareOptions);
-        checkBox_ShowPixelsAmbilight->setObjectName(QString::fromUtf8("checkBox_ShowPixelsAmbilight"));
-        checkBox_ShowPixelsAmbilight->setChecked(true);
-
-        gridLayout->addWidget(checkBox_ShowPixelsAmbilight, 2, 0, 1, 3);
-
         spinBox_WidthAmbilight = new QSpinBox(tabSoftwareOptions);
         spinBox_WidthAmbilight->setObjectName(QString::fromUtf8("spinBox_WidthAmbilight"));
         spinBox_WidthAmbilight->setMinimum(1);
@@ -214,6 +212,28 @@ public:
 
 
         verticalLayout_2->addLayout(gridLayout);
+
+        checkBox_ShowPixelsAmbilight = new QCheckBox(tabSoftwareOptions);
+        checkBox_ShowPixelsAmbilight->setObjectName(QString::fromUtf8("checkBox_ShowPixelsAmbilight"));
+        checkBox_ShowPixelsAmbilight->setChecked(true);
+
+        verticalLayout_2->addWidget(checkBox_ShowPixelsAmbilight);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        radioButton_Colored = new QRadioButton(tabSoftwareOptions);
+        radioButton_Colored->setObjectName(QString::fromUtf8("radioButton_Colored"));
+        radioButton_Colored->setChecked(true);
+
+        horizontalLayout_2->addWidget(radioButton_Colored);
+
+        radioButton_White = new QRadioButton(tabSoftwareOptions);
+        radioButton_White->setObjectName(QString::fromUtf8("radioButton_White"));
+
+        horizontalLayout_2->addWidget(radioButton_White);
+
+
+        verticalLayout_2->addLayout(horizontalLayout_2);
 
         gridLayout_3 = new QGridLayout();
         gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
@@ -479,6 +499,8 @@ public:
         label_UpdateDelayEval->setText(QApplication::translate("MainWindow", "Refresh ambilight evaluated", 0, QApplication::UnicodeUTF8));
         label_hz->setText(QApplication::translate("MainWindow", "Hz", 0, QApplication::UnicodeUTF8));
         checkBox_ShowPixelsAmbilight->setText(QApplication::translate("MainWindow", "Show pixels for ambilight", 0, QApplication::UnicodeUTF8));
+        radioButton_Colored->setText(QApplication::translate("MainWindow", "Colored", 0, QApplication::UnicodeUTF8));
+        radioButton_White->setText(QApplication::translate("MainWindow", "White", 0, QApplication::UnicodeUTF8));
         label_WB_Red->setText(QApplication::translate("MainWindow", "Red", 0, QApplication::UnicodeUTF8));
         label_WB_Green->setText(QApplication::translate("MainWindow", "Green", 0, QApplication::UnicodeUTF8));
         label_WB_Blue->setText(QApplication::translate("MainWindow", "Blue", 0, QApplication::UnicodeUTF8));

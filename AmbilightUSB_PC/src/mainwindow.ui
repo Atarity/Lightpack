@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>360</width>
-    <height>391</height>
+    <width>362</width>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -142,16 +142,6 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0" colspan="3">
-           <widget class="QCheckBox" name="checkBox_ShowPixelsAmbilight">
-            <property name="text">
-             <string>Show pixels for ambilight</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="6" column="1">
            <widget class="QSpinBox" name="spinBox_WidthAmbilight">
             <property name="minimum">
@@ -178,6 +168,37 @@
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_ShowPixelsAmbilight">
+          <property name="text">
+           <string>Show pixels for ambilight</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QRadioButton" name="radioButton_Colored">
+            <property name="text">
+             <string>Colored</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButton_White">
+            <property name="text">
+             <string>White</string>
             </property>
            </widget>
           </item>
