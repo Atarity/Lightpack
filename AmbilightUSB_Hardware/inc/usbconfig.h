@@ -11,6 +11,8 @@
 #ifndef __usbconfig_h_included__
 #define __usbconfig_h_included__
 
+#include "version.h" /* for setting version in usb descriptor */
+
 /*
 General Description:
 This file is an example configuration (with inline documentation) for the USB
@@ -76,7 +78,7 @@ section at the end of this file).
  * with libusb: 0x16c0/0x5dc.  Use this VID/PID pair ONLY if you understand
  * the implications!
  */
-#define USB_CFG_DEVICE_VERSION  0x07, 0x02 /* 2.7 */
+#define USB_CFG_DEVICE_VERSION  VERSION_OF_HARDWARE_MINOR, VERSION_OF_HARDWARE_MAJOR
 /* Version number of the device: Minor number first, then major number.
  */
 #define USB_CFG_VENDOR_NAME     'b', 'r', 'u', 'n', 'q', 'l', '.', 'd', 'e', 'v'

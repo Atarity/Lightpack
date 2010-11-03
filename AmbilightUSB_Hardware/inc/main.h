@@ -10,12 +10,6 @@
 
 #include "RGB.h"
 
-//   Hardware version:
-#define VERSION_OF_HARDWARE				(0x0207UL)
-#define VERSION_OF_HARDWARE_MAJOR		((VERSION_OF_HARDWARE >> 8) & 0xff)
-#define VERSION_OF_HARDWARE_MINOR		(VERSION_OF_HARDWARE & 0x00ff)
-
-
 // Test pin on PORTA.7 using for debugging and evaluation time intervals
 #define TEST_PIN_DDR_INIT()		{ DDRA |= _BV(PA7); }
 #define TEST_UP()				{ PORTA |= _BV(PA7); }
