@@ -31,3 +31,7 @@ build/
 Makefile*
 *.lay
 *.qm
+object_script*
+moc/
+ui_*
+qrc_*
