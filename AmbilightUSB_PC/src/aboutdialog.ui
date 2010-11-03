@@ -20,7 +20,7 @@
    <string>AmbilightUSB - About</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../res_ambilight.qrc">
+   <iconset resource="../res/res_ambilight.qrc">
     <normaloff>:/icons/ambilight_icon.png</normaloff>:/icons/ambilight_icon.png</iconset>
   </property>
   <property name="locale">
@@ -157,7 +157,7 @@ p, li { white-space: pre-wrap; }
    <item>
     <widget class="QLabel" name="labelVersionSoftware">
      <property name="text">
-      <string/>
+      <string> </string>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -170,7 +170,7 @@ p, li { white-space: pre-wrap; }
    <item>
     <widget class="QLabel" name="labelVersionHardware">
      <property name="text">
-      <string/>
+      <string> </string>
      </property>
      <property name="margin">
       <number>3</number>
@@ -216,7 +216,7 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <resources>
-  <include location="../res_ambilight.qrc"/>
+  <include location="../res/res_ambilight.qrc"/>
  </resources>
  <connections>
   <connection>

@@ -5,200 +5,225 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.ui" line="14"/>
+        <location filename="../../src/mainwindow.ui" line="14"/>
         <source>Ambilight USB - Settings</source>
         <translation>Ambilight USB - Настройки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="125"/>
-        <location filename="../src/mainwindow.ui" line="480"/>
+        <location filename="../../src/mainwindow.ui" line="125"/>
+        <location filename="../../src/mainwindow.ui" line="497"/>
         <source>Hz</source>
         <translation>Гц</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="188"/>
+        <location filename="../../src/mainwindow.ui" line="191"/>
+        <source>Colored</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="201"/>
+        <source>White</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="212"/>
         <source>Red</source>
         <translation>Красный</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="198"/>
+        <location filename="../../src/mainwindow.ui" line="222"/>
         <source>Green</source>
         <translation>Зеленый</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="208"/>
+        <location filename="../../src/mainwindow.ui" line="232"/>
         <source>Blue</source>
         <translation>Синий</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="275"/>
+        <location filename="../../src/mainwindow.ui" line="299"/>
         <source>White balance</source>
         <translation>Баланс белого</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="301"/>
+        <location filename="../../src/mainwindow.ui" line="325"/>
         <source>Hardware options</source>
         <translation>Настройки девайса</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="309"/>
+        <location filename="../../src/mainwindow.ui" line="333"/>
         <source>Sets prescaller of the timer that generates PWM on HC595</source>
         <translation>Настройка делителя частоты таймера, который используется для генерации ШИМ на HC595</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="323"/>
+        <location filename="../../src/mainwindow.ui" line="347"/>
         <source>1</source>
         <translation>1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="328"/>
+        <location filename="../../src/mainwindow.ui" line="352"/>
         <source>8</source>
         <translation>8</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="333"/>
+        <location filename="../../src/mainwindow.ui" line="357"/>
         <source>64</source>
         <translation>64</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="338"/>
+        <location filename="../../src/mainwindow.ui" line="362"/>
         <source>256</source>
         <translation>256</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="343"/>
+        <location filename="../../src/mainwindow.ui" line="367"/>
         <source>1024</source>
         <translation>1024</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="370"/>
+        <location filename="../../src/mainwindow.ui" line="394"/>
         <source>Sets output compate register (OCR) value of the timer that generates PWM on HC595</source>
         <translation>Настройка значения регистра сравнения (OCR) таймера используемого для генерации ШИМ на HC595</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="373"/>
+        <location filename="../../src/mainwindow.ui" line="397"/>
         <source>Timer OCR</source>
         <translation>Значение регистра сравнения (OCR)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="393"/>
+        <location filename="../../src/mainwindow.ui" line="417"/>
         <source>ticks</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="400"/>
+        <location filename="../../src/mainwindow.ui" line="424"/>
         <source>Reconnect USB delay</source>
         <translation>Переподключение к USB каждые</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="494"/>
+        <location filename="../../src/mainwindow.ui" line="511"/>
         <source>Frequency of PWM generation:</source>
         <translation>Частота генерации ШИМ:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="40"/>
+        <location filename="../../src/mainwindow.ui" line="40"/>
         <source>Refresh ambilight delay</source>
         <translation>Задержка обновления ambilight</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="60"/>
+        <location filename="../../src/mainwindow.ui" line="60"/>
         <source>ms</source>
         <translation>мс</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="417"/>
-        <location filename="../src/mainwindow.ui" line="447"/>
+        <location filename="../../src/mainwindow.ui" line="441"/>
+        <location filename="../../src/mainwindow.ui" line="471"/>
         <source>secs</source>
         <translation>сек</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="87"/>
-        <location filename="../src/mainwindow.ui" line="101"/>
+        <location filename="../../src/mainwindow.ui" line="87"/>
+        <location filename="../../src/mainwindow.ui" line="101"/>
         <source>pixels</source>
         <translation>точек</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="32"/>
+        <location filename="../../src/mainwindow.ui" line="32"/>
         <source>Software options</source>
         <translation>Настройки приложения</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="67"/>
+        <location filename="../../src/mainwindow.ui" line="67"/>
         <source>Height</source>
         <translation>Высота</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="94"/>
+        <location filename="../../src/mainwindow.ui" line="94"/>
         <source>Width</source>
         <translation>Ширина</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="148"/>
+        <location filename="../../src/mainwindow.ui" line="179"/>
         <source>Show pixels for ambilight</source>
         <translation>Показать точки используемые для подсветки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="108"/>
+        <location filename="../../src/mainwindow.ui" line="108"/>
         <source>Refresh ambilight evaluated</source>
         <translation>Частота обновления ambilight</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="312"/>
+        <location filename="../../src/mainwindow.ui" line="336"/>
         <source>Timer prescaller</source>
         <translation>Делитель таймера</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="424"/>
+        <location filename="../../src/mainwindow.ui" line="448"/>
         <source>USB send data timeout</source>
         <translation>Таймаут USB посылки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="487"/>
+        <location filename="../../src/mainwindow.ui" line="504"/>
         <source>System clock: 12 MHz</source>
         <translation>Частота работы микроконтроллера: 12Мгц</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="535"/>
+        <location filename="../../src/mainwindow.ui" line="518"/>
+        <source>Sets the number of levels in PWM generation for each channel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="521"/>
+        <source>Color depth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="563"/>
+        <source>counts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="611"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="208"/>
+        <location filename="../../src/mainwindow.cpp" line="200"/>
         <source>Ambilight USB. On state.</source>
         <translation>Ambilight USB. Включен.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="214"/>
+        <location filename="../../src/mainwindow.cpp" line="206"/>
         <source>Ambilight USB. Off state.</source>
         <translation>Ambilight USB. Выключен.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="220"/>
+        <location filename="../../src/mainwindow.cpp" line="212"/>
         <source>Ambilight USB. Error state.</source>
         <translation>Ambilight USB. Ошибка подключения к USB.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="372"/>
+        <location filename="../../src/mainwindow.cpp" line="310"/>
         <source>&amp;On ambilight</source>
         <translation>&amp;Включить ambilight</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="375"/>
+        <location filename="../../src/mainwindow.cpp" line="313"/>
         <source>O&amp;ff ambilight</source>
         <translation>&amp;Выключить ambilight</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="378"/>
+        <location filename="../../src/mainwindow.cpp" line="316"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="381"/>
+        <location filename="../../src/mainwindow.cpp" line="319"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="384"/>
+        <location filename="../../src/mainwindow.cpp" line="322"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
@@ -206,12 +231,12 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../src/ambilightusb.cpp" line="154"/>
+        <location filename="../../src/ambilightusb.cpp" line="138"/>
         <source>device unavailable</source>
         <translation>устройство не доступно</translation>
     </message>
     <message>
-        <location filename="../src/ambilightusb.cpp" line="160"/>
+        <location filename="../../src/ambilightusb.cpp" line="144"/>
         <source>read device fail</source>
         <translation>устройство не отвечает</translation>
     </message>
@@ -219,12 +244,12 @@
 <context>
     <name>aboutDialog</name>
     <message>
-        <location filename="../src/aboutdialog.ui" line="20"/>
+        <location filename="../../src/aboutdialog.ui" line="20"/>
         <source>AmbilightUSB - About</source>
         <translation>AmbilightUSB - About</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="33"/>
+        <location filename="../../src/aboutdialog.ui" line="33"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -237,12 +262,12 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;Ambilight USB&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="53"/>
+        <location filename="../../src/aboutdialog.ui" line="53"/>
         <source>This project makes ambilight for you PC. Watching films now can be more fun. </source>
         <translation>Программно-аппаратный комплекс, превращающий практически любой персональный компьютер в телевизор Philips&lt;sup&gt;&amp;reg;&lt;/sup&gt; с Ambilight&lt;sup&gt;TM&amp;reg;&amp;copy;&lt;/sup&gt;-подсветкой. </translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="81"/>
+        <location filename="../../src/aboutdialog.ui" line="81"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -255,7 +280,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Железо:&lt;/span&gt; ATtiny44, 74HC595 и 4 RGB LEDs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="101"/>
+        <location filename="../../src/aboutdialog.ui" line="101"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -268,7 +293,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Прошивка:&lt;/span&gt; C, V-USB (HID)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="127"/>
+        <location filename="../../src/aboutdialog.ui" line="127"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -281,12 +306,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Софт:&lt;/span&gt; C++, Qt 4.6&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="150"/>
+        <location filename="../../src/aboutdialog.ui" line="150"/>
         <source>&lt;b&gt;Author:&lt;/b&gt; brunql</source>
         <translation>&lt;b&gt;Автор:&lt;/b&gt; brunql</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="183"/>
+        <location filename="../../src/aboutdialog.ui" line="183"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -303,17 +328,17 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;right&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;AmbilightUSB (&lt;span style=&quot; font-style:italic;&quot;&gt;copyleft&lt;/span&gt;) 2010 &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.ui" line="212"/>
+        <location filename="../../src/aboutdialog.ui" line="212"/>
         <source>Ok, close it!</source>
         <translation>Самоликвидируйся!</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.cpp" line="10"/>
+        <location filename="../../src/aboutdialog.cpp" line="10"/>
         <source>&lt;b&gt;Software version:&lt;/b&gt; </source>
         <translation>&lt;b&gt;Версия программы:&lt;/b&gt; </translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.cpp" line="11"/>
+        <location filename="../../src/aboutdialog.cpp" line="11"/>
         <source>&lt;b&gt;Hardware version:&lt;/b&gt; </source>
         <translation>&lt;b&gt;Версия устройства:&lt;/b&gt; </translation>
     </message>

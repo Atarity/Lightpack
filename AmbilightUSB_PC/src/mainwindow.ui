@@ -14,7 +14,7 @@
    <string>Ambilight USB - Settings</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../res_ambilight.qrc">
+   <iconset resource="../res/res_ambilight.qrc">
     <normaloff>:/icons/settings.png</normaloff>:/icons/settings.png</iconset>
   </property>
   <property name="locale">
@@ -623,7 +623,7 @@
   <tabstop>spinBox_WidthAmbilight</tabstop>
  </tabstops>
  <resources>
-  <include location="../res_ambilight.qrc"/>
+  <include location="../res/res_ambilight.qrc"/>
  </resources>
  <connections>
   <connection>

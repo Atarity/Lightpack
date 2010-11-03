@@ -1,9 +1,14 @@
 # -------------------------------------------------
+# AmbilightUSB
+#
+# Very simple implementation of the backlight for a laptop (as in Philips TV).
+# Author: brunql
+#
 # Project created by QtCreator 2010-04-28T19:08:13
 # -------------------------------------------------
 DESTDIR = ./build
-TARGET = Ambilight
-TRANSLATIONS = res/translations/Ambilight_ru_RU.ts
+TARGET = AmbilightUSB
+TRANSLATIONS = res/translations/AmbilightUSB_ru_RU.ts
 CONFIG -= console
 CONFIG -= app_bundle
 

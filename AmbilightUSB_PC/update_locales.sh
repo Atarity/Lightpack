@@ -14,13 +14,13 @@ echo
 echo "================================================="
 echo "Updating translation files for Ambilight project:"
 echo 
-lupdate Ambilight.pro
+lupdate AmbilightUSB.pro
 
 echo 
 echo "==========================================================="
 echo "Generating release translation files for Ambilight project:"
 echo 
-lrelease Ambilight.pro
+lrelease AmbilightUSB.pro
 
 echo
 

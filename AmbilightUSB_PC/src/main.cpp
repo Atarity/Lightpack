@@ -162,7 +162,7 @@ int main(int argc, char **argv)
     }
     QApplication::setQuitOnLastWindowClosed(false);
 
-    QString pathToLocale = QString(":/translations/Ambilight_") + locale;    
+    QString pathToLocale = QString(":/translations/AmbilightUSB_") + locale;
 
     if(locale == "en_EN"){
         qWarning() << "Locale: " + locale;
