@@ -2,16 +2,28 @@ AmbilightUSB
 ============
 
 AmbilightUSB is a very simple implementation of the backlight for a laptop (as in Philips TV). A couple of simple printed circuit boards, controller, shift registers, a few LEDs and AmbilightUSB is ready!   
+
 Configuration program lives in the tray, without interfering with habitual work and watching movies.   
 
 **Hardware**: `ATtiny44`, `2 x 74HC595` and `4 x RGB LEDs`   
 **Firmware**: written in `C`, using `V-USB` (HID Class device)   
 **Software**: `C++`, `Qt` (all tested in Ubuntu 10.04)   
 
-[Description](http://brunql.github.com/ambilight/) of the device in pictures   
+[Description](http://brunql.github.com/ambilight/) of the device in pictures.   
+
+How to install AmbilightUSB software see INSTALL document in project root directory.
 
 Software versions:
 ==================
+Version 2.7.6
+-------------
+
+* Windows support
+* Added radio buttons switch colored or white fill of grabbing rects
+* Added new hardware option to set color depth
+* Split code of getting and sending colors in 2 classes
+* Make one *.pro file for windows and linux
+
 Version 2.7.5
 -------------
 Update GUI:
@@ -57,6 +69,13 @@ Using X11 library to catch pixels colors
 
 Firmware versions:
 ==================
+Version 2.8
+-----------
+
+* Added new command to set color depth
+* Change report descriptor size (size of sending, receiving buffers)
+* In usb config set using FAST_CRC algorithm
+
 Version 2.7
 -----------
 New command to set prescaller and output compare register of timer that used to PWM generation.   
