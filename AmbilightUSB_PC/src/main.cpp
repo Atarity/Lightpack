@@ -45,17 +45,13 @@ static void showHelpMessage()
     fprintf(stderr, "sudo ./Ambilight    - try this if can't open device \n");
 }
 
-bool openLogFile()
+bool openLogFile(const QString & filePath)
 {
-    QString filePath = QDir::homePath() + "/.ambilight.log";
-
-    cout << "Writing logs to: " << filePath.toStdString() << endl;
-
     QFile *logFile = new QFile(filePath);
     QIODevice::OpenMode openFileAppendOrTruncateFlag = QIODevice::Append;
     QFileInfo info(filePath);
     if(info.size() > 1*1024*1024){
-        fprintf(stderr, "Log file size > 1 Mb. I'm going to clear it. Now!\n");
+        cout << "Log file size > 1 Mb. I'm going to clear it. Now!\n";
         openFileAppendOrTruncateFlag = QIODevice::Truncate;
     }
     if(logFile->open(QIODevice::WriteOnly | openFileAppendOrTruncateFlag | QIODevice::Text)){
@@ -87,8 +83,11 @@ void messageOutput(QtMsgType type, const char *msg)
         break;
     case QtFatalMsg:
         cerr << "Fatal: " << msg << endl;
+        cerr.flush();
+
         logStream << "Fatal: " << msg << endl;
         logStream.flush();
+
         abort();
     }
     logStream << out << endl;
@@ -122,7 +121,7 @@ void settingsInit()
     setDefaultSettingIfNotFound("WhiteBalanceCoefBlue",                WHITE_BALANCE_COEF_BLUE_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("HwTimerPrescallerIndex",              HW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("HwTimerOCR",                          HW_TIMER_OCR_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("HwColorDepth",                          HW_COLOR_DEPTH_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("HwColorDepth",                        HW_COLOR_DEPTH_DEFAULT_VALUE);
 }
 
 int main(int argc, char **argv)
@@ -130,8 +129,12 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);    
     app.setApplicationVersion(VERSION_STR);
 
-    if(!openLogFile()){
-        cerr << "Log file didn't opened. Exit." << endl;
+    QString logFilePath = QDir::homePath() + "/.ambilight.log";
+
+    if(openLogFile(logFilePath)){
+        cout << "Writing logs to '"<< logFilePath.toStdString() << "'";
+    }else{
+        cerr << "Log file '" << logFilePath.toStdString() << "' didn't opened. Exit." << endl;
         return 2;
     }
 

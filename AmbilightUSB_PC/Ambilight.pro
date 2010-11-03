@@ -3,10 +3,20 @@
 # -------------------------------------------------
 DESTDIR = ./build
 TARGET = Ambilight
-TRANSLATIONS = translations/Ambilight_ru_RU.ts
-CONFIG += console
+TRANSLATIONS = res/translations/Ambilight_ru_RU.ts
+CONFIG -= console
 CONFIG -= app_bundle
-LIBS += -lusb
+
+win32 {
+    # In windows using WinAPI for HID
+    LIBS += -lhid -lusbcamd -lsetupapi
+}
+
+unix {
+    # In unix using libusb
+    LIBS += -lusb
+}
+
 INCLUDEPATH += ./inc
 INCLUDEPATH += ../AmbilightUSB_Hardware/inc/
 OBJECTS_DIR = ./obj
@@ -18,8 +28,7 @@ SOURCES += src/hiddata.cpp \
     src/ambilightusb.cpp \
     src/aboutdialog.cpp \
     src/grabdesktopwindowleds.cpp
-HEADERS += inc/hidsdi.h \
-    inc/hiddata.h \
+HEADERS += inc/hiddata.h \
     ../AmbilightUSB_Hardware/inc/usbconfig.h \
     ../AmbilightUSB_Hardware/inc/commands.h \
     ../AmbilightUSB_Hardware/inc/RGB.h \
@@ -34,4 +43,4 @@ HEADERS += inc/hidsdi.h \
     inc/ledcolors.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui
-RESOURCES += res_ambilight.qrc
+RESOURCES += res/res_ambilight.qrc
