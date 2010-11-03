@@ -8,10 +8,8 @@ CONFIG += console
 CONFIG -= app_bundle
 #WIN32 Libs
 LIBS = -lhid \
- -lhidparse \
  -lusbcamd \
- -lusbcamd2 \
- -lsetupapi
+-lsetupapi
 INCLUDEPATH += ./inc
 INCLUDEPATH += ../AmbilightUSB_Hardware/inc/
 OBJECTS_DIR = ./obj
@@ -21,9 +19,9 @@ SOURCES += src/hiddata.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
     src/ambilightusb.cpp \
-    src/aboutdialog.cpp
-HEADERS += inc/hidsdi.h \
-    inc/hiddata.h \
+    src/aboutdialog.cpp \
+    src/grabdesktopwindowleds.cpp
+HEADERS += inc/hiddata.h \
     ../AmbilightUSB_Hardware/inc/usbconfig.h \
     ../AmbilightUSB_Hardware/inc/commands.h \
     ../AmbilightUSB_Hardware/inc/RGB.h \
@@ -32,7 +30,10 @@ HEADERS += inc/hidsdi.h \
     inc/version.h \
     inc/settings.h \
     inc/aboutdialog.h \
-    inc/timeevaluations.h
+    inc/timeevaluations.h \
+    inc/grabdesktopwindowleds.h \
+    inc/struct_rgb.h \
+    inc/ledcolors.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui
 RESOURCES += res_ambilight.qrc

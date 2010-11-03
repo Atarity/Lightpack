@@ -62,8 +62,8 @@ private:
     usbDevice_t *ambilightDevice;
 
 
-    char read_buffer[1 + 7];    /* 0-system, 1..7-data */
-    char write_buffer[1 + 7];   /* 0-system, 1..7-data */
+    char read_buffer[1 + 8];    /* 0-ReportID, 1..8-data */
+    char write_buffer[1 + 8];   /* 0-ReportID, 1..8-data */
 
 
     // Settings:

@@ -16,7 +16,7 @@
 
 #include <windows.h>
 #include <setupapi.h>
-#include "hidsdi.h"
+#include <ddk/hidsdi.h>
 #include <ddk/hidpi.h>
 
 #ifdef DEBUG
@@ -135,9 +135,10 @@ void    usbhidCloseDevice(usbDevice_t *device)
 
 /* ------------------------------------------------------------------------ */
 
-int usbhidSetReport(usbDevice_t *device, char *buffer, int len)
+int usbhidSetReport(usbDevice_t *device, char *buffer, int len, int timeout)
 {
-BOOLEAN rval;
+    // brunql: windows doesn't support setting timeout, ignore it
+    BOOLEAN rval;
 
     rval = HidD_SetFeature((HANDLE)device, buffer, len);
     return rval == 0 ? USBOPEN_ERR_IO : 0;
@@ -146,8 +147,8 @@ BOOLEAN rval;
 /* ------------------------------------------------------------------------ */
 
 int usbhidGetReport(usbDevice_t *device, int reportNumber, char *buffer, int *len)
-{
-BOOLEAN rval = 0;
+{    
+    BOOLEAN rval = 0;
 
     buffer[0] = reportNumber;
     rval = HidD_GetFeature((HANDLE)device, buffer, *len);
