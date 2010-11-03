@@ -49,3 +49,4 @@ HEADERS += inc/hiddata.h \
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui
 RESOURCES += res/res_ambilight.qrc
+RC_FILE = res/AmbilightUSB.rc
