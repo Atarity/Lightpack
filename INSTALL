@@ -21,7 +21,7 @@ INSTALLATION
    * Get only latest source from github:
      https://github.com/brunql/AmbilightUSB/tarball/master
  2) Compile:
-   $ cd AmbilightUSB/AmbilightUSB_PC/
+   $ cd AmbilightUSB/Software/
    $ ./update_locales.sh
    $ qmake AmbilightUSB.pro
    $ make
