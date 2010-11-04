@@ -27,7 +27,7 @@ INSTALLATION
    $ make
    $ ./build/AmbilightUSB
   
- Icon for linux users: AmbilightUSB_PC/res/icons/ambilight_icon.png
+ Icon for linux users: Software/res/icons/ambilight_icon.png
  
  If AmbilightUSB shows 'AmbilightUSB. Error state.' and write to logs 'Access to device denied' or 'The specified device was not found', this may be problem with permissions, try to add UDEV rules 50-usb.rules (download here: https://github.com/brunql/AmbilightUSB/raw/master/50-usb.rules) to /etc/udev/rules.d/
  $ sudo cp 50-usb.rules /etc/udev/rules.d/
