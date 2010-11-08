@@ -129,10 +129,10 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);    
     app.setApplicationVersion(VERSION_STR);
 
-    QString logFilePath = QDir::homePath() + "/.ambilight.log";
+    QString logFilePath = QDir::homePath() + "/.AmbilightUSB.log";
 
     if(openLogFile(logFilePath)){
-        cout << "Writing logs to '"<< logFilePath.toStdString() << "'";
+        cout << "Writing logs to '"<< logFilePath.toStdString() << "'" << endl;
     }else{
         cerr << "Log file '" << logFilePath.toStdString() << "' didn't opened. Exit." << endl;
         return 2;
