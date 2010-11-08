@@ -109,6 +109,7 @@ void setDefaultSettingIfNotFound(const QString & name, const QVariant & value)
 void settingsInit()
 {
     settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "brunql.dev", "AmbilightUSB");
+    qDebug() << "Settings file: " << settings->fileName();
     
     setDefaultSettingIfNotFound("RefreshAmbilightDelayMs",             REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("ReconnectAmbilightUSBDelayMs",        RECONNECT_USB_MS_DEFAULT_VALUE);
@@ -152,6 +153,9 @@ int main(int argc, char **argv)
         }
     }
 
+    // Initialize 'settings' variable, new settings initializes with default values
+    settingsInit();
+
     Q_INIT_RESOURCE(res_ambilight);
 
     qInstallMsgHandler(messageOutput);
@@ -175,8 +179,6 @@ int main(int argc, char **argv)
             qWarning() << "Locale:" << pathToLocale << "not found. Using defaults.";
         }        
     }
-
-    settingsInit();
 
     MainWindow window;          /* Create MainWindow */
     window.setVisible(false);   /* And load to tray. */
