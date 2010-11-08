@@ -44,8 +44,8 @@ private slots:
     void ambilightOff(); /* using in actions */
 
     void settingsSoftwareOptionsChange();
-    void settingsHardwareOptionsChange();
-
+    void settingsHardwareTimerOptionsChange();
+    void settingsHardwareColorDepthOptionChange();
 
 
 
@@ -60,12 +60,17 @@ private:
     void createActions();
     void loadSettingsToMainWindow();        
 
+    void updatePwmFrequency();
+
 private:
     AmbilightUsb *ambilightUsb;
     GrabDesktopWindowLeds *grabDesktopWindowLeds;
 
     bool isAmbilightOn; /* is grab desktop window ON */
     bool isErrorState;
+
+    // Evaluated frequency of the PWM generation
+    double pwmFrequency;
 
 
     Ui::MainWindow *ui;

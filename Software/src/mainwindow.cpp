@@ -93,9 +93,9 @@ void MainWindow::connectSignalsSlots()
     connect(ui->doubleSpinBox_WB_Green, SIGNAL(valueChanged(double)), this, SLOT(settingsSoftwareOptionsChange()));
     connect(ui->doubleSpinBox_WB_Blue, SIGNAL(valueChanged(double)), this, SLOT(settingsSoftwareOptionsChange()));
     // Hardware options
-    connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareOptionsChange()));
-    connect(ui->horizontalSlider_HW_Prescaller, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareOptionsChange()));
-    connect(ui->horizontalSlider_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareOptionsChange()));
+    connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareColorDepthOptionChange()));
+    connect(ui->horizontalSlider_HW_Prescaller, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareTimerOptionsChange()));
+    connect(ui->horizontalSlider_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareTimerOptionsChange()));
     // Software/Hardware options
     connect(ui->spinBox_ReconnectDelay, SIGNAL(valueChanged(int)), this, SLOT(settingsSoftwareOptionsChange()));
     connect(ui->doubleSpinBoxUsbSendDataTimeout, SIGNAL(valueChanged(double)), this, SLOT(settingsSoftwareOptionsChange()));
@@ -273,34 +273,69 @@ void MainWindow::settingsSoftwareOptionsChange()
     settings->setValue("WhiteBalanceCoefBlue", ui->doubleSpinBox_WB_Blue->value());
 }
 
-// Send settings to device and update evaluated Hz of the PWM generation
-void MainWindow::settingsHardwareOptionsChange()
+// Send timer options to device
+void MainWindow::settingsHardwareTimerOptionsChange()
+{
+    int timerPrescallerIndex = ui->comboBox_HW_Prescaller->currentIndex();
+    int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
+
+    settings->setValue("HwTimerPrescallerIndex", timerPrescallerIndex);
+    settings->setValue("HwTimerOCR", timerOutputCompareRegValue);
+
+    updatePwmFrequency();
+
+    if(pwmFrequency > 1000){
+        qWarning() << "PWM frequency to high! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
+    }else if(pwmFrequency < 10){
+        qWarning() << "PWM frequency to low! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
+    }else{
+        // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
+        ambilightUsb->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
+    }
+}
+
+// Send color depth to device
+void MainWindow::settingsHardwareColorDepthOptionChange()
+{
+    int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
+
+    settings->setValue("HwColorDepth", colorDepth);
+
+    updatePwmFrequency();
+
+    if(pwmFrequency > 1000){
+        qWarning() << "PWM frequency to high! setColorDepth canceled. pwmFrequency =" << pwmFrequency << "Hz";
+    }else if(pwmFrequency < 10){
+        qWarning() << "PWM frequency to low! setColorDepth canceled. pwmFrequency =" << pwmFrequency << "Hz";
+    }else{
+        // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
+        ambilightUsb->setColorDepth(colorDepth);
+    }
+}
+
+void MainWindow::updatePwmFrequency()
 {
     int timerPrescallerIndex = ui->comboBox_HW_Prescaller->currentIndex();
     int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
     int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
 
-    settings->setValue("HwTimerPrescallerIndex", timerPrescallerIndex);
-    settings->setValue("HwTimerOCR", timerOutputCompareRegValue);
-    settings->setValue("HwColorDepth", colorDepth);
-
     if(colorDepth == 0) {
         qWarning() << "void MainWindow::settingsHardwareOptionsChange() Magic! colorDepth == 0";
         return;
     }
-    double pwmFreq = 12000000 / colorDepth; // colorDepth - PWM level max value;
+    pwmFrequency = 12000000 / colorDepth; // colorDepth - PWM level max value;
 
     switch(timerPrescallerIndex){
     case CMD_SET_PRESCALLER_1:      break;
-    case CMD_SET_PRESCALLER_8:      pwmFreq /= 8; break;
-    case CMD_SET_PRESCALLER_64:     pwmFreq /= 64;break;
-    case CMD_SET_PRESCALLER_256:    pwmFreq /= 256;break;
-    case CMD_SET_PRESCALLER_1024:   pwmFreq /= 1024;break;
+    case CMD_SET_PRESCALLER_8:      pwmFrequency /= 8; break;
+    case CMD_SET_PRESCALLER_64:     pwmFrequency /= 64;break;
+    case CMD_SET_PRESCALLER_256:    pwmFrequency /= 256;break;
+    case CMD_SET_PRESCALLER_1024:   pwmFrequency /= 1024;break;
     default: qWarning() << "bad value of 'timerPrescallerIndex' =" << timerPrescallerIndex; break;
     }
-    pwmFreq /= timerOutputCompareRegValue;
+    pwmFrequency /= timerOutputCompareRegValue;
 
-    ui->lineEdit_PWM_Frequency->setText(QString::number(pwmFreq,'g',3));
+    ui->lineEdit_PWM_Frequency->setText(QString::number(pwmFrequency,'g',3));
 }
 
 
@@ -358,5 +393,7 @@ void MainWindow::loadSettingsToMainWindow()
     ui->doubleSpinBox_WB_Green->setValue(settings->value("WhiteBalanceCoefGreen").toDouble());
     ui->doubleSpinBox_WB_Blue->setValue(settings->value("WhiteBalanceCoefBlue").toDouble());
 
-    settingsHardwareOptionsChange(); // eval PWM generation frequency and show it in settings
+    updatePwmFrequency(); // eval PWM generation frequency and show it in settings
+    settingsHardwareColorDepthOptionChange(); // synchonize color depth value with device
+    settingsHardwareTimerOptionsChange(); // synchonize timer options with device
 }

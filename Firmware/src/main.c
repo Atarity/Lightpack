@@ -134,6 +134,9 @@ static inline void SmoothlyShowRGB()
 {
 	uint8_t fsm = 1, red = 0, green = 0, blue = 0;
 
+	SetAllLedsColors(0, 0, 0);
+	_delay_ms(10);
+
 	for(;fsm != 0;){
 		switch(fsm){
 		case 1:

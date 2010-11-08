@@ -133,7 +133,7 @@ int main(int argc, char **argv)
     QString logFilePath = QDir::homePath() + "/.AmbilightUSB.log";
 
     if(openLogFile(logFilePath)){
-        cout << "Writing logs to '"<< logFilePath.toStdString() << "'" << endl;
+        cout << "Logs file: " << logFilePath.toStdString() << endl;
     }else{
         cerr << "Log file '" << logFilePath.toStdString() << "' didn't opened. Exit." << endl;
         return 2;
