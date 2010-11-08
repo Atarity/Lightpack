@@ -1,3 +1,12 @@
+/*
+ * struct_rgb.h
+ *
+ *  Created on: 26.07.2010
+ *      Author: brunql
+ *
+ *      Project: AmbilightUSB
+ */
+ 
 #ifndef RGB_H
 #define RGB_H
 

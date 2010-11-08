@@ -217,11 +217,4 @@ void AmbilightUsb::updateColors(LedColors colors)
     write_buffer[7] = (unsigned char)colors.LeftDown->b;
 
     writeBufferToDeviceWithCheck();
-
-//    qDebug() << "Came:";
-//    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-//        qDebug() << (unsigned char)colors[ledIndex]->r;
-//        qDebug() << (unsigned char)colors[ledIndex]->g;
-//        qDebug() << (unsigned char)colors[ledIndex]->b;
-//    }
 }

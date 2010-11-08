@@ -1,3 +1,12 @@
+/*
+ * aboutdialog.cpp
+ *
+ *  Created on: 26.07.2010
+ *      Author: brunql
+ *
+ *      Project: AmbilightUSB
+ */
+ 
 #include "aboutdialog.h"
 #include "ui_aboutdialog.h"
 #include "version.h"

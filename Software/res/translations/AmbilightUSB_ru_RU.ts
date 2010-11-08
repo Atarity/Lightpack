@@ -18,12 +18,12 @@
     <message>
         <location filename="../../src/mainwindow.ui" line="191"/>
         <source>Colored</source>
-        <translation type="unfinished"></translation>
+        <translation>Разноцветные</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="201"/>
         <source>White</source>
-        <translation type="unfinished"></translation>
+        <translation>Белые</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="212"/>
@@ -170,17 +170,17 @@
     <message>
         <location filename="../../src/mainwindow.ui" line="518"/>
         <source>Sets the number of levels in PWM generation for each channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройка количества уровней в ШИМ генерации на каждый канал</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="521"/>
         <source>Color depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Глубина цвета</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="563"/>
         <source>counts</source>
-        <translation type="unfinished"></translation>
+        <translation>отсчетов</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="611"/>
@@ -264,7 +264,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/aboutdialog.ui" line="53"/>
         <source>This project makes ambilight for you PC. Watching films now can be more fun. </source>
-        <translation>Программно-аппаратный комплекс, превращающий практически любой персональный компьютер в телевизор Philips&lt;sup&gt;&amp;reg;&lt;/sup&gt; с Ambilight&lt;sup&gt;TM&amp;reg;&amp;copy;&lt;/sup&gt;-подсветкой. </translation>
+        <translation>Программно-аппаратный комплекс, превращающий практически любой персональный компьютер в телевизор Philips с Ambilight-подсветкой.</translation>
     </message>
     <message>
         <location filename="../../src/aboutdialog.ui" line="81"/>
@@ -333,12 +333,12 @@ p, li { white-space: pre-wrap; }
         <translation>Самоликвидируйся!</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.cpp" line="10"/>
+        <location filename="../../src/aboutdialog.cpp" line="19"/>
         <source>&lt;b&gt;Software version:&lt;/b&gt; </source>
         <translation>&lt;b&gt;Версия программы:&lt;/b&gt; </translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.cpp" line="11"/>
+        <location filename="../../src/aboutdialog.cpp" line="20"/>
         <source>&lt;b&gt;Hardware version:&lt;/b&gt; </source>
         <translation>&lt;b&gt;Версия устройства:&lt;/b&gt; </translation>
     </message>

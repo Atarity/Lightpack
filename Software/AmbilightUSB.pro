@@ -23,7 +23,7 @@ unix {
 }
 
 INCLUDEPATH += ./inc
-INCLUDEPATH += ../AmbilightUSB_Hardware/inc/
+INCLUDEPATH += ../Firmware/inc/
 OBJECTS_DIR = ./obj
 MOC_DIR = ./moc
 TEMPLATE = app
@@ -34,9 +34,9 @@ SOURCES += src/hiddata.cpp \
     src/aboutdialog.cpp \
     src/grabdesktopwindowleds.cpp
 HEADERS += inc/hiddata.h \
-    ../AmbilightUSB_Hardware/inc/usbconfig.h \
-    ../AmbilightUSB_Hardware/inc/commands.h \
-    ../AmbilightUSB_Hardware/inc/RGB.h \
+    ../Firmware/inc/usbconfig.h \
+    ../Firmware/inc/commands.h \
+    ../Firmware/inc/RGB.h \
     inc/mainwindow.h \
     inc/ambilightusb.h \
     inc/version.h \
