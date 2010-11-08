@@ -180,7 +180,7 @@
     <message>
         <location filename="../../src/mainwindow.ui" line="563"/>
         <source>counts</source>
-        <translation>отсчетов</translation>
+        <translation> </translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="611"/>
@@ -231,12 +231,12 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="138"/>
+        <location filename="../../src/ambilightusb.cpp" line="152"/>
         <source>device unavailable</source>
         <translation>устройство не доступно</translation>
     </message>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="144"/>
+        <location filename="../../src/ambilightusb.cpp" line="158"/>
         <source>read device fail</source>
         <translation>устройство не отвечает</translation>
     </message>

@@ -98,7 +98,7 @@ bool AmbilightUsb::tryToReopenDevice()
 {
     qWarning() << "AmbilightUSB device didn't open. Try to reopen device...";    
     if(openDevice()){
-        qWarning() << "reopen success";        
+        qWarning() << "reopen success";
         return true;
     }else{        
         return false;
@@ -108,7 +108,14 @@ bool AmbilightUsb::tryToReopenDevice()
 bool AmbilightUsb::readDataFromDeviceWithCheck()
 {
     if(ambilightDevice != NULL){
-        return readDataFromDevice();
+        if(!readDataFromDevice()){
+            if(tryToReopenDevice()){
+                return readDataFromDevice();
+            }else{                
+                return false;
+            }
+        }
+        return true;
     }else{
         if(tryToReopenDevice()){
             return readDataFromDevice();
@@ -121,7 +128,14 @@ bool AmbilightUsb::readDataFromDeviceWithCheck()
 bool AmbilightUsb::writeBufferToDeviceWithCheck()
 {
     if(ambilightDevice != NULL){
-        return writeBufferToDevice();
+        if(!writeBufferToDevice()){
+            if(tryToReopenDevice()){
+                return writeBufferToDevice();
+            }else{
+                return false;
+            }
+        }
+        return true;
     }else{
         if(tryToReopenDevice()){
             return writeBufferToDevice();
