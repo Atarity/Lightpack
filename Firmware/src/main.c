@@ -208,7 +208,6 @@ int main(void)
     // Enable interrupts
 	sei(); // USB using INT0
 
-
 	SmoothlyShowRGB();
 
 
