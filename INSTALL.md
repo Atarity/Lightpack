@@ -33,7 +33,7 @@ Sources
   `$ make`  
   `$ ./build/AmbilightUSB`  
   
- Icon for linux users: Software/res/icons/ambilight_icon.png  
+ Icon for linux users: [ambilight_icon.png](https://github.com/brunql/AmbilightUSB/blob/master/Software/res/icons/ambilight_icon.png)
  
  If AmbilightUSB shows `AmbilightUSB. Error state.` and write to logs `Access to device denied` or `The specified device was not found`, this may be problem with permissions, try to add UDEV rules [50-usb.rules](https://github.com/brunql/AmbilightUSB/raw/master/50-usb.rules) to /etc/udev/rules.d/  
 
@@ -50,9 +50,9 @@ Binary
 ------
 
 1) Download: [Libs Win32](https://github.com/downloads/brunql/AmbilightUSB/Libs_Win32.zip)  
-2) Goto: [downloads](https://github.com/downloads/brunql/AmbilightUSB/downloads) find there latest version of available builds (AmbilightUSB_vN.N.N.exe, like this AmbilightUSB_v2.7.6.exe)  
-3) Extract archive in directory AmbilightUSB.  
-4) Copy AmbilightUSB_vN.N.N.exe to AmbilightUSB directory.  
+2) Goto: [downloads](https://github.com/downloads/brunql/AmbilightUSB/downloads) find there latest version of available builds (`AmbilightUSB_vN.N.N.exe`, like this AmbilightUSB_v2.7.6.exe)  
+3) Extract archive in directory `AmbilightUSB`.  
+4) Copy `AmbilightUSB_vN.N.N.exe` to `AmbilightUSB` directory.  
  
  Icon for windows users included in resources.
  
