@@ -11,7 +11,7 @@ Configuration program lives in the tray, without interfering with habitual work 
 
 [Description](http://brunql.github.com/ambilight/) of the device in pictures.   
 
-How to install AmbilightUSB software see INSTALL document in project root directory.
+How to install AmbilightUSB software see [INSTALL](https://github.com/brunql/AmbilightUSB/blob/master/INSTALL) document in project root directory.
 
 Software versions:
 ==================
