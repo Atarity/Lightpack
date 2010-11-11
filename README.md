@@ -13,88 +13,15 @@ Configuration program lives in the tray, without interfering with habitual work 
 
 How to install AmbilightUSB software see [INSTALL](https://github.com/brunql/AmbilightUSB/blob/master/INSTALL) document in project root directory.
 
-Software versions:
-==================
-Version 2.7.6
--------------
-
-* Windows support
-* Added radio buttons switch colored or white fill of grabbing rects
-* Added new hardware option to set color depth
-* Split code of getting and sending colors in 2 classes
-* Make one *.pro file for windows and linux
-
-Version 2.7.5
--------------
-Update GUI:
-
-* All settings now in 2 tabs (software and hardware settings)
-* Added new settings 'white balance' (red, green and blue coefs)
-* Added new settings 'timer prescaler' (1, 8, 64, 256, 1024) and 'timer OCR' (Output Compare Register) settings
-* Eval PWM generation frequency and show it in hardware settings
-
-Timer settings for controlling the PWM frequency
-
-Version 2.7.4
--------------
-Rewrote the code to grab screen image and find the average color value of exciting fields
-Added display of exciting fields as filled rectangles in different colors
-Added scroll bars to change the width and height of the exciting fields
-
-Version 2.7.3
--------------
-Sets configurations of:
-
-* delay between updates
-* count of pixels (by setting size and steps)
-* show/hide transparent/black background of catching pixels
-
-Shows FPS   
-Added logging to `${HOME}/.ambilight.log`   
-Added saving configurations in `${HOME}/.config/brunql.dev/AmbilightUSB.ini`   
-Start to writing this version log  
+Change logs: [software](https://github.com/brunql/AmbilightUSB/blob/master/Software/CHANGELOG), [firmware](https://github.com/brunql/AmbilightUSB/blob/master/Firmware/CHANGELOG)
 
 
-Version 2.*
------------
-Start to writing Qt based GUI version of PC software.  
-After starting the app is minimized to tray.  
+DIY and have fun!
+=================
 
-
-Version 1.*
------------
-Console version of PC software  
-Using X11 library to catch pixels colors  
-
-
-Firmware versions:
-==================
-Version 2.8
------------
-
-* Added new command to set color depth
-* Change report descriptor size (size of sending, receiving buffers)
-* In usb config set using FAST_CRC algorithm
-
-Version 2.7
------------
-New command to set prescaller and output compare register of timer that used to PWM generation.   
-New command to set color max value (pwm_level_max)   
-When you connect the device to the USB, LEDs are smoothly grow and fade the red, green and blue colors.   
-
-Version 2.6
------------
-Firmware using V-USB as HID.    
-Get data request sends info to PC with version of hardware.   
-Set data request sends info about the brightness of each LED to device.  
-
-Version 1.*
------------
-Prototyping on ATmega32 with DM134B   
-
-Have fun!
-=========
-
-For more information see sources and [downloads](http://github.com/brunql/AmbilightUSB/downloads)
+For more information see [INSTALL](https://github.com/brunql/AmbilightUSB/blob/master/INSTALL), [downloads](http://github.com/brunql/AmbilightUSB/downloads), and of cource sources.
 
 Sorry for bad English (=
+
+
+`Ambilight is a trademarks of Koninklijke Philips Electronics N.V.`
