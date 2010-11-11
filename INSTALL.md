@@ -51,7 +51,7 @@ Binary
 ------
 
 1. Download: [Libs Win32](https://github.com/downloads/brunql/AmbilightUSB/Libs_Win32.zip)  
-2. Goto: [downloads](https://github.com/downloads/brunql/AmbilightUSB/downloads) find there latest version of available builds (`AmbilightUSB_vN.N.N.exe`, like this AmbilightUSB_v2.7.6.exe)  
+2. Goto: [downloads](https://github.com/brunql/AmbilightUSB/downloads) find there latest version of available builds (`AmbilightUSB_vN.N.N.exe`, like this AmbilightUSB_v2.7.6.exe)  
 3. Extract archive in directory `AmbilightUSB`.  
 4. Copy `AmbilightUSB_vN.N.N.exe` to `AmbilightUSB` directory.  
  
