@@ -11,7 +11,10 @@ INSTALLATION
  -----
  Download and install Qt4 libs:
    $ sudo apt-get install libqt4-gui
- If you using x86_64 you can simply goto https://github.com/brunql/AmbilightUSB/downloads and download latest AmbilightUSB_vN.N.N, and may be this will work =) overwise compile from sources. This builds created on Ubuntu 10.04 LTS (x86_64), AMD Turion X2 (64 bit), using gcc4.4.3 and Qt4.6.
+   
+ If you using x86_64 you can simply goto https://github.com/brunql/AmbilightUSB/downloads 
+ and download latest AmbilightUSB_vN.N.N, and may be this will work =) overwise compile from sources. 
+ This builds created on Ubuntu 10.04 LTS (x86_64), AMD Turion X2 (64 bit), using gcc4.4.3 and Qt4.6.
   
  Installing from sources (Qt4, gcc): 
  
@@ -29,15 +32,20 @@ INSTALLATION
   
  Icon for linux users: Software/res/icons/ambilight_icon.png
  
- If AmbilightUSB shows 'AmbilightUSB. Error state.' and write to logs 'Access to device denied' or 'The specified device was not found', this may be problem with permissions, try to add UDEV rules 50-usb.rules (download here: https://github.com/brunql/AmbilightUSB/raw/master/50-usb.rules) to /etc/udev/rules.d/
+ If AmbilightUSB shows 'AmbilightUSB. Error state.' and write to logs 'Access to device denied'
+ or 'The specified device was not found', this may be problem with permissions, try to add UDEV 
+ rules 50-usb.rules (download here: https://github.com/brunql/AmbilightUSB/raw/master/50-usb.rules) 
+ to /etc/udev/rules.d/
+ 
  $ sudo cp 50-usb.rules /etc/udev/rules.d/
  $ sudo restart udev
- Unplug and plug if need AmbilightUSB device.
+ Unplug and plug, if needed, AmbilightUSB device.
 
  Windows
  -------
    1) Download: https://github.com/downloads/brunql/AmbilightUSB/Libs_Win32.zip
-   2) Goto: https://github.com/downloads/brunql/AmbilightUSB/downloads and download AmbilightUSB_vN.N.N.exe latest version of available builds (like this v2.7.6)
+   2) Goto: https://github.com/downloads/brunql/AmbilightUSB/downloads and download 
+      AmbilightUSB_vN.N.N.exe latest version of available builds (like this v2.7.6)
    3) Extract archive in directory AmbilightUSB.
    4) Copy AmbilightUSB_vN.N.N.exe to AmbilightUSB directory.
 
