@@ -1,5 +1,6 @@
 Version 2.7.6
 -------------
+brunql, November 03, 2010
 
 * Windows support
 * Added radio buttons switch colored or white fill of grabbing rects
@@ -9,6 +10,8 @@ Version 2.7.6
 
 Version 2.7.5
 -------------
+brunql, October 25, 2010
+
 Update GUI:
 
 * All settings now in 2 tabs (software and hardware settings)
@@ -20,12 +23,16 @@ Timer settings for controlling the PWM frequency
 
 Version 2.7.4
 -------------
+brunql, October 24, 2010
+
 Rewrote the code to grab screen image and find the average color value of exciting fields
 Added display of exciting fields as filled rectangles in different colors
 Added scroll bars to change the width and height of the exciting fields
 
 Version 2.7.3
 -------------
+brunql, September 18, 2010
+
 Sets configurations of:
 
 * delay between updates
