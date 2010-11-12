@@ -7,14 +7,15 @@ Configuration program lives in the tray, without interfering with habitual work 
 
 **Hardware**: `ATtiny44`, `2 x 74HC595` and `4 x RGB LEDs`   
 **Firmware**: written in `C`, using `V-USB` (HID Class device)   
-**Software**: `C++`, `Qt` (all tested in Ubuntu 10.04)   
+**Software**: `C++`, `Qt`
 
 [Description](http://brunql.github.com/ambilight/) of the device in pictures.   
 
+Software is tested in Ubuntu 10.04 (x86_64) and Windows XP (x86).
+
 How to install AmbilightUSB software see [INSTALL](https://github.com/brunql/AmbilightUSB/blob/master/INSTALL.md) document in project root directory.
 
-Change logs: [software](https://github.com/brunql/AmbilightUSB/blob/master/Software/CHANGELOG.md), [firmware](https://github.com/brunql/AmbilightUSB/blob/master/Firmware/CHANGELOG.md)
-
+**Change logs**: [software](https://github.com/brunql/AmbilightUSB/blob/master/Software/CHANGELOG.md), [firmware](https://github.com/brunql/AmbilightUSB/blob/master/Firmware/CHANGELOG.md)
 
 DIY and have fun!
 =================
