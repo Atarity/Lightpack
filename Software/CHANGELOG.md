@@ -1,3 +1,14 @@
+Version 2.7.7
+-------------
+brunql, November 12, 2010
+
+* License GPLv3
+* Bugfix: timer options and colors depth didn't sync with device; 
+* Bugfix: if unplug and plug device, it didn't reopen; now, then screen picture changed, device will be reopened;
+* Move changelogs form README.md to different files
+* Using markdown for CHANGELOGs and INSTALL files
+* Rename: AmbilightUSB_Hardware to Firmware; AmbilightUSB_PC to Software; 
+
 Version 2.7.6
 -------------
 brunql, November 03, 2010
