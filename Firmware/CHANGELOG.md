@@ -24,4 +24,5 @@ Set data request sends info about the brightness of each LED to device.
 
 Version 1.*
 -----------
+brunql, Spring, 2010
 Prototyping on ATmega32 with DM134B   

@@ -47,11 +47,15 @@ Start to writing this version log
 
 Version 2.*
 -----------
+brunql, Summer, 2010
+
 Start to writing Qt based GUI version of PC software.  
 After starting the app is minimized to tray.  
 
 
 Version 1.*
 -----------
+brunql, Spring, 2010
+
 Console version of PC software  
 Using X11 library to catch pixels colors  
