@@ -11,6 +11,22 @@ Configuration program lives in the tray, without interfering with habitual work 
 
 [Description](http://brunql.github.com/ambilight/) of the device in pictures.   
 
+<table>
+<tr>
+	<td>
+		<a href="http://brunql.github.com/ambilight/img/foto/1_Foto.JPG"><img src="http://brunql.github.com/ambilight/img/foto/1_FotoPreview.JPG"  style="border-style: none" alt="foto"/></a>
+	</td>
+
+	<td>
+		<a href="http://brunql.github.com/ambilight/img/foto/5_Foto.JPG"><img src="http://brunql.github.com/ambilight/img/foto/5_FotoPreview.JPG"  style="border-style: none" alt="foto"/></a>
+	</td>
+
+	<td>
+		<a href="http://brunql.github.com/ambilight/img/foto/6_Foto.JPG"><img src="http://brunql.github.com/ambilight/img/foto/6_FotoPreview.JPG"  style="border-style: none" alt="foto"/></a>
+	</td>
+</tr>
+</table>
+
 Software is tested in Ubuntu 10.04 (x86_64) and Windows XP (x86).
 
 How to install AmbilightUSB software see [INSTALL](https://github.com/brunql/AmbilightUSB/blob/master/INSTALL.md) document in project root directory.
