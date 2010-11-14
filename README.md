@@ -31,7 +31,7 @@ Software is tested in Ubuntu 10.04 (x86_64) and Windows XP (x86).
 
 How to install AmbilightUSB software see [INSTALL](https://github.com/brunql/AmbilightUSB/blob/master/INSTALL.md) document in project root directory.
 
-**Change logs**: [software](https://github.com/brunql/AmbilightUSB/blob/master/Software/CHANGELOG.md), [firmware](https://github.com/brunql/AmbilightUSB/blob/master/Firmware/CHANGELOG.md)
+**Change logs**: [software](https://github.com/brunql/AmbilightUSB/blob/master/Software/CHANGELOG.md), [firmware](https://github.com/brunql/AmbilightUSB/blob/master/Firmware/CHANGELOG.md), [hardware](https://github.com/brunql/AmbilightUSB/blob/master/Hardware/CHANGELOG.md)
 
 DIY and have fun!
 =================
