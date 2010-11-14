@@ -29,7 +29,6 @@ build/
 .project
 .settings/
 Makefile*
-*.lay
 *.qm
 object_script*
 moc/
