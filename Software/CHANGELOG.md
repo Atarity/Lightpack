@@ -1,3 +1,6 @@
+Software changes
+================
+
 Version 2.7.7
 -------------
 brunql, November 12, 2010
