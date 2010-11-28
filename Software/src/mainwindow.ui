@@ -25,7 +25,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <attribute name="title">
@@ -498,13 +498,6 @@
             </property>
            </widget>
           </item>
-          <item row="11" column="0" colspan="3">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>System clock: 12 MHz</string>
-            </property>
-           </widget>
-          </item>
           <item row="10" column="0">
            <widget class="QLabel" name="label_2">
             <property name="text">
@@ -568,6 +561,27 @@
            <widget class="QLineEdit" name="lineEdit_PWM_Frequency">
             <property name="readOnly">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="0">
+           <widget class="QCheckBox" name="checkBox_SmoothChangeColors">
+            <property name="text">
+             <string>Smooth change colors</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>System clock: 12 MHz</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="0" colspan="3">
+           <widget class="QCheckBox" name="checkBox_USB_SendDataOnlyIfColorsChanges">
+            <property name="text">
+             <string>USB send data only if colors changes</string>
             </property>
            </widget>
           </item>

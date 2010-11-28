@@ -205,9 +205,10 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
         }
     }
 
-    if(needToUpdate){        
+    if((!updateColorsOnlyIfChanges) || needToUpdate){
+        // if updateColorsOnlyIfChanges == false, then update colors (not depending on needToUpdate flag)
         emit updateLedsColors( colors );
-    }    
+    }
     emit ambilightTimeOfUpdatingColors(timeEval->howLongItEnd());
 
     if(isAmbilightOn) {
@@ -287,3 +288,8 @@ void GrabDesktopWindowLeds::setWhiteGrabPixelsRects(bool state)
     }
 }
 
+
+void GrabDesktopWindowLeds::setUpdateColorsOnlyIfChanges(bool state)
+{
+    this->updateColorsOnlyIfChanges = state;
+}

@@ -62,6 +62,7 @@ public slots:
     void setVisibleGrabPixelsRects(bool state);
     void setColoredGrabPixelsRects(bool state);
     void setWhiteGrabPixelsRects(bool state);
+    void setUpdateColorsOnlyIfChanges(bool state);
 
 
 private slots:
@@ -82,7 +83,8 @@ private: // variables
     int desktop_width;
     int desktop_height;
 
-    bool isAmbilightOn;
+    bool isAmbilightOn;    
+    bool updateColorsOnlyIfChanges;
 
     // Settings:
     int ambilight_width;
