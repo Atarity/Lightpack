@@ -54,8 +54,13 @@ uint8_t   usbFunctionRead(uint8_t *data, uint8_t len)
 {
 	// TODO: return info from temperature sensor ATtiny44 (ADC8)
 	if(len >= 2){
-		data[0] = VERSION_OF_HARDWARE_MAJOR;
-		data[1] = VERSION_OF_HARDWARE_MINOR;
+		// Hardware version
+		data[INDEX_HW_VER_MAJOR] = VERSION_OF_HARDWARE_MAJOR;
+		data[INDEX_HW_VER_MINOR] = VERSION_OF_HARDWARE_MINOR;
+
+		// Firmware version
+		data[INDEX_FW_VER_MAJOR] = VERSION_OF_FIRMWARE_MAJOR;
+		data[INDEX_FW_VER_MINOR] = VERSION_OF_FIRMWARE_MINOR;
 	}
 	return len;
 }
