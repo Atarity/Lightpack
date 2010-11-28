@@ -51,13 +51,15 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
 
     this->ambilight_color_depth = settings->value("HwColorDepth").toInt();
 
+    this->updateColorsOnlyIfChanges = true;
+
 
     qDebug() << "GrabDesktopWindowLeds(): createLabelsGrabPixelsRects()";
     createLabelsGrabPixelsRects();
 
     connect(timer, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
 
-    clearColors();
+    clearColors();       
 
     timer->start(ambilight_refresh_delay_ms);
     qDebug() << "GrabDesktopWindowLeds(): initialized";

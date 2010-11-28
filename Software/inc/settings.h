@@ -45,6 +45,7 @@
 #define HW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE     1 /* 8 */
 #define HW_TIMER_OCR_DEFAULT_VALUE                  234
 #define HW_COLOR_DEPTH_DEFAULT_VALUE                64
+#define HW_CHANGE_COLORS_SMOOTH_DELAY_VALUE         32
 
 extern QSettings *settings;
 

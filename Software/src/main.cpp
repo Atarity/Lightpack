@@ -85,16 +85,13 @@ void messageOutput(QtMsgType type, const char *msg)
 {
     QString out = QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") + " ";
     switch (type) {
-    case QtDebugMsg:
-        cerr << "Debug: " << msg << endl;
-        out.append("Debug: " + QString(msg));
+    case QtDebugMsg:        
+        out.append("Debug: " + QString(msg));        
         break;
     case QtWarningMsg:
-        cerr << "Warning: " << msg << endl;
         out.append("Warning: " + QString(msg));
         break;
     case QtCriticalMsg:
-        cerr << "Critical: " << msg << endl;
         out.append("Critical: " + QString(msg));
         break;
     case QtFatalMsg:
@@ -106,6 +103,7 @@ void messageOutput(QtMsgType type, const char *msg)
 
         abort();
     }
+    cerr << out.toStdString() << endl;
     logStream << out << endl;
     logStream.flush();
     cerr.flush();
@@ -139,6 +137,7 @@ void settingsInit()
     setDefaultSettingIfNotFound("HwTimerPrescallerIndex",              HW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("HwTimerOCR",                          HW_TIMER_OCR_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("HwColorDepth",                        HW_COLOR_DEPTH_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("HwChangeColorsDelay",                 HW_CHANGE_COLORS_SMOOTH_DELAY_VALUE);
 }
 
 int main(int argc, char **argv)
