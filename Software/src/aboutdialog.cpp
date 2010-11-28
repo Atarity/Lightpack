@@ -28,13 +28,14 @@
 #include "ui_aboutdialog.h"
 #include "version.h"
 
-aboutDialog::aboutDialog(QString hardwareVersion, QWidget *parent) :
+aboutDialog::aboutDialog(QString hardwareVersion, QString firmwareVersion, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::aboutDialog)
 {
     ui->setupUi(this);
     ui->labelVersionSoftware->setText(tr("<b>Software version:</b> ") + QApplication::applicationVersion());
     ui->labelVersionHardware->setText(tr("<b>Hardware version:</b> ") + hardwareVersion);
+    ui->labelVersionFirmware->setText(tr("<b>Firmware version:</b> ") + firmwareVersion);
 }
 
 aboutDialog::~aboutDialog()

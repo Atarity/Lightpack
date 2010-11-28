@@ -235,7 +235,8 @@ void MainWindow::trayAmbilightError()
 void MainWindow::showAbout()
 {
     QString hardwareVerison = ambilightUsb->hardwareVersion();
-    aboutDialog *about = new aboutDialog(hardwareVerison, this);
+    QString firmwareVerison = ambilightUsb->firmwareVersion();
+    aboutDialog *about = new aboutDialog(hardwareVerison, firmwareVerison, this);
     about->show();
 }
 

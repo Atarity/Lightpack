@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>418</width>
-    <height>407</height>
+    <height>437</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -147,17 +147,20 @@ p, li { white-space: pre-wrap; }
    <item>
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>&lt;b&gt;Author:&lt;/b&gt; brunql</string>
+      <string>&lt;b&gt;Author:&lt;/b&gt; Mike Shatohin (mikeshatohin@gmail.com)</string>
      </property>
      <property name="margin">
       <number>3</number>
+     </property>
+     <property name="textInteractionFlags">
+      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QLabel" name="labelVersionSoftware">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -170,7 +173,17 @@ p, li { white-space: pre-wrap; }
    <item>
     <widget class="QLabel" name="labelVersionHardware">
      <property name="text">
-      <string> </string>
+      <string/>
+     </property>
+     <property name="margin">
+      <number>3</number>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelVersionFirmware">
+     <property name="text">
+      <string/>
      </property>
      <property name="margin">
       <number>3</number>

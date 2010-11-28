@@ -188,42 +188,42 @@
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="200"/>
+        <location filename="../../src/mainwindow.cpp" line="218"/>
         <source>Ambilight USB. On state.</source>
         <translation>Ambilight USB. Включен.</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="206"/>
+        <location filename="../../src/mainwindow.cpp" line="224"/>
         <source>Ambilight USB. Off state.</source>
         <translation>Ambilight USB. Выключен.</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="212"/>
+        <location filename="../../src/mainwindow.cpp" line="230"/>
         <source>Ambilight USB. Error state.</source>
         <translation>Ambilight USB. Ошибка подключения к USB.</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="310"/>
+        <location filename="../../src/mainwindow.cpp" line="364"/>
         <source>&amp;On ambilight</source>
         <translation>&amp;Включить ambilight</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="313"/>
+        <location filename="../../src/mainwindow.cpp" line="367"/>
         <source>O&amp;ff ambilight</source>
         <translation>&amp;Выключить ambilight</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="316"/>
+        <location filename="../../src/mainwindow.cpp" line="370"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="319"/>
+        <location filename="../../src/mainwindow.cpp" line="373"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="322"/>
+        <location filename="../../src/mainwindow.cpp" line="376"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
@@ -231,12 +231,14 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="152"/>
+        <location filename="../../src/ambilightusb.cpp" line="170"/>
+        <location filename="../../src/ambilightusb.cpp" line="189"/>
         <source>device unavailable</source>
         <translation>устройство не доступно</translation>
     </message>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="158"/>
+        <location filename="../../src/ambilightusb.cpp" line="176"/>
+        <location filename="../../src/ambilightusb.cpp" line="195"/>
         <source>read device fail</source>
         <translation>устройство не отвечает</translation>
     </message>
@@ -307,11 +309,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../src/aboutdialog.ui" line="150"/>
-        <source>&lt;b&gt;Author:&lt;/b&gt; brunql</source>
-        <translation>&lt;b&gt;Автор:&lt;/b&gt; brunql</translation>
+        <source>&lt;b&gt;Author:&lt;/b&gt; Mike Shatohin (mikeshatohin@gmail.com)</source>
+        <translation>&lt;b&gt;Автор:&lt;/b&gt; Михаил Шатохин (mikeshatohin@gmail.com)</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="183"/>
+        <location filename="../../src/aboutdialog.ui" line="196"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -328,19 +330,24 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;right&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;AmbilightUSB (&lt;span style=&quot; font-style:italic;&quot;&gt;copyleft&lt;/span&gt;) 2010 &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="212"/>
+        <location filename="../../src/aboutdialog.ui" line="225"/>
         <source>Ok, close it!</source>
         <translation>Самоликвидируйся!</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.cpp" line="19"/>
+        <location filename="../../src/aboutdialog.cpp" line="36"/>
         <source>&lt;b&gt;Software version:&lt;/b&gt; </source>
         <translation>&lt;b&gt;Версия программы:&lt;/b&gt; </translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.cpp" line="20"/>
+        <location filename="../../src/aboutdialog.cpp" line="37"/>
         <source>&lt;b&gt;Hardware version:&lt;/b&gt; </source>
         <translation>&lt;b&gt;Версия устройства:&lt;/b&gt; </translation>
+    </message>
+    <message>
+        <location filename="../../src/aboutdialog.cpp" line="38"/>
+        <source>&lt;b&gt;Firmware version:&lt;/b&gt; </source>
+        <translation>&lt;b&gt;Версия прошивки:&lt;/b&gt; </translation>
     </message>
 </context>
 </TS>
