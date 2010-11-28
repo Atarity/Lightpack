@@ -35,6 +35,18 @@
 #include "74HC595.h"
 #include "commands.h"
 
+
+static inline void UpdateSmoothStep(void)
+{
+	for(uint8_t color=0; color < 3; color++){
+		for(uint8_t led_index=0; led_index < 4; led_index++){
+			int8_t diff = colors[led_index][color] - colors_new[led_index][color];
+			smooth_step[led_index][color] = diff / SMOOTH_MAX_STEP;
+		}
+	}
+}
+
+
 // USB HID Report descriptor
 PROGMEM char usbHidReportDescriptor[22] = {    /* USB report descriptor */
 		0x06, 0x00, 0xff,              // USAGE_PAGE (Generic Desktop)
@@ -79,6 +91,7 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 		colors_new[RIGHT_DOWN][B] = data[6];
 
 		update_colors = TRUE;
+		UpdateSmoothStep();
 
 	}else if(data[0] == CMD_LEFT_SIDE){
 		colors_new[LEFT_UP][R] = data[1];
@@ -90,6 +103,7 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 		colors_new[LEFT_DOWN][B] = data[6];
 
 		update_colors = TRUE;
+		UpdateSmoothStep();
 
 	}else if(data[0] == CMD_OFF_ALL){
 		HC595_PutUInt16(0x0000);
@@ -99,7 +113,10 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 			colors_new[2][i] = 0x00;
 			colors_new[3][i] = 0x00;
 		}
+
 		update_colors = TRUE;
+		UpdateSmoothStep();
+
 	}else if(data[0] == CMD_SET_TIMER_OPTIONS){
 		TIMSK1 &= (uint8_t)~_BV(OCIE1A);
 

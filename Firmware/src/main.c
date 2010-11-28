@@ -66,8 +66,31 @@ volatile uint8_t is_smooth_change = 0;
 
 // Smoothly changing colors index
 volatile uint8_t smooth = 0x00;
-
 volatile uint8_t smooth_delay = 0x00;
+volatile uint8_t smooth_step[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };;
+
+
+void SmoothlyUpdateColors(void)
+{
+//	smooth_step evaluated when new color comes from PC
+
+	if(++smooth >= smooth_delay){
+		update_colors = FALSE;
+		for(uint8_t color=0; color < 3; color++){
+			for(uint8_t led_index=0; led_index < 4; led_index++){
+				int8_t diff = colors[led_index][color] - colors_new[led_index][color];
+				if(((uint8_t)ABS(diff) / SMOOTH_MAX_STEP) > 0){
+					colors[led_index][color] -= smooth_step[led_index][color];
+					update_colors = TRUE;
+				}else if(ABS(diff) % SMOOTH_MAX_STEP > 0){
+					colors[led_index][color] = colors_new[led_index][color];
+				}
+			}
+		}
+		smooth = 0x00;
+	}
+}
+
 
 
 #define CHECK_PWM_LEVEL_AND_SET_HC595_OUT( LED_INDEX, COLOR_INDEX ) {\
@@ -85,6 +108,20 @@ static inline void PWM()
 {
 	if(++pwm_level >= pwm_level_max){
 		pwm_level = 0x00;
+
+		if(update_colors){
+			if(smooth_delay != 0){
+				SmoothlyUpdateColors();
+			}else{
+				// Without smooth
+				for(uint8_t color=0; color < 3; color++){
+					for(uint8_t led_index=0; led_index < 4; led_index++){
+						colors[led_index][color] = colors_new[led_index][color];
+					}
+				}
+				update_colors = FALSE;
+			}
+		}
 	}
 
 	// LEFT_UP
@@ -128,27 +165,6 @@ static inline void PWM()
 }
 
 
-void SmoothlyUpdateColors(void)
-{
-	if(++smooth >= smooth_delay){
-		update_colors = FALSE;
-		for(uint8_t color=0; color < 3; color++){
-			for(uint8_t led_index=0; led_index < 4; led_index++){
-				if(colors[led_index][color] < colors_new[led_index][color]){
-					colors[led_index][color]++;
-					update_colors = TRUE;
-				}
-				if(colors[led_index][color] > colors_new[led_index][color]){
-					colors[led_index][color]--;
-					update_colors = TRUE;
-				}
-			}
-		}
-		smooth = 0x00;
-	}
-}
-
-
 //
 // Interrupts of the timer that generates PWM
 //
@@ -156,20 +172,6 @@ ISR( TIM1_COMPA_vect )
 {
 	// Enable interrupts for usbPoll();
 	sei();
-
-	if(update_colors){
-		if(smooth_delay != 0){
-			SmoothlyUpdateColors();
-		}else{
-			// Without smooth
-			for(uint8_t color=0; color < 3; color++){
-				for(uint8_t led_index=0; led_index < 4; led_index++){
-					colors[led_index][color] = colors_new[led_index][color];
-				}
-			}
-			update_colors = FALSE;
-		}
-	}
 
 	// Set next PWM states for all channels
 	PWM();

@@ -35,17 +35,20 @@
 #define TEST_UP()				{ PORTA |= _BV(PA7); }
 #define TEST_DOWN()				{ PORTA &= (uint8_t)~_BV(PA7); }
 
-
+#define ABS( x ) ((x)<0?(-x):(x))
+#define SMOOTH_MAX_STEP 10
 
 // If this TRUE we need to update our colors[] array (with smooth if it is used)
 extern volatile uint8_t update_colors;
 
 // Save new colors comes from PC
 extern volatile uint8_t colors_new[4][3];
+extern volatile uint8_t colors[4][3];
 
 // Color max value, i.e. 0 <= color[led][c] < pwm_level_max
 extern volatile uint8_t pwm_level_max;
 
 extern volatile uint8_t smooth_delay;
+extern volatile uint8_t smooth_step[4][3];
 
 #endif /* MAIN_H_ */
