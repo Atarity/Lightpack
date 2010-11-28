@@ -67,10 +67,12 @@ volatile uint8_t is_smooth_change = 0;
 // Smoothly changing colors index
 volatile uint8_t smooth = 0x00;
 
+volatile uint8_t smooth_delay = 0x00;
+
 
 #define CHECK_PWM_LEVEL_AND_SET_HC595_OUT( LED_INDEX, COLOR_INDEX ) {\
 		HC595_CLK_DOWN; \
-		if(colors_new[LED_INDEX][COLOR_INDEX] > pwm_level){ \
+		if(colors[LED_INDEX][COLOR_INDEX] > pwm_level){ \
 			HC595_PORT &= (uint8_t)~HC595_DATA_PIN; \
 		}else{ \
 			HC595_PORT |= HC595_DATA_PIN; \
@@ -128,24 +130,22 @@ static inline void PWM()
 
 void SmoothlyUpdateColors(void)
 {
-	//if(update_colors){
-		//if(++smooth >= SMOOTHLY_DELAY){
-			update_colors = FALSE;
-			for(uint8_t led_index=0; led_index < 4; led_index++){
-				for(uint8_t color=0; color < 3; color++){
-					if(colors[led_index][color] < colors_new[led_index][color]){
-						colors[led_index][color]++;
-						update_colors = TRUE;
-					}
-					if(colors[led_index][color] > colors_new[led_index][color]){
-						colors[led_index][color]--;
-						update_colors = TRUE;
-					}
+	if(++smooth >= smooth_delay){
+		update_colors = FALSE;
+		for(uint8_t led_index=0; led_index < 4; led_index++){
+			for(uint8_t color=0; color < 3; color++){
+				if(colors[led_index][color] < colors_new[led_index][color]){
+					colors[led_index][color]++;
+					update_colors = TRUE;
+				}
+				if(colors[led_index][color] > colors_new[led_index][color]){
+					colors[led_index][color]--;
+					update_colors = TRUE;
 				}
 			}
-			//smooth = 0x00;
-		//}
-	//}
+		}
+		smooth = 0x00;
+	}
 }
 
 
@@ -157,9 +157,19 @@ ISR( TIM1_COMPA_vect )
 	// Enable interrupts for usbPoll();
 	sei();
 
-	//if(is_smooth_change){
-	//	SmoothlyUpdateColors();
-	//}
+	if(update_colors){
+		if(smooth_delay != 0){
+			SmoothlyUpdateColors();
+		}else{
+			// Without smooth
+			for(uint8_t led_index=0; led_index < 4; led_index++){
+				for(uint8_t color=0; color < 3; color++){
+					colors[led_index][color] = colors_new[led_index][color];
+				}
+			}
+			update_colors = FALSE;
+		}
+	}
 
 	// Set next PWM states for all channels
 	PWM();
@@ -264,8 +274,6 @@ int main(void)
 	sei(); // USB using INT0
 
 	SmoothlyShowRGB();
-
-	is_smooth_change = TRUE;
 
    	for(;;){
    		/* Hey, PC! I'm alive! :) */

@@ -120,7 +120,7 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 	}else if(data[0] == CMD_SET_PWM_LEVEL_MAX_VALUE){
 		pwm_level_max = data[1];
 	}else if(data[0] == CMD_SMOOTH_CHANGE_COLORS){
-		is_smooth_change = data[1];
+		smooth_delay = data[1];
 	}
 
 	return 1;
