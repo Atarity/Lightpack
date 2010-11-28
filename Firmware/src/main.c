@@ -132,8 +132,8 @@ void SmoothlyUpdateColors(void)
 {
 	if(++smooth >= smooth_delay){
 		update_colors = FALSE;
-		for(uint8_t led_index=0; led_index < 4; led_index++){
-			for(uint8_t color=0; color < 3; color++){
+		for(uint8_t color=0; color < 3; color++){
+			for(uint8_t led_index=0; led_index < 4; led_index++){
 				if(colors[led_index][color] < colors_new[led_index][color]){
 					colors[led_index][color]++;
 					update_colors = TRUE;
@@ -162,8 +162,8 @@ ISR( TIM1_COMPA_vect )
 			SmoothlyUpdateColors();
 		}else{
 			// Without smooth
-			for(uint8_t led_index=0; led_index < 4; led_index++){
-				for(uint8_t color=0; color < 3; color++){
+			for(uint8_t color=0; color < 3; color++){
+				for(uint8_t led_index=0; led_index < 4; led_index++){
 					colors[led_index][color] = colors_new[led_index][color];
 				}
 			}
