@@ -46,4 +46,6 @@ extern volatile uint8_t colors_new[4][3];
 // Color max value, i.e. 0 <= color[led][c] < pwm_level_max
 extern volatile uint8_t pwm_level_max;
 
+extern volatile uint8_t is_smooth_change;
+
 #endif /* MAIN_H_ */

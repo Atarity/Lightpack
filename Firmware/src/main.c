@@ -61,6 +61,9 @@ volatile uint8_t colors_new[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
 volatile uint8_t pwm_level = 0x00;
 volatile uint8_t pwm_level_max = 64;
 
+// If smooth changing colors ON, is_smooth_change == 1, else == 0
+volatile uint8_t is_smooth_change = 0;
+
 // Smoothly changing colors index
 volatile uint8_t smooth = 0x00;
 
@@ -123,6 +126,28 @@ static inline void PWM()
 }
 
 
+void SmoothlyUpdateColors(void)
+{
+	//if(update_colors){
+		//if(++smooth >= SMOOTHLY_DELAY){
+			update_colors = FALSE;
+			for(uint8_t led_index=0; led_index < 4; led_index++){
+				for(uint8_t color=0; color < 3; color++){
+					if(colors[led_index][color] < colors_new[led_index][color]){
+						colors[led_index][color]++;
+						update_colors = TRUE;
+					}
+					if(colors[led_index][color] > colors_new[led_index][color]){
+						colors[led_index][color]--;
+						update_colors = TRUE;
+					}
+				}
+			}
+			//smooth = 0x00;
+		//}
+	//}
+}
+
 
 //
 // Interrupts of the timer that generates PWM
@@ -132,7 +157,11 @@ ISR( TIM1_COMPA_vect )
 	// Enable interrupts for usbPoll();
 	sei();
 
-	// Generate one PWM on all channels
+	//if(is_smooth_change){
+	//	SmoothlyUpdateColors();
+	//}
+
+	// Set next PWM states for all channels
 	PWM();
 
 	// Clear timer counter
@@ -145,9 +174,9 @@ ISR( TIM1_COMPA_vect )
 void SetAllLedsColors(uint8_t red, uint8_t green, uint8_t blue)
 {
 	for(uint8_t i=0; i<4; i++){
-		colors_new[i][R] = red;
-		colors_new[i][G] = green;
-		colors_new[i][B] = blue;
+		colors[i][R] = red;
+		colors[i][G] = green;
+		colors[i][B] = blue;
 	}
 }
 
@@ -236,6 +265,7 @@ int main(void)
 
 	SmoothlyShowRGB();
 
+	is_smooth_change = TRUE;
 
    	for(;;){
    		/* Hey, PC! I'm alive! :) */

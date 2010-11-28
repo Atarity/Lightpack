@@ -35,6 +35,7 @@ enum COMMANDS{
 	CMD_OFF_ALL, 		/* switch off all leds */
 	CMD_SET_TIMER_OPTIONS, 			/* timer settings */
 	CMD_SET_PWM_LEVEL_MAX_VALUE, 	/* each color max value */
+	CMD_SMOOTH_CHANGE_COLORS,
 };
 
 enum PRESCALLERS{
