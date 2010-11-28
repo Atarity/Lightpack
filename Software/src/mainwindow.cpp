@@ -86,6 +86,7 @@ void MainWindow::connectSignalsSlots()
     // TODO: ambilightUsb slot setUsbReconnectDelay
     //connect(ui->spinBox_ReconnectDelay, SIGNAL(valueChanged(int)), ambilightUsb, SLOT(setUsbReconnectDelay(int)));    
     connect(ui->doubleSpinBoxUsbSendDataTimeout, SIGNAL(valueChanged(double)), ambilightUsb, SLOT(setUsbSendDataTimeoutMs(double)));
+    connect(ui->spinBox_HW_SmoothChangeColors, SIGNAL(valueChanged(int)), ambilightUsb, SLOT(smoothChangeColors(int)));
 
     // Connect to grabDesktopWindowLeds
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), grabDesktopWindowLeds, SLOT(setAmbilightRefreshDelayMs(int)));

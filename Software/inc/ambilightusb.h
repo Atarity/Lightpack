@@ -63,6 +63,7 @@ public slots:
     void setUsbSendDataTimeoutMs(double usb_send_data_timeout_secs);
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void setColorDepth(int colorDepth);
+    void smoothChangeColors(int smoothly_delay);
 
 signals:
     void openDeviceSuccess(bool isSuccess);

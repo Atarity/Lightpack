@@ -208,6 +208,15 @@ void AmbilightUsb::offLeds()
     writeBufferToDeviceWithCheck();
 }
 
+void AmbilightUsb::smoothChangeColors(int smoothly_delay)
+{
+    // TODO: add to settings shoothChangeColors state, send to device and load it to form when start application
+    write_buffer[1] = CMD_SMOOTH_CHANGE_COLORS;
+    write_buffer[2] = (char)smoothly_delay;
+
+    writeBufferToDeviceWithCheck();
+}
+
 
 void AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
 {
