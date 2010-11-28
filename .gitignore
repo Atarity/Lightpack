@@ -16,7 +16,6 @@
 *.ilk
 *.log
 [Bb]in
-[Dd]ebug*/
 *.lib
 *.sbr
 [Rr]elease*/
@@ -34,3 +33,9 @@ object_script*
 moc/
 ui_*
 qrc_*
+*.o
+*.d
+*.eep
+*.hex
+*.lss
+*.elf

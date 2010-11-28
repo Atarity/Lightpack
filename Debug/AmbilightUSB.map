@@ -1,0 +1,470 @@
+Archive member included because of file (symbol)
+
+/usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_mulhi3.o)
+                              ./Firmware/src/main.o (__mulhi3)
+/usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodqi4.o)
+                              ./Firmware/src/vusb.o (__divmodqi4)
+/usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodhi4.o)
+                              ./Firmware/src/main.o (__divmodhi4)
+/usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_exit.o)
+                              /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/crttn44.o (exit)
+/usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_copy_data.o)
+                              ./Firmware/usbdrv/src/oddebug.o (__do_copy_data)
+/usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_clear_bss.o)
+                              ./Firmware/usbdrv/src/oddebug.o (__do_clear_bss)
+/usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_udivmodqi4.o)
+                              /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodqi4.o) (__udivmodqi4)
+/usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_udivmodhi4.o)
+                              /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodhi4.o) (__udivmodhi4)
+
+Allocating common symbols
+Common symbol       size              file
+
+usbTxBuf            0xb               ./Firmware/usbdrv/src/usbdrv.o
+usbTxStatus1        0xc               ./Firmware/usbdrv/src/usbdrv.o
+usbDeviceAddr       0x1               ./Firmware/usbdrv/src/usbdrv.o
+usbRxToken          0x1               ./Firmware/usbdrv/src/usbdrv.o
+usbInputBufOffset   0x1               ./Firmware/usbdrv/src/usbdrv.o
+usbMsgPtr           0x2               ./Firmware/usbdrv/src/usbdrv.o
+usbRxLen            0x1               ./Firmware/usbdrv/src/usbdrv.o
+usbNewDeviceAddr    0x1               ./Firmware/usbdrv/src/usbdrv.o
+usbCurrentTok       0x1               ./Firmware/usbdrv/src/usbdrv.o
+usbConfiguration    0x1               ./Firmware/usbdrv/src/usbdrv.o
+usbRxBuf            0x16              ./Firmware/usbdrv/src/usbdrv.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x0000000000000000 0x0000000000002000 xr
+data             0x0000000000800060 0x000000000000ffa0 rw !x
+eeprom           0x0000000000810000 0x0000000000010000 rw !x
+fuse             0x0000000000820000 0x0000000000000400 rw !x
+lock             0x0000000000830000 0x0000000000000400 rw !x
+signature        0x0000000000840000 0x0000000000000400 rw !x
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/crttn44.o
+LOAD ./Firmware/usbdrv/src/oddebug.o
+LOAD ./Firmware/usbdrv/src/usbdrv.o
+LOAD ./Firmware/usbdrv/asm/usbdrvasm.o
+LOAD ./Firmware/src/74HC595.o
+LOAD ./Firmware/src/main.o
+LOAD ./Firmware/src/vusb.o
+LOAD /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a
+LOAD /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/libc.a
+LOAD /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x0000000000000000      0xe6a
+ *(.vectors)
+ .vectors       0x0000000000000000       0x22 /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/crttn44.o
+                0x0000000000000000                __vectors
+                0x0000000000000000                __vector_default
+ *(.vectors)
+ *(.progmem.gcc*)
+ *(.progmem*)
+ .progmem.data  0x0000000000000022       0x68 ./Firmware/usbdrv/src/usbdrv.o
+                0x0000000000000022                usbDescriptorString0
+                0x0000000000000026                usbDescriptorStringVendor
+                0x000000000000003c                usbDescriptorStringDevice
+                0x0000000000000056                usbDescriptorDevice
+                0x0000000000000068                usbDescriptorConfiguration
+ .progmem.data  0x000000000000008a       0x16 ./Firmware/src/vusb.o
+                0x000000000000008a                usbDescriptorHidReport
+                0x00000000000000a0                . = ALIGN (0x2)
+                0x00000000000000a0                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x00000000000000a0        0x0 linker stubs
+ *(.trampolines*)
+                0x00000000000000a0                __trampolines_end = .
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x00000000000000a0                __ctors_start = .
+ *(.ctors)
+                0x00000000000000a0                __ctors_end = .
+                0x00000000000000a0                __dtors_start = .
+ *(.dtors)
+                0x00000000000000a0                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x00000000000000a0        0x0 /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/crttn44.o
+                0x00000000000000a0                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x00000000000000a0        0xc /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/crttn44.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x00000000000000ac       0x16 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_copy_data.o)
+                0x00000000000000ac                __do_copy_data
+ .init4         0x00000000000000c2       0x10 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_clear_bss.o)
+                0x00000000000000c2                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x00000000000000d2        0x4 /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/crttn44.o
+ *(.init9)
+ *(.text)
+ .text          0x00000000000000d6        0x2 /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/crttn44.o
+                0x00000000000000d6                __vector_12
+                0x00000000000000d6                __bad_interrupt
+                0x00000000000000d6                __vector_3
+                0x00000000000000d6                __vector_11
+                0x00000000000000d6                __vector_13
+                0x00000000000000d6                __vector_7
+                0x00000000000000d6                __vector_5
+                0x00000000000000d6                __vector_4
+                0x00000000000000d6                __vector_9
+                0x00000000000000d6                __vector_2
+                0x00000000000000d6                __vector_15
+                0x00000000000000d6                __vector_8
+                0x00000000000000d6                __vector_14
+                0x00000000000000d6                __vector_10
+                0x00000000000000d6                __vector_16
+ .text          0x00000000000000d8        0x0 ./Firmware/usbdrv/src/oddebug.o
+ .text          0x00000000000000d8      0x2ba ./Firmware/usbdrv/src/usbdrv.o
+                0x00000000000000d8                usbInit
+                0x00000000000000f2                usbSetInterrupt
+                0x0000000000000134                usbPoll
+ .text          0x0000000000000392      0x2c6 ./Firmware/usbdrv/asm/usbdrvasm.o
+                0x0000000000000392                usbCrc16
+                0x00000000000003dc                usbCrc16Append
+                0x00000000000003e4                __vector_1
+ .text          0x0000000000000658       0x4e ./Firmware/src/74HC595.o
+                0x0000000000000658                HC595_PutUInt16
+                0x0000000000000694                HC595_Init
+ .text          0x00000000000006a6      0x4a2 ./Firmware/src/main.o
+                0x00000000000006a6                SmoothlyUpdateColors
+                0x00000000000007c6                __vector_6
+                0x0000000000000934                SetAllLedsColors
+                0x0000000000000966                main
+ .text          0x0000000000000b48      0x27a ./Firmware/src/vusb.o
+                0x0000000000000b48                usbFunctionRead
+                0x0000000000000b60                usbFunctionSetup
+                0x0000000000000b7c                usbInit_FakeUsbDisconnect
+                0x0000000000000b96                usbFunctionWrite
+ .text          0x0000000000000dc2        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_mulhi3.o)
+ .text          0x0000000000000dc2        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodqi4.o)
+ .text          0x0000000000000dc2        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodhi4.o)
+ .text          0x0000000000000dc2        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_exit.o)
+ .text          0x0000000000000dc2        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_copy_data.o)
+ .text          0x0000000000000dc2        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_clear_bss.o)
+ .text          0x0000000000000dc2        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_udivmodqi4.o)
+ .text          0x0000000000000dc2        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_udivmodhi4.o)
+                0x0000000000000dc2                . = ALIGN (0x2)
+ *(.text.*)
+ .text.libgcc   0x0000000000000dc2       0x24 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_mulhi3.o)
+                0x0000000000000dc2                __mulhi3
+ .text.libgcc   0x0000000000000de6       0x1a /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodqi4.o)
+                0x0000000000000de6                __divmodqi4
+ .text.libgcc   0x0000000000000e00       0x26 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodhi4.o)
+                0x0000000000000e00                __divmodhi4
+                0x0000000000000e00                _div
+ .text.libgcc   0x0000000000000e26        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_exit.o)
+ .text.libgcc   0x0000000000000e26        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000000000000e26        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x0000000000000e26       0x18 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_udivmodqi4.o)
+                0x0000000000000e26                __udivmodqi4
+ .text.libgcc   0x0000000000000e3e       0x28 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_udivmodhi4.o)
+                0x0000000000000e3e                __udivmodhi4
+                0x0000000000000e66                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x0000000000000e66        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_exit.o)
+                0x0000000000000e66                exit
+                0x0000000000000e66                _exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x0000000000000e66        0x4 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_exit.o)
+ *(.fini0)
+                0x0000000000000e6a                _etext = .
+
+.data           0x0000000000800060        0x4 load address 0x0000000000000e6a
+                0x0000000000800060                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/crttn44.o
+ .data          0x0000000000800060        0x0 ./Firmware/usbdrv/src/oddebug.o
+ .data          0x0000000000800060        0x2 ./Firmware/usbdrv/src/usbdrv.o
+                0x0000000000800060                usbTxLen
+ .data          0x0000000000800062        0x0 ./Firmware/usbdrv/asm/usbdrvasm.o
+ .data          0x0000000000800062        0x0 ./Firmware/src/74HC595.o
+ .data          0x0000000000800062        0x1 ./Firmware/src/main.o
+                0x0000000000800062                pwm_level_max
+ .data          0x0000000000800063        0x0 ./Firmware/src/vusb.o
+ .data          0x0000000000800063        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_mulhi3.o)
+ .data          0x0000000000800063        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodqi4.o)
+ .data          0x0000000000800063        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodhi4.o)
+ .data          0x0000000000800063        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_exit.o)
+ .data          0x0000000000800063        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_copy_data.o)
+ .data          0x0000000000800063        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_clear_bss.o)
+ .data          0x0000000000800063        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_udivmodqi4.o)
+ .data          0x0000000000800063        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_udivmodhi4.o)
+ *(.data*)
+ *(.rodata)
+ *(.rodata*)
+ *(.gnu.linkonce.d*)
+                0x0000000000800064                . = ALIGN (0x2)
+ *fill*         0x0000000000800063        0x1 00
+                0x0000000000800064                _edata = .
+                0x0000000000800064                PROVIDE (__data_end, .)
+
+.bss            0x0000000000800064       0x60
+                0x0000000000800064                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x0000000000800064        0x0 /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/crttn44.o
+ .bss           0x0000000000800064        0x0 ./Firmware/usbdrv/src/oddebug.o
+ .bss           0x0000000000800064        0x1 ./Firmware/usbdrv/src/usbdrv.o
+ .bss           0x0000000000800065        0x0 ./Firmware/usbdrv/asm/usbdrvasm.o
+ .bss           0x0000000000800065        0x0 ./Firmware/src/74HC595.o
+ .bss           0x0000000000800065       0x29 ./Firmware/src/main.o
+                0x0000000000800065                update_colors
+                0x0000000000800066                colors
+                0x0000000000800072                colors_new
+                0x000000000080007e                pwm_level
+                0x000000000080007f                is_smooth_change
+                0x0000000000800080                smooth
+                0x0000000000800081                smooth_delay
+                0x0000000000800082                smooth_step
+ .bss           0x000000000080008e        0x0 ./Firmware/src/vusb.o
+ .bss           0x000000000080008e        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_mulhi3.o)
+ .bss           0x000000000080008e        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodqi4.o)
+ .bss           0x000000000080008e        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_divmodhi4.o)
+ .bss           0x000000000080008e        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_exit.o)
+ .bss           0x000000000080008e        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_copy_data.o)
+ .bss           0x000000000080008e        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_clear_bss.o)
+ .bss           0x000000000080008e        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_udivmodqi4.o)
+ .bss           0x000000000080008e        0x0 /usr/lib/gcc/avr/4.3.4/avr25/libgcc.a(_udivmodhi4.o)
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x000000000080008e       0x36 ./Firmware/usbdrv/src/usbdrv.o
+                0x000000000080008e                usbTxBuf
+                0x0000000000800099                usbTxStatus1
+                0x00000000008000a5                usbDeviceAddr
+                0x00000000008000a6                usbRxToken
+                0x00000000008000a7                usbInputBufOffset
+                0x00000000008000a8                usbMsgPtr
+                0x00000000008000aa                usbRxLen
+                0x00000000008000ab                usbNewDeviceAddr
+                0x00000000008000ac                usbCurrentTok
+                0x00000000008000ad                usbConfiguration
+                0x00000000008000ae                usbRxBuf
+                0x00000000008000c4                PROVIDE (__bss_end, .)
+                0x0000000000000e6a                __data_load_start = LOADADDR (.data)
+                0x0000000000000e6e                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x00000000008000c4        0x0
+                0x00000000008000c4                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                0x00000000008000c4                PROVIDE (__noinit_end, .)
+                0x00000000008000c4                _end = .
+                0x00000000008000c4                PROVIDE (__heap_start, .)
+
+.eeprom         0x0000000000810000        0x0
+ *(.eeprom*)
+                0x0000000000810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.stab           0x0000000000000000     0x2664
+ *(.stab)
+ .stab          0x0000000000000000      0x6b4 /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/crttn44.o
+ .stab          0x00000000000006b4      0x3b4 ./Firmware/usbdrv/src/oddebug.o
+                                        0x3c0 (size before relaxing)
+ .stab          0x0000000000000a68      0x948 ./Firmware/usbdrv/src/usbdrv.o
+                                        0xbb8 (size before relaxing)
+ .stab          0x00000000000013b0      0x21c ./Firmware/src/74HC595.o
+                                        0x3d8 (size before relaxing)
+ .stab          0x00000000000015cc      0xa20 ./Firmware/src/main.o
+                                        0xce4 (size before relaxing)
+ .stab          0x0000000000001fec      0x678 ./Firmware/src/vusb.o
+                                        0x93c (size before relaxing)
+
+.stabstr        0x0000000000000000     0x133a
+ *(.stabstr)
+ .stabstr       0x0000000000000000     0x133a /usr/lib/gcc/avr/4.3.4/../../../avr/lib/avr25/crttn44.o
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment
+ *(.comment)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges
+ *(.debug_aranges)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info
+ *(.debug_info)
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev
+ *(.debug_abbrev)
+
+.debug_line
+ *(.debug_line)
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str
+ *(.debug_str)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+OUTPUT(AmbilightUSB.elf elf32-avr)
+LOAD linker stubs
