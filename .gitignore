@@ -39,3 +39,4 @@ qrc_*
 *.hex
 *.lss
 *.elf
+*.map
