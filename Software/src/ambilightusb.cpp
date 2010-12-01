@@ -264,18 +264,16 @@ void AmbilightUsb::updateColors(LedColors colors)
     write_buffer[5] = (unsigned char)colors.RightDown->r;
     write_buffer[6] = (unsigned char)colors.RightDown->g;
     write_buffer[7] = (unsigned char)colors.RightDown->b;
+    write_buffer[8] = 0x00;
 
-    writeBufferToDeviceWithCheck();
+    write_buffer[9] = CMD_LEFT_SIDE;
+    write_buffer[10] = (unsigned char)colors.LeftUp->r;
+    write_buffer[11] = (unsigned char)colors.LeftUp->g;
+    write_buffer[12] = (unsigned char)colors.LeftUp->b;
 
-
-    write_buffer[1] = CMD_LEFT_SIDE;
-    write_buffer[2] = (unsigned char)colors.LeftUp->r;
-    write_buffer[3] = (unsigned char)colors.LeftUp->g;
-    write_buffer[4] = (unsigned char)colors.LeftUp->b;
-
-    write_buffer[5] = (unsigned char)colors.LeftDown->r;
-    write_buffer[6] = (unsigned char)colors.LeftDown->g;
-    write_buffer[7] = (unsigned char)colors.LeftDown->b;
+    write_buffer[13] = (unsigned char)colors.LeftDown->r;
+    write_buffer[14] = (unsigned char)colors.LeftDown->g;
+    write_buffer[15] = (unsigned char)colors.LeftDown->b;
 
     writeBufferToDeviceWithCheck();
 }
