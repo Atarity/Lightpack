@@ -5,16 +5,15 @@
  *       Author: Mike Shatohin (brunql)
  *
  *      Project: AmbilightUSB
- *      	MCU: ATtiny44
+ *      	MCU: ATmega8
  *        Clock: 12MHz
  *
- * Command to fill flash and set fuses:       
+ * Command to fill flash and set fuses:
+ * MCU ATmega8:
+ * avrdude  -pm8 -cusbasp -u -Uflash:w:AmbilightUSB.hex:a -Ulfuse:w:0x9f:m -Uhfuse:w:0xc9:m
  *
- * avrdude	-pt44 -cusbasp -u
- *          -Uflash:w:AmbilightUSB.hex:a
- *          -Ulfuse:w:0xee:m
- *          -Uhfuse:w:0xdf:m
- *          -Uefuse:w:0xff:m
+ * MCU ATtiny44:
+ * avrdude  -pt44 -cusbasp -u -Uflash:w:AmbilightUSB.hex:a -Ulfuse:w:0xee:m -Uhfuse:w:0xdf:m -Uefuse:w:0xff:m
  *
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
  *
@@ -96,9 +95,9 @@ void SmoothlyUpdateColors(void)
 #define CHECK_PWM_LEVEL_AND_SET_HC595_OUT( LED_INDEX, COLOR_INDEX ) {\
 		HC595_CLK_DOWN; \
 		if(colors[LED_INDEX][COLOR_INDEX] > pwm_level){ \
-			HC595_PORT &= (uint8_t)~HC595_DATA_PIN; \
+			HC595_DATA_PORT &= (uint8_t)~HC595_DATA0_PIN; \
 		}else{ \
-			HC595_PORT |= HC595_DATA_PIN; \
+			HC595_DATA_PORT |= HC595_DATA0_PIN; \
 		} \
 		HC595_CLK_UP;\
 	}
@@ -126,7 +125,7 @@ static inline void PWM()
 
 	// LEFT_UP
 	HC595_CLK_DOWN;
-	HC595_PORT |= HC595_DATA_PIN;
+	HC595_DATA_PORT |= HC595_DATA0_PIN;
 	HC595_CLK_UP;
 
 	for(uint8_t color=0; color<3; color++){
@@ -135,7 +134,7 @@ static inline void PWM()
 
 	// LEFT_DOWN
 	HC595_CLK_DOWN;
-	HC595_PORT |= HC595_DATA_PIN;
+	HC595_DATA_PORT |= HC595_DATA0_PIN;
 	HC595_CLK_UP;
 
 	for(uint8_t color=0; color<3; color++){
@@ -149,7 +148,7 @@ static inline void PWM()
 		CHECK_PWM_LEVEL_AND_SET_HC595_OUT(RIGHT_DOWN, color);
 	}
 	HC595_CLK_DOWN;
-	HC595_PORT |= HC595_DATA_PIN;
+	HC595_DATA_PORT |= HC595_DATA0_PIN;
 	HC595_CLK_UP;
 
 
@@ -158,7 +157,7 @@ static inline void PWM()
 		CHECK_PWM_LEVEL_AND_SET_HC595_OUT(RIGHT_UP, color);
 	}
 	HC595_CLK_DOWN;
-	HC595_PORT |= HC595_DATA_PIN;
+	HC595_DATA_PORT |= HC595_DATA0_PIN;
 	HC595_CLK_UP;
 
 	HC595_LATCH_PULSE;
@@ -168,7 +167,7 @@ static inline void PWM()
 //
 // Interrupts of the timer that generates PWM
 //
-ISR( TIM1_COMPA_vect )
+ISR( TIMER1_COMPA_vect )
 {
 	// Enable interrupts for usbPoll();
 	sei();
@@ -241,14 +240,13 @@ static inline void SmoothlyShowRGB()
 static inline void TimerForPWM_Init()
 {
 	TCCR1A = 0x00;
-	TCCR1C = 0x00;
 
 	// Default values of timer prescaller and output compare register
 	TCCR1B = _BV(CS11); // 8
 	OCR1A = 100;
 
 	TCNT1 = 0x0000;
-	TIMSK1 = _BV(OCIE1A);
+	TIMSK = _BV(OCIE1A);
 }
 
 //
@@ -257,11 +255,14 @@ static inline void TimerForPWM_Init()
 int main(void)
 {
 	// Input/Output Ports initialization
-	PORTA = 0x00;
-	DDRA = 0x00;
+	PORTB = 0x00;
+	DDRB = 0x00;
 
-    PORTB = 0x00;
-    DDRB = 0x00;
+    PORTC = 0x00;
+    DDRC = 0x00;
+
+    PORTD = 0x00;
+    DDRD = 0x00;
 
     // Low speed USB device initialization
     usbInit_FakeUsbDisconnect();

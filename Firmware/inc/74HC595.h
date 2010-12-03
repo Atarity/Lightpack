@@ -30,12 +30,19 @@
 
 #include <avr/io.h>
 
-#define HC595_PORT 	(PORTA)
-#define HC595_DDR 	(DDRA)
+#define HC595_PORT 			(PORTB)
+#define HC595_DDR 			(DDRB)
+#define HC595_CLK_PIN 		_BV(PB0)
+#define HC595_LATCH_PIN		_BV(PB1)
+#define HC595_OUT_EN_PIN 	_BV(PB2)
 
-#define HC595_DATA_PIN 		_BV(PA2)
-#define HC595_CLK_PIN 		_BV(PA0)
-#define HC595_LATCH_PIN		_BV(PA1)
+#define HC595_DATA_PORT 	(PORTC)
+#define HC595_DATA_DDR 		(DDRC)
+#define HC595_DATA0_PIN 	_BV(PC0)
+#define HC595_DATA1_PIN 	_BV(PC1)
+#define HC595_DATA2_PIN 	_BV(PC2)
+#define HC595_DATA3_PIN 	_BV(PC3)
+
 
 #define HC595_LATCH_UP		{ HC595_PORT |= HC595_LATCH_PIN; }
 #define HC595_LATCH_DOWN	{ HC595_PORT &= (uint8_t)~HC595_LATCH_PIN; }

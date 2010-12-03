@@ -106,7 +106,6 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 		UpdateSmoothStep();
 
 	}else if(data[0] == CMD_OFF_ALL){
-		HC595_PutUInt16(0x0000);
 		for(uint8_t i=0; i<3; i++){
 			colors_new[0][i] = 0x00;
 			colors_new[1][i] = 0x00;
@@ -118,9 +117,9 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 		UpdateSmoothStep();
 
 	}else if(data[0] == CMD_SET_TIMER_OPTIONS){
-		TIMSK1 &= (uint8_t)~_BV(OCIE1A);
+		TIMSK &= (uint8_t)~_BV(OCIE1A);
 
-		// TODO: data[CMD_SET_PRESCALLER_INDEX]
+		// TODO: data[DATA_INDEX_CMD_SET_PRESCALLER]
 		switch(data[1]){
 			case CMD_SET_PRESCALLER_1: 		TCCR1B = _BV(CS10); break;
 			case CMD_SET_PRESCALLER_8:		TCCR1B = _BV(CS11); break;
@@ -129,11 +128,11 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 			case CMD_SET_PRESCALLER_1024:	TCCR1B = _BV(CS12) | _BV(CS11); break;
 		}
 
-		// TODO: data[CMD_SET_OCR_INDEX]
+		// TODO: data[DATA_INDEX_CMD_SET_OCR]
 		OCR1A = data[2];
 
 		TCNT1 = 0x0000;
-		TIMSK1 = _BV(OCIE1A);
+		TIMSK = _BV(OCIE1A);
 	}else if(data[0] == CMD_SET_PWM_LEVEL_MAX_VALUE){
 		pwm_level_max = data[1];
 	}else if(data[0] == CMD_SMOOTH_CHANGE_COLORS){
