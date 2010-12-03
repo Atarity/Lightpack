@@ -9,10 +9,10 @@
  *        Clock: 12MHz
  *
  * Command to fill flash and set fuses:
- * MCU ATmega8:
+ * MCU ATmega8 (hw_v3.*):
  * avrdude  -pm8 -cusbasp -u -Uflash:w:AmbilightUSB.hex:a -Ulfuse:w:0x9f:m -Uhfuse:w:0xc9:m
  *
- * MCU ATtiny44:
+ * MCU ATtiny44 (hw_v2.*):
  * avrdude  -pt44 -cusbasp -u -Uflash:w:AmbilightUSB.hex:a -Ulfuse:w:0xee:m -Uhfuse:w:0xdf:m -Uefuse:w:0xff:m
  *
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
@@ -123,42 +123,42 @@ static inline void PWM()
 		}
 	}
 
-	// LEFT_UP
+
+	// Skip I/O - QH of 74HC595 (IC5, IC6)
 	HC595_CLK_DOWN;
-	HC595_DATA_PORT |= HC595_DATA0_PIN;
 	HC595_CLK_UP;
 
-	for(uint8_t color=0; color<3; color++){
-		CHECK_PWM_LEVEL_AND_SET_HC595_OUT(LEFT_UP, color);
-	}
-
-	// LEFT_DOWN
+	// Skip I/O - QG of 74HC595 (IC5, IC6)
 	HC595_CLK_DOWN;
-	HC595_DATA_PORT |= HC595_DATA0_PIN;
 	HC595_CLK_UP;
 
+	// Set I/O - QF, QE, QD of 74HC595 (IC5, IC6)
 	for(uint8_t color=0; color<3; color++){
-		CHECK_PWM_LEVEL_AND_SET_HC595_OUT(LEFT_DOWN, color);
+		uint8_t hc595_data = 0x00;
+
+		HC595_CLK_DOWN;
+		if(colors[LEFT_UP][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
+		if(colors[RIGHT_UP][color] > pwm_level) hc595_data |= HC595_DATA1_PIN;
+		HC595_DATA_PORT = hc595_data;
+		HC595_CLK_UP;
 	}
 
-
-
-	// RIGHT_DOWN
+	// Set I/O - QC, QB, QA of 74HC595 (IC5, IC6)
 	for(uint8_t color=0; color<3; color++){
-		CHECK_PWM_LEVEL_AND_SET_HC595_OUT(RIGHT_DOWN, color);
-	}
-	HC595_CLK_DOWN;
-	HC595_DATA_PORT |= HC595_DATA0_PIN;
-	HC595_CLK_UP;
+		uint8_t hc595_data = 0x00;
 
-
-	// RIGHT_UP
-	for(uint8_t color=0; color<3; color++){
-		CHECK_PWM_LEVEL_AND_SET_HC595_OUT(RIGHT_UP, color);
+		HC595_CLK_DOWN;
+		if(colors[LEFT_DOWN][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
+		if(colors[RIGHT_DOWN][color] > pwm_level) hc595_data |= HC595_DATA1_PIN;
+		HC595_DATA_PORT = hc595_data;
+		HC595_CLK_UP;
 	}
-	HC595_CLK_DOWN;
-	HC595_DATA_PORT |= HC595_DATA0_PIN;
-	HC595_CLK_UP;
+
+	// LED2 - LEFT_UP
+	// LED4 - RIGHT_UP
+
+	// LED1 - LEFT_DOWN
+	// LED3 - RIGHT_DOWN
 
 	HC595_LATCH_PULSE;
 }

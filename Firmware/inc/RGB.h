@@ -45,34 +45,6 @@
 #define G	1
 #define B	0
 
-// Hardware RGB bits definitions:
-
-// Right side
-#define RED_RIGHT 		0b0100ul
-#define GREEN_RIGHT 	0b0010ul
-#define BLUE_RIGHT 		0b0001ul
-
-#define RIGHT_UP_RED_LS		(RED_RIGHT 		<< 12)
-#define RIGHT_UP_GREEN_LS	(GREEN_RIGHT 	<< 12)
-#define RIGHT_UP_BLUE_LS	(BLUE_RIGHT 	<< 12)
-
-#define RIGHT_DOWN_RED_LS	(RED_RIGHT 		<< 8)
-#define RIGHT_DOWN_GREEN_LS	(GREEN_RIGHT 	<< 8)
-#define RIGHT_DOWN_BLUE_LS	(BLUE_RIGHT 	<< 8)
-
-// Left side
-#define RED_LEFT 	0b1000ul
-#define GREEN_LEFT 	0b0100ul
-#define BLUE_LEFT 	0b0010ul
-
-#define LEFT_DOWN_RED_LS	(RED_LEFT 	<< 4)
-#define LEFT_DOWN_GREEN_LS	(GREEN_LEFT << 4)
-#define LEFT_DOWN_BLUE_LS	(BLUE_LEFT 	<< 4)
-
-#define LEFT_UP_RED_LS		(RED_LEFT 	<< 0)
-#define LEFT_UP_GREEN_LS	(GREEN_LEFT << 0)
-#define LEFT_UP_BLUE_LS		(BLUE_LEFT 	<< 0)
-
 // Be sure that this is defined
 #ifndef TRUE
 #	define TRUE 	0xff
