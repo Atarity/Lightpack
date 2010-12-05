@@ -106,15 +106,14 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 		UpdateSmoothStep();
 
 	}else if(data[0] == CMD_OFF_ALL){
-		for(uint8_t i=0; i<3; i++){
-			colors_new[0][i] = 0x00;
-			colors_new[1][i] = 0x00;
-			colors_new[2][i] = 0x00;
-			colors_new[3][i] = 0x00;
+		for(uint8_t i=0; i<4; i++){
+			colors_new[i][R] = 0x00;
+			colors_new[i][G] = 0x00;
+			colors_new[i][B] = 0x00;
 		}
 
 		update_colors = TRUE;
-		UpdateSmoothStep();
+		//UpdateSmoothStep();
 
 	}else if(data[0] == CMD_SET_TIMER_OPTIONS){
 		TIMSK &= (uint8_t)~_BV(OCIE1A);
