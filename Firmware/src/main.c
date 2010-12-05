@@ -42,6 +42,12 @@
 #include "74HC595.h"    /* RGB leds connects to ATtiny44 through 74HC595 */
 #include "vusb.h"       /* Using V-USB library from OBDEV team */
 
+#define LED1 	LEFT_DOWN
+#define LED2 	LEFT_UP
+#define LED3 	RIGHT_DOWN
+#define LED4 	RIGHT_UP
+
+
 
 //
 // Global variables
@@ -111,14 +117,6 @@ static inline void PWM()
 		if(update_colors){
 			if(smooth_delay != 0){
 				SmoothlyUpdateColors();
-			}else{
-				// Without smooth
-				for(uint8_t color=0; color < 3; color++){
-					for(uint8_t led_index=0; led_index < 4; led_index++){
-						colors[led_index][color] = colors_new[led_index][color];
-					}
-				}
-				update_colors = FALSE;
 			}
 		}
 	}
@@ -126,39 +124,60 @@ static inline void PWM()
 
 	// Skip I/O - QH of 74HC595 (IC5, IC6)
 	HC595_CLK_DOWN;
+	HC595_DATA_PORT = 0x00;
 	HC595_CLK_UP;
 
-	// Skip I/O - QG of 74HC595 (IC5, IC6)
+
+	if(smooth_delay == 0){
+		// Set I/O - QH, QF, QE of 74HC595 (IC5, IC6)
+		for(uint8_t color=0; color<3; color++){
+			uint8_t hc595_data = 0x00;
+
+			HC595_CLK_DOWN;
+			if(colors_new[LED2][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
+			if(colors_new[LED4][color] > pwm_level)  hc595_data |= HC595_DATA1_PIN;
+			HC595_DATA_PORT = hc595_data;
+			HC595_CLK_UP;
+		}
+
+		// Set I/O - QD, QC, QB of 74HC595 (IC5, IC6)
+		for(uint8_t color=0; color<3; color++){
+			uint8_t hc595_data = 0x00;
+
+			HC595_CLK_DOWN;
+			if(colors_new[LED1][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
+			if(colors_new[LED3][color] > pwm_level)  hc595_data |= HC595_DATA1_PIN;
+			HC595_DATA_PORT = hc595_data;
+			HC595_CLK_UP;
+		}
+	}else{
+		// Set I/O - QH, QF, QE of 74HC595 (IC5, IC6)
+		for(uint8_t color=0; color<3; color++){
+			uint8_t hc595_data = 0x00;
+
+			HC595_CLK_DOWN;
+			if(colors[LED2][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
+			if(colors[LED4][color] > pwm_level)  hc595_data |= HC595_DATA1_PIN;
+			HC595_DATA_PORT = hc595_data;
+			HC595_CLK_UP;
+		}
+
+		// Set I/O - QD, QC, QB of 74HC595 (IC5, IC6)
+		for(uint8_t color=0; color<3; color++){
+			uint8_t hc595_data = 0x00;
+
+			HC595_CLK_DOWN;
+			if(colors[LED1][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
+			if(colors[LED3][color] > pwm_level)  hc595_data |= HC595_DATA1_PIN;
+			HC595_DATA_PORT = hc595_data;
+			HC595_CLK_UP;
+		}
+	}
+
+	// Skip I/O - QA of 74HC595 (IC5, IC6)
 	HC595_CLK_DOWN;
+	HC595_DATA_PORT = 0x00;
 	HC595_CLK_UP;
-
-	// Set I/O - QF, QE, QD of 74HC595 (IC5, IC6)
-	for(uint8_t color=0; color<3; color++){
-		uint8_t hc595_data = 0x00;
-
-		HC595_CLK_DOWN;
-		if(colors[LEFT_UP][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
-		if(colors[RIGHT_UP][color] > pwm_level) hc595_data |= HC595_DATA1_PIN;
-		HC595_DATA_PORT = hc595_data;
-		HC595_CLK_UP;
-	}
-
-	// Set I/O - QC, QB, QA of 74HC595 (IC5, IC6)
-	for(uint8_t color=0; color<3; color++){
-		uint8_t hc595_data = 0x00;
-
-		HC595_CLK_DOWN;
-		if(colors[LEFT_DOWN][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
-		if(colors[RIGHT_DOWN][color] > pwm_level) hc595_data |= HC595_DATA1_PIN;
-		HC595_DATA_PORT = hc595_data;
-		HC595_CLK_UP;
-	}
-
-	// LED2 - LEFT_UP
-	// LED4 - RIGHT_UP
-
-	// LED1 - LEFT_DOWN
-	// LED3 - RIGHT_DOWN
 
 	HC595_LATCH_PULSE;
 }

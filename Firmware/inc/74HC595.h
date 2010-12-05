@@ -51,6 +51,10 @@
 #define HC595_CLK_DOWN		{ HC595_PORT &= (uint8_t)~HC595_CLK_PIN; }
 #define HC595_CLK_UP		{ HC595_PORT |= HC595_CLK_PIN; }
 
+// Inverse logic
+#define HC595_OUT_ENABLE	{ HC595_PORT &= (uint8_t)~HC595_OUT_EN_PIN; }
+#define HC595_OUT_DISABLE	{ HC595_PORT |= HC595_OUT_EN_PIN; }
+
 extern void HC595_Init(void);
 extern void HC595_PutUInt16(uint16_t);
 
