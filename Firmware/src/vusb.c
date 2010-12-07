@@ -54,7 +54,7 @@ PROGMEM char usbHidReportDescriptor[22] = {    /* USB report descriptor */
 		0xa1, 0x01,                    // COLLECTION (Application)
 		0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
 		0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
-		0x75, 0x10,                    //   REPORT_SIZE
+		0x75, 0x08,                    //   REPORT_SIZE
 		0x95, 0x10,                    //   REPORT_COUNT
 		0x09, 0x00,                    //   USAGE (Undefined)
 		0xb2, 0x02, 0x01,              //   FEATURE (Data,Var,Abs,Buf)
