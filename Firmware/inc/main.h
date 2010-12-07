@@ -51,4 +51,6 @@ extern volatile uint8_t pwm_level_max;
 extern volatile uint8_t smooth_delay;
 extern volatile uint8_t smooth_step[4][3];
 
+extern volatile int16_t max_diff;
+
 #endif /* MAIN_H_ */

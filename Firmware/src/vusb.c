@@ -38,10 +38,24 @@
 
 static inline void UpdateSmoothStep(void)
 {
+	// Check how fast is this...
+
+	// First find MAX diff between old and new colors, and save all diffs in each smooth_step
 	for(uint8_t color=0; color < 3; color++){
 		for(uint8_t led_index=0; led_index < 4; led_index++){
-			int8_t diff = colors[led_index][color] - colors_new[led_index][color];
-			smooth_step[led_index][color] = diff / SMOOTH_MAX_STEP;
+			int16_t diff = colors[led_index][color] - colors_new[led_index][color];
+			if(diff < 0) diff *= -1;
+
+			if(diff > max_diff) max_diff = diff;
+
+			smooth_step[led_index][color] = (uint8_t)diff;
+		}
+	}
+
+	// To find smooth_step which will be using max_diff divide on each smooth_step
+	for(uint8_t color=0; color < 3; color++){
+		for(uint8_t led_index=0; led_index < 4; led_index++){
+			smooth_step[led_index][color] = (uint8_t) max_diff / smooth_step[led_index][color];
 		}
 	}
 }
@@ -90,8 +104,7 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 		colors_new[RIGHT_DOWN][G] = data[5];
 		colors_new[RIGHT_DOWN][B] = data[6];
 
-		update_colors = TRUE;
-		UpdateSmoothStep();
+		// Wait while comes all new colors (wait colors for LEFT side)
 
 	}else if(data[0] == CMD_LEFT_SIDE){
 		colors_new[LEFT_UP][R] = data[1];
@@ -113,7 +126,7 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 		}
 
 		update_colors = TRUE;
-		//UpdateSmoothStep();
+		UpdateSmoothStep();
 
 	}else if(data[0] == CMD_SET_TIMER_OPTIONS){
 		TIMSK &= (uint8_t)~_BV(OCIE1A);
