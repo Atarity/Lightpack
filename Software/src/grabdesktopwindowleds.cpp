@@ -35,8 +35,9 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     timer = new QTimer(this);
     timeEval = new TimeEvaluations();
 
-    desktop_width = QApplication::desktop()->width();
-    desktop_height = QApplication::desktop()->height();    
+    desktop_width = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).width();
+    desktop_height = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).height();
+
 
     // Read settings once
     qDebug() << "GrabDesktopWindowLeds(): read settings";
@@ -112,8 +113,8 @@ void GrabDesktopWindowLeds::updateSizesLabelsGrabPixelsRects()
 
     labelGrabPixelsRects[RIGHT_UP]->move(desktop_width - ambilight_width, desktop_height / 2 - ambilight_height);
     labelGrabPixelsRects[RIGHT_DOWN]->move(desktop_width - ambilight_width, desktop_height / 2);
-    labelGrabPixelsRects[LEFT_UP]->move(0, QApplication::desktop()->height() / 2 - ambilight_height);
-    labelGrabPixelsRects[LEFT_DOWN]->move(0, QApplication::desktop()->height() / 2);
+    labelGrabPixelsRects[LEFT_UP]->move(0, desktop_height / 2 - ambilight_height);
+    labelGrabPixelsRects[LEFT_DOWN]->move(0, desktop_height / 2);
 }
 
 

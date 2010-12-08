@@ -29,6 +29,8 @@
 #include "ui_mainwindow.h"
 
 
+#include <QDesktopWidget>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -51,13 +53,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connectSignalsSlots();
 
 
+    int desktop_width = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).width();
+    int desktop_height = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).height();
+
     // Initialize limits of height and width
-    ui->horizontalSliderWidth->setMaximum( QApplication::desktop()->width() / 2 );
-    ui->spinBox_WidthAmbilight->setMaximum( QApplication::desktop()->width() / 2 );
+    ui->horizontalSliderWidth->setMaximum( desktop_width / 2 );
+    ui->spinBox_WidthAmbilight->setMaximum( desktop_width / 2 );
 
     // 25px - default height of panels in Ubuntu 10.04
-    ui->horizontalSliderHeight->setMaximum( QApplication::desktop()->height() / 2  - 25);
-    ui->spinBox_HeightAmbilight->setMaximum( QApplication::desktop()->height() / 2 - 25);
+    ui->horizontalSliderHeight->setMaximum( desktop_height / 2);
+    ui->spinBox_HeightAmbilight->setMaximum( desktop_height / 2);
 
         
     isErrorState = false;
@@ -75,6 +80,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Window);    
 
+
+    qDebug() << "Check screen geometry...";
+
+    int screen = QApplication::desktop()->primaryScreen();
+    qDebug() << "  primaryScreen =" << screen;
+    qDebug() << "  isVirtualDesktop =" << QApplication::desktop()->isVirtualDesktop();
+    qDebug() << "  numScreens = " << QApplication::desktop()->numScreens();
+    qDebug() << "  primaryScreen Width x Height = " << QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).width() << "x"
+            << QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).height();
     qDebug() << "MainWindow(): initialized";
 }
 
@@ -244,8 +258,11 @@ void MainWindow::showAbout()
 
 void MainWindow::showSettings()
 {
-    this->move(QApplication::desktop()->width() / 2 - this->width() / 2,
-            QApplication::desktop()->height() / 2 - this->height() / 2);
+    int desktop_width = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).width();
+    int desktop_height = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).height();
+
+    this->move(desktop_width / 2 - this->width() / 2,
+            desktop_height / 2 - this->height() / 2);
     grabDesktopWindowLeds->setVisibleGrabPixelsRects(ui->checkBox_ShowPixelsAmbilight->isChecked());
     this->show();
 }
