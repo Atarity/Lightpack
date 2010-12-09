@@ -3,7 +3,10 @@ Hardware changes
 
 Version 2.1.2
 -------------
-Edited only schematic of AmbilightUSB
+brunql, December 9, 2010
+
+Edited only schematic of AmbilightUSB:
+
 * Bugfix quartz 16Mhz, but must 12Mhz
 * Bugfix 74HC595 connection (was LATCH - SCL, VCC - RCK, must LATCH - RCK, VCC - SCL)
 * Added value of the electrolytic capacitor C1: 1-10uF
