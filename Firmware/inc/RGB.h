@@ -28,17 +28,21 @@
 #ifndef RGB_H_
 #define RGB_H_
 
-#define LEDS_COUNT       4
+// Number of leds, using to define colors and colors_new arrays
+#define LEDS_COUNT  8
 
-// On this "screen", digit is number of led (leds behind of screen)
-//   ╔═════════╗
-//  3╠  Linux  ╣0
-//  2╠  brunql ╣1
-//   ╚═════════╝
-#define RIGHT_UP	0
-#define RIGHT_DOWN	1
-#define LEFT_DOWN	2
-#define LEFT_UP		3
+
+enum LEDS{
+	LED1 = 0, /* this is indexes in colors and colors_new arrays */
+	LED2,
+	LED3,
+	LED4,
+	LED5,
+	LED6,
+	LED7,
+	LED8,
+};
+
 
 // Define indexes for colors and colors_new arrays
 #define R	1
