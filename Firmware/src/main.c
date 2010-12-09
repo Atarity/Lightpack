@@ -42,13 +42,6 @@
 #include "74HC595.h"    /* RGB leds connects to ATtiny44 through 74HC595 */
 #include "vusb.h"       /* Using V-USB library from OBDEV team */
 
-#define LED1 	LEFT_DOWN
-#define LED2 	LEFT_UP
-#define LED3 	RIGHT_DOWN
-#define LED4 	RIGHT_UP
-
-
-
 //
 // Global variables
 //
@@ -57,10 +50,16 @@
 volatile uint8_t update_colors = FALSE;
 
 // Contains colors using now in PWM generation
-volatile uint8_t colors[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
+volatile uint8_t colors[LEDS_COUNT][3] = {
+		{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0},
+		{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}
+};
 
 // Contains new colors (comes from PC) for update with smooth (if it is used)
-volatile uint8_t colors_new[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
+volatile uint8_t colors_new[LEDS_COUNT][3] = {
+		{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0},
+		{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}
+};
 
 // Current PWM generation level
 volatile uint8_t pwm_level = 0x00;
@@ -72,7 +71,10 @@ volatile uint8_t is_smooth_change = 0;
 // Smoothly changing colors index
 volatile uint8_t smooth = 0x00;
 volatile uint8_t smooth_delay = 0x00;
-volatile uint8_t smooth_step[4][3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
+volatile uint8_t smooth_step[LEDS_COUNT][3] = {
+		{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0},
+		{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}
+};
 
 volatile int16_t max_diff = 0x00;
 
@@ -82,7 +84,7 @@ void SmoothlyUpdateColors(void)
 	// Array smooth_step evaluated when new color comes from PC
 
 	for(uint8_t color=0; color < 3; color++){
-		for(uint8_t led_index=0; led_index < 4; led_index++){
+		for(uint8_t led_index=0; led_index < LEDS_COUNT; led_index++){
 			if(smooth % smooth_step[led_index][color] == 0){
 				if(colors[led_index][color] < colors_new[led_index][color]){
 					colors[led_index][color] += 1;
@@ -132,6 +134,8 @@ static inline void PWM()
 			HC595_CLK_DOWN;
 			if(colors_new[LED2][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
 			if(colors_new[LED4][color] > pwm_level)  hc595_data |= HC595_DATA1_PIN;
+			if(colors_new[LED6][color] > pwm_level)  hc595_data |= HC595_DATA2_PIN;
+			if(colors_new[LED8][color] > pwm_level)  hc595_data |= HC595_DATA3_PIN;
 			HC595_DATA_PORT = hc595_data;
 			HC595_CLK_UP;
 		}
@@ -143,6 +147,8 @@ static inline void PWM()
 			HC595_CLK_DOWN;
 			if(colors_new[LED1][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
 			if(colors_new[LED3][color] > pwm_level)  hc595_data |= HC595_DATA1_PIN;
+			if(colors_new[LED5][color] > pwm_level)  hc595_data |= HC595_DATA2_PIN;
+			if(colors_new[LED7][color] > pwm_level)  hc595_data |= HC595_DATA3_PIN;
 			HC595_DATA_PORT = hc595_data;
 			HC595_CLK_UP;
 		}
@@ -154,6 +160,8 @@ static inline void PWM()
 			HC595_CLK_DOWN;
 			if(colors[LED2][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
 			if(colors[LED4][color] > pwm_level)  hc595_data |= HC595_DATA1_PIN;
+			if(colors[LED6][color] > pwm_level)  hc595_data |= HC595_DATA2_PIN;
+			if(colors[LED8][color] > pwm_level)  hc595_data |= HC595_DATA3_PIN;
 			HC595_DATA_PORT = hc595_data;
 			HC595_CLK_UP;
 		}
@@ -165,6 +173,8 @@ static inline void PWM()
 			HC595_CLK_DOWN;
 			if(colors[LED1][color] > pwm_level)  hc595_data |= HC595_DATA0_PIN;
 			if(colors[LED3][color] > pwm_level)  hc595_data |= HC595_DATA1_PIN;
+			if(colors[LED5][color] > pwm_level)  hc595_data |= HC595_DATA2_PIN;
+			if(colors[LED7][color] > pwm_level)  hc595_data |= HC595_DATA3_PIN;
 			HC595_DATA_PORT = hc595_data;
 			HC595_CLK_UP;
 		}
@@ -199,7 +209,7 @@ ISR( TIMER1_COMPA_vect )
 
 void SetAllLedsColors(uint8_t red, uint8_t green, uint8_t blue)
 {
-	for(uint8_t i=0; i<4; i++){
+	for(uint8_t i=0; i<LEDS_COUNT; i++){
 		if(smooth_delay == 0){
 			colors_new[i][R] = red;
 			colors_new[i][G] = green;
