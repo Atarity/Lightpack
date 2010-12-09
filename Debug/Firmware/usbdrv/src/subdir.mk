@@ -20,7 +20,7 @@ C_DEPS += \
 Firmware/usbdrv/src/%.o: ../Firmware/usbdrv/src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: AVR Compiler'
-	avr-gcc -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/inc" -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/usbdrv/inc" -Wall -g2 -gstabs -Os -fpack-struct -fshort-enums -std=c99 -funsigned-char -funsigned-bitfields -mmcu=attiny44 -DF_CPU=12000000UL -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -c -o"$@" "$<"
+	avr-gcc -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/inc" -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/usbdrv/inc" -Wall -g2 -gstabs -Os -fpack-struct -fshort-enums -std=c99 -funsigned-char -funsigned-bitfields -mmcu=atmega8 -DF_CPU=12000000UL -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -c -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

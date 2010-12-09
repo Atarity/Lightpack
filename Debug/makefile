@@ -52,7 +52,7 @@ all: AmbilightUSB.elf secondary-outputs
 AmbilightUSB.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: AVR C Linker'
-	avr-gcc -Wl,-Map,AmbilightUSB.map -mmcu=attiny44 -o"AmbilightUSB.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	avr-gcc -Wl,-Map,AmbilightUSB.map -mmcu=atmega8 -o"AmbilightUSB.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

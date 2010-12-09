@@ -23,14 +23,14 @@ S_UPPER_DEPS += \
 Firmware/usbdrv/asm/%.o: ../Firmware/usbdrv/asm/%.S
 	@echo 'Building file: $<'
 	@echo 'Invoking: AVR Assembler'
-	avr-gcc -x assembler-with-cpp -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/inc" -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/usbdrv/inc" -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/usbdrv/asm" -g2 -gstabs -mmcu=attiny44 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -c -o"$@" "$<"
+	avr-gcc -x assembler-with-cpp -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/inc" -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/usbdrv/inc" -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/usbdrv/asm" -g2 -gstabs -mmcu=atmega8 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -c -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
 Firmware/usbdrv/asm/%.o: ../Firmware/usbdrv/asm/%.asm
 	@echo 'Building file: $<'
 	@echo 'Invoking: AVR Assembler'
-	avr-gcc -x assembler-with-cpp -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/inc" -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/usbdrv/inc" -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/usbdrv/asm" -g2 -gstabs -mmcu=attiny44 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -c -o"$@" "$<"
+	avr-gcc -x assembler-with-cpp -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/inc" -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/usbdrv/inc" -I"/home/brunql/EclipseProjects/AmbilightUSB/Firmware/usbdrv/asm" -g2 -gstabs -mmcu=atmega8 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -c -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
