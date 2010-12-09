@@ -42,7 +42,7 @@ static inline void UpdateSmoothStep(void)
 
 	// First find MAX diff between old and new colors, and save all diffs in each smooth_step
 	for(uint8_t color=0; color < 3; color++){
-		for(uint8_t led_index=0; led_index < 4; led_index++){
+		for(uint8_t led_index=0; led_index < LEDS_COUNT; led_index++){
 			int16_t diff = colors[led_index][color] - colors_new[led_index][color];
 			if(diff < 0) diff *= -1;
 
@@ -54,7 +54,7 @@ static inline void UpdateSmoothStep(void)
 
 	// To find smooth_step which will be using max_diff divide on each smooth_step
 	for(uint8_t color=0; color < 3; color++){
-		for(uint8_t led_index=0; led_index < 4; led_index++){
+		for(uint8_t led_index=0; led_index < LEDS_COUNT; led_index++){
 			smooth_step[led_index][color] = (uint8_t) max_diff / smooth_step[led_index][color];
 		}
 	}
@@ -69,7 +69,7 @@ PROGMEM char usbHidReportDescriptor[22] = {    /* USB report descriptor */
 		0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
 		0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
 		0x75, 0x08,                    //   REPORT_SIZE
-		0x95, 0x10,                    //   REPORT_COUNT
+		0x95, 0x20,                    //   REPORT_COUNT
 		0x09, 0x00,                    //   USAGE (Undefined)
 		0xb2, 0x02, 0x01,              //   FEATURE (Data,Var,Abs,Buf)
 		0xc0                           // END_COLLECTION
@@ -95,31 +95,47 @@ uint8_t   usbFunctionRead(uint8_t *data, uint8_t len)
 uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 {
 	// TODO: data[CMD_INDEX]
-	if(data[0] == CMD_RIGHT_SIDE){
-		colors_new[RIGHT_UP][R] = data[1];
-		colors_new[RIGHT_UP][G] = data[2];
-		colors_new[RIGHT_UP][B] = data[3];
+	if(data[0] == CMD_LEDS_1_2){
+		colors_new[LED1][R] = data[1];
+		colors_new[LED1][G] = data[2];
+		colors_new[LED1][B] = data[3];
 
-		colors_new[RIGHT_DOWN][R] = data[4];
-		colors_new[RIGHT_DOWN][G] = data[5];
-		colors_new[RIGHT_DOWN][B] = data[6];
+		colors_new[LED2][R] = data[4];
+		colors_new[LED2][G] = data[5];
+		colors_new[LED2][B] = data[6];
 
-		// Wait while comes all new colors (wait colors for LEFT side)
+	}else if(data[0] == CMD_LEDS_3_4){
+		colors_new[LED3][R] = data[1];
+		colors_new[LED3][G] = data[2];
+		colors_new[LED3][B] = data[3];
 
-	}else if(data[0] == CMD_LEFT_SIDE){
-		colors_new[LEFT_UP][R] = data[1];
-		colors_new[LEFT_UP][G] = data[2];
-		colors_new[LEFT_UP][B] = data[3];
+		colors_new[LED4][R] = data[4];
+		colors_new[LED4][G] = data[5];
+		colors_new[LED4][B] = data[6];
 
-		colors_new[LEFT_DOWN][R] = data[4];
-		colors_new[LEFT_DOWN][G] = data[5];
-		colors_new[LEFT_DOWN][B] = data[6];
+	}else if(data[0] == CMD_LEDS_5_6){
+		colors_new[LED5][R] = data[1];
+		colors_new[LED5][G] = data[2];
+		colors_new[LED5][B] = data[3];
+
+		colors_new[LED6][R] = data[4];
+		colors_new[LED6][G] = data[5];
+		colors_new[LED6][B] = data[6];
+
+	}else if(data[0] == CMD_LEDS_7_8){
+		colors_new[LED7][R] = data[1];
+		colors_new[LED7][G] = data[2];
+		colors_new[LED7][B] = data[3];
+
+		colors_new[LED8][R] = data[4];
+		colors_new[LED8][G] = data[5];
+		colors_new[LED8][B] = data[6];
 
 		update_colors = TRUE;
 		UpdateSmoothStep();
 
 	}else if(data[0] == CMD_OFF_ALL){
-		for(uint8_t i=0; i<4; i++){
+		for(uint8_t i=0; i<LEDS_COUNT; i++){
 			colors_new[i][R] = 0x00;
 			colors_new[i][G] = 0x00;
 			colors_new[i][B] = 0x00;
