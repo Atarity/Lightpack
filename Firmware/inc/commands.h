@@ -30,14 +30,19 @@
 
 // Commands to device, sends it in first byte of data[]
 enum COMMANDS{
-        CMD_RIGHT_SIDE, 	/* all data for right side of screen */
-	CMD_LEFT_SIDE, 		/* all data for left side of screen */
-	CMD_OFF_ALL, 		/* switch off all leds */
+	/* CMD_RIGHT_SIDE, this will NOP command on previous version of software */
+	/* CMD_LEFT_SIDE, */
+	CMD_OFF_ALL = 2, 		/* switch off all leds */
 	CMD_SET_TIMER_OPTIONS, 			/* timer settings */
 	CMD_SET_PWM_LEVEL_MAX_VALUE, 	/* each color max value */
 	CMD_SMOOTH_CHANGE_COLORS,
 
-        CMD_NOP = 0xff
+	CMD_LEDS_1_2 = 0x10, /* data comes for LEDS N1 and N2 */
+	CMD_LEDS_3_4,
+	CMD_LEDS_5_6,
+	CMD_LEDS_7_8,
+
+	CMD_NOP = 0xff
 };
 
 enum PRESCALLERS{
