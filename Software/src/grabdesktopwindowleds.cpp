@@ -111,10 +111,10 @@ void GrabDesktopWindowLeds::updateSizesLabelsGrabPixelsRects()
         labelGrabPixelsRects[i]->setFixedHeight(ambilight_height);
     }
 
-    labelGrabPixelsRects[RIGHT_UP]->move(desktop_width - ambilight_width, desktop_height / 2 - ambilight_height);
-    labelGrabPixelsRects[RIGHT_DOWN]->move(desktop_width - ambilight_width, desktop_height / 2);
-    labelGrabPixelsRects[LEFT_UP]->move(0, desktop_height / 2 - ambilight_height);
-    labelGrabPixelsRects[LEFT_DOWN]->move(0, desktop_height / 2);
+    labelGrabPixelsRects[LED1]->move(desktop_width - ambilight_width, desktop_height / 2 - ambilight_height);
+    labelGrabPixelsRects[LED2]->move(desktop_width - ambilight_width, desktop_height / 2);
+    labelGrabPixelsRects[LED3]->move(0, desktop_height / 2 - ambilight_height);
+    labelGrabPixelsRects[LED4]->move(0, desktop_height / 2);
 }
 
 
@@ -143,22 +143,26 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         switch(ledIndex){
-        case LEFT_UP:
+        case LED1:
             x = 0;
             y = (desktop_height/2) - ambilight_height;
             break;
-        case LEFT_DOWN:
+        case LED2:
             x = 0;
             y = (desktop_height/2);
             break;
-        case RIGHT_UP:
+        case LED3:
             x = (desktop_width-1) - ambilight_width;
             y = (desktop_height/2) - ambilight_height;
             break;
-        case RIGHT_DOWN:
+        case LED4:
             x = (desktop_width-1) - ambilight_width;
             y = (desktop_height/2);
             break;
+        case LED5: x=0; y=0; break;
+        case LED6: x=0; y=0; break;
+        case LED7: x=0; y=0; break;
+        case LED8: x=0; y=0; break;
         default:
             qWarning("void GrabDesktopWindowLeds::updateLedsColorsIfChanged(): This is impossible, but led_index=%d", ledIndex);
             break;
@@ -181,6 +185,7 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
         colorsNew[ledIndex]->g = (int)((double)colorsNew[ledIndex]->g / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
         colorsNew[ledIndex]->b = (int)((double)colorsNew[ledIndex]->b / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
 
+        // hw_v2.*: 4 SMD RGB LEDs
         //  9.6 mA - all off
         // 90.0 mA - all on
         //colorsNew[led_index][color] = ambilight_color_depth;
