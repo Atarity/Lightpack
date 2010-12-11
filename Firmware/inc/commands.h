@@ -30,16 +30,14 @@
 
 // Commands to device, sends it in first byte of data[]
 enum COMMANDS{
-	/* CMD_RIGHT_SIDE, this will NOP command on previous version of software */
-	/* CMD_LEFT_SIDE, */
-	CMD_OFF_ALL = 2, 		/* switch off all leds */
+	CMD_LEDS_1_2, 					/* sw version < sw_v3.0.2, fw < fw_v3.2: CMD_RIGHT_SIDE = 0 */
+	CMD_LEDS_3_4, 					/* sw version < sw_v3.0.2, fw < fw_v3.2: CMD_LEFT_SIDE = 1 */
+	CMD_OFF_ALL, 					/* switch off all leds */
 	CMD_SET_TIMER_OPTIONS, 			/* timer settings */
 	CMD_SET_PWM_LEVEL_MAX_VALUE, 	/* each color max value */
 	CMD_SMOOTH_CHANGE_COLORS,
 
-	CMD_LEDS_1_2 = 0x10, /* data comes for LEDS N1 and N2 */
-	CMD_LEDS_3_4,
-	CMD_LEDS_5_6,
+	CMD_LEDS_5_6 = 0x10, 			/* data comes for LEDs N5 and N6 */
 	CMD_LEDS_7_8,
 
 	CMD_NOP = 0xff
