@@ -66,7 +66,7 @@ volatile uint8_t pwm_level = 0x00;
 volatile uint8_t pwm_level_max = 64;
 
 // If smooth changing colors ON, is_smooth_change == 1, else == 0
-volatile uint8_t is_smooth_change = 0;
+//volatile uint8_t is_smooth_change = 0;
 
 // Smoothly changing colors index
 volatile uint8_t smooth = 0x00;
