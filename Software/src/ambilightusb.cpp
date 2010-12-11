@@ -205,7 +205,7 @@ void AmbilightUsb::offLeds()
 {
     write_buffer[1] = CMD_OFF_ALL;
 
-    write_buffer[9] = CMD_NOP;
+    write_buffer[9]  = CMD_NOP;
     write_buffer[17] = CMD_NOP;
     write_buffer[25] = CMD_NOP;
 
@@ -218,7 +218,7 @@ void AmbilightUsb::smoothChangeColors(int smoothly_delay)
     write_buffer[1] = CMD_SMOOTH_CHANGE_COLORS;
     write_buffer[2] = (char)smoothly_delay;
 
-    write_buffer[9] = CMD_NOP;
+    write_buffer[9]  = CMD_NOP;
     write_buffer[17] = CMD_NOP;
     write_buffer[25] = CMD_NOP;
 
@@ -235,7 +235,7 @@ void AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValu
     write_buffer[2] = (unsigned char)prescallerIndex;
     write_buffer[3] = (unsigned char)outputCompareRegValue;
 
-    write_buffer[9] = CMD_NOP;
+    write_buffer[9]  = CMD_NOP;
     write_buffer[17] = CMD_NOP;
     write_buffer[25] = CMD_NOP;
 
@@ -255,7 +255,7 @@ void AmbilightUsb::setColorDepth(int colorDepth)
     write_buffer[1] = CMD_SET_PWM_LEVEL_MAX_VALUE;
     write_buffer[2] = (unsigned char)colorDepth;    
 
-    write_buffer[9] = CMD_NOP;
+    write_buffer[9]  = CMD_NOP;
     write_buffer[17] = CMD_NOP;
     write_buffer[25] = CMD_NOP;
 

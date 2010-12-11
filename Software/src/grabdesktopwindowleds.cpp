@@ -28,7 +28,16 @@
 
 #include "grabdesktopwindowleds.h"
 
-const QColor GrabDesktopWindowLeds::labelsColors[LEDS_COUNT] = { Qt::blue, Qt::yellow, Qt::red, Qt::green };
+const QColor GrabDesktopWindowLeds::labelsColors[LEDS_COUNT] = {
+    Qt::blue,       /* LED1 */
+    Qt::yellow,     /* LED2 */
+    Qt::red,        /* LED3 */
+    Qt::green,      /* LED4 */
+    Qt::cyan,       /* LED5 */
+    Qt::magenta,    /* LED6 */
+    Qt::gray,       /* LED7 */
+    Qt::darkGreen,  /* LED8 */
+};
 
 GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
 {
@@ -94,6 +103,8 @@ void GrabDesktopWindowLeds::createLabelsGrabPixelsRects()
     for(int i=0; i<LEDS_COUNT; i++){
         labelGrabPixelsRects.append(new QLabel(this, Qt::FramelessWindowHint | Qt::SplashScreen));
         labelGrabPixelsRects[i]->setFocusPolicy(Qt::NoFocus);
+        labelGrabPixelsRects[i]->setText(QString::number(i+1));
+        labelGrabPixelsRects[i]->setAlignment(Qt::AlignCenter);
 
         // Fill label with labelColors[i] color
         QPalette pal = labelGrabPixelsRects[i]->palette();
@@ -115,6 +126,11 @@ void GrabDesktopWindowLeds::updateSizesLabelsGrabPixelsRects()
     labelGrabPixelsRects[LED2]->move(desktop_width - ambilight_width, desktop_height / 2);
     labelGrabPixelsRects[LED3]->move(0, desktop_height / 2 - ambilight_height);
     labelGrabPixelsRects[LED4]->move(0, desktop_height / 2);
+
+    labelGrabPixelsRects[LED5]->move(desktop_width/2 - 2*ambilight_width, 0);
+    labelGrabPixelsRects[LED6]->move(desktop_width/2 - ambilight_width, 0);
+    labelGrabPixelsRects[LED7]->move(desktop_width/2, 0);
+    labelGrabPixelsRects[LED8]->move(desktop_width/2 + ambilight_width, 0);
 }
 
 
@@ -159,10 +175,22 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
             x = (desktop_width-1) - ambilight_width;
             y = (desktop_height/2);
             break;
-        case LED5: x=0; y=0; break;
-        case LED6: x=0; y=0; break;
-        case LED7: x=0; y=0; break;
-        case LED8: x=0; y=0; break;
+        case LED5:
+            x=desktop_width/2 - 2*ambilight_width;
+            y=0;
+            break;
+        case LED6:
+            x=desktop_width/2 - ambilight_width;
+            y=0;
+            break;
+        case LED7:
+            x=desktop_width/2;
+            y=0;
+            break;
+        case LED8:
+            x=desktop_width/2 + ambilight_width;
+            y=0;
+            break;
         default:
             qWarning("void GrabDesktopWindowLeds::updateLedsColorsIfChanged(): This is impossible, but led_index=%d", ledIndex);
             break;
