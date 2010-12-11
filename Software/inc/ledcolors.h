@@ -34,27 +34,21 @@
 
 struct LedColors
 {    
-    sRGB *LeftUp;
-    sRGB *LeftDown;
-    sRGB *RightUp;
-    sRGB *RightDown;
+    sRGB *leds[LEDS_COUNT];
 
     LedColors(){
-        LeftUp = new sRGB();
-        LeftDown = new sRGB();
-        RightDown = new sRGB();
-        RightUp = new sRGB();
+        for(int i=0; i<LEDS_COUNT; i++){
+            leds[i] = new sRGB();
+        }
     }
 
     sRGB * operator[] (int ledIndex){
-        switch(ledIndex){
-        case LEFT_UP: return LeftUp;
-        case LEFT_DOWN: return LeftDown;
-        case RIGHT_DOWN: return RightDown;
-        case RIGHT_UP: return RightUp;
+        if(ledIndex<LEDS_COUNT){
+            return leds[ledIndex];
+        }else{
+            qWarning("sRGB * operator[] (int ledIndex): magic error: ledIndex=%d",ledIndex);
+            return new sRGB();
         }
-        qWarning("sRGB * operator[] (int ledIndex): magic error: ledIndex=%d",ledIndex);
-        return new sRGB();
     }
 };
 
