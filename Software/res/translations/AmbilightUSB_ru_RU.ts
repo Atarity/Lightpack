@@ -11,7 +11,7 @@
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="125"/>
-        <location filename="../../src/mainwindow.ui" line="497"/>
+        <location filename="../../src/mainwindow.ui" line="500"/>
         <source>Hz</source>
         <translation>Гц</translation>
     </message>
@@ -101,7 +101,7 @@
         <translation>Переподключение к USB каждые</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="511"/>
+        <location filename="../../src/mainwindow.ui" line="507"/>
         <source>Frequency of PWM generation:</source>
         <translation>Частота генерации ШИМ:</translation>
     </message>
@@ -116,8 +116,8 @@
         <translation>мс</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="441"/>
-        <location filename="../../src/mainwindow.ui" line="471"/>
+        <location filename="../../src/mainwindow.ui" line="444"/>
+        <location filename="../../src/mainwindow.ui" line="474"/>
         <source>secs</source>
         <translation>сек</translation>
     </message>
@@ -158,72 +158,82 @@
         <translation>Делитель таймера</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="448"/>
+        <location filename="../../src/mainwindow.ui" line="451"/>
         <source>USB send data timeout</source>
         <translation>Таймаут USB посылки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="504"/>
+        <location filename="../../src/mainwindow.ui" line="573"/>
         <source>System clock: 12 MHz</source>
         <translation>Частота работы микроконтроллера: 12Мгц</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="518"/>
+        <location filename="../../src/mainwindow.ui" line="514"/>
         <source>Sets the number of levels in PWM generation for each channel</source>
         <translation>Настройка количества уровней в ШИМ генерации на каждый канал</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="521"/>
+        <location filename="../../src/mainwindow.ui" line="517"/>
         <source>Color depth</source>
         <translation>Глубина цвета</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="563"/>
+        <location filename="../../src/mainwindow.ui" line="559"/>
         <source>counts</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="611"/>
+        <location filename="../../src/mainwindow.ui" line="580"/>
+        <source>USB send data only if colors changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="625"/>
+        <source>Smooth change colors</source>
+        <translation>Плавное изменение цветов</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="666"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="218"/>
+        <location filename="../../src/mainwindow.cpp" line="234"/>
         <source>Ambilight USB. On state.</source>
         <translation>Ambilight USB. Включен.</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="224"/>
+        <location filename="../../src/mainwindow.cpp" line="240"/>
         <source>Ambilight USB. Off state.</source>
         <translation>Ambilight USB. Выключен.</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="230"/>
+        <location filename="../../src/mainwindow.cpp" line="246"/>
         <source>Ambilight USB. Error state.</source>
         <translation>Ambilight USB. Ошибка подключения к USB.</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="364"/>
+        <location filename="../../src/mainwindow.cpp" line="389"/>
         <source>&amp;On ambilight</source>
         <translation>&amp;Включить ambilight</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="367"/>
+        <location filename="../../src/mainwindow.cpp" line="392"/>
         <source>O&amp;ff ambilight</source>
         <translation>&amp;Выключить ambilight</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="370"/>
+        <location filename="../../src/mainwindow.cpp" line="395"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="373"/>
+        <location filename="../../src/mainwindow.cpp" line="398"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="376"/>
+        <location filename="../../src/mainwindow.cpp" line="401"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
@@ -274,12 +284,12 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Hardware:&lt;/span&gt; ATtiny44, 74HC595 and 4 RGB LEDs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Hardware:&lt;/span&gt; ATmega8, 74HC595 and 8 RGB LEDs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Железо:&lt;/span&gt; ATtiny44, 74HC595 и 4 RGB LEDs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Железо:&lt;/span&gt; ATmega8, 74HC595 and 8 RGB LEDs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../src/aboutdialog.ui" line="101"/>
@@ -313,7 +323,20 @@ p, li { white-space: pre-wrap; }
         <translation>&lt;b&gt;Автор:&lt;/b&gt; Михаил Шатохин (mikeshatohin@gmail.com)</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="196"/>
+        <location filename="../../src/aboutdialog.ui" line="163"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;License:&lt;/span&gt; GPLv3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Лицензия:&lt;/span&gt; GPLv3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../src/aboutdialog.ui" line="219"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -325,12 +348,11 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Хэв фан!&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;&quot;&gt;&lt;/p&gt;
 &lt;p align=&quot;right&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;AmbilightUSB (&lt;span style=&quot; font-style:italic;&quot;&gt;copyleft&lt;/span&gt;) 2010 &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="225"/>
+        <location filename="../../src/aboutdialog.ui" line="248"/>
         <source>Ok, close it!</source>
         <translation>Самоликвидируйся!</translation>
     </message>
