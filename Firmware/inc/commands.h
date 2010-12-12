@@ -30,7 +30,7 @@
 
 // Commands to device, sends it in first byte of data[]
 enum COMMANDS{
-	CMD_LEDS_1_2, 					/* sw version < sw_v3.0.2, fw < fw_v3.2: CMD_RIGHT_SIDE = 0 */
+	CMD_LEDS_1_2, 					/* sw version < sw_v3.0.2, fw < fw_v3.2:    = 0 */
 	CMD_LEDS_3_4, 					/* sw version < sw_v3.0.2, fw < fw_v3.2: CMD_LEFT_SIDE = 1 */
 	CMD_OFF_ALL, 					/* switch off all leds */
 	CMD_SET_TIMER_OPTIONS, 			/* timer settings */
