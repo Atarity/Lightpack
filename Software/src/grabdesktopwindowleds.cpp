@@ -122,15 +122,31 @@ void GrabDesktopWindowLeds::updateSizesLabelsGrabPixelsRects()
         labelGrabPixelsRects[i]->setFixedHeight(ambilight_height);
     }
 
-    labelGrabPixelsRects[LED1]->move(desktop_width - ambilight_width, desktop_height / 2 - ambilight_height);
-    labelGrabPixelsRects[LED2]->move(desktop_width - ambilight_width, desktop_height / 2);
-    labelGrabPixelsRects[LED3]->move(0, desktop_height / 2 - ambilight_height);
-    labelGrabPixelsRects[LED4]->move(0, desktop_height / 2);
+    // TODO: LEFT side 1234, RIGHT side 5678
 
-    labelGrabPixelsRects[LED5]->move(desktop_width/2 - 2*ambilight_width, 0);
-    labelGrabPixelsRects[LED6]->move(desktop_width/2 - ambilight_width, 0);
-    labelGrabPixelsRects[LED7]->move(desktop_width/2, 0);
-    labelGrabPixelsRects[LED8]->move(desktop_width/2 + ambilight_width, 0);
+    // Now, get pixels from monitor:
+    //
+    //   5 6 7 8
+    // 3         1
+    // 4         2
+    //
+
+    labelGrabPixelsRects[LED1]->move(/* x = */ desktop_width - ambilight_width,
+                                     /*  y = */ desktop_height / 2 - ambilight_height);
+    labelGrabPixelsRects[LED2]->move(/* x = */ desktop_width - ambilight_width,
+                                     /*  y = */  desktop_height / 2);
+    labelGrabPixelsRects[LED3]->move(/* x = */ 0,
+                                     /*  y = */  desktop_height / 2 - ambilight_height);
+    labelGrabPixelsRects[LED4]->move(/* x = */ 0,
+                                     /*  y = */  desktop_height / 2);
+
+    labelGrabPixelsRects[LED5]->move(/* x = */ desktop_width/2 - 2*ambilight_width,
+                                     /*  y = */  0);
+    labelGrabPixelsRects[LED6]->move(/* x = */ desktop_width/2 - ambilight_width,
+                                     /*  y = */  0);
+    labelGrabPixelsRects[LED7]->move(/* x = */ desktop_width/2,
+                                     /*  y = */  0);
+    labelGrabPixelsRects[LED8]->move(/* x = */ desktop_width/2 + ambilight_width, 0);
 }
 
 
@@ -154,50 +170,14 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 
     bool needToUpdate = false;
 
-    int x = 0, y = 0;
     LedColors colorsNew;
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        switch(ledIndex){
-        case LED1:
-            x = 0;
-            y = (desktop_height/2) - ambilight_height;
-            break;
-        case LED2:
-            x = 0;
-            y = (desktop_height/2);
-            break;
-        case LED3:
-            x = (desktop_width-1) - ambilight_width;
-            y = (desktop_height/2) - ambilight_height;
-            break;
-        case LED4:
-            x = (desktop_width-1) - ambilight_width;
-            y = (desktop_height/2);
-            break;
-        case LED5:
-            x=desktop_width/2 - 2*ambilight_width;
-            y=0;
-            break;
-        case LED6:
-            x=desktop_width/2 - ambilight_width;
-            y=0;
-            break;
-        case LED7:
-            x=desktop_width/2;
-            y=0;
-            break;
-        case LED8:
-            x=desktop_width/2 + ambilight_width;
-            y=0;
-            break;
-        default:
-            qWarning("void GrabDesktopWindowLeds::updateLedsColorsIfChanged(): This is impossible, but led_index=%d", ledIndex);
-            break;
-        }
-
-        QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(), x, y,
-                                          ambilight_width, ambilight_height);
+        QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
+                                          labelGrabPixelsRects[ledIndex]->x(),
+                                          labelGrabPixelsRects[ledIndex]->y(),
+                                          labelGrabPixelsRects[ledIndex]->width(),
+                                          labelGrabPixelsRects[ledIndex]->height());
         QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         QImage im = scaledPix.toImage();
 
