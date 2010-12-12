@@ -29,14 +29,14 @@
 #include "grabdesktopwindowleds.h"
 
 const QColor GrabDesktopWindowLeds::labelsColors[LEDS_COUNT] = {
-    Qt::blue,       /* LED1 */
-    Qt::yellow,     /* LED2 */
-    Qt::red,        /* LED3 */
-    Qt::green,      /* LED4 */
-    Qt::cyan,       /* LED5 */
-    Qt::magenta,    /* LED6 */
-    Qt::gray,       /* LED7 */
-    Qt::darkGreen,  /* LED8 */
+    Qt::red,       /* LED1 */
+    Qt::green,     /* LED2 */
+    Qt::blue,      /* LED3 */
+    Qt::yellow,    /* LED4 */
+    Qt::darkRed,   /* LED5 */
+    Qt::darkGreen, /* LED6 */
+    Qt::darkBlue,  /* LED7 */
+    Qt::darkYellow,/* LED8 */
 };
 
 GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
@@ -45,7 +45,7 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     timeEval = new TimeEvaluations();
 
     desktop_width = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).width();
-    desktop_height = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).height();
+    desktop_height = QApplication::desktop()->height(); // need full desktop height to find center of the screen
 
 
     // Read settings once
@@ -126,27 +126,28 @@ void GrabDesktopWindowLeds::updateSizesLabelsGrabPixelsRects()
 
     // Now, get pixels from monitor:
     //
-    //   5 6 7 8
-    // 3         1
-    // 4         2
-    //
+    // 1    5
+    // 2    6
+    // 3    7
+    // 4    8
 
-    labelGrabPixelsRects[LED1]->move(/* x = */ desktop_width - ambilight_width,
-                                     /*  y = */ desktop_height / 2 - ambilight_height);
-    labelGrabPixelsRects[LED2]->move(/* x = */ desktop_width - ambilight_width,
-                                     /*  y = */  desktop_height / 2);
-    labelGrabPixelsRects[LED3]->move(/* x = */ 0,
+    labelGrabPixelsRects[LED1]->move(/* x = */ 0,
+                                     /*  y = */ desktop_height / 2 - 2*ambilight_height);
+    labelGrabPixelsRects[LED2]->move(/* x = */ 0,
                                      /*  y = */  desktop_height / 2 - ambilight_height);
+    labelGrabPixelsRects[LED3]->move(/* x = */ 0,
+                                     /*  y = */  desktop_height / 2 );
     labelGrabPixelsRects[LED4]->move(/* x = */ 0,
-                                     /*  y = */  desktop_height / 2);
+                                     /*  y = */  desktop_height / 2 + ambilight_height);
 
-    labelGrabPixelsRects[LED5]->move(/* x = */ desktop_width/2 - 2*ambilight_width,
-                                     /*  y = */  0);
-    labelGrabPixelsRects[LED6]->move(/* x = */ desktop_width/2 - ambilight_width,
-                                     /*  y = */  0);
-    labelGrabPixelsRects[LED7]->move(/* x = */ desktop_width/2,
-                                     /*  y = */  0);
-    labelGrabPixelsRects[LED8]->move(/* x = */ desktop_width/2 + ambilight_width, 0);
+    labelGrabPixelsRects[LED5]->move(/* x = */ desktop_width - ambilight_width,
+                                     /*  y = */  desktop_height / 2 - 2*ambilight_height);
+    labelGrabPixelsRects[LED6]->move(/* x = */ desktop_width - ambilight_width,
+                                     /*  y = */  desktop_height / 2 - ambilight_height);
+    labelGrabPixelsRects[LED7]->move(/* x = */ desktop_width - ambilight_width,
+                                     /*  y = */  desktop_height / 2 );
+    labelGrabPixelsRects[LED8]->move(/* x = */ desktop_width - ambilight_width,
+                                     /* y = */ desktop_height / 2 + ambilight_height);
 }
 
 

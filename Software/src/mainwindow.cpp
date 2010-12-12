@@ -61,8 +61,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->spinBox_WidthAmbilight->setMaximum( desktop_width / 2 );
 
     // 25px - default height of panels in Ubuntu 10.04
-    ui->horizontalSliderHeight->setMaximum( desktop_height / 2);
-    ui->spinBox_HeightAmbilight->setMaximum( desktop_height / 2);
+    ui->horizontalSliderHeight->setMaximum( desktop_height / 4); /* left side 4 leds, right side 4 leds */
+    ui->spinBox_HeightAmbilight->setMaximum( desktop_height / 4); /* left side 4 leds, right side 4 leds */
 
         
     isErrorState = false;
