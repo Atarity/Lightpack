@@ -46,6 +46,8 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void appendLogsLine(const QString & line);
+
 public slots:
     void ambilightUsbSuccess(bool isSuccess);
     void refreshAmbilightEvaluated(double updateResultMs);

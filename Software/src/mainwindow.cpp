@@ -30,6 +30,8 @@
 
 
 #include <QDesktopWidget>
+#include <QPlainTextEdit>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -444,3 +446,11 @@ void MainWindow::loadSettingsToMainWindow()
     settingsHardwareTimerOptionsChange(); // synchonize timer options with device    
     settingsHardwareChangeColorsSmoothDelay(ui->spinBox_HW_SmoothChangeColors->value());
 }
+
+
+
+void MainWindow::appendLogsLine(const QString & line)
+{
+    ui->plainTextLogs->appendPlainText(line);
+}
+

@@ -45,6 +45,11 @@ QSettings *settings;
 
 QTextStream logStream;
 
+// Make it global for access in messageOutput() for returning logs to window
+MainWindow * window;
+
+QString logWhileWindowNotInitialized = "";
+
 static void showHelpMessage()
 {
     fprintf(stderr, "\n");
@@ -107,6 +112,17 @@ void messageOutput(QtMsgType type, const char *msg)
     logStream << out << endl;
     logStream.flush();
     cerr.flush();
+
+    if(window != NULL){
+        if(logWhileWindowNotInitialized != ""){
+            logWhileWindowNotInitialized.truncate( logWhileWindowNotInitialized.length() - 1);
+            window->appendLogsLine(logWhileWindowNotInitialized);
+            logWhileWindowNotInitialized = "";
+        }
+        window->appendLogsLine(out);
+    }else{
+        logWhileWindowNotInitialized.append(out + "\n");
+    }
 }
 
 void setDefaultSettingIfNotFound(const QString & name, const QVariant & value)
@@ -195,9 +211,11 @@ int main(int argc, char **argv)
         }        
     }
 
-    MainWindow window;          /* Create MainWindow */
-    window.setVisible(false);   /* And load to tray. */
+    window = new MainWindow();   /* Create MainWindow */
+    window->setVisible(false);   /* And load to tray. */
 
+    // Don't touch me!!!
+    qDebug() << "call app.exec();";
 
     return app.exec();
 }
