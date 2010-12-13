@@ -1,6 +1,24 @@
 Hardware changes
 ================
 
+Version 3.7
+-----------
+brunql, December 13, 2010
+
+* Fix bug with USB D+ D- connection
+* Fix bug in schema and board with LATCH of 74HC595
+* In PCB 6 (six!) wired jumpers, fixme
+
+Version 3.0
+-----------
+brunql, December, 2010
+
+* ATmega8A
+* 4 x 74HC595
+* 8 x RGB LEDs
+* USB Type B
+* One PCB with wires to LEDs
+
 Version 2.1.2
 -------------
 brunql, December 9, 2010
