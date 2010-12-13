@@ -45,8 +45,8 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): new AmbilightUsb(this)";
     ambilightUsb = new AmbilightUsb(this);
 
-    qDebug() << "MainWindow(): new GrabDesktopWindowLeds(this)";
-    grabDesktopWindowLeds = new GrabDesktopWindowLeds(this);
+    qDebug() << "MainWindow(): new GrabDesktopWindowLeds()";
+    grabDesktopWindowLeds = new GrabDesktopWindowLeds();
 
     qDebug() << "MainWindow(): loadSettingsToMainWindow()";
     loadSettingsToMainWindow();
@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
 
-    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Window);    
+    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Window);
 
 
     qDebug() << "Check screen geometry...";
