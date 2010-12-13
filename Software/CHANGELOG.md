@@ -1,7 +1,44 @@
 Software changes
 ================
 
-Version 2.7.7
+Version sw3.0.3
+-------------
+brunql, December 11, 2010
+
+* Fully support 8 LEDs by software
+* Added logs tab to settings window
+* Added indexes to GrabDesktopWindowLeds labels
+* Bugfix with first tab in settings window
+* Bugfix with finding center of the screen in GrabDesktopWindowLeds (primary screen height and desktop height are differs)
+* Updated "About" dialog: hardware ATmega8 + 8 LEDs
+* Updated "About" dialog: added license GPLv3 with link on www.gnu.org/licenses/gpl-3.0.html 
+
+Version sw3.0.2
+-------------
+brunql, December 11, 2010
+
+* Read and write USB data buffers expanded to 0x20 bytes
+* Rewrite function updateColors() for 8 LEDs
+* Added CMD_NOP to over functions which sends info to device 
+* Intermediate version before fully support 8 LEDs
+
+Version sw3.0.1
+-------------
+brunql, December 8, 2010
+
+* Bugfix with multiply monitors (wrong determine width of screen, using full desktop->width() but need only available witdh of the primary screen) 
+* Right now AmbiligthUSB can be using only with primary screen
+
+Version sw3.0.0
+-------------
+brunql, December 7, 2010
+
+* Split firmware and hardware versions
+* Added option to "Hardware options" for switch on/off "USB send data only if colors changes"
+* In "Hardware options" added option to set smootly delay
+* 
+
+Version sw2.7.7 (release)
 -------------
 brunql, November 12, 2010
 
@@ -12,7 +49,7 @@ brunql, November 12, 2010
 * Using markdown for CHANGELOGs and INSTALL files
 * Rename: AmbilightUSB_Hardware to Firmware; AmbilightUSB_PC to Software; 
 
-Version 2.7.6
+Version sw2.7.6
 -------------
 brunql, November 03, 2010
 
@@ -22,7 +59,7 @@ brunql, November 03, 2010
 * Split code of getting and sending colors in 2 classes
 * Make one *.pro file for windows and linux
 
-Version 2.7.5
+Version sw2.7.5
 -------------
 brunql, October 25, 2010
 
@@ -35,7 +72,7 @@ Update GUI:
 
 Timer settings for controlling the PWM frequency
 
-Version 2.7.4
+Version sw2.7.4
 -------------
 brunql, October 24, 2010
 
@@ -43,7 +80,7 @@ Rewrote the code to grab screen image and find the average color value of exciti
 Added display of exciting fields as filled rectangles in different colors
 Added scroll bars to change the width and height of the exciting fields
 
-Version 2.7.3
+Version sw2.7.3
 -------------
 brunql, September 18, 2010
 
@@ -59,7 +96,7 @@ Added saving configurations in `${HOME}/.config/brunql.dev/AmbilightUSB.ini`
 Start to writing this version log  
 
 
-Version 2.*
+Version sw2.*
 -----------
 brunql, Summer, 2010
 
@@ -67,7 +104,7 @@ Start to writing Qt based GUI version of PC software.
 After starting the app is minimized to tray.  
 
 
-Version 1.*
+Version sw1.*
 -----------
 brunql, Spring, 2010
 
