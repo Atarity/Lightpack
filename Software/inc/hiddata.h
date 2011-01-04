@@ -12,7 +12,7 @@
  *
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
  *
- *  Copyright (c) 2010 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  AmbilightUSB is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,6 +48,10 @@ appropriate libraries in either case: "-lhid -lusb -lsetupapi" on Windows and
 #define USBOPEN_ERR_ACCESS      1   /* not enough permissions to open device */
 #define USBOPEN_ERR_IO          2   /* I/O error */
 #define USBOPEN_ERR_NOTFOUND    3   /* device not found */
+
+
+// brunql
+#define USB_TIMER_EXPIRED       -62
 
 /* ------------------------------------------------------------------------ */
 
@@ -90,6 +94,10 @@ int usbhidGetReport(usbDevice_t *device, int reportID, char *buffer, int *len);
  * report is returned in '*len'.
  * Returns: 0 on success, an error code otherwise.
  */
+
+//brunql:
+int usbInterruptRead(usbDevice_t *device, char *buffer, int size, int ep);
+
 
 /* ------------------------------------------------------------------------ */
 

@@ -12,7 +12,7 @@
  * 
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
  *
- *  Copyright (c) 2010 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  AmbilightUSB is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,10 @@
 
 #include <cstdio>
 #include "hiddata.h"
+
+#include <QDebug>
+
+
 
 /* ######################################################################## */
 #if defined(WIN32) /* ##################################################### */
@@ -312,9 +316,9 @@ int bytesSent;
     }
     bytesSent = usb_control_msg((usb_dev_handle *)device, USB_TYPE_CLASS | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, USBRQ_HID_SET_REPORT, USB_HID_REPORT_TYPE_FEATURE << 8 | (buffer[0] & 0xff), 0, buffer, len, timeout);
     if(bytesSent != len){
-        if(bytesSent < 0)
-            fprintf(stderr, "Error sending message (%d): %s\n", bytesSent, usb_strerror());
-        return USBOPEN_ERR_IO;
+//        if(bytesSent < 0){
+        qWarning("Error (%d): %s", bytesSent, usb_strerror());
+        return (bytesSent == USB_TIMER_EXPIRED) ? 0 : USBOPEN_ERR_IO;
     }
     return 0;
 }
@@ -340,6 +344,15 @@ int bytesReceived, maxLen = *len;
         (*len)++;
     }
     return 0;
+}
+
+
+
+//brunql
+
+int usbInterruptRead(usbDevice_t *device, char *buffer, int size, int ep)
+{
+    return usb_interrupt_read((usb_dev_handle *)device, USB_ENDPOINT_IN | ep, buffer, size, 1000);
 }
 
 /* ######################################################################## */

@@ -7,7 +7,7 @@
  *
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
  *
- *  Copyright (c) 2010 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  AmbilightUSB is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -82,8 +82,8 @@ private:
     usbDevice_t *ambilightDevice;
 
 
-    char read_buffer[1 + 0x20];    /* 0x00-ReportID, 0x01..0x20-data */
-    char write_buffer[1 + 0x20];   /* 0x00-ReportID, 0x01..0x20-data */
+    char read_buffer[1 + 0x08];    /* 0x00-ReportID, 0x01..0x20-data */
+    char write_buffer[1 + 0x08];   /* 0x00-ReportID, 0x01..0x20-data */
 
 
     // Settings:
