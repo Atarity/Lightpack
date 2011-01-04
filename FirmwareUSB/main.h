@@ -43,15 +43,5 @@ extern volatile uint8_t update_colors;
 
 // Save new colors comes from PC
 extern volatile uint8_t colors_new[LEDS_COUNT][3];
-extern volatile uint8_t colors[LEDS_COUNT][3];
-
-// Color max value, i.e. 0 <= color[led][c] < pwm_level_max
-extern volatile uint8_t pwm_level_max;
-extern volatile uint8_t pwm_level;
-
-extern volatile uint8_t smooth_delay;
-extern volatile uint8_t smooth_step[LEDS_COUNT][3];
-
-extern volatile int16_t max_diff;
 
 #endif /* MAIN_H_ */

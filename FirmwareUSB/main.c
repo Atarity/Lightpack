@@ -34,10 +34,13 @@
  
 #include <avr/io.h>
 #include <avr/interrupt.h> /* for sei() */
-#include <util/delay.h>
 
 #include "main.h"
+#include <util/delay.h>
+
+#include "RGB.h"
 #include "vusb.h"       /* Using V-USB library from OBDEV team */
+
 
 //
 // Global variables
@@ -52,7 +55,21 @@ volatile uint8_t colors_new[LEDS_COUNT][3] = {
 		{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}
 };
 
+static inline void UartInitTX()
+{
+#define BAUD 115200
+#include <util/setbaud.h>
+	UBRRL = UBRRL_VALUE;
+	UBRRH = UBRRH_VALUE;
+#if USE_2X
+	UCSRA |= (1 << U2X);
+#else
+	UCSRA &= ~(1 << U2X);
+#endif
 
+	UCSRB = _BV(TXEN);
+	UCSRC = _BV(URSEL) | _BV(USBS) | _BV(UCSZ1) | _BV(UCSZ0);
+}
 
 //
 //	Initializing I/O, USB and starts PWM generation
@@ -72,7 +89,8 @@ int main(void)
     TEST_PIN_DDR_INIT();
     TEST_DOWN();
 
-    // TODO: init UART0
+
+    UartInitTX();
 
     // Low speed USB device initialization
     usbInit_FakeUsbDisconnect();
@@ -80,13 +98,31 @@ int main(void)
     // Enable interrupts
 	sei(); // USB using INT0
 
+	uint8_t sendme_led = 0;
+	uint8_t sendme_color = 0;
+
 
    	for(;;){
    		/* Hey, PC! I'm alive! :) */
    	    usbPoll();
    	    
    	    if(update_colors){
-   	        // TODO: Synchronized sending data by UART to PWM controller
+   	    	while((UCSRA&(1<<UDRE)) == 0);
+
+   	    	if(sendme_led == LEDS_COUNT && sendme_color == 0){
+   	    		UDR = 0xff;
+   	    		sendme_led = 0x00;
+   	    	}else{
+   	    		UDR = colors_new[sendme_led][sendme_color];
+
+   	    		if(++sendme_color == 3){
+   	   	    		sendme_color = 0;
+   	   	    		if(++sendme_led == LEDS_COUNT){
+   	   	    			sendme_led = LEDS_COUNT;
+   	   	    			update_colors = FALSE;
+   	   	    		}
+   	   	    	}
+   	    	}
    	    }
 	}
 

@@ -32,33 +32,10 @@
 
 #include "main.h"
 #include "vusb.h"
-#include "74HC595.h"
+#include "RGB.h"
 #include "commands.h"
 
 
-static inline void UpdateSmoothStep(void)
-{
-	// Check how fast is this...
-
-	// First find MAX diff between old and new colors, and save all diffs in each smooth_step
-	for(uint8_t color=0; color < 3; color++){
-		for(uint8_t led_index=0; led_index < LEDS_COUNT; led_index++){
-			int16_t diff = colors[led_index][color] - colors_new[led_index][color];
-			if(diff < 0) diff *= -1;
-
-			if(diff > max_diff) max_diff = diff;
-
-			smooth_step[led_index][color] = (uint8_t)diff;
-		}
-	}
-
-	// To find smooth_step which will be using max_diff divide on each smooth_step
-	for(uint8_t color=0; color < 3; color++){
-		for(uint8_t led_index=0; led_index < LEDS_COUNT; led_index++){
-			smooth_step[led_index][color] = (uint8_t) max_diff / smooth_step[led_index][color];
-		}
-	}
-}
 
 
 // USB HID Report descriptor
@@ -132,8 +109,6 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 		colors_new[LED8][B] = data[6];
 
 		update_colors = TRUE;
-		UpdateSmoothStep();
-		pwm_level = 0x00;
 
 	}else if(data[0] == CMD_OFF_ALL){
 		for(uint8_t i=0; i<LEDS_COUNT; i++){
@@ -143,30 +118,33 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 		}
 
 		update_colors = TRUE;
-		UpdateSmoothStep();
 
-	}else if(data[0] == CMD_SET_TIMER_OPTIONS){
-		TIMSK &= (uint8_t)~_BV(OCIE1A);
-
-		// TODO: data[DATA_INDEX_CMD_SET_PRESCALLER]
-		switch(data[1]){
-			case CMD_SET_PRESCALLER_1: 		TCCR1B = _BV(CS10); break;
-			case CMD_SET_PRESCALLER_8:		TCCR1B = _BV(CS11); break;
-			case CMD_SET_PRESCALLER_64: 	TCCR1B = _BV(CS11) | _BV(CS10); break;
-			case CMD_SET_PRESCALLER_256:	TCCR1B = _BV(CS12); break;
-			case CMD_SET_PRESCALLER_1024:	TCCR1B = _BV(CS12) | _BV(CS11); break;
-		}
-
-		// TODO: data[DATA_INDEX_CMD_SET_OCR]
-		OCR1A = data[2];
-
-		TCNT1 = 0x0000;
-		TIMSK = _BV(OCIE1A);
-	}else if(data[0] == CMD_SET_PWM_LEVEL_MAX_VALUE){
-		pwm_level_max = data[1];
-	}else if(data[0] == CMD_SMOOTH_CHANGE_COLORS){
-		smooth_delay = data[1];
 	}
+//
+//	TODO: Add this to FirmwarePWM
+//
+//	else if(data[0] == CMD_SET_TIMER_OPTIONS){
+//		TIMSK &= (uint8_t)~_BV(OCIE1A);
+//
+//		// TODO: data[DATA_INDEX_CMD_SET_PRESCALLER]
+//		switch(data[1]){
+//			case CMD_SET_PRESCALLER_1: 		TCCR1B = _BV(CS10); break;
+//			case CMD_SET_PRESCALLER_8:		TCCR1B = _BV(CS11); break;
+//			case CMD_SET_PRESCALLER_64: 	TCCR1B = _BV(CS11) | _BV(CS10); break;
+//			case CMD_SET_PRESCALLER_256:	TCCR1B = _BV(CS12); break;
+//			case CMD_SET_PRESCALLER_1024:	TCCR1B = _BV(CS12) | _BV(CS11); break;
+//		}
+//
+//		// TODO: data[DATA_INDEX_CMD_SET_OCR]
+//		OCR1A = data[2];
+//
+//		TCNT1 = 0x0000;
+//		TIMSK = _BV(OCIE1A);
+//	}else if(data[0] == CMD_SET_PWM_LEVEL_MAX_VALUE){
+//		pwm_level_max = data[1];
+//	}else if(data[0] == CMD_SMOOTH_CHANGE_COLORS){
+//		smooth_delay = data[1];
+//	}
 
 	return 1;
 }
