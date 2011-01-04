@@ -1,13 +1,13 @@
 /*
- * 74HC595.c
+ * main.h
  *
- *  Created on: 18.07.2010
+ *  Created on: 21.07.2010
  *      Author: Mike Shatohin (brunql)
  *     Project: AmbilightUSB
  *
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
  *
- *  Copyright (c) 2010 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  AmbilightUSB is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,30 +23,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+ 
 
-#include "74HC595.h"
+#ifndef MAIN_H_
+#define MAIN_H_
 
-//void HC595_PutUInt16(uint16_t data)
-//{
-//	char i;
-//	for(i=0; i<16; i++){
-//		HC595_CLK_DOWN;
-//		if(data & _BV(i)){
-//			HC595_PORT |= HC595_DATA_PIN;
-//		}else{
-//			HC595_PORT &= (uint8_t)~HC595_DATA_PIN;
-//		}
-//		HC595_CLK_UP;
-//	}
-//	HC595_LATCH_PULSE;
-//}
+// Test pin on PORTA.7 using for debugging and evaluation time intervals
+#define TEST_PIN_DDR_INIT()		{ DDRD |= _BV(PD0); }
+#define TEST_UP()				{ PORTD |= _BV(PD0); }
+#define TEST_DOWN()				{ PORTD &= (uint8_t)~_BV(PD0); }
+#define TEST_TOGGLE()			{ PORTD ^= _BV(PD0); }
 
-void HC595_Init(void)
-{
-	HC595_LATCH_DOWN;
-	HC595_CLK_DOWN;
-	HC595_OUT_ENABLE;
-	HC595_DDR |= HC595_CLK_PIN | HC595_LATCH_PIN | HC595_OUT_EN_PIN;
-	HC595_DATA_PORT = 0x00;
-	HC595_DATA_DDR = HC595_DATA0_PIN | HC595_DATA1_PIN | HC595_DATA2_PIN | HC595_DATA3_PIN;
-}
+#define ABS( x ) ((x)<0?(-x):(x))
+
+
+#endif /* MAIN_H_ */

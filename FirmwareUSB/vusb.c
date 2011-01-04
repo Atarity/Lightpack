@@ -7,7 +7,7 @@
  *
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
  *
- *  Copyright (c) 2010 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  AmbilightUSB is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -69,7 +69,7 @@ PROGMEM char usbHidReportDescriptor[22] = {    /* USB report descriptor */
 		0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
 		0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
 		0x75, 0x08,                    //   REPORT_SIZE
-		0x95, 0x20,                    //   REPORT_COUNT
+		0x95, 0x08,                    //   REPORT_COUNT
 		0x09, 0x00,                    //   USAGE (Undefined)
 		0xb2, 0x02, 0x01,              //   FEATURE (Data,Var,Abs,Buf)
 		0xc0                           // END_COLLECTION
@@ -133,6 +133,7 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 
 		update_colors = TRUE;
 		UpdateSmoothStep();
+		pwm_level = 0x00;
 
 	}else if(data[0] == CMD_OFF_ALL){
 		for(uint8_t i=0; i<LEDS_COUNT; i++){
@@ -177,8 +178,10 @@ usbMsgLen_t usbFunctionSetup(uint8_t data[8])
 
 	if((rq->bmRequestType & USBRQ_TYPE_MASK) == USBRQ_TYPE_CLASS){    /* HID class request */
 		if(rq->bRequest == USBRQ_HID_GET_REPORT){  /* wValue: ReportType (highbyte), ReportID (lowbyte) */
+			//return 0;
 			return USB_NO_MSG;  /* use usbFunctionRead() to obtain data */
 		}else if(rq->bRequest == USBRQ_HID_SET_REPORT){
+			//return 0;
 			return USB_NO_MSG;  /* use usbFunctionWrite() to receive data from host */
 		}
 	}else{

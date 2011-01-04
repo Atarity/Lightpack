@@ -12,6 +12,8 @@
 #include "usbdrv.h"
 #include "oddebug.h"
 
+#include "main.h"
+
 /*
 General Description:
 This module implements the C-part of the USB driver. See usbdrv.h for a
@@ -280,7 +282,7 @@ USB_PUBLIC void usbSetInterrupt3(uint8_t *data, uint8_t len)
 #endif
 
 #ifndef USB_RX_USER_HOOK
-#define USB_RX_USER_HOOK(data, len)
+#define USB_RX_USER_HOOK(data, len)    /*TEST_TOGGLE();*/
 #endif
 #ifndef USB_SET_ADDRESS_HOOK
 #define USB_SET_ADDRESS_HOOK()
@@ -429,7 +431,7 @@ usbRequest_t    *rq = (void *)data;
  * 0...0x0f for OUT on endpoint X
  */
     DBG2(0x10 + (usbRxToken & 0xf), data, len + 2); /* SETUP=1d, SETUP-DATA=11, OUTx=1x */
-    USB_RX_USER_HOOK(data, len)
+    USB_RX_USER_HOOK(data, len);
 #if USB_CFG_IMPLEMENT_FN_WRITEOUT
     if(usbRxToken < 0x10){  /* OUT to endpoint != 0: endpoint number in usbRxToken */
         usbFunctionWriteOut(data, len);

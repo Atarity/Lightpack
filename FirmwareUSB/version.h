@@ -1,13 +1,13 @@
 /*
- * vusb.h
+ * version.h
  *
- *  Created on: 14.05.2010
+ *  Created on: 03.11.2010
  *      Author: Mike Shatohin (brunql)
  *     Project: AmbilightUSB
  *
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
  *
- *  Copyright (c) 2010 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  AmbilightUSB is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,11 +24,18 @@
  *
  */
  
-#ifndef USB_H_
-#define USB_H_
+#ifndef VERSION_H_
+#define VERSION_H_
 
-#include "usbdrv.h"
+//   Hardware version:
+#define VERSION_OF_HARDWARE				(0x0400UL)
+#define VERSION_OF_HARDWARE_MAJOR		((VERSION_OF_HARDWARE >> 8) & 0xff)
+#define VERSION_OF_HARDWARE_MINOR		(VERSION_OF_HARDWARE & 0x00ff)
 
-extern void usbInit_FakeUsbDisconnect(void);
+//   Firmware USB version:
+#define VERSION_OF_FIRMWARE				(0x0400UL)
+#define VERSION_OF_FIRMWARE_MAJOR		((VERSION_OF_FIRMWARE >> 8) & 0xff)
+#define VERSION_OF_FIRMWARE_MINOR		(VERSION_OF_FIRMWARE & 0x00ff)
 
-#endif /* USB_H_ */
+
+#endif /* VERSION_H_ */

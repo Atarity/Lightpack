@@ -7,7 +7,7 @@
  *
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
  *
- *  Copyright (c) 2010 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  AmbilightUSB is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,12 +28,12 @@
 #define VERSION_H_
 
 //   Hardware version:
-#define VERSION_OF_HARDWARE				(0x0307UL)
+#define VERSION_OF_HARDWARE				(0x0400UL)
 #define VERSION_OF_HARDWARE_MAJOR		((VERSION_OF_HARDWARE >> 8) & 0xff)
 #define VERSION_OF_HARDWARE_MINOR		(VERSION_OF_HARDWARE & 0x00ff)
 
-//   Firmware version:
-#define VERSION_OF_FIRMWARE				(0x0303UL)
+//   Firmware PWM version:
+#define VERSION_OF_FIRMWARE				(0x0400UL)
 #define VERSION_OF_FIRMWARE_MAJOR		((VERSION_OF_FIRMWARE >> 8) & 0xff)
 #define VERSION_OF_FIRMWARE_MINOR		(VERSION_OF_FIRMWARE & 0x00ff)
 

@@ -7,7 +7,7 @@
  *
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
  *
- *  Copyright (c) 2010 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  AmbilightUSB is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,9 +31,10 @@
 #include "RGB.h"
 
 // Test pin on PORTA.7 using for debugging and evaluation time intervals
-#define TEST_PIN_DDR_INIT()		{ DDRA |= _BV(PA7); }
-#define TEST_UP()				{ PORTA |= _BV(PA7); }
-#define TEST_DOWN()				{ PORTA &= (uint8_t)~_BV(PA7); }
+#define TEST_PIN_DDR_INIT()		{ DDRD |= _BV(PD0); }
+#define TEST_UP()				{ PORTD |= _BV(PD0); }
+#define TEST_DOWN()				{ PORTD &= (uint8_t)~_BV(PD0); }
+#define TEST_TOGGLE()			{ PORTD ^= _BV(PD0); }
 
 #define ABS( x ) ((x)<0?(-x):(x))
 
@@ -46,6 +47,7 @@ extern volatile uint8_t colors[LEDS_COUNT][3];
 
 // Color max value, i.e. 0 <= color[led][c] < pwm_level_max
 extern volatile uint8_t pwm_level_max;
+extern volatile uint8_t pwm_level;
 
 extern volatile uint8_t smooth_delay;
 extern volatile uint8_t smooth_step[LEDS_COUNT][3];

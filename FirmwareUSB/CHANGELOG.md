@@ -1,5 +1,20 @@
-Firmware changes
+Firmware USB changes
+====================
+
+This firmware for the microcontroller, which transceiver USB in UART
+
+Version fw_usb4.0
+-----------------
+brunql, January 4, 2011
+
+* Nothing works =)
+* See hardware changes verison 4.0 for details 
+
+
+One MCU versions
 ================
+
+USB and PWM in one MCU
 
 Version fw3.3
 -----------

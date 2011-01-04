@@ -8,16 +8,17 @@
  *      	MCU: ATmega8
  *        Clock: 12MHz
  *
- * Command to fill flash and set fuses:
- * MCU ATmega8 (hw_v3.*):
- * avrdude  -pm8 -cusbasp -u -Uflash:w:AmbilightUSB.hex:a -Ulfuse:w:0x9f:m -Uhfuse:w:0xc9:m
+ *  This firmware for the microcontroller, which controls the LEDs (PWM).
  *
- * MCU ATtiny44 (hw_v2.*):
- * avrdude  -pt44 -cusbasp -u -Uflash:w:AmbilightUSB.hex:a -Ulfuse:w:0xee:m -Uhfuse:w:0xdf:m -Uefuse:w:0xff:m
+ *  Command to fill flash and set fuses:
+ 
+ TODO: Check fuses
+ 
+ *  avrdude  -pm8 -cusbasp -u -Uflash:w:FirmwarePWM.hex:a -Ulfuse:w:0x9f:m -Uhfuse:w:0xc9:m
  *
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
  *
- *  Copyright (c) 2010 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  AmbilightUSB is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,8 +40,9 @@
 #include <util/delay.h>
 
 #include "main.h"
-#include "74HC595.h"    /* RGB leds connects to ATtiny44 through 74HC595 */
-#include "vusb.h"       /* Using V-USB library from OBDEV team */
+#include "74HC595.h"
+#include "RGB.h"
+
 
 //
 // Global variables
@@ -79,6 +81,7 @@ volatile uint8_t smooth_step[LEDS_COUNT][3] = {
 volatile int16_t max_diff = 0x00;
 
 
+
 void SmoothlyUpdateColors(void)
 {
 	// Array smooth_step evaluated when new color comes from PC
@@ -104,7 +107,6 @@ void SmoothlyUpdateColors(void)
 }
 
 
-
 static inline void PWM()
 {
 	if(++pwm_level >= pwm_level_max){
@@ -117,7 +119,7 @@ static inline void PWM()
 		}
 	}
 
-
+    // TODO: Check I/O of the 74HC595, skip QH or not?
 	// Skip I/O - QH of 74HC595 (IC5, IC6)
 	HC595_CLK_DOWN;
 	HC595_DATA_PORT = 0x00;
@@ -194,17 +196,25 @@ static inline void PWM()
 //
 ISR( TIMER1_COMPA_vect )
 {
-	// Enable interrupts for usbPoll();
+	// Enable interrupts for USB INT0
 	sei();
+
+	TEST_TOGGLE();
 
 	// Set next PWM states for all channels
 	PWM();
+
+	TEST_TOGGLE();
+
 
 	// Clear timer counter
 	TCNT1 = 0x0000;
 }
 
-
+//ISR( UART0_vect )
+//{
+//    // TODO: check and save new data here or in main loop, think about it.
+//}
 
 
 void SetAllLedsColors(uint8_t red, uint8_t green, uint8_t blue)
@@ -229,6 +239,9 @@ void SetAllLedsColors(uint8_t red, uint8_t green, uint8_t blue)
 //
 static inline void SmoothlyShowRGB()
 {
+
+// TODO: rewrite it on timer interrupts
+
 	uint8_t fsm = 1, red = 0, green = 0, blue = 0;
 
 	SetAllLedsColors(0, 0, 0);
@@ -268,6 +281,9 @@ static inline void SmoothlyShowRGB()
 	SetAllLedsColors(0, 0, 0);
 }
 
+
+
+
 static inline void TimerForPWM_Init()
 {
 	TCCR1A = 0x00;
@@ -278,6 +294,16 @@ static inline void TimerForPWM_Init()
 
 	TCNT1 = 0x0000;
 	TIMSK = _BV(OCIE1A);
+}
+
+static inline void HC595_Init(void)
+{
+	HC595_LATCH_DOWN;
+	HC595_CLK_DOWN;
+	HC595_OUT_ENABLE;
+	HC595_DDR |= HC595_CLK_PIN | HC595_LATCH_PIN | HC595_OUT_EN_PIN;
+	HC595_DATA_PORT = 0x00;
+	HC595_DATA_DDR = HC595_DATA0_PIN | HC595_DATA1_PIN | HC595_DATA2_PIN | HC595_DATA3_PIN;
 }
 
 //
@@ -295,23 +321,27 @@ int main(void)
     PORTD = 0x00;
     DDRD = 0x00;
 
-    // Low speed USB device initialization
-    usbInit_FakeUsbDisconnect();
+    TEST_PIN_DDR_INIT();
+    TEST_DOWN();
+
 
     // HC595 ports initialization
     HC595_Init();
 
     // Initialize timer used to for generate the PWM
     TimerForPWM_Init();
+    
+    // TODO: initialize UART0
 
     // Enable interrupts
-	sei(); // USB using INT0
-
+	sei(); 
+	
 	SmoothlyShowRGB();
 
    	for(;;){
-   		/* Hey, PC! I'm alive! :) */
-   		usbPoll();
+   	    // Wait interrupts for PWM generation
+   	    
+   	    // TODO: Syncronize the UART transfer and PWM
 	}
 
 	return 0;

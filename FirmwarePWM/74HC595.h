@@ -7,7 +7,7 @@
  *
  *  AmbilightUSB is very simple implementation of the backlight for a laptop
  *
- *  Copyright (c) 2010 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  AmbilightUSB is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -54,8 +54,5 @@
 // Inverse logic
 #define HC595_OUT_ENABLE	{ HC595_PORT &= (uint8_t)~HC595_OUT_EN_PIN; }
 #define HC595_OUT_DISABLE	{ HC595_PORT |= HC595_OUT_EN_PIN; }
-
-extern void HC595_Init(void);
-extern void HC595_PutUInt16(uint16_t);
 
 #endif /* HC595_H_INCLUDED */
