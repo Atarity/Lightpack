@@ -80,6 +80,35 @@ volatile uint8_t smooth_step[LEDS_COUNT][3] = {
 
 volatile int16_t max_diff = 0x00;
 
+volatile uint8_t receive_led_index = 0x00;
+volatile uint8_t receive_color_index = 0x00;
+
+
+
+
+static inline void UpdateSmoothStep(void)
+{
+	// Check how fast is this...
+
+	// First find MAX diff between old and new colors, and save all diffs in each smooth_step
+	for(uint8_t color=0; color < 3; color++){
+		for(uint8_t led_index=0; led_index < LEDS_COUNT; led_index++){
+			int16_t diff = colors[led_index][color] - colors_new[led_index][color];
+			if(diff < 0) diff *= -1;
+
+			if(diff > max_diff) max_diff = diff;
+
+			smooth_step[led_index][color] = (uint8_t)diff;
+		}
+	}
+
+	// To find smooth_step which will be using max_diff divide on each smooth_step
+	for(uint8_t color=0; color < 3; color++){
+		for(uint8_t led_index=0; led_index < LEDS_COUNT; led_index++){
+			smooth_step[led_index][color] = (uint8_t) max_diff / smooth_step[led_index][color];
+		}
+	}
+}
 
 
 void SmoothlyUpdateColors(void)
@@ -191,31 +220,6 @@ static inline void PWM()
 }
 
 
-//
-// Interrupts of the timer that generates PWM
-//
-ISR( TIMER1_COMPA_vect )
-{
-	// Enable interrupts for USB INT0
-	sei();
-
-	TEST_TOGGLE();
-
-	// Set next PWM states for all channels
-	PWM();
-
-	TEST_TOGGLE();
-
-
-	// Clear timer counter
-	TCNT1 = 0x0000;
-}
-
-//ISR( UART0_vect )
-//{
-//    // TODO: check and save new data here or in main loop, think about it.
-//}
-
 
 void SetAllLedsColors(uint8_t red, uint8_t green, uint8_t blue)
 {
@@ -282,6 +286,54 @@ static inline void SmoothlyShowRGB()
 }
 
 
+//
+// Interrupts of the timer that generates PWM
+//
+ISR( TIMER1_COMPA_vect )
+{
+//	TEST_UP();
+
+	// Set next PWM states for all channels
+	PWM();
+
+
+
+
+	// Clear timer counter
+	TCNT1 = 0x0000;
+}
+
+
+
+ISR( USART_RXC_vect )
+{
+	uint8_t rx = UDR;
+    if(rx == 0xff){
+    	receive_led_index = 0x00;
+    	receive_color_index = 0x00;
+    }else{
+    	TEST_UP();
+		if(smooth_delay == 0){
+			colors_new[receive_led_index][receive_color_index] = rx;
+		}else{
+			colors[receive_led_index][receive_color_index] = rx;
+		}
+
+    	if(++receive_color_index == 3){
+    		receive_color_index = 0x00;
+    		if(++receive_led_index == LEDS_COUNT){
+    			receive_led_index = 0x00;
+    			update_colors = TRUE;
+    		}
+    	}
+    }
+    TEST_DOWN();
+
+	//UpdateSmoothStep();
+}
+
+
+
 
 
 static inline void TimerForPWM_Init()
@@ -304,6 +356,22 @@ static inline void HC595_Init(void)
 	HC595_DDR |= HC595_CLK_PIN | HC595_LATCH_PIN | HC595_OUT_EN_PIN;
 	HC595_DATA_PORT = 0x00;
 	HC595_DATA_DDR = HC595_DATA0_PIN | HC595_DATA1_PIN | HC595_DATA2_PIN | HC595_DATA3_PIN;
+}
+
+static inline void UartInitRX()
+{
+#define BAUD 115200
+#include <util/setbaud.h>
+	UBRRL = UBRRL_VALUE;
+	UBRRH = UBRRH_VALUE;
+#if USE_2X
+	UCSRA |= (1 << U2X);
+#else
+	UCSRA &= ~(1 << U2X);
+#endif
+
+	UCSRB = _BV(RXEN) | _BV(RXCIE);
+	UCSRC = _BV(URSEL) | _BV(USBS) | _BV(UCSZ1) | _BV(UCSZ0);
 }
 
 //
@@ -331,12 +399,16 @@ int main(void)
     // Initialize timer used to for generate the PWM
     TimerForPWM_Init();
     
-    // TODO: initialize UART0
+    UartInitRX();
 
     // Enable interrupts
 	sei(); 
 	
-	SmoothlyShowRGB();
+//SmoothlyShowRGB();
+
+	smooth_delay = 0x00;
+
+	SetAllLedsColors(10, 20, 10);
 
    	for(;;){
    	    // Wait interrupts for PWM generation

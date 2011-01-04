@@ -29,10 +29,10 @@
 #define MAIN_H_
 
 // Test pin on PORTA.7 using for debugging and evaluation time intervals
-#define TEST_PIN_DDR_INIT()		{ DDRD |= _BV(PD0); }
-#define TEST_UP()				{ PORTD |= _BV(PD0); }
-#define TEST_DOWN()				{ PORTD &= (uint8_t)~_BV(PD0); }
-#define TEST_TOGGLE()			{ PORTD ^= _BV(PD0); }
+#define TEST_PIN_DDR_INIT()		{ DDRD |= _BV(PD3); }
+#define TEST_UP()				{ PORTD |= _BV(PD3); }
+#define TEST_DOWN()				{ PORTD &= (uint8_t)~_BV(PD3); }
+#define TEST_TOGGLE()			{ PORTD ^= _BV(PD3); }
 
 #define ABS( x ) ((x)<0?(-x):(x))
 
