@@ -34,11 +34,11 @@
 
 #include "settings.h"
 
-#include "usbconfig.h"  /* For device VID, PID, vendor name and product name */
+#include "../FirmwareUSB/usbconfig.h"  /* For device VID, PID, vendor name and product name */
 #include "hiddata.h"    /* USB HID */
 
-#include "commands.h"   /* CMD defines */
-#include "RGB.h"        /* Led defines */
+#include "../CommonHeaders/commands.h"   /* CMD defines */
+#include "../CommonHeaders/RGB.h"        /* Led defines */
 
 #include "ledcolors.h"
 
@@ -82,8 +82,8 @@ private:
     usbDevice_t *ambilightDevice;
 
 
-    char read_buffer[1 + 0x08];    /* 0x00-ReportID, 0x01..0x20-data */
-    char write_buffer[1 + 0x08];   /* 0x00-ReportID, 0x01..0x20-data */
+    char read_buffer[1 + 0x20];    /* 0x00-ReportID, 0x01..0x20-data */
+    char write_buffer[1 + 0x20];   /* 0x00-ReportID, 0x01..0x20-data */
 
 
     // Settings:

@@ -51,9 +51,9 @@ SOURCES += src/hiddata.cpp \
     src/aboutdialog.cpp \
     src/grabdesktopwindowleds.cpp
 HEADERS += inc/hiddata.h \
-    ../Firmware/inc/usbconfig.h \
-    ../Firmware/inc/commands.h \
-    ../Firmware/inc/RGB.h \
+    ../FirmwareUSB/usbconfig.h \
+    ../CommonHeaders/commands.h \
+    ../CommonHeaders/RGB.h \
     inc/mainwindow.h \
     inc/ambilightusb.h \
     inc/version.h \

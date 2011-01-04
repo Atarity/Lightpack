@@ -29,7 +29,7 @@
 #define GRABDESKTOPWINDOWLEDS_H
 
 #include <QtGui>
-#include "RGB.h"        /* Led defines */
+#include "../CommonHeaders/RGB.h"        /* Led defines */
 #include "settings.h"
 #include "timeevaluations.h"
 #include "ledcolors.h"
