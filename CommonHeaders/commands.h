@@ -30,34 +30,41 @@
 
 // Commands to device, sends it in first byte of data[]
 enum COMMANDS{
-	CMD_LEDS_1_2, 					/* sw version < sw_v3.0.2, fw < fw_v3.2:    = 0 */
-	CMD_LEDS_3_4, 					/* sw version < sw_v3.0.2, fw < fw_v3.2: CMD_LEFT_SIDE = 1 */
-	CMD_OFF_ALL, 					/* switch off all leds */
-	CMD_SET_TIMER_OPTIONS, 			/* timer settings */
-	CMD_SET_PWM_LEVEL_MAX_VALUE, 	/* each color max value */
-	CMD_SMOOTH_CHANGE_COLORS,
+    CMD_LEDS_1_2,                    /* sw version < sw_v3.0.2, fw < fw_v3.2:    = 0 */
+    CMD_LEDS_3_4,                    /* sw version < sw_v3.0.2, fw < fw_v3.2: CMD_LEFT_SIDE = 1 */
+    CMD_OFF_ALL,                     /* switch off all leds */
+    CMD_SET_TIMER_OPTIONS,           /* timer settings */
+    CMD_SET_PWM_LEVEL_MAX_VALUE,     /* each color max value */
+    CMD_SMOOTH_CHANGE_COLORS,
 
-	CMD_LEDS_5_6 = 0x10, 			/* data comes for LEDs N5 and N6 */
-	CMD_LEDS_7_8,
+    CMD_LEDS_5_6 = 0x10,             /* data comes for LEDs N5 and N6 */
+    CMD_LEDS_7_8,
 
-	CMD_NOP = 0xff
+    CMD_NOP = 0xff
 };
 
 enum PRESCALLERS{
-	CMD_SET_PRESCALLER_1,
-	CMD_SET_PRESCALLER_8,
-	CMD_SET_PRESCALLER_64,
-	CMD_SET_PRESCALLER_256,
-	CMD_SET_PRESCALLER_1024,
+    CMD_SET_PRESCALLER_1,
+    CMD_SET_PRESCALLER_8,
+    CMD_SET_PRESCALLER_64,
+    CMD_SET_PRESCALLER_256,
+    CMD_SET_PRESCALLER_1024,
 };
 
 
 enum DATA_VERSION_INDEXES{
-	INDEX_HW_VER_MAJOR,
-	INDEX_HW_VER_MINOR,
-	INDEX_FW_VER_MAJOR,
-	INDEX_FW_VER_MINOR,
+    INDEX_HW_VER_MAJOR,
+    INDEX_HW_VER_MINOR,
+    INDEX_FW_VER_MAJOR,
+    INDEX_FW_VER_MINOR,
 };
 
+
+enum UART_COMMANDS{
+    START_OF_FRAME_COLORS = 0xf9,
+
+    RECEIVE_OK = 0xf3,
+    RECEIVE_FAIL = 0xf0,
+};
 
 #endif /* COMMANDS_H_ */
