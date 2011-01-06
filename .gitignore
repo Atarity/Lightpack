@@ -40,3 +40,6 @@ qrc_*
 *.lss
 *.elf
 *.map
+*.[sb]#*
+*.epf
+*.pro
