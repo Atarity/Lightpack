@@ -1,5 +1,11 @@
-Hardware changes
-================
+Lightpack hardware
+==================
+
+Version hw4.1
+-------------
+brunql, January 11, 2011
+
+* Prototyping on AT90USB162 maket board
 
 Version hw4.0
 -------------
