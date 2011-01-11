@@ -5,7 +5,7 @@ Lightpack is a very simple implementation of the backlight for a laptop (as in P
 
 Configuration program lives in the tray, without interfering with habitual work and watching movies.   
 
-**Hardware**: `ATtiny44`, `2 x 74HC595` and `4 x RGB LEDs`; changelogs: [master](https://github.com/brunql/Lightpack/blob/master/Hardware/CHANGELOG.md), [develop](https://github.com/brunql/Lightpack/blob/develop/Hardware/CHANGELOG.md)
+**Hardware**: `ATtiny44`, `2 x 74HC595` and `4 x RGB LEDs`; changelogs: [master](https://github.com/brunql/Lightpack/blob/master/Hardware/CHANGELOG.md), [develop](https://github.com/brunql/Lightpack/blob/develop/Hardware/CHANGELOG.md)    
 **Firmware**: written in `C`, using `V-USB` (HID Class device); changelogs: [master](https://github.com/brunql/Lightpack/blob/master/Firmware/CHANGELOG.md), [develop](https://github.com/brunql/Lightpack/blob/develop/Firmware/CHANGELOG.md)    
 **Software**: `C++`, `Qt`; changelogs: [master](https://github.com/brunql/Lightpack/blob/master/Software/CHANGELOG.md), [develop](https://github.com/brunql/Lightpack/blob/develop/Software/CHANGELOG.md)    
 
