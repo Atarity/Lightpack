@@ -1,31 +1,22 @@
 /*
- * main.c
+ * Lightpack.c
  *
  *   Created on: 21.07.2010
  *       Author: Mike Shatohin (brunql)
  *
- *      Project: AmbilightUSB
- *          MCU: ATmega8
- *        Clock: 12MHz
+ *      Project: Lightpack
+ *          MCU: AT90USB162
  *
- *  This firmware for the microcontroller, which controls the LEDs (PWM).
- *
- *  Command to fill flash and set fuses:
- 
- TODO: Check fuses
- 
- *  avrdude  -pm8 -cusbasp -u -Uflash:w:FirmwarePWM.hex:a -Ulfuse:w:0x9f:m -Uhfuse:w:0xc9:m
- *
- *  AmbilightUSB is very simple implementation of the backlight for a laptop
+ *  Lightpack is very simple implementation of the backlight for a laptop
  *
  *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
- *  AmbilightUSB is free software: you can redistribute it and/or modify
+ *  Lightpack is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 2 of the License, or
  *  (at your option) any later version.
  *
- *  AmbilightUSB is distributed in the hope that it will be useful,
+ *  Lightpack is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.

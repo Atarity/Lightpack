@@ -34,42 +34,27 @@
 #include "vusb.h"
 #include "RGB.h"
 #include "commands.h"
+#include "version.h"
 
-
-
-
-// USB HID Report descriptor
-PROGMEM char usbHidReportDescriptor[22] = {    /* USB report descriptor */
-		0x06, 0x00, 0xff,              // USAGE_PAGE (Generic Desktop)
-		0x09, 0x01,                    // USAGE (Vendor Usage 1)
-		0xa1, 0x01,                    // COLLECTION (Application)
-		0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
-		0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
-		0x75, 0x08,                    //   REPORT_SIZE
-		0x95, 0x08,                    //   REPORT_COUNT
-		0x09, 0x00,                    //   USAGE (Undefined)
-		0xb2, 0x02, 0x01,              //   FEATURE (Data,Var,Abs,Buf)
-		0xc0                           // END_COLLECTION
-};
 
 // Read info from device
-uint8_t   usbFunctionRead(uint8_t *data, uint8_t len)
+uint8_t usb_in(uint8_t *data, uint8_t len)
 {
-	// TODO: return info from temperature sensor ATtiny44 (ADC8)
-	if(len >= 2){
-		// Hardware version
-		data[INDEX_HW_VER_MAJOR] = VERSION_OF_HARDWARE_MAJOR;
-		data[INDEX_HW_VER_MINOR] = VERSION_OF_HARDWARE_MINOR;
+    if(len >= 2){
+        // Hardware version
+        data[INDEX_HW_VER_MAJOR] = VERSION_OF_HARDWARE_MAJOR;
+        data[INDEX_HW_VER_MINOR] = VERSION_OF_HARDWARE_MINOR;
 
-		// Firmware version
-		data[INDEX_FW_VER_MAJOR] = VERSION_OF_FIRMWARE_MAJOR;
-		data[INDEX_FW_VER_MINOR] = VERSION_OF_FIRMWARE_MINOR;
-	}
-	return len;
+        // Firmware version
+        data[INDEX_FW_VER_MAJOR] = VERSION_OF_FIRMWARE_MAJOR;
+        data[INDEX_FW_VER_MINOR] = VERSION_OF_FIRMWARE_MINOR;
+    }
+
+    return len;
 }
 
 // Write info to device
-uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
+void usb_out(uint8_t *data, uint8_t len)
 {
 	// TODO: data[CMD_INDEX]
 	if(data[0] == CMD_LEDS_1_2){
@@ -145,38 +130,24 @@ uint8_t   usbFunctionWrite(uint8_t *data, uint8_t len)
 //	}else if(data[0] == CMD_SMOOTH_CHANGE_COLORS){
 //		smooth_delay = data[1];
 //	}
-
-	return 1;
 }
 
-
-usbMsgLen_t usbFunctionSetup(uint8_t data[8])
+//
+// Handle a non-standard SETUP packet
+//
+uint8_t usb_setup(uint8_t data[8])
 {
-	usbRequest_t    *rq = (void *)data;
+    uint8_t requestType = data[0];
+    uint8_t request = data[1];
 
-	if((rq->bmRequestType & USBRQ_TYPE_MASK) == USBRQ_TYPE_CLASS){    /* HID class request */
-		if(rq->bRequest == USBRQ_HID_GET_REPORT){  /* wValue: ReportType (highbyte), ReportID (lowbyte) */
-			//return 0;
-			return USB_NO_MSG;  /* use usbFunctionRead() to obtain data */
-		}else if(rq->bRequest == USBRQ_HID_SET_REPORT){
-			//return 0;
-			return USB_NO_MSG;  /* use usbFunctionWrite() to receive data from host */
+	if((requestType & USBRQ_TYPE_MASK) == USBRQ_TYPE_CLASS){    /* HID class request */
+		if(request == USBRQ_HID_GET_REPORT){
+			return 0xff;  /* call usb_in() */
+		}else if(request == USBRQ_HID_SET_REPORT){
+			return 0xff;  /* call usb_out() */
 		}
 	}else{
 		/* ignore vendor type requests, we don't use any */
 	}
 	return 0;
-}
-
-// Re-enumeration device on USB
-void usbInit_FakeUsbDisconnect(void)
-{
-	usbInit();
-	usbDeviceDisconnect();  /* enforce re-enumeration, do this while interrupts are disabled! */
-	uint8_t i = 0xff;
-	while(i --> 0){         /* fake USB disconnect for > 250 ms */
-		_delay_ms(1);
-	}
-	usbDeviceConnect();
-	usbPoll();
 }
