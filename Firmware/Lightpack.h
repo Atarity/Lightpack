@@ -1,10 +1,15 @@
 /*
-             LUFA Library
-     Copyright (C) Dean Camera, 2010.
-
-  dean [at] fourwalledcubicle [dot] com
-           www.lufa-lib.org
-*/
+ * Lightpack.h
+ *
+ *  Created on: 11.01.2011
+ *      Author: Mike Shatohin (brunql)
+ *     Project: Lightpack
+ *
+ *  Lightpack? This is content-appropriate ambient lighting system for your computer!
+ *
+ *  Edited 2011 Mike Shatohin, mikeshatohin [at] gmail.com
+ *
+ */
 
 /*
   Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)

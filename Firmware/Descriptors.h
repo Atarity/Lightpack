@@ -1,10 +1,15 @@
 /*
-             LUFA Library
-     Copyright (C) Dean Camera, 2010.
-
-  dean [at] fourwalledcubicle [dot] com
-           www.lufa-lib.org
-*/
+ * Descriptors.h
+ *
+ *  Created on: 11.01.2011
+ *      Author: Mike Shatohin (brunql)
+ *     Project: Lightpack
+ *
+ *  Lightpack? This is content-appropriate ambient lighting system for your computer!
+ *
+ *  Edited 2011 Mike Shatohin, mikeshatohin [at] gmail.com
+ *
+ */
 
 /*
   Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
@@ -41,6 +46,9 @@
 
 		#include <LUFA/Drivers/USB/USB.h>
 
+        // USB VID:PID and EP size
+        #include "../CommonHeaders/USB_ID.h"
+
 	/* Type Defines: */
 		/** Type define for the device configuration descriptor structure. This must be defined in the
 		 *  application code, as the configuration descriptor contains several sub-descriptors which
@@ -59,10 +67,10 @@
 		#define GENERIC_IN_EPNUM          1
 
 		/** Size in bytes of the Generic HID reporting endpoint. */
-		#define GENERIC_EPSIZE            8
+		#define GENERIC_EPSIZE            32
 
 		/** Size in bytes of the Generic HID reports (including report ID byte). */
-		#define GENERIC_REPORT_SIZE       8
+		#define GENERIC_REPORT_SIZE       32
 
 	/* Function Prototypes: */
 		uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,

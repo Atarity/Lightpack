@@ -32,16 +32,16 @@
 
 #define HC595_PORT 			(PORTB)
 #define HC595_DDR 			(DDRB)
-#define HC595_CLK_PIN 		_BV(PB0)
-#define HC595_LATCH_PIN		_BV(PB1)
-#define HC595_OUT_EN_PIN 	_BV(PB2)
+#define HC595_CLK_PIN 		_BV(PB5)
+#define HC595_LATCH_PIN		_BV(PB4)
+#define HC595_OUT_EN_PIN 	_BV(PB6) /* connected to GND */
 
-#define HC595_DATA_PORT 	(PORTC)
-#define HC595_DATA_DDR 		(DDRC)
-#define HC595_DATA0_PIN 	_BV(PC0)
-#define HC595_DATA1_PIN 	_BV(PC1)
-#define HC595_DATA2_PIN 	_BV(PC2)
-#define HC595_DATA3_PIN 	_BV(PC3)
+#define HC595_DATA_PORT 	(PORTD)
+#define HC595_DATA_DDR 		(DDRD)
+#define HC595_DATA0_PIN 	_BV(PD4)
+#define HC595_DATA1_PIN 	_BV(PD2)
+#define HC595_DATA2_PIN 	_BV(PD1)
+#define HC595_DATA3_PIN 	_BV(PD0)
 
 
 #define HC595_LATCH_UP		{ HC595_PORT |= HC595_LATCH_PIN; }

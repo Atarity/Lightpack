@@ -1,10 +1,15 @@
 /*
-             LUFA Library
-     Copyright (C) Dean Camera, 2010.
-
-  dean [at] fourwalledcubicle [dot] com
-           www.lufa-lib.org
-*/
+ * Descriptors.c
+ *
+ *  Created on: 11.01.2011
+ *      Author: Mike Shatohin (brunql)
+ *     Project: Lightpack
+ *
+ *  Lightpack? This is content-appropriate ambient lighting system for your computer!
+ *
+ *  Edited 2011 Mike Shatohin, mikeshatohin [at] gmail.com
+ *
+ */
 
 /*
   Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
@@ -45,23 +50,24 @@
  */
 USB_Descriptor_HIDReport_Datatype_t PROGMEM GenericReport[] =
 {
-	0x06, 0x9c, 0xff,     /* Usage Page (Vendor Defined)                     */
-	0x09, 0x01,           /* Usage (Vendor Defined)                          */
-	0xa1, 0x01,           /* Collection (Vendor Defined)                     */
-	0x09, 0x02,           /*   Usage (Vendor Defined)                        */
-	0x75, 0x08,           /*   Report Size (8)                               */
-	0x95, GENERIC_REPORT_SIZE, /*   Report Count (GENERIC_REPORT_SIZE)       */
-	0x15, 0x80,           /*   Logical Minimum (-128)                        */
-	0x25, 0x7F,           /*   Logical Maximum (127)                         */
-	0x81, 0x02,           /*   Input (Data, Variable, Absolute)              */
-	0x09, 0x03,           /*   Usage (Vendor Defined)                        */
-	0x75, 0x08,           /*   Report Size (8)                               */
-	0x95, GENERIC_REPORT_SIZE, /*   Report Count (GENERIC_REPORT_SIZE)       */
-	0x15, 0x00,           /*   Logical Minimum (0)                           */
-	0x25, 0xff,           /*   Logical Maximum (255)                         */
-	0x91, 0x02,           /*   Output (Data, Variable, Absolute)             */
-	0xc0                  /* End Collection                                  */
+        0x06, 0x9c, 0xff,     /* Usage Page (Vendor Defined)                     */
+        0x09, 0x01,           /* Usage (Vendor Defined)                          */
+        0xa1, 0x01,           /* Collection (Vendor Defined)                     */
+        0x09, 0x02,           /*   Usage (Vendor Defined)                        */
+        0x75, 0x08,           /*   Report Size (8)                               */
+        0x95, GENERIC_REPORT_SIZE, /*   Report Count (GENERIC_REPORT_SIZE)       */
+        0x15, 0x80,           /*   Logical Minimum (-128)                        */
+        0x25, 0x7F,           /*   Logical Maximum (127)                         */
+        0x81, 0x02,           /*   Input (Data, Variable, Absolute)              */
+        0x09, 0x03,           /*   Usage (Vendor Defined)                        */
+        0x75, 0x08,           /*   Report Size (8)                               */
+        0x95, GENERIC_REPORT_SIZE, /*   Report Count (GENERIC_REPORT_SIZE)       */
+        0x15, 0x00,           /*   Logical Minimum (0)                           */
+        0x25, 0xff,           /*   Logical Maximum (255)                         */
+        0x91, 0x02,           /*   Output (Data, Variable, Absolute)             */
+        0xc0                  /* End Collection                                  */
 };
+
 
 /** Device descriptor structure. This descriptor, located in FLASH memory, describes the overall
  *  device characteristics, including the supported USB version, control endpoint size and the
@@ -79,8 +85,8 @@ USB_Descriptor_Device_t PROGMEM DeviceDescriptor =
 
 	.Endpoint0Size          = FIXED_CONTROL_ENDPOINT_SIZE,
 
-	.VendorID               = 0x03EB,
-	.ProductID              = 0x204F,
+	.VendorID               = USB_VENDOR_ID,
+	.ProductID              = USB_PRODUCT_ID,
 	.ReleaseNumber          = VERSION_BCD(00.01),
 
 	.ManufacturerStrIndex   = 0x01,
@@ -167,9 +173,9 @@ USB_Descriptor_String_t PROGMEM LanguageString =
  */
 USB_Descriptor_String_t PROGMEM ManufacturerString =
 {
-	.Header                 = {.Size = USB_STRING_LEN(11), .Type = DTYPE_String},
+	.Header                 = {.Size = USB_STRING_LEN(18), .Type = DTYPE_String},
 
-	.UnicodeString          = L"Dean Camera"
+	.UnicodeString          = L"brunql.github.com"
 };
 
 /** Product descriptor string. This is a Unicode string containing the product's details in human readable form,
@@ -178,9 +184,9 @@ USB_Descriptor_String_t PROGMEM ManufacturerString =
  */
 USB_Descriptor_String_t PROGMEM ProductString =
 {
-	.Header                 = {.Size = USB_STRING_LEN(21), .Type = DTYPE_String},
+	.Header                 = {.Size = USB_STRING_LEN(9), .Type = DTYPE_String},
 
-	.UnicodeString          = L"LUFA Generic HID Demo"
+	.UnicodeString          = L"Lightpack"
 };
 
 /** This function is called by the library when in device mode, and must be overridden (see library "USB Descriptors"

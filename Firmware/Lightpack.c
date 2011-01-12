@@ -1,40 +1,50 @@
 /*
-             LUFA Library
-     Copyright (C) Dean Camera, 2010.
-
-  dean [at] fourwalledcubicle [dot] com
-           www.lufa-lib.org
-*/
-
-/*
-  Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
-
-  Permission to use, copy, modify, distribute, and sell this
-  software and its documentation for any purpose is hereby granted
-  without fee, provided that the above copyright notice appear in
-  all copies and that both that the copyright notice and this
-  permission notice and warranty disclaimer appear in supporting
-  documentation, and that the name of the author not be used in
-  advertising or publicity pertaining to distribution of the
-  software without specific, written prior permission.
-
-  The author disclaim all warranties with regard to this
-  software, including all implied warranties of merchantability
-  and fitness.  In no event shall the author be liable for any
-  special, indirect or consequential damages or any damages
-  whatsoever resulting from loss of use, data or profits, whether
-  in an action of contract, negligence or other tortious action,
-  arising out of or in connection with the use or performance of
-  this software.
-*/
-
-/** \file
+ * Lightpack.c
  *
- *  Main source file for the GenericHID demo. This file contains the main tasks of
- *  the demo and is responsible for the initial application hardware configuration.
+ *  Created on: 11.01.2011
+ *      Author: Mike Shatohin (brunql)
+ *     Project: Lightpack
+ *
+ *  Lightpack? This is content-appropriate ambient lighting system for your computer!
+ *
+ *  Copyright (c) 2011 Mike Shatohin, mikeshatohin [at] gmail.com
+ *
+ *  Lightpack is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Lightpack is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  GenericHID demo created by:
+ *  Copyright (c) 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+ *
  */
 
+
 #include "Lightpack.h"
+#include "74HC595.h"
+#include "../CommonHeaders/RGB.h"
+#include "../CommonHeaders/commands.h"
+
+//typedef struct
+//{
+//    uint8_t Red;
+//    uint8_t Green;
+//    uint8_t Blue;
+//} RGB_t;
+
+volatile uint8_t ColorsLevelsForPWM[LEDS_COUNT][3]; // colors using in PWM generation
+volatile uint8_t ColorsLevelsForPWM_New[LEDS_COUNT][3]; // last colors comes from USB
+
+
+volatile uint8_t PwmIndexMaxValue = 64;
 
 /** Buffer to hold the previously generated HID report, for comparison purposes inside the HID class driver. */
 uint8_t PrevHIDReportBuffer[GENERIC_REPORT_SIZE];
@@ -66,15 +76,130 @@ USB_ClassInfo_HID_Device_t Generic_HID_Interface =
 			},
 	};
 
-/** Main program entry point. This routine contains the overall program flow, including initial
- *  setup of all components and the main program loop.
+
+
+void PWM(void)
+{
+    static uint8_t PwmIndex = 0; // index of currect PWM level
+
+    if(++PwmIndex >= PwmIndexMaxValue){
+        PwmIndex = 0x00;
+
+//        if(update_colors){
+//            if(smooth_delay != 0){
+//                SmoothlyUpdateColors();
+//            }
+//        }
+    }
+
+    // TODO: Check I/O of the 74HC595, skip QH or not?
+    // Skip I/O - QH of 74HC595 (IC5, IC6)
+    HC595_CLK_DOWN;
+    HC595_DATA_PORT = 0x00;
+    HC595_CLK_UP;
+
+    // Set I/O - QH, QF, QE of 74HC595 (IC5, IC6)
+    for(uint8_t color=0; color<3; color++){
+        uint8_t hc595_data = 0x00;
+
+        HC595_CLK_DOWN;
+        if(ColorsLevelsForPWM[LED2][color] > PwmIndex)  hc595_data |= HC595_DATA0_PIN;
+        if(ColorsLevelsForPWM[LED4][color] > PwmIndex)  hc595_data |= HC595_DATA1_PIN;
+        if(ColorsLevelsForPWM[LED6][color] > PwmIndex)  hc595_data |= HC595_DATA2_PIN;
+        if(ColorsLevelsForPWM[LED8][color] > PwmIndex)  hc595_data |= HC595_DATA3_PIN;
+        HC595_DATA_PORT = hc595_data;
+        HC595_CLK_UP;
+    }
+
+    // Set I/O - QD, QC, QB of 74HC595 (IC5, IC6)
+    for(uint8_t color=0; color<3; color++){
+        uint8_t hc595_data = 0x00;
+
+        HC595_CLK_DOWN;
+        if(ColorsLevelsForPWM[LED1][color] > PwmIndex)  hc595_data |= HC595_DATA0_PIN;
+        if(ColorsLevelsForPWM[LED3][color] > PwmIndex)  hc595_data |= HC595_DATA1_PIN;
+        if(ColorsLevelsForPWM[LED5][color] > PwmIndex)  hc595_data |= HC595_DATA2_PIN;
+        if(ColorsLevelsForPWM[LED7][color] > PwmIndex)  hc595_data |= HC595_DATA3_PIN;
+        HC595_DATA_PORT = hc595_data;
+        HC595_CLK_UP;
+    }
+
+    // Skip I/O - QA of 74HC595 (IC5, IC6)
+    HC595_CLK_DOWN;
+    HC595_DATA_PORT = 0x00;
+    HC595_CLK_UP;
+
+    HC595_LATCH_PULSE;
+}
+
+
+
+void SetAllLedsColors(uint8_t red, uint8_t green, uint8_t blue)
+{
+    for(uint8_t i=0; i<LEDS_COUNT; i++){
+        ColorsLevelsForPWM[i][R] = red;
+        ColorsLevelsForPWM[i][G] = green;
+        ColorsLevelsForPWM[i][B] = blue;
+    }
+}
+
+//
+// Interrupts of the timer that generates PWM
+//
+ISR( TIMER1_COMPA_vect )
+{
+    // Set next PWM states for all channels
+    PWM();
+
+    // Clear timer counter
+    TCNT1 = 0x0000;
+}
+
+static inline void TimerForPWM_Init(void)
+{
+    TCCR1A = 0x00;
+    TCCR1C = 0x00;
+
+    // Default values of timer prescaller and output compare register
+    TCCR1B = _BV(CS11); // 8
+    OCR1A = 200;
+
+    TCNT1 = 0x0000;
+    TIMSK1 = _BV(OCIE1A);
+}
+
+static inline void HC595_Init(void)
+{
+    HC595_LATCH_DOWN;
+    HC595_CLK_DOWN;
+    HC595_OUT_ENABLE;
+    HC595_DDR |= HC595_CLK_PIN | HC595_LATCH_PIN | HC595_OUT_EN_PIN;
+    HC595_DATA_PORT = 0x00;
+    HC595_DATA_DDR = HC595_DATA0_PIN | HC595_DATA1_PIN | HC595_DATA2_PIN | HC595_DATA3_PIN;
+}
+
+
+
+
+/*
+ *  Main program entry point
  */
 int main(void)
 {
-	SetupHardware();
+    SetupHardware();
 
-	LEDs_SetAllLEDs(LEDMASK_USB_NOTREADY);
+    // HC595 ports initialization
+    HC595_Init();
+
+    // Initialize timer for PWM
+    TimerForPWM_Init();
+
+    // Initialize USB
+    USB_Init();
+
 	sei();
+
+	SetAllLedsColors(10,10,10);
 
 	for (;;)
 	{
@@ -83,7 +208,6 @@ int main(void)
 	}
 }
 
-/** Configures the board hardware and chip peripherals for the demo's functionality. */
 void SetupHardware(void)
 {
 	/* Disable watchdog if enabled by bootloader/fuses */
@@ -94,22 +218,29 @@ void SetupHardware(void)
 	clock_prescale_set(clock_div_1);
 
 	/* Hardware Initialization */
-	OUTPUT( LED );
-	SET( LED );
+    PORTB = 0x00;
+    DDRB = 0x00;
 
-	USB_Init();
+    PORTC = 0x00;
+    DDRC = 0x00;
+
+    PORTD = 0x00;
+    DDRD = 0x00;
+
+	OUTPUT( LED );
+	CLR( LED );
 }
 
 /** Event handler for the library USB Connection event. */
 void EVENT_USB_Device_Connect(void)
 {
-	LEDs_SetAllLEDs(LEDMASK_USB_ENUMERATING);
+	SET( LED );
 }
 
 /** Event handler for the library USB Disconnection event. */
 void EVENT_USB_Device_Disconnect(void)
 {
-	LEDs_SetAllLEDs(LEDMASK_USB_NOTREADY);
+    CLR( LED );
 }
 
 /** Event handler for the library USB Configuration Changed event. */
@@ -120,8 +251,6 @@ void EVENT_USB_Device_ConfigurationChanged(void)
 	ConfigSuccess &= HID_Device_ConfigureEndpoints(&Generic_HID_Interface);
 
 	USB_Device_EnableSOFEvents();
-
-	LEDs_SetAllLEDs(ConfigSuccess ? LEDMASK_USB_READY : LEDMASK_USB_ERROR);
 }
 
 /** Event handler for the library USB Control Request reception event. */
@@ -178,5 +307,35 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 	HIDReportEcho.ReportID   = ReportID;
 	HIDReportEcho.ReportSize = ReportSize;
 	memcpy(HIDReportEcho.ReportData, ReportData, ReportSize);
+
+
+	HIDReportEcho.ReportData[0] = ReportID;
+
+	uint8_t *ReportData_u8 = (uint8_t *)ReportData;
+	uint8_t i = 0;
+
+	switch(ReportID){
+	case CMD_UPDATE_LEDS:
+	    for(uint8_t ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
+	        ColorsLevelsForPWM[ledIndex][R] = ReportData_u8[i++];
+	        ColorsLevelsForPWM[ledIndex][R] = ReportData_u8[i++];
+	        ColorsLevelsForPWM[ledIndex][R] = ReportData_u8[i++];
+	    }
+	    break;
+	case CMD_OFF_ALL:
+	    SetAllLedsColors(0, 0, 0);
+	    break;
+
+	    // TODO:
+
+	case CMD_SET_TIMER_OPTIONS:
+        break;
+	case CMD_SET_PWM_LEVEL_MAX_VALUE:
+        break;
+	case CMD_SMOOTH_CHANGE_COLORS:
+        break;
+	case CMD_NOP:
+        break;
+	}
 }
 
