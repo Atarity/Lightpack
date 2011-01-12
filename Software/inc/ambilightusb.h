@@ -34,7 +34,7 @@
 
 #include "settings.h"
 
-#include "../FirmwareUSB/usbconfig.h"  /* For device VID, PID, vendor name and product name */
+#include "../CommonHeaders/USB_ID.h"  /* For device VID, PID, vendor name and product name */
 #include "hiddata.h"    /* USB HID */
 
 #include "../CommonHeaders/commands.h"   /* CMD defines */
@@ -74,8 +74,8 @@ signals:
 private:
     bool readDataFromDevice();
     bool readDataFromDeviceWithCheck();
-    bool writeBufferToDevice();
-    bool writeBufferToDeviceWithCheck();
+    bool writeBufferToDevice(int reportId);
+    bool writeBufferToDeviceWithCheck(int reportId);
     bool tryToReopenDevice();
     QString usbErrorMessage(int errCode);
 

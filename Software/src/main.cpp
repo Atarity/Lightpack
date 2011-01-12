@@ -187,7 +187,7 @@ int main(int argc, char **argv)
     // Initialize 'settings' variable, new settings initializes with default values
     settingsInit();
 
-    Q_INIT_RESOURCE(res_ambilight);
+    Q_INIT_RESOURCE(LightpackResources);
 
     qInstallMsgHandler(messageOutput);
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
@@ -197,11 +197,11 @@ int main(int argc, char **argv)
     }
     QApplication::setQuitOnLastWindowClosed(false);
 
-    QString pathToLocale = QString(":/translations/AmbilightUSB_") + locale;
+    QString pathToLocale = QString(":/translations/") + locale;
 
     if(locale == "en_EN"){
         qWarning() << "Locale: " + locale;
-    }else{
+    }else{        
         QTranslator *translator = new QTranslator();
         if(translator->load(pathToLocale)){
             qDebug() << "Load translation for locale" << locale;

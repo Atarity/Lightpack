@@ -69,19 +69,22 @@ QString AmbilightUsb::usbErrorMessage(int errCode)
 bool AmbilightUsb::openDevice()
 {
     ambilightDevice = NULL;
-    unsigned char   rawVid[2] = {USB_CFG_VENDOR_ID}, rawPid[2] = {USB_CFG_DEVICE_ID};
-    char            vendorName[] = {USB_CFG_VENDOR_NAME, 0}, productName[] = {USB_CFG_DEVICE_NAME, 0};
-    int             vid = rawVid[0] + 256 * rawVid[1];
-    int             pid = rawPid[0] + 256 * rawPid[1];
-    int             err;
+    int vid = USB_VENDOR_ID;
+    int pid = USB_PRODUCT_ID;
+    int err;
 
-    if((err = usbhidOpenDevice(&ambilightDevice, vid, vendorName, pid, productName, 0)) != 0){
-        qWarning() << "error finding " << productName << ": " << usbErrorMessage(err);
+
+    // TODO: add strings with this:
+    //    iManufacturer           1 brunql.github.com
+    //    iProduct                2 Lightpack
+    // And check it in usbhidOpenDevice(...)
+    if((err = usbhidOpenDevice(&ambilightDevice, vid, NULL, pid, NULL, 0)) != 0){
+        qWarning() << "error finding " << ": " << usbErrorMessage(err);
         emit openDeviceSuccess(false);
         return false;
     }
-    qDebug("%s %s (PID: 0x%04x; VID: 0x%04x) opened.", productName, vendorName, pid, vid);
     emit openDeviceSuccess(true);
+    qDebug("Lightpack (PID: 0x%04x; VID: 0x%04x) opened.", pid, vid);
     return true;
 }
 
@@ -99,11 +102,11 @@ bool AmbilightUsb::readDataFromDevice()
     return true;
 }
 
-bool AmbilightUsb::writeBufferToDevice()
+bool AmbilightUsb::writeBufferToDevice(int reportId)
 {
-    int err;
+    int err = usbhidSetReport(ambilightDevice, reportId, write_buffer, sizeof(write_buffer));
 
-    if((err = usbhidSetReport(ambilightDevice, write_buffer, sizeof(write_buffer), usb_send_data_timeout_ms)) != 0){   /* add a dummy report ID */
+    if(err != 0){
         qWarning() << "error writing data:" << usbErrorMessage(err);
         emit writeBufferToDeviceSuccess(false);
         return false;
@@ -143,12 +146,12 @@ bool AmbilightUsb::readDataFromDeviceWithCheck()
     }
 }
 
-bool AmbilightUsb::writeBufferToDeviceWithCheck()
+bool AmbilightUsb::writeBufferToDeviceWithCheck(int reportId)
 {
     if(ambilightDevice != NULL){
-        if(!writeBufferToDevice()){
+        if(!writeBufferToDevice(reportId)){
             if(tryToReopenDevice()){
-                return writeBufferToDevice();
+                return writeBufferToDevice(reportId);
             }else{
                 return false;
             }
@@ -156,7 +159,7 @@ bool AmbilightUsb::writeBufferToDeviceWithCheck()
         return true;
     }else{
         if(tryToReopenDevice()){
-            return writeBufferToDevice();
+            return writeBufferToDevice(reportId);
         }else{
             return false;
         }
@@ -203,13 +206,7 @@ QString AmbilightUsb::firmwareVersion()
 
 void AmbilightUsb::offLeds()
 {
-    write_buffer[1] = CMD_OFF_ALL;
-
-    write_buffer[9]  = CMD_NOP;
-    write_buffer[17] = CMD_NOP;
-    write_buffer[25] = CMD_NOP;
-
-    writeBufferToDeviceWithCheck();
+    writeBufferToDeviceWithCheck(CMD_OFF_ALL);
 }
 
 void AmbilightUsb::smoothChangeColors(int smoothly_delay)
@@ -218,11 +215,7 @@ void AmbilightUsb::smoothChangeColors(int smoothly_delay)
     write_buffer[1] = CMD_SMOOTH_CHANGE_COLORS;
     write_buffer[2] = (char)smoothly_delay;
 
-    write_buffer[9]  = CMD_NOP;
-    write_buffer[17] = CMD_NOP;
-    write_buffer[25] = CMD_NOP;
-
-    writeBufferToDeviceWithCheck();
+    writeBufferToDeviceWithCheck(CMD_NOP);
 }
 
 
@@ -235,11 +228,8 @@ void AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValu
     write_buffer[2] = (unsigned char)prescallerIndex;
     write_buffer[3] = (unsigned char)outputCompareRegValue;
 
-    write_buffer[9]  = CMD_NOP;
-    write_buffer[17] = CMD_NOP;
-    write_buffer[25] = CMD_NOP;
 
-    writeBufferToDeviceWithCheck();
+    writeBufferToDeviceWithCheck(CMD_NOP);
 }
 
 void AmbilightUsb::setColorDepth(int colorDepth)
@@ -255,11 +245,7 @@ void AmbilightUsb::setColorDepth(int colorDepth)
     write_buffer[1] = CMD_SET_PWM_LEVEL_MAX_VALUE;
     write_buffer[2] = (unsigned char)colorDepth;
 
-    write_buffer[9]  = CMD_NOP;
-    write_buffer[17] = CMD_NOP;
-    write_buffer[25] = CMD_NOP;
-
-    writeBufferToDeviceWithCheck();
+    writeBufferToDeviceWithCheck(CMD_NOP);
 }
 
 
@@ -273,46 +259,12 @@ void AmbilightUsb::setUsbSendDataTimeoutMs(double usb_send_data_timeout_secs)
 void AmbilightUsb::updateColors(LedColors colors)
 {
     // Fill write_buffer with new colors for all LEDs
+    int i=0;
+    for(int led=0; led < LEDS_COUNT; led++){
+        write_buffer[i++] = colors[led]->r;
+        write_buffer[i++] = colors[led]->g;
+        write_buffer[i++] = colors[led]->b;
+    }
 
-    write_buffer[1] = CMD_LEDS_1_2;
-    write_buffer[2] = (unsigned char)colors[LED1]->r;
-    write_buffer[3] = (unsigned char)colors[LED1]->g;
-    write_buffer[4] = (unsigned char)colors[LED1]->b;
-
-    write_buffer[5] = (unsigned char)colors[LED2]->r;
-    write_buffer[6] = (unsigned char)colors[LED2]->g;
-    write_buffer[7] = (unsigned char)colors[LED2]->b;
-    write_buffer[8] = 0x00;
-
-    write_buffer[9] = CMD_LEDS_3_4;
-    write_buffer[10] = (unsigned char)colors[LED3]->r;
-    write_buffer[11] = (unsigned char)colors[LED3]->g;
-    write_buffer[12] = (unsigned char)colors[LED3]->b;
-
-    write_buffer[13] = (unsigned char)colors[LED4]->r;
-    write_buffer[14] = (unsigned char)colors[LED4]->g;
-    write_buffer[15] = (unsigned char)colors[LED4]->b;
-    write_buffer[16] = 0x00;
-
-    write_buffer[17] = CMD_LEDS_5_6;
-    write_buffer[18] = (unsigned char)colors[LED5]->r;
-    write_buffer[19] = (unsigned char)colors[LED5]->g;
-    write_buffer[20] = (unsigned char)colors[LED5]->b;
-
-    write_buffer[21] = (unsigned char)colors[LED6]->r;
-    write_buffer[22] = (unsigned char)colors[LED6]->g;
-    write_buffer[23] = (unsigned char)colors[LED6]->b;
-    write_buffer[24] = 0x00;
-
-    write_buffer[25] = CMD_LEDS_7_8;
-    write_buffer[26] = (unsigned char)colors[LED7]->r;
-    write_buffer[27] = (unsigned char)colors[LED7]->g;
-    write_buffer[28] = (unsigned char)colors[LED7]->b;
-
-    write_buffer[29] = (unsigned char)colors[LED8]->r;
-    write_buffer[30] = (unsigned char)colors[LED8]->g;
-    write_buffer[31] = (unsigned char)colors[LED8]->b;
-    write_buffer[32] = 0x00;
-
-    writeBufferToDeviceWithCheck();
+    writeBufferToDeviceWithCheck(CMD_UPDATE_LEDS);
 }
