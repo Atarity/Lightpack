@@ -161,9 +161,8 @@ void    usbhidCloseDevice(usbDevice_t *device)
 
 /* ------------------------------------------------------------------------ */
 
-int usbhidSetReport(usbDevice_t *device, char *buffer, int len, int timeout)
+int usbhidSetReport(usbDevice_t *device, char *buffer, int len)
 {
-    // brunql: windows doesn't support setting timeout, ignore it
     BOOLEAN rval;
 
     rval = HidD_SetFeature((HANDLE)device, buffer, len);
@@ -198,6 +197,12 @@ int usbhidGetReport(usbDevice_t *device, int reportNumber, char *buffer, int *le
 #define USBRQ_HID_SET_REPORT    0x09
 
 #define USB_HID_REPORT_TYPE_FEATURE 3
+
+/* HID request type */
+#define REQTYPE_CLASS              (1 << 5)
+#define REQREC_INTERFACE           (1 << 0)
+#define REQDIR_HOSTTODEVICE        (0 << 7)
+#define REQDIR_DEVICETOHOST        (1 << 7)
 
 
 static int  usesReportIDs;
@@ -292,6 +297,21 @@ static int          didUsbInit = 0;
         errorCode = 0;
         *device = (usbDevice_t *)handle;//(void *)handle;
         usesReportIDs = _usesReportIDs;
+
+        /* Setup USB configuration and interface */
+        int retries = 1, usbConfiguration = 1, usbInterface = 0;
+        if(usb_set_configuration(handle, usbConfiguration)){
+            fprintf(stderr, "Warning: could not set configuration: %s\n", usb_strerror());
+        }
+        /* now try to claim the interface and detach the kernel HID driver on
+         * Linux and other operating systems which support the call. */
+        while(usb_claim_interface(handle, usbInterface) != 0 && retries-- > 0){
+#ifdef LIBUSB_HAS_DETACH_KERNEL_DRIVER_NP
+            if(usb_detach_kernel_driver_np(handle, usbInterface) < 0){
+                fprintf(stderr, "Warning: could not detach kernel driver: %s\n", usb_strerror());
+            }
+#endif
+        }
     }
     return errorCode;
 }
@@ -306,18 +326,17 @@ void    usbhidCloseDevice(usbDevice_t *device)
 
 /* ------------------------------------------------------------------------- */
 
-int usbhidSetReport(usbDevice_t *device, char *buffer, int len, int timeout)
+int usbhidSetReport(usbDevice_t *device, int reportNumber, char *buffer, int len)
 {
-int bytesSent;
+    int bytesSent = 0;
 
-    if(!usesReportIDs){
-        buffer++;   /* skip dummy report ID */
-        len--;
-    }
-    bytesSent = usb_control_msg((usb_dev_handle *)device, USB_TYPE_CLASS | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, USBRQ_HID_SET_REPORT, USB_HID_REPORT_TYPE_FEATURE << 8 | (buffer[0] & 0xff), 0, buffer, len, timeout);
+    bytesSent = usb_control_msg((usb_dev_handle *)device,
+                                (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE),
+                                USBRQ_HID_SET_REPORT, reportNumber, 0,
+                                buffer, len, 1000);
+
     if(bytesSent != len){
-//        if(bytesSent < 0){
-        qWarning("Error (%d): %s", bytesSent, usb_strerror());
+        qWarning("Error (bytesSent=%d): %s", bytesSent, usb_strerror());
         return (bytesSent == USB_TIMER_EXPIRED) ? 0 : USBOPEN_ERR_IO;
     }
     return 0;
@@ -327,32 +346,19 @@ int bytesSent;
 
 int usbhidGetReport(usbDevice_t *device, int reportNumber, char *buffer, int *len)
 {
-int bytesReceived, maxLen = *len;
+    int bytesReceived, maxLen = *len;
 
-    if(!usesReportIDs){
-        buffer++;   /* make room for dummy report ID */
-        maxLen--;
-    }
-    bytesReceived = usb_control_msg((usb_dev_handle *)device, USB_TYPE_CLASS | USB_RECIP_DEVICE | USB_ENDPOINT_IN, USBRQ_HID_GET_REPORT, USB_HID_REPORT_TYPE_FEATURE << 8 | reportNumber, 0, buffer, maxLen, 5000);
+    bytesReceived = usb_control_msg((usb_dev_handle *)device,
+                                (REQDIR_DEVICETOHOST | REQTYPE_CLASS | REQREC_INTERFACE),
+                                USBRQ_HID_GET_REPORT, reportNumber, 0,
+                                buffer, maxLen, 1000);
     if(bytesReceived < 0){
-        fprintf(stderr, "Error sending message: %s\n", usb_strerror());
+        fprintf(stderr, "Error sending message (%d): %s\n", bytesReceived, usb_strerror());
         return USBOPEN_ERR_IO;
     }
     *len = bytesReceived;
-    if(!usesReportIDs){
-        buffer[-1] = reportNumber;  /* add dummy report ID */
-        (*len)++;
-    }
+
     return 0;
-}
-
-
-
-//brunql
-
-int usbInterruptRead(usbDevice_t *device, char *buffer, int size, int ep)
-{
-    return usb_interrupt_read((usb_dev_handle *)device, USB_ENDPOINT_IN | ep, buffer, size, 1000);
 }
 
 /* ######################################################################## */
