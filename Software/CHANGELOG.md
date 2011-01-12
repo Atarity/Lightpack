@@ -1,8 +1,14 @@
-Software changes
-================
+Lightpack software
+==================
+
+Version sw4.0.0
+---------------
+brunql, January 13, 2011
+
+* See hardware changes for details (hw4.0)
 
 Version sw3.0.3
--------------
+---------------
 brunql, December 11, 2010
 
 * Fully support 8 LEDs by software
@@ -14,7 +20,7 @@ brunql, December 11, 2010
 * Updated "About" dialog: added license GPLv3 with link on www.gnu.org/licenses/gpl-3.0.html 
 
 Version sw3.0.2
--------------
+---------------
 brunql, December 11, 2010
 
 * Read and write USB data buffers expanded to 0x20 bytes
@@ -23,14 +29,14 @@ brunql, December 11, 2010
 * Intermediate version before fully support 8 LEDs
 
 Version sw3.0.1
--------------
+---------------
 brunql, December 8, 2010
 
 * Bugfix with multiply monitors (wrong determine width of screen, using full desktop->width() but need only available witdh of the primary screen) 
 * Right now AmbiligthUSB can be using only with primary screen
 
 Version sw3.0.0
--------------
+---------------
 brunql, December 7, 2010
 
 * Split firmware and hardware versions
@@ -39,7 +45,7 @@ brunql, December 7, 2010
 * 
 
 Version sw2.7.7 (release)
--------------
+---------------
 brunql, November 12, 2010
 
 * License GPLv3
@@ -50,7 +56,7 @@ brunql, November 12, 2010
 * Rename: AmbilightUSB_Hardware to Firmware; AmbilightUSB_PC to Software; 
 
 Version sw2.7.6
--------------
+---------------
 brunql, November 03, 2010
 
 * Windows support
@@ -60,7 +66,7 @@ brunql, November 03, 2010
 * Make one *.pro file for windows and linux
 
 Version sw2.7.5
--------------
+---------------
 brunql, October 25, 2010
 
 Update GUI:
@@ -73,7 +79,7 @@ Update GUI:
 Timer settings for controlling the PWM frequency
 
 Version sw2.7.4
--------------
+---------------
 brunql, October 24, 2010
 
 Rewrote the code to grab screen image and find the average color value of exciting fields
@@ -81,7 +87,7 @@ Added display of exciting fields as filled rectangles in different colors
 Added scroll bars to change the width and height of the exciting fields
 
 Version sw2.7.3
--------------
+---------------
 brunql, September 18, 2010
 
 Sets configurations of:
@@ -97,7 +103,7 @@ Start to writing this version log
 
 
 Version sw2.*
------------
+-------------
 brunql, Summer, 2010
 
 Start to writing Qt based GUI version of PC software.  
@@ -105,7 +111,7 @@ After starting the app is minimized to tray.
 
 
 Version sw1.*
------------
+-------------
 brunql, Spring, 2010
 
 Console version of PC software  
