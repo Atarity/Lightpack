@@ -318,8 +318,8 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 	case CMD_UPDATE_LEDS:
 	    for(uint8_t ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
 	        ColorsLevelsForPWM[ledIndex][R] = ReportData_u8[i++];
-	        ColorsLevelsForPWM[ledIndex][R] = ReportData_u8[i++];
-	        ColorsLevelsForPWM[ledIndex][R] = ReportData_u8[i++];
+	        ColorsLevelsForPWM[ledIndex][G] = ReportData_u8[i++];
+	        ColorsLevelsForPWM[ledIndex][B] = ReportData_u8[i++];
 	    }
 	    break;
 	case CMD_OFF_ALL:
