@@ -117,7 +117,7 @@ bool AmbilightUsb::writeBufferToDevice(int reportId)
 
 bool AmbilightUsb::tryToReopenDevice()
 {
-    qWarning() << "AmbilightUSB device didn't open. Try to reopen device...";
+    qWarning() << "device didn't open; try to reopen device...";
     if(openDevice()){
         qWarning() << "reopen success";
         return true;

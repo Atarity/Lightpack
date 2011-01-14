@@ -53,7 +53,7 @@ QString logWhileWindowNotInitialized = "";
 static void showHelpMessage()
 {
     fprintf(stderr, "\n");
-    fprintf(stderr, "Project : AmbilightUSB \n");
+    fprintf(stderr, "Project : Lightpack \n");
     fprintf(stderr, "Author  : brunql \n");
     fprintf(stderr, "Version : %s\n", VERSION_STR);
     fprintf(stderr, "\n");
@@ -63,7 +63,6 @@ static void showHelpMessage()
     fprintf(stderr, "             use it if detect russian, but you want english \n");
     fprintf(stderr, "  --help   - show this help \n");
     fprintf(stderr, "\n");
-    fprintf(stderr, "sudo ./Ambilight    - try this if can't open device \n");
 }
 
 bool openLogFile(const QString & filePath)
@@ -78,7 +77,7 @@ bool openLogFile(const QString & filePath)
     if(logFile->open(QIODevice::WriteOnly | openFileAppendOrTruncateFlag | QIODevice::Text)){
         logStream.setDevice(logFile);
         logStream << QDateTime::currentDateTime().date().toString("yyyy_MM_dd") << " ";
-        logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Ambilight v" << VERSION_STR << endl;
+        logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Lightpack v" << VERSION_STR << endl;
     }else{
         cerr << "Error open file for write: " << filePath.toStdString() << endl;
         return false;
@@ -138,7 +137,7 @@ void setDefaultSettingIfNotFound(const QString & name, const QVariant & value)
 //
 void settingsInit()
 {
-    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "brunql.dev", "AmbilightUSB");
+    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "brunql.dev", "Lightpack");
     qDebug() << "Settings file: " << settings->fileName();
     
     setDefaultSettingIfNotFound("RefreshAmbilightDelayMs",             REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
@@ -161,7 +160,7 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);    
     app.setApplicationVersion(VERSION_STR);
 
-    QString logFilePath = QDir::homePath() + "/.AmbilightUSB.log";
+    QString logFilePath = QDir::homePath() + "/.Lightpack.log";
 
     if(openLogFile(logFilePath)){
         cout << "Logs file: " << logFilePath.toStdString() << endl;
@@ -191,7 +190,7 @@ int main(int argc, char **argv)
 
     qInstallMsgHandler(messageOutput);
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
-        QMessageBox::critical(0, "AmbilightUSB",
+        QMessageBox::critical(0, "Lightpack",
                               "I couldn't detect any system tray on this system.");
         return 1;
     }

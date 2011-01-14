@@ -233,19 +233,19 @@ void MainWindow::ambilightOff()
 void MainWindow::trayAmbilightOn()
 {
     trayIcon->setIcon(QIcon(":/icons/on.png"));
-    trayIcon->setToolTip(tr("Ambilight USB. On state."));
+    trayIcon->setToolTip(tr("On state"));
 }
 
 void MainWindow::trayAmbilightOff()
 {
     trayIcon->setIcon(QIcon(":/icons/off.png"));
-    trayIcon->setToolTip(tr("Ambilight USB. Off state."));
+    trayIcon->setToolTip(tr("Off state"));
 }
 
 void MainWindow::trayAmbilightError()
 {
     trayIcon->setIcon(QIcon(":/icons/error.png"));
-    trayIcon->setToolTip(tr("Ambilight USB. Error state."));
+    trayIcon->setToolTip(tr("Error state"));
 }
 
 
@@ -277,13 +277,13 @@ void MainWindow::ambilightUsbSuccess(bool isSuccess)
         isErrorState = false;
         trayAmbilightOn();
 
-        qWarning() << "Ambilight USB. On state.";
+        qWarning() << "on state.";
         grabDesktopWindowLeds->clearColors();
     }else if(!isErrorState && !isSuccess){
         isErrorState = true;
         trayAmbilightError();
 
-        qWarning() << "Ambilight USB. Error state.";
+        qWarning() << "error state.";
     }    
 }
 
