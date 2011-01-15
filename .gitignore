@@ -42,6 +42,6 @@ qrc_*
 *.map
 *.[sb]#*
 *.epf
-*.pro
+Hardware/*.pro
 *.lst
 *.sym
