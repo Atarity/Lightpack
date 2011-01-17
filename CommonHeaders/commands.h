@@ -30,13 +30,13 @@
 
 // Commands to device, sends it in first byte of data[]
 enum COMMANDS{
-    CMD_UPDATE_LEDS,
+    CMD_UPDATE_LEDS = 1,
     CMD_OFF_ALL,                     /* switch off all leds */
     CMD_SET_TIMER_OPTIONS,           /* timer settings */
     CMD_SET_PWM_LEVEL_MAX_VALUE,     /* each color max value */
     CMD_SMOOTH_CHANGE_COLORS,
 
-    CMD_NOP = 0xff
+    CMD_NOP = 0x0F
 };
 
 enum PRESCALLERS{
@@ -53,14 +53,6 @@ enum DATA_VERSION_INDEXES{
     INDEX_HW_VER_MINOR,
     INDEX_FW_VER_MAJOR,
     INDEX_FW_VER_MINOR,
-};
-
-
-enum UART_COMMANDS{
-    START_OF_FRAME_COLORS = 0xf9,
-
-    RECEIVE_OK = 0xf3,
-    RECEIVE_FAIL = 0xf0,
 };
 
 #endif /* COMMANDS_H_ */
