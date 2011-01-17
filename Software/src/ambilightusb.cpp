@@ -27,6 +27,8 @@
 
 #include "ambilightusb.h"
 
+#include <unistd.h>
+
 #include <QtDebug>
 
 AmbilightUsb::AmbilightUsb(QObject *parent) :
@@ -44,7 +46,7 @@ AmbilightUsb::AmbilightUsb(QObject *parent) :
 }
 
 AmbilightUsb::~AmbilightUsb(){
-    usbhidCloseDevice(ambilightDevice);
+    hid_close(ambilightDevice);
 }
 
 bool AmbilightUsb::deviceOpened()
@@ -52,49 +54,67 @@ bool AmbilightUsb::deviceOpened()
     return !(ambilightDevice == NULL);
 }
 
-QString AmbilightUsb::usbErrorMessage(int errCode)
-{
-    QString result = "";
-    switch(errCode){
-    case USBOPEN_ERR_ACCESS:      result = "Access to device denied"; break;
-    case USBOPEN_ERR_NOTFOUND:    result = "The specified device was not found"; break;
-    case USBOPEN_ERR_IO:          result = "Communication error with device"; break;
-    default:
-        result = result.sprintf("Unknown USB error %d", errCode);
-        break;
-    }
-    return result;
-}
-
 bool AmbilightUsb::openDevice()
 {
     ambilightDevice = NULL;
-    int vid = USB_VENDOR_ID;
-    int pid = USB_PRODUCT_ID;
-    int err;
+    struct hid_device_info *devs, *cur_dev;
 
+    qDebug("Start enumeration of all HID devices:");
+    devs = hid_enumerate(0, 0);
+    qDebug() << "hid_enumerate(0,0) done";
+    cur_dev = devs;
+    while (cur_dev) {        
 
-    // TODO: add strings with this:
-    //    iManufacturer           1 brunql.github.com
-    //    iProduct                2 Lightpack
-    // And check it in usbhidOpenDevice(...)
-    if((err = usbhidOpenDevice(&ambilightDevice, vid, NULL, pid, NULL, 0)) != 0){
-        qWarning() << "error finding " << ": " << usbErrorMessage(err);
+        int vid = cur_dev->vendor_id;
+        int pid = cur_dev->product_id;
+        QString path = QString::fromStdString(cur_dev->path);
+        QString serial_number = QString::fromWCharArray(cur_dev->serial_number);
+        QString manufacturer_string = QString::fromWCharArray(cur_dev->manufacturer_string);
+        QString product_string = QString::fromWCharArray(cur_dev->product_string);
+
+        qDebug() << "Found HID:";
+        qDebug() << "  VID:" << hex << vid << "; PID:" << pid;
+        qDebug() << "  Path:" << path;
+        qDebug() << "  Serial number:" << serial_number;
+        qDebug() << "  Manufacturer:" << manufacturer_string;
+        qDebug() << "  Product:" << product_string;
+
+        if(vid == USB_VENDOR_ID && pid == USB_PRODUCT_ID && product_string == USB_PRODUCT_STRING){
+            qDebug() << "Lightpack found";
+            ambilightDevice = hid_open_path(cur_dev->path);
+            if(ambilightDevice == NULL){
+                qWarning("Lightpack open fail");
+
+                hid_free_enumeration(devs);
+
+                emit openDeviceSuccess(false);
+                return false;
+            }
+            break; // device founded break search and go to free enumeration and success signal
+        }
+        cur_dev = cur_dev->next;
+    }
+    hid_free_enumeration(devs);
+
+    if(ambilightDevice == NULL){
+        qWarning("Lightpack device not found");
         emit openDeviceSuccess(false);
         return false;
     }
+
+    hid_set_nonblocking(ambilightDevice, 1);
+
     emit openDeviceSuccess(true);
-    qDebug("Lightpack (PID: 0x%04x; VID: 0x%04x) opened.", pid, vid);
+    qDebug("Lightpack opened");
     return true;
 }
 
 bool AmbilightUsb::readDataFromDevice()
-{
-    int err;
+{    
+    int bytes_read = hid_read(ambilightDevice, read_buffer, sizeof(read_buffer));
 
-    int len = sizeof(read_buffer);
-    if((err = usbhidGetReport(ambilightDevice, 0, read_buffer, &len)) != 0){
-        qWarning() << "error reading data:" << usbErrorMessage(err);
+    if(bytes_read < 0){
+        qWarning() << "error reading data:" << bytes_read;
         emit readBufferFromDeviceSuccess(false);
         return false;
     }
@@ -104,10 +124,12 @@ bool AmbilightUsb::readDataFromDevice()
 
 bool AmbilightUsb::writeBufferToDevice(int reportId)
 {
-    int err = usbhidSetReport(ambilightDevice, reportId, write_buffer, sizeof(write_buffer));
+    write_buffer[0] = 0x00;
+    write_buffer[1] = reportId;
+    int bytes_write = hid_write(ambilightDevice, write_buffer, sizeof(write_buffer));
 
-    if(err != 0){
-        qWarning() << "error writing data:" << usbErrorMessage(err);
+    if(bytes_write < 0){
+        qWarning() << "error writing data:" << bytes_write;
         emit writeBufferToDeviceSuccess(false);
         return false;
     }
@@ -117,7 +139,8 @@ bool AmbilightUsb::writeBufferToDevice(int reportId)
 
 bool AmbilightUsb::tryToReopenDevice()
 {
-    qWarning() << "device didn't open; try to reopen device...";
+    hid_close(ambilightDevice);
+    qWarning() << "try to reopen device";
     if(openDevice()){
         qWarning() << "reopen success";
         return true;
@@ -206,16 +229,16 @@ QString AmbilightUsb::firmwareVersion()
 
 void AmbilightUsb::offLeds()
 {
+    qDebug("offLeds()");
     writeBufferToDeviceWithCheck(CMD_OFF_ALL);
 }
 
 void AmbilightUsb::smoothChangeColors(int smoothly_delay)
 {
     // TODO: add to settings shoothChangeColors state, send to device and load it to form when start application
-    write_buffer[1] = CMD_SMOOTH_CHANGE_COLORS;
-    write_buffer[2] = (char)smoothly_delay;
+    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (char)smoothly_delay;
 
-    writeBufferToDeviceWithCheck(CMD_NOP);
+    writeBufferToDeviceWithCheck(CMD_SMOOTH_CHANGE_COLORS);
 }
 
 
@@ -223,13 +246,11 @@ void AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValu
 {
     qDebug("ambilightUsb::setTimerOptions(%d, %d)", prescallerIndex, outputCompareRegValue);
 
-    // TODO: set names for each index
-    write_buffer[1] = CMD_SET_TIMER_OPTIONS;
-    write_buffer[2] = (unsigned char)prescallerIndex;
-    write_buffer[3] = (unsigned char)outputCompareRegValue;
+    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)prescallerIndex;
+    write_buffer[WRITE_BUFFER_INDEX_DATA_START+1] = (unsigned char)outputCompareRegValue;
 
 
-    writeBufferToDeviceWithCheck(CMD_NOP);
+    writeBufferToDeviceWithCheck(CMD_SET_TIMER_OPTIONS);
 }
 
 void AmbilightUsb::setColorDepth(int colorDepth)
@@ -241,11 +262,9 @@ void AmbilightUsb::setColorDepth(int colorDepth)
         return;
     }
 
-    // TODO: set names for each index
-    write_buffer[1] = CMD_SET_PWM_LEVEL_MAX_VALUE;
-    write_buffer[2] = (unsigned char)colorDepth;
+    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)colorDepth;
 
-    writeBufferToDeviceWithCheck(CMD_NOP);
+    writeBufferToDeviceWithCheck(CMD_SET_PWM_LEVEL_MAX_VALUE);
 }
 
 
@@ -259,12 +278,36 @@ void AmbilightUsb::setUsbSendDataTimeoutMs(double usb_send_data_timeout_secs)
 void AmbilightUsb::updateColors(LedColors colors)
 {
     // Fill write_buffer with new colors for all LEDs
-    int i=0;
+
+    // First write_buffer[0] == 0x00 - ReportID, i have problems with using it
+    // Second byte of usb buffer is command (write_buffer[1] == CMD_UPDATE_LEDS, see below)
+    int i = WRITE_BUFFER_INDEX_DATA_START;
     for(int led=0; led < LEDS_COUNT; led++){
         write_buffer[i++] = colors[led]->r;
         write_buffer[i++] = colors[led]->g;
         write_buffer[i++] = colors[led]->b;
     }
 
+#if 0
+    QString res = "";
+    for(unsigned i=0; i<sizeof(write_buffer); i++){
+        res += QString().sprintf("%02x", write_buffer[i]);
+    }
+    qDebug() << "write:" << res;
+#endif
+
     writeBufferToDeviceWithCheck(CMD_UPDATE_LEDS);
+
+#if 0
+    usleep(100*1000);
+
+    memset(read_buffer,0x00,sizeof(read_buffer));
+
+    readDataFromDevice();
+    res = "";
+    for(unsigned i=0; i<sizeof(read_buffer); i++){
+        res += QString().sprintf("%02x", read_buffer[i]);
+    }
+    qDebug() << "read :" << res;
+#endif
 }

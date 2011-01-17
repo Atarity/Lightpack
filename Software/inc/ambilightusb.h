@@ -35,12 +35,20 @@
 #include "settings.h"
 
 #include "../CommonHeaders/USB_ID.h"  /* For device VID, PID, vendor name and product name */
-#include "hiddata.h"    /* USB HID */
+#include "hidapi.h" /* USB HID API */
+
 
 #include "../CommonHeaders/commands.h"   /* CMD defines */
 #include "../CommonHeaders/RGB.h"        /* Led defines */
 
 #include "ledcolors.h"
+
+
+// This defines using in all data transfers to determine indexes in write_buffer[]
+// In device COMMAND have index 0, data 1 and so on, report id isn't using
+#define WRITE_BUFFER_INDEX_REPORT_ID    0
+#define WRITE_BUFFER_INDEX_COMMAND      1
+#define WRITE_BUFFER_INDEX_DATA_START   2
 
 
 class AmbilightUsb : public QObject
@@ -77,13 +85,12 @@ private:
     bool writeBufferToDevice(int reportId);
     bool writeBufferToDeviceWithCheck(int reportId);
     bool tryToReopenDevice();
-    QString usbErrorMessage(int errCode);
 
-    usbDevice_t *ambilightDevice;
+    hid_device *ambilightDevice;
 
 
-    char read_buffer[1 + 0x20];    /* 0x00-ReportID, 0x01..0x20-data */
-    char write_buffer[1 + 0x20];   /* 0x00-ReportID, 0x01..0x20-data */
+    unsigned char read_buffer[33];    /* 0-ReportID, 1..33-data */
+    unsigned char write_buffer[33];   /* 0-ReportID, 1..33-data */
 
 
     // Settings:
