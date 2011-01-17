@@ -34,8 +34,12 @@ TARGET = Lightpack
 TRANSLATIONS = res/translations/ru_RU.ts
 CONFIG -= console
 CONFIG -= app_bundle
-CONFIG += link_pkgconfig
-PKGCONFIG += libusb-1.0
+
+unix{
+    CONFIG += link_pkgconfig
+    PKGCONFIG += libusb-1.0
+}
+
 
 win32 {
     # Windows using WinAPI for HID
@@ -45,15 +49,11 @@ win32 {
 
 unix:!macx{
     # Linux version using libusb and hidapi codes
-    #INCLUDEPATH += `pkg-config libusb-1.0 --cflags`
-    #LIBS += `pkg-config libusb-1.0 --libs`
     SOURCES += hidapi/linux/hid-libusb.c    
 }
 
 macx{
     # MacOS version using libusb and hidapi codes
-    LIBS += `pkg-config libusb-1.0 --libs`
-#-lusb
     SOURCES += hidapi/mac/hid.c
 }
 
