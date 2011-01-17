@@ -308,13 +308,10 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 	HIDReportEcho.ReportSize = ReportSize;
 	memcpy(HIDReportEcho.ReportData, ReportData, ReportSize);
 
-
-	HIDReportEcho.ReportData[0] = ReportID;
-
 	uint8_t *ReportData_u8 = (uint8_t *)ReportData;
-	uint8_t i = 0;
+	uint8_t i = 1;
 
-	switch(ReportID){
+	switch(ReportData_u8[0]){
 	case CMD_UPDATE_LEDS:
 	    for(uint8_t ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
 	        ColorsLevelsForPWM[ledIndex][R] = ReportData_u8[i++];
@@ -325,9 +322,6 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 	case CMD_OFF_ALL:
 	    SetAllLedsColors(0, 0, 0);
 	    break;
-
-	    // TODO:
-
 	case CMD_SET_TIMER_OPTIONS:
         break;
 	case CMD_SET_PWM_LEVEL_MAX_VALUE:
