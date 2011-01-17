@@ -488,7 +488,7 @@ int HID_API_EXPORT HID_API_CALL hid_write(hid_device *dev, const unsigned char *
 	BOOL res;
 
 	OVERLAPPED ol;
-	memset(&ol, 0, sizeof(ol));
+        memset(&ol, 0, sizeof(ol));
 
 	res = WriteFile(dev->device_handle, data, length, NULL, &ol);
 	
@@ -496,7 +496,7 @@ int HID_API_EXPORT HID_API_CALL hid_write(hid_device *dev, const unsigned char *
 		if (GetLastError() != ERROR_IO_PENDING) {
 			// WriteFile() failed. Return error.
 			register_error(dev, "WriteFile");
-			return -1;
+                        return -2;
 		}
 	}
 
@@ -506,7 +506,7 @@ int HID_API_EXPORT HID_API_CALL hid_write(hid_device *dev, const unsigned char *
 	if (!res) {
 		// The Write operation failed.
 		register_error(dev, "WriteFile");
-		return -1;
+                return -3;
 	}
 
 	return bytes_written;
