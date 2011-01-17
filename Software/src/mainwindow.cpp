@@ -215,9 +215,11 @@ void MainWindow::ambilightOn()
 void MainWindow::ambilightOff()
 {
     if(isAmbilightOn){
+        qDebug("trayAmbilightOff...");
         trayAmbilightOff();
 
         if(!isErrorState){
+            qDebug("isErrorState == false");
             if(ambilightUsb->deviceOpened()){
                 ambilightUsb->offLeds();
             }
@@ -226,7 +228,9 @@ void MainWindow::ambilightOff()
         }
         isAmbilightOn = false;
     }
+    qDebug("settings...");
     settings->setValue("IsAmbilightOn", isAmbilightOn);
+    qDebug("grabDesktopWindowLeds...");
     grabDesktopWindowLeds->setAmbilightOn(isAmbilightOn);
 }
 
