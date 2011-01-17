@@ -82,8 +82,8 @@ signals:
 private:
     bool readDataFromDevice();
     bool readDataFromDeviceWithCheck();
-    bool writeBufferToDevice(int reportId);
-    bool writeBufferToDeviceWithCheck(int reportId);
+    bool writeBufferToDevice(int command);
+    bool writeBufferToDeviceWithCheck(int command);
     bool tryToReopenDevice();
 
     hid_device *ambilightDevice;

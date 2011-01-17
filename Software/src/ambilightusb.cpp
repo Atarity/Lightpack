@@ -122,10 +122,10 @@ bool AmbilightUsb::readDataFromDevice()
     return true;
 }
 
-bool AmbilightUsb::writeBufferToDevice(int reportId)
+bool AmbilightUsb::writeBufferToDevice(int command)
 {
-    write_buffer[0] = 0x00;
-    write_buffer[1] = reportId;
+    write_buffer[WRITE_BUFFER_INDEX_REPORT_ID] = 0x00;
+    write_buffer[WRITE_BUFFER_INDEX_COMMAND] = command;
     int bytes_write = hid_write(ambilightDevice, write_buffer, sizeof(write_buffer));
 
     if(bytes_write < 0){
@@ -169,20 +169,22 @@ bool AmbilightUsb::readDataFromDeviceWithCheck()
     }
 }
 
-bool AmbilightUsb::writeBufferToDeviceWithCheck(int reportId)
+bool AmbilightUsb::writeBufferToDeviceWithCheck(int command)
 {
     if(ambilightDevice != NULL){
-        if(!writeBufferToDevice(reportId)){
-            if(tryToReopenDevice()){
-                return writeBufferToDevice(reportId);
-            }else{
-                return false;
+        if(!writeBufferToDevice(command)){
+            if(!writeBufferToDevice(command)){
+                if(tryToReopenDevice()){
+                    return writeBufferToDevice(command);
+                }else{
+                    return false;
+                }
             }
         }
         return true;
     }else{
         if(tryToReopenDevice()){
-            return writeBufferToDevice(reportId);
+            return writeBufferToDevice(command);
         }else{
             return false;
         }
