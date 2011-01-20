@@ -33,6 +33,15 @@ brunql, December, 2010
 * USB Type B
 * One PCB with wires to LEDs
 
+Version hw2.1.3
+---------------
+brunql, January 21, 2011
+
+Edited only schematic of AmbilightUSB:
+
+* Bugfix INT0 must be connected to USB D+
+
+
 Version hw2.1.2
 ---------------
 brunql, December 9, 2010
