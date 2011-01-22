@@ -3,9 +3,13 @@ Lightpack hardware
 
 Version hw4.1
 -------------
-brunql, January 11, 2011
+brunql, January 22, 2011
 
-* Prototyping on AT90USB162 maket board
+* AT90USB162
+* 2 x MBI5026 led drivers
+* 8 RGB SMD LEDs
+* Using miniUSB Type B connector
+* All resistors and capacitors in 1206 package
 
 Version hw4.0
 -------------
