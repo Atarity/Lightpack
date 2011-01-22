@@ -1,4 +1,4 @@
-Hardware/[^.]+\.[s,d]#\d
+Hardware/[^.]+\.[s,d,b]#\d
 Hardware/[^.]+\.pro
 Hardware/[^.]+\.epf
 Firmware/obj/
