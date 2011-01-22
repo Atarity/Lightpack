@@ -1,0 +1,13 @@
+Hardware/[^.]+\.[s,d]#\d
+Hardware/[^.]+\.pro
+Hardware/[^.]+\.epf
+Firmware/obj/
+Firmware/.dep/
+Software/build/
+Software/moc/
+Software/obj/
+Software/ui/
+Software/res/translations/[^.]+.qm
+Software/res/qrc_[^.]+.cpp
+Software/[^.]+.pro.user
+Software/Makefile
