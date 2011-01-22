@@ -30,8 +30,17 @@
 # Project created by QtCreator 2010-04-28T19:08:13
 # -------------------------------------------------
 DESTDIR = ./build
+OBJECTS_DIR = ./obj
+MOC_DIR = ./moc
+UI_DIR = ./ui
+RCC_DIR = ./res
+
 TARGET = Lightpack
+
 TRANSLATIONS = res/translations/ru_RU.ts
+RESOURCES = res/LightpackResources.qrc
+RC_FILE = res/Lightpack.rc
+
 CONFIG -= console
 CONFIG -= app_bundle
 
@@ -58,8 +67,6 @@ macx{
 }
 
 INCLUDEPATH += ./inc ./hidapi
-OBJECTS_DIR = ./obj
-MOC_DIR = ./moc
 TEMPLATE = app
 SOURCES += src/main.cpp \
     src/mainwindow.cpp \
@@ -81,5 +88,3 @@ HEADERS += hidapi/hidapi.h \
     inc/ledcolors.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui
-RESOURCES += res/LightpackResources.qrc
-RC_FILE = res/Lightpack.rc
