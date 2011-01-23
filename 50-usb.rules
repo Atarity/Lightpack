@@ -8,7 +8,11 @@
 # Let's edit this file!
 
 # Ambilight
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",SYSFS{idVendor}=="16c0" , SYSFS{idProduct}=="05df", MODE="0666"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTR{idVendor}=="16c0" , ATTR{idProduct}=="05df", MODE="0666"
 
 # UsbAsp
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",SYSFS{idVendor}=="16c0" , SYSFS{idProduct}=="05dc", MODE="0666"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTR{idVendor}=="16c0" , ATTR{idProduct}=="05dc", MODE="0666"
+
+# Atmel Flip DFU
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTR{idVendor}=="03eb" , ATTR{idProduct}=="2ffa", MODE="0666"
+
