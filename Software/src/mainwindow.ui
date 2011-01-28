@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>474</width>
-    <height>543</height>
+    <width>473</width>
+    <height>489</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -701,6 +701,19 @@
          <string>Close</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>37</width>
+          <height>17</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
