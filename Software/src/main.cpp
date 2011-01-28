@@ -38,6 +38,7 @@
 
 
 
+
 using namespace std;
 
 // Public visible object, #include "settings.h" for use it
@@ -91,12 +92,15 @@ void messageOutput(QtMsgType type, const char *msg)
     switch (type) {
     case QtDebugMsg:        
         out.append("Debug: " + QString(msg));        
+        cout << out.toStdString() << endl;
         break;
     case QtWarningMsg:
         out.append("Warning: " + QString(msg));
+        cerr << out.toStdString() << endl;
         break;
     case QtCriticalMsg:
         out.append("Critical: " + QString(msg));
+        cerr << out.toStdString() << endl;
         break;
     case QtFatalMsg:
         cerr << "Fatal: " << msg << endl;
@@ -106,11 +110,11 @@ void messageOutput(QtMsgType type, const char *msg)
         logStream.flush();
 
         abort();
-    }
-    cerr << out.toStdString() << endl;
+    }    
     logStream << out << endl;
     logStream.flush();
     cerr.flush();
+    cout.flush();
 
     if(window != NULL){
         if(logWhileWindowNotInitialized != ""){
