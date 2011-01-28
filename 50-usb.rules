@@ -4,15 +4,24 @@
 #     Author: brunql
 # Created on: 2.08.10
 #
-# I'm using this USB VID (voti.nl) and PID (shared for HIDs) from obdev for Ambilight project
-# Let's edit this file!
+# brunql@brunql-desktop:~$ sudo cp lightpack/50-usb.rules /etc/udev/rules.d/
+# brunql@brunql-desktop:~$ sudo restart udev
+# brunql@brunql-desktop:~$ lsusb -d 3eb:204f -v
+#
 
-# Ambilight
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTR{idVendor}=="16c0" , ATTR{idProduct}=="05df", MODE="0666"
+
+# AmbilightUSB
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTR{idVendor}=="16c0" , ATTR{idProduct}=="05df", MODE="0777"
+
+# Lightpack
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTR{idVendor}=="03eb" , ATTR{idProduct}=="204f", MODE="0777"
+
+# USBtinyThermometer
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTR{idVendor}=="6666" , ATTR{idProduct}=="0200", MODE="0777"
 
 # UsbAsp
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTR{idVendor}=="16c0" , ATTR{idProduct}=="05dc", MODE="0666"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTR{idVendor}=="16c0" , ATTR{idProduct}=="05dc", MODE="0777"
 
 # Atmel Flip DFU
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTR{idVendor}=="03eb" , ATTR{idProduct}=="2ffa", MODE="0666"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTR{idVendor}=="03eb" , ATTR{idProduct}=="2ffa", MODE="0777"
 
