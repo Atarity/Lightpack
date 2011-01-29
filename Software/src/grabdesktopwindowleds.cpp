@@ -101,15 +101,12 @@ void GrabDesktopWindowLeds::createLabelsGrabPixelsRects()
     labelGrabPixelsRects.clear();
 
     for(int i=0; i<LEDS_COUNT; i++){
-        labelGrabPixelsRects.append(new QLabel(this, Qt::FramelessWindowHint | Qt::SplashScreen));
+        labelGrabPixelsRects.append(new MoveMeWidget(this));
         labelGrabPixelsRects[i]->setFocusPolicy(Qt::NoFocus);
         labelGrabPixelsRects[i]->setText(QString::number(i+1));
         labelGrabPixelsRects[i]->setAlignment(Qt::AlignCenter);
 
-        // Fill label with labelColors[i] color
-        QPalette pal = labelGrabPixelsRects[i]->palette();
-        pal.setBrush(labelGrabPixelsRects[i]->backgroundRole(), QBrush(labelsColors[i]));
-        labelGrabPixelsRects[i]->setPalette(pal);
+        labelGrabPixelsRects[i]->setBackgroundColor(labelsColors[i]);
     }
 
     updateSizesLabelsGrabPixelsRects();
@@ -118,8 +115,7 @@ void GrabDesktopWindowLeds::createLabelsGrabPixelsRects()
 void GrabDesktopWindowLeds::updateSizesLabelsGrabPixelsRects()
 {
     for(int i=0; i<LEDS_COUNT; i++){
-        labelGrabPixelsRects[i]->setFixedWidth(ambilight_width);
-        labelGrabPixelsRects[i]->setFixedHeight(ambilight_height);
+        labelGrabPixelsRects[i]->resize(ambilight_width, ambilight_height);
     }
 
     // TODO: LEFT side 1234, RIGHT side 5678
@@ -286,9 +282,7 @@ void GrabDesktopWindowLeds::setColoredGrabPixelsRects(bool state)
     if(state){
         for(int i=0; i<labelGrabPixelsRects.count(); i++){
             // Fill label with labelColors[i] color
-            QPalette pal = labelGrabPixelsRects[i]->palette();
-            pal.setBrush(labelGrabPixelsRects[i]->backgroundRole(), QBrush(labelsColors[i]));
-            labelGrabPixelsRects[i]->setPalette(pal);
+            labelGrabPixelsRects[i]->setBackgroundColor(labelsColors[i]);
         }
     }
 }
@@ -298,9 +292,7 @@ void GrabDesktopWindowLeds::setWhiteGrabPixelsRects(bool state)
     if(state){
         for(int i=0; i<labelGrabPixelsRects.count(); i++){
             // Fill labels white
-            QPalette pal = labelGrabPixelsRects[i]->palette();
-            pal.setBrush(labelGrabPixelsRects[i]->backgroundRole(), QBrush(Qt::white));
-            labelGrabPixelsRects[i]->setPalette(pal);
+            labelGrabPixelsRects[i]->setBackgroundColor(Qt::white);
         }
     }
 }

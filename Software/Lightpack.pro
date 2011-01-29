@@ -72,7 +72,8 @@ SOURCES += src/main.cpp \
     src/mainwindow.cpp \
     src/ambilightusb.cpp \
     src/aboutdialog.cpp \
-    src/grabdesktopwindowleds.cpp
+    src/grabdesktopwindowleds.cpp \
+    src/movemewidget.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/commands.h \
     ../CommonHeaders/RGB.h \
@@ -84,6 +85,7 @@ HEADERS += hidapi/hidapi.h \
     inc/aboutdialog.h \
     inc/timeevaluations.h \
     inc/grabdesktopwindowleds.h \
+    inc/movemewidget.h \
     inc/struct_rgb.h \
     inc/ledcolors.h
 FORMS += src/mainwindow.ui \

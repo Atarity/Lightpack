@@ -33,6 +33,7 @@
 #include "settings.h"
 #include "timeevaluations.h"
 #include "ledcolors.h"
+#include "movemewidget.h"
 
 class GrabDesktopWindowLeds : public QWidget
 {
@@ -74,7 +75,7 @@ private:
 
 private: // variables
     QTimer *timer;
-    QList<QLabel *> labelGrabPixelsRects;
+    QList<MoveMeWidget *> labelGrabPixelsRects;
     const static QColor labelsColors[LEDS_COUNT];
     TimeEvaluations *timeEval;
 
