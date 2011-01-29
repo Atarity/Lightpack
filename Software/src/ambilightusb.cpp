@@ -205,8 +205,8 @@ QString AmbilightUsb::hardwareVersion()
     }
 
     // read_buffer[0] - report ID, skip it by +1
-    int hw_major = read_buffer[INDEX_HW_VER_MAJOR +1];
-    int hw_minor = read_buffer[INDEX_HW_VER_MINOR +1];
+    int hw_major = read_buffer[INDEX_HW_VER_MAJOR];
+    int hw_minor = read_buffer[INDEX_HW_VER_MINOR];
     return QString::number(hw_major) + "." + QString::number(hw_minor);
 }
 
@@ -224,8 +224,8 @@ QString AmbilightUsb::firmwareVersion()
     }
 
     // read_buffer[0] - report ID, skip it by +1
-    int fw_major = read_buffer[INDEX_FW_VER_MAJOR +1];
-    int fw_minor = read_buffer[INDEX_FW_VER_MINOR +1];
+    int fw_major = read_buffer[INDEX_FW_VER_MAJOR];
+    int fw_minor = read_buffer[INDEX_FW_VER_MINOR];
     return QString::number(fw_major) + "." + QString::number(fw_minor);
 }
 
