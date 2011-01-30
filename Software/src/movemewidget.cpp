@@ -25,8 +25,9 @@
  */
 
 
-#include "QtGui"
+#include <QtGui>
 #include "movemewidget.h"
+#include "desktop.h"
 
 // Colors changes when middle button clicked
 const QColor MoveMeWidget::colors[ColorsCount] = {
@@ -136,15 +137,27 @@ void MoveMeWidget::mousePressEvent(QMouseEvent *pe)
 void MoveMeWidget::mouseMoveEvent(QMouseEvent *pe)
 {
     int newWidth, newHeight, newX, newY;
+    QPoint moveHere;
 
     switch(cmd){
     case MOVE:
-        this->move(pe->globalPos() - mousePressPosition);
+        moveHere = pe->globalPos() - mousePressPosition;
+        if(moveHere.x() < StickyCloserPixels) moveHere.setX(0);
+        if(moveHere.y() < StickyCloserPixels) moveHere.setY(0);
+
+        if(moveHere.x() + this->width() > Desktop::WidthAvailable - StickyCloserPixels)
+            moveHere.setX(Desktop::WidthAvailable - this->width());
+        if(moveHere.y() + this->height() > Desktop::HeightFull - StickyCloserPixels)
+            moveHere.setY(Desktop::HeightFull - this->height());
+
+        this->move(moveHere);
         break;
+
     case RESIZE_HOR_RIGHT:
         newWidth = pe->x() + mousePressDiffFromBorder.width();
         this->resize((newWidth <= MinimumWidth) ? MinimumWidth : newWidth, this->height());
         break;
+
     case RESIZE_VER_DOWN:
         newHeight = pe->y() + mousePressDiffFromBorder.height();
         this->resize(this->width(), (newHeight <= MinimumHeight) ? MinimumHeight : newHeight);
@@ -275,5 +288,5 @@ void MoveMeWidget::mouseReleaseEvent(QMouseEvent *pe)
 {
     this->setCursor(Qt::OpenHandCursor);
     cmd = NOP;
-    emit resizeCompleted();
+    emit resizeCompleted(selfId);
 }

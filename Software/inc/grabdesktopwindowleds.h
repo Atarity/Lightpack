@@ -34,6 +34,7 @@
 #include "timeevaluations.h"
 #include "ledcolors.h"
 #include "movemewidget.h"
+#include "desktop.h"
 
 class GrabDesktopWindowLeds : public QWidget
 {
@@ -82,9 +83,6 @@ private: // variables
     TimeEvaluations *timeEval;
 
     LedColors colors;
-
-    int desktop_width;
-    int desktop_height;
 
     bool isAmbilightOn;    
     bool updateColorsOnlyIfChanges;

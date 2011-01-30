@@ -32,6 +32,7 @@
 #include "settings.h"
 #include "version.h"
 #include "ambilightusb.h"
+#include "desktop.h"
 
 #include <sys/time.h>
 #include "time.h"
@@ -213,6 +214,8 @@ int main(int argc, char **argv)
             qWarning() << "Locale:" << pathToLocale << "not found. Using defaults.";
         }        
     }
+
+    Desktop desktop; // Call constructor, for fill sizes, after initialize QApplication
 
     window = new MainWindow();   /* Create MainWindow */
     window->setVisible(false);   /* And load to tray. */

@@ -27,10 +27,11 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "desktop.h"
 
 #include <QDesktopWidget>
 #include <QPlainTextEdit>
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -55,16 +56,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connectSignalsSlots();
 
 
-    int desktop_width = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).width();
-    int desktop_height = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).height();
-
     // Initialize limits of height and width
-    ui->horizontalSliderWidth->setMaximum( desktop_width / 2 );
-    ui->spinBox_WidthAmbilight->setMaximum( desktop_width / 2 );
+    ui->horizontalSliderWidth->setMaximum( Desktop::WidthAvailable / 2 );
+    ui->spinBox_WidthAmbilight->setMaximum( Desktop::WidthAvailable / 2 );
 
     // 25px - default height of panels in Ubuntu 10.04
-    ui->horizontalSliderHeight->setMaximum( desktop_height / 4); /* left side 4 leds, right side 4 leds */
-    ui->spinBox_HeightAmbilight->setMaximum( desktop_height / 4); /* left side 4 leds, right side 4 leds */
+    ui->horizontalSliderHeight->setMaximum( Desktop::HeightAvailable / 4); /* left side 4 leds, right side 4 leds */
+    ui->spinBox_HeightAmbilight->setMaximum( Desktop::HeightAvailable / 4); /* left side 4 leds, right side 4 leds */
 
         
     isErrorState = false;
@@ -89,8 +87,8 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "  primaryScreen =" << screen;
     qDebug() << "  isVirtualDesktop =" << QApplication::desktop()->isVirtualDesktop();
     qDebug() << "  numScreens = " << QApplication::desktop()->numScreens();
-    qDebug() << "  primaryScreen Width x Height = " << QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).width() << "x"
-            << QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).height();
+    qDebug() << "  primaryScreen Width x Height = " << Desktop::WidthAvailable << "x" << Desktop::HeightAvailable;
+    qDebug() << "  desktop       Width x Height = " << Desktop::WidthFull << "x" << Desktop::HeightFull;
     qDebug() << "MainWindow(): initialized";
 }
 
@@ -264,11 +262,9 @@ void MainWindow::showAbout()
 
 void MainWindow::showSettings()
 {
-    int desktop_width = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).width();
-    int desktop_height = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).height();
 
-    this->move(desktop_width / 2 - this->width() / 2,
-            desktop_height / 2 - this->height() / 2);
+    this->move(Desktop::WidthAvailable / 2 - this->width() / 2,
+            Desktop::HeightFull / 2 - this->height() / 2);
     grabDesktopWindowLeds->setVisibleGrabPixelsRects(ui->checkBox_ShowPixelsAmbilight->isChecked());
     this->show();
 }

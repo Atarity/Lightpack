@@ -40,7 +40,7 @@ public:
 
 signals:
     void resizeStarted();
-    void resizeCompleted();
+    void resizeCompleted(int id);
     void mouseRightButtonClicked(int selfId);
     void sizeAndPositionChanged(int w, int h, int x, int y);
 
@@ -67,6 +67,7 @@ private:
     static const int MinimumWidth = 20;
     static const int MinimumHeight = 20;
     static const int BorderWidth = 10;
+    static const int StickyCloserPixels = 5; // Sticky when closer
 
     static const int ColorsCount = 8;
 

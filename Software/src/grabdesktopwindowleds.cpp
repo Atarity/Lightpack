@@ -44,9 +44,6 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     timer = new QTimer(this);
     timeEval = new TimeEvaluations();
 
-    desktop_width = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).width();
-    desktop_height = QApplication::desktop()->height(); // need full desktop height to find center of the screen
-
 
     // Read settings once
     qDebug() << "GrabDesktopWindowLeds(): read settings";
@@ -125,22 +122,22 @@ void GrabDesktopWindowLeds::updateSizesLabelsGrabPixelsRects()
     // 4    8
 
     labelGrabPixelsRects[LED1]->move(/* x = */ 0,
-                                     /*  y = */ desktop_height / 2 - 2*ambilight_height);
+                                     /*  y = */ Desktop::HeightFull / 2 - 2*ambilight_height);
     labelGrabPixelsRects[LED2]->move(/* x = */ 0,
-                                     /*  y = */  desktop_height / 2 - ambilight_height);
+                                     /*  y = */  Desktop::HeightFull / 2 - ambilight_height);
     labelGrabPixelsRects[LED3]->move(/* x = */ 0,
-                                     /*  y = */  desktop_height / 2 );
+                                     /*  y = */  Desktop::HeightFull / 2 );
     labelGrabPixelsRects[LED4]->move(/* x = */ 0,
-                                     /*  y = */  desktop_height / 2 + ambilight_height);
+                                     /*  y = */  Desktop::HeightFull / 2 + ambilight_height);
 
-    labelGrabPixelsRects[LED5]->move(/* x = */ desktop_width - ambilight_width,
-                                     /*  y = */  desktop_height / 2 - 2*ambilight_height);
-    labelGrabPixelsRects[LED6]->move(/* x = */ desktop_width - ambilight_width,
-                                     /*  y = */  desktop_height / 2 - ambilight_height);
-    labelGrabPixelsRects[LED7]->move(/* x = */ desktop_width - ambilight_width,
-                                     /*  y = */  desktop_height / 2 );
-    labelGrabPixelsRects[LED8]->move(/* x = */ desktop_width - ambilight_width,
-                                     /* y = */ desktop_height / 2 + ambilight_height);
+    labelGrabPixelsRects[LED5]->move(/* x = */ Desktop::WidthAvailable - ambilight_width,
+                                     /*  y = */  Desktop::HeightFull / 2 - 2*ambilight_height);
+    labelGrabPixelsRects[LED6]->move(/* x = */ Desktop::WidthAvailable - ambilight_width,
+                                     /*  y = */  Desktop::HeightFull / 2 - ambilight_height);
+    labelGrabPixelsRects[LED7]->move(/* x = */ Desktop::WidthAvailable - ambilight_width,
+                                     /*  y = */  Desktop::HeightFull / 2 );
+    labelGrabPixelsRects[LED8]->move(/* x = */ Desktop::WidthAvailable - ambilight_width,
+                                     /* y = */ Desktop::HeightFull / 2 + ambilight_height);
 }
 
 
