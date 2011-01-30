@@ -101,10 +101,7 @@ void GrabDesktopWindowLeds::createLabelsGrabPixelsRects()
     labelGrabPixelsRects.clear();
 
     for(int i=0; i<LEDS_COUNT; i++){
-        labelGrabPixelsRects.append(new MoveMeWidget(this));
-        labelGrabPixelsRects[i]->setFocusPolicy(Qt::NoFocus);
-        labelGrabPixelsRects[i]->setText(QString::number(i+1));
-        labelGrabPixelsRects[i]->setAlignment(Qt::AlignCenter);
+        labelGrabPixelsRects.append(new MoveMeWidget(i, this));
 
         labelGrabPixelsRects[i]->setBackgroundColor(labelsColors[i]);
     }
@@ -302,3 +299,15 @@ void GrabDesktopWindowLeds::setUpdateColorsOnlyIfChanges(bool state)
 {
     this->updateColorsOnlyIfChanges = state;
 }
+
+
+void GrabDesktopWindowLeds::moveMeLabelRightClicked(int id)
+{
+    int index = this->moveMeGroup.indexOf(labelGrabPixelsRects[id]);
+    if(index == -1){
+        this->moveMeGroup.append(labelGrabPixelsRects[id]);
+    }else{
+        this->moveMeGroup.removeAt(index);
+    }
+}
+

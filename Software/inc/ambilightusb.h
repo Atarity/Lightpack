@@ -34,12 +34,11 @@
 
 #include "settings.h"
 
-#include "../CommonHeaders/USB_ID.h"  /* For device VID, PID, vendor name and product name */
+#include "../../CommonHeaders/USB_ID.h"  /* For device VID, PID, vendor name and product name */
 #include "hidapi.h" /* USB HID API */
 
-
-#include "../CommonHeaders/commands.h"   /* CMD defines */
-#include "../CommonHeaders/RGB.h"        /* Led defines */
+#include "../../CommonHeaders/commands.h"   /* CMD defines */
+#include "../../CommonHeaders/RGB.h"        /* Led defines */
 
 #include "ledcolors.h"
 

@@ -29,7 +29,7 @@
 #define GRABDESKTOPWINDOWLEDS_H
 
 #include <QtGui>
-#include "../CommonHeaders/RGB.h"        /* Led defines */
+#include "../../CommonHeaders/RGB.h"        /* Led defines */
 #include "settings.h"
 #include "timeevaluations.h"
 #include "ledcolors.h"
@@ -65,6 +65,7 @@ public slots:
     void setWhiteGrabPixelsRects(bool state);
     void setUpdateColorsOnlyIfChanges(bool state);
 
+    void moveMeLabelRightClicked(int id);
 
 private slots:
     void updateLedsColorsIfChanged();
@@ -76,6 +77,7 @@ private:
 private: // variables
     QTimer *timer;
     QList<MoveMeWidget *> labelGrabPixelsRects;
+    QList<MoveMeWidget *> moveMeGroup; // move and resize labels together
     const static QColor labelsColors[LEDS_COUNT];
     TimeEvaluations *timeEval;
 

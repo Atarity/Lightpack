@@ -28,7 +28,7 @@
 #ifndef LEDCOLORS_H
 #define LEDCOLORS_H
 
-#include "../CommonHeaders/RGB.h"
+#include "../../CommonHeaders/RGB.h"
 #include "struct_rgb.h"
 #include "QtDebug"
 

@@ -41,12 +41,17 @@ const QColor MoveMeWidget::colors[ColorsCount] = {
 };
 
 
-MoveMeWidget::MoveMeWidget(QWidget *parent) :
+MoveMeWidget::MoveMeWidget(int id, QWidget *parent) :
     QLabel(parent)
 {
+    this->selfId = id;
+
     this->setCursor(Qt::OpenHandCursor);
-    this->setWindowFlags(Qt::FramelessWindowHint | Qt::SplashScreen);
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
     this->setFocusPolicy(Qt::NoFocus);
+    this->setText(QString::number(this->selfId + 1));
+    this->setAlignment(Qt::AlignCenter);
+
     this->setMouseTracking(true);
 
     this->resize(100, 100);
@@ -84,7 +89,7 @@ void MoveMeWidget::mousePressEvent(QMouseEvent *pe)
 
     }else if(pe->buttons() == Qt::RightButton){
         // Send signal RightButtonClicked to main window for grouping widgets
-        emit mouseRightButtonClicked();
+        emit mouseRightButtonClicked(selfId);
 
     }else if(pe->buttons() == Qt::LeftButton){
         // First check corners

@@ -33,7 +33,7 @@ class MoveMeWidget : public QLabel
 {
     Q_OBJECT
 public:
-    explicit MoveMeWidget(QWidget *parent = 0);
+    explicit MoveMeWidget(int id, QWidget *parent = 0);
 
     void setBackgroundColor(QColor color);
     void setSizeAndPosition(int w, int h, int x, int y);
@@ -41,7 +41,7 @@ public:
 signals:
     void resizeStarted();
     void resizeCompleted();
-    void mouseRightButtonClicked();
+    void mouseRightButtonClicked(int selfId);
     void sizeAndPositionChanged(int w, int h, int x, int y);
 
 public slots:
@@ -72,6 +72,8 @@ private:
 
     static const QColor colors[ColorsCount];
     int colorIndex; // index of color which using now
+
+    int selfId; // ID of this object
 
 protected:
     virtual void mousePressEvent(QMouseEvent *pe);
