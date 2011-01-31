@@ -29,7 +29,7 @@
 
 
 #include "Lightpack.h"
-#include "74HC595.h"
+#include "LedDriver.h"
 #include "../CommonHeaders/RGB.h"
 #include "../CommonHeaders/commands.h"
 
@@ -159,44 +159,57 @@ void PWM(void)
         }
     }
 
-    // TODO: Check I/O of the 74HC595, skip QH or not?
-    // Skip I/O - QH of 74HC595 (IC5, IC6)
-    HC595_CLK_DOWN;
-    HC595_DATA_PORT = 0x00;
-    HC595_CLK_UP;
 
-    // Set I/O - QH, QF, QE of 74HC595 (IC5, IC6)
+    // LedDriver connection: NC B G R
+    LedDrivers_ClkDown();
+    LedDriver1_OutOff();
+    LedDriver2_OutOff();
+    LedDrivers_ClkUp();
+
     for(uint8_t color=0; color<3; color++){
-        uint8_t hc595_data = 0x00;
-
-        HC595_CLK_DOWN;
-        if(ColorsLevelsForPWM[LED2][color] > PwmIndex)  hc595_data |= HC595_DATA0_PIN;
-        if(ColorsLevelsForPWM[LED4][color] > PwmIndex)  hc595_data |= HC595_DATA1_PIN;
-        if(ColorsLevelsForPWM[LED6][color] > PwmIndex)  hc595_data |= HC595_DATA2_PIN;
-        if(ColorsLevelsForPWM[LED8][color] > PwmIndex)  hc595_data |= HC595_DATA3_PIN;
-        HC595_DATA_PORT = hc595_data;
-        HC595_CLK_UP;
+    	LedDrivers_ClkDown();
+    	if(ColorsLevelsForPWM[LED4][color] > PwmIndex) LedDriver1_OutOn(); else LedDriver1_OutOff();
+    	if(ColorsLevelsForPWM[LED8][color] > PwmIndex) LedDriver2_OutOn(); else LedDriver2_OutOff();
+    	LedDrivers_ClkUp();
     }
 
-    // Set I/O - QD, QC, QB of 74HC595 (IC5, IC6)
-    for(uint8_t color=0; color<3; color++){
-        uint8_t hc595_data = 0x00;
+    LedDrivers_ClkDown();
+    LedDriver1_OutOff();
+    LedDriver2_OutOff();
+    LedDrivers_ClkUp();
 
-        HC595_CLK_DOWN;
-        if(ColorsLevelsForPWM[LED1][color] > PwmIndex)  hc595_data |= HC595_DATA0_PIN;
-        if(ColorsLevelsForPWM[LED3][color] > PwmIndex)  hc595_data |= HC595_DATA1_PIN;
-        if(ColorsLevelsForPWM[LED5][color] > PwmIndex)  hc595_data |= HC595_DATA2_PIN;
-        if(ColorsLevelsForPWM[LED7][color] > PwmIndex)  hc595_data |= HC595_DATA3_PIN;
-        HC595_DATA_PORT = hc595_data;
-        HC595_CLK_UP;
+    for(uint8_t color=0; color<3; color++){
+    	LedDrivers_ClkDown();
+    	if(ColorsLevelsForPWM[LED3][color] > PwmIndex) LedDriver1_OutOn(); else LedDriver1_OutOff();
+    	if(ColorsLevelsForPWM[LED7][color] > PwmIndex) LedDriver2_OutOn(); else LedDriver2_OutOff();
+    	LedDrivers_ClkUp();
     }
 
-    // Skip I/O - QA of 74HC595 (IC5, IC6)
-    HC595_CLK_DOWN;
-    HC595_DATA_PORT = 0x00;
-    HC595_CLK_UP;
+    LedDrivers_ClkDown();
+    LedDriver1_OutOff();
+    LedDriver2_OutOff();
+    LedDrivers_ClkUp();
 
-    HC595_LATCH_PULSE;
+    for(uint8_t color=0; color<3; color++){
+    	LedDrivers_ClkDown();
+    	if(ColorsLevelsForPWM[LED2][color] > PwmIndex) LedDriver1_OutOn(); else LedDriver1_OutOff();
+    	if(ColorsLevelsForPWM[LED6][color] > PwmIndex) LedDriver2_OutOn(); else LedDriver2_OutOff();
+    	LedDrivers_ClkUp();
+    }
+
+    LedDrivers_ClkDown();
+    LedDriver1_OutOff();
+    LedDriver2_OutOff();
+    LedDrivers_ClkUp();
+
+    for(uint8_t color=0; color<3; color++){
+    	LedDrivers_ClkDown();
+    	if(ColorsLevelsForPWM[LED1][color] > PwmIndex) LedDriver1_OutOn(); else LedDriver1_OutOff();
+    	if(ColorsLevelsForPWM[LED5][color] > PwmIndex) LedDriver2_OutOn(); else LedDriver2_OutOff();
+    	LedDrivers_ClkUp();
+    }
+
+    LedDrivers_LatchPulse();
 }
 
 
@@ -235,18 +248,6 @@ static inline void TimerForPWM_Init(void)
     TIMSK1 = _BV(OCIE1A);
 }
 
-static inline void HC595_Init(void)
-{
-    HC595_LATCH_DOWN;
-    HC595_CLK_DOWN;
-    HC595_OUT_ENABLE;
-    HC595_DDR |= HC595_CLK_PIN | HC595_LATCH_PIN | HC595_OUT_EN_PIN;
-    HC595_DATA_PORT = 0x00;
-    HC595_DATA_DDR = HC595_DATA0_PIN | HC595_DATA1_PIN | HC595_DATA2_PIN | HC595_DATA3_PIN;
-}
-
-
-
 
 /*
  *  Main program entry point
@@ -255,8 +256,8 @@ int main(void)
 {
     SetupHardware();
 
-    // HC595 ports initialization
-    HC595_Init();
+    // Led driver ports initialization
+    LedDriver_Init();
 
     // Initialize timer for PWM
     TimerForPWM_Init();
@@ -385,9 +386,12 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 	memcpy(HIDReportEcho.ReportData, ReportData, ReportSize);
 
 	uint8_t *ReportData_u8 = (uint8_t *)ReportData;
-	uint8_t i = 1;
 
-	switch(ReportData_u8[0]){
+	uint8_t cmd = ReportData_u8[0]; // command from enum COMMANDS{ ... };
+
+	uint8_t i = 1; // new data for colors levels starts form ReportData_u8[1]
+
+	switch(cmd){
 	case CMD_UPDATE_LEDS:
 	    if(SmoothDelay == 0){
 	        // Just put new colors directly to ColorsLevelsForPWM[]

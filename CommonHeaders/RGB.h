@@ -45,9 +45,9 @@ enum LEDS{
 
 
 // Define indexes for colors and colors_new arrays
-#define R	1
-#define G	0
-#define B	2
+#define R	2
+#define G	1
+#define B	0
 
 // Be sure that this is defined
 #ifndef TRUE
