@@ -49,24 +49,17 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     qDebug() << "GrabDesktopWindowLeds(): read settings";
     this->ambilight_refresh_delay_ms = settings->value("RefreshAmbilightDelayMs").toInt();
 
-    this->ambilight_width = settings->value("WidthAmbilight").toInt();
-    this->ambilight_height = settings->value("HeightAmbilight").toInt();
-
-    this->ambilight_white_balance_r = settings->value("WhiteBalanceCoefRed").toDouble();
-    this->ambilight_white_balance_g = settings->value("WhiteBalanceCoefGreen").toDouble();
-    this->ambilight_white_balance_b = settings->value("WhiteBalanceCoefBlue").toDouble();
-
-    this->ambilight_color_depth = settings->value("HwColorDepth").toInt();
+    this->ambilight_color_depth = settings->value("Firmware/ColorDepth").toInt();
 
     this->updateColorsOnlyIfChanges = true;
 
 
     qDebug() << "GrabDesktopWindowLeds(): createLabelsGrabPixelsRects()";
-    createLabelsGrabPixelsRects();
+    createLedWidgets();
 
     connect(timer, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
 
-    clearColors();       
+    clearColors();
 
     timer->start(ambilight_refresh_delay_ms);
     qDebug() << "GrabDesktopWindowLeds(): initialized";
@@ -77,11 +70,11 @@ GrabDesktopWindowLeds::~GrabDesktopWindowLeds()
     delete timer;
     delete timeEval;
 
-    for(int i=0; i<labelGrabPixelsRects.count(); i++){
-        labelGrabPixelsRects[i]->close();
+    for(int i=0; i<ledWidgets.count(); i++){
+        ledWidgets[i]->close();
     }
 
-    labelGrabPixelsRects.clear();
+    ledWidgets.clear();
 }
 
 void GrabDesktopWindowLeds::clearColors()
@@ -93,61 +86,36 @@ void GrabDesktopWindowLeds::clearColors()
     }
 }
 
-void GrabDesktopWindowLeds::createLabelsGrabPixelsRects()
+void GrabDesktopWindowLeds::createLedWidgets()
 {
-    labelGrabPixelsRects.clear();
+    ledWidgets.clear();
 
     for(int i=0; i<LEDS_COUNT; i++){
-        labelGrabPixelsRects.append(new MoveMeWidget(i, this));
+        ledWidgets.append(new MoveMeWidget(i, this));
 
-        labelGrabPixelsRects[i]->setBackgroundColor(labelsColors[i]);
+        ledWidgets[i]->setBackgroundColor(labelsColors[i]);
     }
 
-    updateSizesLabelsGrabPixelsRects();
-}
+    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
+        QSize ledWidgetSize = settings->value("LED_" + QString::number(ledIndex+1) + "/Size").toSize();
+        QPoint ledWidgetPosition = settings->value("LED_" + QString::number(ledIndex+1) + "/Position").toPoint();
 
-void GrabDesktopWindowLeds::updateSizesLabelsGrabPixelsRects()
-{
-    for(int i=0; i<LEDS_COUNT; i++){
-        labelGrabPixelsRects[i]->resize(ambilight_width, ambilight_height);
+        ledWidgets[ledIndex]->resize(ledWidgetSize);
+        ledWidgets[ledIndex]->move(ledWidgetPosition);
+
+        // Connect signal resizeCompleted for save new size and position
+        connect(ledWidgets[ledIndex], SIGNAL(resizeCompleted(int)), this, SLOT(ledWidgetResizeCompleted(int)));
     }
-
-    // TODO: LEFT side 1234, RIGHT side 5678
-
-    // Now, get pixels from monitor:
-    //
-    // 1    5
-    // 2    6
-    // 3    7
-    // 4    8
-
-    labelGrabPixelsRects[LED1]->move(/* x = */ 0,
-                                     /*  y = */ Desktop::HeightFull / 2 - 2*ambilight_height);
-    labelGrabPixelsRects[LED2]->move(/* x = */ 0,
-                                     /*  y = */  Desktop::HeightFull / 2 - ambilight_height);
-    labelGrabPixelsRects[LED3]->move(/* x = */ 0,
-                                     /*  y = */  Desktop::HeightFull / 2 );
-    labelGrabPixelsRects[LED4]->move(/* x = */ 0,
-                                     /*  y = */  Desktop::HeightFull / 2 + ambilight_height);
-
-    labelGrabPixelsRects[LED5]->move(/* x = */ Desktop::WidthAvailable - ambilight_width,
-                                     /*  y = */  Desktop::HeightFull / 2 - 2*ambilight_height);
-    labelGrabPixelsRects[LED6]->move(/* x = */ Desktop::WidthAvailable - ambilight_width,
-                                     /*  y = */  Desktop::HeightFull / 2 - ambilight_height);
-    labelGrabPixelsRects[LED7]->move(/* x = */ Desktop::WidthAvailable - ambilight_width,
-                                     /*  y = */  Desktop::HeightFull / 2 );
-    labelGrabPixelsRects[LED8]->move(/* x = */ Desktop::WidthAvailable - ambilight_width,
-                                     /* y = */ Desktop::HeightFull / 2 + ambilight_height);
 }
 
 
-void GrabDesktopWindowLeds::setVisibleGrabPixelsRects(bool state)
+void GrabDesktopWindowLeds::setVisibleLedWidgets(bool state)
 {
-    for(int i=0; i<labelGrabPixelsRects.count(); i++){
+    for(int i=0; i<ledWidgets.count(); i++){
         if(state){
-            labelGrabPixelsRects[i]->show();
+            ledWidgets[i]->show();
         }else{
-            labelGrabPixelsRects[i]->hide();
+            ledWidgets[i]->hide();
         }
     }
 }
@@ -165,10 +133,10 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
-                                          labelGrabPixelsRects[ledIndex]->x(),
-                                          labelGrabPixelsRects[ledIndex]->y(),
-                                          labelGrabPixelsRects[ledIndex]->width(),
-                                          labelGrabPixelsRects[ledIndex]->height());
+                                          ledWidgets[ledIndex]->x(),
+                                          ledWidgets[ledIndex]->y(),
+                                          ledWidgets[ledIndex]->width(),
+                                          ledWidgets[ledIndex]->height());
         QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         QImage im = scaledPix.toImage();
 
@@ -191,11 +159,12 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
     }
 
     // White balance
-    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        colorsNew[ledIndex]->r *= ambilight_white_balance_r;
-        colorsNew[ledIndex]->g *= ambilight_white_balance_g;
-        colorsNew[ledIndex]->b *= ambilight_white_balance_b;
-    }
+    // TODO: add coefs to ledWidgets and use it here
+//    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+//        colorsNew[ledIndex]->r *= ambilight_white_balance_r;
+//        colorsNew[ledIndex]->g *= ambilight_white_balance_g;
+//        colorsNew[ledIndex]->b *= ambilight_white_balance_b;
+//    }
 
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         if(colors[ledIndex]->r != colorsNew[ledIndex]->r){
@@ -234,17 +203,6 @@ void GrabDesktopWindowLeds::setAmbilightOn(bool state)
     isAmbilightOn = state;
 }
 
-void GrabDesktopWindowLeds::setAmbilightWidth(int w)
-{
-    this->ambilight_width = w;
-    updateSizesLabelsGrabPixelsRects();
-}
-
-void GrabDesktopWindowLeds::setAmbilightHeight(int h)
-{
-    this->ambilight_height = h;
-    updateSizesLabelsGrabPixelsRects();
-}
 
 void GrabDesktopWindowLeds::setAmbilightRefreshDelayMs(int ms)
 {
@@ -256,37 +214,22 @@ void GrabDesktopWindowLeds::setAmbilightColorDepth(int color_depth)
     this->ambilight_color_depth = color_depth;
 }
 
-void GrabDesktopWindowLeds::setAmbilightWhiteBalanceR(double r)
-{
-    this->ambilight_white_balance_r = r;
-}
-
-void GrabDesktopWindowLeds::setAmbilightWhiteBalanceG(double g)
-{
-    this->ambilight_white_balance_g = g;
-}
-
-void GrabDesktopWindowLeds::setAmbilightWhiteBalanceB(double b)
-{
-    this->ambilight_white_balance_b = b;
-}
-
-void GrabDesktopWindowLeds::setColoredGrabPixelsRects(bool state)
+void GrabDesktopWindowLeds::setColoredLedWidgets(bool state)
 {
     if(state){
-        for(int i=0; i<labelGrabPixelsRects.count(); i++){
+        for(int i=0; i<ledWidgets.count(); i++){
             // Fill label with labelColors[i] color
-            labelGrabPixelsRects[i]->setBackgroundColor(labelsColors[i]);
+            ledWidgets[i]->setBackgroundColor(labelsColors[i]);
         }
     }
 }
 
-void GrabDesktopWindowLeds::setWhiteGrabPixelsRects(bool state)
+void GrabDesktopWindowLeds::setWhiteLedWidgets(bool state)
 {
     if(state){
-        for(int i=0; i<labelGrabPixelsRects.count(); i++){
+        for(int i=0; i<ledWidgets.count(); i++){
             // Fill labels white
-            labelGrabPixelsRects[i]->setBackgroundColor(Qt::white);
+            ledWidgets[i]->setBackgroundColor(Qt::white);
         }
     }
 }
@@ -298,13 +241,27 @@ void GrabDesktopWindowLeds::setUpdateColorsOnlyIfChanges(bool state)
 }
 
 
-void GrabDesktopWindowLeds::moveMeLabelRightClicked(int id)
+void GrabDesktopWindowLeds::ledWidgetResizeCompleted(int id)
 {
-    int index = this->moveMeGroup.indexOf(labelGrabPixelsRects[id]);
-    if(index == -1){
-        this->moveMeGroup.append(labelGrabPixelsRects[id]);
-    }else{
-        this->moveMeGroup.removeAt(index);
-    }
+    // Save size and position
+    settings->setValue("LED_" + QString::number(id+1) + "/Size",      ledWidgets[id]->size());
+    settings->setValue("LED_" + QString::number(id+1) + "/Position",  ledWidgets[id]->pos());
+
+    // TODO: save coefs
+//    settings->setValue("LED_" + QString::number(ledIndex+1) + "/CoefRed",   LED_COEF_RED_DEFAULT_VALUE);
+//    settings->setValue("LED_" + QString::number(ledIndex+1) + "/CoefGreen", LED_COEF_GREEN_DEFAULT_VALUE);
+//    settings->setValue("LED_" + QString::number(ledIndex+1) + "/CoefBlue",  LED_COEF_BLUE);
 }
+
+
+
+//void GrabDesktopWindowLeds::moveMeLabelRightClicked(int id)
+//{
+//    int index = this->moveMeGroup.indexOf(labelGrabPixelsRects[id]);
+//    if(index == -1){
+//        this->moveMeGroup.append(labelGrabPixelsRects[id]);
+//    }else{
+//        this->moveMeGroup.removeAt(index);
+//    }
+//}
 

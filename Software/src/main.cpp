@@ -73,7 +73,7 @@ bool openLogFile(const QString & filePath)
     QIODevice::OpenMode openFileAppendOrTruncateFlag = QIODevice::Append;
     QFileInfo info(filePath);
     if(info.size() > 1*1024*1024){
-        cout << "Log file size > 1 Mb. I'm going to clear it. Now!\n";
+        qDebug() << "Log file size > 1 Mb. I'm going to clear it. Now!\n";
         openFileAppendOrTruncateFlag = QIODevice::Truncate;
     }
     if(logFile->open(QIODevice::WriteOnly | openFileAppendOrTruncateFlag | QIODevice::Text)){
@@ -132,7 +132,14 @@ void messageOutput(QtMsgType type, const char *msg)
 void setDefaultSettingIfNotFound(const QString & name, const QVariant & value)
 {
     if(!settings->contains(name)){
-        qDebug() << "Settings:"<< name << "not found. Set it to default value: " << value.toString();
+        if(value.canConvert<QSize>()){
+            qDebug() << "Settings:" << name << "not found. Set it to default value: " << value.toSize().width() << "x" << value.toSize().height();
+        }else if(value.canConvert<QPoint>()){
+            qDebug() << "Settings:"<< name << "not found. Set it to default value: " << value.toPoint().x() << "x" << value.toPoint().y();
+        }else{
+            qDebug() << "Settings:"<< name << "not found. Set it to default value: " << value.toString();
+        }
+
         settings->setValue(name, value);
     }
 }
@@ -146,18 +153,39 @@ void settingsInit()
     qDebug() << "Settings file: " << settings->fileName();
     
     setDefaultSettingIfNotFound("RefreshAmbilightDelayMs",             REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("ReconnectAmbilightUSBDelayMs",        RECONNECT_USB_MS_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("WidthAmbilight",                      WIDTH_AMBILIGHT_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("HeightAmbilight",                     HEIGHT_AMBILIGHT_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("UsbSendDataTimeout",                  USB_SEND_DATA_TIMEOUT_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("WhiteBalanceCoefRed",                 WHITE_BALANCE_COEF_RED_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("WhiteBalanceCoefGreen",               WHITE_BALANCE_COEF_GREEN_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("WhiteBalanceCoefBlue",                WHITE_BALANCE_COEF_BLUE_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("HwTimerPrescallerIndex",              HW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("HwTimerOCR",                          HW_TIMER_OCR_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("HwColorDepth",                        HW_COLOR_DEPTH_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("HwChangeColorsDelay",                 HW_CHANGE_COLORS_SMOOTH_DELAY_VALUE);
+    setDefaultSettingIfNotFound("Firmware/TimerPrescallerIndex",       FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("Firmware/TimerOCR",                   FW_TIMER_OCR_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("Firmware/ColorDepth",                 FW_COLOR_DEPTH_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("Firmware/ChangeColorsDelay",          FW_CHANGE_COLORS_SMOOTH_DELAY_VALUE);
+
+    QPoint ledPosition;
+
+    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
+        setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/CoefRed",   LED_COEF_RED_DEFAULT_VALUE);
+        setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/CoefGreen", LED_COEF_GREEN_DEFAULT_VALUE);
+        setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/CoefBlue",  LED_COEF_BLUE_DEFAULT_VALUE);
+
+        if(ledIndex < 4){
+            ledPosition.setX(0);
+        }else{
+            ledPosition.setX(Desktop::WidthAvailable - LED_FIELD_WIDTH_DEFAULT_VALUE);
+        }
+
+        switch( ledIndex ){
+        case LED1:
+        case LED5: ledPosition.setY(Desktop::HeightFull / 2 - 2*LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        case LED2:
+        case LED6: ledPosition.setY(Desktop::HeightFull / 2 - LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        case LED3:
+        case LED7: ledPosition.setY(Desktop::HeightFull / 2 );  break;
+        case LED4:
+        case LED8: ledPosition.setY(Desktop::HeightFull / 2 + LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        }
+
+        setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/Size",      LED_FIELD_SIZE_DEFAULT_VALUE);
+        setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/Position",  ledPosition);
+    }
 }
 
 int main(int argc, char **argv)
@@ -165,10 +193,12 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);    
     app.setApplicationVersion(VERSION_STR);
 
-    QString logFilePath = QDir::homePath() + "/.Lightpack.log";
 
+    qInstallMsgHandler(messageOutput);
+
+    QString logFilePath = QDir::homePath() + "/.Lightpack.log";
     if(openLogFile(logFilePath)){
-        cout << "Logs file: " << logFilePath.toStdString() << endl;
+        qDebug() << "Logs file: " << logFilePath;
     }else{
         cerr << "Log file '" << logFilePath.toStdString() << "' didn't opened. Exit." << endl;
         return 2;
@@ -188,12 +218,13 @@ int main(int argc, char **argv)
         }
     }
 
+    Desktop desktop; // Call constructor, for fill sizes, after initialize QApplication
+
     // Initialize 'settings' variable, new settings initializes with default values
     settingsInit();
 
     Q_INIT_RESOURCE(LightpackResources);
 
-    qInstallMsgHandler(messageOutput);
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         QMessageBox::critical(0, "Lightpack",
                               "I couldn't detect any system tray on this system.");
@@ -213,9 +244,7 @@ int main(int argc, char **argv)
         }else{
             qWarning() << "Locale:" << pathToLocale << "not found. Using defaults.";
         }        
-    }
-
-    Desktop desktop; // Call constructor, for fill sizes, after initialize QApplication
+    }    
 
     window = new MainWindow();   /* Create MainWindow */
     window->setVisible(false);   /* And load to tray. */

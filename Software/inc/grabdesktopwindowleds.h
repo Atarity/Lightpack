@@ -54,31 +54,26 @@ signals:
 
 public slots:
     void setAmbilightOn(bool state);
-    void setAmbilightWidth(int w);
-    void setAmbilightHeight(int h);
     void setAmbilightRefreshDelayMs(int ms);
     void setAmbilightColorDepth(int color_depth);
-    void setAmbilightWhiteBalanceR(double r);
-    void setAmbilightWhiteBalanceG(double g);
-    void setAmbilightWhiteBalanceB(double b);
-    void setVisibleGrabPixelsRects(bool state);
-    void setColoredGrabPixelsRects(bool state);
-    void setWhiteGrabPixelsRects(bool state);
+    void setVisibleLedWidgets(bool state);
+    void setColoredLedWidgets(bool state);
+    void setWhiteLedWidgets(bool state);
     void setUpdateColorsOnlyIfChanges(bool state);
 
-    void moveMeLabelRightClicked(int id);
+    void ledWidgetResizeCompleted(int id);
 
 private slots:
     void updateLedsColorsIfChanged();
 
 private:
-    void createLabelsGrabPixelsRects();
+    void createLedWidgets();
     void updateSizesLabelsGrabPixelsRects();
 
 private: // variables
     QTimer *timer;
-    QList<MoveMeWidget *> labelGrabPixelsRects;
-    QList<MoveMeWidget *> moveMeGroup; // move and resize labels together
+    QList<MoveMeWidget *> ledWidgets;
+    //QList<MoveMeWidget *> moveMeGroup; // move and resize labels together
     const static QColor labelsColors[LEDS_COUNT];
     TimeEvaluations *timeEval;
 
@@ -88,14 +83,8 @@ private: // variables
     bool updateColorsOnlyIfChanges;
 
     // Settings:
-    int ambilight_width;
-    int ambilight_height;
     int ambilight_refresh_delay_ms;
     int ambilight_color_depth;
-
-    double ambilight_white_balance_r;
-    double ambilight_white_balance_g;
-    double ambilight_white_balance_b;
 };
 
 #endif // GRABDESKTOPWINDOWLEDS_H
