@@ -82,13 +82,7 @@ void MoveMeWidget::mousePressEvent(QMouseEvent *pe)
     mousePressDiffFromBorder.setWidth(this->width() - pe->x());
     mousePressDiffFromBorder.setHeight(this->height() - pe->y());
 
-    if(pe->buttons() == Qt::MidButton){
-        if(++colorIndex >= ColorsCount){
-            colorIndex = 0;
-        }
-        this->setBackgroundColor(colors[colorIndex]);
-
-    }else if(pe->buttons() == Qt::RightButton){
+    if(pe->buttons() == Qt::RightButton){
         // Send signal RightButtonClicked to main window for grouping widgets
         emit mouseRightButtonClicked(selfId);
 
@@ -289,4 +283,20 @@ void MoveMeWidget::mouseReleaseEvent(QMouseEvent *pe)
     this->setCursor(Qt::OpenHandCursor);
     cmd = NOP;
     emit resizeCompleted(selfId);
+}
+
+
+void MoveMeWidget::wheelEvent(QWheelEvent *pe)
+{
+
+    if(pe->delta() > 0) colorIndex++;
+    if(pe->delta() < 0) colorIndex--;
+
+    if(colorIndex >= ColorsCount){
+        colorIndex = 0;
+    }else if(colorIndex < 0) {
+        colorIndex = ColorsCount - 1;
+    }
+    this->setBackgroundColor(colors[colorIndex]);
+
 }

@@ -80,6 +80,7 @@ protected:
     virtual void mousePressEvent(QMouseEvent *pe);
     virtual void mouseMoveEvent(QMouseEvent *pe);
     virtual void mouseReleaseEvent(QMouseEvent *pe);
+    virtual void wheelEvent(QWheelEvent *);
 };
 
 #endif // MOVEMEWIDGET_H
