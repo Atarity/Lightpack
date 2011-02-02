@@ -73,13 +73,13 @@ bool openLogFile(const QString & filePath)
     QIODevice::OpenMode openFileAppendOrTruncateFlag = QIODevice::Append;
     QFileInfo info(filePath);
     if(info.size() > 1*1024*1024){
-        qDebug() << "Log file size > 1 Mb. I'm going to clear it. Now!\n";
+        cout << "Log file size > 1 Mb. I'm going to clear it. Now!\n";
         openFileAppendOrTruncateFlag = QIODevice::Truncate;
     }
     if(logFile->open(QIODevice::WriteOnly | openFileAppendOrTruncateFlag | QIODevice::Text)){
         logStream.setDevice(logFile);
         logStream << QDateTime::currentDateTime().date().toString("yyyy_MM_dd") << " ";
-        logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Lightpack v" << VERSION_STR << endl;
+        logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Lightpack sw" << VERSION_STR << endl;
     }else{
         cerr << "Error open file for write: " << filePath.toStdString() << endl;
         return false;
