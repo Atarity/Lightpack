@@ -54,7 +54,7 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     this->updateColorsOnlyIfChanges = true;
 
 
-    qDebug() << "GrabDesktopWindowLeds(): createLabelsGrabPixelsRects()";
+    qDebug() << "GrabDesktopWindowLeds(): createLedWidgets()";
     createLedWidgets();
 
     connect(timer, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
@@ -159,12 +159,12 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
     }
 
     // White balance
-    // TODO: add coefs to ledWidgets and use it here
-//    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-//        colorsNew[ledIndex]->r *= ambilight_white_balance_r;
-//        colorsNew[ledIndex]->g *= ambilight_white_balance_g;
-//        colorsNew[ledIndex]->b *= ambilight_white_balance_b;
-//    }
+    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+        colorsNew[ledIndex]->r *= ledWidgets[ledIndex]->getCoefRed();
+        colorsNew[ledIndex]->g *= ledWidgets[ledIndex]->getCoefGreen();
+        colorsNew[ledIndex]->b *= ledWidgets[ledIndex]->getCoefBlue();
+    }
+
 
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         if(colors[ledIndex]->r != colorsNew[ledIndex]->r){

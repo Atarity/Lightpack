@@ -28,6 +28,7 @@
 #include <QtGui>
 #include "movemewidget.h"
 #include "desktop.h"
+#include "settings.h"
 
 // Colors changes when middle button clicked
 const QColor MoveMeWidget::colors[ColorsCount] = {
@@ -59,6 +60,12 @@ MoveMeWidget::MoveMeWidget(int id, QWidget *parent) :
 
     colorIndex = 0;
     this->setBackgroundColor(colors[colorIndex]);
+
+    qDebug() << "MoveMeWidget(" << (selfId + 1) << "): Load coef-s from settings";
+    // Load coef-s from settings
+    coefRed = loadCoefWithCheck("CoefRed");
+    coefGreen = loadCoefWithCheck("CoefGreen");
+    coefBlue = loadCoefWithCheck("CoefBlue");
 }
 
 void MoveMeWidget::setBackgroundColor(QColor color)
@@ -72,6 +79,23 @@ void MoveMeWidget::setSizeAndPosition(int w, int h, int x, int y)
 {
     this->move(x, y);
     this->resize(w, h);
+}
+
+// private
+double MoveMeWidget::loadCoefWithCheck(QString coefStr)
+{
+    bool ok = false;
+    double coef = settings->value("LED_" + QString::number(selfId + 1) + "/" + coefStr).toDouble(&ok);
+    if(ok == false){
+        qWarning() << "LedWidget:" << "Settings bad value" << "[LED_" + QString::number(selfId + 1) + "]" << coefStr << "Convert to double error. Set it to default value" << coefStr << "= 1";
+        coef = 1;
+        settings->setValue("LED_" + QString::number(selfId + 1) + "/" + coefStr, coef);
+    }else if(coef < 0.1 || coef > 3){
+        qWarning() << "LedWidget:" << "Settings bad value" << "[LED_" + QString::number(selfId + 1) + "]" << coefStr << "=" << coef << "Set it to default value" << coefStr << "= 1";
+        coef = 1;
+        settings->setValue("LED_" + QString::number(selfId + 1) + "/" + coefStr, coef);
+    }
+    return coef;
 }
 
 
@@ -288,7 +312,6 @@ void MoveMeWidget::mouseReleaseEvent(QMouseEvent *pe)
 
 void MoveMeWidget::wheelEvent(QWheelEvent *pe)
 {
-
     if(pe->delta() > 0) colorIndex++;
     if(pe->delta() < 0) colorIndex--;
 
@@ -299,4 +322,19 @@ void MoveMeWidget::wheelEvent(QWheelEvent *pe)
     }
     this->setBackgroundColor(colors[colorIndex]);
 
+}
+
+double MoveMeWidget::getCoefRed()
+{
+    return coefRed;
+}
+
+double MoveMeWidget::getCoefGreen()
+{
+    return coefGreen;
+}
+
+double MoveMeWidget::getCoefBlue()
+{
+    return coefBlue;
 }

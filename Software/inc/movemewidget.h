@@ -37,6 +37,9 @@ public:
 
     void setBackgroundColor(QColor color);
     void setSizeAndPosition(int w, int h, int x, int y);
+    double getCoefRed();
+    double getCoefGreen();
+    double getCoefBlue();
 
 signals:
     void resizeStarted();
@@ -45,6 +48,10 @@ signals:
     void sizeAndPositionChanged(int w, int h, int x, int y);
 
 public slots:
+
+
+private:
+    double loadCoefWithCheck(QString coefStr);
 
 private:
     enum {
@@ -75,6 +82,10 @@ private:
     int colorIndex; // index of color which using now
 
     int selfId; // ID of this object
+
+    double coefRed;
+    double coefGreen;
+    double coefBlue;
 
 protected:
     virtual void mousePressEvent(QMouseEvent *pe);
