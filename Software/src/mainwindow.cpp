@@ -335,17 +335,25 @@ void MainWindow::updatePwmFrequency()
         qWarning() << "void MainWindow::settingsHardwareOptionsChange() Magic! colorDepth == 0";
         return;
     }
-    pwmFrequency = 16000000 / colorDepth; // colorDepth - PWM level max value;
+
+    // Eval with oscilloscope
+    const double timeSetAllLeds_secs = 30.0 / 1000 / 1000;
+    const double timeSmoothlyUpdateLeds_secs = 483.0 / 1000 / 1000;
+
+    double timeBetweenPwm_secs = timerOutputCompareRegValue / 16000000.0;
 
     switch(timerPrescallerIndex){
     case CMD_SET_PRESCALLER_1:      break;
-    case CMD_SET_PRESCALLER_8:      pwmFrequency /= 8; break;
-    case CMD_SET_PRESCALLER_64:     pwmFrequency /= 64;break;
-    case CMD_SET_PRESCALLER_256:    pwmFrequency /= 256;break;
-    case CMD_SET_PRESCALLER_1024:   pwmFrequency /= 1024;break;
+    case CMD_SET_PRESCALLER_8:      timeBetweenPwm_secs *= 8; break;
+    case CMD_SET_PRESCALLER_64:     timeBetweenPwm_secs *= 64; break;
+    case CMD_SET_PRESCALLER_256:    timeBetweenPwm_secs *= 256; break;
+    case CMD_SET_PRESCALLER_1024:   timeBetweenPwm_secs *= 1024; break;
     default: qWarning() << "bad value of 'timerPrescallerIndex' =" << timerPrescallerIndex; break;
     }
-    pwmFrequency /= timerOutputCompareRegValue;
+
+    double timePwm_secs = (timeBetweenPwm_secs + timeSetAllLeds_secs) * colorDepth + timeSmoothlyUpdateLeds_secs;
+
+    pwmFrequency = 1 / timePwm_secs;
 
     ui->lineEdit_PWM_Frequency->setText(QString::number(pwmFrequency,'g',3));
 }
