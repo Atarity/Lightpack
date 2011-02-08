@@ -7,7 +7,6 @@ Software/build/
 Software/moc/
 Software/obj/
 Software/ui/
-Software/res/translations/[^.]+.qm
 Software/res/qrc_[^.]+.cpp
 Software/[^.]+.pro.user
 Software/Makefile
