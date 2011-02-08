@@ -29,13 +29,14 @@
 
 
 #include "Lightpack.h"
+
 #include "LedDriver.h"
 #include "../CommonHeaders/RGB.h"
 #include "../CommonHeaders/commands.h"
 
 #include "Version.h"
 
-volatile uint8_t UpdateColors = 0;
+volatile uint8_t UpdateColors = FALSE;
 
 volatile uint8_t ColorsLevelsForPWM[LEDS_COUNT][3]; // colors using in PWM generation
 volatile uint8_t ColorsLevelsForPWM_New[LEDS_COUNT][3]; // last colors comes from USB
@@ -53,13 +54,6 @@ volatile uint8_t MaxDiff = 0; // Maximum difference between old and new color
 /** Buffer to hold the previously generated HID report, for comparison purposes inside the HID class driver. */
 uint8_t PrevHIDReportBuffer[GENERIC_REPORT_SIZE];
 
-/** Structure to contain reports from the host, so that they can be echoed back upon request */
-struct
-{
-	uint8_t  ReportID;
-	uint16_t ReportSize;
-	uint8_t  ReportData[GENERIC_REPORT_SIZE];
-} HIDReportEcho;
 
 /** LUFA HID Class driver interface configuration and state information. This structure is
  *  passed to all HID Class driver functions, so that multiple instances of the same class
@@ -82,62 +76,36 @@ USB_ClassInfo_HID_Device_t Generic_HID_Interface =
 
 
 
-
-
-static inline void UpdateSmoothStep(void)
+void SmoothlyUpdateColors(void)
 {
-    // First find MAX diff between old and new colors, and save all diffs in each smooth_step
-    for(uint8_t color=0; color < 3; color++){
-        for(uint8_t led_index=0; led_index < LEDS_COUNT; led_index++){
-            int16_t diff = ColorsLevelsForPWM[led_index][color] - ColorsLevelsForPWM_New[led_index][color];
-            if(diff < 0) diff *= -1;
-
-            if(diff > MaxDiff) MaxDiff = diff;
-
-            SmoothStep[led_index][color] = (uint8_t)diff;
-        }
-    }
-
-    // To find smooth_step which will be using max_diff divide on each smooth_step
-    for(uint8_t color=0; color < 3; color++){
-        for(uint8_t led_index=0; led_index < LEDS_COUNT; led_index++){
-            SmoothStep[led_index][color] = (uint8_t) MaxDiff / SmoothStep[led_index][color];
-        }
-    }
-
-    Smooth = 0x00;
-}
-
-
-static inline void SmoothlyUpdateColors(void)
-{
-    // Array smooth_step evaluated when new color comes from PC
+	UpdateColors = FALSE;
 
     for(uint8_t color=0; color < 3; color++){
-        for(uint8_t led_index=0; led_index < LEDS_COUNT; led_index++){
-            if(Smooth % SmoothStep[led_index][color] == 0){
-                if(ColorsLevelsForPWM[led_index][color] < ColorsLevelsForPWM_New[led_index][color]){
-                    ColorsLevelsForPWM[led_index][color] += 1;
+        for(uint8_t ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+
+        	uint8_t now = ColorsLevelsForPWM[ledIndex][color];
+        	uint8_t new = ColorsLevelsForPWM_New[ledIndex][color];
+
+            if(Smooth % SmoothStep[ledIndex][color] == 0){
+                if(now < new){
+                    now++;
                 }
-                if(ColorsLevelsForPWM[led_index][color] > ColorsLevelsForPWM_New[led_index][color]){
-                    ColorsLevelsForPWM[led_index][color] -= 1;
+                if(now > new){
+                    now--;
                 }
-                UpdateColors = TRUE;
+                ColorsLevelsForPWM[ledIndex][color] = now;
+            }
+
+            if(now != new){
+            	UpdateColors = TRUE;
             }
         }
     }
 
-    if(++Smooth >= MaxDiff){
-        Smooth = 0x00;
-        UpdateColors = FALSE;
-
-        // Cheater!!!
-        // TODO: find way how to make this better than simple
-        for(uint8_t color=0; color < 3; color++){
-            for(uint8_t led_index=0; led_index < LEDS_COUNT; led_index++){
-                ColorsLevelsForPWM[led_index][color] = ColorsLevelsForPWM_New[led_index][color];
-            }
-        }
+    if(UpdateColors){
+    	Smooth++;
+    }else{
+    	Smooth = 0x00;
     }
 }
 
@@ -147,15 +115,18 @@ static inline void SmoothlyUpdateColors(void)
 
 void PWM(void)
 {
-    static uint8_t PwmIndex = 0; // index of currect PWM level
+    static uint8_t PwmIndex = 0; // index of current PWM level
 
     if(++PwmIndex >= PwmIndexMaxValue){
         PwmIndex = 0x00;
 
-        if(UpdateColors){
-            if(SmoothDelay != 0){
-                SmoothlyUpdateColors();
-            }
+
+        if(SmoothDelay != 0){
+        	if(UpdateColors){
+        		SmoothlyUpdateColors(); // == 483us
+        	}else{
+        		_delay_us(483); // go away annoying flickering!
+        	}
         }
     }
 
@@ -241,8 +212,8 @@ static inline void TimerForPWM_Init(void)
     TCCR1C = 0x00;
 
     // Default values of timer prescaller and output compare register
-    TCCR1B = _BV(CS11); // 8
-    OCR1A = 200;
+    TCCR1B = _BV(CS10); // div1
+    OCR1A = 100;
 
     TCNT1 = 0x0000;
     TIMSK1 = _BV(OCIE1A);
@@ -267,7 +238,9 @@ int main(void)
 
 	sei();
 
-	SetAllLedsColors(10,10,10);
+	SmoothDelay = TRUE;
+
+	SetAllLedsColors(20,20,20);
 
 	for (;;)
 	{
@@ -349,10 +322,6 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
                                          void* ReportData,
                                          uint16_t* const ReportSize)
 {
-//	if (HIDReportEcho.ReportID)
-//	  *ReportID = HIDReportEcho.ReportID;
-//	memcpy(ReportData, HIDReportEcho.ReportData, HIDReportEcho.ReportSize);
-
 	uint8_t *ReportData_u8 = (uint8_t *)ReportData;
 
     // Hardware version
@@ -363,7 +332,7 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 	ReportData_u8[INDEX_FW_VER_MAJOR] = VERSION_OF_FIRMWARE_MAJOR;
 	ReportData_u8[INDEX_FW_VER_MINOR] = VERSION_OF_FIRMWARE_MINOR;
 
-	*ReportSize = HIDReportEcho.ReportSize;
+	*ReportSize = GENERIC_REPORT_SIZE;
 	return true;
 }
 
@@ -381,10 +350,6 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
                                           const void* ReportData,
                                           const uint16_t ReportSize)
 {
-	HIDReportEcho.ReportID   = ReportID;
-	HIDReportEcho.ReportSize = ReportSize;
-	memcpy(HIDReportEcho.ReportData, ReportData, ReportSize);
-
 	uint8_t *ReportData_u8 = (uint8_t *)ReportData;
 
 	uint8_t cmd = ReportData_u8[0]; // command from enum COMMANDS{ ... };
@@ -399,6 +364,9 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 	            ColorsLevelsForPWM[ledIndex][R] = ReportData_u8[i++];
 	            ColorsLevelsForPWM[ledIndex][G] = ReportData_u8[i++];
 	            ColorsLevelsForPWM[ledIndex][B] = ReportData_u8[i++];
+	            SmoothStep[ledIndex][R] = ReportData_u8[i++];
+	            SmoothStep[ledIndex][G] = ReportData_u8[i++];
+	            SmoothStep[ledIndex][B] = ReportData_u8[i++];
 	        }
 	    }else{
 	        // SmoothDelay not zero and put new colors to ColorsLevelsForPWM_New[]
@@ -406,9 +374,12 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 	            ColorsLevelsForPWM_New[ledIndex][R] = ReportData_u8[i++];
 	            ColorsLevelsForPWM_New[ledIndex][G] = ReportData_u8[i++];
 	            ColorsLevelsForPWM_New[ledIndex][B] = ReportData_u8[i++];
+	            SmoothStep[ledIndex][R] = ReportData_u8[i++];
+	            SmoothStep[ledIndex][G] = ReportData_u8[i++];
+	            SmoothStep[ledIndex][B] = ReportData_u8[i++];
 	        }
-	        UpdateSmoothStep();
 	        UpdateColors = TRUE;
+	        Smooth = 0x00;
 	    }
 	    break;
 	case CMD_OFF_ALL:
@@ -422,8 +393,8 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 	            ColorsLevelsForPWM_New[ledIndex][G] = 0;
 	            ColorsLevelsForPWM_New[ledIndex][B] = 0;
 	        }
-	        UpdateSmoothStep();
 	        UpdateColors = TRUE;
+	        Smooth = 0x00;
 	    }
 
 	    break;

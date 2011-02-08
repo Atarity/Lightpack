@@ -47,6 +47,8 @@
 		#include <avr/power.h>
 		#include <avr/interrupt.h>
 		#include <string.h>
+		#include <util/delay.h>
+
 
         #include "Def.h"  /* I/O manipulations */
 
