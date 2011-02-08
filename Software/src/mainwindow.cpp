@@ -290,7 +290,7 @@ void MainWindow::settingsHardwareTimerOptionsChange()
 
     updatePwmFrequency();
 
-    if(pwmFrequency > 1000){
+    if(pwmFrequency > 10000){
         qWarning() << "PWM frequency to high! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
     }else if(pwmFrequency < 10){
         qWarning() << "PWM frequency to low! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";

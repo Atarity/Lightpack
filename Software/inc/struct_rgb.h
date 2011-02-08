@@ -33,13 +33,21 @@ struct sRGB
     unsigned char r;
     unsigned char g;
     unsigned char b;
+    unsigned char sr; // step r
+    unsigned char sg; // step g
+    unsigned char sb; // step b
+
 
     sRGB(){
         this->r = 0;
         this->g = 0;
         this->b = 0;
+        this->sr = 0;
+        this->sg = 0;
+        this->sb = 0;
     }
 
+#if 0
     sRGB(unsigned char r, unsigned char g, unsigned char b){
         this->r = r;
         this->g = g;
@@ -54,6 +62,8 @@ struct sRGB
         }
         return -1;
     }
+#endif
+
 };
 
 #endif // RGB_H

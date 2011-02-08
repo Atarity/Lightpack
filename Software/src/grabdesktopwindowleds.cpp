@@ -127,6 +127,13 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 {    
     timeEval->howLongItStart();
 
+    if(isAmbilightOn) {
+        if(timer->isActive() == false){
+            timer->start(ambilight_refresh_delay_ms);
+        }
+    }
+
+
     bool needToUpdate = false;
 
     LedColors colorsNew;
@@ -166,6 +173,38 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
     }
 
 
+    // Eval smooth steps start
+
+    int maxDiff = 0, diff = 0;
+
+    // First find MAX diff between old and new colors, and save all diffs in each smooth_step
+    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+        diff = colors[ledIndex]->r - colorsNew[ledIndex]->r;
+        if(diff < 0) diff *= -1;
+        if(diff > maxDiff) maxDiff = diff;
+        colorsNew[ledIndex]->sr = (unsigned char)((diff != 0) ? diff : 1);
+
+        diff = colors[ledIndex]->g - colorsNew[ledIndex]->g;
+        if(diff < 0) diff *= -1;
+        if(diff > maxDiff) maxDiff = diff;
+        colorsNew[ledIndex]->sg = (unsigned char)((diff != 0) ? diff : 1);
+
+        diff = colors[ledIndex]->b - colorsNew[ledIndex]->b;
+        if(diff < 0) diff *= -1;
+        if(diff > maxDiff) maxDiff = diff;
+        colorsNew[ledIndex]->sb = (unsigned char)((diff != 0) ? diff : 1);
+    }
+
+    // To find smooth_step which will be using max_diff divide on each smooth_step
+    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+        colorsNew[ledIndex]->sr = (unsigned char) maxDiff / colorsNew[ledIndex]->sr;
+        colorsNew[ledIndex]->sg = (unsigned char) maxDiff / colorsNew[ledIndex]->sg;
+        colorsNew[ledIndex]->sb = (unsigned char) maxDiff / colorsNew[ledIndex]->sb;
+    }
+    // Eval smooth steps end
+
+
+
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         if(colors[ledIndex]->r != colorsNew[ledIndex]->r){
             colors[ledIndex]->r = colorsNew[ledIndex]->r;
@@ -179,17 +218,18 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
             colors[ledIndex]->b = colorsNew[ledIndex]->b;
             needToUpdate = true;
         }
+
+        colors[ledIndex]->sr = colorsNew[ledIndex]->sr;
+        colors[ledIndex]->sg = colorsNew[ledIndex]->sg;
+        colors[ledIndex]->sb = colorsNew[ledIndex]->sb;
     }
+
 
     if((!updateColorsOnlyIfChanges) || needToUpdate){
         // if updateColorsOnlyIfChanges == false, then update colors (not depending on needToUpdate flag)
         emit updateLedsColors( colors );
     }
     emit ambilightTimeOfUpdatingColors(timeEval->howLongItEnd());
-
-    if(isAmbilightOn) {
-        timer->start(ambilight_refresh_delay_ms);
-    }
 }
 
 void GrabDesktopWindowLeds::setAmbilightOn(bool state)

@@ -829,7 +829,7 @@ int HID_API_EXPORT hid_write(hid_device *dev, const unsigned char *data, size_t 
 			1000/*timeout millis*/);
 		
 		if (res < 0)
-			return -1;
+                        return res;
 		
 		if (skipped_report_id)
 			length++;

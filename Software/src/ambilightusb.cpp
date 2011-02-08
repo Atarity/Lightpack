@@ -285,9 +285,15 @@ void AmbilightUsb::updateColors(LedColors colors)
     // Second byte of usb buffer is command (write_buffer[1] == CMD_UPDATE_LEDS, see below)
     int i = WRITE_BUFFER_INDEX_DATA_START;
     for(int led=0; led < LEDS_COUNT; led++){
+        // Send colors values
         write_buffer[i++] = colors[led]->r;
         write_buffer[i++] = colors[led]->g;
         write_buffer[i++] = colors[led]->b;
+
+        // Send change colors steps
+        write_buffer[i++] = colors[led]->sr;
+        write_buffer[i++] = colors[led]->sg;
+        write_buffer[i++] = colors[led]->sb;
     }
 
 #if 0
