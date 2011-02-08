@@ -202,6 +202,9 @@ ISR( TIMER1_COMPA_vect )
     // Set next PWM states for all channels
     PWM();
 
+    // Clear timer interrupt flag
+    TIFR1 = _BV(OCF1A);
+
     // Clear timer counter
     TCNT1 = 0x0000;
 }
