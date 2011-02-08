@@ -460,7 +460,7 @@ ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
 # Default target.
-all: begin gccversion sizebefore create-objdirs build sizeafter end
+all: begin gccversion sizebefore create-objdirs build sizeafter copy-hex end
 
 # Change the build target to build a HEX file or a library.
 build: elf hex eep lss sym
@@ -468,6 +468,9 @@ build: elf hex eep lss sym
 
 create-objdirs:
 	mkdir -p $(OBJDIRS)
+
+copy-hex:
+	cp $(OBJDIR)/$(TARGET).hex $(TARGET).hex
 
 elf: $(TARGET).elf
 hex: $(TARGET).hex
