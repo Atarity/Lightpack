@@ -5,98 +5,73 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/mainwindow.ui" line="135"/>
-        <location filename="../../src/mainwindow.ui" line="510"/>
+        <location filename="../../src/mainwindow.ui" line="94"/>
+        <location filename="../../src/mainwindow.ui" line="270"/>
         <source>Hz</source>
         <translation>Гц</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="201"/>
+        <location filename="../../src/mainwindow.ui" line="115"/>
         <source>Colored</source>
         <translation>Разноцветные</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="211"/>
+        <location filename="../../src/mainwindow.ui" line="125"/>
         <source>White</source>
         <translation>Белые</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="222"/>
-        <source>Red</source>
-        <translation>Красный</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="232"/>
-        <source>Green</source>
-        <translation>Зеленый</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="242"/>
-        <source>Blue</source>
-        <translation>Синий</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="309"/>
-        <source>White balance</source>
-        <translation>Баланс белого</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="335"/>
+        <location filename="../../src/mainwindow.ui" line="152"/>
         <source>Hardware options</source>
         <translation>Настройки девайса</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="343"/>
+        <location filename="../../src/mainwindow.ui" line="160"/>
         <source>Sets prescaller of the timer that generates PWM on HC595</source>
         <translation>Настройка делителя частоты таймера, который используется для генерации ШИМ на HC595</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="357"/>
+        <location filename="../../src/mainwindow.ui" line="174"/>
         <source>1</source>
         <translation>1</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="362"/>
+        <location filename="../../src/mainwindow.ui" line="179"/>
         <source>8</source>
         <translation>8</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="367"/>
+        <location filename="../../src/mainwindow.ui" line="184"/>
         <source>64</source>
         <translation>64</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="372"/>
+        <location filename="../../src/mainwindow.ui" line="189"/>
         <source>256</source>
         <translation>256</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="377"/>
+        <location filename="../../src/mainwindow.ui" line="194"/>
         <source>1024</source>
         <translation>1024</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="404"/>
+        <location filename="../../src/mainwindow.ui" line="221"/>
         <source>Sets output compate register (OCR) value of the timer that generates PWM on HC595</source>
         <translation>Настройка значения регистра сравнения (OCR) таймера используемого для генерации ШИМ на HC595</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="407"/>
+        <location filename="../../src/mainwindow.ui" line="224"/>
         <source>Timer OCR</source>
         <translation>Значение регистра сравнения (OCR)</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="427"/>
+        <location filename="../../src/mainwindow.ui" line="244"/>
         <source>ticks</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="434"/>
-        <source>Reconnect USB delay</source>
-        <translation>Переподключение к USB каждые</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="517"/>
+        <location filename="../../src/mainwindow.ui" line="277"/>
         <source>Frequency of PWM generation:</source>
         <translation>Частота генерации ШИМ:</translation>
     </message>
@@ -111,59 +86,27 @@
         <translation>мс</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="454"/>
-        <location filename="../../src/mainwindow.ui" line="484"/>
-        <source>secs</source>
-        <translation>сек</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="97"/>
-        <location filename="../../src/mainwindow.ui" line="111"/>
-        <source>pixels</source>
-        <translation>точек</translation>
-    </message>
-    <message>
         <location filename="../../src/mainwindow.ui" line="42"/>
         <source>Software options</source>
         <translation>Настройки приложения</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="77"/>
-        <source>Height</source>
-        <translation>Высота</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="104"/>
-        <source>Width</source>
-        <translation>Ширина</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="189"/>
+        <location filename="../../src/mainwindow.ui" line="103"/>
         <source>Show pixels for ambilight</source>
         <translation>Показать точки используемые для подсветки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="118"/>
+        <location filename="../../src/mainwindow.ui" line="77"/>
         <source>Refresh ambilight evaluated</source>
         <translation>Частота обновления ambilight</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="346"/>
+        <location filename="../../src/mainwindow.ui" line="163"/>
         <source>Timer prescaller</source>
         <translation>Делитель таймера</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="461"/>
-        <source>USB send data timeout</source>
-        <translation>Таймаут USB посылки</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="583"/>
-        <source>System clock: 12 MHz</source>
-        <translation>Частота работы микроконтроллера: 12Мгц</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="524"/>
+        <location filename="../../src/mainwindow.ui" line="284"/>
         <source>Sets the number of levels in PWM generation for each channel</source>
         <translation>Настройка количества уровней в ШИМ генерации на каждый канал</translation>
     </message>
@@ -173,72 +116,77 @@
         <translation>Лайтпак - Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="527"/>
+        <location filename="../../src/mainwindow.ui" line="287"/>
         <source>Color depth</source>
         <translation>Глубина цвета</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="569"/>
+        <location filename="../../src/mainwindow.ui" line="329"/>
         <source>counts</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="590"/>
+        <location filename="../../src/mainwindow.ui" line="343"/>
+        <source>System clock: 16 MHz</source>
+        <translation>Частота работы микроконтроллера: 16МГц</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="350"/>
         <source>USB send data only if colors changes</source>
         <translation>Посылать данные по USB, только если цвета изменились</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="635"/>
+        <location filename="../../src/mainwindow.ui" line="395"/>
         <source>Smooth change colors</source>
         <translation>Плавное изменение цветов</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="661"/>
+        <location filename="../../src/mainwindow.ui" line="421"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="701"/>
+        <location filename="../../src/mainwindow.ui" line="461"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="240"/>
+        <location filename="../../src/mainwindow.cpp" line="211"/>
         <source>On state</source>
         <translation>Включен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="246"/>
+        <location filename="../../src/mainwindow.cpp" line="217"/>
         <source>Off state</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="252"/>
+        <location filename="../../src/mainwindow.cpp" line="223"/>
         <source>Error state</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="395"/>
+        <location filename="../../src/mainwindow.cpp" line="365"/>
         <source>&amp;On ambilight</source>
         <translation>&amp;Включить ambilight</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="398"/>
+        <location filename="../../src/mainwindow.cpp" line="368"/>
         <source>O&amp;ff ambilight</source>
         <translation>&amp;Выключить ambilight</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="401"/>
+        <location filename="../../src/mainwindow.cpp" line="371"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="404"/>
+        <location filename="../../src/mainwindow.cpp" line="374"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="407"/>
+        <location filename="../../src/mainwindow.cpp" line="377"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
@@ -303,7 +251,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Железо:&lt;/span&gt; AT90USB162, MBI5026 и 8 RGB светодиодов&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Железка:&lt;/span&gt; AT90USB162, MBI5026 и 8 RGB светодиодов&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../src/aboutdialog.ui" line="106"/>
@@ -323,13 +271,13 @@ p, li { white-space: pre-wrap; }
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Software:&lt;/span&gt; C++, Qt 4.6&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:600;&quot;&gt;Software:&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Sans&apos;; font-size:10pt;&quot;&gt; C++, Qt4&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Софт:&lt;/span&gt; C++, Qt 4.6&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:600;&quot;&gt;Софтинка:&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Sans&apos;; font-size:10pt;&quot;&gt; C++, Qt4&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../src/aboutdialog.ui" line="155"/>
