@@ -60,6 +60,7 @@ public slots:
     void setColoredLedWidgets(bool state);
     void setWhiteLedWidgets(bool state);
     void setUpdateColorsOnlyIfChanges(bool state);
+    void setAvgColorsOnAllLeds(bool state);
 
     void ledWidgetResizeCompleted(int id);
 
@@ -81,6 +82,7 @@ private: // variables
 
     bool isAmbilightOn;    
     bool updateColorsOnlyIfChanges;
+    bool avgColorsOnAllLeds;
 
     // Settings:
     int ambilight_refresh_delay_ms;

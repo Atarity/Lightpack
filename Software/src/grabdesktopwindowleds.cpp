@@ -51,7 +51,9 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
 
     this->ambilight_color_depth = settings->value("Firmware/ColorDepth").toInt();
 
-    this->updateColorsOnlyIfChanges = true;
+    // TODO: add us to settings
+    this->updateColorsOnlyIfChanges = true; // default value
+    this->avgColorsOnAllLeds = false; // default value
 
 
     qDebug() << "GrabDesktopWindowLeds(): createLedWidgets()";
@@ -136,6 +138,8 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 
     bool needToUpdate = false;
 
+    int r = 0, g = 0, b = 0;
+
     LedColors colorsNew;
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
@@ -147,9 +151,30 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
         QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         QImage im = scaledPix.toImage();
 
-        colorsNew[ledIndex]->r = (im.pixel(0,0) >> 0x10) & 0xff;
-        colorsNew[ledIndex]->g = (im.pixel(0,0) >> 0x08) & 0xff;
-        colorsNew[ledIndex]->b = (im.pixel(0,0) >> 0x00) & 0xff;
+
+        if (avgColorsOnAllLeds){
+            r += (im.pixel(0,0) >> 0x10) & 0xff;
+            g += (im.pixel(0,0) >> 0x08) & 0xff;
+            b += (im.pixel(0,0) >> 0x00) & 0xff;
+        }else{
+            colorsNew[ledIndex]->r = (im.pixel(0,0) >> 0x10) & 0xff;
+            colorsNew[ledIndex]->g = (im.pixel(0,0) >> 0x08) & 0xff;
+            colorsNew[ledIndex]->b = (im.pixel(0,0) >> 0x00) & 0xff;
+        }
+    }
+
+
+    if(avgColorsOnAllLeds){
+        r /= LEDS_COUNT;
+        g /= LEDS_COUNT;
+        b /= LEDS_COUNT;
+
+        // Set all LEDs one AVG color
+        for(int i=0; i<LEDS_COUNT; i++){
+            colorsNew[i]->r = (unsigned char)(r & 0xff);
+            colorsNew[i]->g = (unsigned char)(g & 0xff);
+            colorsNew[i]->b = (unsigned char)(b & 0xff);
+        }
     }
 
 
@@ -278,6 +303,12 @@ void GrabDesktopWindowLeds::setWhiteLedWidgets(bool state)
 void GrabDesktopWindowLeds::setUpdateColorsOnlyIfChanges(bool state)
 {
     this->updateColorsOnlyIfChanges = state;
+}
+
+
+void GrabDesktopWindowLeds::setAvgColorsOnAllLeds(bool state)
+{
+    this->avgColorsOnAllLeds = state;
 }
 
 
