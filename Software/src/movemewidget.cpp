@@ -329,7 +329,11 @@ void MoveMeWidget::wheelEvent(QWheelEvent *pe)
         colorIndex = ColorsCount - 1;
     }
     this->setBackgroundColor(colors[colorIndex]);
+}
 
+void MoveMeWidget::resizeEvent(QResizeEvent *)
+{
+    ui->labelWidthHeight->setText( QString::number(this->width()) + "x" + QString::number(this->height()) );
 }
 
 double MoveMeWidget::getCoefRed()

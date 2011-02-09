@@ -54,7 +54,6 @@ signals:
 
 public slots:
 
-
 private:
     double loadCoefWithCheck(QString coefStr);
 
@@ -99,6 +98,7 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *pe);
     virtual void mouseReleaseEvent(QMouseEvent *pe);
     virtual void wheelEvent(QWheelEvent *);
+    virtual void resizeEvent(QResizeEvent *);
 };
 
 #endif // MOVEMEWIDGET_H
