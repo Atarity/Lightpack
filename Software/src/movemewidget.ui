@@ -22,13 +22,26 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+       <stylestrategy>PreferDefault</stylestrategy>
+      </font>
+     </property>
      <property name="text">
-      <string>W x H</string>
+      <string>WxH</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QLabel" name="labelSelfId">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
       <string>ID</string>
      </property>
