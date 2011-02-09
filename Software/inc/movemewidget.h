@@ -57,6 +57,9 @@ public slots:
 
 private:
     double loadCoefWithCheck(QString coefStr);
+    void setCursorOnAll(Qt::CursorShape cursor);
+    void checkAndSetCursors(QMouseEvent *pe);
+
 
 private:
     enum {

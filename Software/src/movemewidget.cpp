@@ -52,7 +52,7 @@ MoveMeWidget::MoveMeWidget(int id, QWidget *parent) :
 
     this->selfId = id;
 
-    this->setCursor(Qt::OpenHandCursor);
+    this->setCursorOnAll(Qt::OpenHandCursor);
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
     this->setFocusPolicy(Qt::NoFocus);
     ui->labelSelfId->setText(QString::number(this->selfId + 1));
@@ -99,6 +99,14 @@ void MoveMeWidget::setSizeAndPosition(int w, int h, int x, int y)
 }
 
 // private
+void MoveMeWidget::setCursorOnAll(Qt::CursorShape cursor)
+{
+    this->setCursor(cursor);
+    ui->labelSelfId->setCursor(cursor);
+    ui->labelWidthHeight->setCursor(cursor);
+}
+
+// private
 double MoveMeWidget::loadCoefWithCheck(QString coefStr)
 {
     bool ok = false;
@@ -131,35 +139,35 @@ void MoveMeWidget::mousePressEvent(QMouseEvent *pe)
         // First check corners
         if(pe->x() < BorderWidth && pe->y() < BorderWidth){
             cmd = RESIZE_LEFT_UP;
-            this->setCursor(Qt::SizeFDiagCursor);
+            this->setCursorOnAll(Qt::SizeFDiagCursor);
         }else if(pe->x() < BorderWidth && (this->height() - pe->y()) < BorderWidth){
             cmd = RESIZE_LEFT_DOWN;
-            this->setCursor(Qt::SizeBDiagCursor);
+            this->setCursorOnAll(Qt::SizeBDiagCursor);
         }else if(pe->y() < BorderWidth && (this->width() - pe->x()) < BorderWidth){
             cmd = RESIZE_RIGHT_UP;
-            this->setCursor(Qt::SizeBDiagCursor);
+            this->setCursorOnAll(Qt::SizeBDiagCursor);
         }else if((this->height() - pe->y()) < BorderWidth && (this->width() - pe->x()) < BorderWidth){
             cmd = RESIZE_RIGHT_DOWN;
-            this->setCursor(Qt::SizeFDiagCursor);
+            this->setCursorOnAll(Qt::SizeFDiagCursor);
         }
         // Next check sides
         else if(pe->x() < BorderWidth){
             cmd = RESIZE_HOR_LEFT;
-            this->setCursor(Qt::SizeHorCursor);
+            this->setCursorOnAll(Qt::SizeHorCursor);
         }else if((this->width() - pe->x()) < BorderWidth){
             cmd = RESIZE_HOR_RIGHT;
-            this->setCursor(Qt::SizeHorCursor);
+            this->setCursorOnAll(Qt::SizeHorCursor);
         }else if(pe->y() < BorderWidth){
             cmd = RESIZE_VER_UP;
-            this->setCursor(Qt::SizeVerCursor);
+            this->setCursorOnAll(Qt::SizeVerCursor);
         }else if((this->height() - pe->y()) < BorderWidth){
             cmd = RESIZE_VER_DOWN;
-            this->setCursor(Qt::SizeVerCursor);
+            this->setCursorOnAll(Qt::SizeVerCursor);
         }
         // Click on center, just move it
         else{
             cmd = MOVE;
-            this->setCursor(Qt::ClosedHandCursor);
+            this->setCursorOnAll(Qt::ClosedHandCursor);
         }
 
         emit resizeStarted();
@@ -295,33 +303,14 @@ void MoveMeWidget::mouseMoveEvent(QMouseEvent *pe)
 
     case NOP:
     default:
-
-        if(pe->x() < BorderWidth && pe->y() < BorderWidth){
-            this->setCursor(Qt::SizeFDiagCursor);
-        }else if(pe->x() < BorderWidth && (this->height() - pe->y()) < BorderWidth){
-            this->setCursor(Qt::SizeBDiagCursor);
-        }else if(pe->y() < BorderWidth && (this->width() - pe->x()) < BorderWidth){
-            this->setCursor(Qt::SizeBDiagCursor);
-        }else if((this->height() - pe->y()) < BorderWidth && (this->width() - pe->x()) < BorderWidth){
-            this->setCursor(Qt::SizeFDiagCursor);
-        }else if(pe->x() < BorderWidth){
-            this->setCursor(Qt::SizeHorCursor);
-        }else if((this->width() - pe->x()) < BorderWidth){
-            this->setCursor(Qt::SizeHorCursor);
-        }else if(pe->y() < BorderWidth){
-            this->setCursor(Qt::SizeVerCursor);
-        }else if((this->height() - pe->y()) < BorderWidth){
-            this->setCursor(Qt::SizeVerCursor);
-        }else{
-            this->setCursor(Qt::OpenHandCursor);
-        }
+        checkAndSetCursors(pe);
         break;
     }
 }
 
 void MoveMeWidget::mouseReleaseEvent(QMouseEvent *pe)
 {
-    this->setCursor(Qt::OpenHandCursor);
+    checkAndSetCursors(pe);
     cmd = NOP;
     emit resizeCompleted(selfId);
 }
@@ -359,4 +348,28 @@ double MoveMeWidget::getCoefGreen()
 double MoveMeWidget::getCoefBlue()
 {
     return coefBlue;
+}
+
+
+void MoveMeWidget::checkAndSetCursors(QMouseEvent *pe)
+{
+    if(pe->x() < BorderWidth && pe->y() < BorderWidth){
+        this->setCursorOnAll(Qt::SizeFDiagCursor);
+    }else if(pe->x() < BorderWidth && (this->height() - pe->y()) < BorderWidth){
+        this->setCursorOnAll(Qt::SizeBDiagCursor);
+    }else if(pe->y() < BorderWidth && (this->width() - pe->x()) < BorderWidth){
+        this->setCursorOnAll(Qt::SizeBDiagCursor);
+    }else if((this->height() - pe->y()) < BorderWidth && (this->width() - pe->x()) < BorderWidth){
+        this->setCursorOnAll(Qt::SizeFDiagCursor);
+    }else if(pe->x() < BorderWidth){
+        this->setCursorOnAll(Qt::SizeHorCursor);
+    }else if((this->width() - pe->x()) < BorderWidth){
+        this->setCursorOnAll(Qt::SizeHorCursor);
+    }else if(pe->y() < BorderWidth){
+        this->setCursorOnAll(Qt::SizeVerCursor);
+    }else if((this->height() - pe->y()) < BorderWidth){
+        this->setCursorOnAll(Qt::SizeVerCursor);
+    }else{
+        this->setCursorOnAll(Qt::OpenHandCursor);
+    }
 }
