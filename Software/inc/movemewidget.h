@@ -27,13 +27,18 @@
 #ifndef MOVEMEWIDGET_H
 #define MOVEMEWIDGET_H
 
-#include <QLabel>
+#include <QWidget>
 
-class MoveMeWidget : public QLabel
+namespace Ui {
+    class MoveMeWidget;
+}
+
+class MoveMeWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MoveMeWidget(int id, QWidget *parent = 0);
+    MoveMeWidget(int id, QWidget *parent = 0);
+    ~MoveMeWidget();
 
     void setBackgroundColor(QColor color);
     void setSizeAndPosition(int w, int h, int x, int y);
@@ -71,8 +76,8 @@ private:
     QPoint mousePressGlobalPosition;
     QSize mousePressDiffFromBorder;
 
-    static const int MinimumWidth = 20;
-    static const int MinimumHeight = 20;
+    static const int MinimumWidth = 50;
+    static const int MinimumHeight = 50;
     static const int BorderWidth = 10;
     static const int StickyCloserPixels = 5; // Sticky when closer
 
@@ -86,6 +91,8 @@ private:
     double coefRed;
     double coefGreen;
     double coefBlue;
+
+    Ui::MoveMeWidget *ui;
 
 protected:
     virtual void mousePressEvent(QMouseEvent *pe);

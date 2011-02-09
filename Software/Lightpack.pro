@@ -91,4 +91,5 @@ HEADERS += hidapi/hidapi.h \
     inc/ledcolors.h \
     inc/desktop.h
 FORMS += src/mainwindow.ui \
-    src/aboutdialog.ui
+    src/aboutdialog.ui \
+    src/movemewidget.ui

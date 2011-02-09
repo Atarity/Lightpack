@@ -27,6 +27,7 @@
 
 #include <QtGui>
 #include "movemewidget.h"
+#include "ui_movemewidget.h"
 #include "desktop.h"
 #include "settings.h"
 
@@ -44,15 +45,17 @@ const QColor MoveMeWidget::colors[ColorsCount] = {
 
 
 MoveMeWidget::MoveMeWidget(int id, QWidget *parent) :
-    QLabel(parent)
+    QWidget(parent),
+    ui(new Ui::MoveMeWidget)
 {
+    ui->setupUi(this);
+
     this->selfId = id;
 
     this->setCursor(Qt::OpenHandCursor);
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
     this->setFocusPolicy(Qt::NoFocus);
-    this->setText(QString::number(this->selfId + 1));
-    this->setAlignment(Qt::AlignCenter);
+    ui->labelSelfId->setText(QString::number(this->selfId + 1));
 
     this->setMouseTracking(true);
 
@@ -66,6 +69,11 @@ MoveMeWidget::MoveMeWidget(int id, QWidget *parent) :
     coefRed = loadCoefWithCheck("CoefRed");
     coefGreen = loadCoefWithCheck("CoefGreen");
     coefBlue = loadCoefWithCheck("CoefBlue");
+}
+
+MoveMeWidget::~MoveMeWidget()
+{
+    delete ui;
 }
 
 void MoveMeWidget::setBackgroundColor(QColor color)
