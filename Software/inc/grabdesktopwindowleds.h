@@ -75,7 +75,7 @@ private: // variables
     QTimer *timer;
     QList<MoveMeWidget *> ledWidgets;
     //QList<MoveMeWidget *> moveMeGroup; // move and resize labels together
-    const static QColor labelsColors[LEDS_COUNT];
+    const static QColor backgroundAndTextColors[LEDS_COUNT][2];
     TimeEvaluations *timeEval;
 
     LedColors colors;

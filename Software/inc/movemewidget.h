@@ -41,6 +41,7 @@ public:
     ~MoveMeWidget();
 
     void setBackgroundColor(QColor color);
+    void setTextColor(QColor color);
     void setSizeAndPosition(int w, int h, int x, int y);
     double getCoefRed();
     double getCoefGreen();
@@ -82,7 +83,7 @@ private:
 
     static const int ColorsCount = 8;
 
-    static const QColor colors[ColorsCount];
+    static const QColor colors[ColorsCount][2]; // background and text colors
     int colorIndex; // index of color which using now
 
     int selfId; // ID of this object

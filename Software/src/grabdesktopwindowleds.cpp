@@ -28,15 +28,15 @@
 
 #include "grabdesktopwindowleds.h"
 
-const QColor GrabDesktopWindowLeds::labelsColors[LEDS_COUNT] = {
-    Qt::red,       /* LED1 */
-    Qt::green,     /* LED2 */
-    Qt::blue,      /* LED3 */
-    Qt::yellow,    /* LED4 */
-    Qt::darkRed,   /* LED5 */
-    Qt::darkGreen, /* LED6 */
-    Qt::darkBlue,  /* LED7 */
-    Qt::darkYellow,/* LED8 */
+const QColor GrabDesktopWindowLeds::backgroundAndTextColors[LEDS_COUNT][2] = {
+    { Qt::red,        Qt::black }, /* LED1 */
+    { Qt::green,      Qt::black }, /* LED2 */
+    { Qt::blue,       Qt::white }, /* LED3 */
+    { Qt::yellow,     Qt::black }, /* LED4 */
+    { Qt::darkRed,    Qt::white }, /* LED5 */
+    { Qt::darkGreen,  Qt::white }, /* LED6 */
+    { Qt::darkBlue,   Qt::white }, /* LED7 */
+    { Qt::darkYellow, Qt::white }, /* LED8 */
 };
 
 GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
@@ -94,8 +94,6 @@ void GrabDesktopWindowLeds::createLedWidgets()
 
     for(int i=0; i<LEDS_COUNT; i++){
         ledWidgets.append(new MoveMeWidget(i, this));
-
-        ledWidgets[i]->setBackgroundColor(labelsColors[i]);
     }
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
@@ -108,6 +106,8 @@ void GrabDesktopWindowLeds::createLedWidgets()
         // Connect signal resizeCompleted for save new size and position
         connect(ledWidgets[ledIndex], SIGNAL(resizeCompleted(int)), this, SLOT(ledWidgetResizeCompleted(int)));
     }
+
+    setColoredLedWidgets(true);
 }
 
 
@@ -284,7 +284,8 @@ void GrabDesktopWindowLeds::setColoredLedWidgets(bool state)
     if(state){
         for(int i=0; i<ledWidgets.count(); i++){
             // Fill label with labelColors[i] color
-            ledWidgets[i]->setBackgroundColor(labelsColors[i]);
+            ledWidgets[i]->setBackgroundColor(backgroundAndTextColors[i][0]);
+            ledWidgets[i]->setTextColor(backgroundAndTextColors[i][1]);
         }
     }
 }
@@ -295,6 +296,7 @@ void GrabDesktopWindowLeds::setWhiteLedWidgets(bool state)
         for(int i=0; i<ledWidgets.count(); i++){
             // Fill labels white
             ledWidgets[i]->setBackgroundColor(Qt::white);
+            ledWidgets[i]->setTextColor(Qt::black);
         }
     }
 }

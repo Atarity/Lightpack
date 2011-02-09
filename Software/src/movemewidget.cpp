@@ -32,15 +32,15 @@
 #include "settings.h"
 
 // Colors changes when middle button clicked
-const QColor MoveMeWidget::colors[ColorsCount] = {
-    Qt::red,
-    Qt::green,
-    Qt::blue,
-    Qt::yellow,
-    Qt::white,
-    Qt::black,
-    Qt::magenta,
-    Qt::cyan,
+const QColor MoveMeWidget::colors[ColorsCount][2] = {
+    { Qt::red,      Qt::black },
+    { Qt::green,    Qt::black },
+    { Qt::blue,     Qt::white },
+    { Qt::yellow,   Qt::black },
+    { Qt::white,    Qt::black },
+    { Qt::black,    Qt::white },
+    { Qt::magenta,  Qt::black },
+    { Qt::cyan,     Qt::black },
 };
 
 
@@ -62,7 +62,8 @@ MoveMeWidget::MoveMeWidget(int id, QWidget *parent) :
     this->resize(100, 100);
 
     colorIndex = 0;
-    this->setBackgroundColor(colors[colorIndex]);
+    this->setBackgroundColor(colors[colorIndex][0]);
+    this->setTextColor(colors[colorIndex][1]);
 
     qDebug() << "MoveMeWidget(" << (selfId + 1) << "): Load coef-s from settings";
     // Load coef-s from settings
@@ -81,6 +82,14 @@ void MoveMeWidget::setBackgroundColor(QColor color)
     QPalette pal = this->palette();
     pal.setBrush(this->backgroundRole(), QBrush(color));
     this->setPalette(pal);
+}
+
+void MoveMeWidget::setTextColor(QColor color)
+{
+    QPalette pal = this->palette();
+    pal.setBrush(this->foregroundRole(), QBrush(color));
+    ui->labelSelfId->setPalette(pal);
+    ui->labelWidthHeight->setPalette(pal);
 }
 
 void MoveMeWidget::setSizeAndPosition(int w, int h, int x, int y)
@@ -328,7 +337,8 @@ void MoveMeWidget::wheelEvent(QWheelEvent *pe)
     }else if(colorIndex < 0) {
         colorIndex = ColorsCount - 1;
     }
-    this->setBackgroundColor(colors[colorIndex]);
+    this->setBackgroundColor(colors[colorIndex][0]);
+    this->setTextColor(colors[colorIndex][1]);
 }
 
 void MoveMeWidget::resizeEvent(QResizeEvent *)
