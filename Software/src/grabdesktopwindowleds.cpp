@@ -200,9 +200,13 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 
     // Check minimum level of sensivity
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        if(colorsNew[ledIndex]->r < minLevelOfSensivity) colorsNew[ledIndex]->r = 0;
-        if(colorsNew[ledIndex]->g < minLevelOfSensivity) colorsNew[ledIndex]->g = 0;
-        if(colorsNew[ledIndex]->b < minLevelOfSensivity) colorsNew[ledIndex]->b = 0;
+        int avg = colorsNew[ledIndex]->r + colorsNew[ledIndex]->g + colorsNew[ledIndex]->b;
+        avg /= 3;
+        if(avg <= minLevelOfSensivity){
+            colorsNew[ledIndex]->r = 0;
+            colorsNew[ledIndex]->g = 0;
+            colorsNew[ledIndex]->b = 0;
+        }
     }
 
 
