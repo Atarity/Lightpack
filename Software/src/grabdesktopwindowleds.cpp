@@ -54,6 +54,7 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     // TODO: add us to settings
     this->updateColorsOnlyIfChanges = true; // default value
     this->avgColorsOnAllLeds = false; // default value
+    this->minLevelOfSensivity = 0; // default value
 
 
     qDebug() << "GrabDesktopWindowLeds(): createLedWidgets()";
@@ -122,6 +123,11 @@ void GrabDesktopWindowLeds::setVisibleLedWidgets(bool state)
     }
 }
 
+void GrabDesktopWindowLeds::setMinLevelOfSensivity(int value)
+{
+    this->minLevelOfSensivity = value;
+}
+
 
 
 
@@ -183,11 +189,6 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
         colorsNew[ledIndex]->r = (int)((double)colorsNew[ledIndex]->r / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
         colorsNew[ledIndex]->g = (int)((double)colorsNew[ledIndex]->g / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
         colorsNew[ledIndex]->b = (int)((double)colorsNew[ledIndex]->b / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
-
-        // hw_v2.*: 4 SMD RGB LEDs
-        //  9.6 mA - all off
-        // 90.0 mA - all on
-        //colorsNew[led_index][color] = ambilight_color_depth;
     }
 
     // White balance
@@ -195,6 +196,13 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
         colorsNew[ledIndex]->r *= ledWidgets[ledIndex]->getCoefRed();
         colorsNew[ledIndex]->g *= ledWidgets[ledIndex]->getCoefGreen();
         colorsNew[ledIndex]->b *= ledWidgets[ledIndex]->getCoefBlue();
+    }
+
+    // Check minimum level of sensivity
+    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+        if(colorsNew[ledIndex]->r < minLevelOfSensivity) colorsNew[ledIndex]->r = 0;
+        if(colorsNew[ledIndex]->g < minLevelOfSensivity) colorsNew[ledIndex]->g = 0;
+        if(colorsNew[ledIndex]->b < minLevelOfSensivity) colorsNew[ledIndex]->b = 0;
     }
 
 

@@ -43,7 +43,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0">
+         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0">
           <item row="1" column="0">
            <widget class="QLabel" name="label_UpdateDelay">
             <property name="text">
@@ -95,6 +95,36 @@
             </property>
            </widget>
           </item>
+          <item row="3" column="1">
+           <widget class="QSpinBox" name="spinBox_MinLevelOfSensitivity">
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>20</number>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>The minimum level of sensitivity</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="3">
+           <widget class="QSlider" name="horizontalSlider_MinLevelOfSensitivity">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
@@ -140,7 +170,7 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0">
+          <item row="2" column="0">
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -622,6 +652,38 @@
     <hint type="destinationlabel">
      <x>264</x>
      <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_MinLevelOfSensitivity</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_MinLevelOfSensitivity</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>236</x>
+     <y>156</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>334</x>
+     <y>129</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_MinLevelOfSensitivity</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSlider_MinLevelOfSensitivity</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>334</x>
+     <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>236</x>
+     <y>156</y>
     </hint>
    </hints>
   </connection>
