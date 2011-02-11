@@ -335,6 +335,14 @@ void MoveMeWidget::resizeEvent(QResizeEvent *)
     ui->labelWidthHeight->setText( QString::number(this->width()) + "x" + QString::number(this->height()) );
 }
 
+void MoveMeWidget::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    painter.setPen(Qt::black);
+    painter.drawRect(0, 0, width() - 1, height() - 1);
+}
+
+
 double MoveMeWidget::getCoefRed()
 {
     return coefRed;
