@@ -27,11 +27,6 @@
 #ifndef VERSION_H_
 #define VERSION_H_
 
-//   Hardware version:
-#define VERSION_OF_HARDWARE				(0x0403UL)
-#define VERSION_OF_HARDWARE_MAJOR		((VERSION_OF_HARDWARE >> 8) & 0xff)
-#define VERSION_OF_HARDWARE_MINOR		(VERSION_OF_HARDWARE & 0x00ff)
-
 //   Firmware version:
 #define VERSION_OF_FIRMWARE				(0x0402UL)
 #define VERSION_OF_FIRMWARE_MAJOR		((VERSION_OF_FIRMWARE >> 8) & 0xff)

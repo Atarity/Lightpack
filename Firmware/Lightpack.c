@@ -327,10 +327,6 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 {
 	uint8_t *ReportData_u8 = (uint8_t *)ReportData;
 
-    // Hardware version
-	ReportData_u8[INDEX_HW_VER_MAJOR] = VERSION_OF_HARDWARE_MAJOR;
-	ReportData_u8[INDEX_HW_VER_MINOR] = VERSION_OF_HARDWARE_MINOR;
-
     // Firmware version
 	ReportData_u8[INDEX_FW_VER_MAJOR] = VERSION_OF_FIRMWARE_MAJOR;
 	ReportData_u8[INDEX_FW_VER_MINOR] = VERSION_OF_FIRMWARE_MINOR;

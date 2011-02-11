@@ -61,7 +61,6 @@ public:
 public:
     bool openDevice();
     bool deviceOpened();
-    QString hardwareVersion();
     QString firmwareVersion();
     void offLeds();
 

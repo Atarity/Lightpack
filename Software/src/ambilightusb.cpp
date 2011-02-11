@@ -191,25 +191,6 @@ bool AmbilightUsb::writeBufferToDeviceWithCheck(int command)
     }
 }
 
-QString AmbilightUsb::hardwareVersion()
-{
-    if(ambilightDevice == NULL){
-        if(!tryToReopenDevice()){
-            return QApplication::tr("device unavailable");
-        }
-    }
-    // TODO: write command CMD_GET_VERSION to device
-    bool result = readDataFromDeviceWithCheck();
-    if(!result){
-        return QApplication::tr("read device fail");
-    }
-
-    // read_buffer[0] - report ID, skip it by +1
-    int hw_major = read_buffer[INDEX_HW_VER_MAJOR];
-    int hw_minor = read_buffer[INDEX_HW_VER_MINOR];
-    return QString::number(hw_major) + "." + QString::number(hw_minor);
-}
-
 QString AmbilightUsb::firmwareVersion()
 {
     if(ambilightDevice == NULL){
