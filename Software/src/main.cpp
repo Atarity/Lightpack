@@ -154,6 +154,9 @@ void settingsInit()
     
     setDefaultSettingIfNotFound("RefreshAmbilightDelayMs",             REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("IsAvgColorsOn",                       IS_AVG_COLORS_ON_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("MinimumLevelOfSensitivity",           MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT);
+
     setDefaultSettingIfNotFound("Firmware/TimerPrescallerIndex",       FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("Firmware/TimerOCR",                   FW_TIMER_OCR_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("Firmware/ColorDepth",                 FW_COLOR_DEPTH_DEFAULT_VALUE);

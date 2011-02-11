@@ -399,11 +399,14 @@ void MainWindow::createTrayIcon()
 void MainWindow::loadSettingsToMainWindow()
 {
     ui->spinBox_UpdateDelay->setValue( settings->value("RefreshAmbilightDelayMs").toInt() );
+    ui->spinBox_MinLevelOfSensitivity->setValue( settings->value("MinimumLevelOfSensitivity").toInt() );
+    ui->checkBox_AVG_Colors->setChecked( settings->value("IsAvgColorsOn").toBool() );
 
-    ui->horizontalSlider_HW_OCR->setValue( settings->value("Firmware/TimerOCR").toInt());
-    ui->horizontalSlider_HW_Prescaller->setValue( settings->value("Firmware/TimerPrescallerIndex").toInt());
-    ui->horizontalSlider_HW_ColorDepth->setValue( settings->value("Firmware/ColorDepth").toInt());
-    ui->spinBox_HW_SmoothChangeColors->setValue(settings->value("Firmware/ChangeColorsDelay").toInt());
+    ui->horizontalSlider_HW_OCR->setValue( settings->value("Firmware/TimerOCR").toInt() );
+    ui->horizontalSlider_HW_Prescaller->setValue( settings->value("Firmware/TimerPrescallerIndex").toInt() );
+    ui->horizontalSlider_HW_ColorDepth->setValue( settings->value("Firmware/ColorDepth").toInt() );
+    ui->spinBox_HW_SmoothChangeColors->setValue( settings->value("Firmware/ChangeColorsDelay").toInt() );
+
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
     settingsHardwareColorDepthOptionChange(); // synchonize color depth value with device

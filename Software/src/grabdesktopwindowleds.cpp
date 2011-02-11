@@ -48,13 +48,13 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     // Read settings once
     qDebug() << "GrabDesktopWindowLeds(): read settings";
     this->ambilight_refresh_delay_ms = settings->value("RefreshAmbilightDelayMs").toInt();
+    this->avgColorsOnAllLeds = settings->value("IsAvgColorsOn").toBool();
+    this->minLevelOfSensivity = settings->value("MinimumLevelOfSensitivity").toInt();
 
     this->ambilight_color_depth = settings->value("Firmware/ColorDepth").toInt();
 
-    // TODO: add us to settings
+    // TODO: add me to settings
     this->updateColorsOnlyIfChanges = true; // default value
-    this->avgColorsOnAllLeds = false; // default value
-    this->minLevelOfSensivity = 0; // default value
 
 
     qDebug() << "GrabDesktopWindowLeds(): createLedWidgets()";
@@ -122,13 +122,6 @@ void GrabDesktopWindowLeds::setVisibleLedWidgets(bool state)
         }
     }
 }
-
-void GrabDesktopWindowLeds::setMinLevelOfSensivity(int value)
-{
-    this->minLevelOfSensivity = value;
-}
-
-
 
 
 void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
@@ -323,6 +316,13 @@ void GrabDesktopWindowLeds::setUpdateColorsOnlyIfChanges(bool state)
 void GrabDesktopWindowLeds::setAvgColorsOnAllLeds(bool state)
 {
     this->avgColorsOnAllLeds = state;
+    settings->setValue("IsAvgColorsOn", state);
+}
+
+void GrabDesktopWindowLeds::setMinLevelOfSensivity(int value)
+{
+    this->minLevelOfSensivity = value;
+    settings->setValue("MinimumLevelOfSensitivity", value);
 }
 
 
