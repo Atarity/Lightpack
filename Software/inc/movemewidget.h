@@ -103,6 +103,7 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent *pe);
     virtual void wheelEvent(QWheelEvent *);
     virtual void resizeEvent(QResizeEvent *);
+    virtual void paintEvent(QPaintEvent *);
 };
 
 #endif // MOVEMEWIDGET_H
