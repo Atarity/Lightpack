@@ -63,6 +63,9 @@ public slots:
     void setAvgColorsOnAllLeds(bool state);
     void setMinLevelOfSensivity(int value);
 
+    void setAmbilightON();
+    void setAmbilightOFF();
+
     void ledWidgetResizeCompleted(int id);
 
 private slots:
@@ -82,6 +85,7 @@ private: // variables
     LedColors colors;
 
     bool isAmbilightOn;    
+    bool isResizeOrMoving;
     bool updateColorsOnlyIfChanges;
     bool avgColorsOnAllLeds;
     int minLevelOfSensivity;

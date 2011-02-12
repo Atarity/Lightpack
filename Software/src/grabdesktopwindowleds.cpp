@@ -56,6 +56,7 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     // TODO: add me to settings
     this->updateColorsOnlyIfChanges = true; // default value
 
+    this->isResizeOrMoving = false;
 
     qDebug() << "GrabDesktopWindowLeds(): createLedWidgets()";
     createLedWidgets();
@@ -105,7 +106,9 @@ void GrabDesktopWindowLeds::createLedWidgets()
         ledWidgets[ledIndex]->move(ledWidgetPosition);
 
         // Connect signal resizeCompleted for save new size and position
-        connect(ledWidgets[ledIndex], SIGNAL(resizeCompleted(int)), this, SLOT(ledWidgetResizeCompleted(int)));
+        connect(ledWidgets[ledIndex], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(ledWidgetResizeCompleted(int)));
+        connect(ledWidgets[ledIndex], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(setAmbilightON()));
+        connect(ledWidgets[ledIndex], SIGNAL(resizeOrMoveStarted()), this, SLOT(setAmbilightOFF()));
     }
 
     setColoredLedWidgets(true);
@@ -126,6 +129,10 @@ void GrabDesktopWindowLeds::setVisibleLedWidgets(bool state)
 
 void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 {    
+    if(isResizeOrMoving){
+        return;
+    }
+
     timeEval->howLongItStart();
 
     if(isAmbilightOn) {
@@ -272,6 +279,17 @@ void GrabDesktopWindowLeds::setAmbilightOn(bool state)
     }
     isAmbilightOn = state;
 }
+
+void GrabDesktopWindowLeds::setAmbilightON()
+{
+    isResizeOrMoving = false;
+}
+
+void GrabDesktopWindowLeds::setAmbilightOFF()
+{
+    isResizeOrMoving = true;
+}
+
 
 
 void GrabDesktopWindowLeds::setAmbilightRefreshDelayMs(int ms)

@@ -48,8 +48,8 @@ public:
     double getCoefBlue();
 
 signals:
-    void resizeStarted();
-    void resizeCompleted(int id);
+    void resizeOrMoveStarted();
+    void resizeOrMoveCompleted(int id);
     void mouseRightButtonClicked(int selfId);
     void sizeAndPositionChanged(int w, int h, int x, int y);
 

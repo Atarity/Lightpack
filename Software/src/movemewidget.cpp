@@ -170,7 +170,7 @@ void MoveMeWidget::mousePressEvent(QMouseEvent *pe)
             this->setCursorOnAll(Qt::ClosedHandCursor);
         }
 
-        emit resizeStarted();
+        emit resizeOrMoveStarted();
 
     }else{
         cmd = NOP;
@@ -312,7 +312,7 @@ void MoveMeWidget::mouseReleaseEvent(QMouseEvent *pe)
 {
     checkAndSetCursors(pe);
     cmd = NOP;
-    emit resizeCompleted(selfId);
+    emit resizeOrMoveCompleted(selfId);
 }
 
 
