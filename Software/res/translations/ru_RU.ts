@@ -6,72 +6,82 @@
     <name>MainWindow</name>
     <message>
         <location filename="../../src/mainwindow.ui" line="94"/>
-        <location filename="../../src/mainwindow.ui" line="270"/>
+        <location filename="../../src/mainwindow.ui" line="310"/>
         <source>Hz</source>
         <translation>Гц</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="115"/>
+        <location filename="../../src/mainwindow.ui" line="114"/>
+        <source>The minimum level of sensitivity</source>
+        <translation>Минимальный уровень чувствительности</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="133"/>
+        <source>AVG color on all LEDs</source>
+        <translation>Усреднить цвет всех светодиодов</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="155"/>
         <source>Colored</source>
         <translation>Разноцветные</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="125"/>
+        <location filename="../../src/mainwindow.ui" line="165"/>
         <source>White</source>
         <translation>Белые</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="152"/>
+        <location filename="../../src/mainwindow.ui" line="192"/>
         <source>Hardware options</source>
         <translation>Настройки девайса</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="160"/>
+        <location filename="../../src/mainwindow.ui" line="200"/>
         <source>Sets prescaller of the timer that generates PWM on HC595</source>
         <translation>Настройка делителя частоты таймера, который используется для генерации ШИМ на HC595</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="174"/>
+        <location filename="../../src/mainwindow.ui" line="214"/>
         <source>1</source>
         <translation>1</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="179"/>
+        <location filename="../../src/mainwindow.ui" line="219"/>
         <source>8</source>
         <translation>8</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="184"/>
+        <location filename="../../src/mainwindow.ui" line="224"/>
         <source>64</source>
         <translation>64</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="189"/>
+        <location filename="../../src/mainwindow.ui" line="229"/>
         <source>256</source>
         <translation>256</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="194"/>
+        <location filename="../../src/mainwindow.ui" line="234"/>
         <source>1024</source>
         <translation>1024</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="221"/>
+        <location filename="../../src/mainwindow.ui" line="261"/>
         <source>Sets output compate register (OCR) value of the timer that generates PWM on HC595</source>
         <translation>Настройка значения регистра сравнения (OCR) таймера используемого для генерации ШИМ на HC595</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="224"/>
+        <location filename="../../src/mainwindow.ui" line="264"/>
         <source>Timer OCR</source>
         <translation>Значение регистра сравнения (OCR)</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="244"/>
+        <location filename="../../src/mainwindow.ui" line="284"/>
         <source>ticks</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="277"/>
+        <location filename="../../src/mainwindow.ui" line="317"/>
         <source>Frequency of PWM generation:</source>
         <translation>Частота генерации ШИМ:</translation>
     </message>
@@ -91,7 +101,7 @@
         <translation>Настройки приложения</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="103"/>
+        <location filename="../../src/mainwindow.ui" line="143"/>
         <source>Show pixels for ambilight</source>
         <translation>Показать точки используемые для подсветки</translation>
     </message>
@@ -101,12 +111,12 @@
         <translation>Частота обновления ambilight</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="163"/>
+        <location filename="../../src/mainwindow.ui" line="203"/>
         <source>Timer prescaller</source>
         <translation>Делитель таймера</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="284"/>
+        <location filename="../../src/mainwindow.ui" line="324"/>
         <source>Sets the number of levels in PWM generation for each channel</source>
         <translation>Настройка количества уровней в ШИМ генерации на каждый канал</translation>
     </message>
@@ -116,92 +126,108 @@
         <translation>Лайтпак - Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="287"/>
+        <location filename="../../src/mainwindow.ui" line="327"/>
         <source>Color depth</source>
         <translation>Глубина цвета</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="329"/>
+        <location filename="../../src/mainwindow.ui" line="369"/>
         <source>counts</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="343"/>
+        <location filename="../../src/mainwindow.ui" line="383"/>
         <source>System clock: 16 MHz</source>
         <translation>Частота работы микроконтроллера: 16МГц</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="350"/>
+        <location filename="../../src/mainwindow.ui" line="390"/>
         <source>USB send data only if colors changes</source>
         <translation>Посылать данные по USB, только если цвета изменились</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="395"/>
+        <location filename="../../src/mainwindow.ui" line="435"/>
         <source>Smooth change colors</source>
         <translation>Плавное изменение цветов</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="421"/>
+        <location filename="../../src/mainwindow.ui" line="461"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="461"/>
+        <location filename="../../src/mainwindow.ui" line="501"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="211"/>
+        <location filename="../../src/mainwindow.cpp" line="213"/>
         <source>On state</source>
         <translation>Включен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="217"/>
+        <location filename="../../src/mainwindow.cpp" line="219"/>
         <source>Off state</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="223"/>
+        <location filename="../../src/mainwindow.cpp" line="225"/>
         <source>Error state</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="365"/>
-        <source>&amp;On ambilight</source>
-        <translation>&amp;Включить ambilight</translation>
+        <location filename="../../src/mainwindow.cpp" line="366"/>
+        <source>&amp;Turn on</source>
+        <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="368"/>
-        <source>O&amp;ff ambilight</source>
-        <translation>&amp;Выключить ambilight</translation>
+        <location filename="../../src/mainwindow.cpp" line="370"/>
+        <source>&amp;Turn off</source>
+        <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="371"/>
+        <location filename="../../src/mainwindow.cpp" line="374"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="374"/>
+        <location filename="../../src/mainwindow.cpp" line="378"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="377"/>
+        <location filename="../../src/mainwindow.cpp" line="382"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
+    </message>
+</context>
+<context>
+    <name>MoveMeWidget</name>
+    <message>
+        <location filename="../../src/movemewidget.ui" line="14"/>
+        <source>LED Widget</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../src/movemewidget.ui" line="38"/>
+        <source>WxH</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../src/movemewidget.ui" line="97"/>
+        <source>ID</source>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>QApplication</name>
     <message>
         <location filename="../../src/ambilightusb.cpp" line="198"/>
-        <location filename="../../src/ambilightusb.cpp" line="217"/>
         <source>device unavailable</source>
         <translation>устройство не доступно</translation>
     </message>
     <message>
         <location filename="../../src/ambilightusb.cpp" line="204"/>
-        <location filename="../../src/ambilightusb.cpp" line="223"/>
         <source>read device fail</source>
         <translation>устройство не отвечает</translation>
     </message>
@@ -293,7 +319,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Автор:&lt;/span&gt; Mike Shatohin (mike.shatohin@gmail.com)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="265"/>
+        <location filename="../../src/aboutdialog.ui" line="255"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
@@ -316,12 +342,11 @@ p, li { white-space: pre-wrap; }
         <translation>&lt;b&gt;Версия программы:&lt;/b&gt; </translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.cpp" line="37"/>
         <source>&lt;b&gt;Hardware version:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Версия устройства:&lt;/b&gt; </translation>
+        <translation type="obsolete">&lt;b&gt;Версия устройства:&lt;/b&gt; </translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.cpp" line="38"/>
+        <location filename="../../src/aboutdialog.cpp" line="37"/>
         <source>&lt;b&gt;Firmware version:&lt;/b&gt; </source>
         <translation>&lt;b&gt;Версия прошивки:&lt;/b&gt; </translation>
     </message>

@@ -363,16 +363,20 @@ void MainWindow::updatePwmFrequency()
 
 void MainWindow::createActions()
 {
-    onAmbilightAction = new QAction(tr("&On ambilight"), this);
+    onAmbilightAction = new QAction(QIcon(":/icons/on.png"), tr("&Turn on"), this);
+    onAmbilightAction->setIconVisibleInMenu(true);
     connect(onAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOn()));
 
-    offAmbilightAction = new QAction(tr("O&ff ambilight"), this);
+    offAmbilightAction = new QAction(QIcon(":/icons/off.png"), tr("&Turn off"), this);
+    offAmbilightAction->setIconVisibleInMenu(true);
     connect(offAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOff()));
 
-    settingsAction = new QAction(tr("&Settings"), this);
+    settingsAction = new QAction(QIcon(":/icons/settings.png"), tr("&Settings"), this);
+    settingsAction->setIconVisibleInMenu(true);
     connect(settingsAction, SIGNAL(triggered()), this, SLOT(showSettings()));
 
-    aboutAction = new QAction(tr("&About"), this);
+    aboutAction = new QAction(QIcon(":/icons/Lightpack.png"), tr("&About"), this);
+    aboutAction->setIconVisibleInMenu(true);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAbout()));
 
     quitAction = new QAction(tr("&Quit"), this);

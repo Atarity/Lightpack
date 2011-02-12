@@ -20,8 +20,8 @@
    <string>Lightpack - About</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>:/icons/ambilight_icon.png</normaloff>:/icons/ambilight_icon.png</iconset>
+   <iconset resource="../res/LightpackResources.qrc">
+    <normaloff>:/icons/Lightpack.png</normaloff>:/icons/Lightpack.png</iconset>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -273,7 +273,9 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../res/LightpackResources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>pushButton</sender>
