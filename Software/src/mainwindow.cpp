@@ -120,8 +120,7 @@ void MainWindow::connectSignalsSlots()
 
 
 MainWindow::~MainWindow()
-{
-    delete ui;
+{    
     delete onAmbilightAction;
     delete offAmbilightAction;
     delete settingsAction;
@@ -133,6 +132,8 @@ MainWindow::~MainWindow()
 
     delete ambilightUsb;
     delete grabDesktopWindowLeds;
+
+    delete ui;
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -380,7 +381,7 @@ void MainWindow::createActions()
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAbout()));
 
     quitAction = new QAction(tr("&Quit"), this);
-    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(quitAction, SIGNAL(triggered()), this, SLOT(quit()));
 }
 
 void MainWindow::createTrayIcon()
@@ -425,3 +426,8 @@ void MainWindow::appendLogsLine(const QString & line)
     ui->plainTextLogs->appendPlainText(line);
 }
 
+void MainWindow::quit()
+{
+    trayIcon->hide();
+    QApplication::quit();
+}

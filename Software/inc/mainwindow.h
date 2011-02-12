@@ -53,8 +53,8 @@ public slots:
     void refreshAmbilightEvaluated(double updateResultMs);
 
 protected:
-    void changeEvent(QEvent *e);
-    void closeEvent(QCloseEvent *event);
+    virtual void changeEvent(QEvent *e);
+    virtual void closeEvent(QCloseEvent *event);
 
 private slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
@@ -62,6 +62,7 @@ private slots:
     void showSettings(); /* using in actions */
     void ambilightOn(); /* using in actions */
     void ambilightOff(); /* using in actions */
+    void quit(); /* using in actions */
 
     void settingsSoftwareOptionsChange();
     void settingsHardwareTimerOptionsChange();
