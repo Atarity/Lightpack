@@ -212,12 +212,18 @@ void MainWindow::trayAmbilightOn()
 {
     trayIcon->setIcon(QIcon(":/icons/on.png"));
     trayIcon->setToolTip(tr("On state"));
+
+    onAmbilightAction->setEnabled(false);
+    offAmbilightAction->setEnabled(true);
 }
 
 void MainWindow::trayAmbilightOff()
 {
     trayIcon->setIcon(QIcon(":/icons/off.png"));
     trayIcon->setToolTip(tr("Off state"));
+
+    onAmbilightAction->setEnabled(true);
+    offAmbilightAction->setEnabled(false);
 }
 
 void MainWindow::trayAmbilightError()
