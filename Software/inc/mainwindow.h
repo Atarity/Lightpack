@@ -67,7 +67,7 @@ private slots:
     void settingsSoftwareOptionsChange();
     void settingsHardwareTimerOptionsChange();
     void settingsHardwareColorDepthOptionChange();
-    void settingsHardwareChangeColorsSmoothDelay(int smoothDelay);
+    void settingsHardwareChangeColorsIsSmooth(bool isSmooth);
 
 
 private:    

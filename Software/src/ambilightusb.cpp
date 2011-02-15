@@ -216,10 +216,13 @@ void AmbilightUsb::offLeds()
     writeBufferToDeviceWithCheck(CMD_OFF_ALL);
 }
 
-void AmbilightUsb::smoothChangeColors(int smoothly_delay)
+void AmbilightUsb::smoothChangeColors(bool isSmooth)
 {
-    // TODO: add to settings shoothChangeColors state, send to device and load it to form when start application
-    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (char)smoothly_delay;
+    if(isSmooth){
+        write_buffer[WRITE_BUFFER_INDEX_DATA_START] = 0x93;
+    }else{
+        write_buffer[WRITE_BUFFER_INDEX_DATA_START] = 0x00;
+    }
 
     writeBufferToDeviceWithCheck(CMD_SMOOTH_CHANGE_COLORS);
 }
@@ -251,9 +254,9 @@ void AmbilightUsb::setColorDepth(int colorDepth)
 }
 
 
-void AmbilightUsb::setUsbSendDataTimeoutMs(double usb_send_data_timeout_secs)
+void AmbilightUsb::setUsbSendDataTimeoutMs(double usbSendDataTimeoutSecs)
 {
-    this->usb_send_data_timeout_ms = (int)(usb_send_data_timeout_secs * 1000.0);
+    this->usb_send_data_timeout_ms = (int)(usbSendDataTimeoutSecs * 1000.0);
 }
 
 

@@ -7,12 +7,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>473</width>
-    <height>489</height>
+    <width>351</width>
+    <height>327</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Lightpack - Settings</string>
+   <string>Lightpack — Settings</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../res/LightpackResources.qrc">
@@ -32,26 +32,118 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
         <bool>true</bool>
        </property>
        <attribute name="title">
-        <string>Software options</string>
+        <string>Grab</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0">
-          <item row="1" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <item>
+           <widget class="QLabel" name="label_UpdateFrequencyTxt">
+            <property name="font">
+             <font>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Refresh ambilight evaluated</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_UpdateFrequencyEval">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_hz">
+            <property name="text">
+             <string>Hz</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0">
+          <item row="5" column="0">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>2</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_UpdateFrequencyTxt_2">
+            <property name="font">
+             <font>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>The minimum level of sensitivity</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QSpinBox" name="spinBox_MinLevelOfSensitivity">
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>20</number>
+            </property>
+            <property name="value">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
            <widget class="QLabel" name="label_UpdateDelay">
+            <property name="font">
+             <font>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
             <property name="text">
              <string>Refresh ambilight delay</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="3" column="1">
            <widget class="QSpinBox" name="spinBox_UpdateDelay">
             <property name="minimum">
              <number>0</number>
@@ -64,64 +156,10 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
+          <item row="3" column="2">
            <widget class="QLabel" name="label_ms">
             <property name="text">
              <string>ms</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_UpdateDelayEval">
-            <property name="text">
-             <string>Refresh ambilight evaluated</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="lineEdit_RefreshAmbilihtEvaluated">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QLabel" name="label_hz">
-            <property name="text">
-             <string>Hz</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QSpinBox" name="spinBox_MinLevelOfSensitivity">
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="value">
-             <number>0</number>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>The minimum level of sensitivity</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0" colspan="3">
-           <widget class="QSlider" name="horizontalSlider_MinLevelOfSensitivity">
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
@@ -129,6 +167,12 @@
         </item>
         <item>
          <widget class="QCheckBox" name="checkBox_AVG_Colors">
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
           <property name="text">
            <string>AVG color on all LEDs</string>
           </property>
@@ -138,305 +182,222 @@
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_ShowPixelsAmbilight">
-          <property name="text">
-           <string>Show pixels for ambilight</string>
+         <widget class="QGroupBox" name="groupBox_ShowGrabWidgets">
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
           </property>
-          <property name="checked">
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="title">
+           <string>Show grab widgets</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+          <property name="checkable">
            <bool>true</bool>
           </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QRadioButton" name="radioButton_White">
+             <property name="text">
+              <string>White</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_Colored">
+             <property name="text">
+              <string>Colored</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QRadioButton" name="radioButton_Colored">
-            <property name="text">
-             <string>Colored</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButton_White">
-            <property name="text">
-             <string>White</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QGridLayout" name="gridLayout_3">
-          <item row="2" column="0">
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tabHardwareOptions">
        <attribute name="title">
-        <string>Hardware options</string>
+        <string>Device</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_HW_TimPrescaller">
-            <property name="toolTip">
-             <string>Sets prescaller of the timer that generates PWM on HC595</string>
-            </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>Timer prescaller</string>
+             <string>Frequency of PWM generation</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_HW_Prescaller">
-            <property name="currentIndex">
-             <number>2</number>
-            </property>
-            <item>
-             <property name="text">
-              <string>1</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>8</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>64</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>256</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>1024</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="3">
-           <widget class="QSlider" name="horizontalSlider_HW_Prescaller">
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>4</number>
-            </property>
-            <property name="pageStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>2</number>
-            </property>
+          <item>
+           <spacer name="horizontalSpacer_4">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_HW_TimerOCR">
-            <property name="toolTip">
-             <string>Sets output compate register (OCR) value of the timer that generates PWM on HC595</string>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
             </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_PWM_Freq">
             <property name="text">
-             <string>Timer OCR</string>
+             <string/>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QSpinBox" name="spinBox_HW_OCR">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="value">
-             <number>7</number>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QLabel" name="label_HW_Ticks">
-            <property name="text">
-             <string>ticks</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0" colspan="3">
-           <widget class="QSlider" name="horizontalSlider_HW_OCR">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="pageStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>7</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="2">
+          <item>
            <widget class="QLabel" name="label_4">
             <property name="text">
              <string>Hz</string>
             </property>
            </widget>
           </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>Frequency of PWM generation:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_HW_ColorDepth">
-            <property name="toolTip">
-             <string>Sets the number of levels in PWM generation for each channel</string>
-            </property>
-            <property name="text">
-             <string>Color depth</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0" colspan="3">
-           <widget class="QSlider" name="horizontalSlider_HW_ColorDepth">
-            <property name="minimum">
-             <number>2</number>
-            </property>
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="pageStep">
-             <number>3</number>
-            </property>
-            <property name="value">
-             <number>64</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QSpinBox" name="spinBox_HW_ColorDepth">
-            <property name="minimum">
-             <number>2</number>
-            </property>
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="singleStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>64</number>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="2">
-           <widget class="QLabel" name="label_HW_ColorDepth_counts">
-            <property name="text">
-             <string>counts</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="1">
-           <widget class="QLineEdit" name="lineEdit_PWM_Frequency">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>System clock: 16 MHz</string>
-            </property>
-           </widget>
-          </item>
-          <item row="13" column="0" colspan="3">
-           <widget class="QCheckBox" name="checkBox_USB_SendDataOnlyIfColorsChanges">
-            <property name="text">
-             <string>USB send data only if colors changes</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="1">
-           <widget class="QSpinBox" name="spinBox_HW_SmoothChangeColors">
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="singleStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>10</number>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="0" colspan="3">
-           <widget class="QSlider" name="horizontalSlider_HW_SmoothChangeColors">
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="pageStep">
-             <number>3</number>
-            </property>
-            <property name="value">
-             <number>10</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="0">
-           <widget class="QLabel" name="label_SmoothChangeColors">
-            <property name="text">
-             <string>Smooth change colors</string>
-            </property>
-           </widget>
-          </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>Timer</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QSlider" name="horizontalSlider_HW_OCR">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="pageStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>7</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinBox_HW_OCR">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="value">
+              <number>7</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_HW_Ticks">
+             <property name="text">
+              <string>ticks</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="title">
+           <string>Color depth</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QSlider" name="horizontalSlider_HW_ColorDepth">
+             <property name="minimum">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="pageStep">
+              <number>3</number>
+             </property>
+             <property name="value">
+              <number>64</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinBox_HW_ColorDepth">
+             <property name="minimum">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>64</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_HW_ColorDepth_counts">
+             <property name="text">
+              <string>counts</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_SmoothChangeColors">
+          <property name="text">
+           <string>Smooth change colors</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_USB_SendDataOnlyIfColorsChanges">
+          <property name="text">
+           <string>USB send data only if colors changes</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
         <item>
          <spacer name="verticalSpacer_2">
@@ -520,45 +481,10 @@
    </layout>
   </widget>
  </widget>
- <tabstops>
-  <tabstop>spinBox_UpdateDelay</tabstop>
- </tabstops>
  <resources>
   <include location="../res/LightpackResources.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>comboBox_HW_Prescaller</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>horizontalSlider_HW_Prescaller</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>232</x>
-     <y>129</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>174</x>
-     <y>156</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>horizontalSlider_HW_Prescaller</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>comboBox_HW_Prescaller</receiver>
-   <slot>setCurrentIndex(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>174</x>
-     <y>156</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>232</x>
-     <y>129</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>horizontalSlider_HW_OCR</sender>
    <signal>valueChanged(int)</signal>
@@ -620,70 +546,6 @@
     <hint type="destinationlabel">
      <x>177</x>
      <y>264</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox_HW_SmoothChangeColors</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider_HW_SmoothChangeColors</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>264</x>
-     <y>347</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>186</x>
-     <y>374</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>horizontalSlider_HW_SmoothChangeColors</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox_HW_SmoothChangeColors</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>186</x>
-     <y>374</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>264</x>
-     <y>347</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>horizontalSlider_MinLevelOfSensitivity</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox_MinLevelOfSensitivity</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>236</x>
-     <y>156</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>334</x>
-     <y>129</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox_MinLevelOfSensitivity</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider_MinLevelOfSensitivity</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>334</x>
-     <y>129</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>236</x>
-     <y>156</y>
     </hint>
    </hints>
   </connection>

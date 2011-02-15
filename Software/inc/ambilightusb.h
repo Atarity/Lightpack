@@ -66,10 +66,10 @@ public:
 
 public slots:
     void updateColors(LedColors colors);
-    void setUsbSendDataTimeoutMs(double usb_send_data_timeout_secs);
+    void setUsbSendDataTimeoutMs(double usbSendDataTimeoutSecs);
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void setColorDepth(int colorDepth);
-    void smoothChangeColors(int smoothly_delay);
+    void smoothChangeColors(bool isSmooth);
 
 signals:
     void openDeviceSuccess(bool isSuccess);

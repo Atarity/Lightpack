@@ -67,9 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ambilightOff();
     }
 
-
-    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Window);
-
+    setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
 
     qDebug() << "Check screen geometry...";
 
@@ -89,25 +87,24 @@ void MainWindow::connectSignalsSlots()
 
     // Connect to grabDesktopWindowLeds
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), grabDesktopWindowLeds, SLOT(setAmbilightRefreshDelayMs(int)));
-    connect(ui->checkBox_ShowPixelsAmbilight, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setVisibleLedWidgets(bool)));
+    connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setVisibleLedWidgets(bool)));
     connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), grabDesktopWindowLeds, SLOT(setAmbilightColorDepth(int)));
     connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setColoredLedWidgets(bool)));
     connect(ui->radioButton_White, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setWhiteLedWidgets(bool)));
     connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setUpdateColorsOnlyIfChanges(bool)));
     connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setAvgColorsOnAllLeds(bool)));
-    connect(ui->horizontalSlider_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), grabDesktopWindowLeds, SLOT(setMinLevelOfSensivity(int)));
+    connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), grabDesktopWindowLeds, SLOT(setMinLevelOfSensivity(int)));
 
     // Connect grabDesktopWindowLeds with ambilightUsb
     connect(grabDesktopWindowLeds, SIGNAL(updateLedsColors(LedColors)), ambilightUsb, SLOT(updateColors(LedColors)));
 
     // Software options
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), this, SLOT(settingsSoftwareOptionsChange()));
-    connect(ui->checkBox_ShowPixelsAmbilight, SIGNAL(toggled(bool)), this, SLOT(settingsSoftwareOptionsChange()));
+    connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), this, SLOT(settingsSoftwareOptionsChange()));
     // Hardware options
     connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareColorDepthOptionChange()));
-    connect(ui->horizontalSlider_HW_Prescaller, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareTimerOptionsChange()));
     connect(ui->horizontalSlider_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareTimerOptionsChange()));
-    connect(ui->spinBox_HW_SmoothChangeColors, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareChangeColorsSmoothDelay(int)));
+    connect(ui->checkBox_SmoothChangeColors, SIGNAL(toggled(bool)), this, SLOT(settingsHardwareChangeColorsIsSmooth(bool)));
 
     // ambilightUsb to this
     connect(ambilightUsb, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
@@ -240,7 +237,7 @@ void MainWindow::showSettings()
 
     this->move(Desktop::WidthAvailable / 2 - this->width() / 2,
             Desktop::HeightFull / 2 - this->height() / 2);
-    grabDesktopWindowLeds->setVisibleLedWidgets(ui->checkBox_ShowPixelsAmbilight->isChecked());
+    grabDesktopWindowLeds->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked());
     this->show();
 }
 
@@ -273,7 +270,7 @@ void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
         hz = 1 / secs;
     }
 
-    ui->lineEdit_RefreshAmbilihtEvaluated->setText( QString::number(hz,'f', 4) /* ms to hz */ );
+    ui->label_UpdateFrequencyEval->setText( QString::number(hz,'f', 4) /* ms to hz */ );
 }
 
 void MainWindow::settingsSoftwareOptionsChange()
@@ -284,10 +281,9 @@ void MainWindow::settingsSoftwareOptionsChange()
 // Send timer options to device
 void MainWindow::settingsHardwareTimerOptionsChange()
 {
-    int timerPrescallerIndex = ui->comboBox_HW_Prescaller->currentIndex();
+    int timerPrescallerIndex = settings->value("Firmware/TimerPrescallerIndex").toInt();
     int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
 
-    settings->setValue("Firmware/TimerPrescallerIndex", timerPrescallerIndex);
     settings->setValue("Firmware/TimerOCR", timerOutputCompareRegValue);
 
     updatePwmFrequency();
@@ -321,15 +317,15 @@ void MainWindow::settingsHardwareColorDepthOptionChange()
     }
 }
 
-void MainWindow::settingsHardwareChangeColorsSmoothDelay(int smoothDelay)
+void MainWindow::settingsHardwareChangeColorsIsSmooth(bool isSmooth)
 {
-    settings->setValue("Firmware/ChangeColorsDelay", smoothDelay);
-    ambilightUsb->smoothChangeColors(smoothDelay);
+    settings->setValue("Firmware/IsSmoothChangeColors", isSmooth);
+    ambilightUsb->smoothChangeColors(isSmooth);
 }
 
 void MainWindow::updatePwmFrequency()
 {
-    int timerPrescallerIndex = ui->comboBox_HW_Prescaller->currentIndex();
+    int timerPrescallerIndex = settings->value("Firmware/TimerPrescallerIndex").toInt();
     int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
     int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
 
@@ -357,7 +353,7 @@ void MainWindow::updatePwmFrequency()
 
     pwmFrequency = 1 / timePwm_secs;
 
-    ui->lineEdit_PWM_Frequency->setText(QString::number(pwmFrequency,'g',3));
+    ui->label_PWM_Freq->setText(QString::number(pwmFrequency,'g',3));
 }
 
 
@@ -408,15 +404,14 @@ void MainWindow::loadSettingsToMainWindow()
     ui->checkBox_AVG_Colors->setChecked( settings->value("IsAvgColorsOn").toBool() );
 
     ui->horizontalSlider_HW_OCR->setValue( settings->value("Firmware/TimerOCR").toInt() );
-    ui->horizontalSlider_HW_Prescaller->setValue( settings->value("Firmware/TimerPrescallerIndex").toInt() );
     ui->horizontalSlider_HW_ColorDepth->setValue( settings->value("Firmware/ColorDepth").toInt() );
-    ui->spinBox_HW_SmoothChangeColors->setValue( settings->value("Firmware/ChangeColorsDelay").toInt() );
+    ui->checkBox_SmoothChangeColors->setChecked( settings->value("Firmware/IsSmoothChangeColors").toBool() );
 
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
     settingsHardwareColorDepthOptionChange(); // synchonize color depth value with device
     settingsHardwareTimerOptionsChange(); // synchonize timer options with device    
-    settingsHardwareChangeColorsSmoothDelay(ui->spinBox_HW_SmoothChangeColors->value());
+    settingsHardwareChangeColorsIsSmooth( ui->checkBox_SmoothChangeColors->isChecked() );
 }
 
 

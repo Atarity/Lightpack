@@ -160,7 +160,7 @@ void settingsInit()
     setDefaultSettingIfNotFound("Firmware/TimerPrescallerIndex",       FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("Firmware/TimerOCR",                   FW_TIMER_OCR_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("Firmware/ColorDepth",                 FW_COLOR_DEPTH_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("Firmware/ChangeColorsDelay",          FW_CHANGE_COLORS_SMOOTH_DELAY_VALUE);
+    setDefaultSettingIfNotFound("Firmware/IsSmoothChangeColors",       FW_IS_SMOOTH_CHANGE_COLORS_DEFAULT_VALUE);
 
     QPoint ledPosition;
 
