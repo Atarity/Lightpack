@@ -33,6 +33,10 @@ aboutDialog::aboutDialog(QString firmwareVersion, QWidget *parent) :
     ui(new Ui::aboutDialog)
 {
     ui->setupUi(this);
+
+    this->setWindowFlags(Qt::Tool);
+    this->adjustSize();
+
     ui->labelVersionSoftware->setText(tr("<b>Software version:</b> ") + QApplication::applicationVersion());
     ui->labelVersionFirmware->setText(tr("<b>Firmware version:</b> ") + firmwareVersion);
 }

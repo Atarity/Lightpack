@@ -235,15 +235,17 @@ void MainWindow::showAbout()
 {
     QString firmwareVerison = ambilightUsb->firmwareVersion();
     aboutDialog *about = new aboutDialog(firmwareVerison, this);
+    about->move(Desktop::WidthAvailable / 2 - about->width() / 2,
+            Desktop::HeightFull / 2 - about->height() / 2);
     about->show();
 }
 
 void MainWindow::showSettings()
 {
-
+    this->adjustSize();
     this->move(Desktop::WidthAvailable / 2 - this->width() / 2,
             Desktop::HeightFull / 2 - this->height() / 2);
-    grabDesktopWindowLeds->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked());
+    grabDesktopWindowLeds->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked());    
     this->show();
 }
 
