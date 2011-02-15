@@ -69,6 +69,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
 
+    logsFilePath = "";
+
     qDebug() << "Check screen geometry...";
 
     int screen = QApplication::desktop()->primaryScreen();
@@ -113,6 +115,10 @@ void MainWindow::connectSignalsSlots()
 
     // grabDesktopWindowLeds to this
     connect(grabDesktopWindowLeds, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));    
+
+    // links to Logs and Settings files
+    connect(ui->commandLinkButton_OpenLogs, SIGNAL(clicked()), this, SLOT(openLogsFile()));
+    connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openSettingsFile()));
 }
 
 
@@ -331,6 +337,18 @@ void MainWindow::settingsHardwareChangeColorsIsSmooth(bool isSmooth)
     ambilightUsb->smoothChangeColors(isSmooth);
 }
 
+
+void MainWindow::openLogsFile()
+{
+    QDesktopServices::openUrl( QUrl(this->logsFilePath) );
+}
+
+void MainWindow::openSettingsFile()
+{
+    QDesktopServices::openUrl( QUrl(settings->fileName()) );
+}
+
+
 void MainWindow::updatePwmFrequency()
 {
     int timerPrescallerIndex = settings->value("Firmware/TimerPrescallerIndex").toInt();
@@ -427,6 +445,11 @@ void MainWindow::loadSettingsToMainWindow()
 void MainWindow::appendLogsLine(const QString & line)
 {
     ui->plainTextLogs->appendPlainText(line);
+}
+
+void MainWindow::setLogsFilePath(const QString & filePath)
+{
+    this->logsFilePath = filePath;
 }
 
 void MainWindow::quit()

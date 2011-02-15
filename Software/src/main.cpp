@@ -251,6 +251,7 @@ int main(int argc, char **argv)
 
     window = new MainWindow();   /* Create MainWindow */
     window->setVisible(false);   /* And load to tray. */
+    window->setLogsFilePath(logFilePath);
 
     // Don't touch me!!!
     qDebug() << "call app.exec();";

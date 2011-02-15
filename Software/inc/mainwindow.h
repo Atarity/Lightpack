@@ -47,6 +47,7 @@ public:
     ~MainWindow();
 
     void appendLogsLine(const QString & line);
+    void setLogsFilePath(const QString & filePath);
 
 public slots:
     void ambilightUsbSuccess(bool isSuccess);
@@ -68,6 +69,9 @@ private slots:
     void settingsHardwareTimerOptionsChange();
     void settingsHardwareColorDepthOptionChange();
     void settingsHardwareChangeColorsIsSmooth(bool isSmooth);
+
+    void openLogsFile();
+    void openSettingsFile();
 
 
 private:    
@@ -93,6 +97,7 @@ private:
     // Evaluated frequency of the PWM generation
     double pwmFrequency;
 
+    QString logsFilePath;
 
     Ui::MainWindow *ui;
 
