@@ -40,7 +40,7 @@
 #define FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE     0 /* prescaller == 1 */
 #define FW_TIMER_OCR_DEFAULT_VALUE                  100
 #define FW_COLOR_DEPTH_DEFAULT_VALUE                128
-#define FW_CHANGE_COLORS_SMOOTH_DELAY_VALUE         32
+#define FW_IS_SMOOTH_CHANGE_COLORS_DEFAULT_VALUE    true
 
 // [LED_i]
 #define LED_FIELD_WIDTH_DEFAULT_VALUE       150
