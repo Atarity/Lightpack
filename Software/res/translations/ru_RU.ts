@@ -16,22 +16,22 @@
         <translation>Порог чувствительности</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="177"/>
+        <location filename="../../src/mainwindow.ui" line="218"/>
         <source>AVG color on all LEDs</source>
         <translation>Средний цвет на все светодиоды</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="196"/>
+        <location filename="../../src/mainwindow.ui" line="180"/>
         <source>Show grab widgets</source>
         <translation>Показать области захвата</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="215"/>
+        <location filename="../../src/mainwindow.ui" line="199"/>
         <source>Colored</source>
         <translation>Разноцветные</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="208"/>
+        <location filename="../../src/mainwindow.ui" line="192"/>
         <source>White</source>
         <translation>Белые</translation>
     </message>
@@ -90,6 +90,11 @@
         <translation>Плавное изменение цветов</translation>
     </message>
     <message>
+        <location filename="../../src/mainwindow.ui" line="76"/>
+        <source>0</source>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="../../src/mainwindow.ui" line="242"/>
         <source>Device</source>
         <translation>Устройство</translation>
@@ -97,12 +102,12 @@
     <message>
         <location filename="../../src/mainwindow.ui" line="250"/>
         <source>Frequency of PWM generation</source>
-        <translation>Частота ШИМ</translation>
+        <translation>Итоговая частота ШИМ</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="289"/>
         <source>Timer</source>
-        <translation>Таймер</translation>
+        <translation>Настройка частоты ШИМ</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="422"/>
@@ -110,47 +115,57 @@
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="462"/>
+        <location filename="../../src/mainwindow.ui" line="443"/>
+        <source>Open logs file</source>
+        <translation>Открыть файл с логами</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="456"/>
+        <source>Open settings file</source>
+        <translation>Открыть файл с настройками</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="488"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="211"/>
+        <location filename="../../src/mainwindow.cpp" line="217"/>
         <source>On state</source>
         <translation>Включен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="217"/>
+        <location filename="../../src/mainwindow.cpp" line="226"/>
         <source>Off state</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="223"/>
+        <location filename="../../src/mainwindow.cpp" line="235"/>
         <source>Error state</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="363"/>
+        <location filename="../../src/mainwindow.cpp" line="389"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="367"/>
+        <location filename="../../src/mainwindow.cpp" line="393"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="371"/>
+        <location filename="../../src/mainwindow.cpp" line="397"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="375"/>
+        <location filename="../../src/mainwindow.cpp" line="401"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="379"/>
+        <location filename="../../src/mainwindow.cpp" line="405"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
@@ -291,12 +306,12 @@ p, li { white-space: pre-wrap; }
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.cpp" line="36"/>
+        <location filename="../../src/aboutdialog.cpp" line="40"/>
         <source>&lt;b&gt;Software version:&lt;/b&gt; </source>
         <translation>&lt;b&gt;Версия программы:&lt;/b&gt; </translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.cpp" line="37"/>
+        <location filename="../../src/aboutdialog.cpp" line="41"/>
         <source>&lt;b&gt;Firmware version:&lt;/b&gt; </source>
         <translation>&lt;b&gt;Версия прошивки:&lt;/b&gt; </translation>
     </message>
