@@ -284,7 +284,7 @@ void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
         hz = 1 / secs;
     }
 
-    ui->label_UpdateFrequencyEval->setText( QString::number(hz,'f', 4) /* ms to hz */ );
+    ui->label_UpdateFrequencyEval->setText( QString::number(hz,'f', 2) /* ms to hz */ );
 }
 
 void MainWindow::settingsSoftwareOptionsChange()
@@ -379,7 +379,7 @@ void MainWindow::updatePwmFrequency()
 
     pwmFrequency = 1 / timePwm_secs;
 
-    ui->label_PWM_Freq->setText(QString::number(pwmFrequency,'g',3));
+    ui->label_PWM_Freq->setText(QString::number(pwmFrequency,'f',2));
 }
 
 
