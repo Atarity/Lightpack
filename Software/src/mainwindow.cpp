@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ambilightOff();
     }
 
-    setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
 
     logsFilePath = "";
 
