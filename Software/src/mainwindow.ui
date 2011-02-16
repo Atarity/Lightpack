@@ -73,7 +73,7 @@
           <item>
            <widget class="QLabel" name="label_UpdateFrequencyEval">
             <property name="text">
-             <string/>
+             <string>0</string>
             </property>
             <property name="textInteractionFlags">
              <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
