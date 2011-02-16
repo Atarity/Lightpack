@@ -166,22 +166,6 @@
          </layout>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_AVG_Colors">
-          <property name="font">
-           <font>
-            <weight>50</weight>
-            <bold>false</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>AVG color on all LEDs</string>
-          </property>
-          <property name="checked">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QGroupBox" name="groupBox_ShowGrabWidgets">
           <property name="font">
            <font>
@@ -220,6 +204,22 @@
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_AVG_Colors">
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>AVG color on all LEDs</string>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item>
