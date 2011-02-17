@@ -107,7 +107,7 @@
     <message>
         <location filename="../../src/mainwindow.ui" line="289"/>
         <source>Timer</source>
-        <translation>Настройка частоты ШИМ</translation>
+        <translation>Задержка таймера ШИМ</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="422"/>
