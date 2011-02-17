@@ -82,7 +82,7 @@
     <message>
         <location filename="../../src/mainwindow.ui" line="395"/>
         <source>USB send data only if colors changes</source>
-        <translation>Посылать данные, только если цвета изменились</translation>
+        <translation>Посылать данные только при обновлении цвета</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="388"/>
