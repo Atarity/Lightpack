@@ -149,7 +149,7 @@ void setDefaultSettingIfNotFound(const QString & name, const QVariant & value)
 //
 void settingsInit()
 {
-    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "brunql.dev", "Lightpack");
+    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", "Lightpack");
     qDebug() << "Settings file: " << settings->fileName();
     
     setDefaultSettingIfNotFound("RefreshAmbilightDelayMs",             REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
