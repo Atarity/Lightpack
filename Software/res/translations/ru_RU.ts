@@ -36,18 +36,9 @@
         <translation>Белые</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="327"/>
+        <location filename="../../src/mainwindow.ui" line="343"/>
         <source>ticks</source>
         <translation> </translation>
-    </message>
-    <message>
-        <source>Frequency of PWM generation:</source>
-        <translation type="obsolete">Частота генерации ШИМ:</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="15"/>
-        <source>Lightpack — Settings</source>
-        <translation>Лайтпак — Настройки</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="42"/>
@@ -70,22 +61,27 @@
         <translation>Итоговая частота обновления</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="337"/>
+        <location filename="../../src/mainwindow.ui" line="15"/>
+        <source>Lightpack — Settings</source>
+        <translation>Лайтпак — Настройки</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="353"/>
         <source>Color depth</source>
         <translation>Глубина цвета</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="378"/>
+        <location filename="../../src/mainwindow.ui" line="394"/>
         <source>counts</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="395"/>
+        <location filename="../../src/mainwindow.ui" line="411"/>
         <source>USB send data only if colors changes</source>
         <translation>Посылать данные только при обновлении цвета</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="388"/>
+        <location filename="../../src/mainwindow.ui" line="404"/>
         <source>Smooth change colors</source>
         <translation>Плавное изменение цветов</translation>
     </message>
@@ -105,27 +101,27 @@
         <translation>Итоговая частота ШИМ</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="289"/>
+        <location filename="../../src/mainwindow.ui" line="305"/>
         <source>Timer</source>
         <translation>Задержка таймера ШИМ</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="422"/>
+        <location filename="../../src/mainwindow.ui" line="438"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="443"/>
+        <location filename="../../src/mainwindow.ui" line="459"/>
         <source>Open logs file</source>
         <translation>Открыть файл с логами</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="456"/>
+        <location filename="../../src/mainwindow.ui" line="472"/>
         <source>Open settings file</source>
         <translation>Открыть файл с настройками</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="488"/>
+        <location filename="../../src/mainwindow.ui" line="504"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
