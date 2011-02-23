@@ -66,14 +66,12 @@ bool AmbilightUsb::openDevice()
         int vid = cur_dev->vendor_id;
         int pid = cur_dev->product_id;
         QString path = QString::fromStdString(cur_dev->path);
-        QString serial_number = QString::fromWCharArray(cur_dev->serial_number);
         QString manufacturer_string = QString::fromWCharArray(cur_dev->manufacturer_string);
         QString product_string = QString::fromWCharArray(cur_dev->product_string);
 
         qDebug() << "Found HID:";
         qDebug() << "  VID:" << hex << vid << "; PID:" << pid;
         qDebug() << "  Path:" << path;
-        qDebug() << "  Serial number:" << serial_number;
         qDebug() << "  Manufacturer:" << manufacturer_string;
         qDebug() << "  Product:" << product_string;
 
@@ -210,7 +208,7 @@ QString AmbilightUsb::firmwareVersion()
 
 void AmbilightUsb::offLeds()
 {
-    qDebug("offLeds()");
+    qDebug("AmbilightUsb::offLeds()");
     writeBufferToDeviceWithCheck(CMD_OFF_ALL);
 }
 

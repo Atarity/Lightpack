@@ -48,9 +48,11 @@ MainWindow::MainWindow(QWidget *parent) :
             Desktop::HeightFull / 2 - this->height() / 2);
     this->setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
 
-    QRegExp rx("[A-Za-z _.0-9а-я]+");
+
+    QRegExp rx("[^<>:\"/\\|?*]+");  // Check windows reserved simbols
     QRegExpValidator *validator = new QRegExpValidator(rx, this);
     ui->comboBox_Profiles->lineEdit()->setValidator(validator);
+
 
     qDebug() << "MainWindow(): new AmbilightUsb(this)";
     ambilightUsb = new AmbilightUsb(this);
@@ -58,14 +60,17 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): new GrabDesktopWindowLeds()";
     grabDesktopWindowLeds = new GrabDesktopWindowLeds();
 
-    qDebug() << "MainWindow(): loadSettingsToMainWindow()";
-    loadSettingsToMainWindow();
-
-    findAllAvailableSettings();
-
     qDebug() << "MainWindow(): connectSignalsSlots()";
     connectSignalsSlots();
-        
+
+    qDebug() << "MainWindow(): findAllAvailableSettings();";
+    findAllAvailableSettings();
+
+    qDebug() << "MainWindow(): profileChange();";
+    profileChange( ui->comboBox_Profiles->currentText() );
+
+
+
     isErrorState = false;
     isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
     if(isAmbilightOn){
@@ -209,11 +214,9 @@ void MainWindow::ambilightOn()
 void MainWindow::ambilightOff()
 {
     if(isAmbilightOn){
-        qDebug("trayAmbilightOff...");
         trayAmbilightOff();
 
         if(!isErrorState){
-            qDebug("isErrorState == false");
             if(ambilightUsb->deviceOpened()){
                 ambilightUsb->offLeds();
             }
@@ -222,9 +225,8 @@ void MainWindow::ambilightOff()
         }
         isAmbilightOn = false;
     }
-    qDebug("settings...");
+
     Settings::setValue("IsAmbilightOn", isAmbilightOn);
-    qDebug("grabDesktopWindowLeds...");
     grabDesktopWindowLeds->setAmbilightOn(isAmbilightOn);
 }
 
@@ -492,6 +494,8 @@ void MainWindow::createTrayIcon()
 
 void MainWindow::loadSettingsToMainWindow()
 {
+    qDebug() << "MainWindow::loadSettingsToMainWindow()";
+
     ui->spinBox_UpdateDelay->setValue( Settings::value("RefreshAmbilightDelayMs").toInt() );
     ui->spinBox_MinLevelOfSensitivity->setValue( Settings::value("MinimumLevelOfSensitivity").toInt() );
     ui->checkBox_AVG_Colors->setChecked( Settings::value("IsAvgColorsOn").toBool() );
@@ -502,8 +506,6 @@ void MainWindow::loadSettingsToMainWindow()
 
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
-    settingsHardwareColorDepthOptionChange(); // synchonize color depth value with device
-    settingsHardwareTimerOptionsChange(); // synchonize timer options with device    
     settingsHardwareChangeColorsIsSmooth( ui->checkBox_SmoothChangeColors->isChecked() );
 }
 

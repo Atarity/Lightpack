@@ -68,8 +68,6 @@ public slots:
 
     void settingsProfileChanged();
 
-    void ledWidgetResizeCompleted(int id);
-
 private slots:
     void updateLedsColorsIfChanged();
 

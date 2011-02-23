@@ -34,8 +34,11 @@
        <property name="cursor">
         <cursorShape>OpenHandCursor</cursorShape>
        </property>
+       <property name="locale">
+        <locale language="English" country="UnitedStates"/>
+       </property>
        <property name="text">
-        <string>WxH</string>
+        <string notr="true">WxH</string>
        </property>
       </widget>
      </item>
@@ -83,21 +86,24 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="labelSelfId">
+      <widget class="QCheckBox" name="checkBox_SelfId">
        <property name="font">
         <font>
          <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
-       <property name="cursor">
-        <cursorShape>OpenHandCursor</cursorShape>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
+       <property name="locale">
+        <locale language="English" country="UnitedStates"/>
        </property>
        <property name="text">
-        <string>ID</string>
+        <string notr="true">ID</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

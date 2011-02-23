@@ -40,12 +40,14 @@ public:
     MoveMeWidget(int id, QWidget *parent = 0);
     ~MoveMeWidget();
 
+    void setColors(int index);
     void setBackgroundColor(QColor color);
     void setTextColor(QColor color);
     void setSizeAndPosition(int w, int h, int x, int y);
     double getCoefRed();
     double getCoefGreen();
     double getCoefBlue();
+    bool isGrabEnabled();
 
 signals:
     void resizeOrMoveStarted();
@@ -54,12 +56,18 @@ signals:
     void sizeAndPositionChanged(int w, int h, int x, int y);
 
 public slots:
+    void settingsProfileChanged();
+
+private slots:
+    void checkBoxSelfId_Toggled(bool state);
 
 private:
     double loadCoefWithCheck(QString coefStr);
     void setCursorOnAll(Qt::CursorShape cursor);
     void checkAndSetCursors(QMouseEvent *pe);
 
+public:
+    static const int ColorIndexWhite = 11;
 
 private:
     enum {
@@ -84,7 +92,7 @@ private:
     static const int BorderWidth = 10;
     static const int StickyCloserPixels = 5; // Sticky when closer
 
-    static const int ColorsCount = 8;
+    static const int ColorsCount = 12;
 
     static const QColor colors[ColorsCount][2]; // background and text colors
     int colorIndex; // index of color which using now

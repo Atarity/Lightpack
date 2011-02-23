@@ -141,42 +141,42 @@
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="234"/>
+        <location filename="../../src/mainwindow.cpp" line="236"/>
         <source>On state</source>
         <translation>Включен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="243"/>
+        <location filename="../../src/mainwindow.cpp" line="245"/>
         <source>Off state</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="252"/>
+        <location filename="../../src/mainwindow.cpp" line="254"/>
         <source>Error state</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="456"/>
+        <location filename="../../src/mainwindow.cpp" line="458"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="460"/>
+        <location filename="../../src/mainwindow.cpp" line="462"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="464"/>
+        <location filename="../../src/mainwindow.cpp" line="466"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="468"/>
+        <location filename="../../src/mainwindow.cpp" line="470"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="472"/>
+        <location filename="../../src/mainwindow.cpp" line="474"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
@@ -188,26 +188,16 @@
         <source>LED Widget</source>
         <translation></translation>
     </message>
-    <message>
-        <location filename="../../src/movemewidget.ui" line="38"/>
-        <source>WxH</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../src/movemewidget.ui" line="97"/>
-        <source>ID</source>
-        <translation></translation>
-    </message>
 </context>
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="196"/>
+        <location filename="../../src/ambilightusb.cpp" line="194"/>
         <source>device unavailable</source>
         <translation>устройство не доступно</translation>
     </message>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="202"/>
+        <location filename="../../src/ambilightusb.cpp" line="200"/>
         <source>read device fail</source>
         <translation>устройство не отвечает</translation>
     </message>

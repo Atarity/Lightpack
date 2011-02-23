@@ -144,6 +144,7 @@ void Settings::settingsInit()
 
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/Size",      LED_FIELD_SIZE_DEFAULT_VALUE);
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/Position",  ledPosition);
+        setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/IsEnabled", LED_IS_ENABLED_DEFAULT_VALUE);
     }
 
     settingsNow->sync();
