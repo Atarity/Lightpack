@@ -29,6 +29,9 @@
 #define SETTINGS_H
 
 #include <QSettings>
+#include <QVariant>
+
+// Default values:
 
 // [General]
 #define REFRESH_AMBILIGHT_MS_DEFAULT_VALUE      50
@@ -46,10 +49,31 @@
 #define LED_FIELD_WIDTH_DEFAULT_VALUE       150
 #define LED_FIELD_HEIGHT_DEFAULT_VALUE      150
 #define LED_FIELD_SIZE_DEFAULT_VALUE        QSize(LED_FIELD_WIDTH_DEFAULT_VALUE, LED_FIELD_HEIGHT_DEFAULT_VALUE)
-#define LED_COEF_RED_DEFAULT_VALUE          1
-#define LED_COEF_GREEN_DEFAULT_VALUE        1
-#define LED_COEF_BLUE_DEFAULT_VALUE         1
+#define LED_COEF_RGB_DEFAULT_VALUE          1
 
-extern QSettings *settings;
+
+
+class Settings : public QObject
+{
+    Q_OBJECT
+
+public:
+    static void Initialize();
+
+    // Simple abstraction functions for forwarding to settingsNow object
+    static void setValue(const QString & key, const QVariant & value);
+    static QVariant value(const QString & key);
+    static QString fileName();
+
+    static void loadOrCreateConfig(const QString & configName);
+    static void removeCurrentConfig();
+
+private:
+    static void settingsInit();
+    static void setDefaultSettingIfNotFound(const QString & name, const QVariant & value);
+
+private:
+    static QSettings * settingsNow;
+};
 
 #endif // SETTINGS_H

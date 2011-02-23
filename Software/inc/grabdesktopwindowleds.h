@@ -66,6 +66,8 @@ public slots:
     void setAmbilightON();
     void setAmbilightOFF();
 
+    void settingsProfileChanged();
+
     void ledWidgetResizeCompleted(int id);
 
 private slots:

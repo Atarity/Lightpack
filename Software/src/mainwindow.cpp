@@ -43,6 +43,15 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
     createTrayIcon();
 
+    this->adjustSize();
+    this->move(Desktop::WidthAvailable / 2 - this->width() / 2,
+            Desktop::HeightFull / 2 - this->height() / 2);
+    this->setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
+
+    QRegExp rx("[A-Za-z _.0-9а-я]+");
+    QRegExpValidator *validator = new QRegExpValidator(rx, this);
+    ui->comboBox_Profiles->lineEdit()->setValidator(validator);
+
     qDebug() << "MainWindow(): new AmbilightUsb(this)";
     ambilightUsb = new AmbilightUsb(this);
 
@@ -52,11 +61,13 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): loadSettingsToMainWindow()";
     loadSettingsToMainWindow();
 
+    findAllAvailableSettings();
+
     qDebug() << "MainWindow(): connectSignalsSlots()";
     connectSignalsSlots();
         
     isErrorState = false;
-    isAmbilightOn = settings->value("IsAmbilightOn").toBool();
+    isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
     if(isAmbilightOn){
         isAmbilightOn = false; // ambilightOn() check this and if this true, return
         qDebug() << "MainWindow(): ambilightOn()";
@@ -65,9 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
         isAmbilightOn = true; // ambilightOn() check this and if this false, return
         qDebug() << "MainWindow(): ambilightOff()";
         ambilightOff();
-    }
-
-    setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
+    }    
 
     logsFilePath = "";
 
@@ -96,6 +105,7 @@ void MainWindow::connectSignalsSlots()
     connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setUpdateColorsOnlyIfChanges(bool)));
     connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setAvgColorsOnAllLeds(bool)));
     connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), grabDesktopWindowLeds, SLOT(setMinLevelOfSensivity(int)));
+    connect(this, SIGNAL(settingsProfileChanged()), grabDesktopWindowLeds, SLOT(settingsProfileChanged()));
 
     // Connect grabDesktopWindowLeds with ambilightUsb
     connect(grabDesktopWindowLeds, SIGNAL(updateLedsColors(LedColors)), ambilightUsb, SLOT(updateColors(LedColors)));
@@ -119,6 +129,13 @@ void MainWindow::connectSignalsSlots()
     // links to Logs and Settings files
     connect(ui->commandLinkButton_OpenLogs, SIGNAL(clicked()), this, SLOT(openLogsFile()));
     connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openSettingsFile()));
+
+    // Connect profile signals to this slots
+    connect(ui->comboBox_Profiles, SIGNAL(editTextChanged(QString)), this, SLOT(profileTextChanging()));
+    connect(ui->comboBox_Profiles, SIGNAL(activated(QString)), this, SLOT(profileChange(QString)));
+    connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
+
+    connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
 }
 
 
@@ -185,7 +202,7 @@ void MainWindow::ambilightOn()
         trayAmbilightOn();
     }
     isAmbilightOn = true;
-    settings->setValue("IsAmbilightOn", isAmbilightOn);
+    Settings::setValue("IsAmbilightOn", isAmbilightOn);
     grabDesktopWindowLeds->setAmbilightOn(isAmbilightOn);
 }
 
@@ -206,7 +223,7 @@ void MainWindow::ambilightOff()
         isAmbilightOn = false;
     }
     qDebug("settings...");
-    settings->setValue("IsAmbilightOn", isAmbilightOn);
+    Settings::setValue("IsAmbilightOn", isAmbilightOn);
     qDebug("grabDesktopWindowLeds...");
     grabDesktopWindowLeds->setAmbilightOn(isAmbilightOn);
 }
@@ -248,9 +265,6 @@ void MainWindow::showAbout()
 
 void MainWindow::showSettings()
 {
-    this->adjustSize();
-    this->move(Desktop::WidthAvailable / 2 - this->width() / 2,
-            Desktop::HeightFull / 2 - this->height() / 2);
     grabDesktopWindowLeds->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked());    
     this->show();
 }
@@ -289,16 +303,16 @@ void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
 
 void MainWindow::settingsSoftwareOptionsChange()
 {
-    settings->setValue("RefreshAmbilightDelayMs", ui->spinBox_UpdateDelay->value());
+    Settings::setValue("RefreshAmbilightDelayMs", ui->spinBox_UpdateDelay->value());
 }
 
 // Send timer options to device
 void MainWindow::settingsHardwareTimerOptionsChange()
 {
-    int timerPrescallerIndex = settings->value("Firmware/TimerPrescallerIndex").toInt();
+    int timerPrescallerIndex = Settings::value("Firmware/TimerPrescallerIndex").toInt();
     int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
 
-    settings->setValue("Firmware/TimerOCR", timerOutputCompareRegValue);
+    Settings::setValue("Firmware/TimerOCR", timerOutputCompareRegValue);
 
     updatePwmFrequency();
 
@@ -317,7 +331,7 @@ void MainWindow::settingsHardwareColorDepthOptionChange()
 {
     int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
 
-    settings->setValue("Firmware/ColorDepth", colorDepth);
+    Settings::setValue("Firmware/ColorDepth", colorDepth);
 
     updatePwmFrequency();
 
@@ -333,25 +347,78 @@ void MainWindow::settingsHardwareColorDepthOptionChange()
 
 void MainWindow::settingsHardwareChangeColorsIsSmooth(bool isSmooth)
 {
-    settings->setValue("Firmware/IsSmoothChangeColors", isSmooth);
+    Settings::setValue("Firmware/IsSmoothChangeColors", isSmooth);
     ambilightUsb->smoothChangeColors(isSmooth);
 }
 
+// Logs tab
 
 void MainWindow::openLogsFile()
 {
     QDesktopServices::openUrl( QUrl(this->logsFilePath) );
 }
 
+
+// Profile tab
+
 void MainWindow::openSettingsFile()
 {
-    QDesktopServices::openUrl( QUrl(settings->fileName()) );
+    QDesktopServices::openUrl( QUrl(Settings::fileName()) );
+}
+
+void MainWindow::profileTextChanging()
+{
+    // While changing text it will be italic, after save it will be normal
+    QFont font = ui->comboBox_Profiles->lineEdit()->font();
+    font.setItalic(true);
+    ui->comboBox_Profiles->lineEdit()->setFont(font);
+}
+
+void MainWindow::profileChange(const QString & configName)
+{
+    if(configName == ""){
+        return;
+    }
+
+    Settings::loadOrCreateConfig(configName);
+
+    loadSettingsToMainWindow();
+
+    QFont font = ui->comboBox_Profiles->lineEdit()->font();
+    font.setItalic(false);
+    ui->comboBox_Profiles->lineEdit()->setFont(font);
+
+    emit settingsProfileChanged();
+}
+
+void MainWindow::profileDeleteCurrent()
+{
+    if(ui->comboBox_Profiles->count() <= 1){
+        qWarning() << "void MainWindow::profileDeleteCurrent(): profiles count ==" << ui->comboBox_Profiles->count();
+        return;
+    }
+
+    // Delete settings file
+    Settings::removeCurrentConfig();
+    // Remove from combobox
+    ui->comboBox_Profiles->removeItem( ui->comboBox_Profiles->currentIndex() );
+    // Update settings
+    profileChange( ui->comboBox_Profiles->currentText() );
+}
+
+void MainWindow::settingsProfileChanged_UpdateUI()
+{
+    if(ui->comboBox_Profiles->count() > 1){
+        ui->pushButton_DeleteProfile->setEnabled(true);
+    }else{
+        ui->pushButton_DeleteProfile->setEnabled(false);
+    }
 }
 
 
 void MainWindow::updatePwmFrequency()
 {
-    int timerPrescallerIndex = settings->value("Firmware/TimerPrescallerIndex").toInt();
+    int timerPrescallerIndex = Settings::value("Firmware/TimerPrescallerIndex").toInt();
     int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
     int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
 
@@ -425,13 +492,13 @@ void MainWindow::createTrayIcon()
 
 void MainWindow::loadSettingsToMainWindow()
 {
-    ui->spinBox_UpdateDelay->setValue( settings->value("RefreshAmbilightDelayMs").toInt() );
-    ui->spinBox_MinLevelOfSensitivity->setValue( settings->value("MinimumLevelOfSensitivity").toInt() );
-    ui->checkBox_AVG_Colors->setChecked( settings->value("IsAvgColorsOn").toBool() );
+    ui->spinBox_UpdateDelay->setValue( Settings::value("RefreshAmbilightDelayMs").toInt() );
+    ui->spinBox_MinLevelOfSensitivity->setValue( Settings::value("MinimumLevelOfSensitivity").toInt() );
+    ui->checkBox_AVG_Colors->setChecked( Settings::value("IsAvgColorsOn").toBool() );
 
-    ui->horizontalSlider_HW_OCR->setValue( settings->value("Firmware/TimerOCR").toInt() );
-    ui->horizontalSlider_HW_ColorDepth->setValue( settings->value("Firmware/ColorDepth").toInt() );
-    ui->checkBox_SmoothChangeColors->setChecked( settings->value("Firmware/IsSmoothChangeColors").toBool() );
+    ui->horizontalSlider_HW_OCR->setValue( Settings::value("Firmware/TimerOCR").toInt() );
+    ui->horizontalSlider_HW_ColorDepth->setValue( Settings::value("Firmware/ColorDepth").toInt() );
+    ui->checkBox_SmoothChangeColors->setChecked( Settings::value("Firmware/IsSmoothChangeColors").toBool() );
 
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
@@ -440,7 +507,28 @@ void MainWindow::loadSettingsToMainWindow()
     settingsHardwareChangeColorsIsSmooth( ui->checkBox_SmoothChangeColors->isChecked() );
 }
 
+void MainWindow::findAllAvailableSettings()
+{
+    QFileInfo setsFile( Settings::fileName() );
+    QFileInfoList iniFiles = setsFile.absoluteDir().entryInfoList(QStringList("*.ini"));
 
+    QStringList settingsFiles;
+    for(int i=0; i<iniFiles.count(); i++){
+        settingsFiles.append( iniFiles.at(i).completeBaseName() );
+    }
+
+    qDebug() << "Find settings files:" << settingsFiles;
+
+    for(int i=0; i<settingsFiles.count(); i++){
+        if(ui->comboBox_Profiles->findText(settingsFiles.at(i)) == -1){
+            ui->comboBox_Profiles->addItem(settingsFiles.at(i));
+        }
+    }
+
+    ui->comboBox_Profiles->setCurrentIndex( 0 );
+
+    settingsProfileChanged_UpdateUI();
+}
 
 void MainWindow::appendLogsLine(const QString & line)
 {

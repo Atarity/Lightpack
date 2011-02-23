@@ -43,7 +43,7 @@
 using namespace std;
 
 // Public visible object, #include "settings.h" for use it
-QSettings *settings;
+Settings *settings;
 
 QTextStream logStream;
 
@@ -129,72 +129,13 @@ void messageOutput(QtMsgType type, const char *msg)
     }
 }
 
-void setDefaultSettingIfNotFound(const QString & name, const QVariant & value)
-{
-    if(!settings->contains(name)){
-        if(value.canConvert<QSize>()){
-            qDebug() << "Settings:" << name << "not found. Set it to default value: " << value.toSize().width() << "x" << value.toSize().height();
-        }else if(value.canConvert<QPoint>()){
-            qDebug() << "Settings:"<< name << "not found. Set it to default value: " << value.toPoint().x() << "x" << value.toPoint().y();
-        }else{
-            qDebug() << "Settings:"<< name << "not found. Set it to default value: " << value.toString();
-        }
-
-        settings->setValue(name, value);
-    }
-}
-
-//
-//  Check and/or initialize settings
-//
-void settingsInit()
-{
-    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", "Lightpack");
-    qDebug() << "Settings file: " << settings->fileName();
-    
-    setDefaultSettingIfNotFound("RefreshAmbilightDelayMs",             REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("IsAvgColorsOn",                       IS_AVG_COLORS_ON_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("MinimumLevelOfSensitivity",           MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT);
-
-    setDefaultSettingIfNotFound("Firmware/TimerPrescallerIndex",       FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("Firmware/TimerOCR",                   FW_TIMER_OCR_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("Firmware/ColorDepth",                 FW_COLOR_DEPTH_DEFAULT_VALUE);
-    setDefaultSettingIfNotFound("Firmware/IsSmoothChangeColors",       FW_IS_SMOOTH_CHANGE_COLORS_DEFAULT_VALUE);
-
-    QPoint ledPosition;
-
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/CoefRed",   LED_COEF_RED_DEFAULT_VALUE);
-        setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/CoefGreen", LED_COEF_GREEN_DEFAULT_VALUE);
-        setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/CoefBlue",  LED_COEF_BLUE_DEFAULT_VALUE);
-
-        if(ledIndex < 4){
-            ledPosition.setX(0);
-        }else{
-            ledPosition.setX(Desktop::WidthAvailable - LED_FIELD_WIDTH_DEFAULT_VALUE);
-        }
-
-        switch( ledIndex ){
-        case LED1:
-        case LED5: ledPosition.setY(Desktop::HeightFull / 2 - 2*LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
-        case LED2:
-        case LED6: ledPosition.setY(Desktop::HeightFull / 2 - LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
-        case LED3:
-        case LED7: ledPosition.setY(Desktop::HeightFull / 2 );  break;
-        case LED4:
-        case LED8: ledPosition.setY(Desktop::HeightFull / 2 + LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
-        }
-
-        setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/Size",      LED_FIELD_SIZE_DEFAULT_VALUE);
-        setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/Position",  ledPosition);
-    }
-}
 
 int main(int argc, char **argv)
 {
-    QApplication app(argc, argv);    
-    app.setApplicationVersion(VERSION_STR);
+    QApplication app(argc, argv);        
+    QApplication::setApplicationName("Lightpack");
+    QApplication::setOrganizationName("Lightpack");
+    QApplication::setApplicationVersion(VERSION_STR);
 
 
     qInstallMsgHandler(messageOutput);
@@ -221,10 +162,11 @@ int main(int argc, char **argv)
         }
     }
 
-    Desktop desktop; // Call constructor, for fill sizes, after initialize QApplication
+    // After initialize QApplication, update desktop widht and height
+    Desktop::UpdateSize();
 
-    // Initialize 'settings' variable, new settings initializes with default values
-    settingsInit();
+    Settings::Initialize();
+
 
     Q_INIT_RESOURCE(LightpackResources);
 

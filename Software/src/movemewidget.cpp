@@ -110,15 +110,15 @@ void MoveMeWidget::setCursorOnAll(Qt::CursorShape cursor)
 double MoveMeWidget::loadCoefWithCheck(QString coefStr)
 {
     bool ok = false;
-    double coef = settings->value("LED_" + QString::number(selfId + 1) + "/" + coefStr).toDouble(&ok);
+    double coef = Settings::value("LED_" + QString::number(selfId + 1) + "/" + coefStr).toDouble(&ok);
     if(ok == false){
         qWarning() << "LedWidget:" << "Settings bad value" << "[LED_" + QString::number(selfId + 1) + "]" << coefStr << "Convert to double error. Set it to default value" << coefStr << "= 1";
         coef = 1;
-        settings->setValue("LED_" + QString::number(selfId + 1) + "/" + coefStr, coef);
+        Settings::setValue("LED_" + QString::number(selfId + 1) + "/" + coefStr, coef);
     }else if(coef < 0.1 || coef > 3){
         qWarning() << "LedWidget:" << "Settings bad value" << "[LED_" + QString::number(selfId + 1) + "]" << coefStr << "=" << coef << "Set it to default value" << coefStr << "= 1";
         coef = 1;
-        settings->setValue("LED_" + QString::number(selfId + 1) + "/" + coefStr, coef);
+        Settings::setValue("LED_" + QString::number(selfId + 1) + "/" + coefStr, coef);
     }
     return coef;
 }
@@ -306,6 +306,8 @@ void MoveMeWidget::mouseMoveEvent(QMouseEvent *pe)
         checkAndSetCursors(pe);
         break;
     }
+
+    resizeEvent(NULL);
 }
 
 void MoveMeWidget::mouseReleaseEvent(QMouseEvent *pe)

@@ -49,6 +49,10 @@ public:
     void appendLogsLine(const QString & line);
     void setLogsFilePath(const QString & filePath);
 
+signals:
+    void settingsProfileChanged();
+
+
 public slots:
     void ambilightUsbSuccess(bool isSuccess);
     void refreshAmbilightEvaluated(double updateResultMs);
@@ -73,6 +77,10 @@ private slots:
     void openLogsFile();
     void openSettingsFile();
 
+    void profileTextChanging();
+    void profileChange(const QString & configName);
+    void profileDeleteCurrent();
+    void settingsProfileChanged_UpdateUI();
 
 private:    
     void connectSignalsSlots();
@@ -83,7 +91,8 @@ private:
 
     void createTrayIcon();
     void createActions();
-    void loadSettingsToMainWindow();        
+    void loadSettingsToMainWindow();
+    void findAllAvailableSettings();
 
     void updatePwmFrequency();
 
