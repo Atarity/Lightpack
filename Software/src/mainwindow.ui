@@ -32,7 +32,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -438,7 +438,7 @@
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Choose name of the profile and click 'Enter':</string>
+           <string>Profile name:</string>
           </property>
          </widget>
         </item>

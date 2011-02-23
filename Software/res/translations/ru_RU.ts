@@ -106,62 +106,77 @@
         <translation>Задержка таймера ШИМ</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="438"/>
+        <location filename="../../src/mainwindow.ui" line="435"/>
+        <source>Profiles</source>
+        <translation>Профили</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="469"/>
+        <source>Delete</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="511"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="459"/>
+        <location filename="../../src/mainwindow.ui" line="532"/>
         <source>Open logs file</source>
         <translation>Открыть файл с логами</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="472"/>
+        <location filename="../../src/mainwindow.ui" line="481"/>
         <source>Open settings file</source>
         <translation>Открыть файл с настройками</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="504"/>
+        <location filename="../../src/mainwindow.ui" line="441"/>
+        <source>Profile name:</source>
+        <translation>Имя профиля:</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="564"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="217"/>
+        <location filename="../../src/mainwindow.cpp" line="234"/>
         <source>On state</source>
         <translation>Включен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="226"/>
+        <location filename="../../src/mainwindow.cpp" line="243"/>
         <source>Off state</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="235"/>
+        <location filename="../../src/mainwindow.cpp" line="252"/>
         <source>Error state</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="389"/>
+        <location filename="../../src/mainwindow.cpp" line="456"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="393"/>
+        <location filename="../../src/mainwindow.cpp" line="460"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="397"/>
+        <location filename="../../src/mainwindow.cpp" line="464"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="401"/>
+        <location filename="../../src/mainwindow.cpp" line="468"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="405"/>
+        <location filename="../../src/mainwindow.cpp" line="472"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
@@ -187,12 +202,12 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="198"/>
+        <location filename="../../src/ambilightusb.cpp" line="196"/>
         <source>device unavailable</source>
         <translation>устройство не доступно</translation>
     </message>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="204"/>
+        <location filename="../../src/ambilightusb.cpp" line="202"/>
         <source>read device fail</source>
         <translation>устройство не отвечает</translation>
     </message>
