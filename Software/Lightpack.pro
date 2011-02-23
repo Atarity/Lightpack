@@ -8,9 +8,9 @@
 # 
 # Copyright (c) 2010 Mike Shatohin, mikeshatohin [at] gmail.com
 #
-# https://github.com/brunql/Lightpack
+# http://lightpack.googlecode.com
 #
-# This project based on:
+# Lightpack based on:
 # LUFA: http://www.fourwalledcubicle.com/LUFA.php
 # hidapi: https://github.com/signal11/hidapi
 #
@@ -74,7 +74,8 @@ SOURCES += src/main.cpp \
     src/aboutdialog.cpp \
     src/grabdesktopwindowleds.cpp \
     src/movemewidget.cpp \
-    src/desktop.cpp
+    src/desktop.cpp \
+    src/settings.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/commands.h \
     ../CommonHeaders/RGB.h \
