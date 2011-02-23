@@ -37,8 +37,6 @@ AmbilightUsb::AmbilightUsb(QObject *parent) :
     qDebug() << "ambilightUsb(): openDevice()";
     openDevice();
 
-    usb_send_data_timeout_ms = settings->value("UsbSendDataTimeout").toInt();
-
     memset(write_buffer, 0, sizeof(write_buffer));
     memset(read_buffer, 0, sizeof(read_buffer));
 
@@ -252,13 +250,6 @@ void AmbilightUsb::setColorDepth(int colorDepth)
 
     writeBufferToDeviceWithCheck(CMD_SET_PWM_LEVEL_MAX_VALUE);
 }
-
-
-void AmbilightUsb::setUsbSendDataTimeoutMs(double usbSendDataTimeoutSecs)
-{
-    this->usb_send_data_timeout_ms = (int)(usbSendDataTimeoutSecs * 1000.0);
-}
-
 
 
 void AmbilightUsb::updateColors(LedColors colors)

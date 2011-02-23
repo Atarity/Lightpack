@@ -32,8 +32,6 @@
 
 #include "timeevaluations.h"
 
-#include "settings.h"
-
 #include "../../CommonHeaders/USB_ID.h"  /* For device VID, PID, vendor name and product name */
 #include "hidapi.h" /* USB HID API */
 
@@ -66,7 +64,6 @@ public:
 
 public slots:
     void updateColors(LedColors colors);
-    void setUsbSendDataTimeoutMs(double usbSendDataTimeoutSecs);
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void setColorDepth(int colorDepth);
     void smoothChangeColors(bool isSmooth);
@@ -89,10 +86,6 @@ private:
 
     unsigned char read_buffer[65];    /* 0-ReportID, 1..65-data */
     unsigned char write_buffer[65];   /* 0-ReportID, 1..65-data */
-
-
-    // Settings:
-    int usb_send_data_timeout_ms;
 };
 
 #endif // AMBILIGHTUSB_H
