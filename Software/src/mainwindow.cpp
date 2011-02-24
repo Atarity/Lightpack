@@ -139,6 +139,7 @@ void MainWindow::connectSignalsSlots()
     connect(ui->comboBox_Profiles, SIGNAL(editTextChanged(QString)), this, SLOT(profileTextChanging()));
     connect(ui->comboBox_Profiles, SIGNAL(activated(QString)), this, SLOT(profileChange(QString)));
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
+    connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
 
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
 }
@@ -404,6 +405,13 @@ void MainWindow::profileDeleteCurrent()
     Settings::removeCurrentConfig();
     // Remove from combobox
     ui->comboBox_Profiles->removeItem( ui->comboBox_Profiles->currentIndex() );
+    // Update settings
+    profileChange( ui->comboBox_Profiles->currentText() );
+}
+
+void MainWindow::profileResetToDefaultCurrent()
+{
+    Settings::resetToDefaults();
     // Update settings
     profileChange( ui->comboBox_Profiles->currentText() );
 }

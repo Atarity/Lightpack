@@ -111,22 +111,17 @@
         <translation>Профили</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="469"/>
-        <source>Delete</source>
-        <translation>Удалить</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="511"/>
+        <location filename="../../src/mainwindow.ui" line="542"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="532"/>
+        <location filename="../../src/mainwindow.ui" line="563"/>
         <source>Open logs file</source>
         <translation>Открыть файл с логами</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="481"/>
+        <location filename="../../src/mainwindow.ui" line="512"/>
         <source>Open settings file</source>
         <translation>Открыть файл с настройками</translation>
     </message>
@@ -136,47 +131,57 @@
         <translation>Имя профиля:</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="564"/>
+        <location filename="../../src/mainwindow.ui" line="466"/>
+        <source>Reset current profile to defaults</source>
+        <translation>Сбросить настройки текущего профиля</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="492"/>
+        <source>Delete current profile</source>
+        <translation>Удалить профиль</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="595"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="236"/>
+        <location filename="../../src/mainwindow.cpp" line="237"/>
         <source>On state</source>
         <translation>Включен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="245"/>
+        <location filename="../../src/mainwindow.cpp" line="246"/>
         <source>Off state</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="254"/>
+        <location filename="../../src/mainwindow.cpp" line="255"/>
         <source>Error state</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="458"/>
+        <location filename="../../src/mainwindow.cpp" line="466"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="462"/>
+        <location filename="../../src/mainwindow.cpp" line="470"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="466"/>
+        <location filename="../../src/mainwindow.cpp" line="474"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="470"/>
+        <location filename="../../src/mainwindow.cpp" line="478"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="474"/>
+        <location filename="../../src/mainwindow.cpp" line="482"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>

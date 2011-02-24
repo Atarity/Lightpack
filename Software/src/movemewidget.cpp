@@ -101,7 +101,7 @@ void MoveMeWidget::setColors(int index)
         this->setTextColor(colors[colorIndex][1]);
     }else{
         this->setBackgroundColor(Qt::gray);
-        this->setTextColor(Qt::black);
+        this->setTextColor(Qt::darkGray);
     }
 }
 
@@ -115,7 +115,7 @@ void MoveMeWidget::setBackgroundColor(QColor color)
 void MoveMeWidget::setTextColor(QColor color)
 {
     QPalette pal = this->palette();
-    pal.setBrush(this->foregroundRole(), QBrush(color));
+    pal.setBrush(QPalette::WindowText, QBrush(color));
     ui->checkBox_SelfId->setPalette(pal);
     ui->labelWidthHeight->setPalette(pal);
 }

@@ -30,6 +30,7 @@
 #include <QSize>
 #include <QPoint>
 #include <QFileInfo>
+#include <QDir>
 
 #include "desktop.h" // Desktop width and height
 #include "../../CommonHeaders/RGB.h"        /* Led defines */
@@ -65,7 +66,16 @@ QString Settings::fileName()
 
 void Settings::loadOrCreateConfig(const QString & configName)
 {
-    if(settingsNow != NULL) delete settingsNow;
+    if(settingsNow != NULL){
+        // Copy current settings to new one
+        QString settingsDir = QFileInfo(settingsNow->fileName()).absoluteDir().absolutePath();
+
+        if(settingsNow->fileName() != settingsDir + "/" + configName + ".ini"){
+            QFile::copy(settingsNow->fileName(), settingsDir + "/" + configName + ".ini");
+        }
+        delete settingsNow;
+    }
+
 
     settingsNow = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", configName);
     qDebug() << "Settings file: " << settingsNow->fileName();
@@ -145,6 +155,53 @@ void Settings::settingsInit()
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/Size",      LED_FIELD_SIZE_DEFAULT_VALUE);
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/Position",  ledPosition);
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/IsEnabled", LED_IS_ENABLED_DEFAULT_VALUE);
+    }
+
+    settingsNow->sync();
+}
+
+//
+//  Set all settings in current config to default values
+//
+void Settings::resetToDefaults()
+{
+    settingsNow->setValue("RefreshAmbilightDelayMs",             REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
+    settingsNow->setValue("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
+    settingsNow->setValue("IsAvgColorsOn",                       IS_AVG_COLORS_ON_DEFAULT_VALUE);
+    settingsNow->setValue("MinimumLevelOfSensitivity",           MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT);
+
+    settingsNow->setValue("Firmware/TimerPrescallerIndex",       FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
+    settingsNow->setValue("Firmware/TimerOCR",                   FW_TIMER_OCR_DEFAULT_VALUE);
+    settingsNow->setValue("Firmware/ColorDepth",                 FW_COLOR_DEPTH_DEFAULT_VALUE);
+    settingsNow->setValue("Firmware/IsSmoothChangeColors",       FW_IS_SMOOTH_CHANGE_COLORS_DEFAULT_VALUE);
+
+    QPoint ledPosition;
+
+    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
+        settingsNow->setValue("LED_" + QString::number(ledIndex+1) + "/CoefRed",   LED_COEF_RGB_DEFAULT_VALUE);
+        settingsNow->setValue("LED_" + QString::number(ledIndex+1) + "/CoefGreen", LED_COEF_RGB_DEFAULT_VALUE);
+        settingsNow->setValue("LED_" + QString::number(ledIndex+1) + "/CoefBlue",  LED_COEF_RGB_DEFAULT_VALUE);
+
+        if(ledIndex < 4){
+            ledPosition.setX(0);
+        }else{
+            ledPosition.setX(Desktop::WidthAvailable - LED_FIELD_WIDTH_DEFAULT_VALUE);
+        }
+
+        switch( ledIndex ){
+        case LED1:
+        case LED5: ledPosition.setY(Desktop::HeightFull / 2 - 2*LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        case LED2:
+        case LED6: ledPosition.setY(Desktop::HeightFull / 2 - LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        case LED3:
+        case LED7: ledPosition.setY(Desktop::HeightFull / 2 );  break;
+        case LED4:
+        case LED8: ledPosition.setY(Desktop::HeightFull / 2 + LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        }
+
+        settingsNow->setValue("LED_" + QString::number(ledIndex+1) + "/Size",      LED_FIELD_SIZE_DEFAULT_VALUE);
+        settingsNow->setValue("LED_" + QString::number(ledIndex+1) + "/Position",  ledPosition);
+        settingsNow->setValue("LED_" + QString::number(ledIndex+1) + "/IsEnabled", LED_IS_ENABLED_DEFAULT_VALUE);
     }
 
     settingsNow->sync();

@@ -5,6 +5,8 @@
         <file>icons/on.png</file>
         <file>icons/settings.png</file>
         <file>icons/Lightpack.png</file>
+        <file>icons/profile_delete.png</file>
+        <file>icons/profile_reset.png</file>
         <file>translations/ru_RU.qm</file>
     </qresource>
 </RCC>

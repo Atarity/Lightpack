@@ -80,6 +80,7 @@ private slots:
     void profileTextChanging();
     void profileChange(const QString & configName);
     void profileDeleteCurrent();
+    void profileResetToDefaultCurrent();
     void settingsProfileChanged_UpdateUI();
 
 private:    

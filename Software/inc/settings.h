@@ -66,6 +66,7 @@ public:
     static QVariant value(const QString & key);
     static QString fileName();
 
+    static void resetToDefaults();
     static void loadOrCreateConfig(const QString & configName);
     static void removeCurrentConfig();
 
