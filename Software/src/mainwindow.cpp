@@ -138,8 +138,9 @@ void MainWindow::connectSignalsSlots()
     // Connect profile signals to this slots
     connect(ui->comboBox_Profiles, SIGNAL(editTextChanged(QString)), this, SLOT(profileTextChanging()));
     connect(ui->comboBox_Profiles, SIGNAL(activated(QString)), this, SLOT(profileChange(QString)));
-    connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
+    connect(ui->pushButton_ProfileNew, SIGNAL(clicked()), this, SLOT(profileNew()));
     connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
+    connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
 
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
 }
@@ -391,7 +392,37 @@ void MainWindow::profileChange(const QString & configName)
     font.setItalic(false);
     ui->comboBox_Profiles->lineEdit()->setFont(font);
 
+    this->setFocus(Qt::OtherFocusReason);
+
     emit settingsProfileChanged();
+}
+
+void MainWindow::profileNew()
+{
+    QString profileName = tr("New profile");
+
+    if(ui->comboBox_Profiles->findText(profileName) != -1){
+        int i = 1;
+        while( ui->comboBox_Profiles->findText(profileName +" "+ QString::number(i)) != -1 ){
+            i++;
+        }
+        profileName += + " " + QString::number(i);
+    }
+
+    int lastIndex = ui->comboBox_Profiles->count();
+
+    ui->comboBox_Profiles->insertItem( 0, profileName );
+    ui->comboBox_Profiles->setCurrentIndex( 0 );
+
+    ui->comboBox_Profiles->lineEdit()->selectAll();
+    ui->comboBox_Profiles->lineEdit()->setFocus(Qt::MouseFocusReason);
+}
+
+void MainWindow::profileResetToDefaultCurrent()
+{
+    Settings::resetToDefaults();
+    // Update settings
+    profileChange( ui->comboBox_Profiles->currentText() );
 }
 
 void MainWindow::profileDeleteCurrent()
@@ -405,13 +436,6 @@ void MainWindow::profileDeleteCurrent()
     Settings::removeCurrentConfig();
     // Remove from combobox
     ui->comboBox_Profiles->removeItem( ui->comboBox_Profiles->currentIndex() );
-    // Update settings
-    profileChange( ui->comboBox_Profiles->currentText() );
-}
-
-void MainWindow::profileResetToDefaultCurrent()
-{
-    Settings::resetToDefaults();
     // Update settings
     profileChange( ui->comboBox_Profiles->currentText() );
 }

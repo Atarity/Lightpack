@@ -7,6 +7,7 @@
         <file>icons/Lightpack.png</file>
         <file>icons/profile_delete.png</file>
         <file>icons/profile_reset.png</file>
+        <file>icons/profile_new.png</file>
         <file>translations/ru_RU.qm</file>
     </qresource>
 </RCC>
