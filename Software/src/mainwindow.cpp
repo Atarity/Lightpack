@@ -367,7 +367,7 @@ void MainWindow::openLogsFile()
 
 void MainWindow::openSettingsFile()
 {
-    QDesktopServices::openUrl( QUrl(Settings::fileName()) );
+    QDesktopServices::openUrl( QUrl("file://" + Settings::fileName(), QUrl::TolerantMode) );
 }
 
 void MainWindow::profileTextChanging()
@@ -408,8 +408,6 @@ void MainWindow::profileNew()
         }
         profileName += + " " + QString::number(i);
     }
-
-    int lastIndex = ui->comboBox_Profiles->count();
 
     ui->comboBox_Profiles->insertItem( 0, profileName );
     ui->comboBox_Profiles->setCurrentIndex( 0 );
