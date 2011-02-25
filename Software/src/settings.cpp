@@ -83,9 +83,10 @@ void Settings::loadOrCreateConfig(const QString & configName)
     if(settingsNow != NULL){
         // Copy current settings to new one
         QString settingsDir = QFileInfo(settingsNow->fileName()).absoluteDir().absolutePath();
+        QString settingsNewFileName = settingsDir + "/" + configName + ".ini";
 
-        if(settingsNow->fileName() != settingsDir + "/" + configName + ".ini"){
-            QFile::copy(settingsNow->fileName(), settingsDir + "/" + configName + ".ini");
+        if(settingsNow->fileName() != settingsNewFileName){
+            QFile::copy(settingsNow->fileName(), settingsNewFileName);
         }
         delete settingsNow;
     }
@@ -94,9 +95,35 @@ void Settings::loadOrCreateConfig(const QString & configName)
     settingsNow = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", configName);
     settingsNow->setIniCodec("UTF-8");
     settingsInit();
-    qDebug() << "Settings file: " << settingsNow->fileName();
+    qDebug() << "Settings file:" << settingsNow->fileName();
 
     settingsMain->setValue("ProfileLast", configName);
+}
+
+void Settings::renameCurrentConfig(const QString & configName)
+{
+    if(settingsNow == NULL){
+        qWarning() << "void Settings::renameCurrentConfig(): fail, settingsNow not initialized";
+        return;
+    }
+
+    // Copy current settings to new one
+    QString settingsDir = QFileInfo(settingsNow->fileName()).absoluteDir().absolutePath();
+    QString settingsNewFileName = settingsDir + "/" + configName + ".ini";
+
+    if(settingsNow->fileName() != settingsNewFileName){
+        QFile::rename(settingsNow->fileName(), settingsNewFileName);
+
+        delete settingsNow;
+
+        // Update settingsNow point to new QSettings with configName
+        settingsNow = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", configName);
+        settingsNow->setIniCodec("UTF-8");
+
+        qDebug() << "Settings file renamed:" << settingsNow->fileName();
+
+        settingsMain->setValue("ProfileLast", configName);
+    }
 }
 
 void Settings::removeCurrentConfig()

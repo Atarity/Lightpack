@@ -66,10 +66,6 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): findAllAvailableSettings();";
     findAllAvailableSettings();
 
-    qDebug() << "MainWindow(): profileChange();";
-    profileChange();
-
-
 
     isErrorState = false;
     isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
@@ -136,9 +132,8 @@ void MainWindow::connectSignalsSlots()
     connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openSettingsFile()));
 
     // Connect profile signals to this slots
-    connect(ui->comboBox_Profiles, SIGNAL(editTextChanged(QString)), this, SLOT(profileTextChanging()));
-    connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(returnPressed()), this, SLOT(profileChange()));
-    connect(ui->comboBox_Profiles, SIGNAL(activated(int)), this, SLOT(profileChange()));
+    connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(returnPressed()), this, SLOT(profileRename()));
+    connect(ui->comboBox_Profiles, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileSwitch(QString)));
     connect(ui->pushButton_ProfileNew, SIGNAL(clicked()), this, SLOT(profileNew()));
     connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
@@ -371,15 +366,7 @@ void MainWindow::openSettingsFile()
     QDesktopServices::openUrl( QUrl("file://" + Settings::fileName(), QUrl::TolerantMode) );
 }
 
-void MainWindow::profileTextChanging()
-{
-    // While changing text it will be italic, after save it will be normal
-    QFont font = ui->comboBox_Profiles->lineEdit()->font();
-    font.setItalic(true);
-    ui->comboBox_Profiles->lineEdit()->setFont(font);
-}
-
-void MainWindow::profileChange()
+void MainWindow::profileRename()
 {
     QString configName = ui->comboBox_Profiles->currentText().trimmed();
     ui->comboBox_Profiles->setItemText( ui->comboBox_Profiles->currentIndex(), configName );
@@ -388,18 +375,21 @@ void MainWindow::profileChange()
         return;
     }
 
-    qDebug() << "Change profile on:" << configName;
+    Settings::renameCurrentConfig(configName);
+
+    this->setFocus(Qt::OtherFocusReason);
+}
+
+void MainWindow::profileSwitch(const QString & configName)
+{
+    qDebug() << "Switch profile on:" << configName;
 
     Settings::loadOrCreateConfig(configName);
 
-    loadSettingsToMainWindow();
-
-    QFont font = ui->comboBox_Profiles->lineEdit()->font();
-    font.setItalic(false);
-    ui->comboBox_Profiles->lineEdit()->setFont(font);
-
     this->setFocus(Qt::OtherFocusReason);
 
+    // Update settings
+    loadSettingsToMainWindow();
     emit settingsProfileChanged();
 }
 
@@ -426,7 +416,8 @@ void MainWindow::profileResetToDefaultCurrent()
 {
     Settings::resetToDefaults();
     // Update settings
-    profileChange();
+    loadSettingsToMainWindow();
+    emit settingsProfileChanged();
 }
 
 void MainWindow::profileDeleteCurrent()
@@ -440,8 +431,6 @@ void MainWindow::profileDeleteCurrent()
     Settings::removeCurrentConfig();
     // Remove from combobox
     ui->comboBox_Profiles->removeItem( ui->comboBox_Profiles->currentIndex() );
-    // Update settings
-    profileChange();
 }
 
 void MainWindow::settingsProfileChanged_UpdateUI()

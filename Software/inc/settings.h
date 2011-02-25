@@ -73,6 +73,7 @@ public:
 
     static void resetToDefaults();
     static void loadOrCreateConfig(const QString & configName);
+    static void renameCurrentConfig(const QString & configName);
     static void removeCurrentConfig();
 
     static QString lastProfileName();
