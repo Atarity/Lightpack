@@ -36,11 +36,6 @@
         <translation>Белые</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="343"/>
-        <source>ticks</source>
-        <translation> </translation>
-    </message>
-    <message>
         <location filename="../../src/mainwindow.ui" line="42"/>
         <source>Grab</source>
         <translation>Захват</translation>
@@ -66,22 +61,17 @@
         <translation>Лайтпак — Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="353"/>
+        <location filename="../../src/mainwindow.ui" line="346"/>
         <source>Color depth</source>
         <translation>Глубина цвета</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="394"/>
-        <source>counts</source>
-        <translation> </translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="411"/>
+        <location filename="../../src/mainwindow.ui" line="397"/>
         <source>USB send data only if colors changes</source>
         <translation>Посылать данные только при обновлении цвета</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="404"/>
+        <location filename="../../src/mainwindow.ui" line="390"/>
         <source>Smooth change colors</source>
         <translation>Плавное изменение цветов</translation>
     </message>
@@ -106,92 +96,92 @@
         <translation>Задержка таймера ШИМ</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="435"/>
+        <location filename="../../src/mainwindow.ui" line="421"/>
         <source>Profiles</source>
         <translation>Профили</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="466"/>
+        <location filename="../../src/mainwindow.ui" line="452"/>
         <source>Add new profile</source>
         <translation>Добавить новый профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="568"/>
+        <location filename="../../src/mainwindow.ui" line="554"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="589"/>
+        <location filename="../../src/mainwindow.ui" line="575"/>
         <source>Open logs file</source>
         <translation>Открыть файл с логами</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="538"/>
+        <location filename="../../src/mainwindow.ui" line="524"/>
         <source>Open settings file</source>
         <translation>Открыть файл с настройками</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="441"/>
+        <location filename="../../src/mainwindow.ui" line="427"/>
         <source>Profile name:</source>
         <translation>Имя профиля:</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="492"/>
+        <location filename="../../src/mainwindow.ui" line="478"/>
         <source>Reset current profile to defaults</source>
         <translation>Сбросить настройки текущего профиля</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="518"/>
+        <location filename="../../src/mainwindow.ui" line="504"/>
         <source>Delete profile</source>
         <translation>Удалить профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="621"/>
+        <location filename="../../src/mainwindow.ui" line="607"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="238"/>
+        <location filename="../../src/mainwindow.cpp" line="239"/>
         <source>On state</source>
         <translation>Включен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="247"/>
+        <location filename="../../src/mainwindow.cpp" line="248"/>
         <source>Off state</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="256"/>
+        <location filename="../../src/mainwindow.cpp" line="257"/>
         <source>Error state</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="402"/>
+        <location filename="../../src/mainwindow.cpp" line="407"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="490"/>
+        <location filename="../../src/mainwindow.cpp" line="493"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="494"/>
+        <location filename="../../src/mainwindow.cpp" line="497"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="498"/>
+        <location filename="../../src/mainwindow.cpp" line="501"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="502"/>
+        <location filename="../../src/mainwindow.cpp" line="505"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="506"/>
+        <location filename="../../src/mainwindow.cpp" line="509"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>

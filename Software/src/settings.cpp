@@ -37,15 +37,29 @@
 
 
 QSettings * Settings::settingsNow;
+QSettings * Settings::settingsMain; // Main.ini contains last profile
 
 
 void Settings::Initialize()
 {
-    Settings::settingsNow = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", "Lightpack");
+    Settings::settingsMain = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", "Main");
+    settingsMain->setIniCodec("UTF-8");
 
-    qDebug() << "Settings file: " << settingsNow->fileName();
+    if(settingsMain->contains("ProfileLast") == false){
+        qDebug() << "Settings:"<< "ProfileLast" << "not found. Set it to default value: " << PROFILE_DEFAULT_NAME;
+
+        settingsMain->setValue("ProfileLast", PROFILE_DEFAULT_NAME);
+    }
+
+    QString profileLast = settingsMain->value("ProfileLast").toString();
+
+    // Load last profile
+    Settings::settingsNow = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", profileLast);
+    settingsNow->setIniCodec("UTF-8");
 
     settingsInit();
+
+    qDebug() << "Settings file:" << settingsNow->fileName();
 }
 
 
@@ -78,22 +92,37 @@ void Settings::loadOrCreateConfig(const QString & configName)
 
 
     settingsNow = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", configName);
-    qDebug() << "Settings file: " << settingsNow->fileName();
+    settingsNow->setIniCodec("UTF-8");
     settingsInit();
+    qDebug() << "Settings file: " << settingsNow->fileName();
+
+    settingsMain->setValue("ProfileLast", configName);
 }
 
 void Settings::removeCurrentConfig()
 {
-    if(QFile::remove( settingsNow->fileName() ) == false){
-        qWarning() << "void Settings::removeCurrentConfig() fail";
+    if(settingsNow == NULL){
+        qWarning() << "void Settings::removeCurrentConfig() nothing to remove";
+        return;
+    }
+
+    bool result = QFile::remove( settingsNow->fileName() );
+
+    if(result == false){
+        qWarning() << "void Settings::removeCurrentConfig() QFile::remove() fail";
         return;
     }
 
     delete settingsNow;
     settingsNow = NULL;
+
+    settingsMain->setValue("ProfileLast", PROFILE_DEFAULT_NAME);
 }
 
-
+QString Settings::lastProfileName()
+{
+    return settingsMain->value("ProfileLast").toString();
+}
 
 
 // private

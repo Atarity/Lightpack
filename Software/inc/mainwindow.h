@@ -78,7 +78,7 @@ private slots:
     void openSettingsFile();
 
     void profileTextChanging();
-    void profileChange(const QString & configName);
+    void profileChange();
     void profileNew();
     void profileResetToDefaultCurrent();
     void profileDeleteCurrent();

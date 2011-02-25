@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     findAllAvailableSettings();
 
     qDebug() << "MainWindow(): profileChange();";
-    profileChange( ui->comboBox_Profiles->currentText() );
+    profileChange();
 
 
 
@@ -137,7 +137,8 @@ void MainWindow::connectSignalsSlots()
 
     // Connect profile signals to this slots
     connect(ui->comboBox_Profiles, SIGNAL(editTextChanged(QString)), this, SLOT(profileTextChanging()));
-    connect(ui->comboBox_Profiles, SIGNAL(activated(QString)), this, SLOT(profileChange(QString)));
+    connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(returnPressed()), this, SLOT(profileChange()));
+    connect(ui->comboBox_Profiles, SIGNAL(activated(int)), this, SLOT(profileChange()));
     connect(ui->pushButton_ProfileNew, SIGNAL(clicked()), this, SLOT(profileNew()));
     connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
@@ -378,11 +379,16 @@ void MainWindow::profileTextChanging()
     ui->comboBox_Profiles->lineEdit()->setFont(font);
 }
 
-void MainWindow::profileChange(const QString & configName)
+void MainWindow::profileChange()
 {
+    QString configName = ui->comboBox_Profiles->currentText().trimmed();
+    ui->comboBox_Profiles->setItemText( ui->comboBox_Profiles->currentIndex(), configName );
+
     if(configName == ""){
         return;
     }
+
+    qDebug() << "Change profile on:" << configName;
 
     Settings::loadOrCreateConfig(configName);
 
@@ -420,7 +426,7 @@ void MainWindow::profileResetToDefaultCurrent()
 {
     Settings::resetToDefaults();
     // Update settings
-    profileChange( ui->comboBox_Profiles->currentText() );
+    profileChange();
 }
 
 void MainWindow::profileDeleteCurrent()
@@ -435,7 +441,7 @@ void MainWindow::profileDeleteCurrent()
     // Remove from combobox
     ui->comboBox_Profiles->removeItem( ui->comboBox_Profiles->currentIndex() );
     // Update settings
-    profileChange( ui->comboBox_Profiles->currentText() );
+    profileChange();
 }
 
 void MainWindow::settingsProfileChanged_UpdateUI()
@@ -546,7 +552,10 @@ void MainWindow::findAllAvailableSettings()
 
     QStringList settingsFiles;
     for(int i=0; i<iniFiles.count(); i++){
-        settingsFiles.append( iniFiles.at(i).completeBaseName() );
+        QString compBaseName = iniFiles.at(i).completeBaseName();
+        if(compBaseName != "Main"){
+            settingsFiles.append( compBaseName );
+        }
     }
 
     qDebug() << "Find settings files:" << settingsFiles;
@@ -557,7 +566,7 @@ void MainWindow::findAllAvailableSettings()
         }
     }
 
-    ui->comboBox_Profiles->setCurrentIndex( 0 );
+    ui->comboBox_Profiles->setCurrentIndex( ui->comboBox_Profiles->findText( Settings::lastProfileName() ) );
 
     settingsProfileChanged_UpdateUI();
 }

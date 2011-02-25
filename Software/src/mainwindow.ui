@@ -32,7 +32,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -337,13 +337,6 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QLabel" name="label_HW_Ticks">
-             <property name="text">
-              <string>ticks</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </widget>
         </item>
@@ -385,13 +378,6 @@
              </property>
              <property name="value">
               <number>64</number>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_HW_ColorDepth_counts">
-             <property name="text">
-              <string>counts</string>
              </property>
             </widget>
            </item>
@@ -447,7 +433,7 @@
               <bool>true</bool>
              </property>
              <property name="insertPolicy">
-              <enum>QComboBox::InsertAlphabetically</enum>
+              <enum>QComboBox::NoInsert</enum>
              </property>
             </widget>
            </item>
