@@ -27,10 +27,21 @@
 #ifndef DESKTOP_H
 #define DESKTOP_H
 
-class Desktop
+#include <QObject>
+
+
+class Desktop : public QObject
 {
+    Q_OBJECT
 public:
-    static void UpdateSize();
+    // Singleton
+    static void Initialize(QObject *parent = 0);
+private:
+    Desktop(QObject *parent = 0);
+
+public slots:
+    void sizeChanged();
+    void screenCountChanged(int count);
 
 public: // This variables set in Desktop constructor and using in all over classes
     // primary screen available geometry
@@ -39,6 +50,9 @@ public: // This variables set in Desktop constructor and using in all over class
     // full desktop available geometry
     static int WidthFull;
     static int HeightFull;
+
+private:
+    static Desktop *self;
 };
 
 #endif // DESKTOP_H

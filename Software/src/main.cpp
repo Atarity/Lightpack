@@ -163,7 +163,7 @@ int main(int argc, char **argv)
     }
 
     // After initialize QApplication, update desktop widht and height
-    Desktop::UpdateSize();
+    Desktop::Initialize();
 
     Settings::Initialize();
 

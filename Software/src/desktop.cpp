@@ -25,6 +25,7 @@
  */
 
 #include <QtGui>
+#include <QtDebug>
 #include "desktop.h"
 
 int Desktop::WidthAvailable = 0;
@@ -32,11 +33,36 @@ int Desktop::HeightAvailable = 0;
 int Desktop::WidthFull = 0;
 int Desktop::HeightFull = 0;
 
-void Desktop::UpdateSize()
-{    
+Desktop *Desktop::self = NULL; /* private */
+
+
+void Desktop::Initialize(QObject *parent)
+{
+    qDebug() << "Desktop::Initialize()";
+    Desktop::self = new Desktop(parent);
+}
+
+Desktop::Desktop(QObject *parent) : QObject(parent)
+{
+    sizeChanged(); // Update sizes
+
+    connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(sizeChanged()));
+    connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), this, SLOT(screenCountChanged(int)));
+}
+
+
+void Desktop::sizeChanged()
+{
+    qDebug() << "Desktop::sizeChanged()";
+
     Desktop::WidthAvailable = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).width();
     Desktop::HeightAvailable = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).height();
 
     Desktop::WidthFull = QApplication::desktop()->width();
     Desktop::HeightFull = QApplication::desktop()->height();
+}
+
+void Desktop::screenCountChanged(int count)
+{
+    qWarning() << "void Desktop::screenCountChanged(" << count << ") not implemented yet";
 }
