@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connectSignalsSlots();
 
     qDebug() << "MainWindow(): findAllAvailableSettings();";
-    findAllAvailableSettings();
+    findAllAvailableConfigs();
 
 
     isErrorState = false;
@@ -534,7 +534,7 @@ void MainWindow::loadSettingsToMainWindow()
     settingsHardwareChangeColorsIsSmooth( ui->checkBox_SmoothChangeColors->isChecked() );
 }
 
-void MainWindow::findAllAvailableSettings()
+void MainWindow::findAllAvailableConfigs()
 {
     QFileInfo setsFile( Settings::fileName() );
     QFileInfoList iniFiles = setsFile.absoluteDir().entryInfoList(QStringList("*.ini"));
