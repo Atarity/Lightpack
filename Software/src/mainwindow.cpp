@@ -32,8 +32,6 @@
 #include <QDesktopWidget>
 #include <QPlainTextEdit>
 
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -60,11 +58,14 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): new GrabDesktopWindowLeds()";
     grabDesktopWindowLeds = new GrabDesktopWindowLeds();
 
+    qDebug() << "MainWindow(): profilesFindAll();";
+    profilesFindAll();
+
     qDebug() << "MainWindow(): connectSignalsSlots()";
     connectSignalsSlots();
 
-    qDebug() << "MainWindow(): findAllAvailableSettings();";
-    findAllAvailableConfigs();
+    qDebug() << "MainWindow(): profilesComboBoxSelectLastProfile();";
+    profileLoadLast();
 
 
     isErrorState = false;
@@ -425,6 +426,42 @@ void MainWindow::profileDeleteCurrent()
     ui->comboBox_Profiles->removeItem( ui->comboBox_Profiles->currentIndex() );
 }
 
+
+void MainWindow::profilesFindAll()
+{
+    QFileInfo setsFile( Settings::fileName() );
+    QFileInfoList iniFiles = setsFile.absoluteDir().entryInfoList(QStringList("*.ini"));
+
+    QStringList settingsFiles;
+    for(int i=0; i<iniFiles.count(); i++){
+        QString compBaseName = iniFiles.at(i).completeBaseName();
+        if(compBaseName != "Main"){
+            settingsFiles.append( compBaseName );
+        }
+    }
+
+    qDebug() << "Find settings files:" << settingsFiles;
+
+    qDebug() << "find Settings::lastProfileName() =" <<  Settings::lastProfileName();
+
+    for(int i=0; i<settingsFiles.count(); i++){
+        if(ui->comboBox_Profiles->findText(settingsFiles.at(i)) == -1){
+            qDebug() << "i Settings::lastProfileName() =" <<  Settings::lastProfileName();
+            ui->comboBox_Profiles->addItem(settingsFiles.at(i));
+            qDebug() << "o Settings::lastProfileName() =" <<  Settings::lastProfileName();
+        }
+    }
+}
+
+void MainWindow::profileLoadLast()
+{
+    ui->comboBox_Profiles->setCurrentIndex( ui->comboBox_Profiles->findText( Settings::lastProfileName() ) );
+
+    // Update settings
+    loadSettingsToMainWindow();
+    emit settingsProfileChanged();
+}
+
 void MainWindow::settingsProfileChanged_UpdateUI()
 {
     if(ui->comboBox_Profiles->count() > 1){
@@ -524,32 +561,6 @@ void MainWindow::loadSettingsToMainWindow()
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
     settingsHardwareChangeColorsIsSmooth( ui->checkBox_SmoothChangeColors->isChecked() );
-}
-
-void MainWindow::findAllAvailableConfigs()
-{
-    QFileInfo setsFile( Settings::fileName() );
-    QFileInfoList iniFiles = setsFile.absoluteDir().entryInfoList(QStringList("*.ini"));
-
-    QStringList settingsFiles;
-    for(int i=0; i<iniFiles.count(); i++){
-        QString compBaseName = iniFiles.at(i).completeBaseName();
-        if(compBaseName != "Main"){
-            settingsFiles.append( compBaseName );
-        }
-    }
-
-    qDebug() << "Find settings files:" << settingsFiles;
-
-    for(int i=0; i<settingsFiles.count(); i++){
-        if(ui->comboBox_Profiles->findText(settingsFiles.at(i)) == -1){
-            ui->comboBox_Profiles->addItem(settingsFiles.at(i));
-        }
-    }
-
-    ui->comboBox_Profiles->setCurrentIndex( ui->comboBox_Profiles->findText( Settings::lastProfileName() ) );
-
-    settingsProfileChanged_UpdateUI();
 }
 
 void MainWindow::appendLogsLine(const QString & line)

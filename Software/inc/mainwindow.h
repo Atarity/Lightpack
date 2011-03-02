@@ -94,7 +94,9 @@ private:
     void createTrayIcon();
     void createActions();
     void loadSettingsToMainWindow();
-    void findAllAvailableConfigs();
+
+    void profilesFindAll();
+    void profileLoadLast();
 
     void updatePwmFrequency();
 
