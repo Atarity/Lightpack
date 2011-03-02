@@ -348,6 +348,7 @@ void MainWindow::settingsHardwareChangeColorsIsSmooth(bool isSmooth)
 
 void MainWindow::openLogsFile()
 {
+    // Logs file name does'n contains russian symbols, just simple open it as is; see openSettingsFile() for details
     QDesktopServices::openUrl( QUrl(this->logsFilePath) );
 }
 
@@ -356,7 +357,13 @@ void MainWindow::openLogsFile()
 
 void MainWindow::openSettingsFile()
 {
-    QDesktopServices::openUrl( QUrl("file://" + Settings::fileName(), QUrl::TolerantMode) );
+    QString filePrefix = "file://";
+
+#if defined(__WIN32__) || defined(__WIN64__)
+    filePrefix = "file:///";
+#endif
+
+    QDesktopServices::openUrl( QUrl( filePrefix + Settings::fileName(), QUrl::TolerantMode) );
 }
 
 void MainWindow::profileRename()
