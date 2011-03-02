@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): connectSignalsSlots()";
     connectSignalsSlots();
 
-    qDebug() << "MainWindow(): profilesComboBoxSelectLastProfile();";
+    qDebug() << "MainWindow(): profileLoadLast();";
     profileLoadLast();
 
 
@@ -359,7 +359,7 @@ void MainWindow::openSettingsFile()
 {
     QString filePrefix = "file://";
 
-#if defined(__WIN32__) || defined(__WIN64__)
+#ifdef Q_WS_WIN
     filePrefix = "file:///";
 #endif
 
