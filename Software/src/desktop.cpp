@@ -35,8 +35,6 @@ int Desktop::Height = 0;
 int Desktop::InitWidth = 0;
 int Desktop::InitHeight = 0;
 
-int Desktop::screenIndex = -1; // Default screen
-
 Desktop *Desktop::self = NULL; /* private */
 
 
@@ -48,42 +46,18 @@ void Desktop::Initialize(QObject *parent)
 
 Desktop::Desktop(QObject *parent) : QObject(parent)
 {
-    Desktop::Width = QApplication::desktop()->screenGeometry( screenIndex ).width();
-    Desktop::Height = QApplication::desktop()->screenGeometry( screenIndex ).height();
+    Desktop::Width = QApplication::desktop()->screenGeometry().width();
+    Desktop::Height = QApplication::desktop()->screenGeometry().height();
 
     // Save size of desktop when initialize application
     Desktop::InitWidth = Desktop::Width;
     Desktop::InitHeight = Desktop::Height;
 
     connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(sizeChanged(int)));
-    connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), this, SLOT(screenCountChanged(int)));
 }
 
-void Desktop::setScreenIndex(int screen)
+void Desktop::sizeChanged(int /*screen*/)
 {
-    if( screen < QApplication::desktop()->screenCount() ){
-        screenIndex = screen;
-    }else{
-        qWarning() << "void Desktop::setScreenIndex(" << screen << ") screen >= screenCount";
-    }
-}
-
-
-
-void Desktop::sizeChanged(int screen)
-{
-    if(screenIndex == screen){
-        qDebug() << "Desktop::sizeChanged(" << screen << ")";
-
-        Desktop::Width = QApplication::desktop()->screenGeometry( screenIndex ).width();
-        Desktop::Height = QApplication::desktop()->screenGeometry( screenIndex ).height();
-    }
-}
-
-void Desktop::screenCountChanged(int count)
-{
-    // Check screenIndex
-    if(screenIndex >= count){
-        screenIndex  = -1;
-    }
+    Desktop::Width = QApplication::desktop()->screenGeometry().width();
+    Desktop::Height = QApplication::desktop()->screenGeometry().height();
 }

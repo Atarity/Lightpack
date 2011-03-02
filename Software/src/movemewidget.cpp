@@ -213,14 +213,6 @@ void MoveMeWidget::mouseMoveEvent(QMouseEvent *pe)
     switch(cmd){
     case MOVE:
         moveHere = pe->globalPos() - mousePressPosition;
-        if(moveHere.x() < StickyCloserPixels) moveHere.setX(0);
-        if(moveHere.y() < StickyCloserPixels) moveHere.setY(0);
-
-        if(moveHere.x() + this->width() > Desktop::Width - StickyCloserPixels)
-            moveHere.setX(Desktop::Width - this->width());
-        if(moveHere.y() + this->height() > Desktop::Height - StickyCloserPixels)
-            moveHere.setY(Desktop::Height - this->height());
-
         this->move(moveHere);
         break;
 

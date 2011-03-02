@@ -36,14 +36,12 @@ class Desktop : public QObject
 public:
     // Singleton
     static void Initialize(QObject *parent = 0);
-    void setScreenIndex(int screen);
 
 private:
     Desktop(QObject *parent = 0);
 
 public slots:
     void sizeChanged(int screen);
-    void screenCountChanged(int count);
 
 public:
     // This variables set in Desktop constructor and using in all over classes
@@ -59,7 +57,6 @@ public:
 
 private:
     static Desktop *self;
-    static int screenIndex;
 };
 
 #endif // DESKTOP_H
