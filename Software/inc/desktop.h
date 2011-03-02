@@ -36,23 +36,30 @@ class Desktop : public QObject
 public:
     // Singleton
     static void Initialize(QObject *parent = 0);
+    void setScreenIndex(int screen);
+
 private:
     Desktop(QObject *parent = 0);
 
 public slots:
-    void sizeChanged();
+    void sizeChanged(int screen);
     void screenCountChanged(int count);
 
-public: // This variables set in Desktop constructor and using in all over classes
-    // primary screen available geometry
-    static int WidthAvailable;
-    static int HeightAvailable;
-    // full desktop available geometry
-    static int WidthFull;
-    static int HeightFull;
+public:
+    // This variables set in Desktop constructor and using in all over classes
+
+    // Screen geometry
+    static int Width;
+    static int Height;
+
+    // Screen geometry when init Desktop object
+    static int InitWidth;
+    static int InitHeight;
+
 
 private:
     static Desktop *self;
+    static int screenIndex;
 };
 
 #endif // DESKTOP_H

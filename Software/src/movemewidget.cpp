@@ -216,10 +216,10 @@ void MoveMeWidget::mouseMoveEvent(QMouseEvent *pe)
         if(moveHere.x() < StickyCloserPixels) moveHere.setX(0);
         if(moveHere.y() < StickyCloserPixels) moveHere.setY(0);
 
-        if(moveHere.x() + this->width() > Desktop::WidthAvailable - StickyCloserPixels)
-            moveHere.setX(Desktop::WidthAvailable - this->width());
-        if(moveHere.y() + this->height() > Desktop::HeightFull - StickyCloserPixels)
-            moveHere.setY(Desktop::HeightFull - this->height());
+        if(moveHere.x() + this->width() > Desktop::Width - StickyCloserPixels)
+            moveHere.setX(Desktop::Width - this->width());
+        if(moveHere.y() + this->height() > Desktop::Height - StickyCloserPixels)
+            moveHere.setY(Desktop::Height - this->height());
 
         this->move(moveHere);
         break;

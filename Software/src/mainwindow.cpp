@@ -44,8 +44,8 @@ MainWindow::MainWindow(QWidget *parent) :
     createTrayIcon();
 
     this->adjustSize();
-    this->move(Desktop::WidthAvailable / 2 - this->width() / 2,
-            Desktop::HeightFull / 2 - this->height() / 2);
+    this->move(Desktop::Width / 2 - this->width() / 2,
+            Desktop::Height / 2 - this->height() / 2);
     this->setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
 
 
@@ -81,14 +81,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     logsFilePath = "";
 
-    qDebug() << "Check screen geometry...";
-
-    int screen = QApplication::desktop()->primaryScreen();
-    qDebug() << "  primaryScreen =" << screen;
-    qDebug() << "  isVirtualDesktop =" << QApplication::desktop()->isVirtualDesktop();
-    qDebug() << "  numScreens = " << QApplication::desktop()->numScreens();
-    qDebug() << "  primaryScreen Width x Height = " << Desktop::WidthAvailable << "x" << Desktop::HeightAvailable;
-    qDebug() << "  desktop       Width x Height = " << Desktop::WidthFull << "x" << Desktop::HeightFull;
     qDebug() << "MainWindow(): initialized";
 }
 
@@ -258,8 +250,8 @@ void MainWindow::showAbout()
 {
     QString firmwareVerison = ambilightUsb->firmwareVersion();
     aboutDialog *about = new aboutDialog(firmwareVerison, this);
-    about->move(Desktop::WidthAvailable / 2 - about->width() / 2,
-            Desktop::HeightFull / 2 - about->height() / 2);
+    about->move(Desktop::Width / 2 - about->width() / 2,
+            Desktop::Height / 2 - about->height() / 2);
     about->show();
 }
 

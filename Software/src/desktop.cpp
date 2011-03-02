@@ -28,10 +28,14 @@
 #include <QtDebug>
 #include "desktop.h"
 
-int Desktop::WidthAvailable = 0;
-int Desktop::HeightAvailable = 0;
-int Desktop::WidthFull = 0;
-int Desktop::HeightFull = 0;
+int Desktop::Width = 0;
+int Desktop::Height = 0;
+
+// Using this for scale LED widgets
+int Desktop::InitWidth = 0;
+int Desktop::InitHeight = 0;
+
+int Desktop::screenIndex = -1; // Default screen
 
 Desktop *Desktop::self = NULL; /* private */
 
@@ -44,25 +48,42 @@ void Desktop::Initialize(QObject *parent)
 
 Desktop::Desktop(QObject *parent) : QObject(parent)
 {
-    sizeChanged(); // Update sizes
+    Desktop::Width = QApplication::desktop()->screenGeometry( screenIndex ).width();
+    Desktop::Height = QApplication::desktop()->screenGeometry( screenIndex ).height();
 
-    connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(sizeChanged()));
+    // Save size of desktop when initialize application
+    Desktop::InitWidth = Desktop::Width;
+    Desktop::InitHeight = Desktop::Height;
+
+    connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(sizeChanged(int)));
     connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), this, SLOT(screenCountChanged(int)));
 }
 
-
-void Desktop::sizeChanged()
+void Desktop::setScreenIndex(int screen)
 {
-    qDebug() << "Desktop::sizeChanged()";
+    if( screen < QApplication::desktop()->screenCount() ){
+        screenIndex = screen;
+    }else{
+        qWarning() << "void Desktop::setScreenIndex(" << screen << ") screen >= screenCount";
+    }
+}
 
-    Desktop::WidthAvailable = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).width();
-    Desktop::HeightAvailable = QApplication::desktop()->availableGeometry(QApplication::desktop()->primaryScreen()).height();
 
-    Desktop::WidthFull = QApplication::desktop()->width();
-    Desktop::HeightFull = QApplication::desktop()->height();
+
+void Desktop::sizeChanged(int screen)
+{
+    if(screenIndex == screen){
+        qDebug() << "Desktop::sizeChanged(" << screen << ")";
+
+        Desktop::Width = QApplication::desktop()->screenGeometry( screenIndex ).width();
+        Desktop::Height = QApplication::desktop()->screenGeometry( screenIndex ).height();
+    }
 }
 
 void Desktop::screenCountChanged(int count)
 {
-    qWarning() << "void Desktop::screenCountChanged(" << count << ") not implemented yet";
+    // Check screenIndex
+    if(screenIndex >= count){
+        screenIndex  = -1;
+    }
 }
