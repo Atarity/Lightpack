@@ -51,8 +51,8 @@ public:
     static int Height;
 
     // Screen geometry when init Desktop object
-    static int InitWidth;
-    static int InitHeight;
+    static int WidthSaved;
+    static int HeightSaved;
 
 
 private:

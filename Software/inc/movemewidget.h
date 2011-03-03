@@ -40,6 +40,8 @@ public:
     MoveMeWidget(int id, QWidget *parent = 0);
     ~MoveMeWidget();
 
+    void saveSizeAndPosition();
+
     void setColors(int index);
     void setBackgroundColor(QColor color);
     void setTextColor(QColor color);

@@ -75,6 +75,12 @@ MoveMeWidget::~MoveMeWidget()
     delete ui;
 }
 
+void MoveMeWidget::saveSizeAndPosition()
+{
+    Settings::setValue("LED_" + QString::number(selfId+1) + "/Position", pos() );
+    Settings::setValue("LED_" + QString::number(selfId+1) + "/Size", size() );
+}
+
 void MoveMeWidget::settingsProfileChanged()
 {
     qDebug() << "MoveMeWidget(" << selfId << "): settingsProfileChanged()";
@@ -335,8 +341,7 @@ void MoveMeWidget::mouseReleaseEvent(QMouseEvent *pe)
     checkAndSetCursors(pe);
     cmd = NOP;
 
-    Settings::setValue("LED_" + QString::number(selfId+1) + "/Position", pos() );
-    Settings::setValue("LED_" + QString::number(selfId+1) + "/Size", size() );
+    saveSizeAndPosition();
 
     emit resizeOrMoveCompleted(selfId);
 }

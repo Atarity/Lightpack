@@ -43,6 +43,7 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     createLedWidgets();
 
     connect(timer, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
+    connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(scaleLedWidgets()));
 
     clearColors();
 
@@ -97,6 +98,23 @@ void GrabDesktopWindowLeds::setVisibleLedWidgets(bool state)
     }
 }
 
+void GrabDesktopWindowLeds::scaleLedWidgets()
+{
+    double scaleX = (double) Desktop::Width / Desktop::WidthSaved;
+    double scaleY = (double) Desktop::Height / Desktop::HeightSaved;
+
+    for(int i=0; i<ledWidgets.count(); i++){
+        int width  = round( scaleX * ledWidgets[i]->width() );
+        int height = round( scaleY * ledWidgets[i]->height() );
+        int x = round( scaleX * ledWidgets[i]->x() );
+        int y = round( scaleY * ledWidgets[i]->y() );
+
+        ledWidgets[i]->move(x,y);
+        ledWidgets[i]->resize(width, height);
+
+        ledWidgets[i]->saveSizeAndPosition();
+    }
+}
 
 void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 {    

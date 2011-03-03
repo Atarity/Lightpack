@@ -70,6 +70,7 @@ public slots:
 
 private slots:
     void updateLedsColorsIfChanged();
+    void scaleLedWidgets();
 
 private:
     void createLedWidgets();

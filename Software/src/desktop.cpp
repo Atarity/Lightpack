@@ -32,8 +32,8 @@ int Desktop::Width = 0;
 int Desktop::Height = 0;
 
 // Using this for scale LED widgets
-int Desktop::InitWidth = 0;
-int Desktop::InitHeight = 0;
+int Desktop::WidthSaved = 0;
+int Desktop::HeightSaved = 0;
 
 Desktop *Desktop::self = NULL; /* private */
 
@@ -49,15 +49,18 @@ Desktop::Desktop(QObject *parent) : QObject(parent)
     Desktop::Width = QApplication::desktop()->screenGeometry().width();
     Desktop::Height = QApplication::desktop()->screenGeometry().height();
 
-    // Save size of desktop when initialize application
-    Desktop::InitWidth = Desktop::Width;
-    Desktop::InitHeight = Desktop::Height;
+    Desktop::WidthSaved = Desktop::Width;
+    Desktop::HeightSaved = Desktop::Height;
 
     connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(sizeChanged(int)));
 }
 
 void Desktop::sizeChanged(int /*screen*/)
-{
+{    
+    Desktop::WidthSaved = Desktop::Width;
+    Desktop::HeightSaved = Desktop::Height;
+
     Desktop::Width = QApplication::desktop()->screenGeometry().width();
     Desktop::Height = QApplication::desktop()->screenGeometry().height();
+    qDebug() << "Desktop::sizeChanged():" << Width << "x" << Height;
 }
