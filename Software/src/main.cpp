@@ -92,15 +92,15 @@ void messageOutput(QtMsgType type, const char *msg)
     QString out = QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") + " ";
     switch (type) {
     case QtDebugMsg:        
-        out.append("Debug: " + QString(msg));        
+        out.append("Debug: " + QString::fromLocal8Bit(msg));
         cout << out.toStdString() << endl;
         break;
     case QtWarningMsg:
-        out.append("Warning: " + QString(msg));
+        out.append("Warning: " + QString::fromLocal8Bit(msg));
         cerr << out.toStdString() << endl;
         break;
     case QtCriticalMsg:
-        out.append("Critical: " + QString(msg));
+        out.append("Critical: " + QString::fromLocal8Bit(msg));
         cerr << out.toStdString() << endl;
         break;
     case QtFatalMsg:
@@ -137,6 +137,8 @@ int main(int argc, char **argv)
     QApplication::setOrganizationName("Lightpack");
     QApplication::setApplicationVersion(VERSION_STR);
 
+    // Using locale codec for console output in messageOutput(..) function ( cout << qstring.toStdString() )
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
 
     qInstallMsgHandler(messageOutput);
 

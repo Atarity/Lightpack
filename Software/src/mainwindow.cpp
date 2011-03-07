@@ -175,23 +175,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-
-void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
-{
-    switch (reason) {
-    case QSystemTrayIcon::DoubleClick:
-        if(isAmbilightOn){
-            ambilightOff();
-        }else{
-            ambilightOn();
-        }
-        break;
-    case QSystemTrayIcon::MiddleClick:
-    case QSystemTrayIcon::Trigger:
-    default: break;
-    }
-}
-
 void MainWindow::ambilightOn()
 {
     grabDesktopWindowLeds->clearColors();
@@ -554,6 +537,23 @@ void MainWindow::createTrayIcon()
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->setIcon(QIcon(":/icons/off.png"));
     trayIcon->show();
+}
+
+void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason) {
+    case QSystemTrayIcon::DoubleClick:
+        if(isAmbilightOn){
+            ambilightOff();
+        }else{
+            ambilightOn();
+        }
+        break;
+    case QSystemTrayIcon::MiddleClick:
+    case QSystemTrayIcon::Trigger:
+    default: break;
+    }
+    trayIconMenu->setFocus();
 }
 
 void MainWindow::loadSettingsToMainWindow()
