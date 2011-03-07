@@ -448,14 +448,9 @@ void MainWindow::profilesFindAll()
     }
 
     qDebug() << "Find settings files:" << settingsFiles;
-
-    qDebug() << "find Settings::lastProfileName() =" <<  Settings::lastProfileName();
-
     for(int i=0; i<settingsFiles.count(); i++){
         if(ui->comboBox_Profiles->findText(settingsFiles.at(i)) == -1){
-            qDebug() << "i Settings::lastProfileName() =" <<  Settings::lastProfileName();
             ui->comboBox_Profiles->addItem(settingsFiles.at(i));
-            qDebug() << "o Settings::lastProfileName() =" <<  Settings::lastProfileName();
         }
     }
 }

@@ -173,9 +173,9 @@ USB_Descriptor_String_t PROGMEM LanguageString =
  */
 USB_Descriptor_String_t PROGMEM ManufacturerString =
 {
-	.Header                 = {.Size = USB_STRING_LEN(18), .Type = DTYPE_String},
+	.Header                 = {.Size = USB_STRING_LEN(24), .Type = DTYPE_String},
 
-	.UnicodeString          = L"brunql.github.com"
+	.UnicodeString          = L"lightpack.googlecode.com"
 };
 
 /** Product descriptor string. This is a Unicode string containing the product's details in human readable form,

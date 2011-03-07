@@ -57,23 +57,21 @@ bool AmbilightUsb::openDevice()
     ambilightDevice = NULL;
     struct hid_device_info *devs, *cur_dev;
 
-    qDebug("Start enumeration of all HID devices:");
+    qDebug() << "Start enumeration of all HID devices";
     devs = hid_enumerate(0, 0);
-    qDebug() << "hid_enumerate(0,0) done";
     cur_dev = devs;
-    while (cur_dev) {        
-
+    while (cur_dev) {
         int vid = cur_dev->vendor_id;
         int pid = cur_dev->product_id;
-        QString path = QString::fromStdString(cur_dev->path);
+
         QString manufacturer_string = QString::fromWCharArray(cur_dev->manufacturer_string);
         QString product_string = QString::fromWCharArray(cur_dev->product_string);
 
-        qDebug() << "Found HID:";
-        qDebug() << "  VID:" << hex << vid << "; PID:" << pid;
-        qDebug() << "  Path:" << path;
-        qDebug() << "  Manufacturer:" << manufacturer_string;
-        qDebug() << "  Product:" << product_string;
+        qDebug() << QString("Found HID: 0x%1 0x%2 %3 %4")
+                .arg(pid, 4, 16, QChar('0'))
+                .arg(vid, 4, 16, QChar('0'))
+                .arg(product_string)
+                .arg(manufacturer_string).trimmed();
 
         if(vid == USB_VENDOR_ID && pid == USB_PRODUCT_ID && product_string == USB_PRODUCT_STRING){
             qDebug() << "Lightpack found";

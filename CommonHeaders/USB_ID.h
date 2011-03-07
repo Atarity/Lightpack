@@ -34,7 +34,7 @@
 #define USB_VENDOR_ID   0x03EB
 #define USB_PRODUCT_ID  0x204F
 
-#define USB_MANUFACTURER_STRING     "brunql.github.com"
+#define USB_MANUFACTURER_STRING     "lightpack.googlecode.com"
 #define USB_PRODUCT_STRING          "Lightpack"
 
 #endif /* USB_ID_H_ */
