@@ -84,7 +84,7 @@ private slots:
     void profileDeleteCurrent();
     void settingsProfileChanged_UpdateUI();
 
-private:    
+private:
     void connectSignalsSlots();
 
     void trayAmbilightOn();
@@ -97,6 +97,8 @@ private:
 
     void profilesFindAll();
     void profileLoadLast();
+
+    void openFile(const QString &filePath);
 
     void updatePwmFrequency();
 

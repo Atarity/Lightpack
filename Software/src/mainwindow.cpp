@@ -344,18 +344,8 @@ void MainWindow::settingsHardwareChangeColorsIsSmooth(bool isSmooth)
     ambilightUsb->smoothChangeColors(isSmooth);
 }
 
-// Logs tab
-
-void MainWindow::openLogsFile()
-{
-    // Logs file name does'n contains russian symbols, just simple open it as is; see openSettingsFile() for details
-    QDesktopServices::openUrl( QUrl(this->logsFilePath) );
-}
-
-
-// Profile tab
-
-void MainWindow::openSettingsFile()
+// private
+void MainWindow::openFile(const QString &filePath)
 {
     QString filePrefix = "file://";
 
@@ -363,7 +353,23 @@ void MainWindow::openSettingsFile()
     filePrefix = "file:///";
 #endif
 
-    QDesktopServices::openUrl( QUrl( filePrefix + Settings::fileName(), QUrl::TolerantMode) );
+    QDesktopServices::openUrl( QUrl( filePrefix + filePath, QUrl::TolerantMode) );
+}
+
+
+// Logs tab
+
+void MainWindow::openLogsFile()
+{
+    openFile( this->logsFilePath );
+}
+
+
+// Profile tab
+
+void MainWindow::openSettingsFile()
+{
+    openFile( Settings::fileName() );
 }
 
 void MainWindow::profileRename()
