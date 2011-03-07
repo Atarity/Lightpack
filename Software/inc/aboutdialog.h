@@ -29,19 +29,23 @@
 #define ABOUTDIALOG_H
 
 #include <QDialog>
+#include <QCloseEvent>
 
 namespace Ui {
     class aboutDialog;
 }
 
-class aboutDialog : public QDialog {
+class AboutDialog : public QDialog {
     Q_OBJECT
 public:
-    aboutDialog(QString firmwareVersion, QWidget *parent = 0);
-    ~aboutDialog();
+    AboutDialog(QWidget *parent = 0);
+    ~AboutDialog();
+
+    void setFirmwareVersion(const QString &firmwareVersion);
 
 protected:
-    void changeEvent(QEvent *e);
+    virtual void changeEvent(QEvent *e);
+    virtual void closeEvent(QCloseEvent *event);
 
 private:
     Ui::aboutDialog *ui;

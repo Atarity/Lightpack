@@ -105,6 +105,7 @@ private:
 private:
     AmbilightUsb *ambilightUsb;
     GrabDesktopWindowLeds *grabDesktopWindowLeds;
+    AboutDialog *aboutDialog;
 
     bool isAmbilightOn; /* is grab desktop window ON */
     bool isErrorState;

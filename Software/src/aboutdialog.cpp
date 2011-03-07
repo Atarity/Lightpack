@@ -28,7 +28,7 @@
 #include "ui_aboutdialog.h"
 #include "version.h"
 
-aboutDialog::aboutDialog(QString firmwareVersion, QWidget *parent) :
+AboutDialog::AboutDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::aboutDialog)
 {
@@ -38,15 +38,14 @@ aboutDialog::aboutDialog(QString firmwareVersion, QWidget *parent) :
     this->adjustSize();
 
     ui->labelVersionSoftware->setText(tr("<b>Software version:</b> ") + QApplication::applicationVersion());
-    ui->labelVersionFirmware->setText(tr("<b>Firmware version:</b> ") + firmwareVersion);
 }
 
-aboutDialog::~aboutDialog()
+AboutDialog::~AboutDialog()
 {
     delete ui;
 }
 
-void aboutDialog::changeEvent(QEvent *e)
+void AboutDialog::changeEvent(QEvent *e)
 {
     QDialog::changeEvent(e);
     switch (e->type()) {
@@ -57,3 +56,15 @@ void aboutDialog::changeEvent(QEvent *e)
         break;
     }
 }
+
+void AboutDialog::closeEvent(QCloseEvent *event)
+{
+    this->hide();
+    event->ignore();
+}
+
+void AboutDialog::setFirmwareVersion(const QString &firmwareVersion)
+{
+    ui->labelVersionFirmware->setText(tr("<b>Firmware version:</b> ") + firmwareVersion);
+}
+

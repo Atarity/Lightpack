@@ -58,6 +58,8 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): new GrabDesktopWindowLeds()";
     grabDesktopWindowLeds = new GrabDesktopWindowLeds();
 
+    aboutDialog = new AboutDialog(this);
+
     qDebug() << "MainWindow(): profilesFindAll();";
     profilesFindAll();
 
@@ -249,11 +251,11 @@ void MainWindow::trayAmbilightError()
 
 void MainWindow::showAbout()
 {
-    QString firmwareVerison = ambilightUsb->firmwareVersion();
-    aboutDialog *about = new aboutDialog(firmwareVerison, this);
-    about->move(Desktop::Width / 2 - about->width() / 2,
-            Desktop::Height / 2 - about->height() / 2);
-    about->show();
+    aboutDialog->setFirmwareVersion( ambilightUsb->firmwareVersion() );
+
+    aboutDialog->move(Desktop::Width / 2 - aboutDialog->width() / 2,
+            Desktop::Height / 2 - aboutDialog->height() / 2);
+    aboutDialog->show();
 }
 
 void MainWindow::showSettings()
