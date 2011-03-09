@@ -24,15 +24,20 @@
  *
  */
 
-
-
 #include "grabdesktopwindowleds.h"
+#include "grab_api.h"
+
+
+// Uncomment this line for see in debug output time spent on grab
+//#define PRINT_TIME_SPENT_ON_GRAB
 
 
 GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
 {
     timer = new QTimer(this);
-    timeEval = new TimeEvaluations();
+    timeEval = new TimeEvaluations();    
+
+    Grab::Initialize();
 
     // TODO: add me to settings
     this->updateColorsOnlyIfChanges = true; // default value
@@ -61,6 +66,8 @@ GrabDesktopWindowLeds::~GrabDesktopWindowLeds()
     }
 
     ledWidgets.clear();
+
+    Grab::DeInitialize();
 }
 
 void GrabDesktopWindowLeds::clearColors()
@@ -138,30 +145,35 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 
     LedColors colorsNew;    
 
+#ifdef PRINT_TIME_SPENT_ON_GRAB
+    QTime t; t.start();
+#endif
+
+    // Copy screen only in WinAPI version of Grab
+    Grab::copyScreen();
+
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         if(ledWidgets[ledIndex]->isGrabEnabled()){
-            QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
-                                              ledWidgets[ledIndex]->x(),
-                                              ledWidgets[ledIndex]->y(),
-                                              ledWidgets[ledIndex]->width(),
-                                              ledWidgets[ledIndex]->height());
-            QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            QImage im = scaledPix.toImage();
-
-
+            QColor color = Grab::getColor( ledWidgets[ledIndex]->x(),
+                                           ledWidgets[ledIndex]->y(),
+                                           ledWidgets[ledIndex]->width(),
+                                           ledWidgets[ledIndex]->height());
             if (avgColorsOnAllLeds){
                 countGrabEnabled++;
-                r += (im.pixel(0,0) >> 0x10) & 0xff;
-                g += (im.pixel(0,0) >> 0x08) & 0xff;
-                b += (im.pixel(0,0) >> 0x00) & 0xff;
+                r += color.red();
+                g += color.green();
+                b += color.blue();
             }else{
-                colorsNew[ledIndex]->r = (im.pixel(0,0) >> 0x10) & 0xff;
-                colorsNew[ledIndex]->g = (im.pixel(0,0) >> 0x08) & 0xff;
-                colorsNew[ledIndex]->b = (im.pixel(0,0) >> 0x00) & 0xff;
+                colorsNew[ledIndex]->r = color.red();
+                colorsNew[ledIndex]->g = color.green();
+                colorsNew[ledIndex]->b = color.blue();
             }
         }
     }
 
+#ifdef PRINT_TIME_SPENT_ON_GRAB
+    qDebug() << "Time spent on grab:" << t.elapsed() << "ms";
+#endif
 
     if(avgColorsOnAllLeds){
         if(countGrabEnabled == 0) countGrabEnabled = 1;

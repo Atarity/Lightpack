@@ -51,22 +51,29 @@ unix{
 
 
 win32 {
-    # Windows using WinAPI for HID
+    # Windows version using WinAPI for HID
     LIBS += -lhid -lusbcamd -lsetupapi
     SOURCES += hidapi/windows/hid.cpp
+    # Windows version using WinAPI + GDI for grab colors
+    LIBS += -lgdi32
+    SOURCES += grab/grab_winapi.cpp
 }
 
 unix:!macx{
     # Linux version using libusb and hidapi codes
     SOURCES += hidapi/linux/hid-libusb.c    
+    # Linux version using Qt grabWindow(..) for grab colors
+    SOURCES += grab/grab_qt.cpp
 }
 
 macx{
     # MacOS version using libusb and hidapi codes
     SOURCES += hidapi/mac/hid.c
+    # MacOS version using Qt grabWindow(..) for grab colors
+    SOURCES += grab/grab_qt.cpp
 }
 
-INCLUDEPATH += ./inc ./hidapi
+INCLUDEPATH += ./inc ./hidapi ./grab
 TEMPLATE = app
 SOURCES += src/main.cpp \
     src/mainwindow.cpp \
@@ -90,7 +97,8 @@ HEADERS += hidapi/hidapi.h \
     inc/movemewidget.h \
     inc/struct_rgb.h \
     inc/ledcolors.h \
-    inc/desktop.h
+    inc/desktop.h \
+    grab/grab_api.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui

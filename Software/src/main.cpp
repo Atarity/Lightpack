@@ -164,10 +164,10 @@ int main(int argc, char **argv)
         }
     }
 
+    Settings::Initialize();
+
     // After initialize QApplication, update desktop widht and height
     Desktop::Initialize();
-
-    Settings::Initialize();
 
 
     Q_INIT_RESOURCE(LightpackResources);
