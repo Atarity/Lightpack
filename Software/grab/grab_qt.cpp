@@ -28,19 +28,18 @@
 #include <QDesktopWidget>
 #include <QPixmap>
 #include <QImage>
+
 #include "grab_api.h"
 
-void Grab::Initialize()   { /* Do nothing; */ }
-void Grab::DeInitialize() { /* Do nothing; */ }
 
-void Grab::copyScreen() { /* Do nothing; */ }
-
-int Grab::step = 0; // not using in Qt version
-void Grab::setStep(int /*value*/) { /* Do nothing; */ }
-
-QColor Grab::getColor(int x, int y, int width, int height)
+QColor Grab::getColor(const QWidget &grabme)
 {
-    QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(), x, y, width, height);
+    QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
+                                      grabme.x(),
+                                      grabme.y(),
+                                      grabme.width(),
+                                      grabme.height());
+
     QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     QImage im = scaledPix.toImage();
     return QColor(im.pixel(0,0));

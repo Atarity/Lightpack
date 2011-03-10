@@ -39,11 +39,7 @@
 
 
 
-
 using namespace std;
-
-// Public visible object, #include "settings.h" for use it
-Settings *settings;
 
 QTextStream logStream;
 

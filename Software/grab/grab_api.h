@@ -24,23 +24,16 @@
  *
  */
 
-#ifndef GRAB_H
-#define GRAB_H
+#ifndef GRAB_API_H
+#define GRAB_API_H
 
+#include <QWidget>
 #include <QColor>
 
 class Grab
 {
 public:
-    static void Initialize();
-    static void DeInitialize();
-
-    static void copyScreen();
-    static QColor getColor(int x, int y, int width, int height);
-    static void setStep(int value);
-
-private:
-    static int step;
+    static QColor getColor(const QWidget * grabme);
 };
 
-#endif // GRAB_H
+#endif // GRAB_API_H

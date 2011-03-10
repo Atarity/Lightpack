@@ -69,8 +69,8 @@ public slots:
     void settingsProfileChanged();
 
 private slots:
-    void updateLedsColorsIfChanged();
     void scaleLedWidgets();
+    void updateLedsColorsIfChanged();
 
 private:
     void createLedWidgets();

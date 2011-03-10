@@ -37,8 +37,6 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     timer = new QTimer(this);
     timeEval = new TimeEvaluations();    
 
-    Grab::Initialize();
-
     // TODO: add me to settings
     this->updateColorsOnlyIfChanges = true; // default value
 
@@ -66,8 +64,6 @@ GrabDesktopWindowLeds::~GrabDesktopWindowLeds()
     }
 
     ledWidgets.clear();
-
-    Grab::DeInitialize();
 }
 
 void GrabDesktopWindowLeds::clearColors()
@@ -93,18 +89,6 @@ void GrabDesktopWindowLeds::createLedWidgets()
     }
 }
 
-
-void GrabDesktopWindowLeds::setVisibleLedWidgets(bool state)
-{
-    for(int i=0; i<ledWidgets.count(); i++){
-        if(state){
-            ledWidgets[i]->show();
-        }else{
-            ledWidgets[i]->hide();
-        }
-    }
-}
-
 void GrabDesktopWindowLeds::scaleLedWidgets()
 {
     double scaleX = (double) Desktop::Width / Desktop::WidthSaved;
@@ -120,6 +104,8 @@ void GrabDesktopWindowLeds::scaleLedWidgets()
         ledWidgets[i]->resize(width, height);
 
         ledWidgets[i]->saveSizeAndPosition();
+
+        qDebug() << "scaleLedWidgets(): new values [" << i << "]" << "x =" << x << "y =" << y << "w =" << width << "h =" << height;
     }
 }
 
@@ -149,15 +135,11 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
     QTime t; t.start();
 #endif
 
-    // Copy screen only in WinAPI version of Grab
-    Grab::copyScreen();
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         if(ledWidgets[ledIndex]->isGrabEnabled()){
-            QColor color = Grab::getColor( ledWidgets[ledIndex]->x(),
-                                           ledWidgets[ledIndex]->y(),
-                                           ledWidgets[ledIndex]->width(),
-                                           ledWidgets[ledIndex]->height());
+            QColor color = Grab::getColor( ledWidgets[ledIndex] );
+
             if (avgColorsOnAllLeds){
                 countGrabEnabled++;
                 r += color.red();
@@ -329,6 +311,17 @@ void GrabDesktopWindowLeds::setAmbilightRefreshDelayMs(int ms)
 void GrabDesktopWindowLeds::setAmbilightColorDepth(int color_depth)
 {
     this->ambilight_color_depth = color_depth;
+}
+
+void GrabDesktopWindowLeds::setVisibleLedWidgets(bool state)
+{
+    for(int i=0; i<ledWidgets.count(); i++){
+        if(state){
+            ledWidgets[i]->show();
+        }else{
+            ledWidgets[i]->hide();
+        }
+    }
 }
 
 void GrabDesktopWindowLeds::setColoredLedWidgets(bool state)
