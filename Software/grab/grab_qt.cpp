@@ -32,13 +32,13 @@
 #include "grab_api.h"
 
 
-QColor Grab::getColor(const QWidget &grabme)
+QColor Grab::getColor(const QWidget * grabme)
 {
     QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
-                                      grabme.x(),
-                                      grabme.y(),
-                                      grabme.width(),
-                                      grabme.height());
+                                      grabme->x(),
+                                      grabme->y(),
+                                      grabme->width(),
+                                      grabme->height());
 
     QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     QImage im = scaledPix.toImage();
