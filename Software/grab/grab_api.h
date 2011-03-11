@@ -32,8 +32,13 @@
 
 class Grab
 {
+    // Using:
+    //      captureScreen(), getColor(), ..., getColor(), cleanUp()
+
 public:
+    static void captureScreen(const QWidget * firstLedWidget);
     static QColor getColor(const QWidget * grabme);
+    static void cleanUp();
 };
 
 #endif // GRAB_API_H

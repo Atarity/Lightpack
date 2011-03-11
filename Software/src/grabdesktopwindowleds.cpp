@@ -135,6 +135,8 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
     QTime t; t.start();
 #endif
 
+    // Capture screen what contains first LED widgets
+    Grab::captureScreen( ledWidgets[0] );
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         if(ledWidgets[ledIndex]->isGrabEnabled()){
@@ -151,7 +153,8 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
                 colorsNew[ledIndex]->b = color.blue();
             }
         }
-    }
+    }    
+    Grab::cleanUp();
 
 #ifdef PRINT_TIME_SPENT_ON_GRAB
     qDebug() << "Time spent on grab:" << t.elapsed() << "ms";

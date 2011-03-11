@@ -31,6 +31,10 @@
 
 #include "grab_api.h"
 
+// Smart gcc will remove call-s of this functions, I hope...
+void captureScreen(const QWidget *) { /* nop */ }
+void cleanUp(){ /* nop */ }
+
 
 QColor Grab::getColor(const QWidget * grabme)
 {
