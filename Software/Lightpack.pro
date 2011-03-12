@@ -96,7 +96,6 @@ HEADERS += hidapi/hidapi.h \
     inc/grabdesktopwindowleds.h \
     inc/movemewidget.h \
     inc/struct_rgb.h \
-    inc/ledcolors.h \
     inc/desktop.h \
     grab/grab_api.h
 FORMS += src/mainwindow.ui \

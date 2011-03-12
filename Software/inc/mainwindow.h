@@ -33,8 +33,7 @@
 #include "settings.h"               /* QSettings */
 #include "ambilightusb.h"           /* class AmbilightUsb */
 #include "grabdesktopwindowleds.h"  /* class GrabDesktopWindowLeds */
-
-#include "ledcolors.h"
+#include "struct_rgb.h"
 
 namespace Ui {
     class MainWindow;

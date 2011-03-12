@@ -24,46 +24,19 @@
  *
  */
 
+#include <QRgb>
  
-#ifndef RGB_H
-#define RGB_H
+#ifndef STRUCT_RGB_H
+#define STRUCT_RGB_H
 
-struct sRGB
+struct StructRGB
 {
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char sr; // step r
-    unsigned char sg; // step g
-    unsigned char sb; // step b
-
-
-    sRGB(){
-        this->r = 0;
-        this->g = 0;
-        this->b = 0;
-        this->sr = 0;
-        this->sg = 0;
-        this->sb = 0;
+    QRgb rgb;
+    QRgb steps;
+    StructRGB( ){
+        rgb = 0;
+        steps = 0;
     }
-
-#if 0
-    sRGB(unsigned char r, unsigned char g, unsigned char b){
-        this->r = r;
-        this->g = g;
-        this->b = b;
-    }
-
-    unsigned char operator[] (int colorIndex){
-        switch(colorIndex){
-        case R: return this->r;
-        case G: return this->g;
-        case B: return this->b;
-        }
-        return -1;
-    }
-#endif
-
 };
 
-#endif // RGB_H
+#endif // STRUCT_RGB_H
