@@ -3,6 +3,19 @@
 <TS version="2.0" language="ru_RU">
 <defaultcodec>UTF-8</defaultcodec>
 <context>
+    <name>AboutDialog</name>
+    <message>
+        <location filename="../../src/aboutdialog.cpp" line="40"/>
+        <source>&lt;b&gt;Software version:&lt;/b&gt; </source>
+        <translation>&lt;b&gt;Версия программы:&lt;/b&gt; </translation>
+    </message>
+    <message>
+        <location filename="../../src/aboutdialog.cpp" line="68"/>
+        <source>&lt;b&gt;Firmware version:&lt;/b&gt; </source>
+        <translation>&lt;b&gt;Версия прошивки:&lt;/b&gt; </translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <location filename="../../src/mainwindow.ui" line="86"/>
@@ -141,47 +154,47 @@
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="239"/>
+        <location filename="../../src/mainwindow.cpp" line="212"/>
         <source>On state</source>
         <translation>Включен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="248"/>
+        <location filename="../../src/mainwindow.cpp" line="221"/>
         <source>Off state</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="257"/>
+        <location filename="../../src/mainwindow.cpp" line="230"/>
         <source>Error state</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="407"/>
+        <location filename="../../src/mainwindow.cpp" line="389"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="493"/>
+        <location filename="../../src/mainwindow.cpp" line="505"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="497"/>
+        <location filename="../../src/mainwindow.cpp" line="509"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="501"/>
+        <location filename="../../src/mainwindow.cpp" line="513"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="505"/>
+        <location filename="../../src/mainwindow.cpp" line="517"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="509"/>
+        <location filename="../../src/mainwindow.cpp" line="521"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
@@ -197,12 +210,12 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="194"/>
+        <location filename="../../src/ambilightusb.cpp" line="192"/>
         <source>device unavailable</source>
         <translation>устройство не доступно</translation>
     </message>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="200"/>
+        <location filename="../../src/ambilightusb.cpp" line="198"/>
         <source>read device fail</source>
         <translation>устройство не отвечает</translation>
     </message>
@@ -310,16 +323,6 @@ p, li { white-space: pre-wrap; }
         <location filename="../../src/aboutdialog.ui" line="255"/>
         <source>Close</source>
         <translation>Закрыть</translation>
-    </message>
-    <message>
-        <location filename="../../src/aboutdialog.cpp" line="40"/>
-        <source>&lt;b&gt;Software version:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Версия программы:&lt;/b&gt; </translation>
-    </message>
-    <message>
-        <location filename="../../src/aboutdialog.cpp" line="41"/>
-        <source>&lt;b&gt;Firmware version:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Версия прошивки:&lt;/b&gt; </translation>
     </message>
 </context>
 </TS>
