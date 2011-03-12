@@ -32,13 +32,17 @@
 
 class Grab
 {
-    // Using:
-    //      captureScreen(), getColor(), ..., getColor(), cleanUp()
+    // Using WinAPI:
+    //      if grabbing-monitor changed call findScreenOnNextCapture( HWND ) for update buffer size
+    //      after it just call captureScreen(), getColor(), ..., getColor() repeatedly
+    // Using Qt:
+    //      just call getColor(...);
+    //      functions findScreenOnNextCapture() and captureScreen() do nothing
 
 public:
-    static void captureScreen(const QWidget * firstLedWidget);
-    static QColor getColor(const QWidget * grabme);
-    static void cleanUp();
+    static void findScreenOnNextCapture( WId winId );
+    static void captureScreen();
+    static QRgb getColor(const QWidget * grabme);
 };
 
 #endif // GRAB_API_H

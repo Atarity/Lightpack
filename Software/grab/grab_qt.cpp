@@ -33,10 +33,9 @@
 
 // Smart gcc will remove call-s of this functions, I hope...
 void captureScreen(const QWidget *) { /* nop */ }
-void cleanUp(){ /* nop */ }
+void findScreenOnNextCapture( WId ){ /* nop */ }
 
-
-QColor Grab::getColor(const QWidget * grabme)
+QRgb Grab::getColor(const QWidget * grabme)
 {
     QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(),
                                       grabme->x(),
@@ -46,5 +45,5 @@ QColor Grab::getColor(const QWidget * grabme)
 
     QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     QImage im = scaledPix.toImage();
-    return QColor(im.pixel(0,0));
+    return im.pixel(0,0);
 }

@@ -27,11 +27,6 @@
 #include "grabdesktopwindowleds.h"
 #include "grab_api.h"
 
-
-// Uncomment this line for see in debug output time spent on grab
-//#define PRINT_TIME_SPENT_ON_GRAB
-
-
 GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
 {
     timer = new QTimer(this);
@@ -87,7 +82,18 @@ void GrabDesktopWindowLeds::createLedWidgets()
         connect(ledWidgets[ledIndex], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(setAmbilightON()));
         connect(ledWidgets[ledIndex], SIGNAL(resizeOrMoveStarted()), this, SLOT(setAmbilightOFF()));
     }
+
+    firstWidgetPositionChanged();
+
+    // First LED widget using to determine grabbing-monitor in WinAPI version of Grab
+    connect(ledWidgets[0], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(firstWidgetPositionChanged()));
 }
+
+void GrabDesktopWindowLeds::firstWidgetPositionChanged()
+{
+    Grab::findScreenOnNextCapture( ledWidgets[0]->winId() );
+}
+
 
 void GrabDesktopWindowLeds::scaleLedWidgets()
 {
@@ -109,6 +115,7 @@ void GrabDesktopWindowLeds::scaleLedWidgets()
     }
 }
 
+
 void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 {    
     if(isResizeOrMoving){
@@ -129,32 +136,34 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
     int r = 0, g = 0, b = 0;
     int countGrabEnabled = 0;
 
-    LedColors colorsNew;    
+    // FIXME: memory leak
+    LedColors colorsNew;
 
+
+//#define PRINT_TIME_SPENT_ON_GRAB
 #ifdef PRINT_TIME_SPENT_ON_GRAB
     QTime t; t.start();
-#endif
+#endif    
 
     // Capture screen what contains first LED widgets
-    Grab::captureScreen( ledWidgets[0] );
+    Grab::captureScreen();
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         if(ledWidgets[ledIndex]->isGrabEnabled()){
-            QColor color = Grab::getColor( ledWidgets[ledIndex] );
+            QRgb rgb = Grab::getColor( ledWidgets[ledIndex] );
 
             if (avgColorsOnAllLeds){
                 countGrabEnabled++;
-                r += color.red();
-                g += color.green();
-                b += color.blue();
+                r += qRed  ( rgb );
+                g += qGreen( rgb );
+                b += qBlue ( rgb );
             }else{
-                colorsNew[ledIndex]->r = color.red();
-                colorsNew[ledIndex]->g = color.green();
-                colorsNew[ledIndex]->b = color.blue();
+                colorsNew[ledIndex]->r = qRed  ( rgb );
+                colorsNew[ledIndex]->g = qGreen( rgb );
+                colorsNew[ledIndex]->b = qBlue ( rgb );
             }
         }
-    }    
-    Grab::cleanUp();
+    }
 
 #ifdef PRINT_TIME_SPENT_ON_GRAB
     qDebug() << "Time spent on grab:" << t.elapsed() << "ms";
@@ -260,7 +269,6 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
         colors[ledIndex]->sg = colorsNew[ledIndex]->sg;
         colors[ledIndex]->sb = colorsNew[ledIndex]->sb;
     }
-
 
     if((!updateColorsOnlyIfChanges) || needToUpdate){
         // if updateColorsOnlyIfChanges == false, then update colors (not depending on needToUpdate flag)

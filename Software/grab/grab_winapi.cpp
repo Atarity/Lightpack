@@ -43,26 +43,49 @@ unsigned screenWidth;
 unsigned screenHeight;
 
 // Captured screen buffer, contains actual RGB data in reversed order
-BYTE * pbPixelsBuff;
+BYTE * pbPixelsBuff = NULL;
 unsigned pixelsBuffSize;
 unsigned bytesPerPixel;
+
+HWND hWndForFindMonitor = NULL;
+bool updateScreenAndAllocateMemory = true;
+
+//
+// Save winId for find screen/monitor what will using for full screen capture
+//
+void Grab::findScreenOnNextCapture( WId winId )
+{
+    qDebug() << Q_FUNC_INFO;
+
+    // Save HWND of widget for find monitor
+    hWndForFindMonitor = winId;
+
+    // Next time captureScreen will allocate mem for pbPixelsBuff and update pixelsBuffSize, bytesPerPixel    
+    updateScreenAndAllocateMemory = true;
+}
+
 
 //
 // Capture screen what contains firstLedWidget to pbPixelsBuff
 //
-void Grab::captureScreen(const QWidget * firstLedWidget)
+void Grab::captureScreen()
 {    
-    // Find the monitor, what contains firstLedWidget
-    HMONITOR hMonitor = MonitorFromWindow( firstLedWidget->winId(), MONITOR_DEFAULTTONEAREST );
+    if( updateScreenAndAllocateMemory ){
+        // Find the monitor, what contains firstLedWidget
+        HMONITOR hMonitor = MonitorFromWindow( hWndForFindMonitor, MONITOR_DEFAULTTONEAREST );
 
-    ZeroMemory( &monitorInfo, sizeof(MONITORINFO) );
-    monitorInfo.cbSize = sizeof(MONITORINFO);
+        ZeroMemory( &monitorInfo, sizeof(MONITORINFO) );
+        monitorInfo.cbSize = sizeof(MONITORINFO);
 
-    // Get position and resolution of the monitor
-    GetMonitorInfo( hMonitor, &monitorInfo );
+        // Get position and resolution of the monitor
+        GetMonitorInfo( hMonitor, &monitorInfo );
 
-    screenWidth  = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
-    screenHeight = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
+        screenWidth  = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
+        screenHeight = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
+    }
+
+    // TODO: test GetDesktopWindow()/GetWindowDC() for speed,
+    // and if it fast - remove CreateDC/DeleteDC to GetDesktopWindow()/GetWindowDC()/ReleaseDC
 
     // CreateDC for multiple monitors
     HDC hScreenDC = CreateDC( TEXT("DISPLAY"), NULL, NULL, NULL );
@@ -83,50 +106,56 @@ void Grab::captureScreen(const QWidget * firstLedWidget)
     // Select old bitmap back into memory DC and get handle to bitmap of the screen
     hBitmap = (HBITMAP) SelectObject( hMemDC, hOldBitmap );
 
-    BITMAP * bmp = new BITMAP;
-    // Now get the actual Bitmap
-    GetObject( hBitmap, sizeof(BITMAP), bmp );
+    if( updateScreenAndAllocateMemory ){
 
-    // Calculate the size the buffer needs to be
-    pixelsBuffSize = bmp->bmWidthBytes * bmp->bmHeight;
+        qDebug() << "Allocate memory for pbPixelsBuff and update pixelsBuffSize, bytesPerPixel";
 
-    // Allocate
-    pbPixelsBuff = new BYTE[ pixelsBuffSize ];
+        BITMAP * bmp = new BITMAP;
 
-    // The amount of bytes per pixel is the amount of bits divided by 8
-    bytesPerPixel = bmp->bmBitsPixel / 8;
+        // Now get the actual Bitmap
+        GetObject( hBitmap, sizeof(BITMAP), bmp );
 
-    if( bytesPerPixel != 4 ){
-        qDebug() << "Not 32-bit mode is not supported!";
+        // Calculate the size the buffer needs to be
+        unsigned pixelsBuffSizeNew = bmp->bmWidthBytes * bmp->bmHeight;
+
+        if(pixelsBuffSize != pixelsBuffSizeNew){
+            pixelsBuffSize = pixelsBuffSizeNew;
+
+            // ReAllocate memory for new buffer size
+            if( pbPixelsBuff ) delete pbPixelsBuff;
+
+            // Allocate
+            pbPixelsBuff = new BYTE[ pixelsBuffSize ];
+        }
+
+        // The amount of bytes per pixel is the amount of bits divided by 8
+        bytesPerPixel = bmp->bmBitsPixel / 8;
+
+        if( bytesPerPixel != 4 ){
+            qDebug() << "Not 32-bit mode is not supported!" << bytesPerPixel;
+        }
+
+        DeleteObject( bmp );
+
+        updateScreenAndAllocateMemory = false;
     }
 
-    // Get the actual RGB data and put it into pbPixels
+    // Get the actual RGB data and put it into pbPixelsBuff
     GetBitmapBits( hBitmap, pixelsBuffSize, pbPixelsBuff );
-
 
     // CleanUp
     DeleteObject( hBitmap );
     DeleteObject( hOldBitmap );
 
     DeleteDC( hScreenDC );
-    DeleteDC( hMemDC );
-
-    if( bmp ) delete bmp;
-}
-
-//
-// Release pbPixelsBuff memory
-//
-void Grab::cleanUp()
-{
-    if( pbPixelsBuff ) delete pbPixelsBuff;
+    DeleteDC( hMemDC );   
 }
 
 
 //
 // Get AVG color of the rect set by 'grabme' widget from captured screen buffer pbPixelsBuff
 //
-QColor Grab::getColor(const QWidget * grabme)
+QRgb Grab::getColor(const QWidget * grabme)
 {    
     int x = grabme->x();
     int y = grabme->y();
@@ -143,7 +172,7 @@ QColor Grab::getColor(const QWidget * grabme)
         y               > monitorInfo.rcMonitor.bottom ){
 
         // Widget 'grabme' is out of screen
-        return QColor(0, 0, 0);
+        return 0x000000;
     }
 
     // Convert coordinates from "Main" desktop coord-system to capture-monitor coord-system
@@ -184,9 +213,12 @@ QColor Grab::getColor(const QWidget * grabme)
             count++;
         }
     }
-    r = round((double) r / count);
-    g = round((double) g / count);
-    b = round((double) b / count);
+
+    if( count != 0 ){
+        r = (unsigned)round((double) r / count) & 0xff;
+        g = (unsigned)round((double) g / count) & 0xff;
+        b = (unsigned)round((double) b / count) & 0xff;
+    }
 
 #if 0
     // Save image of screen:
@@ -202,5 +234,5 @@ QColor Grab::getColor(const QWidget * grabme)
     delete im;
 #endif
 
-    return QColor(r, g, b);
+    return qRgb(r, g, b);
 }
