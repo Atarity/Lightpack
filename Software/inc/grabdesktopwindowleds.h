@@ -36,13 +36,13 @@
 #include "movemewidget.h"
 #include "desktop.h"
 
-class GrabDesktopWindowLeds : public QWidget
+class GrabManager : public QWidget
 {
     Q_OBJECT
 
 public:
-    GrabDesktopWindowLeds(QWidget *parent = 0);
-    ~GrabDesktopWindowLeds();
+    GrabManager(QWidget *parent = 0);
+    ~GrabManager();
 
 public:
     void clearColors();

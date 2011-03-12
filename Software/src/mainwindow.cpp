@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ambilightUsb = new AmbilightUsb(this);
 
     qDebug() << "MainWindow(): new GrabDesktopWindowLeds()";
-    grabDesktopWindowLeds = new GrabDesktopWindowLeds();
+    grabDesktopWindowLeds = new GrabManager();
 
     aboutDialog = new AboutDialog(this);
 

@@ -27,7 +27,7 @@
 #include "grabdesktopwindowleds.h"
 #include "grab_api.h"
 
-GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
+GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
 {
     timer = new QTimer(this);
     timeEval = new TimeEvaluations();    
@@ -50,7 +50,7 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
     qDebug() << "GrabDesktopWindowLeds(): initialized";
 }
 
-GrabDesktopWindowLeds::~GrabDesktopWindowLeds()
+GrabManager::~GrabManager()
 {
     delete timer;
     delete timeEval;
@@ -62,7 +62,7 @@ GrabDesktopWindowLeds::~GrabDesktopWindowLeds()
     ledWidgets.clear();
 }
 
-void GrabDesktopWindowLeds::initColorLists()
+void GrabManager::initColorLists()
 {
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){       
         colors.append( StructRGB() );
@@ -70,7 +70,7 @@ void GrabDesktopWindowLeds::initColorLists()
     }
 }
 
-void GrabDesktopWindowLeds::clearColors()
+void GrabManager::clearColors()
 {
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         colors[ledIndex].rgb = 0;
@@ -81,7 +81,7 @@ void GrabDesktopWindowLeds::clearColors()
 }
 
 
-void GrabDesktopWindowLeds::initLedWidgets()
+void GrabManager::initLedWidgets()
 {
     ledWidgets.clear();
 
@@ -100,13 +100,13 @@ void GrabDesktopWindowLeds::initLedWidgets()
     connect(ledWidgets[0], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(firstWidgetPositionChanged()));
 }
 
-void GrabDesktopWindowLeds::firstWidgetPositionChanged()
+void GrabManager::firstWidgetPositionChanged()
 {
     Grab::findScreenOnNextCapture( ledWidgets[0]->winId() );
 }
 
 
-void GrabDesktopWindowLeds::scaleLedWidgets()
+void GrabManager::scaleLedWidgets()
 {
     double scaleX = (double) Desktop::Width / Desktop::WidthSaved;
     double scaleY = (double) Desktop::Height / Desktop::HeightSaved;
@@ -127,7 +127,7 @@ void GrabDesktopWindowLeds::scaleLedWidgets()
 }
 
 
-void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
+void GrabManager::updateLedsColorsIfChanged()
 {    
     if(isResizeOrMoving){
         return;
@@ -281,7 +281,7 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
     emit ambilightTimeOfUpdatingColors( timeEval->howLongItEnd() );
 }
 
-void GrabDesktopWindowLeds::setAmbilightOn(bool state)
+void GrabManager::setAmbilightOn(bool state)
 {
     if(timer->isActive()){
         timer->stop();
@@ -293,17 +293,17 @@ void GrabDesktopWindowLeds::setAmbilightOn(bool state)
     isAmbilightOn = state;
 }
 
-void GrabDesktopWindowLeds::setAmbilightON()
+void GrabManager::setAmbilightON()
 {
     isResizeOrMoving = false;
 }
 
-void GrabDesktopWindowLeds::setAmbilightOFF()
+void GrabManager::setAmbilightOFF()
 {
     isResizeOrMoving = true;
 }
 
-void GrabDesktopWindowLeds::settingsProfileChanged()
+void GrabManager::settingsProfileChanged()
 {
     qDebug() << "GrabDesktopWindowLeds::settingsProfileChanged()";
 
@@ -319,17 +319,17 @@ void GrabDesktopWindowLeds::settingsProfileChanged()
 }
 
 
-void GrabDesktopWindowLeds::setAmbilightRefreshDelayMs(int ms)
+void GrabManager::setAmbilightRefreshDelayMs(int ms)
 {
     this->ambilight_refresh_delay_ms = ms;
 }
 
-void GrabDesktopWindowLeds::setAmbilightColorDepth(int color_depth)
+void GrabManager::setAmbilightColorDepth(int color_depth)
 {
     this->ambilight_color_depth = color_depth;
 }
 
-void GrabDesktopWindowLeds::setVisibleLedWidgets(bool state)
+void GrabManager::setVisibleLedWidgets(bool state)
 {
     for(int i=0; i<ledWidgets.count(); i++){
         if(state){
@@ -340,7 +340,7 @@ void GrabDesktopWindowLeds::setVisibleLedWidgets(bool state)
     }
 }
 
-void GrabDesktopWindowLeds::setColoredLedWidgets(bool state)
+void GrabManager::setColoredLedWidgets(bool state)
 {
     if(state){
         for(int i=0; i<ledWidgets.count(); i++){
@@ -350,7 +350,7 @@ void GrabDesktopWindowLeds::setColoredLedWidgets(bool state)
     }
 }
 
-void GrabDesktopWindowLeds::setWhiteLedWidgets(bool state)
+void GrabManager::setWhiteLedWidgets(bool state)
 {
     if(state){
         for(int i=0; i<ledWidgets.count(); i++){
@@ -361,19 +361,19 @@ void GrabDesktopWindowLeds::setWhiteLedWidgets(bool state)
 }
 
 
-void GrabDesktopWindowLeds::setUpdateColorsOnlyIfChanges(bool state)
+void GrabManager::setUpdateColorsOnlyIfChanges(bool state)
 {
     this->updateColorsOnlyIfChanges = state;
 }
 
 
-void GrabDesktopWindowLeds::setAvgColorsOnAllLeds(bool state)
+void GrabManager::setAvgColorsOnAllLeds(bool state)
 {
     this->avgColorsOnAllLeds = state;
     Settings::setValue("IsAvgColorsOn", state);
 }
 
-void GrabDesktopWindowLeds::setMinLevelOfSensivity(int value)
+void GrabManager::setMinLevelOfSensivity(int value)
 {
     this->minLevelOfSensivity = value;
     Settings::setValue("MinimumLevelOfSensitivity", value);
