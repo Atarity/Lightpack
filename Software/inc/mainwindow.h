@@ -32,7 +32,7 @@
 #include "aboutdialog.h"            /* About dialog */
 #include "settings.h"               /* QSettings */
 #include "ambilightusb.h"           /* class AmbilightUsb */
-#include "grabdesktopwindowleds.h"  /* class GrabDesktopWindowLeds */
+#include "grabmanager.h"            /* class GrabManager */
 #include "struct_rgb.h"
 
 namespace Ui {

@@ -24,7 +24,7 @@
  *
  */
 
-#include "grabdesktopwindowleds.h"
+#include "grabmanager.h"
 #include "grab_api.h"
 
 GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
