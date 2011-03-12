@@ -131,28 +131,34 @@ QColor Grab::getColor(const QWidget * grabme)
     int x = grabme->x();
     int y = grabme->y();
 
+    unsigned width  = grabme->width();
+    unsigned height = grabme->height();
+
     unsigned r = 0, g = 0, b = 0;
 
     // Checking for the 'grabme' widget position inside the monitor that is used to capture color
-    if( x < monitorInfo.rcMonitor.left ||
-        x > monitorInfo.rcMonitor.right ||
-        y < monitorInfo.rcMonitor.top ||
-        y > monitorInfo.rcMonitor.bottom){
+    if( x + (int)width  < monitorInfo.rcMonitor.left   ||
+        x               > monitorInfo.rcMonitor.right  ||
+        y + (int)height < monitorInfo.rcMonitor.top    ||
+        y               > monitorInfo.rcMonitor.bottom ){
 
         // Widget 'grabme' is out of screen
         return QColor(0, 0, 0);
     }
-
-    unsigned width  = grabme->width();
-    unsigned height = grabme->height();
 
     // Convert coordinates from "Main" desktop coord-system to capture-monitor coord-system
     x -= monitorInfo.rcMonitor.left;
     y -= monitorInfo.rcMonitor.top;
 
     // Ignore part of LED widget which out of screen
-    if( x < 0 ) x = 0;
-    if( y < 0 ) y = 0;
+    if( x < 0 ) {
+        width  += x;  /* reduce width  */
+        x = 0;
+    }
+    if( y < 0 ) {
+        height += y;  /* reduce height */
+        y = 0;
+    }
     if( x + width  > screenWidth  ) width  -= (x + width ) - screenWidth;
     if( y + height > screenHeight ) height -= (y + height) - screenHeight;
 
