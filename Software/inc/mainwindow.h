@@ -32,9 +32,8 @@
 #include "aboutdialog.h"            /* About dialog */
 #include "settings.h"               /* QSettings */
 #include "ambilightusb.h"           /* class AmbilightUsb */
-#include "grabdesktopwindowleds.h"  /* class GrabDesktopWindowLeds */
-
-#include "ledcolors.h"
+#include "grabmanager.h"            /* class GrabManager */
+#include "struct_rgb.h"
 
 namespace Ui {
     class MainWindow;
@@ -104,7 +103,7 @@ private:
 
 private:
     AmbilightUsb *ambilightUsb;
-    GrabDesktopWindowLeds *grabDesktopWindowLeds;
+    GrabManager *grabDesktopWindowLeds;
     AboutDialog *aboutDialog;
 
     bool isAmbilightOn; /* is grab desktop window ON */

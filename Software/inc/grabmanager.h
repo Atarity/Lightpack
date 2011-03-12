@@ -32,23 +32,23 @@
 #include "../../CommonHeaders/RGB.h"        /* Led defines */
 #include "settings.h"
 #include "timeevaluations.h"
-#include "ledcolors.h"
+#include "struct_rgb.h"
 #include "movemewidget.h"
 #include "desktop.h"
 
-class GrabDesktopWindowLeds : public QWidget
+class GrabManager : public QWidget
 {
     Q_OBJECT
 
 public:
-    GrabDesktopWindowLeds(QWidget *parent = 0);
-    ~GrabDesktopWindowLeds();
+    GrabManager(QWidget *parent = 0);
+    ~GrabManager();
 
 public:
     void clearColors();
 
 signals:
-    void updateLedsColors(LedColors colorsNew);
+    void updateLedsColors(const QList<StructRGB> & colorsNew);
     void ambilightTimeOfUpdatingColors(double ms);
 
 
@@ -74,8 +74,8 @@ private slots:
     void updateLedsColorsIfChanged();
 
 private:
-    void createLedWidgets();
-    void updateSizesLabelsGrabPixelsRects();
+    void initColorLists();
+    void initLedWidgets();
 
 private: // variables
     QTimer *timer;
@@ -84,7 +84,8 @@ private: // variables
     const static QColor backgroundAndTextColors[LEDS_COUNT][2];
     TimeEvaluations *timeEval;
 
-    LedColors colors;
+    QList<StructRGB> colors;
+    QList<StructRGB> colorsNew;
 
     bool isAmbilightOn;    
     bool isResizeOrMoving;

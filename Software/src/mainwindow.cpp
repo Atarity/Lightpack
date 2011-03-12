@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ambilightUsb = new AmbilightUsb(this);
 
     qDebug() << "MainWindow(): new GrabDesktopWindowLeds()";
-    grabDesktopWindowLeds = new GrabDesktopWindowLeds();
+    grabDesktopWindowLeds = new GrabManager();
 
     aboutDialog = new AboutDialog(this);
 
@@ -104,7 +104,7 @@ void MainWindow::connectSignalsSlots()
     connect(this, SIGNAL(settingsProfileChanged()), grabDesktopWindowLeds, SLOT(settingsProfileChanged()));
 
     // Connect grabDesktopWindowLeds with ambilightUsb
-    connect(grabDesktopWindowLeds, SIGNAL(updateLedsColors(LedColors)), ambilightUsb, SLOT(updateColors(LedColors)));
+    connect(grabDesktopWindowLeds, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ambilightUsb, SLOT(updateColors(const QList<StructRGB> &)));
 
     // Software options
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), this, SLOT(settingsSoftwareOptionsChange()));

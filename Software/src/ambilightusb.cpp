@@ -248,7 +248,7 @@ void AmbilightUsb::setColorDepth(int colorDepth)
 }
 
 
-void AmbilightUsb::updateColors(LedColors colors)
+void AmbilightUsb::updateColors(const QList<StructRGB> & colors)
 {
     // Fill write_buffer with new colors for all LEDs
 
@@ -257,14 +257,14 @@ void AmbilightUsb::updateColors(LedColors colors)
     int i = WRITE_BUFFER_INDEX_DATA_START;
     for(int led=0; led < LEDS_COUNT; led++){
         // Send colors values
-        write_buffer[i++] = colors[led]->r;
-        write_buffer[i++] = colors[led]->g;
-        write_buffer[i++] = colors[led]->b;
+        write_buffer[i++] = qRed  ( colors[led].rgb );
+        write_buffer[i++] = qGreen( colors[led].rgb );
+        write_buffer[i++] = qBlue ( colors[led].rgb );
 
         // Send change colors steps
-        write_buffer[i++] = colors[led]->sr;
-        write_buffer[i++] = colors[led]->sg;
-        write_buffer[i++] = colors[led]->sb;
+        write_buffer[i++] = qRed  ( colors[led].steps );
+        write_buffer[i++] = qGreen( colors[led].steps );
+        write_buffer[i++] = qBlue ( colors[led].steps );
     }
 
 #if 0

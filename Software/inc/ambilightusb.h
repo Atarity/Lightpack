@@ -30,6 +30,7 @@
 
 #include <QtGui>
 
+#include "struct_rgb.h"
 #include "timeevaluations.h"
 
 #include "../../CommonHeaders/USB_ID.h"  /* For device VID, PID, vendor name and product name */
@@ -37,8 +38,6 @@
 
 #include "../../CommonHeaders/commands.h"   /* CMD defines */
 #include "../../CommonHeaders/RGB.h"        /* Led defines */
-
-#include "ledcolors.h"
 
 
 // This defines using in all data transfers to determine indexes in write_buffer[]
@@ -63,7 +62,7 @@ public:
     void offLeds();
 
 public slots:
-    void updateColors(LedColors colors);
+    void updateColors(const QList<StructRGB> & colors);
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void setColorDepth(int colorDepth);
     void smoothChangeColors(bool isSmooth);

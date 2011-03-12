@@ -24,10 +24,10 @@
  *
  */
 
-#include "grabdesktopwindowleds.h"
+#include "grabmanager.h"
 #include "grab_api.h"
 
-GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
+GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
 {
     timer = new QTimer(this);
     timeEval = new TimeEvaluations();    
@@ -37,19 +37,20 @@ GrabDesktopWindowLeds::GrabDesktopWindowLeds(QWidget *parent) : QWidget(parent)
 
     this->isResizeOrMoving = false;
 
+    qDebug() << "GrabDesktopWindowLeds(): initColorLists()";
+    initColorLists();
+
     qDebug() << "GrabDesktopWindowLeds(): createLedWidgets()";
-    createLedWidgets();
+    initLedWidgets();
 
     connect(timer, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
     connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(scaleLedWidgets()));
-
-    clearColors();
 
     timer->start(10);
     qDebug() << "GrabDesktopWindowLeds(): initialized";
 }
 
-GrabDesktopWindowLeds::~GrabDesktopWindowLeds()
+GrabManager::~GrabManager()
 {
     delete timer;
     delete timeEval;
@@ -61,16 +62,26 @@ GrabDesktopWindowLeds::~GrabDesktopWindowLeds()
     ledWidgets.clear();
 }
 
-void GrabDesktopWindowLeds::clearColors()
+void GrabManager::initColorLists()
 {
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        colors[ledIndex]->r = 0;
-        colors[ledIndex]->g = 0;
-        colors[ledIndex]->b = 0;
+    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){       
+        colors.append( StructRGB() );
+        colorsNew.append( StructRGB() );
     }
 }
 
-void GrabDesktopWindowLeds::createLedWidgets()
+void GrabManager::clearColors()
+{
+    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
+        colors[ledIndex].rgb = 0;
+        colors[ledIndex].steps = 0;
+        colorsNew[ledIndex].rgb = 0;
+        colorsNew[ledIndex].steps = 0;
+    }
+}
+
+
+void GrabManager::initLedWidgets()
 {
     ledWidgets.clear();
 
@@ -89,13 +100,13 @@ void GrabDesktopWindowLeds::createLedWidgets()
     connect(ledWidgets[0], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(firstWidgetPositionChanged()));
 }
 
-void GrabDesktopWindowLeds::firstWidgetPositionChanged()
+void GrabManager::firstWidgetPositionChanged()
 {
     Grab::findScreenOnNextCapture( ledWidgets[0]->winId() );
 }
 
 
-void GrabDesktopWindowLeds::scaleLedWidgets()
+void GrabManager::scaleLedWidgets()
 {
     double scaleX = (double) Desktop::Width / Desktop::WidthSaved;
     double scaleY = (double) Desktop::Height / Desktop::HeightSaved;
@@ -116,7 +127,7 @@ void GrabDesktopWindowLeds::scaleLedWidgets()
 }
 
 
-void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
+void GrabManager::updateLedsColorsIfChanged()
 {    
     if(isResizeOrMoving){
         return;
@@ -133,11 +144,14 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 
     bool needToUpdate = false;
 
-    int r = 0, g = 0, b = 0;
+    int avgR = 0, avgG = 0, avgB = 0;
     int countGrabEnabled = 0;
 
-    // FIXME: memory leak
-    LedColors colorsNew;
+    // Clear colorsNew
+    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+        colorsNew[ledIndex].rgb = 0;
+        colorsNew[ledIndex].steps = 0;
+    }
 
 
 //#define PRINT_TIME_SPENT_ON_GRAB
@@ -152,16 +166,16 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
         if(ledWidgets[ledIndex]->isGrabEnabled()){
             QRgb rgb = Grab::getColor( ledWidgets[ledIndex] );
 
-            if (avgColorsOnAllLeds){
+            if( avgColorsOnAllLeds ){
+                avgR += qRed(rgb);
+                avgG += qGreen(rgb);
+                avgB += qBlue(rgb);
                 countGrabEnabled++;
-                r += qRed  ( rgb );
-                g += qGreen( rgb );
-                b += qBlue ( rgb );
             }else{
-                colorsNew[ledIndex]->r = qRed  ( rgb );
-                colorsNew[ledIndex]->g = qGreen( rgb );
-                colorsNew[ledIndex]->b = qBlue ( rgb );
+                colorsNew[ledIndex].rgb = rgb;
             }
+        }else{
+            colorsNew[ledIndex].rgb = 0; // off led
         }
     }
 
@@ -169,52 +183,44 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
     qDebug() << "Time spent on grab:" << t.elapsed() << "ms";
 #endif
 
-    if(avgColorsOnAllLeds){
-        if(countGrabEnabled == 0) countGrabEnabled = 1;
-
-        r /= countGrabEnabled;
-        g /= countGrabEnabled;
-        b /= countGrabEnabled;
-
-        // Set all LEDs one AVG color
-        for(int i=0; i<LEDS_COUNT; i++){
-            colorsNew[i]->r = (unsigned char)(r & 0xff);
-            colorsNew[i]->g = (unsigned char)(g & 0xff);
-            colorsNew[i]->b = (unsigned char)(b & 0xff);
+    if( avgColorsOnAllLeds ){
+        if( countGrabEnabled != 0 ){
+            avgR /= countGrabEnabled;
+            avgG /= countGrabEnabled;
+            avgB /= countGrabEnabled;
+        }
+        // Set one AVG color to all LEDs
+        for(int ledIndex = 0; ledIndex < LEDS_COUNT; ledIndex++){
+            colorsNew[ledIndex].rgb = qRgb(avgR, avgG, avgB);
         }
     }
 
-
-    // Find average for each led color
+#if 0
+    // 0 <= color <= ambilight_color_depth
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        colorsNew[ledIndex]->r = (int)((double)colorsNew[ledIndex]->r / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
-        colorsNew[ledIndex]->g = (int)((double)colorsNew[ledIndex]->g / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
-        colorsNew[ledIndex]->b = (int)((double)colorsNew[ledIndex]->b / (256.0 / ambilight_color_depth)); // now pwm_value_max==64
+        colorsNew[ledIndex]->r = (int)((double)colorsNew[ledIndex]->r / (256.0 / ambilight_color_depth));
+        colorsNew[ledIndex]->g = (int)((double)colorsNew[ledIndex]->g / (256.0 / ambilight_color_depth));
+        colorsNew[ledIndex]->b = (int)((double)colorsNew[ledIndex]->b / (256.0 / ambilight_color_depth));
     }
+#endif
 
     // White balance
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        colorsNew[ledIndex]->r *= ledWidgets[ledIndex]->getCoefRed();
-        colorsNew[ledIndex]->g *= ledWidgets[ledIndex]->getCoefGreen();
-        colorsNew[ledIndex]->b *= ledWidgets[ledIndex]->getCoefBlue();
+        QRgb rgb = colorsNew[ledIndex].rgb;
+
+        int r = qRed(rgb)   * ledWidgets[ledIndex]->getCoefRed();
+        int g = qGreen(rgb) * ledWidgets[ledIndex]->getCoefGreen();
+        int b = qBlue(rgb)  * ledWidgets[ledIndex]->getCoefBlue();
+
+        colorsNew[ledIndex].rgb = qRgb(r, g, b);
     }
 
     // Check minimum level of sensivity
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        int avg = colorsNew[ledIndex]->r + colorsNew[ledIndex]->g + colorsNew[ledIndex]->b;
-        avg /= 3;
+        QRgb rgb = colorsNew[ledIndex].rgb;
+        int avg = round( (qRed(rgb) + qGreen(rgb) + qBlue(rgb)) / 3.0 );
         if(avg <= minLevelOfSensivity){
-            colorsNew[ledIndex]->r = 0;
-            colorsNew[ledIndex]->g = 0;
-            colorsNew[ledIndex]->b = 0;
-        }
-    }
-
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        if(ledWidgets[ledIndex]->isGrabEnabled() == false){
-            colorsNew[ledIndex]->r = 0x00;
-            colorsNew[ledIndex]->g = 0x00;
-            colorsNew[ledIndex]->b = 0x00;
+            colorsNew[ledIndex].rgb = 0;
         }
     }
 
@@ -225,62 +231,61 @@ void GrabDesktopWindowLeds::updateLedsColorsIfChanged()
 
     // First find MAX diff between old and new colors, and save all diffs in each smooth_step
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        diff = colors[ledIndex]->r - colorsNew[ledIndex]->r;
-        if(diff < 0) diff *= -1;
-        if(diff > maxDiff) maxDiff = diff;
-        colorsNew[ledIndex]->sr = (unsigned char)((diff != 0) ? diff : 1);
+        QRgb rgb = colors[ledIndex].rgb;
+        QRgb rgbNew = colorsNew[ledIndex].rgb;
+        int stepR, stepG, stepB;
 
-        diff = colors[ledIndex]->g - colorsNew[ledIndex]->g;
+        diff = qRed(rgb) - qRed(rgbNew);
         if(diff < 0) diff *= -1;
         if(diff > maxDiff) maxDiff = diff;
-        colorsNew[ledIndex]->sg = (unsigned char)((diff != 0) ? diff : 1);
+        stepR = (diff != 0) ? diff : 1;
 
-        diff = colors[ledIndex]->b - colorsNew[ledIndex]->b;
+        diff = qGreen(rgb) - qGreen(rgbNew);
         if(diff < 0) diff *= -1;
         if(diff > maxDiff) maxDiff = diff;
-        colorsNew[ledIndex]->sb = (unsigned char)((diff != 0) ? diff : 1);
+        stepG = (diff != 0) ? diff : 1;
+
+        diff = qBlue(rgb) - qBlue(rgbNew);
+        if(diff < 0) diff *= -1;
+        if(diff > maxDiff) maxDiff = diff;
+        stepB = (diff != 0) ? diff : 1;
+
+        colorsNew[ledIndex].steps = qRgb(stepR, stepG, stepB);
     }
 
     // To find smooth_step which will be using max_diff divide on each smooth_step
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        colorsNew[ledIndex]->sr = (unsigned char) maxDiff / colorsNew[ledIndex]->sr;
-        colorsNew[ledIndex]->sg = (unsigned char) maxDiff / colorsNew[ledIndex]->sg;
-        colorsNew[ledIndex]->sb = (unsigned char) maxDiff / colorsNew[ledIndex]->sb;
+        QRgb steps = colorsNew[ledIndex].steps;
+        int stepR, stepG, stepB;
+        stepR = maxDiff / qRed(steps);
+        stepG = maxDiff / qGreen(steps);
+        stepB = maxDiff / qBlue(steps);
+        colorsNew[ledIndex].steps = qRgb(stepR, stepG, stepB);
     }
     // Eval smooth steps end
 
 
 
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        if(colors[ledIndex]->r != colorsNew[ledIndex]->r){
-            colors[ledIndex]->r = colorsNew[ledIndex]->r;
+        if( colors[ledIndex].rgb != colorsNew[ledIndex].rgb ){
+            colors[ledIndex].rgb  = colorsNew[ledIndex].rgb;
             needToUpdate = true;
         }
-        if(colors[ledIndex]->g != colorsNew[ledIndex]->g){
-            colors[ledIndex]->g = colorsNew[ledIndex]->g;
-            needToUpdate = true;
-        }
-        if(colors[ledIndex]->b != colorsNew[ledIndex]->b){
-            colors[ledIndex]->b = colorsNew[ledIndex]->b;
-            needToUpdate = true;
-        }
-
-        colors[ledIndex]->sr = colorsNew[ledIndex]->sr;
-        colors[ledIndex]->sg = colorsNew[ledIndex]->sg;
-        colors[ledIndex]->sb = colorsNew[ledIndex]->sb;
+        colors[ledIndex].steps = colorsNew[ledIndex].steps;
     }
 
     if((!updateColorsOnlyIfChanges) || needToUpdate){
         // if updateColorsOnlyIfChanges == false, then update colors (not depending on needToUpdate flag)
         emit updateLedsColors( colors );
     }
-    emit ambilightTimeOfUpdatingColors(timeEval->howLongItEnd());
+    emit ambilightTimeOfUpdatingColors( timeEval->howLongItEnd() );
 }
 
-void GrabDesktopWindowLeds::setAmbilightOn(bool state)
+void GrabManager::setAmbilightOn(bool state)
 {
     if(timer->isActive()){
         timer->stop();
+        clearColors();
     }
     if(state){        
         timer->start(ambilight_refresh_delay_ms);
@@ -288,17 +293,17 @@ void GrabDesktopWindowLeds::setAmbilightOn(bool state)
     isAmbilightOn = state;
 }
 
-void GrabDesktopWindowLeds::setAmbilightON()
+void GrabManager::setAmbilightON()
 {
     isResizeOrMoving = false;
 }
 
-void GrabDesktopWindowLeds::setAmbilightOFF()
+void GrabManager::setAmbilightOFF()
 {
     isResizeOrMoving = true;
 }
 
-void GrabDesktopWindowLeds::settingsProfileChanged()
+void GrabManager::settingsProfileChanged()
 {
     qDebug() << "GrabDesktopWindowLeds::settingsProfileChanged()";
 
@@ -314,17 +319,17 @@ void GrabDesktopWindowLeds::settingsProfileChanged()
 }
 
 
-void GrabDesktopWindowLeds::setAmbilightRefreshDelayMs(int ms)
+void GrabManager::setAmbilightRefreshDelayMs(int ms)
 {
     this->ambilight_refresh_delay_ms = ms;
 }
 
-void GrabDesktopWindowLeds::setAmbilightColorDepth(int color_depth)
+void GrabManager::setAmbilightColorDepth(int color_depth)
 {
     this->ambilight_color_depth = color_depth;
 }
 
-void GrabDesktopWindowLeds::setVisibleLedWidgets(bool state)
+void GrabManager::setVisibleLedWidgets(bool state)
 {
     for(int i=0; i<ledWidgets.count(); i++){
         if(state){
@@ -335,7 +340,7 @@ void GrabDesktopWindowLeds::setVisibleLedWidgets(bool state)
     }
 }
 
-void GrabDesktopWindowLeds::setColoredLedWidgets(bool state)
+void GrabManager::setColoredLedWidgets(bool state)
 {
     if(state){
         for(int i=0; i<ledWidgets.count(); i++){
@@ -345,7 +350,7 @@ void GrabDesktopWindowLeds::setColoredLedWidgets(bool state)
     }
 }
 
-void GrabDesktopWindowLeds::setWhiteLedWidgets(bool state)
+void GrabManager::setWhiteLedWidgets(bool state)
 {
     if(state){
         for(int i=0; i<ledWidgets.count(); i++){
@@ -356,19 +361,19 @@ void GrabDesktopWindowLeds::setWhiteLedWidgets(bool state)
 }
 
 
-void GrabDesktopWindowLeds::setUpdateColorsOnlyIfChanges(bool state)
+void GrabManager::setUpdateColorsOnlyIfChanges(bool state)
 {
     this->updateColorsOnlyIfChanges = state;
 }
 
 
-void GrabDesktopWindowLeds::setAvgColorsOnAllLeds(bool state)
+void GrabManager::setAvgColorsOnAllLeds(bool state)
 {
     this->avgColorsOnAllLeds = state;
     Settings::setValue("IsAvgColorsOn", state);
 }
 
-void GrabDesktopWindowLeds::setMinLevelOfSensivity(int value)
+void GrabManager::setMinLevelOfSensivity(int value)
 {
     this->minLevelOfSensivity = value;
     Settings::setValue("MinimumLevelOfSensitivity", value);

@@ -79,7 +79,7 @@ SOURCES += src/main.cpp \
     src/mainwindow.cpp \
     src/ambilightusb.cpp \
     src/aboutdialog.cpp \
-    src/grabdesktopwindowleds.cpp \
+    src/grabmanager.cpp \
     src/movemewidget.cpp \
     src/desktop.cpp \
     src/settings.cpp
@@ -93,10 +93,9 @@ HEADERS += hidapi/hidapi.h \
     inc/settings.h \
     inc/aboutdialog.h \
     inc/timeevaluations.h \
-    inc/grabdesktopwindowleds.h \
+    inc/grabmanager.h \
     inc/movemewidget.h \
     inc/struct_rgb.h \
-    inc/ledcolors.h \
     inc/desktop.h \
     grab/grab_api.h
 FORMS += src/mainwindow.ui \
