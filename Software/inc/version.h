@@ -28,26 +28,22 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-// Current version of Ambilight soft
+// Current version of Lightpack software
 #define VERSION_STR     "4.1.0beta0"
 
 // Resource defines using in Lightpack.rc
 #define VER_FILEVERSION             4,1,0,0
-#define VER_FILEVERSION_STR         VERSION_STR "\0"
-
 #define VER_PRODUCTVERSION          VER_FILEVERSION
+
+#define VER_FILEVERSION_STR         VERSION_STR "\0"
 #define VER_PRODUCTVERSION_STR      VER_FILEVERSION_STR
 
+#define VER_PRODUCTNAME_STR         "Lightpack"
 #define VER_COMPANYNAME_STR         "Lightpack"
-#define VER_FILEDESCRIPTION_STR     "Lightpack"
+#define VER_FILEDESCRIPTION_STR     "lightpack.googlecode.com"
 #define VER_INTERNALNAME_STR        "Lightpack"
 #define VER_LEGALCOPYRIGHT_STR      "Copyleft © 2011 Lightpack"
-#define VER_LEGALTRADEMARKS1_STR    "Some rights reserved"
-#define VER_LEGALTRADEMARKS2_STR    VER_LEGALTRADEMARKS1_STR
 #define VER_ORIGINALFILENAME_STR    "Lightpack_sw" VERSION_STR ".exe"
-#define VER_PRODUCTNAME_STR         "Lightpack"
-
-#define VER_COMPANYDOMAIN_STR       "lightpack.googlecode.com"
 
 
 #endif // VERSION_H
