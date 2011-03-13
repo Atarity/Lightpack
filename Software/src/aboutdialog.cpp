@@ -36,15 +36,16 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
     this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint );
 
-    QString softwareVersion = tr("Software version ") + QApplication::applicationVersion();
+    QString softwareVersion = tr("Software version ") + "<b>" + QApplication::applicationVersion() + "</b>";
 #ifdef HG_REVISION
-    softwareVersion += QString(" <a href=\"http://code.google.com/p/lightpack/source/detail?r=%1\">%1</a>").arg( HG_REVISION );
+    if( QString(HG_REVISION).isEmpty() == false ){
+        softwareVersion += tr(" revision ") + QString(" <a href=\"http://code.google.com/p/lightpack/source/detail?r=%1\">%1</a>").arg( HG_REVISION );
+    }
 #endif
 
     ui->labelVersionSoftware->setText( softwareVersion );
-    this->adjustSize();
 
-    setFixedSize(width(), height());
+    setFixedSize( sizeHint() );
 }
 
 AboutDialog::~AboutDialog()
@@ -72,6 +73,6 @@ void AboutDialog::closeEvent(QCloseEvent *event)
 
 void AboutDialog::setFirmwareVersion(const QString &firmwareVersion)
 {
-    ui->labelVersionFirmware->setText(tr("Firmware version ") + firmwareVersion);
+    ui->labelVersionFirmware->setText( tr("Firmware version ") + "<b>" + firmwareVersion + "</b>" );
 }
 

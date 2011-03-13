@@ -10,7 +10,12 @@
         <translation>Версия программы </translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.cpp" line="75"/>
+        <location filename="../../src/aboutdialog.cpp" line="42"/>
+        <source> revision </source>
+        <translation> ревизия </translation>
+    </message>
+    <message>
+        <location filename="../../src/aboutdialog.cpp" line="76"/>
         <source>Firmware version </source>
         <translation>Версия прошивки </translation>
     </message>
@@ -169,32 +174,32 @@
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="389"/>
+        <location filename="../../src/mainwindow.cpp" line="390"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="505"/>
+        <location filename="../../src/mainwindow.cpp" line="506"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="509"/>
+        <location filename="../../src/mainwindow.cpp" line="510"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="513"/>
+        <location filename="../../src/mainwindow.cpp" line="514"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="517"/>
+        <location filename="../../src/mainwindow.cpp" line="518"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="521"/>
+        <location filename="../../src/mainwindow.cpp" line="522"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
@@ -223,44 +228,32 @@
 <context>
     <name>aboutDialog</name>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="20"/>
+        <location filename="../../src/aboutdialog.ui" line="29"/>
         <source>Lightpack — About</source>
         <translation>Лайтпак — Описание</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="82"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans&apos;; font-size:12pt; font-weight:600;&quot;&gt;Lightpack&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans&apos;; font-size:12pt; font-weight:600;&quot;&gt;Лайтпак&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <location filename="../../src/aboutdialog.ui" line="91"/>
+        <source>&lt;h2&gt;Lightpack&lt;/h2&gt;</source>
+        <translation>&lt;h2&gt;Лайтпак&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="111"/>
+        <location filename="../../src/aboutdialog.ui" line="110"/>
         <source>&lt;a href=&quot;http://lightpack.googlecode.com/&quot;&gt;lightpack.googlecode.com&lt;/a&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="133"/>
+        <location filename="../../src/aboutdialog.ui" line="126"/>
         <source>Content-appropriate ambient lighting system with USB interface</source>
         <translation>USB-подсветка монитора для усиления эффекта присутствия</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="200"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation></translation>
+        <location filename="../../src/aboutdialog.ui" line="190"/>
+        <source>&lt;small&gt;THIS PROGRAM IS DISTRIBUTED &quot;AS IS&quot;. NO WARRANTY OF ANY KIND IS EXPRESSED OR IMPLIED. YOU USE AT YOUR OWN RISK. THE AUTHOR WILL NOT BE LIABLE FOR DATA LOSS, DAMAGES, LOSS OF PROFITS OR ANY OTHER KIND OF LOSS WHILE USING OR MISUSING THIS SOFTWARE.&lt;/small&gt;</source>
+        <translation>&lt;small&gt;ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПОСТАВЛЯЕТСЯ ПО ПРИНЦИПУ &quot;AS IS&quot;. НИКАКИХ ГАРАНТИЙ НЕ ПРИЛАГАЕТСЯ И НЕ ПРЕДУСМАТРИВАЕТСЯ. ВЫ ИСПОЛЬЗУЕТЕ ЭТО ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ НА СВОЙ РИСК. АВТОР НЕ БУДЕТ ОТВЕЧАТЬ НИ ЗА КАКИЕ ПОТЕРИ ИЛИ ИСКАЖЕНИЯ ДАННЫХ, ЛЮБУЮ УПУЩЕННУЮ ВЫГОДУ В ПРОЦЕССЕ ИСПОЛЬЗОВАНИЯ ИЛИ НЕПРАВИЛЬНОГО ИСПОЛЬЗОВАНИЯ ЭТОГО ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="231"/>
+        <location filename="../../src/aboutdialog.ui" line="221"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>

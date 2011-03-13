@@ -238,6 +238,7 @@ void MainWindow::showAbout()
 
     aboutDialog->move(Desktop::Width / 2 - aboutDialog->width() / 2,
             Desktop::Height / 2 - aboutDialog->height() / 2);
+
     aboutDialog->show();
 }
 
