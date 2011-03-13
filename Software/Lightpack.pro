@@ -45,9 +45,6 @@ TRANSLATIONS = res/translations/ru_RU.ts
 RESOURCES = res/LightpackResources.qrc
 RC_FILE = res/Lightpack.rc
 
-#CONFIG -= console
-#CONFIG -= app_bundle
-
 unix{
     CONFIG += link_pkgconfig
     PKGCONFIG += libusb-1.0

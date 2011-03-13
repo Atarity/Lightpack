@@ -56,14 +56,16 @@ static void showHelpMessage()
     fprintf(stderr, "Version  : %s\n", VERSION_STR);
 #ifdef HG_REVISION
     if(strcmp(HG_REVISION, "") != 0){
-        fprintf(stderr, "Revision : %s\n", HG_REVISION);
+        fprintf(stderr, "Revision : %s \n", HG_REVISION);
     }
 #endif
-    fprintf(stderr, "Site     : lightpack.googlecode.com\n");
+    fprintf(stderr, "Site     : lightpack.googlecode.com \n");
     fprintf(stderr, "\n");
-    fprintf(stderr, "Options:\n");
-    fprintf(stderr, "  --off    - send 'off leds' cmd to device\n");
-    fprintf(stderr, "  --notr   - no translate (English version)\n");
+    fprintf(stderr, "Build with Qt version %s \n", QT_VERSION_STR);
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Options: \n");
+    fprintf(stderr, "  --off    - send 'off leds' cmd to device \n");
+    fprintf(stderr, "  --notr   - no translate (English version) \n");
     fprintf(stderr, "             use it if detect russian, but you want english \n");
     fprintf(stderr, "  --help   - show this help \n");
     fprintf(stderr, "\n");
@@ -151,6 +153,10 @@ int main(int argc, char **argv)
         cerr << "Log file '" << logFilePath.toStdString() << "' didn't opened. Exit." << endl;
         return 2;
     }
+
+    qDebug() << "Build with Qt verison:" << QT_VERSION_STR;
+    qDebug() << "Qt version currently in use:" << qVersion();
+
 
     QString locale = QLocale::system().name();
     if(argc > 1){
