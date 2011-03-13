@@ -35,14 +35,18 @@ MOC_DIR = ./moc
 UI_DIR = ./ui
 RCC_DIR = ./res
 
+HG_REVISION=$$system(hg id -i)
+DEFINES += HG_REVISION=\\\"$${HG_REVISION}\\\"
+
+TEMPLATE = app
 TARGET = Lightpack
 
 TRANSLATIONS = res/translations/ru_RU.ts
 RESOURCES = res/LightpackResources.qrc
 RC_FILE = res/Lightpack.rc
 
-CONFIG -= console
-CONFIG -= app_bundle
+#CONFIG -= console
+#CONFIG -= app_bundle
 
 unix{
     CONFIG += link_pkgconfig
@@ -74,7 +78,6 @@ macx{
 }
 
 INCLUDEPATH += ./inc ./hidapi ./grab
-TEMPLATE = app
 SOURCES += src/main.cpp \
     src/mainwindow.cpp \
     src/ambilightusb.cpp \

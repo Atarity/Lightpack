@@ -51,12 +51,16 @@ QString logWhileWindowNotInitialized = "";
 static void showHelpMessage()
 {
     fprintf(stderr, "\n");
-    fprintf(stderr, "Project : Lightpack \n");
-    fprintf(stderr, "Author  : brunql \n");
-    fprintf(stderr, "Version : %s\n", VERSION_STR);
+    fprintf(stderr, "Project  : Lightpack \n");
+    fprintf(stderr, "Author   : Mike Shatohin \n");
+    fprintf(stderr, "Version  : %s\n", VERSION_STR);
+#ifdef HG_REVISION
+    fprintf(stderr, "Revision : %s\n", HG_REVISION);
+#endif
+    fprintf(stderr, "Site     : lightpack.googlecode.com\n");
     fprintf(stderr, "\n");
     fprintf(stderr, "Options:\n");
-    fprintf(stderr, "  --off    - off leds \n");
+    fprintf(stderr, "  --off    - send 'off leds' cmd to device\n");
     fprintf(stderr, "  --notr   - no translate (English version)\n");
     fprintf(stderr, "             use it if detect russian, but you want english \n");
     fprintf(stderr, "  --help   - show this help \n");
@@ -69,7 +73,7 @@ bool openLogFile(const QString & filePath)
     QIODevice::OpenMode openFileAppendOrTruncateFlag = QIODevice::Append;
     QFileInfo info(filePath);
     if(info.size() > 1*1024*1024){
-        cout << "Log file size > 1 Mb. I'm going to clear it. Now!\n";
+        cout << "Log file size > 1 Mb. I'm going to clear it. Now!" << endl;
         openFileAppendOrTruncateFlag = QIODevice::Truncate;
     }
     if(logFile->open(QIODevice::WriteOnly | openFileAppendOrTruncateFlag | QIODevice::Text)){
@@ -187,7 +191,7 @@ int main(int argc, char **argv)
         }else{
             qWarning() << "Locale:" << pathToLocale << "not found. Using defaults.";
         }        
-    }    
+    }
 
     window = new MainWindow();   /* Create MainWindow */
     window->setVisible(false);   /* And load to tray. */
