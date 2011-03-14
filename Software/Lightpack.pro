@@ -29,40 +29,59 @@
 #  
 # Project created by QtCreator 2010-04-28T19:08:13
 # -------------------------------------------------
-DESTDIR = ./build
-OBJECTS_DIR = ./obj
-MOC_DIR = ./moc
-UI_DIR = ./ui
-RCC_DIR = ./res
 
-HG_REVISION=$$system(hg id -i)
-DEFINES += HG_REVISION=\\\"$${HG_REVISION}\\\"
+TARGET      = Lightpack
+DESTDIR     = bin
 
-TEMPLATE = app
-TARGET = Lightpack
+TEMPLATE    = app
 
-TRANSLATIONS = res/translations/ru_RU.ts
-RESOURCES = res/LightpackResources.qrc
-RC_FILE = res/Lightpack.rc
+# QMake and GCC produce a lot of stuff
+OBJECTS_DIR = stuff
+MOC_DIR     = stuff
+UI_DIR      = stuff
+RCC_DIR     = stuff
 
-unix{
-    CONFIG += link_pkgconfig
-    PKGCONFIG += libusb-1.0
+
+# Find currect mercurial revision
+HG_REVISION = $$system(hg id -i)
+
+# For update HG_REVISION use it:
+#   $ qmake Lightpack.pro && make clean && make
+#
+# Or simply edit this file (add space anythere
+# for cause to call qmake) and re-build project
+
+isEmpty( HG_REVISION ){
+    # In code uses #ifdef HG_REVISION ... #endif
+    message( "Mercurial not found, HG_REVISION will be undefined" )
+} else {
+    # Define currect mercurial revision id
+    # It will be show in about dialog and --help output
+    DEFINES += HG_REVISION=\\\"$${HG_REVISION}\\\"
 }
 
 
+TRANSLATIONS = res/translations/ru_RU.ts
+RESOURCES    = res/LightpackResources.qrc
+RC_FILE      = res/Lightpack.rc
+
+unix{
+    CONFIG    += link_pkgconfig
+    PKGCONFIG += libusb-1.0
+}
+
 win32 {
     # Windows version using WinAPI for HID
-    LIBS += -lhid -lusbcamd -lsetupapi
+    LIBS    += -lhid -lusbcamd -lsetupapi
     SOURCES += hidapi/windows/hid.cpp
     # Windows version using WinAPI + GDI for grab colors
-    LIBS += -lgdi32
+    LIBS    += -lgdi32
     SOURCES += grab/grab_winapi.cpp
 }
 
 unix:!macx{
     # Linux version using libusb and hidapi codes
-    SOURCES += hidapi/linux/hid-libusb.c    
+    SOURCES += hidapi/linux/hid-libusb.c
     # Linux version using Qt grabWindow(..) for grab colors
     SOURCES += grab/grab_qt.cpp
 }

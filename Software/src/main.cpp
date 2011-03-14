@@ -55,9 +55,7 @@ static void showHelpMessage()
     fprintf(stderr, "Author   : Mike Shatohin \n");
     fprintf(stderr, "Version  : %s\n", VERSION_STR);
 #ifdef HG_REVISION
-    if(strcmp(HG_REVISION, "") != 0){
-        fprintf(stderr, "Revision : %s \n", HG_REVISION);
-    }
+    fprintf(stderr, "Revision : %s \n", HG_REVISION);
 #endif
     fprintf(stderr, "Site     : lightpack.googlecode.com \n");
     fprintf(stderr, "\n");

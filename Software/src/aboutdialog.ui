@@ -136,7 +136,7 @@
        <item>
         <widget class="QLabel" name="labelVersionSoftware">
          <property name="text">
-          <string/>
+          <string notr="true">Software version #.#.# revision ######</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -155,7 +155,7 @@
        <item>
         <widget class="QLabel" name="labelVersionFirmware">
          <property name="text">
-          <string/>
+          <string notr="true">Firmware version #.#</string>
          </property>
          <property name="margin">
           <number>0</number>

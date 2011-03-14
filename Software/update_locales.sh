@@ -37,6 +37,9 @@ echo
 lrelease Lightpack.pro
 
 echo
+echo Press enter to exit...
+
+read
 
 exit 0
 

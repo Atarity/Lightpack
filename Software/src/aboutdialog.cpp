@@ -38,9 +38,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
     QString softwareVersion = tr("Software version ") + "<b>" + QApplication::applicationVersion() + "</b>";
 #ifdef HG_REVISION
-    if( QString(HG_REVISION).isEmpty() == false ){
-        softwareVersion += tr(" revision ") + QString(" <a href=\"http://code.google.com/p/lightpack/source/detail?r=%1\">%1</a>").arg( HG_REVISION );
-    }
+    softwareVersion += tr(" revision ") + QString("<a href=\"http://code.google.com/p/lightpack/source/detail?r=%1\">%1</a>").arg( HG_REVISION );
 #endif
 
     ui->labelVersionSoftware->setText( softwareVersion );
