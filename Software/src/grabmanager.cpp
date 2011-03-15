@@ -193,7 +193,9 @@ void GrabManager::updateLedsColorsIfChanged()
         }
         // Set one AVG color to all LEDs
         for(int ledIndex = 0; ledIndex < LEDS_COUNT; ledIndex++){
-            colorsNew[ledIndex].rgb = qRgb(avgR, avgG, avgB);
+            if(ledWidgets[ledIndex]->isGrabEnabled()){
+                colorsNew[ledIndex].rgb = qRgb(avgR, avgG, avgB);
+            }
         }
     }
 
@@ -249,7 +251,7 @@ void GrabManager::updateLedsColorsIfChanged()
 //
 void GrabManager::updateSmoothSteps()
 {
-    int maxDiff = 0, diff = 0;
+    double maxDiff = 0, diff = 0;
 
     // First find MAX diff between old and new colors, and save all diffs in each smooth_step
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
@@ -279,9 +281,12 @@ void GrabManager::updateSmoothSteps()
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         QRgb steps = colorsNew[ledIndex].steps;
         int stepR, stepG, stepB;
-        stepR = maxDiff / qRed(steps);
-        stepG = maxDiff / qGreen(steps);
-        stepB = maxDiff / qBlue(steps);
+        stepR = round( maxDiff / qRed(steps)   );
+        stepG = round( maxDiff / qGreen(steps) );
+        stepB = round( maxDiff / qBlue(steps)  );
+        if(stepR == 0) stepR = 1;
+        if(stepG == 0) stepG = 1;
+        if(stepB == 0) stepB = 1;
         colorsNew[ledIndex].steps = qRgb(stepR, stepG, stepB);
     }
 }
