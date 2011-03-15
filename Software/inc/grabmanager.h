@@ -1,5 +1,5 @@
 /*
- * grabdesktopwindowleds.h
+ * grabmanager.h
  *
  *  Created on: 26.07.2010
  *      Author: Mike Shatohin (brunql)
@@ -25,8 +25,8 @@
  */
 
 
-#ifndef GRABDESKTOPWINDOWLEDS_H
-#define GRABDESKTOPWINDOWLEDS_H
+#ifndef GRAB_MANAGER_H
+#define GRAB_MANAGER_H
 
 #include <QtGui>
 #include "../../CommonHeaders/RGB.h"        /* Led defines */
@@ -44,9 +44,6 @@ public:
     GrabManager(QWidget *parent = 0);
     ~GrabManager();
 
-public:
-    void clearColors();
-
 signals:
     void updateLedsColors(const QList<StructRGB> & colorsNew);
     void ambilightTimeOfUpdatingColors(double ms);
@@ -55,7 +52,7 @@ signals:
 public slots:
     void setAmbilightOn(bool state);
     void setAmbilightRefreshDelayMs(int ms);
-    void setAmbilightColorDepth(int color_depth);
+    void setAmbilightColorDepth(int depth);
     void setVisibleLedWidgets(bool state);
     void setColoredLedWidgets(bool state);
     void setWhiteLedWidgets(bool state);
@@ -72,10 +69,15 @@ private slots:
     void scaleLedWidgets();
     void firstWidgetPositionChanged();
     void updateLedsColorsIfChanged();
+private:
+    void updateSmoothSteps(); /* works with colorsNew */
 
 private:
     void initColorLists();
+    void clearColorsNew();
+    void clearColorsCurrent();
     void initLedWidgets();
+
 
 private: // variables
     QTimer *timer;
@@ -84,7 +86,7 @@ private: // variables
     const static QColor backgroundAndTextColors[LEDS_COUNT][2];
     TimeEvaluations *timeEval;
 
-    QList<StructRGB> colors;
+    QList<StructRGB> colorsCurrent;
     QList<StructRGB> colorsNew;
 
     bool isAmbilightOn;    
@@ -94,8 +96,8 @@ private: // variables
     int minLevelOfSensivity;
 
     // Settings:
-    int ambilight_refresh_delay_ms;
-    int ambilight_color_depth;
+    int ambilightRefreshDelayMs;
+    int colorDepth;
 };
 
-#endif // GRABDESKTOPWINDOWLEDS_H
+#endif // GRAB_MANAGER_H

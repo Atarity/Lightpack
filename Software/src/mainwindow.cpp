@@ -99,7 +99,7 @@ void MainWindow::connectSignalsSlots()
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));
 
-    // Connect to grabDesktopWindowLeds
+    // Connect to GrabManager
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightRefreshDelayMs(int)));
     connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), grabManager, SLOT(setVisibleLedWidgets(bool)));
     connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightColorDepth(int)));
@@ -110,7 +110,7 @@ void MainWindow::connectSignalsSlots()
     connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), grabManager, SLOT(setMinLevelOfSensivity(int)));
     connect(this, SIGNAL(settingsProfileChanged()), grabManager, SLOT(settingsProfileChanged()));
 
-    // Connect grabDesktopWindowLeds with ambilightUsb
+    // Connect GrabManager with ambilightUsb
     connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ambilightUsb, SLOT(updateColors(const QList<StructRGB> &)));
 
     // Software options
@@ -126,7 +126,7 @@ void MainWindow::connectSignalsSlots()
     connect(ambilightUsb, SIGNAL(readBufferFromDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
     connect(ambilightUsb, SIGNAL(writeBufferToDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
 
-    // grabDesktopWindowLeds to this
+    // GrabManager to this
     connect(grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
 
     // links to Logs and Settings files
@@ -184,8 +184,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::ambilightOn()
 {
-    grabManager->clearColors();
-
     if(isErrorState == false && isAmbilightOn == false){
         trayAmbilightOn();
     }
@@ -198,13 +196,8 @@ void MainWindow::ambilightOff()
 {
     if(isAmbilightOn){
         trayAmbilightOff();
-        if(isErrorState == false){
-            if(ambilightUsb->deviceOpened()){
-                ambilightUsb->offLeds();
-            }
-        }else{
-            isErrorState = false;
-        }
+
+        isErrorState = false;
         isAmbilightOn = false;
     }
 
@@ -267,13 +260,12 @@ void MainWindow::ambilightUsbSuccess(bool isSuccess)
         isErrorState = false;
         trayAmbilightOn();
 
-        qWarning() << "on state.";
-        grabManager->clearColors();
+        qWarning() << "on state";
     }else if(!isErrorState && !isSuccess){
         isErrorState = true;
         trayAmbilightError();
 
-        qWarning() << "error state.";
+        qWarning() << "error state";
     }    
 }
 
