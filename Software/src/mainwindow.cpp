@@ -32,6 +32,10 @@
 #include <QDesktopWidget>
 #include <QPlainTextEdit>
 
+//
+// Lightpack settings window
+//
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -42,9 +46,12 @@ MainWindow::MainWindow(QWidget *parent) :
     createTrayIcon();
 
     this->adjustSize();
-    this->move(Desktop::Width / 2 - this->width() / 2,
-            Desktop::Height / 2 - this->height() / 2);
-    this->setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
+    this->move( Desktop::Width / 2  - this->width() / 2,
+                Desktop::Height / 2 - this->height() / 2 );
+    this->setWindowFlags( Qt::Window
+                          | Qt::WindowStaysOnTopHint
+                          | Qt::CustomizeWindowHint
+                          | Qt::WindowCloseButtonHint );
 
 
     QRegExp rx("[^<>:\"/\\|?*]+");  // Check windows reserved simbols
@@ -55,8 +62,8 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): new AmbilightUsb(this)";
     ambilightUsb = new AmbilightUsb(this);
 
-    qDebug() << "MainWindow(): new GrabDesktopWindowLeds()";
-    grabDesktopWindowLeds = new GrabManager();
+    qDebug() << "MainWindow(): new GrabManager()";
+    grabManager = new GrabManager();
 
     aboutDialog = new AboutDialog(this);
 
@@ -93,18 +100,18 @@ void MainWindow::connectSignalsSlots()
     connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));
 
     // Connect to grabDesktopWindowLeds
-    connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), grabDesktopWindowLeds, SLOT(setAmbilightRefreshDelayMs(int)));
-    connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setVisibleLedWidgets(bool)));
-    connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), grabDesktopWindowLeds, SLOT(setAmbilightColorDepth(int)));
-    connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setColoredLedWidgets(bool)));
-    connect(ui->radioButton_White, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setWhiteLedWidgets(bool)));
-    connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setUpdateColorsOnlyIfChanges(bool)));
-    connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), grabDesktopWindowLeds, SLOT(setAvgColorsOnAllLeds(bool)));
-    connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), grabDesktopWindowLeds, SLOT(setMinLevelOfSensivity(int)));
-    connect(this, SIGNAL(settingsProfileChanged()), grabDesktopWindowLeds, SLOT(settingsProfileChanged()));
+    connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightRefreshDelayMs(int)));
+    connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), grabManager, SLOT(setVisibleLedWidgets(bool)));
+    connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightColorDepth(int)));
+    connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), grabManager, SLOT(setColoredLedWidgets(bool)));
+    connect(ui->radioButton_White, SIGNAL(toggled(bool)), grabManager, SLOT(setWhiteLedWidgets(bool)));
+    connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), grabManager, SLOT(setUpdateColorsOnlyIfChanges(bool)));
+    connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), grabManager, SLOT(setAvgColorsOnAllLeds(bool)));
+    connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), grabManager, SLOT(setMinLevelOfSensivity(int)));
+    connect(this, SIGNAL(settingsProfileChanged()), grabManager, SLOT(settingsProfileChanged()));
 
     // Connect grabDesktopWindowLeds with ambilightUsb
-    connect(grabDesktopWindowLeds, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ambilightUsb, SLOT(updateColors(const QList<StructRGB> &)));
+    connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ambilightUsb, SLOT(updateColors(const QList<StructRGB> &)));
 
     // Software options
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), this, SLOT(settingsSoftwareOptionsChange()));
@@ -120,7 +127,7 @@ void MainWindow::connectSignalsSlots()
     connect(ambilightUsb, SIGNAL(writeBufferToDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
 
     // grabDesktopWindowLeds to this
-    connect(grabDesktopWindowLeds, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));    
+    connect(grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
 
     // links to Logs and Settings files
     connect(ui->commandLinkButton_OpenLogs, SIGNAL(clicked()), this, SLOT(openLogsFile()));
@@ -149,7 +156,7 @@ MainWindow::~MainWindow()
     delete trayIconMenu;
 
     delete ambilightUsb;
-    delete grabDesktopWindowLeds;
+    delete grabManager;
 
     delete ui;
 }
@@ -169,7 +176,7 @@ void MainWindow::changeEvent(QEvent *e)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (trayIcon->isVisible()) {
-        grabDesktopWindowLeds->setVisibleLedWidgets(false);
+        grabManager->setVisibleLedWidgets(false);
         this->hide();
         event->ignore();
     }
@@ -177,22 +184,21 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::ambilightOn()
 {
-    grabDesktopWindowLeds->clearColors();
+    grabManager->clearColors();
 
     if(isErrorState == false && isAmbilightOn == false){
         trayAmbilightOn();
     }
     isAmbilightOn = true;
     Settings::setValue("IsAmbilightOn", isAmbilightOn);
-    grabDesktopWindowLeds->setAmbilightOn(isAmbilightOn);
+    grabManager->setAmbilightOn( isAmbilightOn );
 }
 
 void MainWindow::ambilightOff()
 {
     if(isAmbilightOn){
         trayAmbilightOff();
-
-        if(!isErrorState){
+        if(isErrorState == false){
             if(ambilightUsb->deviceOpened()){
                 ambilightUsb->offLeds();
             }
@@ -203,7 +209,7 @@ void MainWindow::ambilightOff()
     }
 
     Settings::setValue("IsAmbilightOn", isAmbilightOn);
-    grabDesktopWindowLeds->setAmbilightOn(isAmbilightOn);
+    grabManager->setAmbilightOn( isAmbilightOn );
 }
 
 void MainWindow::trayAmbilightOn()
@@ -244,12 +250,12 @@ void MainWindow::showAbout()
 
 void MainWindow::showSettings()
 {
-    grabDesktopWindowLeds->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked());    
+    grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked());
     this->show();
 }
 
 
-// SLOT
+// public slot
 void MainWindow::ambilightUsbSuccess(bool isSuccess)
 {    
     if(isErrorState && isSuccess){
@@ -257,7 +263,7 @@ void MainWindow::ambilightUsbSuccess(bool isSuccess)
         trayAmbilightOn();
 
         qWarning() << "on state.";
-        grabDesktopWindowLeds->clearColors();
+        grabManager->clearColors();
     }else if(!isErrorState && !isSuccess){
         isErrorState = true;
         trayAmbilightError();
@@ -266,7 +272,7 @@ void MainWindow::ambilightUsbSuccess(bool isSuccess)
     }    
 }
 
-// SLOT
+// public slot
 void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
 {    
     int usbTimerDelayMs = ui->spinBox_UpdateDelay->value();

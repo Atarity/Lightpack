@@ -65,8 +65,8 @@ GrabManager::~GrabManager()
 void GrabManager::initColorLists()
 {
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){       
-        colors.append( StructRGB() );
-        colorsNew.append( StructRGB() );
+        colors    << StructRGB();
+        colorsNew << StructRGB();
     }
 }
 

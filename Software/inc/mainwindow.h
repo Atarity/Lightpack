@@ -103,7 +103,7 @@ private:
 
 private:
     AmbilightUsb *ambilightUsb;
-    GrabManager *grabDesktopWindowLeds;
+    GrabManager *grabManager;
     AboutDialog *aboutDialog;
 
     bool isAmbilightOn; /* is grab desktop window ON */
