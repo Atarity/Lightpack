@@ -59,7 +59,7 @@ public:
     bool openDevice();
     bool deviceOpened();
     QString firmwareVersion();
-    void offLeds();
+    void offLeds(); /* send CMD_OFF_ALL to device, it causes rapid shutdown LEDs */
 
 public slots:
     void updateColors(const QList<StructRGB> & colors);

@@ -175,9 +175,9 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (trayIcon->isVisible()) {
-        grabManager->setVisibleLedWidgets(false);
-        this->hide();
+    if( trayIcon->isVisible() ){
+        // Just hide settings
+        hideSettings();
         event->ignore();
     }
 }
@@ -250,10 +250,15 @@ void MainWindow::showAbout()
 
 void MainWindow::showSettings()
 {
-    grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked());
+    grabManager->setVisibleLedWidgets( ui->groupBox_ShowGrabWidgets->isChecked() );
     this->show();
 }
 
+void MainWindow::hideSettings()
+{
+    grabManager->setVisibleLedWidgets(false);
+    this->hide();
+}
 
 // public slot
 void MainWindow::ambilightUsbSuccess(bool isSuccess)
@@ -556,11 +561,18 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
             ambilightOn();
         }
         break;
+
     case QSystemTrayIcon::MiddleClick:
+        if( this->isVisible() ){
+            hideSettings();
+        }else{
+            showSettings();
+        }
+        break;
+
     case QSystemTrayIcon::Trigger:
     default: break;
     }
-    trayIconMenu->setFocus();
 }
 
 void MainWindow::loadSettingsToMainWindow()

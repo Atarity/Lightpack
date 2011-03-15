@@ -64,6 +64,7 @@ private slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void showAbout(); /* using in actions */
     void showSettings(); /* using in actions */
+    void hideSettings(); /* using in iconActivated(..) */
     void ambilightOn(); /* using in actions */
     void ambilightOff(); /* using in actions */
     void quit(); /* using in actions */
