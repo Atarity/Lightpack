@@ -34,7 +34,10 @@ TARGET      = Lightpack
 DESTDIR     = bin
 
 # Portable version store logs and settings in application directory
-DEFINES    += PORTABLE_VERSION
+win32{
+    # Use it on your own risk!
+    DEFINES    += PORTABLE_VERSION
+}
 
 TEMPLATE    = app
 
