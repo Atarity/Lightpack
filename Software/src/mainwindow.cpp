@@ -497,6 +497,9 @@ void MainWindow::initLanguages()
     ui->comboBox_Language->addItem( "English" );
     ui->comboBox_Language->addItem( "Russian" );
 
+    int langIndex = ui->comboBox_Language->findText( Settings::valueMain("Language").toString() );
+    ui->comboBox_Language->setCurrentIndex( langIndex );
+
     translator = NULL;
 }
 
