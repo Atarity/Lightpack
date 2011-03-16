@@ -83,8 +83,8 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): profileLoadLast()";
     profileLoadLast();
 
-    qDebug() << "MainWindow(): userInterfaceLanguageChanged( 0 == <System> )";
-    userInterfaceLanguageChanged( 0 ); // TODO: Settings main
+    qDebug() << "MainWindow(): loadTranslation(..)";
+    loadTranslation( Settings::valueMain( "Language" ).toString() );
 
 
     isErrorState = false;
@@ -124,7 +124,7 @@ void MainWindow::connectSignalsSlots()
     connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ambilightUsb, SLOT(updateColors(const QList<StructRGB> &)));
 
     // Main options
-    connect(ui->comboBox_Language, SIGNAL(activated(int)), this, SLOT(userInterfaceLanguageChanged(int)));
+    connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
 
     // Software options
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), this, SLOT(settingsSoftwareOptionsChange()));
@@ -500,23 +500,31 @@ void MainWindow::initLanguages()
     translator = NULL;
 }
 
-void MainWindow::userInterfaceLanguageChanged(int languageIndex)
+void MainWindow::loadTranslation(const QString & language)
 {
-    QString language = ui->comboBox_Language->itemText( languageIndex );
-    QString locale = QLocale::system().name(); // default using system locale
-    qDebug() << "System locale" << locale;
+    Settings::setValueMain( "Language", language );
 
-    if( languageIndex != 0 /* <System> */){
-        // add translation to Lightpack.pro TRANSLATIONS
-        // lupdate Lightpack.pro
-        // open linguist and translate application
-        // lrelease Lightpack.pro
-        // add new language to LightpackResources.qrc :/translations/
-        // add new language to MainWindow::initLanguages() function
-        // and only when all this done append here new line
+    QString locale = QLocale::system().name();
 
-        if( language == "English" ) locale = "en_EN";
-        if( language == "Russian" ) locale = "ru_RU";
+    // add translation to Lightpack.pro TRANSLATIONS
+    // lupdate Lightpack.pro
+    // open linguist and translate application
+    // lrelease Lightpack.pro
+    // add new language to LightpackResources.qrc :/translations/
+    // add new language to MainWindow::initLanguages() function
+    // and only when all this done append here new line
+
+    if( language == "<System>" ){
+        qDebug() << "System locale" << locale;
+    }
+    else if ( language == "English"  ) locale = "en_EN";
+    else if ( language == "Russian"  ) locale = "ru_RU";
+    // append line for new language/locale here
+    else {
+        qWarning() << "Language" << language << "not found. Set to default" << LANGUAGE_DEFAULT_NAME;
+        qDebug() << "System locale" << locale;
+
+        Settings::setValueMain( "Language", LANGUAGE_DEFAULT_NAME );
     }
 
     QString pathToLocale = QString(":/translations/") + locale;
@@ -540,6 +548,7 @@ void MainWindow::userInterfaceLanguageChanged(int languageIndex)
         qWarning() << "Fail load translation for locale" << locale << "pathToLocale" << pathToLocale;
     }
 }
+
 
 
 void MainWindow::updatePwmFrequency()

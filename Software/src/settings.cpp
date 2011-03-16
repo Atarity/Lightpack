@@ -46,11 +46,8 @@ void Settings::Initialize()
     Settings::settingsMain = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", "LightpackMain");
     settingsMain->setIniCodec("UTF-8");
 
-    if(settingsMain->contains("ProfileLast") == false){
-        qDebug() << "Settings:"<< "ProfileLast" << "not found. Set it to default value: " << PROFILE_DEFAULT_NAME;
-
-        settingsMain->setValue("ProfileLast", PROFILE_DEFAULT_NAME);
-    }
+    setDefaultSettingIfNotFound(settingsMain, "ProfileLast",    PROFILE_DEFAULT_NAME);
+    setDefaultSettingIfNotFound(settingsMain, "Language",       LANGUAGE_DEFAULT_NAME);
 
     QString profileLast = settingsMain->value("ProfileLast").toString();
 
@@ -78,6 +75,18 @@ QString Settings::fileName()
 {
     return settingsNow->fileName();
 }
+
+
+void Settings::setValueMain(const QString & key, const QVariant & value)
+{
+    settingsMain->setValue(key, value);
+}
+
+QVariant Settings::valueMain( const QString & key)
+{
+    return settingsMain->value(key);
+}
+
 
 void Settings::loadOrCreateConfig(const QString & configName)
 {
@@ -157,7 +166,12 @@ QString Settings::lastProfileName()
 
 void Settings::setDefaultSettingIfNotFound(const QString & name, const QVariant & value)
 {
-    if(!settingsNow->contains(name)){
+    setDefaultSettingIfNotFound(settingsNow, name, value);
+}
+
+void Settings::setDefaultSettingIfNotFound(QSettings *settings, const QString & name, const QVariant & value)
+{
+    if(!settings->contains(name)){
         if(value.canConvert<QSize>()){
             qDebug() << "Settings:" << name << "not found. Set it to default value: " << value.toSize().width() << "x" << value.toSize().height();
         }else if(value.canConvert<QPoint>()){
@@ -166,7 +180,7 @@ void Settings::setDefaultSettingIfNotFound(const QString & name, const QVariant 
             qDebug() << "Settings:"<< name << "not found. Set it to default value: " << value.toString();
         }
 
-        settingsNow->setValue(name, value);
+        settings->setValue(name, value);
     }
 }
 

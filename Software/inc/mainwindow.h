@@ -84,7 +84,7 @@ private slots:
     void profileDeleteCurrent();
     void settingsProfileChanged_UpdateUI();
 
-    void userInterfaceLanguageChanged(int languageIndex);
+    void loadTranslation(const QString & language);
 
 private:
     void connectSignalsSlots();

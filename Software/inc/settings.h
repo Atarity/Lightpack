@@ -33,11 +33,12 @@
 
 // Default values:
 
-// Main.ini
+// LightpackMain.ini
 // [General]
 #define PROFILE_DEFAULT_NAME    "Lightpack"
+#define LANGUAGE_DEFAULT_NAME   "<System>" /* system lang */
 
-// Profile.ini
+// ProfileName.ini
 // [General]
 #define REFRESH_AMBILIGHT_MS_DEFAULT_VALUE      50
 #define IS_AMBILIGHT_ON_DEFAULT_VALUE           true
@@ -71,6 +72,10 @@ public:
     static QVariant value(const QString & key);
     static QString fileName();
 
+    // forwarding to settingsMain object
+    static void setValueMain(const QString & key, const QVariant & value);
+    static QVariant valueMain(const QString & key);
+
     static void resetToDefaults();
     static void loadOrCreateConfig(const QString & configName);
     static void renameCurrentConfig(const QString & configName);
@@ -81,6 +86,7 @@ public:
 private:
     static void settingsInit();
     static void setDefaultSettingIfNotFound(const QString & name, const QVariant & value);
+    static void setDefaultSettingIfNotFound(QSettings *settings, const QString & name, const QVariant & value);
 
 private:
     static QSettings * settingsNow; // using profile
