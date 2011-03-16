@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->tabWidget->setCurrentIndex( 0 );
 
+
     createActions();
     createTrayIcon();
 
@@ -54,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
                           | Qt::WindowStaysOnTopHint
                           | Qt::CustomizeWindowHint
                           | Qt::WindowCloseButtonHint );
-
+    this->setFocus(Qt::OtherFocusReason);
 
     // Check windows reserved simbols in profile input name
     QRegExp rx("[^<>:\"/\\|?*]+");
