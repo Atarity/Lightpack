@@ -79,6 +79,7 @@ bool openLogFile(const QString & filePath)
     }
     if(logFile->open(QIODevice::WriteOnly | openFileAppendOrTruncateFlag | QIODevice::Text)){
         logStream.setDevice(logFile);
+        logStream << endl;
         logStream << QDateTime::currentDateTime().date().toString("yyyy_MM_dd") << " ";
         logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Lightpack sw" << VERSION_STR << endl;
     }else{
@@ -133,7 +134,7 @@ void messageOutput(QtMsgType type, const char *msg)
 
 int main(int argc, char **argv)
 {
-    QApplication app(argc, argv);        
+    QApplication app(argc, argv);
     QApplication::setApplicationName("Lightpack");
     QApplication::setOrganizationName("Lightpack");
     QApplication::setApplicationVersion(VERSION_STR);
@@ -143,7 +144,25 @@ int main(int argc, char **argv)
 
     qInstallMsgHandler(messageOutput);
 
-    QString logFilePath = QDir::homePath() + "/.Lightpack.log";
+#ifdef PORTABLE_VERSION
+    // Find directory of the application
+    QString applicationDirPath( argv[0] );
+    QFileInfo fileInfo( applicationDirPath );
+    applicationDirPath = fileInfo.absoluteDir().absolutePath();
+    cout << "Application directory: " << applicationDirPath.toStdString() << endl;
+#else
+    QString applicationDirPath = QDir::homePath() + "/.Lightpack";
+    QDir dir( applicationDirPath );
+    if(dir.exists() == false){
+        cout << "mkdir " << applicationDirPath.toStdString() << endl;
+        if(dir.mkdir( applicationDirPath ) == false){
+            cerr << "Failed mkdir '" << applicationDirPath.toStdString() << "' for application generated stuff. Exit." << endl;
+            return 3;
+        }
+    }
+#endif
+
+    QString logFilePath = applicationDirPath + "/Lightpack.log";
     if(openLogFile(logFilePath)){
         qDebug() << "Logs file: " << logFilePath;
     }else{
@@ -166,20 +185,12 @@ int main(int argc, char **argv)
         }
     }
 
-#if 0
-    QString exeFilePath( argv[0] );
-    QFileInfo fileInfo( exeFilePath );
-    exeFilePath = fileInfo.absoluteDir().absolutePath();
-    qDebug() << "Binary file location:" << exeFilePath;
-#endif
-
-
     // Update desktop widht and height
     Desktop::Initialize();
 
     // Open last used profile, if profile doesn't exists it will be created
     // Desktop::Width and Desktop::Height should be initialized
-    Settings::Initialize();
+    Settings::Initialize( applicationDirPath );
 
     Q_INIT_RESOURCE(LightpackResources);
 

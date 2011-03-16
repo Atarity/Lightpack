@@ -37,13 +37,22 @@
 
 
 QSettings * Settings::settingsNow;
-QSettings * Settings::settingsMain; // LightpackMain.ini contains last profile
+QSettings * Settings::settingsMain; // LightpackMain.conf contains last profile
 
+// Path to directory there store application generated stuff
+QString Settings::appDirPath = "";
 
 // Desktop should be initialized before call Settings::Initialize()
-void Settings::Initialize()
+void Settings::Initialize( const QString & applicationDirPath)
 {
-    Settings::settingsMain = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", "LightpackMain");
+    appDirPath = applicationDirPath;
+
+    // Append to the end of dir path '/'
+    if(appDirPath.lastIndexOf('/') != appDirPath.length() - 1){
+        appDirPath += "/";
+    }
+
+    settingsMain = new QSettings(appDirPath + "LightpackMain.conf", QSettings::IniFormat);
     settingsMain->setIniCodec("UTF-8");
 
     setDefaultSettingIfNotFound(settingsMain, "ProfileLast",    PROFILE_DEFAULT_NAME);
@@ -52,12 +61,12 @@ void Settings::Initialize()
     QString profileLast = settingsMain->value("ProfileLast").toString();
 
     // Load last profile
-    Settings::settingsNow = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", profileLast);
+    settingsNow = new QSettings(appDirPath + "Profiles/" + profileLast + ".ini", QSettings::IniFormat);
     settingsNow->setIniCodec("UTF-8");
 
-    settingsInit();
-
     qDebug() << "Settings file:" << settingsNow->fileName();
+
+    settingsInit();
 }
 
 
@@ -102,7 +111,7 @@ void Settings::loadOrCreateConfig(const QString & configName)
     }
 
 
-    settingsNow = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", configName);
+    settingsNow = new QSettings(appDirPath + "Profiles/" + configName + ".ini", QSettings::IniFormat );
     settingsNow->setIniCodec("UTF-8");
     settingsInit();
     qDebug() << "Settings file:" << settingsNow->fileName();
@@ -118,7 +127,7 @@ void Settings::renameCurrentConfig(const QString & configName)
     }
 
     // Copy current settings to new one
-    QString settingsDir = QFileInfo(settingsNow->fileName()).absoluteDir().absolutePath();
+    QString settingsDir = QFileInfo( settingsNow->fileName() ).absoluteDir().absolutePath();
     QString settingsNewFileName = settingsDir + "/" + configName + ".ini";
 
     if(settingsNow->fileName() != settingsNewFileName){
@@ -127,7 +136,7 @@ void Settings::renameCurrentConfig(const QString & configName)
         delete settingsNow;
 
         // Update settingsNow point to new QSettings with configName
-        settingsNow = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", configName);
+        settingsNow = new QSettings(appDirPath + "Profiles/" + configName + ".ini", QSettings::IniFormat );
         settingsNow->setIniCodec("UTF-8");
 
         qDebug() << "Settings file renamed:" << settingsNow->fileName();

@@ -33,6 +33,9 @@
 TARGET      = Lightpack
 DESTDIR     = bin
 
+# Portable version store logs and settings in application directory
+DEFINES    += PORTABLE_VERSION
+
 TEMPLATE    = app
 
 # QMake and GCC produce a lot of stuff
@@ -59,7 +62,6 @@ isEmpty( HG_REVISION ){
     # It will be show in about dialog and --help output
     DEFINES += HG_REVISION=\\\"$${HG_REVISION}\\\"
 }
-
 
 TRANSLATIONS = res/translations/ru_RU.ts
 RESOURCES    = res/LightpackResources.qrc

@@ -65,7 +65,7 @@ class Settings : public QObject
     Q_OBJECT
 
 public:
-    static void Initialize();
+    static void Initialize(const QString & applicationDirPath);
 
     // Simple abstraction functions for forwarding to settingsNow object
     static void setValue(const QString & key, const QVariant & value);
@@ -91,6 +91,7 @@ private:
 private:
     static QSettings * settingsNow; // using profile
     static QSettings * settingsMain; // store last used profile name
+    static QString appDirPath; // path to store app generated stuff
 };
 
 #endif // SETTINGS_H
