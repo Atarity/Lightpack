@@ -206,6 +206,8 @@ int main(int argc, char **argv)
     window->setVisible(false);   /* And load to tray. */
     window->setLogsFilePath(logFilePath);
 
+    window->startAmbilight();
+
     // Don't touch me!!!
     qDebug() << "call app.exec();";
 

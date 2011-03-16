@@ -47,6 +47,7 @@ public:
 
     void appendLogsLine(const QString & line);
     void setLogsFilePath(const QString & filePath);
+    void startAmbilight();
 
 signals:
     void settingsProfileChanged();

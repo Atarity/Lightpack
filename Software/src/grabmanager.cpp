@@ -136,17 +136,9 @@ void GrabManager::updateLedsColorsIfChanged()
     // Temporary switch off updating colors
     // if one of LED widgets resizing or moving
     if(isResizeOrMoving){
+        timer->start(50); // check in 50 ms
         return;
     }
-
-    timeEval->howLongItStart();
-
-    if(isAmbilightOn) {
-        if(timer->isActive() == false){
-            timer->start( ambilightRefreshDelayMs );
-        }
-    }
-
 
     bool needToUpdate = false;
 
@@ -243,6 +235,12 @@ void GrabManager::updateLedsColorsIfChanged()
         emit updateLedsColors( colorsCurrent );
     }
     emit ambilightTimeOfUpdatingColors( timeEval->howLongItEnd() );
+
+    timeEval->howLongItStart();
+
+    if(isAmbilightOn){
+        timer->start( ambilightRefreshDelayMs );
+    }
 }
 
 //
@@ -300,7 +298,7 @@ void GrabManager::setAmbilightOn(bool isAmbilightOn, bool isErrorState)
 
     if( isAmbilightOn ){
         // Restart ambilight timer
-        timer->start( ambilightRefreshDelayMs );
+        timer->start( 0 );
     }else{
         // Switch ambilight off
         timer->stop();

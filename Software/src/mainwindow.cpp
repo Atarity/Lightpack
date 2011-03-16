@@ -90,15 +90,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     isErrorState = false;
     isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
-    if(isAmbilightOn){
-        isAmbilightOn = false; // ambilightOn() check this and if this true, return
-        qDebug() << "MainWindow(): ambilightOn()";
-        ambilightOn();
-    }else{
-        isAmbilightOn = true; // ambilightOn() check this and if this false, return
-        qDebug() << "MainWindow(): ambilightOff()";
-        ambilightOff();
-    }    
 
     logsFilePath = "";
 
@@ -212,23 +203,13 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::ambilightOn()
 {
     isAmbilightOn = true;
-
-    Settings::setValue("IsAmbilightOn", isAmbilightOn);
-    grabManager->setAmbilightOn( isAmbilightOn, isErrorState );
-
-    updateTrayAndActionStates();
+    startAmbilight();
 }
 
 void MainWindow::ambilightOff()
 {    
     isAmbilightOn = false;
-
-    Settings::setValue("IsAmbilightOn", isAmbilightOn);
-    grabManager->setAmbilightOn( isAmbilightOn, isErrorState );
-
-    isErrorState = false;
-
-    updateTrayAndActionStates();
+    startAmbilight();
 }
 
 void MainWindow::updateTrayAndActionStates()
@@ -291,8 +272,7 @@ void MainWindow::ambilightUsbSuccess(bool isSuccess)
 // public slot
 void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
 {    
-    int usbTimerDelayMs = ui->spinBox_UpdateDelay->value();
-    double secs = (updateResultMs + usbTimerDelayMs) / 1000;
+    double secs = updateResultMs / 1000;
     double hz = 0;
 
     if(secs != 0){
@@ -683,6 +663,20 @@ void MainWindow::appendLogsLine(const QString & line)
 void MainWindow::setLogsFilePath(const QString & filePath)
 {
     this->logsFilePath = filePath;
+}
+
+void MainWindow::startAmbilight()
+{
+    qDebug() << Q_FUNC_INFO << "isAmbilightOn" << isAmbilightOn;
+
+    Settings::setValue("IsAmbilightOn", isAmbilightOn);
+    grabManager->setAmbilightOn( isAmbilightOn, isErrorState );
+
+    if(isAmbilightOn == false){
+        isErrorState = false;
+    }
+
+    updateTrayAndActionStates();
 }
 
 void MainWindow::quit()
