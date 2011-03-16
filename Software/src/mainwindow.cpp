@@ -388,6 +388,9 @@ void MainWindow::openSettingsFile()
 
 void MainWindow::profileRename()
 {
+    // Press <Enter> in profile edit line will perform renaming it
+    // also update settings for usable configuration LED coefs
+
     QString configName = ui->comboBox_Profiles->currentText().trimmed();
     ui->comboBox_Profiles->setItemText( ui->comboBox_Profiles->currentIndex(), configName );
 
@@ -398,6 +401,9 @@ void MainWindow::profileRename()
     Settings::renameCurrentConfig(configName);
 
     this->setFocus(Qt::OtherFocusReason);
+
+    loadSettingsToMainWindow();
+    emit settingsProfileChanged();
 }
 
 void MainWindow::profileSwitch(const QString & configName)
@@ -465,7 +471,7 @@ void MainWindow::profilesFindAll()
         settingsFiles.append( compBaseName );
     }
 
-    qDebug() << "Find settings files:" << settingsFiles;
+    qDebug() << "Found profiles:" << settingsFiles;
     for(int i=0; i<settingsFiles.count(); i++){
         if(ui->comboBox_Profiles->findText(settingsFiles.at(i)) == -1){
             ui->comboBox_Profiles->addItem(settingsFiles.at(i));
