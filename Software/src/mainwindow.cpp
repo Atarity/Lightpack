@@ -208,25 +208,25 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::ambilightOn()
 {
-    if(isErrorState == false && isAmbilightOn == false){
+    if(isErrorState == false){
         trayAmbilightOn();
     }
+
     isAmbilightOn = true;
+
     Settings::setValue("IsAmbilightOn", isAmbilightOn);
-    grabManager->setAmbilightOn( isAmbilightOn );
+    grabManager->setAmbilightOn( isAmbilightOn, isErrorState );
 }
 
 void MainWindow::ambilightOff()
 {
-    if(isAmbilightOn){
-        trayAmbilightOff();
-
-        isErrorState = false;
-        isAmbilightOn = false;
-    }
+    trayAmbilightOff();
+    isAmbilightOn = false;
 
     Settings::setValue("IsAmbilightOn", isAmbilightOn);
-    grabManager->setAmbilightOn( isAmbilightOn );
+    grabManager->setAmbilightOn( isAmbilightOn, isErrorState );
+
+    isErrorState = false;
 }
 
 void MainWindow::trayAmbilightOn()
@@ -461,9 +461,7 @@ void MainWindow::profilesFindAll()
     QStringList settingsFiles;
     for(int i=0; i<iniFiles.count(); i++){
         QString compBaseName = iniFiles.at(i).completeBaseName();
-        if(compBaseName != "LightpackMain"){
-            settingsFiles.append( compBaseName );
-        }
+        settingsFiles.append( compBaseName );
     }
 
     qDebug() << "Find settings files:" << settingsFiles;
@@ -632,10 +630,14 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::DoubleClick:
-        if(isAmbilightOn){
+        if(isErrorState){
             ambilightOff();
         }else{
-            ambilightOn();
+            if(isAmbilightOn){
+                ambilightOff();
+            }else{
+                ambilightOn();
+            }
         }
         break;
 

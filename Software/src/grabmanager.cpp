@@ -292,13 +292,13 @@ void GrabManager::updateSmoothSteps()
 }
 
 
-void GrabManager::setAmbilightOn(bool state)
+void GrabManager::setAmbilightOn(bool isAmbilightOn, bool isErrorState)
 {
-    isAmbilightOn = state;
+    this->isAmbilightOn = isAmbilightOn;
 
     clearColorsNew();
 
-    if(state){
+    if( isAmbilightOn ){
         // Restart ambilight timer
         timer->start( ambilightRefreshDelayMs );
     }else{
@@ -306,7 +306,10 @@ void GrabManager::setAmbilightOn(bool state)
         timer->stop();
         updateSmoothSteps();
         clearColorsCurrent();
-        emit updateLedsColors( colorsNew );
+
+        if(isErrorState == false){
+            emit updateLedsColors( colorsNew );
+        }
     }
 }
 

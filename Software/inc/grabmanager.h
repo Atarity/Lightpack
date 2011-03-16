@@ -50,7 +50,7 @@ signals:
 
 
 public slots:
-    void setAmbilightOn(bool state);
+    void setAmbilightOn(bool isAmbilightOn, bool isErrorState);
     void setAmbilightRefreshDelayMs(int ms);
     void setAmbilightColorDepth(int depth);
     void setVisibleLedWidgets(bool state);
