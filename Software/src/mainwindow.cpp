@@ -187,10 +187,12 @@ void MainWindow::changeEvent(QEvent *e)
         aboutAction->setText( tr("&About") );
         quitAction->setText( tr("&Quit") );
 
-        if(isAmbilightOn) trayIcon->setToolTip(tr("On state"));
-        else trayIcon->setToolTip(tr("Off state"));
+        if(isAmbilightOn) trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
+        else trayIcon->setToolTip( tr("Disabled") );
 
-        if(isErrorState) trayIcon->setToolTip(tr("Error state"));
+        if(isErrorState) trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
+
+        setWindowTitle( tr("Lightpack: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
 
         break;
     default:
@@ -209,49 +211,46 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::ambilightOn()
 {
-    if(isErrorState == false){
-        trayAmbilightOn();
-    }
-
     isAmbilightOn = true;
 
     Settings::setValue("IsAmbilightOn", isAmbilightOn);
     grabManager->setAmbilightOn( isAmbilightOn, isErrorState );
+
+    updateTrayAndActionStates();
 }
 
 void MainWindow::ambilightOff()
-{
-    trayAmbilightOff();
+{    
     isAmbilightOn = false;
 
     Settings::setValue("IsAmbilightOn", isAmbilightOn);
     grabManager->setAmbilightOn( isAmbilightOn, isErrorState );
 
     isErrorState = false;
+
+    updateTrayAndActionStates();
 }
 
-void MainWindow::trayAmbilightOn()
+void MainWindow::updateTrayAndActionStates()
 {
-    trayIcon->setIcon(QIcon(":/icons/on.png"));
-    trayIcon->setToolTip(tr("On state"));
+    if( isErrorState ){
+        trayIcon->setIcon(QIcon(":/icons/error.png"));
+        trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
+    }else{
+        if( isAmbilightOn ){
+            trayIcon->setIcon(QIcon(":/icons/on.png"));
+            trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
 
-    onAmbilightAction->setEnabled(false);
-    offAmbilightAction->setEnabled(true);
-}
+            onAmbilightAction->setEnabled(false);
+            offAmbilightAction->setEnabled(true);
+        }else{
+            trayIcon->setIcon(QIcon(":/icons/off.png"));
+            trayIcon->setToolTip(tr("Disabled"));
 
-void MainWindow::trayAmbilightOff()
-{
-    trayIcon->setIcon(QIcon(":/icons/off.png"));
-    trayIcon->setToolTip(tr("Off state"));
-
-    onAmbilightAction->setEnabled(true);
-    offAmbilightAction->setEnabled(false);
-}
-
-void MainWindow::trayAmbilightError()
-{
-    trayIcon->setIcon(QIcon(":/icons/error.png"));
-    trayIcon->setToolTip(tr("Error state"));
+            onAmbilightAction->setEnabled(true);
+            offAmbilightAction->setEnabled(false);
+        }
+    }
 }
 
 
@@ -281,17 +280,12 @@ void MainWindow::hideSettings()
 // public slot
 void MainWindow::ambilightUsbSuccess(bool isSuccess)
 {    
-    if(isErrorState && isSuccess){
-        isErrorState = false;
-        trayAmbilightOn();
+    if(isErrorState != ! isSuccess){
+        isErrorState = ! isSuccess;
+        qWarning() << "isErrorState state" << isErrorState;
+    }
 
-        qWarning() << "on state";
-    }else if(!isErrorState && !isSuccess){
-        isErrorState = true;
-        trayAmbilightError();
-
-        qWarning() << "error state";
-    }    
+    updateTrayAndActionStates();
 }
 
 // public slot
@@ -490,6 +484,9 @@ void MainWindow::profileLoadLast()
 
 void MainWindow::settingsProfileChanged_UpdateUI()
 {
+    setWindowTitle( tr("Lightpack: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
+    if(isAmbilightOn) trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
+
     if(ui->comboBox_Profiles->count() > 1){
         ui->pushButton_DeleteProfile->setEnabled(true);
     }else{

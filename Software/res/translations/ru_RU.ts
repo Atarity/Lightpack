@@ -84,11 +84,6 @@
         <translation>Итоговая частота обновления</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="15"/>
-        <source>Lightpack — Settings</source>
-        <translation>Лайтпак — Настройки</translation>
-    </message>
-    <message>
         <location filename="../../src/mainwindow.ui" line="505"/>
         <source>Color depth</source>
         <translation>Глубина цвета</translation>
@@ -109,10 +104,6 @@
         <translation>Основные</translation>
     </message>
     <message>
-        <source>Open profile in text editor</source>
-        <translation type="obsolete">Открыть профиль в текстовом редакторе</translation>
-    </message>
-    <message>
         <location filename="../../src/mainwindow.ui" line="159"/>
         <source>User interface</source>
         <translation>Интерфейс пользователя</translation>
@@ -121,10 +112,6 @@
         <location filename="../../src/mainwindow.ui" line="165"/>
         <source>Language:</source>
         <translation>Язык:</translation>
-    </message>
-    <message>
-        <source>&lt;System&gt;</source>
-        <translation type="obsolete">&lt;Системный&gt;</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="401"/>
@@ -152,10 +139,6 @@
         <translation>Логи</translation>
     </message>
     <message>
-        <source>Profile name:</source>
-        <translation type="obsolete">Имя профиля:</translation>
-    </message>
-    <message>
         <location filename="../../src/mainwindow.ui" line="98"/>
         <source>Reset current profile to defaults</source>
         <translation>Сбросить настройки текущего профиля</translation>
@@ -176,57 +159,64 @@
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="190"/>
-        <location filename="../../src/mainwindow.cpp" line="236"/>
-        <source>On state</source>
-        <translation>Включен</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="191"/>
-        <location filename="../../src/mainwindow.cpp" line="245"/>
-        <source>Off state</source>
-        <translation>Выключен</translation>
+        <location filename="../../src/mainwindow.cpp" line="195"/>
+        <location filename="../../src/mainwindow.cpp" line="487"/>
+        <source>Lightpack: %1</source>
+        <translation>Лайтпак: %1</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="193"/>
-        <location filename="../../src/mainwindow.cpp" line="254"/>
-        <source>Error state</source>
+        <location filename="../../src/mainwindow.cpp" line="238"/>
+        <source>Error with connection device, verbose in logs</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="424"/>
-        <source>New profile</source>
-        <translation>Новый профиль</translation>
-    </message>
-    <message>
         <location filename="../../src/mainwindow.cpp" line="184"/>
-        <location filename="../../src/mainwindow.cpp" line="599"/>
+        <location filename="../../src/mainwindow.cpp" line="596"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
+        <location filename="../../src/mainwindow.cpp" line="191"/>
+        <location filename="../../src/mainwindow.cpp" line="248"/>
+        <source>Disabled</source>
+        <translation>Выключен</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="418"/>
+        <source>New profile</source>
+        <translation>Новый профиль</translation>
+    </message>
+    <message>
         <location filename="../../src/mainwindow.cpp" line="185"/>
-        <location filename="../../src/mainwindow.cpp" line="603"/>
+        <location filename="../../src/mainwindow.cpp" line="600"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="186"/>
-        <location filename="../../src/mainwindow.cpp" line="607"/>
+        <location filename="../../src/mainwindow.cpp" line="604"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="187"/>
-        <location filename="../../src/mainwindow.cpp" line="611"/>
+        <location filename="../../src/mainwindow.cpp" line="608"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="188"/>
-        <location filename="../../src/mainwindow.cpp" line="615"/>
+        <location filename="../../src/mainwindow.cpp" line="612"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="190"/>
+        <location filename="../../src/mainwindow.cpp" line="242"/>
+        <location filename="../../src/mainwindow.cpp" line="488"/>
+        <source>Enabled profile: %1</source>
+        <translation>Включен профиль: %1</translation>
     </message>
 </context>
 <context>

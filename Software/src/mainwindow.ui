@@ -12,7 +12,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Lightpack — Settings</string>
+   <string notr="true">Lightpack</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../res/LightpackResources.qrc">

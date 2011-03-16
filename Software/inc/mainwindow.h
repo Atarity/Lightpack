@@ -89,9 +89,7 @@ private slots:
 private:
     void connectSignalsSlots();
 
-    void trayAmbilightOn();
-    void trayAmbilightOff();
-    void trayAmbilightError();
+    void updateTrayAndActionStates();
 
     void createTrayIcon();
     void createActions();
