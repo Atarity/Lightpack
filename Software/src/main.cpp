@@ -37,6 +37,7 @@
 #include <sys/time.h>
 #include "time.h"
 
+#include <QFileInfo>
 
 
 using namespace std;
@@ -63,8 +64,6 @@ static void showHelpMessage()
     fprintf(stderr, "\n");
     fprintf(stderr, "Options: \n");
     fprintf(stderr, "  --off    - send 'off leds' cmd to device \n");
-    fprintf(stderr, "  --notr   - no translate (English version) \n");
-    fprintf(stderr, "             use it if detect russian, but you want english \n");
     fprintf(stderr, "  --help   - show this help \n");
     fprintf(stderr, "\n");
 }
@@ -156,25 +155,31 @@ int main(int argc, char **argv)
     qDebug() << "Qt version currently in use:" << qVersion();
 
 
-    QString locale = QLocale::system().name();
     if(argc > 1){
         if(strcmp(argv[1], "--off") == 0){
             AmbilightUsb ambilight_usb;
             ambilight_usb.offLeds();
             return 0;
-        }else if(strcmp(argv[1], "--notr") == 0){
-            locale = "en_EN";
         }else{
             showHelpMessage();
             return 1;
         }
     }
 
-    Settings::Initialize();
+#if 0
+    QString exeFilePath( argv[0] );
+    QFileInfo fileInfo( exeFilePath );
+    exeFilePath = fileInfo.absoluteDir().absolutePath();
+    qDebug() << "Binary file location:" << exeFilePath;
+#endif
 
-    // After initialize QApplication, update desktop widht and height
+
+    // Update desktop widht and height
     Desktop::Initialize();
 
+    // Open last used profile, if profile doesn't exists it will be created
+    // Desktop::Width and Desktop::Height should be initialized
+    Settings::Initialize();
 
     Q_INIT_RESOURCE(LightpackResources);
 
@@ -185,19 +190,6 @@ int main(int argc, char **argv)
     }
     QApplication::setQuitOnLastWindowClosed(false);
 
-    QString pathToLocale = QString(":/translations/") + locale;
-
-    if(locale == "en_EN"){
-        qWarning() << "Locale: " + locale;
-    }else{        
-        QTranslator *translator = new QTranslator();
-        if(translator->load(pathToLocale)){
-            qDebug() << "Load translation for locale" << locale;
-            app.installTranslator(translator);
-        }else{
-            qWarning() << "Locale:" << pathToLocale << "not found. Using defaults.";
-        }        
-    }
 
     window = new MainWindow();   /* Create MainWindow */
     window->setVisible(false);   /* And load to tray. */

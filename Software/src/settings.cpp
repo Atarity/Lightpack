@@ -37,12 +37,13 @@
 
 
 QSettings * Settings::settingsNow;
-QSettings * Settings::settingsMain; // Main.ini contains last profile
+QSettings * Settings::settingsMain; // LightpackMain.ini contains last profile
 
 
+// Desktop should be initialized before call Settings::Initialize()
 void Settings::Initialize()
 {
-    Settings::settingsMain = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", "Main");
+    Settings::settingsMain = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Lightpack", "LightpackMain");
     settingsMain->setIniCodec("UTF-8");
 
     if(settingsMain->contains("ProfileLast") == false){

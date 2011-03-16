@@ -84,6 +84,8 @@ private slots:
     void profileDeleteCurrent();
     void settingsProfileChanged_UpdateUI();
 
+    void userInterfaceLanguageChanged(int languageIndex);
+
 private:
     void connectSignalsSlots();
 
@@ -97,6 +99,7 @@ private:
 
     void profilesFindAll();
     void profileLoadLast();
+    void initLanguages();
 
     void openFile(const QString &filePath);
 
@@ -124,7 +127,9 @@ private:
     QAction *quitAction;
 
     QSystemTrayIcon *trayIcon;
-    QMenu *trayIconMenu;    
+    QMenu *trayIconMenu;
+
+    QTranslator *translator;
 };
 
 #endif // MAINWINDOW_H

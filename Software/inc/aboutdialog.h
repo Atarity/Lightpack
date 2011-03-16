@@ -43,6 +43,9 @@ public:
 
     void setFirmwareVersion(const QString &firmwareVersion);
 
+private:
+    void softwareVersionUpdate();
+
 protected:
     virtual void changeEvent(QEvent *e);
     virtual void closeEvent(QCloseEvent *event);

@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->tabWidget->setCurrentIndex( 0 );
+
     createActions();
     createTrayIcon();
 
@@ -54,7 +56,8 @@ MainWindow::MainWindow(QWidget *parent) :
                           | Qt::WindowCloseButtonHint );
 
 
-    QRegExp rx("[^<>:\"/\\|?*]+");  // Check windows reserved simbols
+    // Check windows reserved simbols in profile input name
+    QRegExp rx("[^<>:\"/\\|?*]+");
     QRegExpValidator *validator = new QRegExpValidator(rx, this);
     ui->comboBox_Profiles->lineEdit()->setValidator(validator);
 
@@ -65,16 +68,23 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "MainWindow(): new GrabManager()";
     grabManager = new GrabManager();
 
+    qDebug() << "MainWindow(): new AboutDialog(this)";
     aboutDialog = new AboutDialog(this);
 
     qDebug() << "MainWindow(): profilesFindAll();";
     profilesFindAll();
 
+    qDebug() << "MainWindow(): void initLanguages()";
+    initLanguages();
+
     qDebug() << "MainWindow(): connectSignalsSlots()";
     connectSignalsSlots();
 
-    qDebug() << "MainWindow(): profileLoadLast();";
+    qDebug() << "MainWindow(): profileLoadLast()";
     profileLoadLast();
+
+    qDebug() << "MainWindow(): userInterfaceLanguageChanged( 0 == <System> )";
+    userInterfaceLanguageChanged( 0 ); // TODO: Settings main
 
 
     isErrorState = false;
@@ -112,6 +122,9 @@ void MainWindow::connectSignalsSlots()
 
     // Connect GrabManager with ambilightUsb
     connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ambilightUsb, SLOT(updateColors(const QList<StructRGB> &)));
+
+    // Main options
+    connect(ui->comboBox_Language, SIGNAL(activated(int)), this, SLOT(userInterfaceLanguageChanged(int)));
 
     // Software options
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), this, SLOT(settingsSoftwareOptionsChange()));
@@ -167,6 +180,17 @@ void MainWindow::changeEvent(QEvent *e)
     switch (e->type()) {
     case QEvent::LanguageChange:
         ui->retranslateUi(this);
+        onAmbilightAction->setText( tr("&Turn on") );
+        offAmbilightAction->setText( tr("&Turn off") );
+        settingsAction->setText( tr("&Settings") );
+        aboutAction->setText( tr("&About") );
+        quitAction->setText( tr("&Quit") );
+
+        if(isAmbilightOn) trayIcon->setToolTip(tr("On state"));
+        else trayIcon->setToolTip(tr("Off state"));
+
+        if(isErrorState) trayIcon->setToolTip(tr("Error state"));
+
         break;
     default:
         break;
@@ -354,7 +378,7 @@ void MainWindow::openLogsFile()
 }
 
 
-// Profile tab
+// Main tab
 
 void MainWindow::openSettingsFile()
 {
@@ -437,7 +461,7 @@ void MainWindow::profilesFindAll()
     QStringList settingsFiles;
     for(int i=0; i<iniFiles.count(); i++){
         QString compBaseName = iniFiles.at(i).completeBaseName();
-        if(compBaseName != "Main"){
+        if(compBaseName != "LightpackMain"){
             settingsFiles.append( compBaseName );
         }
     }
@@ -465,6 +489,55 @@ void MainWindow::settingsProfileChanged_UpdateUI()
         ui->pushButton_DeleteProfile->setEnabled(true);
     }else{
         ui->pushButton_DeleteProfile->setEnabled(false);
+    }
+}
+
+void MainWindow::initLanguages()
+{
+    ui->comboBox_Language->addItem( "English" );
+    ui->comboBox_Language->addItem( "Russian" );
+
+    translator = NULL;
+}
+
+void MainWindow::userInterfaceLanguageChanged(int languageIndex)
+{
+    QString language = ui->comboBox_Language->itemText( languageIndex );
+    QString locale = QLocale::system().name(); // default using system locale
+    qDebug() << "System locale" << locale;
+
+    if( languageIndex != 0 /* <System> */){
+        // add translation to Lightpack.pro TRANSLATIONS
+        // lupdate Lightpack.pro
+        // open linguist and translate application
+        // lrelease Lightpack.pro
+        // add new language to LightpackResources.qrc :/translations/
+        // add new language to MainWindow::initLanguages() function
+        // and only when all this done append here new line
+
+        if( language == "English" ) locale = "en_EN";
+        if( language == "Russian" ) locale = "ru_RU";
+    }
+
+    QString pathToLocale = QString(":/translations/") + locale;
+
+    if( translator != NULL ){
+        qApp->removeTranslator(translator);
+        delete translator;
+        translator = NULL;
+    }
+
+    if( locale == "en_EN" /* default no need to translate */ ){
+        qDebug() << "Translation removed, using default locale" << locale;
+        return;
+    }
+
+    translator = new QTranslator();
+    if(translator->load( pathToLocale )){
+        qDebug() << "Load translation for locale" << locale;
+        qApp->installTranslator(translator);
+    }else{
+        qWarning() << "Fail load translation for locale" << locale << "pathToLocale" << pathToLocale;
     }
 }
 

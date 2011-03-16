@@ -187,6 +187,8 @@ bool AmbilightUsb::writeBufferToDeviceWithCheck(int command)
 
 QString AmbilightUsb::firmwareVersion()
 {
+    qDebug() << Q_FUNC_INFO;
+
     if(ambilightDevice == NULL){
         if(!tryToReopenDevice()){
             return QApplication::tr("device unavailable");
