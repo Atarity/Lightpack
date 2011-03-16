@@ -192,41 +192,33 @@
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="183"/>
-        <location filename="../../src/mainwindow.cpp" line="582"/>
+        <location filename="../../src/mainwindow.cpp" line="591"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="184"/>
-        <location filename="../../src/mainwindow.cpp" line="586"/>
+        <location filename="../../src/mainwindow.cpp" line="595"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="185"/>
-        <location filename="../../src/mainwindow.cpp" line="590"/>
+        <location filename="../../src/mainwindow.cpp" line="599"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="186"/>
-        <location filename="../../src/mainwindow.cpp" line="594"/>
+        <location filename="../../src/mainwindow.cpp" line="603"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="187"/>
-        <location filename="../../src/mainwindow.cpp" line="598"/>
+        <location filename="../../src/mainwindow.cpp" line="607"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
-    </message>
-</context>
-<context>
-    <name>MoveMeWidget</name>
-    <message>
-        <location filename="../../src/movemewidget.ui" line="14"/>
-        <source>LED Widget</source>
-        <translation></translation>
     </message>
 </context>
 <context>

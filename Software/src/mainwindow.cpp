@@ -517,8 +517,8 @@ void MainWindow::loadTranslation(const QString & language)
     if( language == "<System>" ){
         qDebug() << "System locale" << locale;
     }
-    else if ( language == "English"  ) locale = "en_EN";
-    else if ( language == "Russian"  ) locale = "ru_RU";
+    else if ( language == "English" ) locale = "en_EN";
+    else if ( language == "Russian" ) locale = "ru_RU";
     // append line for new language/locale here
     else {
         qWarning() << "Language" << language << "not found. Set to default" << LANGUAGE_DEFAULT_NAME;
