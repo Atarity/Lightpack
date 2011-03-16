@@ -143,6 +143,8 @@ void Settings::renameCurrentConfig(const QString & configName)
 
         settingsMain->setValue("ProfileLast", configName);
     }
+
+    settingsNow->sync();
 }
 
 void Settings::removeCurrentConfig()
