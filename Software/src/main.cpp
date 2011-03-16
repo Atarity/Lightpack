@@ -145,13 +145,19 @@ int main(int argc, char **argv)
     qInstallMsgHandler(messageOutput);
 
 #ifdef PORTABLE_VERSION
-    // Find directory of the application
+    // Find application directory
     QString applicationDirPath( argv[0] );
     QFileInfo fileInfo( applicationDirPath );
     applicationDirPath = fileInfo.absoluteDir().absolutePath();
     cout << "Application directory: " << applicationDirPath.toStdString() << endl;
 #else
+
+#   ifdef Q_WS_WIN
+    QString applicationDirPath = QDir::homePath() + "/Lightpack";
+#   else
     QString applicationDirPath = QDir::homePath() + "/.Lightpack";
+#   endif
+
     QDir dir( applicationDirPath );
     if(dir.exists() == false){
         cout << "mkdir " << applicationDirPath.toStdString() << endl;

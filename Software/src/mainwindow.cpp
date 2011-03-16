@@ -497,13 +497,13 @@ void MainWindow::loadTranslation(const QString & language)
     // lrelease Lightpack.pro
     // add new language to LightpackResources.qrc :/translations/
     // add new language to MainWindow::initLanguages() function
-    // and only when all this done append here new line
-
+    // and only when all this done - append new line
+    // locale - name of translation binary file form resources: %locale%.qm
     if( language == "<System>" ){
         qDebug() << "System locale" << locale;
     }
-    else if ( language == "English" ) locale = "en_EN";
-    else if ( language == "Russian" ) locale = "ru_RU";
+    else if ( language == "English" ) locale = "en_EN"; // :/translations/en_EN.qm
+    else if ( language == "Russian" ) locale = "ru_RU"; // :/translations/ru_RU.qm
     // append line for new language/locale here
     else {
         qWarning() << "Language" << language << "not found. Set to default" << LANGUAGE_DEFAULT_NAME;
