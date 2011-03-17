@@ -186,12 +186,6 @@ void MainWindow::changeEvent(QEvent *e)
 
         setWindowTitle( tr("Lightpack: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
 
-        if( ui->pushButton_GrabOnOff->isChecked() ){
-            ui->pushButton_GrabOnOff->setText(tr("Enabled"));
-        }else{
-            ui->pushButton_GrabOnOff->setText(tr("Disabled"));
-        }
-
         break;
     default:
         break;
@@ -229,11 +223,9 @@ void MainWindow::updateTrayAndActionStates()
 {
     if( isAmbilightOn ){
         ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/on.png"));
-        ui->pushButton_GrabOnOff->setText(tr("Enabled"));
         ui->pushButton_GrabOnOff->setChecked(true);
     }else{
         ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/off.png"));
-        ui->pushButton_GrabOnOff->setText(tr("Disabled"));
         ui->pushButton_GrabOnOff->setChecked(false);
     }
 
@@ -322,7 +314,7 @@ void MainWindow::settingsHardwareTimerOptionsChange()
 
     updatePwmFrequency();
 
-    if(pwmFrequency > 10000){
+    if(pwmFrequency > 1000){
         qWarning() << "PWM frequency to high! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
     }else if(pwmFrequency < 10){
         qWarning() << "PWM frequency to low! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";

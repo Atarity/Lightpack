@@ -29,22 +29,22 @@
         <translation>Гц</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="218"/>
+        <location filename="../../src/mainwindow.ui" line="244"/>
         <source>AVG color on all LEDs</source>
         <translation>Средний цвет на все светодиоды</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="180"/>
+        <location filename="../../src/mainwindow.ui" line="206"/>
         <source>Show grab widgets</source>
         <translation>Показать области захвата</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="199"/>
+        <location filename="../../src/mainwindow.ui" line="225"/>
         <source>Colored</source>
         <translation>Разноцветные</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="192"/>
+        <location filename="../../src/mainwindow.ui" line="218"/>
         <source>White</source>
         <translation>Белые</translation>
     </message>
@@ -64,7 +64,7 @@
         <translation>Захват</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="162"/>
+        <location filename="../../src/mainwindow.ui" line="188"/>
         <source>ms</source>
         <translation>мс</translation>
     </message>
@@ -104,22 +104,14 @@
         <translation>Кадров в секунду (FPS):</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="116"/>
+        <location filename="../../src/mainwindow.ui" line="142"/>
         <source>Minimum level of sensitivity:</source>
         <translation>Порог чувствительности:</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="142"/>
+        <location filename="../../src/mainwindow.ui" line="168"/>
         <source>Slowdown:</source>
         <translation>Задержка:</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="244"/>
-        <location filename="../../src/mainwindow.cpp" line="190"/>
-        <location filename="../../src/mainwindow.cpp" line="235"/>
-        <location filename="../../src/mainwindow.cpp" line="243"/>
-        <source>Enabled</source>
-        <translation>Включен</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="276"/>
@@ -168,63 +160,61 @@
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="187"/>
-        <location filename="../../src/mainwindow.cpp" line="492"/>
+        <location filename="../../src/mainwindow.cpp" line="484"/>
         <source>Lightpack: %1</source>
         <translation>Лайтпак: %1</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="185"/>
-        <location filename="../../src/mainwindow.cpp" line="232"/>
+        <location filename="../../src/mainwindow.cpp" line="234"/>
         <source>Error with connection device, verbose in logs</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="176"/>
-        <location filename="../../src/mainwindow.cpp" line="601"/>
+        <location filename="../../src/mainwindow.cpp" line="593"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="183"/>
-        <location filename="../../src/mainwindow.cpp" line="192"/>
-        <location filename="../../src/mainwindow.cpp" line="250"/>
-        <location filename="../../src/mainwindow.cpp" line="253"/>
+        <location filename="../../src/mainwindow.cpp" line="246"/>
         <source>Disabled</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="423"/>
+        <location filename="../../src/mainwindow.cpp" line="415"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="177"/>
-        <location filename="../../src/mainwindow.cpp" line="605"/>
+        <location filename="../../src/mainwindow.cpp" line="597"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="178"/>
-        <location filename="../../src/mainwindow.cpp" line="609"/>
+        <location filename="../../src/mainwindow.cpp" line="601"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="179"/>
-        <location filename="../../src/mainwindow.cpp" line="613"/>
+        <location filename="../../src/mainwindow.cpp" line="605"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="180"/>
-        <location filename="../../src/mainwindow.cpp" line="617"/>
+        <location filename="../../src/mainwindow.cpp" line="609"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="182"/>
         <location filename="../../src/mainwindow.cpp" line="240"/>
-        <location filename="../../src/mainwindow.cpp" line="493"/>
+        <location filename="../../src/mainwindow.cpp" line="485"/>
         <source>Enabled profile: %1</source>
         <translation>Включен профиль: %1</translation>
     </message>
