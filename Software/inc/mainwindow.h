@@ -72,13 +72,12 @@ private slots:
 
     void grabAmbilightOnOff(bool state);
 
-    void settingsSoftwareOptionsChange();
     void settingsHardwareTimerOptionsChange();
     void settingsHardwareColorDepthOptionChange();
     void settingsHardwareChangeColorsIsSmooth(bool isSmooth);
 
     void openLogsFile();
-    void openSettingsFile();
+    void openCurrentProfile();
 
     void profileRename();
     void profileSwitch(const QString & configName);

@@ -51,7 +51,7 @@ signals:
 
 public slots:
     void setAmbilightOn(bool isAmbilightOn, bool isErrorState);
-    void setAmbilightRefreshDelayMs(int ms);
+    void setAmbilightSlowdownMs(int ms);
     void setAmbilightColorDepth(int depth);
     void setVisibleLedWidgets(bool state);
     void setColoredLedWidgets(bool state);
@@ -96,7 +96,7 @@ private: // variables
     int minLevelOfSensivity;
 
     // Settings:
-    int ambilightRefreshDelayMs;
+    int ambilightDelayMs;
     int colorDepth;
 };
 

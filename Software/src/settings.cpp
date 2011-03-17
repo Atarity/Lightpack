@@ -200,7 +200,7 @@ void Settings::setDefaultSettingIfNotFound(QSettings *settings, const QString & 
 //
 void Settings::settingsInit()
 {
-    setDefaultSettingIfNotFound("RefreshAmbilightDelayMs",             REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
+    setDefaultSettingIfNotFound("GrabSlowdownMs",                      GRAB_SLOWDOWN_MS_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("IsAvgColorsOn",                       IS_AVG_COLORS_ON_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("MinimumLevelOfSensitivity",           MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT);
@@ -247,7 +247,7 @@ void Settings::settingsInit()
 //
 void Settings::resetToDefaults()
 {
-    settingsNow->setValue("RefreshAmbilightDelayMs",             REFRESH_AMBILIGHT_MS_DEFAULT_VALUE);
+    settingsNow->setValue("GrabSlowdownMs",                      GRAB_SLOWDOWN_MS_DEFAULT_VALUE);
     settingsNow->setValue("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
     settingsNow->setValue("IsAvgColorsOn",                       IS_AVG_COLORS_ON_DEFAULT_VALUE);
     settingsNow->setValue("MinimumLevelOfSensitivity",           MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT);

@@ -33,14 +33,14 @@
 
 // Default values:
 
-// LightpackMain.ini
+// LightpackMain.conf
 // [General]
 #define PROFILE_DEFAULT_NAME    "Lightpack"
 #define LANGUAGE_DEFAULT_NAME   "<System>" /* system lang */
 
 // ProfileName.ini
 // [General]
-#define REFRESH_AMBILIGHT_MS_DEFAULT_VALUE      50
+#define GRAB_SLOWDOWN_MS_DEFAULT_VALUE          50
 #define IS_AMBILIGHT_ON_DEFAULT_VALUE           true
 #define IS_AVG_COLORS_ON_DEFAULT_VALUE          false
 #define MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT    3

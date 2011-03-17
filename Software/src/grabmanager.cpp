@@ -239,7 +239,7 @@ void GrabManager::updateLedsColorsIfChanged()
     timeEval->howLongItStart();
 
     if(isAmbilightOn){
-        timer->start( ambilightRefreshDelayMs );
+        timer->start( ambilightDelayMs );
     }
 }
 
@@ -328,7 +328,7 @@ void GrabManager::settingsProfileChanged()
     this->avgColorsOnAllLeds = Settings::value("IsAvgColorsOn").toBool();
     this->minLevelOfSensivity = Settings::value("MinimumLevelOfSensitivity").toInt();
 
-    this->ambilightRefreshDelayMs = Settings::value("RefreshAmbilightDelayMs").toInt();
+    this->ambilightDelayMs = Settings::value("GrabSlowdownMs").toInt();
     this->colorDepth = Settings::value("Firmware/ColorDepth").toInt();
 
     for(int i=0; i<ledWidgets.count(); i++){
@@ -337,9 +337,10 @@ void GrabManager::settingsProfileChanged()
 }
 
 
-void GrabManager::setAmbilightRefreshDelayMs(int ms)
+void GrabManager::setAmbilightSlowdownMs(int ms)
 {
-    this->ambilightRefreshDelayMs = ms;
+    this->ambilightDelayMs = ms;
+    Settings::setValue("GrabSlowdownMs", ms);
 }
 
 void GrabManager::setAmbilightColorDepth(int depth)
