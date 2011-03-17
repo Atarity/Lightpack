@@ -93,10 +93,10 @@
               <normaloff>:/icons/on.png</normaloff>:/icons/on.png</iconset>
             </property>
             <property name="checkable">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="default">
              <bool>false</bool>
@@ -678,24 +678,27 @@
   </widget>
  </widget>
  <tabstops>
-  <tabstop>comboBox_Profiles</tabstop>
-  <tabstop>pushButton_ProfileNew</tabstop>
-  <tabstop>pushButton_ProfileResetToDefault</tabstop>
-  <tabstop>pushButton_DeleteProfile</tabstop>
-  <tabstop>comboBox_Language</tabstop>
   <tabstop>tabWidget</tabstop>
+  <tabstop>pushButton_GrabOnOff</tabstop>
   <tabstop>spinBox_UpdateDelay</tabstop>
   <tabstop>spinBox_MinLevelOfSensitivity</tabstop>
   <tabstop>groupBox_ShowGrabWidgets</tabstop>
   <tabstop>radioButton_White</tabstop>
   <tabstop>radioButton_Colored</tabstop>
   <tabstop>checkBox_AVG_Colors</tabstop>
+  <tabstop>pushButton_Close</tabstop>
   <tabstop>horizontalSlider_HW_OCR</tabstop>
   <tabstop>spinBox_HW_OCR</tabstop>
   <tabstop>horizontalSlider_HW_ColorDepth</tabstop>
   <tabstop>spinBox_HW_ColorDepth</tabstop>
   <tabstop>checkBox_SmoothChangeColors</tabstop>
   <tabstop>checkBox_USB_SendDataOnlyIfColorsChanges</tabstop>
+  <tabstop>comboBox_Profiles</tabstop>
+  <tabstop>pushButton_ProfileNew</tabstop>
+  <tabstop>pushButton_ProfileResetToDefault</tabstop>
+  <tabstop>pushButton_DeleteProfile</tabstop>
+  <tabstop>commandLinkButton_OpenSettings</tabstop>
+  <tabstop>comboBox_Language</tabstop>
   <tabstop>commandLinkButton_OpenLogs</tabstop>
   <tabstop>plainTextLogs</tabstop>
  </tabstops>

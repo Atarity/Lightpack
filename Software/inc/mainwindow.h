@@ -70,7 +70,7 @@ private slots:
     void ambilightOff(); /* using in actions */
     void quit(); /* using in actions */
 
-    void grabAmbilightOnOff(bool state);
+    void grabAmbilightOnOff();
 
     void settingsHardwareTimerOptionsChange();
     void settingsHardwareColorDepthOptionChange();

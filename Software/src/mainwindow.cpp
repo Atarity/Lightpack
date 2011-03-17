@@ -117,7 +117,7 @@ void MainWindow::connectSignalsSlots()
 
     // Main options
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
-    connect(ui->pushButton_GrabOnOff, SIGNAL(clicked(bool)), this, SLOT(grabAmbilightOnOff(bool)));
+    connect(ui->pushButton_GrabOnOff, SIGNAL(clicked()), this, SLOT(grabAmbilightOnOff()));
 
     // Hardware options
     connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareColorDepthOptionChange()));
@@ -218,9 +218,9 @@ void MainWindow::ambilightOff()
     startAmbilight();
 }
 
-void MainWindow::grabAmbilightOnOff(bool state)
+void MainWindow::grabAmbilightOnOff()
 {
-    isAmbilightOn = state;
+    isAmbilightOn = !isAmbilightOn;
     startAmbilight();
 }
 
@@ -242,10 +242,8 @@ void MainWindow::updateTrayAndActionStates()
 {
     if( isAmbilightOn ){
         ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/on.png"));
-        ui->pushButton_GrabOnOff->setChecked(true);
     }else{
         ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/off.png"));
-        ui->pushButton_GrabOnOff->setChecked(false);
     }
 
     if( isErrorState ){
