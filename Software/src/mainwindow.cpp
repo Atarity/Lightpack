@@ -227,21 +227,25 @@ void MainWindow::grabAmbilightOnOff(bool state)
 
 void MainWindow::updateTrayAndActionStates()
 {
+    if( isAmbilightOn ){
+        ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/on.png"));
+        ui->pushButton_GrabOnOff->setText(tr("Enabled"));
+        ui->pushButton_GrabOnOff->setChecked(true);
+    }else{
+        ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/off.png"));
+        ui->pushButton_GrabOnOff->setText(tr("Disabled"));
+        ui->pushButton_GrabOnOff->setChecked(false);
+    }
+
     if( isErrorState ){
         trayIcon->setIcon(QIcon(":/icons/error.png"));
         trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
 
         ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/error.png"));
-        ui->pushButton_GrabOnOff->setText(tr("Enabled"));
-        ui->pushButton_GrabOnOff->setChecked(true);
     }else{
         if( isAmbilightOn ){
             trayIcon->setIcon(QIcon(":/icons/on.png"));
             trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
-
-            ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/on.png"));
-            ui->pushButton_GrabOnOff->setText(tr("Enabled"));
-            ui->pushButton_GrabOnOff->setChecked(true);
 
             onAmbilightAction->setEnabled(false);
             offAmbilightAction->setEnabled(true);
@@ -249,14 +253,10 @@ void MainWindow::updateTrayAndActionStates()
             trayIcon->setIcon(QIcon(":/icons/off.png"));
             trayIcon->setToolTip(tr("Disabled"));
 
-            ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/off.png"));
-            ui->pushButton_GrabOnOff->setText(tr("Disabled"));
-            ui->pushButton_GrabOnOff->setChecked(false);
-
             onAmbilightAction->setEnabled(true);
             offAmbilightAction->setEnabled(false);
         }
-    }
+    }    
 }
 
 
