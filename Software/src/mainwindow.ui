@@ -53,7 +53,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Refresh ambilight evaluated</string>
+             <string>Frames per second:</string>
             </property>
            </widget>
           </item>
@@ -113,7 +113,7 @@
              </font>
             </property>
             <property name="text">
-             <string>The minimum level of sensitivity</string>
+             <string>Minimum level of sensitivity:</string>
             </property>
            </widget>
           </item>
@@ -139,7 +139,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Refresh ambilight delay</string>
+             <string>Slowdown:</string>
             </property>
            </widget>
           </item>
@@ -234,6 +234,32 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_GrabOnOff">
+          <property name="focusPolicy">
+           <enum>Qt::TabFocus</enum>
+          </property>
+          <property name="text">
+           <string>Enabled</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../res/LightpackResources.qrc">
+            <normaloff>:/icons/on.png</normaloff>:/icons/on.png</iconset>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+          <property name="default">
+           <bool>false</bool>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -635,20 +661,10 @@
         <property name="text">
          <string>Close</string>
         </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
        </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>37</width>
-          <height>17</height>
-         </size>
-        </property>
-       </spacer>
       </item>
      </layout>
     </item>
@@ -661,7 +677,6 @@
   <tabstop>pushButton_ProfileResetToDefault</tabstop>
   <tabstop>pushButton_DeleteProfile</tabstop>
   <tabstop>comboBox_Language</tabstop>
-  <tabstop>pushButton_Close</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>spinBox_UpdateDelay</tabstop>
   <tabstop>spinBox_MinLevelOfSensitivity</tabstop>

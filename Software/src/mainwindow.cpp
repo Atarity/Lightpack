@@ -117,6 +117,7 @@ void MainWindow::connectSignalsSlots()
 
     // Main options
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
+    connect(ui->pushButton_GrabOnOff, SIGNAL(clicked(bool)), this, SLOT(grabAmbilightOnOff(bool)));
 
     // Software options
     connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), this, SLOT(settingsSoftwareOptionsChange()));
@@ -185,6 +186,12 @@ void MainWindow::changeEvent(QEvent *e)
 
         setWindowTitle( tr("Lightpack: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
 
+        if( ui->pushButton_GrabOnOff->isChecked() ){
+            ui->pushButton_GrabOnOff->setText(tr("Enabled"));
+        }else{
+            ui->pushButton_GrabOnOff->setText(tr("Disabled"));
+        }
+
         break;
     default:
         break;
@@ -212,21 +219,39 @@ void MainWindow::ambilightOff()
     startAmbilight();
 }
 
+void MainWindow::grabAmbilightOnOff(bool state)
+{
+    isAmbilightOn = state;
+    startAmbilight();
+}
+
 void MainWindow::updateTrayAndActionStates()
 {
     if( isErrorState ){
         trayIcon->setIcon(QIcon(":/icons/error.png"));
         trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
+
+        ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/error.png"));
+        ui->pushButton_GrabOnOff->setText(tr("Enabled"));
+        ui->pushButton_GrabOnOff->setChecked(true);
     }else{
         if( isAmbilightOn ){
             trayIcon->setIcon(QIcon(":/icons/on.png"));
             trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
+
+            ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/on.png"));
+            ui->pushButton_GrabOnOff->setText(tr("Enabled"));
+            ui->pushButton_GrabOnOff->setChecked(true);
 
             onAmbilightAction->setEnabled(false);
             offAmbilightAction->setEnabled(true);
         }else{
             trayIcon->setIcon(QIcon(":/icons/off.png"));
             trayIcon->setToolTip(tr("Disabled"));
+
+            ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/off.png"));
+            ui->pushButton_GrabOnOff->setText(tr("Disabled"));
+            ui->pushButton_GrabOnOff->setChecked(false);
 
             onAmbilightAction->setEnabled(true);
             offAmbilightAction->setEnabled(false);
