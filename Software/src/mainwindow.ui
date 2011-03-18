@@ -32,7 +32,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -155,7 +155,7 @@
           <item row="1" column="4">
            <widget class="QLabel" name="label_GrabFrequency_txt_fps">
             <property name="text">
-             <string notr="true">fps</string>
+             <string>fps</string>
             </property>
             <property name="textInteractionFlags">
              <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
@@ -574,13 +574,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox_Language">
-             <item>
-              <property name="text">
-               <string notr="true">&lt;System&gt;</string>
-              </property>
-             </item>
-            </widget>
+            <widget class="QComboBox" name="comboBox_Language"/>
            </item>
           </layout>
          </widget>

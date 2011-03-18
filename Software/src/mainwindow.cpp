@@ -193,6 +193,8 @@ void MainWindow::changeEvent(QEvent *e)
 
         setWindowTitle( tr("Lightpack: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
 
+        ui->comboBox_Language->setItemText( 0, tr("System default") );
+
         break;
     default:
         break;
@@ -520,10 +522,16 @@ void MainWindow::settingsProfileChanged_UpdateUI()
 
 void MainWindow::initLanguages()
 {
+    ui->comboBox_Language->clear();
+    ui->comboBox_Language->addItem( tr("System default") );
     ui->comboBox_Language->addItem( "English" );
     ui->comboBox_Language->addItem( "Russian" );
 
-    int langIndex = ui->comboBox_Language->findText( Settings::valueMain("Language").toString() );
+    int langIndex = 0; // "System default"
+    QString langSaved = Settings::valueMain("Language").toString();
+    if( langSaved != "<System>" ){
+        langIndex = ui->comboBox_Language->findText( langSaved );
+    }
     ui->comboBox_Language->setCurrentIndex( langIndex );
 
     translator = NULL;
