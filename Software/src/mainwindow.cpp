@@ -551,7 +551,7 @@ void MainWindow::loadTranslation(const QString & language)
     // add new language to MainWindow::initLanguages() function
     // and only when all this done - append new line
     // locale - name of translation binary file form resources: %locale%.qm
-    if( language == "<System>" ){
+    if( ui->comboBox_Language->currentIndex() == 0 /* System */ ){
         qDebug() << "System locale" << locale;
     }
     else if ( language == "English" ) locale = "en_EN"; // :/translations/en_EN.qm
