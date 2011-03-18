@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>364</width>
-    <height>365</height>
+    <width>286</width>
+    <height>288</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,9 +43,22 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
-          <item>
-           <widget class="QLabel" name="label_UpdateFrequencyTxt">
+         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0">
+          <item row="5" column="0">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>2</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_MinLevelOfSensitivity">
             <property name="font">
              <font>
               <weight>50</weight>
@@ -53,25 +66,64 @@
              </font>
             </property>
             <property name="text">
-             <string>Frames per second:</string>
+             <string>Minimum level of sensitivity:</string>
             </property>
            </widget>
           </item>
-          <item>
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_SlowdownGrab_txt">
+            <property name="font">
+             <font>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
+            <property name="text">
+             <string>Slowdown grab:</string>
             </property>
-           </spacer>
+           </widget>
           </item>
-          <item>
-           <widget class="QLabel" name="label_UpdateFrequencyEval">
+          <item row="3" column="1" colspan="3">
+           <widget class="QSpinBox" name="spinBox_SlowdownGrab">
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>20</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_EnableDisableGrab">
+            <property name="font">
+             <font>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string notr="true">Enable/Disable grab:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_GrabFrequency_txt">
+            <property name="font">
+             <font>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Grab frequency:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" colspan="3">
+           <widget class="QLabel" name="label_GrabFrequency_value">
             <property name="text">
              <string notr="true">0</string>
             </property>
@@ -80,8 +132,38 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_GrabOnOff">
+          <item row="4" column="1" colspan="3">
+           <widget class="QSpinBox" name="spinBox_MinLevelOfSensitivity">
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>20</number>
+            </property>
+            <property name="value">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="4">
+           <widget class="QLabel" name="label_SlowdownGrab_txt_ms">
+            <property name="text">
+             <string>ms</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QLabel" name="label_GrabFrequency_txt_fps">
+            <property name="text">
+             <string notr="true">fps</string>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="3">
+           <widget class="QPushButton" name="pushButton_EnableDisableGrab">
             <property name="focusPolicy">
              <enum>Qt::TabFocus</enum>
             </property>
@@ -102,83 +184,7 @@
              <bool>false</bool>
             </property>
             <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0">
-          <item row="5" column="0">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>2</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_UpdateFrequencyTxt_2">
-            <property name="font">
-             <font>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Minimum level of sensitivity:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QSpinBox" name="spinBox_MinLevelOfSensitivity">
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>20</number>
-            </property>
-            <property name="value">
-             <number>0</number>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_UpdateDelay">
-            <property name="font">
-             <font>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Slowdown:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QSpinBox" name="spinBox_UpdateDelay">
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>1000</number>
-            </property>
-            <property name="value">
-             <number>20</number>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QLabel" name="label_ms">
-            <property name="text">
-             <string>ms</string>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -679,9 +685,7 @@
  </widget>
  <tabstops>
   <tabstop>tabWidget</tabstop>
-  <tabstop>pushButton_GrabOnOff</tabstop>
-  <tabstop>spinBox_UpdateDelay</tabstop>
-  <tabstop>spinBox_MinLevelOfSensitivity</tabstop>
+  <tabstop>spinBox_SlowdownGrab</tabstop>
   <tabstop>groupBox_ShowGrabWidgets</tabstop>
   <tabstop>radioButton_White</tabstop>
   <tabstop>radioButton_Colored</tabstop>

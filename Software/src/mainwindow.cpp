@@ -102,7 +102,7 @@ void MainWindow::connectSignalsSlots()
     connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));
 
     // Connect to GrabManager
-    connect(ui->spinBox_UpdateDelay, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightSlowdownMs(int)));
+    connect(ui->spinBox_SlowdownGrab, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightSlowdownMs(int)));
     connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), grabManager, SLOT(setVisibleLedWidgets(bool)));
     connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightColorDepth(int)));
     connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), grabManager, SLOT(setColoredLedWidgets(bool)));
@@ -117,7 +117,7 @@ void MainWindow::connectSignalsSlots()
 
     // Main options
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
-    connect(ui->pushButton_GrabOnOff, SIGNAL(clicked()), this, SLOT(grabAmbilightOnOff()));
+    connect(ui->pushButton_EnableDisableGrab, SIGNAL(clicked()), this, SLOT(grabAmbilightOnOff()));
 
     // Hardware options
     connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareColorDepthOptionChange()));
@@ -174,14 +174,20 @@ void MainWindow::changeEvent(QEvent *e)
     switch (e->type()) {
     case QEvent::LanguageChange:
         ui->retranslateUi(this);
+
         onAmbilightAction->setText( tr("&Turn on") );
         offAmbilightAction->setText( tr("&Turn off") );
         settingsAction->setText( tr("&Settings") );
         aboutAction->setText( tr("&About") );
         quitAction->setText( tr("&Quit") );
 
-        if(isAmbilightOn) trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
-        else trayIcon->setToolTip( tr("Disabled") );
+        if( isAmbilightOn ){
+            trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
+            ui->label_EnableDisableGrab->setText( tr("Disable grab") );
+        }else{
+            trayIcon->setToolTip( tr("Disabled") );
+            ui->label_EnableDisableGrab->setText( tr("Enable grab") );
+        }
 
         if(isErrorState) trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
 
@@ -241,16 +247,18 @@ void MainWindow::startAmbilight()
 void MainWindow::updateTrayAndActionStates()
 {
     if( isAmbilightOn ){
-        ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/on.png"));
+        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/on.png"));
+        ui->label_EnableDisableGrab->setText( tr("Disable grab") );
     }else{
-        ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/off.png"));
+        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/off.png"));
+        ui->label_EnableDisableGrab->setText( tr("Enable grab") );
     }
 
     if( isErrorState ){
         trayIcon->setIcon(QIcon(":/icons/error.png"));
         trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
 
-        ui->pushButton_GrabOnOff->setIcon(QIcon(":/icons/error.png"));
+        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/error.png"));
     }else{
         if( isAmbilightOn ){
             trayIcon->setIcon(QIcon(":/icons/on.png"));
@@ -317,7 +325,7 @@ void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
         hz = 1 / secs;
     }
 
-    ui->label_UpdateFrequencyEval->setText( QString::number(hz,'f', 2) /* ms to hz */ );
+    ui->label_GrabFrequency_value->setText( QString::number(hz,'f', 2) /* ms to hz */ );
 }
 
 // ----------------------------------------------------------------------------
@@ -678,7 +686,9 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
         break;
 
     case QSystemTrayIcon::Trigger:
-    default: break;
+        break;
+    default:
+        ;
     }
 }
 
@@ -690,7 +700,7 @@ void MainWindow::loadSettingsToMainWindow()
 {
     qDebug() << "MainWindow::loadSettingsToMainWindow()";
 
-    ui->spinBox_UpdateDelay->setValue               ( Settings::value("GrabSlowdownMs").toInt() );
+    ui->spinBox_SlowdownGrab->setValue              ( Settings::value("GrabSlowdownMs").toInt() );
     ui->spinBox_MinLevelOfSensitivity->setValue     ( Settings::value("MinimumLevelOfSensitivity").toInt() );
     ui->checkBox_AVG_Colors->setChecked             ( Settings::value("IsAvgColorsOn").toBool() );
 
