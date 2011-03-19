@@ -783,7 +783,7 @@ void MainWindow::loadSettingsToMainWindow()
 // Back call from main.cpp message processing messageOutput()
 void MainWindow::appendLogsLine(const QString & line)
 {
-    ui->plainTextLogs->appendPlainText(line);
+    ui->plainTextLogs->insertPlainText(line + "\n");
 }
 
 void MainWindow::setLogsFilePath(const QString & filePath)
