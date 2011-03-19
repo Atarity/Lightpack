@@ -185,10 +185,10 @@ void MainWindow::changeEvent(QEvent *e)
 
         if( isAmbilightOn ){
             trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
-            ui->label_EnableDisableGrab->setText( tr("Disable grab") );
+            ui->label_EnableDisableGrab->setText( tr("Disable grab:") );
         }else{
             trayIcon->setToolTip( tr("Disabled") );
-            ui->label_EnableDisableGrab->setText( tr("Enable grab") );
+            ui->label_EnableDisableGrab->setText( tr("Enable grab:") );
         }
 
         if(isErrorState) trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
@@ -252,10 +252,10 @@ void MainWindow::updateTrayAndActionStates()
 {
     if( isAmbilightOn ){
         ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/on.png"));
-        ui->label_EnableDisableGrab->setText( tr("Disable grab") );
+        ui->label_EnableDisableGrab->setText( tr("Disable grab:") );
     }else{
         ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/off.png"));
-        ui->label_EnableDisableGrab->setText( tr("Enable grab") );
+        ui->label_EnableDisableGrab->setText( tr("Enable grab:") );
     }
 
     if( isErrorState ){
