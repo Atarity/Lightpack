@@ -436,6 +436,29 @@ void MainWindow::profileSwitch(const QString & configName)
     emit settingsProfileChanged();
 }
 
+// Slot for switch profiles by tray menu
+void MainWindow::profileTraySwitch()
+{
+    qDebug() << Q_FUNC_INFO;
+
+    for(int i=0; i < profilesMenu->actions().count(); i++){
+        QAction * action = profilesMenu->actions().at(i);
+        if( action->isChecked() ){
+            if( action->text() != ui->comboBox_Profiles->currentText() ){
+                qDebug() << "profileSwitch" << action->text();
+                int index = ui->comboBox_Profiles->findText( action->text() );
+                ui->comboBox_Profiles->setCurrentIndex( index );
+                return;
+            }
+        }else{
+            if( action->text() == ui->comboBox_Profiles->currentText() ){
+                qDebug() << "setChecked" << action->text();
+                action->setChecked(true);
+            }
+        }
+    }
+}
+
 void MainWindow::profileNew()
 {
     QString profileName = tr("New profile");
@@ -514,7 +537,30 @@ void MainWindow::settingsProfileChanged_UpdateUI()
     }else{
         ui->pushButton_DeleteProfile->setEnabled(false);
     }
+
+    profileTraySync();
 }
+
+// Syncronize profiles from combobox with tray menu
+void MainWindow::profileTraySync()
+{
+    qDebug() << Q_FUNC_INFO;
+
+    QAction *profileAction;
+
+    profilesMenu->clear();
+
+    for(int i=0; i < ui->comboBox_Profiles->count(); i++){
+        profileAction = new QAction( ui->comboBox_Profiles->itemText( i ), this );
+        profileAction->setCheckable( true );
+        if( i == ui->comboBox_Profiles->currentIndex() ){
+            profileAction->setChecked( true );
+        }
+        profilesMenu->addAction( profileAction );
+        connect(profileAction, SIGNAL(triggered()), this, SLOT(profileTraySwitch()));
+    }
+}
+
 
 // ----------------------------------------------------------------------------
 // Translate GUI
@@ -638,6 +684,10 @@ void MainWindow::createActions()
     offAmbilightAction->setIconVisibleInMenu(true);
     connect(offAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOff()));
 
+
+    profilesMenu = new QMenu("&Profiles", this);
+    profilesMenu->clear();
+
     settingsAction = new QAction(QIcon(":/icons/settings.png"), tr("&Settings"), this);
     settingsAction->setIconVisibleInMenu(true);
     connect(settingsAction, SIGNAL(triggered()), this, SLOT(showSettings()));
@@ -655,7 +705,8 @@ void MainWindow::createTrayIcon()
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(onAmbilightAction);
     trayIconMenu->addAction(offAmbilightAction);
-    trayIconMenu->addSeparator();
+    trayIconMenu->addSeparator();    
+    trayIconMenu->addMenu(profilesMenu);
     trayIconMenu->addAction(settingsAction);
     trayIconMenu->addAction(aboutAction);
     trayIconMenu->addSeparator();

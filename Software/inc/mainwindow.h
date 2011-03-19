@@ -81,6 +81,7 @@ private slots:
 
     void profileRename();
     void profileSwitch(const QString & configName);
+    void profileTraySwitch();
     void profileNew();
     void profileResetToDefaultCurrent();
     void profileDeleteCurrent();
@@ -99,6 +100,8 @@ private:
 
     void profilesFindAll();
     void profileLoadLast();
+    void profileTraySync();
+
     void initLanguages();
 
     void openFile(const QString &filePath);
@@ -128,6 +131,7 @@ private:
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
+    QMenu *profilesMenu;
 
     QTranslator *translator;
 };
