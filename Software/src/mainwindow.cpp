@@ -553,6 +553,7 @@ void MainWindow::loadTranslation(const QString & language)
     // locale - name of translation binary file form resources: %locale%.qm
     if( ui->comboBox_Language->currentIndex() == 0 /* System */ ){
         qDebug() << "System locale" << locale;
+        Settings::setValueMain( "Language", LANGUAGE_DEFAULT_NAME );
     }
     else if ( language == "English" ) locale = "en_EN"; // :/translations/en_EN.qm
     else if ( language == "Russian" ) locale = "ru_RU"; // :/translations/ru_RU.qm
