@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>494</width>
-    <height>268</height>
+    <width>435</width>
+    <height>310</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,7 +22,7 @@
   <property name="minimumSize">
    <size>
     <width>0</width>
-    <height>0</height>
+    <height>15</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -256,7 +256,7 @@
           </size>
          </property>
          <property name="text">
-          <string notr="true">#.#.#</string>
+          <string notr="true">&lt;b&gt;%1&lt;/b&gt;</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -287,7 +287,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Software revision ######</string>
+          <string>Software revision &lt;b&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;&lt;/b&gt;</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -318,10 +318,10 @@
           </size>
          </property>
          <property name="text">
-          <string notr="true">Firmware version #.#</string>
+          <string>Firmware version &lt;b&gt;%1&lt;/b&gt;</string>
          </property>
          <property name="margin">
-          <number>0</number>
+          <number>1</number>
          </property>
          <property name="openExternalLinks">
           <bool>true</bool>

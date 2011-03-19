@@ -688,6 +688,7 @@ void MainWindow::createActions()
 
 
     profilesMenu = new QMenu(tr("&Profiles"), this);
+    profilesMenu->setIcon( QIcon(":/icons/profiles.png"));
     profilesMenu->clear();
 
     settingsAction = new QAction(QIcon(":/icons/settings.png"), tr("&Settings"), this);

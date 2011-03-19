@@ -52,6 +52,9 @@ protected:
 
 private:
     Ui::aboutDialog *ui;
+    QString softwareVersionTemplate;
+    QString softwareRevisionTemplate;
+    QString fimwareVersionTemplate;
 };
 
 #endif // ABOUTDIALOG_H

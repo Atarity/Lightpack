@@ -3,57 +3,39 @@
 <TS version="2.0" language="ru_RU">
 <defaultcodec>UTF-8</defaultcodec>
 <context>
-    <name>AboutDialog</name>
-    <message>
-        <location filename="../../src/aboutdialog.cpp" line="74"/>
-        <source>Software version</source>
-        <translation>Версия программы</translation>
-    </message>
-    <message>
-        <location filename="../../src/aboutdialog.cpp" line="76"/>
-        <source> revision </source>
-        <translation> ревизия </translation>
-    </message>
-    <message>
-        <location filename="../../src/aboutdialog.cpp" line="68"/>
-        <source>Firmware version</source>
-        <translation>Версия прошивки</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/mainwindow.ui" line="305"/>
+        <location filename="../../src/mainwindow.ui" line="365"/>
         <source>Hz</source>
         <translation>Гц</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="243"/>
+        <location filename="../../src/mainwindow.ui" line="303"/>
         <source>AVG color on all LEDs</source>
         <translation>Средний цвет на все светодиоды</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="205"/>
+        <location filename="../../src/mainwindow.ui" line="265"/>
         <source>Show grab widgets</source>
         <translation>Показать области захвата</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="224"/>
+        <location filename="../../src/mainwindow.ui" line="284"/>
         <source>Colored</source>
         <translation>Разноцветные</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="217"/>
+        <location filename="../../src/mainwindow.ui" line="277"/>
         <source>White</source>
         <translation>Белые</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="452"/>
+        <location filename="../../src/mainwindow.ui" line="512"/>
         <source>Profile</source>
         <translation>Профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="550"/>
+        <location filename="../../src/mainwindow.ui" line="610"/>
         <source>Open in text editor</source>
         <translation>Открыть в текстовом редакторе</translation>
     </message>
@@ -63,47 +45,47 @@
         <translation>Захват</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="82"/>
+        <location filename="../../src/mainwindow.ui" line="97"/>
         <source>Slowdown grab:</source>
         <translation>Задержка захвата:</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="121"/>
+        <location filename="../../src/mainwindow.ui" line="169"/>
         <source>Grab frequency:</source>
         <translation>Частота захвата:</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="151"/>
+        <location filename="../../src/mainwindow.ui" line="205"/>
         <source>ms</source>
         <translation>мс</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="371"/>
+        <location filename="../../src/mainwindow.ui" line="431"/>
         <source>Color depth</source>
         <translation>Глубина цвета</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="422"/>
+        <location filename="../../src/mainwindow.ui" line="482"/>
         <source>USB send data only if colors changes</source>
         <translation>Посылать данные только при обновлении цвета</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="415"/>
+        <location filename="../../src/mainwindow.ui" line="475"/>
         <source>Smooth change colors</source>
         <translation>Плавное изменение цветов</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="566"/>
+        <location filename="../../src/mainwindow.ui" line="626"/>
         <source>User interface</source>
         <translation>Интерфейс пользователя</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="572"/>
+        <location filename="../../src/mainwindow.ui" line="632"/>
         <source>Language:</source>
         <translation>Язык:</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="267"/>
+        <location filename="../../src/mainwindow.ui" line="327"/>
         <source>Device</source>
         <translation>Устройство</translation>
     </message>
@@ -113,52 +95,52 @@
         <translation>Порог чувствительности:</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="158"/>
+        <location filename="../../src/mainwindow.ui" line="215"/>
         <source>fps</source>
         <translation>к/с</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="275"/>
+        <location filename="../../src/mainwindow.ui" line="335"/>
         <source>Frequency of PWM generation</source>
         <translation>Итоговая частота ШИМ</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="330"/>
+        <location filename="../../src/mainwindow.ui" line="390"/>
         <source>Timer</source>
         <translation>Задержка таймера ШИМ</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="446"/>
+        <location filename="../../src/mainwindow.ui" line="506"/>
         <source>Profiles</source>
         <translation>Профили</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="479"/>
+        <location filename="../../src/mainwindow.ui" line="539"/>
         <source>Add new profile</source>
         <translation>Добавить новый профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="602"/>
+        <location filename="../../src/mainwindow.ui" line="662"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="505"/>
+        <location filename="../../src/mainwindow.ui" line="565"/>
         <source>Reset current profile to defaults</source>
         <translation>Сбросить настройки текущего профиля</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="531"/>
+        <location filename="../../src/mainwindow.ui" line="591"/>
         <source>Delete profile</source>
         <translation>Удалить профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="623"/>
+        <location filename="../../src/mainwindow.ui" line="683"/>
         <source>Open logs in text editor</source>
         <translation>Открыть логи в текстовом редакторе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="655"/>
+        <location filename="../../src/mainwindow.ui" line="715"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
@@ -187,22 +169,10 @@
         <translation>&amp;Профили</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="188"/>
-        <location filename="../../src/mainwindow.cpp" line="255"/>
-        <source>Disable grab</source>
-        <translation>Выключить захват</translation>
-    </message>
-    <message>
         <location filename="../../src/mainwindow.cpp" line="190"/>
         <location filename="../../src/mainwindow.cpp" line="275"/>
         <source>Disabled</source>
         <translation>Выключен</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="191"/>
-        <location filename="../../src/mainwindow.cpp" line="258"/>
-        <source>Enable grab</source>
-        <translation>Включить захват</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="198"/>
@@ -246,6 +216,18 @@
         <source>Enabled profile: %1</source>
         <translation>Включен профиль: %1</translation>
     </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="188"/>
+        <location filename="../../src/mainwindow.cpp" line="255"/>
+        <source>Disable grab:</source>
+        <translation>Выключить захват:</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="191"/>
+        <location filename="../../src/mainwindow.cpp" line="258"/>
+        <source>Enable grab:</source>
+        <translation>Включить захват:</translation>
+    </message>
 </context>
 <context>
     <name>QApplication</name>
@@ -268,27 +250,37 @@
         <translation>Лайтпак — Описание</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="91"/>
+        <location filename="../../src/aboutdialog.ui" line="125"/>
         <source>&lt;h2&gt;Lightpack&lt;/h2&gt;</source>
         <translation>&lt;h2&gt;Лайтпак&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="110"/>
+        <location filename="../../src/aboutdialog.ui" line="175"/>
         <source>&lt;a href=&quot;http://lightpack.googlecode.com/&quot;&gt;lightpack.googlecode.com&lt;/a&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="126"/>
+        <location filename="../../src/aboutdialog.ui" line="290"/>
+        <source>Software revision &lt;b&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;&lt;/b&gt;</source>
+        <translation>Ревизия приложения &lt;b&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../src/aboutdialog.ui" line="150"/>
         <source>Content-appropriate ambient lighting system with USB interface</source>
         <translation>USB-подсветка монитора для усиления эффекта присутствия</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="190"/>
-        <source>&lt;small&gt;THIS PROGRAM IS DISTRIBUTED &quot;AS IS&quot;. NO WARRANTY OF ANY KIND IS EXPRESSED OR IMPLIED. YOU USE AT YOUR OWN RISK. THE AUTHOR WILL NOT BE LIABLE FOR DATA LOSS, DAMAGES, LOSS OF PROFITS OR ANY OTHER KIND OF LOSS WHILE USING OR MISUSING THIS SOFTWARE.&lt;/small&gt;</source>
-        <translation>&lt;small&gt;ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПОСТАВЛЯЕТСЯ ПО ПРИНЦИПУ &quot;AS IS&quot;. НИКАКИХ ГАРАНТИЙ НЕ ПРИЛАГАЕТСЯ И НЕ ПРЕДУСМАТРИВАЕТСЯ. ВЫ ИСПОЛЬЗУЕТЕ ЭТО ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ НА СВОЙ РИСК. АВТОР НЕ БУДЕТ ОТВЕЧАТЬ НИ ЗА КАКИЕ ПОТЕРИ ИЛИ ИСКАЖЕНИЯ ДАННЫХ, ЛЮБУЮ УПУЩЕННУЮ ВЫГОДУ В ПРОЦЕССЕ ИСПОЛЬЗОВАНИЯ ИЛИ НЕПРАВИЛЬНОГО ИСПОЛЬЗОВАНИЯ ЭТОГО ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ.&lt;/small&gt;</translation>
+        <location filename="../../src/aboutdialog.ui" line="321"/>
+        <source>Firmware version &lt;b&gt;%1&lt;/b&gt;</source>
+        <translation>Версия прошивки &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="221"/>
+        <location filename="../../src/aboutdialog.ui" line="382"/>
+        <source>&lt;small&gt;THIS PROGRAM IS DISTRIBUTED &quot;AS IS&quot;. NO WARRANTY OF ANY KIND IS EXPRESSED OR IMPLIED. YOU USE AT YOUR OWN RISK. THE AUTHOR WILL NOT BE LIABLE FOR DATA LOSS, DAMAGES, LOSS OF PROFITS OR ANY OTHER KIND OF LOSS WHILE USING OR MISUSING THIS SOFTWARE.&lt;/small&gt;</source>
+        <translation>Программное обеспечение распространяется под открытой лицензией GPLv3 и поставляется &quot;как есть&quot;. Никаких гарантий не прилагается и не предусматривается. Вы используете это программное обеспечение на свой риск. Авторы не несут ответственности за потерю, или порчу данных, а так же упущенную вами в процессе использования этого ПО выгоду.</translation>
+    </message>
+    <message>
+        <location filename="../../src/aboutdialog.ui" line="413"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>

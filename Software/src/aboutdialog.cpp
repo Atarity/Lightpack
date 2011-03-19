@@ -36,6 +36,11 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
     this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint );
 
+    // Save templetes for construct version strings
+    softwareVersionTemplate     = ui->labelVersionSoftware->text();
+    softwareRevisionTemplate    = ui->labelRevisionSoftware->text();
+    fimwareVersionTemplate      = ui->labelVersionFirmware->text();
+
     softwareVersionUpdate();
 }
 
@@ -50,6 +55,10 @@ void AboutDialog::changeEvent(QEvent *e)
     switch (e->type()) {
     case QEvent::LanguageChange:
         ui->retranslateUi(this);
+
+        //softwareRevisionTemplate    = tr( softwareRevisionTemplate );
+        //fimwareVersionTemplate      = ui->labelVersionFirmware->text();
+
         softwareVersionUpdate();
         break;
     default:
@@ -65,17 +74,21 @@ void AboutDialog::closeEvent(QCloseEvent *event)
 
 void AboutDialog::setFirmwareVersion(const QString &firmwareVersion)
 {
-    ui->labelVersionFirmware->setText( tr("Firmware version") + " <b>" + firmwareVersion + "</b>" );
+    ui->labelVersionFirmware->setText( fimwareVersionTemplate.arg( firmwareVersion ) );
 }
 
 
 void AboutDialog::softwareVersionUpdate()
 {
-    QString softwareVersion = tr("Software version") + " <b>" + QApplication::applicationVersion() + "</b>";
+    ui->labelVersionSoftware->setText( softwareVersionTemplate.arg( QApplication::applicationVersion() ) );
+
 #ifdef HG_REVISION
-    softwareVersion += tr(" revision ") + QString("<a href=\"http://code.google.com/p/lightpack/source/detail?r=%1\">%1</a>").arg( HG_REVISION );
+    ui->labelRevisionSoftware->setText( softwareRevisionTemplate.arg( HG_REVISION ) );
+#else
+    ui->labelRevisionSoftware->hide();
 #endif
-    ui->labelVersionSoftware->setText( softwareVersion );
+
+    adjustSize();
 
     setFixedSize( sizeHint() );
 }
