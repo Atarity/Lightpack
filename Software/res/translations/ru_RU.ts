@@ -163,80 +163,86 @@
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="194"/>
-        <location filename="../../src/mainwindow.cpp" line="509"/>
+        <location filename="../../src/mainwindow.cpp" line="196"/>
+        <location filename="../../src/mainwindow.cpp" line="534"/>
         <source>Lightpack: %1</source>
         <translation>Лайтпак: %1</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="192"/>
-        <location filename="../../src/mainwindow.cpp" line="261"/>
+        <location filename="../../src/mainwindow.cpp" line="194"/>
+        <location filename="../../src/mainwindow.cpp" line="263"/>
         <source>Error with connection device, verbose in logs</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="178"/>
-        <location filename="../../src/mainwindow.cpp" line="632"/>
+        <location filename="../../src/mainwindow.cpp" line="681"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="186"/>
-        <location filename="../../src/mainwindow.cpp" line="253"/>
+        <location filename="../../src/mainwindow.cpp" line="184"/>
+        <location filename="../../src/mainwindow.cpp" line="690"/>
+        <source>&amp;Profiles</source>
+        <translation>&amp;Профили</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="188"/>
+        <location filename="../../src/mainwindow.cpp" line="255"/>
         <source>Disable grab</source>
         <translation>Выключить захват</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="188"/>
-        <location filename="../../src/mainwindow.cpp" line="273"/>
+        <location filename="../../src/mainwindow.cpp" line="190"/>
+        <location filename="../../src/mainwindow.cpp" line="275"/>
         <source>Disabled</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="189"/>
-        <location filename="../../src/mainwindow.cpp" line="256"/>
+        <location filename="../../src/mainwindow.cpp" line="191"/>
+        <location filename="../../src/mainwindow.cpp" line="258"/>
         <source>Enable grab</source>
         <translation>Включить захват</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="196"/>
-        <location filename="../../src/mainwindow.cpp" line="526"/>
+        <location filename="../../src/mainwindow.cpp" line="198"/>
+        <location filename="../../src/mainwindow.cpp" line="574"/>
         <source>System default</source>
         <translation>По умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="441"/>
+        <location filename="../../src/mainwindow.cpp" line="466"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="179"/>
-        <location filename="../../src/mainwindow.cpp" line="636"/>
+        <location filename="../../src/mainwindow.cpp" line="685"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="180"/>
-        <location filename="../../src/mainwindow.cpp" line="640"/>
+        <location filename="../../src/mainwindow.cpp" line="693"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="181"/>
-        <location filename="../../src/mainwindow.cpp" line="644"/>
+        <location filename="../../src/mainwindow.cpp" line="697"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="182"/>
-        <location filename="../../src/mainwindow.cpp" line="648"/>
+        <location filename="../../src/mainwindow.cpp" line="701"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="185"/>
-        <location filename="../../src/mainwindow.cpp" line="267"/>
-        <location filename="../../src/mainwindow.cpp" line="510"/>
+        <location filename="../../src/mainwindow.cpp" line="187"/>
+        <location filename="../../src/mainwindow.cpp" line="269"/>
+        <location filename="../../src/mainwindow.cpp" line="535"/>
         <source>Enabled profile: %1</source>
         <translation>Включен профиль: %1</translation>
     </message>

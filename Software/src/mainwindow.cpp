@@ -181,6 +181,8 @@ void MainWindow::changeEvent(QEvent *e)
         aboutAction->setText( tr("&About") );
         quitAction->setText( tr("&Quit") );
 
+        profilesMenu->setTitle( tr("&Profiles") );
+
         if( isAmbilightOn ){
             trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
             ui->label_EnableDisableGrab->setText( tr("Disable grab") );
@@ -685,7 +687,7 @@ void MainWindow::createActions()
     connect(offAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOff()));
 
 
-    profilesMenu = new QMenu("&Profiles", this);
+    profilesMenu = new QMenu(tr("&Profiles"), this);
     profilesMenu->clear();
 
     settingsAction = new QAction(QIcon(":/icons/settings.png"), tr("&Settings"), this);
