@@ -193,19 +193,19 @@
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="180"/>
-        <location filename="../../src/mainwindow.cpp" line="693"/>
+        <location filename="../../src/mainwindow.cpp" line="694"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="181"/>
-        <location filename="../../src/mainwindow.cpp" line="697"/>
+        <location filename="../../src/mainwindow.cpp" line="698"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="182"/>
-        <location filename="../../src/mainwindow.cpp" line="701"/>
+        <location filename="../../src/mainwindow.cpp" line="702"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
@@ -260,14 +260,14 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="290"/>
-        <source>Software revision &lt;b&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;&lt;/b&gt;</source>
-        <translation>Ревизия приложения &lt;b&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;&lt;/b&gt;</translation>
-    </message>
-    <message>
         <location filename="../../src/aboutdialog.ui" line="150"/>
         <source>Content-appropriate ambient lighting system with USB interface</source>
         <translation>USB-подсветка монитора для усиления эффекта присутствия</translation>
+    </message>
+    <message>
+        <location filename="../../src/aboutdialog.ui" line="290"/>
+        <source>Software revision &lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;</source>
+        <translation>Ревизия приложения &lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/aboutdialog.ui" line="321"/>

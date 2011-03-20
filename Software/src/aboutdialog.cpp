@@ -36,10 +36,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
     this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint );
 
-    // Save templetes for construct version strings
-    softwareVersionTemplate     = ui->labelVersionSoftware->text();
-    softwareRevisionTemplate    = ui->labelRevisionSoftware->text();
-    fimwareVersionTemplate      = ui->labelVersionFirmware->text();
+    versionTemplatesUpdate();
 
     softwareVersionUpdate();
 }
@@ -56,9 +53,9 @@ void AboutDialog::changeEvent(QEvent *e)
     case QEvent::LanguageChange:
         ui->retranslateUi(this);
 
-        //softwareRevisionTemplate    = tr( softwareRevisionTemplate );
-        //fimwareVersionTemplate      = ui->labelVersionFirmware->text();
-
+        // After retranslate UI we need to update templates for new locale
+        versionTemplatesUpdate();
+        // Fill templates with software version and revision and show it in dialog
         softwareVersionUpdate();
         break;
     default:
@@ -71,6 +68,16 @@ void AboutDialog::closeEvent(QCloseEvent *event)
     this->hide();
     event->ignore();
 }
+
+
+void AboutDialog::versionTemplatesUpdate()
+{
+    // Save templetes for construct version strings
+    softwareVersionTemplate     = ui->labelVersionSoftware->text();
+    softwareRevisionTemplate    = ui->labelRevisionSoftware->text();
+    fimwareVersionTemplate      = ui->labelVersionFirmware->text();
+}
+
 
 void AboutDialog::setFirmwareVersion(const QString &firmwareVersion)
 {

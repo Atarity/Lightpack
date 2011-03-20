@@ -287,7 +287,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Software revision &lt;b&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;&lt;/b&gt;</string>
+          <string>Software revision &lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
