@@ -748,7 +748,8 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
         }
         break;
 
-    case QSystemTrayIcon::Trigger:
+    case QSystemTrayIcon::Context:
+        trayIconMenu->activateWindow();
         break;
     default:
         ;
