@@ -265,6 +265,11 @@
         <translation>USB-подсветка монитора для усиления эффекта присутствия</translation>
     </message>
     <message>
+        <location filename="../../src/aboutdialog.ui" line="259"/>
+        <source>&lt;b&gt;%1&lt;/b&gt;</source>
+        <translation>&lt;b&gt;%1&lt;/b&gt;</translation>
+    </message>
+    <message>
         <location filename="../../src/aboutdialog.ui" line="290"/>
         <source>Software revision &lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;</source>
         <translation>Ревизия приложения &lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;</translation>

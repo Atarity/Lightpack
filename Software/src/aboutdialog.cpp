@@ -28,6 +28,8 @@
 #include "ui_aboutdialog.h"
 #include "version.h"
 
+#include <QtDebug>
+
 AboutDialog::AboutDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::aboutDialog)
@@ -51,9 +53,7 @@ void AboutDialog::changeEvent(QEvent *e)
     QDialog::changeEvent(e);
     switch (e->type()) {
     case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-
-        // After retranslate UI we need to update templates for new locale
+        // Retranslate UI and update templates for new locale
         versionTemplatesUpdate();
         // Fill templates with software version and revision and show it in dialog
         softwareVersionUpdate();
@@ -64,7 +64,7 @@ void AboutDialog::changeEvent(QEvent *e)
 }
 
 void AboutDialog::closeEvent(QCloseEvent *event)
-{
+{    
     this->hide();
     event->ignore();
 }
@@ -72,6 +72,8 @@ void AboutDialog::closeEvent(QCloseEvent *event)
 
 void AboutDialog::versionTemplatesUpdate()
 {
+    ui->retranslateUi(this);
+
     // Save templetes for construct version strings
     softwareVersionTemplate     = ui->labelVersionSoftware->text();
     softwareRevisionTemplate    = ui->labelRevisionSoftware->text();

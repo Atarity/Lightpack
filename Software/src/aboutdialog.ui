@@ -256,7 +256,7 @@
           </size>
          </property>
          <property name="text">
-          <string notr="true">&lt;b&gt;%1&lt;/b&gt;</string>
+          <string>&lt;b&gt;%1&lt;/b&gt;</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
