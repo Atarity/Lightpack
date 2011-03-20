@@ -247,7 +247,7 @@
     <message>
         <location filename="../../src/aboutdialog.ui" line="29"/>
         <source>Lightpack — About</source>
-        <translation>Лайтпак — Описание</translation>
+        <translation>Лайтпак — О программе</translation>
     </message>
     <message>
         <location filename="../../src/aboutdialog.ui" line="125"/>
@@ -255,37 +255,35 @@
         <translation>&lt;h2&gt;Лайтпак&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="175"/>
+        <location filename="../../src/aboutdialog.ui" line="150"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревизия &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), прошивка &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../src/aboutdialog.ui" line="229"/>
         <source>&lt;a href=&quot;http://lightpack.googlecode.com/&quot;&gt;lightpack.googlecode.com&lt;/a&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="150"/>
+        <location filename="../../src/aboutdialog.ui" line="204"/>
         <source>Content-appropriate ambient lighting system with USB interface</source>
         <translation>USB-подсветка монитора для усиления эффекта присутствия</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="259"/>
-        <source>&lt;b&gt;%1&lt;/b&gt;</source>
-        <translation>&lt;b&gt;%1&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../src/aboutdialog.ui" line="290"/>
-        <source>Software revision &lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;</source>
-        <translation>Ревизия приложения &lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%1&quot;&gt; %1 &lt;/a&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../src/aboutdialog.ui" line="321"/>
-        <source>Firmware version &lt;b&gt;%1&lt;/b&gt;</source>
-        <translation>Версия прошивки &lt;b&gt;%1&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../src/aboutdialog.ui" line="382"/>
+        <location filename="../../src/aboutdialog.ui" line="296"/>
         <source>&lt;small&gt;THIS PROGRAM IS DISTRIBUTED &quot;AS IS&quot;. NO WARRANTY OF ANY KIND IS EXPRESSED OR IMPLIED. YOU USE AT YOUR OWN RISK. THE AUTHOR WILL NOT BE LIABLE FOR DATA LOSS, DAMAGES, LOSS OF PROFITS OR ANY OTHER KIND OF LOSS WHILE USING OR MISUSING THIS SOFTWARE.&lt;/small&gt;</source>
         <translation>Программное обеспечение распространяется под открытой лицензией GPLv3 и поставляется &quot;как есть&quot;. Никаких гарантий не прилагается и не предусматривается. Вы используете это программное обеспечение на свой риск. Авторы не несут ответственности за потерю, или порчу данных, а так же упущенную вами в процессе использования этого ПО выгоду.</translation>
     </message>
     <message>
-        <location filename="../../src/aboutdialog.ui" line="413"/>
+        <location filename="../../src/aboutdialog.ui" line="327"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>

@@ -44,8 +44,7 @@ public:
     void setFirmwareVersion(const QString &firmwareVersion);
 
 private:
-    void versionTemplatesUpdate();
-    void softwareVersionUpdate();
+    void versionsUpdate();
 
 protected:
     virtual void changeEvent(QEvent *e);
@@ -54,9 +53,7 @@ protected:
 private:
     Ui::aboutDialog *ui;
 
-    QString softwareVersionTemplate;
-    QString softwareRevisionTemplate;
-    QString fimwareVersionTemplate;
+    QString fimwareVersion;
 };
 
 #endif // ABOUTDIALOG_H

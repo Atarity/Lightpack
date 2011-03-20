@@ -38,9 +38,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
     this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint );
 
-    versionTemplatesUpdate();
-
-    softwareVersionUpdate();
+    versionsUpdate();
 }
 
 AboutDialog::~AboutDialog()
@@ -53,10 +51,8 @@ void AboutDialog::changeEvent(QEvent *e)
     QDialog::changeEvent(e);
     switch (e->type()) {
     case QEvent::LanguageChange:
-        // Retranslate UI and update templates for new locale
-        versionTemplatesUpdate();
-        // Fill templates with software version and revision and show it in dialog
-        softwareVersionUpdate();
+        // Retranslate UI and update versions string
+        versionsUpdate();
         break;
     default:
         break;
@@ -69,35 +65,36 @@ void AboutDialog::closeEvent(QCloseEvent *event)
     event->ignore();
 }
 
+void AboutDialog::setFirmwareVersion(const QString &firmwareVersion)
+{
+    this->fimwareVersion = firmwareVersion;
+    versionsUpdate();
+}
 
-void AboutDialog::versionTemplatesUpdate()
+
+void AboutDialog::versionsUpdate()
 {
     ui->retranslateUi(this);
 
-    // Save templetes for construct version strings
-    softwareVersionTemplate     = ui->labelVersionSoftware->text();
-    softwareRevisionTemplate    = ui->labelRevisionSoftware->text();
-    fimwareVersionTemplate      = ui->labelVersionFirmware->text();
-}
+    // Save templete for construct version string
+    QString versionsTemplate = ui->labelVersions->text();
 
+    versionsTemplate = versionsTemplate.arg(
+            QApplication::applicationVersion(),
+            HG_REVISION,
+            fimwareVersion );
 
-void AboutDialog::setFirmwareVersion(const QString &firmwareVersion)
-{
-    ui->labelVersionFirmware->setText( fimwareVersionTemplate.arg( firmwareVersion ) );
-}
-
-
-void AboutDialog::softwareVersionUpdate()
-{
-    ui->labelVersionSoftware->setText( softwareVersionTemplate.arg( QApplication::applicationVersion() ) );
-
-#ifdef HG_REVISION
-    ui->labelRevisionSoftware->setText( softwareRevisionTemplate.arg( HG_REVISION ) );
-#else
-    ui->labelRevisionSoftware->hide();
+#ifndef HG_REVISION
+    versionsTemplate.remove(QRegExp(" [(].+[)]"));
 #endif
+
+    ui->labelVersions->setText( versionsTemplate );
 
     adjustSize();
 
     setFixedSize( sizeHint() );
 }
+
+
+
+
