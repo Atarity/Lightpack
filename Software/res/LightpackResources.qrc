@@ -9,6 +9,7 @@
         <file>icons/profile_reset.png</file>
         <file>icons/profile_new.png</file>
         <file>icons/profiles.png</file>
+        <file>icons/about.png</file>
         <file>translations/ru_RU.qm</file>
     </qresource>
 </RCC>

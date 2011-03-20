@@ -30,7 +30,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../res/LightpackResources.qrc">
-    <normaloff>:/icons/Lightpack.png</normaloff>:/icons/Lightpack.png</iconset>
+    <normaloff>:/icons/about.png</normaloff>:/icons/about.png</iconset>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>

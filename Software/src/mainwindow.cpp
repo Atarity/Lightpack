@@ -695,7 +695,7 @@ void MainWindow::createActions()
     settingsAction->setIconVisibleInMenu(true);
     connect(settingsAction, SIGNAL(triggered()), this, SLOT(showSettings()));
 
-    aboutAction = new QAction(QIcon(":/icons/Lightpack.png"), tr("&About"), this);
+    aboutAction = new QAction(QIcon(":/icons/about.png"), tr("&About"), this);
     aboutAction->setIconVisibleInMenu(true);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAbout()));
 
