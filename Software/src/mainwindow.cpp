@@ -251,10 +251,10 @@ void MainWindow::startAmbilight()
 void MainWindow::updateTrayAndActionStates()
 {
     if( isAmbilightOn ){
-        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/on.png"));
+        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/off.png"));
         ui->label_EnableDisableGrab->setText( tr("Disable grab:") );
     }else{
-        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/off.png"));
+        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/on.png"));
         ui->label_EnableDisableGrab->setText( tr("Enable grab:") );
     }
 
