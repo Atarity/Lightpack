@@ -69,6 +69,8 @@ private slots:
     void scaleLedWidgets();
     void firstWidgetPositionChanged();
     void updateLedsColorsIfChanged();
+    void updateFpsOnMainWindow();
+
 private:
     void updateSmoothSteps(); /* works with colorsNew */
 
@@ -80,7 +82,8 @@ private:
 
 
 private: // variables
-    QTimer *timer;
+    QTimer *timerGrab;
+    QTimer *timerUpdateFPS;
     QList<MoveMeWidget *> ledWidgets;
     //QList<MoveMeWidget *> moveMeGroup; // move and resize labels together
     const static QColor backgroundAndTextColors[LEDS_COUNT][2];
@@ -94,6 +97,9 @@ private: // variables
     bool updateColorsOnlyIfChanges;
     bool avgColorsOnAllLeds;
     int minLevelOfSensivity;
+
+    // Store last grabbing time in milliseconds
+    double fpsMs;
 
     // Settings:
     int ambilightDelayMs;

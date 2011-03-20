@@ -29,8 +29,15 @@
 
 GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
 {
-    timer = new QTimer(this);
-    timeEval = new TimeEvaluations();    
+    timerGrab = new QTimer(this);
+    timeEval = new TimeEvaluations();
+
+    fpsMs = 0;
+
+    timerUpdateFPS = new QTimer(this);
+    connect(timerUpdateFPS, SIGNAL(timeout()), this, SLOT(updateFpsOnMainWindow()));
+    timerUpdateFPS->setSingleShot( false );
+    timerUpdateFPS->start( 1000 );
 
     // TODO: add me to settings
     this->updateColorsOnlyIfChanges = true; // default value
@@ -43,7 +50,7 @@ GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
     qDebug() << "GrabManager(): createLedWidgets()";
     initLedWidgets();
 
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
+    connect(timerGrab, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
     connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(scaleLedWidgets()));
 
     qDebug() << "GrabManager(): initialized";
@@ -51,7 +58,7 @@ GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
 
 GrabManager::~GrabManager()
 {
-    delete timer;
+    delete timerGrab;
     delete timeEval;
 
     for(int i=0; i<ledWidgets.count(); i++){
@@ -136,7 +143,7 @@ void GrabManager::updateLedsColorsIfChanged()
     // Temporary switch off updating colors
     // if one of LED widgets resizing or moving
     if(isResizeOrMoving){
-        timer->start(50); // check in 50 ms
+        timerGrab->start(50); // check in 50 ms
         return;
     }
 
@@ -234,12 +241,12 @@ void GrabManager::updateLedsColorsIfChanged()
         // if updateColorsOnlyIfChanges == false, then update colors (not depending on needToUpdate flag)
         emit updateLedsColors( colorsCurrent );
     }
-    emit ambilightTimeOfUpdatingColors( timeEval->howLongItEnd() );
 
+    fpsMs = timeEval->howLongItEnd();
     timeEval->howLongItStart();
 
     if(isAmbilightOn){
-        timer->start( ambilightDelayMs );
+        timerGrab->start( ambilightDelayMs );
     }
 }
 
@@ -289,6 +296,11 @@ void GrabManager::updateSmoothSteps()
     }
 }
 
+// Send each second new grabbing time in ms to main window
+void GrabManager::updateFpsOnMainWindow()
+{
+    emit ambilightTimeOfUpdatingColors( fpsMs );
+}
 
 void GrabManager::setAmbilightOn(bool isAmbilightOn, bool isErrorState)
 {
@@ -298,10 +310,10 @@ void GrabManager::setAmbilightOn(bool isAmbilightOn, bool isErrorState)
 
     if( isAmbilightOn ){
         // Restart ambilight timer
-        timer->start( 0 );
+        timerGrab->start( 0 );
     }else{
         // Switch ambilight off
-        timer->stop();
+        timerGrab->stop();
         updateSmoothSteps();
         clearColorsCurrent();
 
