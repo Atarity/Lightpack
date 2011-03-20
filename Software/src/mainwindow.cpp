@@ -784,7 +784,16 @@ void MainWindow::loadSettingsToMainWindow()
 // Back call from main.cpp message processing messageOutput()
 void MainWindow::appendLogsLine(const QString & line)
 {
-    ui->plainTextLogs->insertPlainText(line + "\n");
+    // Scroll QPlainTextEdit and set cursor position to the start of line
+
+    // Move cursor to start of last added paragraph
+    ui->plainTextLogs->textCursor().setPosition( ui->plainTextLogs->textCursor().block().position() );
+
+    // Insert here new line of text
+    ui->plainTextLogs->insertPlainText(line);
+
+    // Append new empty paragraph for using in next appendLogsLine()
+    ui->plainTextLogs->appendPlainText("");
 }
 
 void MainWindow::setLogsFilePath(const QString & filePath)
