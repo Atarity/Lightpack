@@ -38,7 +38,7 @@ GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
     timerUpdateFPS = new QTimer(this);
     connect(timerUpdateFPS, SIGNAL(timeout()), this, SLOT(updateFpsOnMainWindow()));
     timerUpdateFPS->setSingleShot( false );
-    timerUpdateFPS->start( 1000 );
+    timerUpdateFPS->start( 500 );
 
     // TODO: add me to settings
     this->updateColorsOnlyIfChanges = true; // default value
