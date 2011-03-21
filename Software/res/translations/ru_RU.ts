@@ -234,7 +234,7 @@
     <message>
         <location filename="../../src/ambilightusb.cpp" line="194"/>
         <source>device unavailable</source>
-        <translation>устройство не доступно</translation>
+        <translation>устройство недоступно</translation>
     </message>
     <message>
         <location filename="../../src/ambilightusb.cpp" line="200"/>

@@ -261,8 +261,6 @@ void MainWindow::updateTrayAndActionStates()
     if( isErrorState ){
         trayIcon->setIcon(QIcon(":/icons/error.png"));
         trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
-
-        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/error.png"));
     }else{
         if( isAmbilightOn ){
             trayIcon->setIcon(QIcon(":/icons/on.png"));
