@@ -56,7 +56,7 @@ bool updateScreenAndAllocateMemory = true;
 //
 // Save winId for find screen/monitor what will using for full screen capture
 //
-void Grab::findScreenOnNextCapture( WId winId )
+void findScreenOnNextCapture( WId winId )
 {
     qDebug() << Q_FUNC_INFO;
 
@@ -71,7 +71,7 @@ void Grab::findScreenOnNextCapture( WId winId )
 //
 // Capture screen what contains firstLedWidget to pbPixelsBuff
 //
-void Grab::captureScreen()
+void captureScreen()
 {    
     if( updateScreenAndAllocateMemory ){
         // Find the monitor, what contains firstLedWidget
@@ -158,7 +158,7 @@ void Grab::captureScreen()
 //
 // Get AVG color of the rect set by 'grabme' widget from captured screen buffer pbPixelsBuff
 //
-QRgb Grab::getColor(const QWidget * grabme)
+QRgb getColor(const QWidget * grabme)
 {    
     int x = grabme->x();
     int y = grabme->y();
