@@ -89,6 +89,8 @@ private slots:
 
     void loadTranslation(const QString & language);
 
+    void grabSwitchQtWinAPI(bool isWinAPI);
+
 private:
     void connectSignalsSlots();
 

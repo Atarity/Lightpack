@@ -56,7 +56,8 @@ void Settings::Initialize( const QString & applicationDirPath)
     settingsMain->setIniCodec("UTF-8");
 
     setDefaultSettingIfNotFound(settingsMain, "ProfileLast",    PROFILE_DEFAULT_NAME);
-    setDefaultSettingIfNotFound(settingsMain, "Language",       LANGUAGE_DEFAULT_NAME);
+    setDefaultSettingIfNotFound(settingsMain, "Language",       LANGUAGE_DEFAULT_NAME);    
+    setDefaultSettingIfNotFound(settingsMain, "GuiShowSwitchQtWinAPI", GUI_SHOW_SWITCH_GRAB_QT_WINAPI);
 
     QString profileLast = settingsMain->value("ProfileLast").toString();
 

@@ -65,6 +65,8 @@ public slots:
 
     void settingsProfileChanged();
 
+    void switchQtWinApi(bool isWinApi);
+
 private slots:
     void scaleLedWidgets();
     void firstWidgetPositionChanged();
@@ -100,6 +102,8 @@ private: // variables
 
     // Store last grabbing time in milliseconds
     double fpsMs;
+
+    bool isGrabWinAPI;
 
     // Settings:
     int ambilightDelayMs;

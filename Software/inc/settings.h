@@ -35,8 +35,9 @@
 
 // LightpackMain.conf
 // [General]
-#define PROFILE_DEFAULT_NAME    "Lightpack"
-#define LANGUAGE_DEFAULT_NAME   "<System>" /* system lang */
+#define PROFILE_DEFAULT_NAME            "Lightpack"
+#define LANGUAGE_DEFAULT_NAME           "<System>" /* system lang */
+#define GUI_SHOW_SWITCH_GRAB_QT_WINAPI  false
 
 // ProfileName.ini
 // [General]

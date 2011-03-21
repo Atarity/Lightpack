@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>286</width>
-    <height>290</height>
+    <width>324</width>
+    <height>375</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -304,6 +304,19 @@
           </property>
           <property name="checked">
            <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_SwitchQtWinAPI">
+          <property name="text">
+           <string notr="true">Qt / WinAPI</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

@@ -82,6 +82,7 @@ win32 {
     # Windows version using WinAPI + GDI for grab colors
     LIBS    += -lgdi32
     SOURCES += grab/grab_winapi.cpp
+    SOURCES += grab/grab_qt.cpp
 }
 
 unix:!macx{

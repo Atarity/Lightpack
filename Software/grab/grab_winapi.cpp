@@ -35,6 +35,9 @@
 #include "grab_api.h"
 
 
+namespace GrabWinAPI
+{
+
 // Position of monitor, initialize in captureScreen() using in getColor()
 MONITORINFO monitorInfo;
 
@@ -235,4 +238,6 @@ QRgb Grab::getColor(const QWidget * grabme)
 #endif
 
     return qRgb(r, g, b);
+}
+
 }

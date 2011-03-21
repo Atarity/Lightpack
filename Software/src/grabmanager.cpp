@@ -33,6 +33,7 @@ GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
     timeEval = new TimeEvaluations();
 
     fpsMs = 0;
+    isGrabWinAPI = true;
 
     timerUpdateFPS = new QTimer(this);
     connect(timerUpdateFPS, SIGNAL(timeout()), this, SLOT(updateFpsOnMainWindow()));
@@ -113,7 +114,9 @@ void GrabManager::initLedWidgets()
 
 void GrabManager::firstWidgetPositionChanged()
 {
-    Grab::findScreenOnNextCapture( ledWidgets[0]->winId() );
+    if(isGrabWinAPI){
+        GrabWinAPI::findScreenOnNextCapture( ledWidgets[0]->winId() );
+    }
 }
 
 
@@ -161,11 +164,18 @@ void GrabManager::updateLedsColorsIfChanged()
 #endif    
 
     // Capture screen what contains first LED widgets
-    Grab::captureScreen();
+    if(isGrabWinAPI){
+        GrabWinAPI::captureScreen();
+    }
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         if(ledWidgets[ledIndex]->isGrabEnabled()){
-            QRgb rgb = Grab::getColor( ledWidgets[ledIndex] );
+            QRgb rgb;
+            if(isGrabWinAPI){
+                rgb = GrabWinAPI::getColor( ledWidgets[ledIndex] );
+            } else {
+                rgb = GrabQt::getColor( ledWidgets[ledIndex] );
+            }
 
             if( avgColorsOnAllLeds ){
                 avgR += qRed(rgb);
@@ -346,6 +356,12 @@ void GrabManager::settingsProfileChanged()
     for(int i=0; i<ledWidgets.count(); i++){
         ledWidgets[i]->settingsProfileChanged();
     }
+}
+
+
+void GrabManager::switchQtWinApi(bool isWinApi)
+{
+    this->isGrabWinAPI = isWinApi;
 }
 
 

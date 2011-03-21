@@ -31,11 +31,19 @@
 
 #include "grab_api.h"
 
-// Smart gcc will remove call-s of this functions, I hope...
-void Grab::captureScreen() { /* nop */ }
-void Grab::findScreenOnNextCapture( WId ){ /* nop */ }
+#ifndef Q_WS_WIN
+namespace GrabWinAPI
+{
+    void findScreenOnNextCapture( WId ) { }
+    void captureScreen() { }
+    QRgb getColor(const QWidget * ) { return 0; }
+};
+#endif
 
-QRgb Grab::getColor(const QWidget * grabme)
+namespace GrabQt
+{
+
+QRgb getColor(const QWidget * grabme)
 {
     int x = grabme->x();
     int y = grabme->y();
@@ -47,3 +55,6 @@ QRgb Grab::getColor(const QWidget * grabme)
     QImage im = scaledPix.toImage();
     return im.pixel(0,0);
 }
+
+};
+

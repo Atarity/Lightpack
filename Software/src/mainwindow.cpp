@@ -93,6 +93,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     logsFilePath = "";
 
+    ui->pushButton_SwitchQtWinAPI->setVisible( Settings::valueMain("GuiShowSwitchQtWinAPI").toBool() );
+    grabSwitchQtWinAPI( ui->pushButton_SwitchQtWinAPI->isChecked() );
+
     qDebug() << "MainWindow(): initialized";
 }
 
@@ -144,6 +147,7 @@ void MainWindow::connectSignalsSlots()
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
 
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
+    connect(ui->pushButton_SwitchQtWinAPI, SIGNAL(clicked(bool)), this, SLOT(grabSwitchQtWinAPI(bool)));
 }
 
 
@@ -667,6 +671,18 @@ void MainWindow::updatePwmFrequency()
     pwmFrequency = 1 / timePwm_secs;
 
     ui->label_PWM_Freq->setText(QString::number(pwmFrequency,'f',2));
+}
+
+
+void MainWindow::grabSwitchQtWinAPI(bool isWinAPI)
+{
+    if(isWinAPI){
+        ui->pushButton_SwitchQtWinAPI->setText( "Grab with WinAPI" );
+    }else{
+        ui->pushButton_SwitchQtWinAPI->setText( "Grab with Qt grabWindow()" );
+    }
+
+    grabManager->switchQtWinApi( isWinAPI );
 }
 
 
