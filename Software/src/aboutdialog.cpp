@@ -92,12 +92,16 @@ void AboutDialog::versionsUpdate()
     // Save templete for construct version string
     QString versionsTemplate = ui->labelVersions->text();
 
+#ifdef HG_REVISION
     versionsTemplate = versionsTemplate.arg(
             QApplication::applicationVersion(),
             HG_REVISION,
             fimwareVersion );
-
-#ifndef HG_REVISION
+#else
+    versionsTemplate = versionsTemplate.arg(
+            QApplication::applicationVersion(),
+            "unknown",
+            fimwareVersion );
     versionsTemplate.remove(QRegExp(" [(].+[)]"));
 #endif
 
