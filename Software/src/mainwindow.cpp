@@ -32,6 +32,8 @@
 #include <QDesktopWidget>
 #include <QPlainTextEdit>
 
+#include "debug.h"
+
 // ----------------------------------------------------------------------------
 // Lightpack settings window
 // ----------------------------------------------------------------------------
@@ -40,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     ui->setupUi(this);
 
     ui->tabWidget->setCurrentIndex( 0 );
@@ -62,29 +66,20 @@ MainWindow::MainWindow(QWidget *parent) :
     QRegExpValidator *validator = new QRegExpValidator(rx, this);
     ui->comboBox_Profiles->lineEdit()->setValidator(validator);
 
-
-    qDebug() << "MainWindow(): new AmbilightUsb(this)";
     ambilightUsb = new AmbilightUsb(this);
 
-    qDebug() << "MainWindow(): new GrabManager()";
     grabManager = new GrabManager();
 
-    qDebug() << "MainWindow(): new AboutDialog(this)";
     aboutDialog = new AboutDialog(this);
 
-    qDebug() << "MainWindow(): profilesFindAll();";
     profilesFindAll();
 
-    qDebug() << "MainWindow(): void initLanguages()";
     initLanguages();
 
-    qDebug() << "MainWindow(): connectSignalsSlots()";
     connectSignalsSlots();
 
-    qDebug() << "MainWindow(): profileLoadLast()";
     profileLoadLast();
 
-    qDebug() << "MainWindow(): loadTranslation(..)";
     loadTranslation( Settings::valueMain( "Language" ).toString() );
 
 
@@ -96,11 +91,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_SwitchQtWinAPI->setVisible( Settings::valueMain("GuiShowSwitchQtWinAPI").toBool() );
     grabSwitchQtWinAPI( ui->pushButton_SwitchQtWinAPI->isChecked() );
 
-    qDebug() << "MainWindow(): initialized";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
 
 void MainWindow::connectSignalsSlots()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));
 
@@ -135,8 +132,7 @@ void MainWindow::connectSignalsSlots()
     // GrabManager to this
     connect(grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
 
-    // links to Logs and Settings files
-    connect(ui->commandLinkButton_OpenLogs, SIGNAL(clicked()), this, SLOT(openLogsFile()));
+    // Open Settings file
     connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openCurrentProfile()));
 
     // Connect profile signals to this slots
@@ -153,6 +149,8 @@ void MainWindow::connectSignalsSlots()
 
 MainWindow::~MainWindow()
 {    
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     delete onAmbilightAction;
     delete offAmbilightAction;
     delete settingsAction;
@@ -174,6 +172,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::changeEvent(QEvent *e)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << e->type();
+
     QMainWindow::changeEvent(e);
     switch (e->type()) {
     case QEvent::LanguageChange:
@@ -209,6 +209,8 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     if( trayIcon->isVisible() ){
         // Just hide settings
         hideSettings();
@@ -222,25 +224,31 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::ambilightOn()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     isAmbilightOn = true;
     startAmbilight();
 }
 
 void MainWindow::ambilightOff()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     isAmbilightOn = false;
     startAmbilight();
 }
 
 void MainWindow::grabAmbilightOnOff()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     isAmbilightOn = !isAmbilightOn;
     startAmbilight();
 }
 
 void MainWindow::startAmbilight()
 {
-    qDebug() << Q_FUNC_INFO << "isAmbilightOn" << isAmbilightOn;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isAmbilightOn;
 
     Settings::setValue("IsAmbilightOn", isAmbilightOn);
     grabManager->setAmbilightOn( isAmbilightOn, isErrorState );
@@ -254,6 +262,8 @@ void MainWindow::startAmbilight()
 
 void MainWindow::updateTrayAndActionStates()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     if( isAmbilightOn ){
         ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/off.png"));
         ui->label_EnableDisableGrab->setText( tr("Disable grab:") );
@@ -288,6 +298,8 @@ void MainWindow::updateTrayAndActionStates()
 
 void MainWindow::showAbout()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     aboutDialog->setFirmwareVersion( ambilightUsb->firmwareVersion() );
 
     aboutDialog->move(Desktop::Width / 2 - aboutDialog->width() / 2,
@@ -298,12 +310,16 @@ void MainWindow::showAbout()
 
 void MainWindow::showSettings()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     grabManager->setVisibleLedWidgets( ui->groupBox_ShowGrabWidgets->isChecked() );
     this->show();
 }
 
 void MainWindow::hideSettings()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     grabManager->setVisibleLedWidgets(false);
     this->hide();
 }
@@ -314,9 +330,11 @@ void MainWindow::hideSettings()
 
 void MainWindow::ambilightUsbSuccess(bool isSuccess)
 {    
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << isSuccess;
+
     if(isErrorState != ! isSuccess){
         isErrorState = ! isSuccess;
-        qWarning() << "isErrorState state" << isErrorState;
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "isErrorState" << isErrorState;
     }
 
     updateTrayAndActionStates();
@@ -324,6 +342,8 @@ void MainWindow::ambilightUsbSuccess(bool isSuccess)
 
 void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
 {    
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << updateResultMs;
+
     double secs = updateResultMs / 1000;
     double hz = 0;
 
@@ -339,6 +359,8 @@ void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
 // ----------------------------------------------------------------------------
 void MainWindow::settingsHardwareTimerOptionsChange()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     int timerPrescallerIndex = Settings::value("Firmware/TimerPrescallerIndex").toInt();
     int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
 
@@ -361,6 +383,8 @@ void MainWindow::settingsHardwareTimerOptionsChange()
 // ----------------------------------------------------------------------------
 void MainWindow::settingsHardwareColorDepthOptionChange()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
 
     Settings::setValue("Firmware/ColorDepth", colorDepth);
@@ -379,6 +403,8 @@ void MainWindow::settingsHardwareColorDepthOptionChange()
 
 void MainWindow::settingsHardwareChangeColorsIsSmooth(bool isSmooth)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     Settings::setValue("Firmware/IsSmoothChangeColors", isSmooth);
     ambilightUsb->smoothChangeColors(isSmooth);
 }
@@ -388,6 +414,8 @@ void MainWindow::settingsHardwareChangeColorsIsSmooth(bool isSmooth)
 
 void MainWindow::openFile(const QString &filePath)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     QString filePrefix = "file://";
 
 #ifdef Q_WS_WIN
@@ -403,11 +431,15 @@ void MainWindow::openFile(const QString &filePath)
 
 void MainWindow::openCurrentProfile()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     openFile( Settings::fileName() );
 }
 
 void MainWindow::profileRename()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     //
     // Press <Enter> in profile edit line will perform renaming it
     // also update settings for usable configuration LED coefs
@@ -429,7 +461,7 @@ void MainWindow::profileRename()
 
 void MainWindow::profileSwitch(const QString & configName)
 {
-    qDebug() << "Switch profile on:" << configName;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << configName;
 
     Settings::loadOrCreateConfig(configName);
 
@@ -443,20 +475,20 @@ void MainWindow::profileSwitch(const QString & configName)
 // Slot for switch profiles by tray menu
 void MainWindow::profileTraySwitch()
 {
-    qDebug() << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     for(int i=0; i < profilesMenu->actions().count(); i++){
         QAction * action = profilesMenu->actions().at(i);
         if( action->isChecked() ){
             if( action->text() != ui->comboBox_Profiles->currentText() ){
-                qDebug() << "profileSwitch" << action->text();
+                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "switch to" << action->text();
                 int index = ui->comboBox_Profiles->findText( action->text() );
                 ui->comboBox_Profiles->setCurrentIndex( index );
                 return;
             }
         }else{
             if( action->text() == ui->comboBox_Profiles->currentText() ){
-                qDebug() << "setChecked" << action->text();
+                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "set checked" << action->text();
                 action->setChecked(true);
             }
         }
@@ -465,6 +497,8 @@ void MainWindow::profileTraySwitch()
 
 void MainWindow::profileNew()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     QString profileName = tr("New profile");
 
     if(ui->comboBox_Profiles->findText(profileName) != -1){
@@ -484,6 +518,8 @@ void MainWindow::profileNew()
 
 void MainWindow::profileResetToDefaultCurrent()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     Settings::resetToDefaults();
     // Update settings
     loadSettingsToMainWindow();
@@ -492,6 +528,8 @@ void MainWindow::profileResetToDefaultCurrent()
 
 void MainWindow::profileDeleteCurrent()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     if(ui->comboBox_Profiles->count() <= 1){
         qWarning() << "void MainWindow::profileDeleteCurrent(): profiles count ==" << ui->comboBox_Profiles->count();
         return;
@@ -505,6 +543,8 @@ void MainWindow::profileDeleteCurrent()
 
 void MainWindow::profilesFindAll()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     QFileInfo setsFile( Settings::fileName() );
     QFileInfoList iniFiles = setsFile.absoluteDir().entryInfoList(QStringList("*.ini"));
 
@@ -514,7 +554,7 @@ void MainWindow::profilesFindAll()
         settingsFiles.append( compBaseName );
     }
 
-    qDebug() << "Found profiles:" << settingsFiles;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "found profiles:" << settingsFiles;
     for(int i=0; i<settingsFiles.count(); i++){
         if(ui->comboBox_Profiles->findText(settingsFiles.at(i)) == -1){
             ui->comboBox_Profiles->addItem(settingsFiles.at(i));
@@ -524,6 +564,8 @@ void MainWindow::profilesFindAll()
 
 void MainWindow::profileLoadLast()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     ui->comboBox_Profiles->setCurrentIndex( ui->comboBox_Profiles->findText( Settings::lastProfileName() ) );
 
     // Update settings
@@ -533,6 +575,8 @@ void MainWindow::profileLoadLast()
 
 void MainWindow::settingsProfileChanged_UpdateUI()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     setWindowTitle( tr("Lightpack: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
     if(isAmbilightOn) trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
 
@@ -548,7 +592,7 @@ void MainWindow::settingsProfileChanged_UpdateUI()
 // Syncronize profiles from combobox with tray menu
 void MainWindow::profileTraySync()
 {
-    qDebug() << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     QAction *profileAction;
 
@@ -572,6 +616,8 @@ void MainWindow::profileTraySync()
 
 void MainWindow::initLanguages()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     ui->comboBox_Language->clear();
     ui->comboBox_Language->addItem( tr("System default") );
     ui->comboBox_Language->addItem( "English" );
@@ -589,6 +635,8 @@ void MainWindow::initLanguages()
 
 void MainWindow::loadTranslation(const QString & language)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << language;
+
     Settings::setValueMain( "Language", language );
 
     QString locale = QLocale::system().name();
@@ -630,7 +678,7 @@ void MainWindow::loadTranslation(const QString & language)
 
     translator = new QTranslator();
     if(translator->load( pathToLocale )){
-        qDebug() << "Load translation for locale" << locale;
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Load translation for locale" << locale;
         qApp->installTranslator(translator);
     }else{
         qWarning() << "Fail load translation for locale" << locale << "pathToLocale" << pathToLocale;
@@ -642,6 +690,8 @@ void MainWindow::loadTranslation(const QString & language)
 
 void MainWindow::updatePwmFrequency()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     int timerPrescallerIndex = Settings::value("Firmware/TimerPrescallerIndex").toInt();
     int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
     int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
@@ -676,6 +726,8 @@ void MainWindow::updatePwmFrequency()
 
 void MainWindow::grabSwitchQtWinAPI(bool isWinAPI)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     if(isWinAPI){
         ui->pushButton_SwitchQtWinAPI->setText( "Grab with WinAPI" );
     }else{
@@ -692,6 +744,8 @@ void MainWindow::grabSwitchQtWinAPI(bool isWinAPI)
 
 void MainWindow::createActions()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     onAmbilightAction = new QAction(QIcon(":/icons/on.png"), tr("&Turn on"), this);
     onAmbilightAction->setIconVisibleInMenu(true);
     connect(onAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOn()));
@@ -719,6 +773,8 @@ void MainWindow::createActions()
 
 void MainWindow::createTrayIcon()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(onAmbilightAction);
     trayIconMenu->addAction(offAmbilightAction);
@@ -741,6 +797,8 @@ void MainWindow::createTrayIcon()
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     switch (reason) {
     case QSystemTrayIcon::DoubleClick:
         if(isErrorState){
@@ -776,7 +834,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::loadSettingsToMainWindow()
 {
-    qDebug() << "MainWindow::loadSettingsToMainWindow()";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     ui->spinBox_SlowdownGrab->setValue              ( Settings::value("GrabSlowdownMs").toInt() );
     ui->spinBox_MinLevelOfSensitivity->setValue     ( Settings::value("MinimumLevelOfSensitivity").toInt() );
@@ -793,41 +851,16 @@ void MainWindow::loadSettingsToMainWindow()
 
 
 // ----------------------------------------------------------------------------
-// Logging
-// ----------------------------------------------------------------------------
-
-// Back call from main.cpp message processing messageOutput()
-void MainWindow::appendLogsLine(const QString & line)
-{
-    // Scroll QPlainTextEdit and set cursor position to the start of line
-
-    // Move cursor to start of last added paragraph
-    ui->plainTextLogs->textCursor().setPosition( ui->plainTextLogs->textCursor().block().position() );
-
-    // Insert here new line of text
-    ui->plainTextLogs->insertPlainText(line);
-
-    // Append new empty paragraph for using in next appendLogsLine()
-    ui->plainTextLogs->appendPlainText("");
-}
-
-void MainWindow::setLogsFilePath(const QString & filePath)
-{
-    this->logsFilePath = filePath;
-}
-
-void MainWindow::openLogsFile()
-{
-    openFile( this->logsFilePath );
-}
-
-
-// ----------------------------------------------------------------------------
 // Quit application
 // ----------------------------------------------------------------------------
 
 void MainWindow::quit()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "trayIcon->hide();";
+
     trayIcon->hide();
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "QApplication::quit();";
+
     QApplication::quit();
 }

@@ -667,44 +667,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabLogs">
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
-       <attribute name="title">
-        <string>Logs</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <widget class="QPlainTextEdit" name="plainTextLogs">
-          <property name="font">
-           <font>
-            <family>Courier New</family>
-           </font>
-          </property>
-          <property name="lineWrapMode">
-           <enum>QPlainTextEdit::NoWrap</enum>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCommandLinkButton" name="commandLinkButton_OpenLogs">
-          <property name="text">
-           <string>Open logs in text editor</string>
-          </property>
-          <property name="checkable">
-           <bool>false</bool>
-          </property>
-          <property name="description">
-           <string/>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
      </widget>
     </item>
     <item>
@@ -770,8 +732,6 @@
   <tabstop>pushButton_DeleteProfile</tabstop>
   <tabstop>commandLinkButton_OpenSettings</tabstop>
   <tabstop>comboBox_Language</tabstop>
-  <tabstop>commandLinkButton_OpenLogs</tabstop>
-  <tabstop>plainTextLogs</tabstop>
  </tabstops>
  <resources>
   <include location="../res/LightpackResources.qrc"/>

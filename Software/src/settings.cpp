@@ -35,6 +35,7 @@
 #include "desktop.h" // Desktop width and height
 #include "../../CommonHeaders/RGB.h"        /* Led defines */
 
+#include "debug.h"
 
 QSettings * Settings::settingsNow;
 QSettings * Settings::settingsMain; // LightpackMain.conf contains last profile
@@ -45,6 +46,8 @@ QString Settings::appDirPath = "";
 // Desktop should be initialized before call Settings::Initialize()
 void Settings::Initialize( const QString & applicationDirPath)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     appDirPath = applicationDirPath;
 
     // Append to the end of dir path '/'
@@ -73,33 +76,45 @@ void Settings::Initialize( const QString & applicationDirPath)
 
 void Settings::setValue(const QString & key, const QVariant & value)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
+
     settingsNow->setValue(key, value);
 }
 
 QVariant Settings::value( const QString & key)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
+
     return settingsNow->value(key);
 }
 
 QString Settings::fileName()
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
     return settingsNow->fileName();
 }
 
 
 void Settings::setValueMain(const QString & key, const QVariant & value)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
+
     settingsMain->setValue(key, value);
 }
 
 QVariant Settings::valueMain( const QString & key)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
+
     return settingsMain->value(key);
 }
 
 
 void Settings::loadOrCreateConfig(const QString & configName)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << configName;
+
     if(settingsNow != NULL){
         // Copy current settings to new one
         QString settingsDir = QFileInfo(settingsNow->fileName()).absoluteDir().absolutePath();
@@ -122,6 +137,8 @@ void Settings::loadOrCreateConfig(const QString & configName)
 
 void Settings::renameCurrentConfig(const QString & configName)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << configName;
+
     if(settingsNow == NULL){
         qWarning() << "void Settings::renameCurrentConfig(): fail, settingsNow not initialized";
         return;
@@ -150,6 +167,8 @@ void Settings::renameCurrentConfig(const QString & configName)
 
 void Settings::removeCurrentConfig()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     if(settingsNow == NULL){
         qWarning() << "void Settings::removeCurrentConfig() nothing to remove";
         return;
@@ -170,6 +189,8 @@ void Settings::removeCurrentConfig()
 
 QString Settings::lastProfileName()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     return settingsMain->value("ProfileLast").toString();
 }
 
@@ -183,6 +204,8 @@ void Settings::setDefaultSettingIfNotFound(const QString & name, const QVariant 
 
 void Settings::setDefaultSettingIfNotFound(QSettings *settings, const QString & name, const QVariant & value)
 {
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << name;
+
     if(!settings->contains(name)){
         if(value.canConvert<QSize>()){
             qDebug() << "Settings:" << name << "not found. Set it to default value: " << value.toSize().width() << "x" << value.toSize().height();
@@ -201,6 +224,8 @@ void Settings::setDefaultSettingIfNotFound(QSettings *settings, const QString & 
 //
 void Settings::settingsInit()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     setDefaultSettingIfNotFound("GrabSlowdownMs",                      GRAB_SLOWDOWN_MS_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("IsAvgColorsOn",                       IS_AVG_COLORS_ON_DEFAULT_VALUE);
@@ -248,6 +273,8 @@ void Settings::settingsInit()
 //
 void Settings::resetToDefaults()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     settingsNow->setValue("GrabSlowdownMs",                      GRAB_SLOWDOWN_MS_DEFAULT_VALUE);
     settingsNow->setValue("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
     settingsNow->setValue("IsAvgColorsOn",                       IS_AVG_COLORS_ON_DEFAULT_VALUE);

@@ -31,6 +31,8 @@
 
 #include "grab_api.h"
 
+#include "debug.h"
+
 #ifndef Q_WS_WIN
 namespace GrabWinAPI
 {
@@ -45,15 +47,23 @@ namespace GrabQt
 
 QRgb getColor(const QWidget * grabme)
 {
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+
     int x = grabme->x();
     int y = grabme->y();
     int width = grabme->width();
     int height = grabme->height();
 
+    DEBUG_HIGH_LEVEL << "x y w h:" << x << y << width << height;
+
     QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(), x, y, width, height);
     QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     QImage im = scaledPix.toImage();
-    return im.pixel(0,0);
+    QRgb result = im.pixel(0,0);
+
+    DEBUG_HIGH_LEVEL << "QRgb result =" << hex << result;
+
+    return result;
 }
 
 };

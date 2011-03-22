@@ -29,11 +29,14 @@
 #include "version.h"
 
 #include <QtDebug>
+#include "debug.h"
 
 AboutDialog::AboutDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::aboutDialog)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     ui->setupUi(this);
 
     this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint );
@@ -43,11 +46,15 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
 AboutDialog::~AboutDialog()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     delete ui;
 }
 
 void AboutDialog::changeEvent(QEvent *e)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << e->type();
+
     QDialog::changeEvent(e);
     switch (e->type()) {
     case QEvent::LanguageChange:
@@ -61,12 +68,16 @@ void AboutDialog::changeEvent(QEvent *e)
 
 void AboutDialog::closeEvent(QCloseEvent *event)
 {    
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     this->hide();
     event->ignore();
 }
 
 void AboutDialog::setFirmwareVersion(const QString &firmwareVersion)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     this->fimwareVersion = firmwareVersion;
     versionsUpdate();
 }
@@ -74,6 +85,8 @@ void AboutDialog::setFirmwareVersion(const QString &firmwareVersion)
 
 void AboutDialog::versionsUpdate()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     ui->retranslateUi(this);
 
     // Save templete for construct version string

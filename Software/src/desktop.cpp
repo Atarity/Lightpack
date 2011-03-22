@@ -26,6 +26,7 @@
 
 #include <QtGui>
 #include <QtDebug>
+#include "debug.h"
 #include "desktop.h"
 
 int Desktop::Width = 0;
@@ -40,23 +41,30 @@ Desktop *Desktop::self = NULL; /* private */
 
 void Desktop::Initialize(QObject *parent)
 {
-    qDebug() << "Desktop::Initialize()";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     Desktop::self = new Desktop(parent);
 }
 
 Desktop::Desktop(QObject *parent) : QObject(parent)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
     Desktop::Width = QApplication::desktop()->screenGeometry().width();
     Desktop::Height = QApplication::desktop()->screenGeometry().height();
 
     Desktop::WidthSaved = Desktop::Width;
     Desktop::HeightSaved = Desktop::Height;
 
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Desktop: Width x Height =" << Desktop::Width << "x" << Desktop::Height;
+
     connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(sizeChanged(int)));
 }
 
 void Desktop::sizeChanged(int /*screen*/)
 {    
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     Desktop::WidthSaved = Desktop::Width;
     Desktop::HeightSaved = Desktop::Height;
 

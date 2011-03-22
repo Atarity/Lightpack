@@ -27,6 +27,8 @@
  */
 
 #include <QtDebug>
+#include "debug.h"
+
 
 #define WINVER 0x0500 /* Windows2000 for MonitorFromWindow(..) func */
 #include <windows.h>
@@ -58,7 +60,7 @@ bool updateScreenAndAllocateMemory = true;
 //
 void findScreenOnNextCapture( WId winId )
 {
-    qDebug() << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     // Save HWND of widget for find monitor
     hWndForFindMonitor = winId;
@@ -73,7 +75,9 @@ void findScreenOnNextCapture( WId winId )
 //
 void captureScreen()
 {    
-    if( updateScreenAndAllocateMemory ){
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+
+    if( updateScreenAndAllocateMemory ){        
         // Find the monitor, what contains firstLedWidget
         HMONITOR hMonitor = MonitorFromWindow( hWndForFindMonitor, MONITOR_DEFAULTTONEAREST );
 
@@ -85,10 +89,9 @@ void captureScreen()
 
         screenWidth  = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
         screenHeight = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
-    }
 
-    // TODO: test GetDesktopWindow()/GetWindowDC() for speed,
-    // and if it fast - remove CreateDC/DeleteDC to GetDesktopWindow()/GetWindowDC()/ReleaseDC
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenWidth x screenHeight" << screenWidth << "x" << screenHeight;
+    }
 
     // CreateDC for multiple monitors
     HDC hScreenDC = CreateDC( TEXT("DISPLAY"), NULL, NULL, NULL );
@@ -111,7 +114,7 @@ void captureScreen()
 
     if( updateScreenAndAllocateMemory ){
 
-        qDebug() << "Allocate memory for pbPixelsBuff and update pixelsBuffSize, bytesPerPixel";
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Allocate memory for pbPixelsBuff and update pixelsBuffSize, bytesPerPixel";
 
         BITMAP * bmp = new BITMAP;
 
@@ -146,12 +149,16 @@ void captureScreen()
     // Get the actual RGB data and put it into pbPixelsBuff
     GetBitmapBits( hBitmap, pixelsBuffSize, pbPixelsBuff );
 
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << "DeleteObject-s: hBitmap, hOldBitmap";
+
     // CleanUp
     DeleteObject( hBitmap );
     DeleteObject( hOldBitmap );
 
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << "DeleteDC-s: hScreenDC, hMemDC";
+
     DeleteDC( hScreenDC );
-    DeleteDC( hMemDC );   
+    DeleteDC( hMemDC );
 }
 
 
@@ -160,11 +167,15 @@ void captureScreen()
 //
 QRgb getColor(const QWidget * grabme)
 {    
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+
     int x = grabme->x();
     int y = grabme->y();
 
     unsigned width  = grabme->width();
     unsigned height = grabme->height();
+
+    DEBUG_HIGH_LEVEL << "x y w h:" << x << y << width << height;
 
     unsigned r = 0, g = 0, b = 0;
 
@@ -173,6 +184,8 @@ QRgb getColor(const QWidget * grabme)
         x               > monitorInfo.rcMonitor.right  ||
         y + (int)height < monitorInfo.rcMonitor.top    ||
         y               > monitorInfo.rcMonitor.bottom ){
+
+        DEBUG_LOW_LEVEL << "Widget 'grabme' is out of screen, x y w h:" << x << y << width << height;
 
         // Widget 'grabme' is out of screen
         return 0x000000;
@@ -237,7 +250,11 @@ QRgb getColor(const QWidget * grabme)
     delete im;
 #endif
 
-    return qRgb(r, g, b);
+    QRgb result = qRgb(r, g, b);
+
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << "QRgb result =" << hex << result;
+
+    return result;
 }
 
 }

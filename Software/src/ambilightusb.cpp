@@ -30,34 +30,42 @@
 #include <unistd.h>
 
 #include <QtDebug>
+#include "debug.h"
 
 AmbilightUsb::AmbilightUsb(QObject *parent) :
         QObject(parent)
 {
-    qDebug() << "ambilightUsb(): openDevice()";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     openDevice();
 
     memset(write_buffer, 0, sizeof(write_buffer));
     memset(read_buffer, 0, sizeof(read_buffer));
 
-    qDebug() << "ambilightUsb(): initialized";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
 
-AmbilightUsb::~AmbilightUsb(){
+AmbilightUsb::~AmbilightUsb()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "hid_close(ambilightDevice);";
     hid_close(ambilightDevice);
 }
 
 bool AmbilightUsb::deviceOpened()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     return !(ambilightDevice == NULL);
 }
 
 bool AmbilightUsb::openDevice()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     ambilightDevice = NULL;
     struct hid_device_info *devs, *cur_dev;
 
-    qDebug() << "Start enumeration of all HID devices";
+    DEBUG_LOW_LEVEL << "Start enumeration of all HID devices";
     devs = hid_enumerate(0, 0);
     cur_dev = devs;
     while (cur_dev) {
@@ -67,14 +75,14 @@ bool AmbilightUsb::openDevice()
         QString manufacturer_string = QString::fromWCharArray(cur_dev->manufacturer_string);
         QString product_string = QString::fromWCharArray(cur_dev->product_string);
 
-        qDebug() << QString("Found HID: 0x%1 0x%2 %3 %4")
+        DEBUG_LOW_LEVEL << QString("Found HID: 0x%1 0x%2 %3 %4")
                 .arg(pid, 4, 16, QChar('0'))
                 .arg(vid, 4, 16, QChar('0'))
                 .arg(product_string)
                 .arg(manufacturer_string).trimmed();
 
         if(vid == USB_VENDOR_ID && pid == USB_PRODUCT_ID && product_string == USB_PRODUCT_STRING){
-            qDebug() << "Lightpack found";
+            DEBUG_LOW_LEVEL << "Lightpack found";
             ambilightDevice = hid_open_path(cur_dev->path);
             if(ambilightDevice == NULL){
                 qWarning("Lightpack open fail");
@@ -99,12 +107,14 @@ bool AmbilightUsb::openDevice()
     hid_set_nonblocking(ambilightDevice, 1);
 
     emit openDeviceSuccess(true);
-    qDebug("Lightpack opened");
+    DEBUG_LOW_LEVEL << "Lightpack opened";
     return true;
 }
 
 bool AmbilightUsb::readDataFromDevice()
 {    
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     int bytes_read = hid_read(ambilightDevice, read_buffer, sizeof(read_buffer));
 
     if(bytes_read < 0){
@@ -118,6 +128,8 @@ bool AmbilightUsb::readDataFromDevice()
 
 bool AmbilightUsb::writeBufferToDevice(int command)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << command;
+
     write_buffer[WRITE_BUFFER_INDEX_REPORT_ID] = 0x00;
     write_buffer[WRITE_BUFFER_INDEX_COMMAND] = command;
     int bytes_write = hid_write(ambilightDevice, write_buffer, sizeof(write_buffer));
@@ -133,6 +145,8 @@ bool AmbilightUsb::writeBufferToDevice(int command)
 
 bool AmbilightUsb::tryToReopenDevice()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     hid_close(ambilightDevice);
     qWarning() << "try to reopen device";
     if(openDevice()){
@@ -145,6 +159,8 @@ bool AmbilightUsb::tryToReopenDevice()
 
 bool AmbilightUsb::readDataFromDeviceWithCheck()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     if(ambilightDevice != NULL){
         if(!readDataFromDevice()){
             if(tryToReopenDevice()){
@@ -165,6 +181,8 @@ bool AmbilightUsb::readDataFromDeviceWithCheck()
 
 bool AmbilightUsb::writeBufferToDeviceWithCheck(int command)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
     if(ambilightDevice != NULL){
         if(!writeBufferToDevice(command)){
             if(!writeBufferToDevice(command)){
@@ -187,7 +205,7 @@ bool AmbilightUsb::writeBufferToDeviceWithCheck(int command)
 
 QString AmbilightUsb::firmwareVersion()
 {
-    qDebug() << Q_FUNC_INFO;
+    DEBUG_OUT << Q_FUNC_INFO;
 
     if(ambilightDevice == NULL){
         if(!tryToReopenDevice()){
@@ -203,17 +221,24 @@ QString AmbilightUsb::firmwareVersion()
     // read_buffer[0] - report ID, skip it by +1
     int fw_major = read_buffer[INDEX_FW_VER_MAJOR];
     int fw_minor = read_buffer[INDEX_FW_VER_MINOR];
-    return QString::number(fw_major) + "." + QString::number(fw_minor);
+    QString firmwareVer = QString::number(fw_major) + "." + QString::number(fw_minor);
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << firmwareVer;
+
+    return firmwareVer;
 }
 
 void AmbilightUsb::offLeds()
 {
-    qDebug("AmbilightUsb::offLeds()");
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     writeBufferToDeviceWithCheck(CMD_OFF_ALL);
 }
 
 void AmbilightUsb::smoothChangeColors(bool isSmooth)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     if(isSmooth){
         write_buffer[WRITE_BUFFER_INDEX_DATA_START] = 0x93;
     }else{
@@ -226,18 +251,17 @@ void AmbilightUsb::smoothChangeColors(bool isSmooth)
 
 void AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
 {
-    qDebug("ambilightUsb::setTimerOptions(%d, %d)", prescallerIndex, outputCompareRegValue);
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << prescallerIndex << outputCompareRegValue;
 
     write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)prescallerIndex;
     write_buffer[WRITE_BUFFER_INDEX_DATA_START+1] = (unsigned char)outputCompareRegValue;
-
 
     writeBufferToDeviceWithCheck(CMD_SET_TIMER_OPTIONS);
 }
 
 void AmbilightUsb::setColorDepth(int colorDepth)
 {
-    qDebug("ambilightUsb::setColorDepth(%d)",colorDepth);
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << colorDepth;
 
     if(colorDepth <= 0){
         qWarning("ambilightUsb::setColorDepth(%d): This is magic, colorDepth <= 0!", colorDepth);
@@ -252,6 +276,8 @@ void AmbilightUsb::setColorDepth(int colorDepth)
 
 void AmbilightUsb::updateColors(const QList<StructRGB> & colors)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
     // Fill write_buffer with new colors for all LEDs
 
     // First write_buffer[0] == 0x00 - ReportID, i have problems with using it

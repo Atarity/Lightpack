@@ -122,6 +122,7 @@ HEADERS += hidapi/hidapi.h \
     inc/movemewidget.h \
     inc/struct_rgb.h \
     inc/desktop.h \
+    inc/debug.h \
     grab/grab_api.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \

@@ -45,7 +45,6 @@ public:
     void setColors(int index);
     void setBackgroundColor(QColor color);
     void setTextColor(QColor color);
-    void setSizeAndPosition(int w, int h, int x, int y);
     double getCoefRed();
     double getCoefGreen();
     double getCoefBlue();

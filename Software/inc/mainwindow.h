@@ -45,8 +45,6 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void appendLogsLine(const QString & line);
-    void setLogsFilePath(const QString & filePath);
     void startAmbilight();
 
 signals:
@@ -76,7 +74,6 @@ private slots:
     void settingsHardwareColorDepthOptionChange();
     void settingsHardwareChangeColorsIsSmooth(bool isSmooth);
 
-    void openLogsFile();
     void openCurrentProfile();
 
     void profileRename();

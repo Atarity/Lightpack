@@ -31,6 +31,8 @@
 #include "desktop.h"
 #include "settings.h"
 
+#include "debug.h"
+
 // Colors changes when middle button clicked
 const QColor MoveMeWidget::colors[MoveMeWidget::ColorsCount][2] = {
     { Qt::red,        Qt::black }, /* LED1 */
@@ -52,6 +54,8 @@ MoveMeWidget::MoveMeWidget(int id, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MoveMeWidget)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << id;
+
     ui->setupUi(this);
 
     this->selfId = id;
@@ -72,18 +76,22 @@ MoveMeWidget::MoveMeWidget(int id, QWidget *parent) :
 
 MoveMeWidget::~MoveMeWidget()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     delete ui;
 }
 
 void MoveMeWidget::saveSizeAndPosition()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     Settings::setValue("LED_" + QString::number(selfId+1) + "/Position", pos() );
     Settings::setValue("LED_" + QString::number(selfId+1) + "/Size", size() );
 }
 
 void MoveMeWidget::settingsProfileChanged()
 {
-    qDebug() << "MoveMeWidget(" << selfId << "): settingsProfileChanged()";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << selfId;
 
     coefRed = loadCoefWithCheck("CoefRed");
     coefGreen = loadCoefWithCheck("CoefGreen");
@@ -98,6 +106,8 @@ void MoveMeWidget::settingsProfileChanged()
 
 void MoveMeWidget::setColors(int index)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << index;
+
     if(index < ColorsCount){
         colorIndex = index;
     }
@@ -113,6 +123,8 @@ void MoveMeWidget::setColors(int index)
 
 void MoveMeWidget::setBackgroundColor(QColor color)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << hex << color.rgb();
+
     QPalette pal = this->palette();
     pal.setBrush(this->backgroundRole(), QBrush(color));
     this->setPalette(pal);
@@ -120,21 +132,19 @@ void MoveMeWidget::setBackgroundColor(QColor color)
 
 void MoveMeWidget::setTextColor(QColor color)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << hex << color.rgb();
+
     QPalette pal = this->palette();
     pal.setBrush(QPalette::WindowText, QBrush(color));
     ui->checkBox_SelfId->setPalette(pal);
     ui->labelWidthHeight->setPalette(pal);
 }
 
-void MoveMeWidget::setSizeAndPosition(int w, int h, int x, int y)
-{
-    this->move(x, y);
-    this->resize(w, h);
-}
-
 // private
 void MoveMeWidget::setCursorOnAll(Qt::CursorShape cursor)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << cursor;
+
     this->setCursor(cursor);
     ui->checkBox_SelfId->setCursor(cursor);
     ui->labelWidthHeight->setCursor(cursor);
@@ -143,6 +153,8 @@ void MoveMeWidget::setCursorOnAll(Qt::CursorShape cursor)
 // private
 double MoveMeWidget::loadCoefWithCheck(QString coefStr)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << coefStr;
+
     bool ok = false;
     double coef = Settings::value("LED_" + QString::number(selfId + 1) + "/" + coefStr).toDouble(&ok);
     if(ok == false){
@@ -160,6 +172,8 @@ double MoveMeWidget::loadCoefWithCheck(QString coefStr)
 
 void MoveMeWidget::mousePressEvent(QMouseEvent *pe)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << pe->pos();
+
     mousePressPosition = pe->pos();
     mousePressGlobalPosition = pe->globalPos();
     mousePressDiffFromBorder.setWidth(this->width() - pe->x());
@@ -213,6 +227,8 @@ void MoveMeWidget::mousePressEvent(QMouseEvent *pe)
 
 void MoveMeWidget::mouseMoveEvent(QMouseEvent *pe)
 {
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << "pe->pos() =" << pe->pos();
+
     int newWidth, newHeight, newX, newY;
     QPoint moveHere;
 
@@ -338,6 +354,8 @@ void MoveMeWidget::mouseMoveEvent(QMouseEvent *pe)
 
 void MoveMeWidget::mouseReleaseEvent(QMouseEvent *pe)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
     checkAndSetCursors(pe);
     cmd = NOP;
 
@@ -349,6 +367,8 @@ void MoveMeWidget::mouseReleaseEvent(QMouseEvent *pe)
 
 void MoveMeWidget::wheelEvent(QWheelEvent *pe)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
     if(ui->checkBox_SelfId->isChecked() == false){
         return;
     }
@@ -366,11 +386,15 @@ void MoveMeWidget::wheelEvent(QWheelEvent *pe)
 
 void MoveMeWidget::resizeEvent(QResizeEvent *)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
     ui->labelWidthHeight->setText( QString::number(this->width()) + "x" + QString::number(this->height()) );
 }
 
 void MoveMeWidget::paintEvent(QPaintEvent *)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
     QPainter painter(this);
     painter.setPen(QColor(0x77, 0x77, 0x77));
     painter.drawRect(0, 0, width() - 1, height() - 1);
@@ -379,27 +403,37 @@ void MoveMeWidget::paintEvent(QPaintEvent *)
 
 double MoveMeWidget::getCoefRed()
 {
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+
     return coefRed;
 }
 
 double MoveMeWidget::getCoefGreen()
 {
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+
     return coefGreen;
 }
 
 double MoveMeWidget::getCoefBlue()
 {
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+
     return coefBlue;
 }
 
 bool MoveMeWidget::isGrabEnabled()
 {
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+
     return ui->checkBox_SelfId->isChecked();
 }
 
 
 void MoveMeWidget::checkAndSetCursors(QMouseEvent *pe)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
     if(pe->x() < BorderWidth && pe->y() < BorderWidth){
         this->setCursorOnAll(Qt::SizeFDiagCursor);
     }else if(pe->x() < BorderWidth && (this->height() - pe->y()) < BorderWidth){
@@ -423,6 +457,8 @@ void MoveMeWidget::checkAndSetCursors(QMouseEvent *pe)
 
 void MoveMeWidget::checkBoxSelfId_Toggled(bool state)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
+
     setColors(colorIndex); // just update color
 
     Settings::setValue("LED_" + QString::number(selfId+1) + "/IsEnabled", state);

@@ -60,8 +60,8 @@ public slots:
     void setAvgColorsOnAllLeds(bool state);
     void setMinLevelOfSensivity(int value);
 
-    void setAmbilightON();
-    void setAmbilightOFF();
+    void setResizeOrMovingFalse();
+    void setResizeOrMovingTrue();
 
     void settingsProfileChanged();
 
@@ -87,7 +87,6 @@ private: // variables
     QTimer *timerGrab;
     QTimer *timerUpdateFPS;
     QList<MoveMeWidget *> ledWidgets;
-    //QList<MoveMeWidget *> moveMeGroup; // move and resize labels together
     const static QColor backgroundAndTextColors[LEDS_COUNT][2];
     TimeEvaluations *timeEval;
 

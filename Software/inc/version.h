@@ -29,10 +29,10 @@
 #define VERSION_H
 
 // Current version of Lightpack software
-#define VERSION_STR     "4.1.0beta0"
+#define VERSION_STR     "4.1.0beta1"
 
 // Resource defines using in Lightpack.rc
-#define VER_FILEVERSION             4,1,0,0
+#define VER_FILEVERSION             4,1,0,1
 #define VER_PRODUCTVERSION          VER_FILEVERSION
 
 #define VER_FILEVERSION_STR         VERSION_STR "\0"

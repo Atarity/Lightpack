@@ -39,13 +39,14 @@
 
 #include <QFileInfo>
 
-
 using namespace std;
 
-QTextStream logStream;
 
-// Make it global for access in messageOutput() for returning logs to window
-MainWindow * window;
+#include "debug.h"
+unsigned debugLevel = 0;
+
+
+QTextStream logStream;
 
 QString logWhileWindowNotInitialized = "";
 
@@ -65,6 +66,10 @@ static void showHelpMessage()
     fprintf(stderr, "Options: \n");
     fprintf(stderr, "  --off    - send 'off leds' cmd to device \n");
     fprintf(stderr, "  --help   - show this help \n");
+    fprintf(stderr, "  --debug_high  - maximum verbose level of debug output");
+    fprintf(stderr, "  --debug_mid   - middle debug level");
+    fprintf(stderr, "  --debug_low   - low debug level, DEFAULT");
+    fprintf(stderr, "  --debug_zero  - minimum debug output");
     fprintf(stderr, "\n");
 }
 
@@ -118,17 +123,6 @@ void messageOutput(QtMsgType type, const char *msg)
     logStream.flush();
     cerr.flush();
     cout.flush();
-
-    if(window != NULL){
-        if(logWhileWindowNotInitialized != ""){
-            logWhileWindowNotInitialized.truncate( logWhileWindowNotInitialized.length() - 1);
-            window->appendLogsLine(logWhileWindowNotInitialized);
-            logWhileWindowNotInitialized = "";
-        }
-        window->appendLogsLine(out);
-    }else{
-        logWhileWindowNotInitialized.append(out + "\n");
-    }
 }
 
 
@@ -176,20 +170,46 @@ int main(int argc, char **argv)
         return 2;
     }
 
-    qDebug() << "Build with Qt verison:" << QT_VERSION_STR;
-    qDebug() << "Qt version currently in use:" << qVersion();
-
+    // Default debug level
+    debugLevel = Debug::LowLevel;
 
     if(argc > 1){
         if(strcmp(argv[1], "--off") == 0){
             AmbilightUsb ambilight_usb;
             ambilight_usb.offLeds();
             return 0;
+        }else if(strcmp(argv[1], "--debug_high") == 0){
+            debugLevel = Debug::HighLevel;
+        }else if(strcmp(argv[1], "--debug_mid") == 0){
+            debugLevel = Debug::MidLevel;
+        }else if(strcmp(argv[1], "--debug_low") == 0){
+            debugLevel = Debug::LowLevel;
+        }else if(strcmp(argv[1], "--debug_zero") == 0){
+            debugLevel = Debug::ZeroLevel;
         }else{
             showHelpMessage();
             return 1;
         }
     }
+
+
+    if(debugLevel > 0){
+        qDebug() << "Build with Qt verison:" << QT_VERSION_STR;
+        qDebug() << "Qt version currently in use:" << qVersion();
+
+#ifdef Q_WS_WIN
+        switch( QSysInfo::windowsVersion() ){
+        case QSysInfo::WV_NT:       qDebug() << "Windows NT (operating system version 4.0)"; break;
+        case QSysInfo::WV_2000:     qDebug() << "Windows 2000 (operating system version 5.0)"; break;
+        case QSysInfo::WV_XP:       qDebug() << "Windows XP (operating system version 5.1)"; break;
+        case QSysInfo::WV_2003:     qDebug() << "Windows Server 2003, Windows Server 2003 R2, Windows Home Server, Windows XP Professional x64 Edition (operating system version 5.2)"; break;
+        case QSysInfo::WV_VISTA:    qDebug() << "Windows Vista, Windows Server 2008 (operating system version 6.0)"; break;
+        case QSysInfo::WV_WINDOWS7: qDebug() << "Windows 7, Windows Server 2008 R2 (operating system version 6.1)"; break;
+        default:                    qDebug() << "Unknown windows version:" << QSysInfo::windowsVersion();
+        }
+#endif
+        }
+
 
     // Update desktop widht and height
     Desktop::Initialize();
@@ -207,15 +227,12 @@ int main(int argc, char **argv)
     }
     QApplication::setQuitOnLastWindowClosed(false);
 
-
-    window = new MainWindow();   /* Create MainWindow */
+    MainWindow *window = new MainWindow();   /* Create MainWindow */
     window->setVisible(false);   /* And load to tray. */
-    window->setLogsFilePath(logFilePath);
 
     window->startAmbilight();
 
-    // Don't touch me!!!
-    qDebug() << "call app.exec();";
+    qDebug() << "Start main event loop: app.exec();";
 
     return app.exec();
 }
