@@ -192,6 +192,15 @@ int main(int argc, char **argv)
         }
     }
 
+    QString debugLevelStr = "";
+    switch( debugLevel ){
+    case Debug::HighLevel:  debugLevelStr = "High"; break;
+    case Debug::MidLevel:   debugLevelStr = "Mid"; break;
+    case Debug::LowLevel:   debugLevelStr = "Low"; break;
+    case Debug::ZeroLevel:  debugLevelStr = "Zero"; break;
+    }
+    qDebug() << "Debug level" << debugLevelStr;
+
 
     if(debugLevel > 0){
         qDebug() << "Build with Qt verison:" << QT_VERSION_STR;
