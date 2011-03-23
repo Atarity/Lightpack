@@ -146,7 +146,7 @@ void MoveMeWidget::setCursorOnAll(Qt::CursorShape cursor)
     DEBUG_MID_LEVEL << Q_FUNC_INFO << cursor;
 
     this->setCursor(cursor);
-    ui->checkBox_SelfId->setCursor(cursor);
+    ui->checkBox_SelfId->setCursor(Qt::ArrowCursor);
     ui->labelWidthHeight->setCursor(cursor);
 }
 
