@@ -28,7 +28,6 @@
 #include <QtGui>
 #include "movemewidget.h"
 #include "ui_movemewidget.h"
-#include "desktop.h"
 #include "settings.h"
 
 #include "debug.h"

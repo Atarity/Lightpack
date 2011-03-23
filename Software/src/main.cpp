@@ -32,7 +32,6 @@
 #include "settings.h"
 #include "version.h"
 #include "ambilightusb.h"
-#include "desktop.h"
 
 #include <sys/time.h>
 #include "time.h"
@@ -219,12 +218,7 @@ int main(int argc, char **argv)
 #endif
         }
 
-
-    // Update desktop widht and height
-    Desktop::Initialize();
-
     // Open last used profile, if profile doesn't exists it will be created
-    // Desktop::Width and Desktop::Height should be initialized
     Settings::Initialize( applicationDirPath );
 
     Q_INIT_RESOURCE(LightpackResources);

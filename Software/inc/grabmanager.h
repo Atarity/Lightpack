@@ -34,7 +34,6 @@
 #include "timeevaluations.h"
 #include "struct_rgb.h"
 #include "movemewidget.h"
-#include "desktop.h"
 
 class GrabManager : public QWidget
 {
@@ -68,7 +67,7 @@ public slots:
     void switchQtWinApi(bool isWinApi);
 
 private slots:
-    void scaleLedWidgets();
+    void scaleLedWidgets(int screenIndexResized);
     void firstWidgetPositionChanged();
     void updateLedsColorsIfChanged();
     void updateFpsOnMainWindow();
@@ -92,6 +91,8 @@ private: // variables
 
     QList<StructRGB> colorsCurrent;
     QList<StructRGB> colorsNew;
+
+    QRect screenSaved;
 
     bool isAmbilightOn;    
     bool isResizeOrMoving;

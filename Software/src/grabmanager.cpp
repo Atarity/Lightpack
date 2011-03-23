@@ -52,8 +52,10 @@ GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
     initColorLists();
     initLedWidgets();
 
+    screenSaved = QApplication::desktop()->screenGeometry(ledWidgets[0]);
+
     connect(timerGrab, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
-    connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(scaleLedWidgets()));
+    connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(scaleLedWidgets(int)));
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
@@ -127,18 +129,33 @@ void GrabManager::firstWidgetPositionChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    screenSaved = QApplication::desktop()->screenGeometry(ledWidgets[0]);
+
     if(isGrabWinAPI){
         GrabWinAPI::findScreenOnNextCapture( ledWidgets[0]->winId() );
     }
 }
 
 
-void GrabManager::scaleLedWidgets()
+void GrabManager::scaleLedWidgets(int screenIndexResized)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << screenIndexResized;
 
-    double scaleX = (double) Desktop::Width / Desktop::WidthSaved;
-    double scaleY = (double) Desktop::Height / Desktop::HeightSaved;
+    int screenIndexOfFirstLedWidget = QApplication::desktop()->screenNumber(ledWidgets[0]);
+
+    DEBUG_LOW_LEVEL << "LedWidgets[0] screen index:" << screenIndexOfFirstLedWidget;
+
+    // Do nothing if the size has not changed on the screen of the first widget
+    if(screenIndexResized != screenIndexOfFirstLedWidget){
+        return;
+    }
+
+    QRect screen = QApplication::desktop()->screenGeometry(ledWidgets[0]);
+
+    double scaleX = (double) screen.width() / screenSaved.width();
+    double scaleY = (double) screen.height() / screenSaved.height();
+
+    screenSaved = screen;
 
     for(int i=0; i<ledWidgets.count(); i++){
         int width  = round( scaleX * ledWidgets[i]->width() );
