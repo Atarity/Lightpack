@@ -1,6 +1,15 @@
 Lightpack firmware
 ==================
 
+Version fw4.2
+-------------
+brunql, February 8, 2011
+
+* Added smooth change colors;
+* Rewrite PWM generation for led drivers;
+* Remove using report Id-s;
+* Added to repository Lighpack.hex;
+
 Version fw4.1
 -------------
 brunql, January 11, 2011

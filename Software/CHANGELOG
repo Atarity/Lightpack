@@ -1,6 +1,33 @@
 Lightpack software
 ==================
 
+Version sw4.1.0
+---------------
+brunql, March 23, 2011
+
+* Grab using WinAPI (grab from screen where placed first widget)
+* Added profiles
+* New icons and application image
+* Portable version: store logs and configs in current directory
+* About dialog rewrited: added mercurial revision and links to project on googlecode.com
+* Added information about the version and manufacturer in the description of the executable file
+* Added runtime GUI translation
+* Scale grab widgets on resize screen where placed first widget
+* Fix cursor behavior on MoveMeWidget
+
+Version sw4.0.9
+---------------
+brunql, February 19, 2011
+
+* Using HIDAPI (https://github.com/signal11/hidapi) for cross-platform HID;
+* Added new class MoveMeWidget for determine parts of desktop for each LEDs;
+* Save size and position of each MoveMeWidget to ini-settigs file;
+* Added checkbox for On/Off AVG colors;
+* Added option for set minimum level of sensitivity;
+* Added icons to tray menu
+* Rename project to Lightpack
+* Fixbug with recreation logs file if size > 1 Mb;
+
 Version sw4.0.0
 ---------------
 brunql, January 13, 2011

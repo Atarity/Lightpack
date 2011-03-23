@@ -1,6 +1,13 @@
 Lightpack hardware
 ==================
 
+Version hw4.3
+-------------
+brunql & atarity, January 29, 2011
+
+* Led ref resistor 1kOm
+* Added external board for RGB LEDs
+
 Version hw4.1
 -------------
 brunql, January 22, 2011
