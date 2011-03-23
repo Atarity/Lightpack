@@ -14,6 +14,7 @@ brunql, March 23, 2011
 * Added runtime GUI translation
 * Scale grab widgets on resize screen where placed first widget
 * Fix cursor behavior on MoveMeWidget
+* Added debug level option to main config file
 
 Version sw4.0.9
 ---------------
