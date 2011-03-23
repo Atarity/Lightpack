@@ -27,7 +27,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "desktop.h"
 
 #include <QDesktopWidget>
 #include <QPlainTextEdit>
@@ -52,9 +51,11 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
     createTrayIcon();
 
+    QRect screen = QApplication::desktop()->screenGeometry(this);
+
     this->adjustSize();
-    this->move( Desktop::Width / 2  - this->width() / 2,
-                Desktop::Height / 2 - this->height() / 2 );
+    this->move( screen.width() / 2  - this->width() / 2,
+                screen.height() / 2 - this->height() / 2 );
     this->setWindowFlags( Qt::Window
                           | Qt::WindowStaysOnTopHint
                           | Qt::CustomizeWindowHint
@@ -300,10 +301,12 @@ void MainWindow::showAbout()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    QRect screen = QApplication::desktop()->screenGeometry(this);
+
     aboutDialog->setFirmwareVersion( ambilightUsb->firmwareVersion() );
 
-    aboutDialog->move(Desktop::Width / 2 - aboutDialog->width() / 2,
-            Desktop::Height / 2 - aboutDialog->height() / 2);
+    aboutDialog->move(screen.width() / 2 - aboutDialog->width() / 2,
+            screen.height() / 2 - aboutDialog->height() / 2);
 
     aboutDialog->show();
 }

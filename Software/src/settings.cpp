@@ -27,12 +27,13 @@
 #include "settings.h"
 
 #include <QtDebug>
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QSize>
 #include <QPoint>
 #include <QFileInfo>
 #include <QDir>
 
-#include "desktop.h" // Desktop width and height
 #include "../../CommonHeaders/RGB.h"        /* Led defines */
 
 #include "debug.h"
@@ -226,6 +227,8 @@ void Settings::settingsInit()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    QRect screen = QApplication::desktop()->screenGeometry();
+
     setDefaultSettingIfNotFound("GrabSlowdownMs",                      GRAB_SLOWDOWN_MS_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("IsAvgColorsOn",                       IS_AVG_COLORS_ON_DEFAULT_VALUE);
@@ -246,18 +249,18 @@ void Settings::settingsInit()
         if(ledIndex < 4){
             ledPosition.setX(0);
         }else{
-            ledPosition.setX(Desktop::Width - LED_FIELD_WIDTH_DEFAULT_VALUE);
+            ledPosition.setX(screen.width() - LED_FIELD_WIDTH_DEFAULT_VALUE);
         }
 
         switch( ledIndex ){
         case LED1:
-        case LED5: ledPosition.setY(Desktop::Height / 2 - 2*LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        case LED5: ledPosition.setY(screen.height() / 2 - 2*LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
         case LED2:
-        case LED6: ledPosition.setY(Desktop::Height / 2 - LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        case LED6: ledPosition.setY(screen.height() / 2 - LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
         case LED3:
-        case LED7: ledPosition.setY(Desktop::Height / 2 );  break;
+        case LED7: ledPosition.setY(screen.height() / 2 );  break;
         case LED4:
-        case LED8: ledPosition.setY(Desktop::Height / 2 + LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        case LED8: ledPosition.setY(screen.height() / 2 + LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
         }
 
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/Size",      LED_FIELD_SIZE_DEFAULT_VALUE);
@@ -274,6 +277,8 @@ void Settings::settingsInit()
 void Settings::resetToDefaults()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    QRect screen = QApplication::desktop()->screenGeometry();
 
     settingsNow->setValue("GrabSlowdownMs",                      GRAB_SLOWDOWN_MS_DEFAULT_VALUE);
     settingsNow->setValue("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
@@ -295,18 +300,18 @@ void Settings::resetToDefaults()
         if(ledIndex < 4){
             ledPosition.setX(0);
         }else{
-            ledPosition.setX(Desktop::Width - LED_FIELD_WIDTH_DEFAULT_VALUE);
+            ledPosition.setX(screen.width() - LED_FIELD_WIDTH_DEFAULT_VALUE);
         }
 
         switch( ledIndex ){
         case LED1:
-        case LED5: ledPosition.setY(Desktop::Height / 2 - 2*LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        case LED5: ledPosition.setY(screen.height() / 2 - 2*LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
         case LED2:
-        case LED6: ledPosition.setY(Desktop::Height / 2 - LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        case LED6: ledPosition.setY(screen.height() / 2 - LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
         case LED3:
-        case LED7: ledPosition.setY(Desktop::Height / 2 );  break;
+        case LED7: ledPosition.setY(screen.height() / 2 );  break;
         case LED4:
-        case LED8: ledPosition.setY(Desktop::Height / 2 + LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
+        case LED8: ledPosition.setY(screen.height() / 2 + LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
         }
 
         settingsNow->setValue("LED_" + QString::number(ledIndex+1) + "/Size",      LED_FIELD_SIZE_DEFAULT_VALUE);

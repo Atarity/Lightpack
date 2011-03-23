@@ -106,7 +106,6 @@ SOURCES += src/main.cpp \
     src/aboutdialog.cpp \
     src/grabmanager.cpp \
     src/movemewidget.cpp \
-    src/desktop.cpp \
     src/settings.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/commands.h \
@@ -121,7 +120,6 @@ HEADERS += hidapi/hidapi.h \
     inc/grabmanager.h \
     inc/movemewidget.h \
     inc/struct_rgb.h \
-    inc/desktop.h \
     inc/debug.h \
     grab/grab_api.h
 FORMS += src/mainwindow.ui \
