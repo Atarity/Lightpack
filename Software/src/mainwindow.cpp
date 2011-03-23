@@ -89,7 +89,14 @@ MainWindow::MainWindow(QWidget *parent) :
     logsFilePath = "";
 
     ui->pushButton_SwitchQtWinAPI->setVisible( Settings::valueMain("GuiShowSwitchQtWinAPI").toBool() );
-    grabSwitchQtWinAPI( ui->pushButton_SwitchQtWinAPI->isChecked() );
+
+#ifdef Q_WS_WIN
+    ui->pushButton_SwitchQtWinAPI->setChecked(true);
+    grabSwitchQtWinAPI(true);
+#else
+    ui->pushButton_SwitchQtWinAPI->setChecked(false);
+    grabSwitchQtWinAPI(false);
+#endif
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
@@ -262,7 +269,7 @@ void MainWindow::startAmbilight()
 
 void MainWindow::updateTrayAndActionStates()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     if( isAmbilightOn ){
         ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/off.png"));
