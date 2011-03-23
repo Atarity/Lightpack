@@ -63,6 +63,7 @@ private slots:
     void checkBoxSelfId_Toggled(bool state);
 
 private:
+    virtual void closeEvent(QCloseEvent *event);
     double loadCoefWithCheck(QString coefStr);
     void setCursorOnAll(Qt::CursorShape cursor);
     void checkAndSetCursors(QMouseEvent *pe);

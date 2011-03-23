@@ -80,6 +80,14 @@ MoveMeWidget::~MoveMeWidget()
     delete ui;
 }
 
+void MoveMeWidget::closeEvent(QCloseEvent *event)
+{
+    qWarning() << Q_FUNC_INFO << "event->type():" << event->type() << "Id:" << selfId;
+
+    event->ignore();
+}
+
+
 void MoveMeWidget::saveSizeAndPosition()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -144,9 +152,9 @@ void MoveMeWidget::setCursorOnAll(Qt::CursorShape cursor)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << cursor;
 
-    this->setCursor(cursor);
     ui->checkBox_SelfId->setCursor(Qt::ArrowCursor);
     ui->labelWidthHeight->setCursor(cursor);
+    this->setCursor(cursor);
 }
 
 // private
@@ -214,6 +222,10 @@ void MoveMeWidget::mousePressEvent(QMouseEvent *pe)
         // Click on center, just move it
         else{
             cmd = MOVE;
+            // Force set cursor to ClosedHand
+            this->grabMouse(Qt::ClosedHandCursor);
+            this->releaseMouse();
+            // And set it to this widget and labelWxH
             this->setCursorOnAll(Qt::ClosedHandCursor);
         }
 
@@ -343,11 +355,10 @@ void MoveMeWidget::mouseMoveEvent(QMouseEvent *pe)
         break;
 
     case NOP:
-    default:
+    default:        
         checkAndSetCursors(pe);
         break;
     }
-
     resizeEvent(NULL);
 }
 
@@ -356,7 +367,12 @@ void MoveMeWidget::mouseReleaseEvent(QMouseEvent *pe)
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     checkAndSetCursors(pe);
+
     cmd = NOP;
+
+    // Force set cursor from widget to mouse
+    this->grabMouse(this->cursor());
+    this->releaseMouse();
 
     saveSizeAndPosition();
 
@@ -450,7 +466,11 @@ void MoveMeWidget::checkAndSetCursors(QMouseEvent *pe)
     }else if((this->height() - pe->y()) < BorderWidth){
         this->setCursorOnAll(Qt::SizeVerCursor);
     }else{
-        this->setCursorOnAll(Qt::OpenHandCursor);
+        if(pe->buttons() & Qt::LeftButton){
+            this->setCursorOnAll(Qt::ClosedHandCursor);
+        }else{
+            this->setCursorOnAll(Qt::OpenHandCursor);
+        }
     }
 }
 
