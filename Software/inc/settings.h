@@ -31,6 +31,8 @@
 #include <QSettings>
 #include <QVariant>
 
+#include "debug.h"
+
 // Default values:
 
 // LightpackMain.conf
@@ -38,6 +40,7 @@
 #define PROFILE_DEFAULT_NAME            "Lightpack"
 #define LANGUAGE_DEFAULT_NAME           "<System>" /* system lang */
 #define GUI_SHOW_SWITCH_GRAB_QT_WINAPI  false
+#define DEBUG_LEVEL_DEFAULT             Debug::LowLevel
 
 // ProfileName.ini
 // [General]
@@ -66,7 +69,7 @@ class Settings : public QObject
     Q_OBJECT
 
 public:
-    static void Initialize(const QString & applicationDirPath);
+    static void Initialize(const QString & applicationDirPath, bool isSetDebugLevelFromConfig);
 
     // Simple abstraction functions for forwarding to settingsNow object
     static void setValue(const QString & key, const QVariant & value);

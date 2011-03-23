@@ -45,7 +45,7 @@ QSettings * Settings::settingsMain; // LightpackMain.conf contains last profile
 QString Settings::appDirPath = "";
 
 // Desktop should be initialized before call Settings::Initialize()
-void Settings::Initialize( const QString & applicationDirPath)
+void Settings::Initialize( const QString & applicationDirPath, bool isSetDebugLevelFromConfig)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -62,6 +62,21 @@ void Settings::Initialize( const QString & applicationDirPath)
     setDefaultSettingIfNotFound(settingsMain, "ProfileLast",    PROFILE_DEFAULT_NAME);
     setDefaultSettingIfNotFound(settingsMain, "Language",       LANGUAGE_DEFAULT_NAME);    
     setDefaultSettingIfNotFound(settingsMain, "GuiShowSwitchQtWinAPI", GUI_SHOW_SWITCH_GRAB_QT_WINAPI);
+    setDefaultSettingIfNotFound(settingsMain, "DebugLevel",     DEBUG_LEVEL_DEFAULT);
+
+    if(isSetDebugLevelFromConfig){
+        bool ok = false;
+        int sDebugLevel = Settings::valueMain("DebugLevel").toInt(&ok);
+
+        if( ok && sDebugLevel >= 0 ){
+            debugLevel = sDebugLevel;
+            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "debugLevel =" << debugLevel;
+        }else{
+            qWarning() << "DebugLevel in config has an invalid value, set the default" << DEBUG_LEVEL_DEFAULT;
+            Settings::setValueMain("DebugLevel", DEBUG_LEVEL_DEFAULT);
+            debugLevel = DEBUG_LEVEL_DEFAULT;
+        }
+    }
 
     QString profileLast = settingsMain->value("ProfileLast").toString();
 

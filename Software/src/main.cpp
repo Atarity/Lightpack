@@ -171,34 +171,34 @@ int main(int argc, char **argv)
 
     // Default debug level
     debugLevel = Debug::LowLevel;
+    bool isSetDebugLevelFromConfig = true;
 
     if(argc > 1){
         if(strcmp(argv[1], "--off") == 0){
             AmbilightUsb ambilight_usb;
             ambilight_usb.offLeds();
             return 0;
-        }else if(strcmp(argv[1], "--debug_high") == 0){
+        }else if( strcmp(argv[1], "--debug_high") == 0 ){
             debugLevel = Debug::HighLevel;
-        }else if(strcmp(argv[1], "--debug_mid") == 0){
+            isSetDebugLevelFromConfig = false;
+
+        }else if( strcmp(argv[1], "--debug_mid") == 0 ){
             debugLevel = Debug::MidLevel;
-        }else if(strcmp(argv[1], "--debug_low") == 0){
+            isSetDebugLevelFromConfig = false;
+
+        }else if( strcmp(argv[1], "--debug_low") == 0 ){
             debugLevel = Debug::LowLevel;
-        }else if(strcmp(argv[1], "--debug_zero") == 0){
+            isSetDebugLevelFromConfig = false;
+
+        }else if( strcmp(argv[1], "--debug_zero") == 0 ){
             debugLevel = Debug::ZeroLevel;
+            isSetDebugLevelFromConfig = false;
+
         }else{
             showHelpMessage();
             return 1;
         }
     }
-
-    QString debugLevelStr = "";
-    switch( debugLevel ){
-    case Debug::HighLevel:  debugLevelStr = "High"; break;
-    case Debug::MidLevel:   debugLevelStr = "Mid"; break;
-    case Debug::LowLevel:   debugLevelStr = "Low"; break;
-    case Debug::ZeroLevel:  debugLevelStr = "Zero"; break;
-    }
-    qDebug() << "Debug level" << debugLevelStr;
 
 
     if(debugLevel > 0){
@@ -219,7 +219,17 @@ int main(int argc, char **argv)
         }
 
     // Open last used profile, if profile doesn't exists it will be created
-    Settings::Initialize( applicationDirPath );
+    Settings::Initialize( applicationDirPath, isSetDebugLevelFromConfig );
+
+    QString debugLevelStr = "";
+    switch( debugLevel ){
+    case Debug::HighLevel:  debugLevelStr = "High"; break;
+    case Debug::MidLevel:   debugLevelStr = "Mid"; break;
+    case Debug::LowLevel:   debugLevelStr = "Low"; break;
+    case Debug::ZeroLevel:  debugLevelStr = "Zero"; break;
+    }
+    qDebug() << "Debug level" << debugLevelStr;
+
 
     Q_INIT_RESOURCE(LightpackResources);
 
