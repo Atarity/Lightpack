@@ -255,9 +255,13 @@ void GrabManager::updateLedsColorsIfChanged()
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         QRgb rgb = colorsNew[ledIndex].rgb;
 
-        int r = qRed(rgb)   * ledWidgets[ledIndex]->getCoefRed();
-        int g = qGreen(rgb) * ledWidgets[ledIndex]->getCoefGreen();
-        int b = qBlue(rgb)  * ledWidgets[ledIndex]->getCoefBlue();
+        unsigned r = qRed(rgb)   * ledWidgets[ledIndex]->getCoefRed();
+        unsigned g = qGreen(rgb) * ledWidgets[ledIndex]->getCoefGreen();
+        unsigned b = qBlue(rgb)  * ledWidgets[ledIndex]->getCoefBlue();
+
+        if(r > 0xff) r = 0xff;
+        if(g > 0xff) g = 0xff;
+        if(b > 0xff) b = 0xff;
 
         colorsNew[ledIndex].rgb = qRgb(r, g, b);
     }
