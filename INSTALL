@@ -1,61 +1,95 @@
 
-AmbilightUSB
-============
-                                                            
-Very simple implementation of the backlight for a laptop (as in Philips TV).
+    _/        _/            _/          _/                                    _/      
+   _/              _/_/_/  _/_/_/    _/_/_/_/  _/_/_/      _/_/_/    _/_/_/  _/  _/   
+  _/        _/  _/    _/  _/    _/    _/      _/    _/  _/    _/  _/        _/_/      
+ _/        _/  _/    _/  _/    _/    _/      _/    _/  _/    _/  _/        _/  _/     
+_/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    _/    
+                   _/                      _/                                         
+              _/_/                        _/                                          
 
-Linux
-=====
-
-Download and install Qt4 libs:  
-`$ sudo apt-get install libqt4-gui`  
-   
-Binary
-------
- 
- If you using `x86_64` you can simply goto [downloads](https://github.com/brunql/AmbilightUSB/downloads) and download latest `AmbilightUSB_vN.N.N`, and may be this will work =) overwise compile from sources.   
- This builds created on Ubuntu 10.04 LTS (x86_64), AMD Turion X2 (64 bit), using gcc4.4.3 and Qt4.6.  
-
-Sources
--------
- 
- Installing from sources (Qt4 and gcc must be already installed): 
- 
-1. Download sources:
-
-   * Get only latest source from github: [tar.gz](https://github.com/brunql/AmbilightUSB/tarball/master) or [zip](https://github.com/brunql/AmbilightUSB/zipball/master)  
-   * Get full git tree from github: `$ git clone git@github.com:brunql/AmbilightUSB.git`  
-     
-2. Compile:  
-   
-       $ cd AmbilightUSB/Software/
-       $ ./update_locales.sh
-       $ qmake AmbilightUSB.pro
-       $ make
-       $ ./build/AmbilightUSB
-
-Icon for linux users: [ambilight_icon.png](https://github.com/brunql/AmbilightUSB/blob/master/Software/res/icons/ambilight_icon.png)
- 
-If AmbilightUSB shows `AmbilightUSB. Error state.` and write to logs `Access to device denied` or `The specified device was not found`, this may be problem with permissions, try to add `UDEV` rules [50-usb.rules](https://github.com/brunql/AmbilightUSB/raw/master/50-usb.rules) to `/etc/udev/rules.d/`  
-
-    $ sudo cp 50-usb.rules /etc/udev/rules.d/
-    $ sudo restart udev
-
-Unplug and plug, if needed, AmbilightUSB device.  
+                        lightpack.googlecode.com
 
 
-Windows
-=======
- 
-Binary
-------
+===================================================================================
+#    Install guide
+===================================================================================
+-----------------------------------------------------------------------------------
 
-1. Download: [Libs Win32](https://github.com/downloads/brunql/AmbilightUSB/Libs_Win32.zip)  
-2. Extract `Libs_Win32.zip` archive in `AmbilightUSB` directory.  
-3. Goto: [downloads](https://github.com/brunql/AmbilightUSB/downloads) find there latest version of available builds (`AmbilightUSB_vN.N.N.exe`, like this AmbilightUSB_v2.7.7.exe)  
-4. Copy `AmbilightUSB_vN.N.N.exe` to `AmbilightUSB` directory.  
-5. Connect device and start application.
-6. Have fun!
+Get latest build for your platform: http://code.google.com/p/lightpack/downloads
 
- Icon for windows users included in resources.
- 
+NOTE: Windows users, don't forget to download Qt libraries.
+
+--------------------------------------------------------------------------------
+#    Linux
+--------------------------------------------------------------------------------
+
+Lightpack depends on:
+
+Shared library: [libusb-1.0.so.0]
+Shared library: [libQtGui.so.4]
+Shared library: [libQtCore.so.4]
+Shared library: [libpthread.so.0]
+Shared library: [libstdc++.so.6]
+Shared library: [libm.so.6]
+Shared library: [libgcc_s.so.1]
+Shared library: [libc.so.6]
+
+NOTE: I think this steps can be reproduced on any linux platform (changes depending 
+      on platform), but I'll show you how to do this on Debian-based distro like Ubuntu
+
+1. Download and install libs:
+
+  $ sudo apt-get install libusb-1.0-0
+  $ sudo apt-get install libqt4-gui
+
+2. Set executable bit:
+
+  $ sudo chmod +x Lightpack
+
+3. Plugin device and start application:
+
+  $ ./Lightpack
+
+4. Using --help option for show help message:
+
+  $ ./Lightpack --help
+
+NOTE: If application can not connect to the device, add a rule for UDEV 
+      See comments in 93-lightpack.rules for how to do it.
+
+
+TIP: Linux users can use this images for icon:
+
+  http://lightpack.googlecode.com/hg/Software/res/icons/on.png
+  http://lightpack.googlecode.com/hg/Software/res/icons/Lightpack.png
+
+
+--------------------------------------------------------------------------------
+#   Windows
+--------------------------------------------------------------------------------
+
+If your forgot to download Qt libraries go to: 
+  
+  http://code.google.com/p/lightpack/downloads
+
+
+1. Extract Qt libs to Lightpack folder
+
+2. Copy Lightpack.exe to Lightpack folder
+
+3. Connect device and start application
+
+NOTE: Icon for windows users included in resources.
+
+
+
+
+Please let us know if you find mistakes, bugs or errors.
+
+Post new issue : http://code.google.com/p/lightpack/issues/list
+Ask questions  : http://groups.google.com/group/lightpack
+
+
+
+
+

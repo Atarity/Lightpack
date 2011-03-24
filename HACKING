@@ -1,0 +1,90 @@
+
+    _/        _/            _/          _/                                    _/      
+   _/              _/_/_/  _/_/_/    _/_/_/_/  _/_/_/      _/_/_/    _/_/_/  _/  _/   
+  _/        _/  _/    _/  _/    _/    _/      _/    _/  _/    _/  _/        _/_/      
+ _/        _/  _/    _/  _/    _/    _/      _/    _/  _/    _/  _/        _/  _/     
+_/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    _/    
+                   _/                      _/                                         
+              _/_/                        _/                                          
+
+                        lightpack.googlecode.com
+
+
+First of all, download the source code:
+
+  $ hg clone https://lightpack.googlecode.com/hg/ Lightpack 
+
+
+===================================================================================
+#    Software hackers guide
+===================================================================================
+-----------------------------------------------------------------------------------
+
+Get latest Qt SDK for your platform: http://qt.nokia.com/downloads
+     
+1. Compile:
+
+  $ cd Lightpack/Software/
+  $ qmake Lightpack.pro
+  $ make
+
+2. Start
+
+  $ ./bin/Lightpack
+ 
+3. Don't forget to update UDEV rules before using Lightpack device.
+   See INSTALL guide for details.
+
+NOTE: Same steps for Linux and Windows platforms.
+
+
+===================================================================================
+#    Firmware hackers guide
+===================================================================================
+-----------------------------------------------------------------------------------
+
+1. Install AVR GCC Toolchain
+
+  http://avr-eclipse.sourceforge.net/wiki/index.php/The_AVR_GCC_Toolchain
+
+2. Install dfu-programmer for upload firmware
+
+  $ sudo apt-get install dfu-programmer
+
+2. Install Eclipse IDE for C/C++ Developers
+
+  http://www.eclipse.org/downloads/
+
+3. Install AVR Eclipse Plugin
+
+  http://avr-eclipse.sourceforge.net/wiki/index.php/Plugin_Download
+
+4. Create new AVR GCC "C project" 
+
+  Set name "Lightpack"
+  Set path "Lightpack/Firmware/"
+  Set MCU   = AT90USB162(*)
+  Set CLOCK = 16000000(*) MHz
+
+5. Goto "Properties" - "C/C++ Build" and turn off Makefiles generation.
+   Eclipse will start "make" in "Lightpack/Firmware/" and using makefile from there.
+
+6. Reboot device to bootloader and type:
+
+  $ make dfu
+
+7. Enjoy!
+
+(*) This values depends on your Lightpack hardware
+
+
+
+Please let us know if you find mistakes, bugs or errors.
+
+Post new issue : http://code.google.com/p/lightpack/issues/list
+Ask questions  : https://groups.google.com/group/lightpack
+
+
+
+
+
