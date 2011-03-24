@@ -59,23 +59,19 @@ NOTE: Same steps for Linux and Windows platforms.
 
   http://avr-eclipse.sourceforge.net/wiki/index.php/Plugin_Download
 
-4. Create new AVR GCC "C project" 
+4. Create new "Makefile project from existing code"
 
-  Set name "Lightpack"
-  Set path "Lightpack/Firmware/"
-  Set MCU   = AT90USB162(*)
-  Set CLOCK = 16000000(*) MHz
+  Set "Existing Code Location" to "Lightpack/Firmware/"
+  Set "Project Name" to "Lightpack"
+  Choose AVR-GCC Toolchain
+  Press "Finish"
 
-5. Goto "Properties" - "C/C++ Build" and turn off Makefiles generation.
-   Eclipse will start "make" in "Lightpack/Firmware/" and using makefile from there.
+5. Reboot device to bootloader and type:
 
-6. Reboot device to bootloader and type:
-
+  $ cd Lightpack/Firmware/
   $ make dfu
 
-7. Enjoy!
-
-(*) This values depends on your Lightpack hardware
+6. Enjoy!
 
 
 
