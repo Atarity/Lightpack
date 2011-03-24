@@ -1,12 +1,33 @@
-Lightpack
-=========
 
-Lightpack is a very simple implementation of the backlight for a laptop (as in Philips TV). A couple of simple printed circuit boards, controller, shift registers, a few LEDs and lightpack is ready!   
+    _/        _/            _/          _/                                    _/      
+   _/              _/_/_/  _/_/_/    _/_/_/_/  _/_/_/      _/_/_/    _/_/_/  _/  _/   
+  _/        _/  _/    _/  _/    _/    _/      _/    _/  _/    _/  _/        _/_/      
+ _/        _/  _/    _/  _/    _/    _/      _/    _/  _/    _/  _/        _/  _/     
+_/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    _/    
+                   _/                      _/                                         
+              _/_/                        _/                                          
+
+                        lightpack.googlecode.com
+
+
+Lightpack is a very simple implementation of the backlight for any computer. 
+A couple of simple printed circuit boards, controller, led drivers, a few LEDs and lightpack is ready! 
 
 Configuration program lives in the tray, without interfering with habitual work and watching movies.   
 
-Hardware: AT90USB162, 2 x MBI5026 and 8 x RGB LEDs;
-Firmware: LUFA, USB HID, PWM;
-Software: C++, Qt4, hidapi;
+Main features:
 
-Project in the web: lightpack.googlecode.com
+  * Open source and hardware (GPLv3)
+  * Cross-platform GUI (Qt)
+  * USB Human Interface Device (no need to install any drivers)
+  * The device is simple to build (Do-It-Yourself) 
+
+
+Please let us know if you find mistakes, bugs or errors.
+
+Post new issue : http://code.google.com/p/lightpack/issues/list
+Ask questions  : https://groups.google.com/group/lightpack
+
+
+
+
