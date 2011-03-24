@@ -63,12 +63,12 @@ static void showHelpMessage()
     fprintf(stderr, "Build with Qt version %s \n", QT_VERSION_STR);
     fprintf(stderr, "\n");
     fprintf(stderr, "Options: \n");
-    fprintf(stderr, "  --off    - send 'off leds' cmd to device \n");
-    fprintf(stderr, "  --help   - show this help \n");
-    fprintf(stderr, "  --debug_high  - maximum verbose level of debug output");
-    fprintf(stderr, "  --debug_mid   - middle debug level");
-    fprintf(stderr, "  --debug_low   - low debug level, DEFAULT");
-    fprintf(stderr, "  --debug_zero  - minimum debug output");
+    fprintf(stderr, "  --off         - send 'off leds' cmd to device \n");
+    fprintf(stderr, "  --help        - show this help \n");
+    fprintf(stderr, "  --debug_high  - maximum verbose level of debug output\n");
+    fprintf(stderr, "  --debug_mid   - middle debug level\n");
+    fprintf(stderr, "  --debug_low   - low debug level, DEFAULT\n");
+    fprintf(stderr, "  --debug_zero  - minimum debug output\n");
     fprintf(stderr, "\n");
 }
 
