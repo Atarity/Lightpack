@@ -92,7 +92,7 @@ private:
     static const int MinimumWidth = 50;
     static const int MinimumHeight = 50;
     static const int BorderWidth = 10;
-    static const int StickyCloserPixels = 5; // Sticky when closer
+    static const int StickyCloserPixels = 10; // Sticky to screen when closer N pixels
 
     static const int ColorsCount = 12;
 

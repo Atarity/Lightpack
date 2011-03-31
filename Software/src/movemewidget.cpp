@@ -245,9 +245,36 @@ void MoveMeWidget::mouseMoveEvent(QMouseEvent *pe)
     int newWidth, newHeight, newX, newY;
     QPoint moveHere;
 
+    QRect screen = QApplication::desktop()->screenGeometry(this);
+
+    int left, top, right, bottom;
+
     switch(cmd){
     case MOVE:
         moveHere = pe->globalPos() - mousePressPosition;
+
+        left = moveHere.x();
+        top = moveHere.y();
+
+        right = moveHere.x() + this->width();
+        bottom = moveHere.y() + this->height();
+
+        if(left < screen.left() + StickyCloserPixels &&
+           left > screen.left() - StickyCloserPixels)
+            moveHere.setX( screen.left() );
+
+        if(top < screen.top() + StickyCloserPixels &&
+           top > screen.top() - StickyCloserPixels)
+            moveHere.setY( screen.top() );
+
+        if(right < screen.right() + StickyCloserPixels &&
+           right > screen.right() - StickyCloserPixels)
+            moveHere.setX(screen.right() - this->width());
+
+        if(bottom < screen.bottom() + StickyCloserPixels &&
+           bottom > screen.bottom() - StickyCloserPixels)
+            moveHere.setY(screen.bottom() - this->height());
+
         this->move(moveHere);
         break;
 
