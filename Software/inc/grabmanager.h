@@ -93,6 +93,7 @@ private: // variables
     QList<StructRGB> colorsNew;
 
     QRect screenSaved;
+    int screenSavedIndex;
 
     bool isAmbilightOn;    
     bool isResizeOrMoving;

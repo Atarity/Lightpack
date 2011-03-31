@@ -185,7 +185,7 @@ QRgb getColor(const QWidget * grabme)
         y + (int)height < monitorInfo.rcMonitor.top    ||
         y               > monitorInfo.rcMonitor.bottom ){
 
-        DEBUG_LOW_LEVEL << "Widget 'grabme' is out of screen, x y w h:" << x << y << width << height;
+        DEBUG_MID_LEVEL << "Widget 'grabme' is out of screen, x y w h:" << x << y << width << height;
 
         // Widget 'grabme' is out of screen
         return 0x000000;

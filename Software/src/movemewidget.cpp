@@ -107,6 +107,8 @@ void MoveMeWidget::settingsProfileChanged()
     this->move( Settings::value("LED_" + QString::number(selfId+1) + "/Position").toPoint() );
     this->resize( Settings::value("LED_" + QString::number(selfId+1) + "/Size").toSize() );
 
+    emit resizeOrMoveCompleted( selfId );
+
     ui->checkBox_SelfId->setChecked( Settings::value("LED_" + QString::number(selfId+1) + "/IsEnabled").toBool() );
 }
 
