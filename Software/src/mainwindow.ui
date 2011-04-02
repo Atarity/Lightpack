@@ -312,12 +312,6 @@
           <property name="text">
            <string notr="true">Qt / WinAPI</string>
           </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
          </widget>
         </item>
         <item>

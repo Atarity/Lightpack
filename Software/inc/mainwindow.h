@@ -86,7 +86,7 @@ private slots:
 
     void loadTranslation(const QString & language);
 
-    void grabSwitchQtWinAPI(bool isWinAPI);
+    void switchQtWinAPIClick();
 
 private:
     void connectSignalsSlots();
@@ -96,6 +96,8 @@ private:
     void createTrayIcon();
     void createActions();
     void loadSettingsToMainWindow();
+
+    void grabSwitchQtWinAPI();
 
     void profilesFindAll();
     void profileLoadLast();
@@ -114,6 +116,7 @@ private:
 
     bool isAmbilightOn; /* is grab desktop window ON */
     bool isErrorState;
+    bool isWinAPIGrab;
 
     // Evaluated frequency of the PWM generation
     double pwmFrequency;
