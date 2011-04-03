@@ -14,6 +14,20 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 ===================================================================================
 -----------------------------------------------------------------------------------
 
+Version hw5.0
+-------------
+brunql, April 3, 2011
+
+* Led drivers connection via SPI
+* Each led driver controls 5 LEDs (summary 10 LEDs)
+* One button to enter bootloader mode
+* Pads to connect the expansion board with an additional LED drivers
+* Pads to connect the SPI
+* Pads to connect the USART
+* Main board: 86 х 38 mm; Led board: 15 x 15 mm
+- Unfortunately 8 wires on bottom layer
+
+
 Version hw4.3
 -------------
 brunql & atarity, January 29, 2011
