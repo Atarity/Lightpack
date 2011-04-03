@@ -36,7 +36,6 @@
 
 #include "grab_api.h"
 
-
 namespace GrabWinAPI
 {
 
@@ -54,6 +53,11 @@ unsigned bytesPerPixel;
 
 HWND hWndForFindMonitor = NULL;
 bool updateScreenAndAllocateMemory = true;
+
+HDC hScreenDC;
+HDC hMemDC;
+HBITMAP hBitmap;
+
 
 //
 // Save winId for find screen/monitor what will using for full screen capture
@@ -91,26 +95,24 @@ void captureScreen()
         screenHeight = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
 
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenWidth x screenHeight" << screenWidth << "x" << screenHeight;
+
+
+        // CreateDC for multiple monitors
+        hScreenDC = CreateDC( TEXT("DISPLAY"), NULL, NULL, NULL );
+
+        // Create a bitmap compatible with the screen DC
+        hBitmap = CreateCompatibleBitmap( hScreenDC, screenWidth, screenHeight );
+
+        // Create a memory DC compatible to screen DC
+        hMemDC = CreateCompatibleDC( hScreenDC );
+
+        // Select new bitmap into memory DC
+        SelectObject( hMemDC, hBitmap );
     }
-
-    // CreateDC for multiple monitors
-    HDC hScreenDC = CreateDC( TEXT("DISPLAY"), NULL, NULL, NULL );
-
-    // Create a bitmap compatible with the screen DC
-    HBITMAP hBitmap = CreateCompatibleBitmap( hScreenDC, screenWidth, screenHeight );
-
-    // Create a memory DC compatible to screen DC
-    HDC hMemDC = CreateCompatibleDC( hScreenDC );
-
-    // Select new bitmap into memory DC
-    HGDIOBJ hOldBitmap = SelectObject( hMemDC, hBitmap );
 
     // Copy screen
     BitBlt( hMemDC, 0, 0, screenWidth, screenHeight, hScreenDC,
            monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.top, SRCCOPY );
-
-    // Select old bitmap back into memory DC and get handle to bitmap of the screen
-    hBitmap = (HBITMAP) SelectObject( hMemDC, hOldBitmap );
 
     if( updateScreenAndAllocateMemory ){
 
@@ -123,6 +125,8 @@ void captureScreen()
 
         // Calculate the size the buffer needs to be
         unsigned pixelsBuffSizeNew = bmp->bmWidthBytes * bmp->bmHeight;
+
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "pixelsBuffSize =" << pixelsBuffSizeNew;
 
         if(pixelsBuffSize != pixelsBuffSizeNew){
             pixelsBuffSize = pixelsBuffSizeNew;
@@ -148,17 +152,6 @@ void captureScreen()
 
     // Get the actual RGB data and put it into pbPixelsBuff
     GetBitmapBits( hBitmap, pixelsBuffSize, pbPixelsBuff );
-
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << "DeleteObject-s: hBitmap, hOldBitmap";
-
-    // CleanUp
-    DeleteObject( hBitmap );
-    DeleteObject( hOldBitmap );
-
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << "DeleteDC-s: hScreenDC, hMemDC";
-
-    DeleteDC( hScreenDC );
-    DeleteDC( hMemDC );
 }
 
 
