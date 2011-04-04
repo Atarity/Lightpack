@@ -269,11 +269,11 @@ void MoveMeWidget::mouseMoveEvent(QMouseEvent *pe)
 
         if(right < screen.right() + StickyCloserPixels &&
            right > screen.right() - StickyCloserPixels)
-            moveHere.setX(screen.right() - this->width());
+            moveHere.setX(screen.right() - this->width() + 1);
 
         if(bottom < screen.bottom() + StickyCloserPixels &&
            bottom > screen.bottom() - StickyCloserPixels)
-            moveHere.setY(screen.bottom() - this->height());
+            moveHere.setY(screen.bottom() - this->height() + 1);
 
         this->move(moveHere);
         break;
