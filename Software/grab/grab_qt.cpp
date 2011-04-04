@@ -40,6 +40,9 @@ namespace GrabWinAPI
     void captureScreen() { }
     QRgb getColor(const QWidget * ) { return 0; }
     QRgb getColor(int x, int y, int width, int height) { return 0; }
+
+    void setGrabPrecision(int precision) { }
+    int getGrabPrecision() { return 0; }
 };
 #endif
 

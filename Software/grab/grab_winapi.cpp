@@ -58,6 +58,8 @@ HDC hScreenDC;
 HDC hMemDC;
 HBITMAP hBitmap;
 
+// If grab precision == 2, then using only every 4-th pixel of grabbing area
+int grabPrecision = 1;
 
 //
 // Save winId for find screen/monitor what will using for full screen capture
@@ -215,8 +217,8 @@ QRgb getColor(int x, int y, int width, int height)
     unsigned count = 0; // count the amount of pixels taken into account
 
     // This is where all the magic happens: calculate the average RGB
-    for(int i = x; i < x + width; i++){
-        for(int j = y; j < y + height; j++){
+    for(int i = x; i < x + width; i += grabPrecision){
+        for(int j = y; j < y + height; j += grabPrecision){
             // Calculate new index value
             index = (bytesPerPixel * j * screenWidth) + (bytesPerPixel * i);
             if(index > pixelsBuffSize) {
@@ -258,6 +260,21 @@ QRgb getColor(int x, int y, int width, int height)
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << "QRgb result =" << hex << result;
 
     return result;
+}
+
+
+void setGrabPrecision(int precision)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << precision;
+
+    grabPrecision = precision;
+}
+
+int getGrabPrecision()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << grabPrecision;
+
+    return grabPrecision;
 }
 
 }

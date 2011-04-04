@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>324</width>
-    <height>385</height>
+    <height>411</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,8 +43,8 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0">
-          <item row="5" column="0">
+         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0">
+          <item row="6" column="0">
            <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -248,6 +248,35 @@
             </property>
            </widget>
           </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_GrabPrecision">
+            <property name="font">
+             <font>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Grab precision (WinAPI only):</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1" colspan="3">
+           <widget class="QSpinBox" name="spinBox_GrabPrecision">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>20</number>
+            </property>
+            <property name="value">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
@@ -348,14 +377,14 @@
             </layout>
            </item>
            <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_GrabbedColors"/>
+           </item>
+           <item>
             <widget class="QPushButton" name="pushButton_StartTests">
              <property name="text">
               <string notr="true">Start tests</string>
              </property>
             </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_GrabbedColors"/>
            </item>
           </layout>
          </widget>

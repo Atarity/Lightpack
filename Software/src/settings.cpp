@@ -255,6 +255,7 @@ void Settings::settingsInit()
     setDefaultSettingIfNotFound("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("IsAvgColorsOn",                       IS_AVG_COLORS_ON_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("MinimumLevelOfSensitivity",           MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT);
+    setDefaultSettingIfNotFound("GrabPrecision",                       GRAB_PRECISION_WINAPI_DEFAULT);
 
     setDefaultSettingIfNotFound("Firmware/TimerPrescallerIndex",       FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("Firmware/TimerOCR",                   FW_TIMER_OCR_DEFAULT_VALUE);
@@ -306,6 +307,7 @@ void Settings::resetToDefaults()
     settingsNow->setValue("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
     settingsNow->setValue("IsAvgColorsOn",                       IS_AVG_COLORS_ON_DEFAULT_VALUE);
     settingsNow->setValue("MinimumLevelOfSensitivity",           MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT);
+    settingsNow->setValue("GrabPrecision",                       GRAB_PRECISION_WINAPI_DEFAULT);
 
     settingsNow->setValue("Firmware/TimerPrescallerIndex",       FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE);
     settingsNow->setValue("Firmware/TimerOCR",                   FW_TIMER_OCR_DEFAULT_VALUE);

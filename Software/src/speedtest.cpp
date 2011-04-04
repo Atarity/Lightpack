@@ -37,8 +37,33 @@
 
 using namespace std;
 
+#ifdef Q_WS_WIN
+#include <windows.h>
+
+typedef int (*DWM_IS_COMPOSITION_ENABLED)(BOOL *);
+DWM_IS_COMPOSITION_ENABLED DwmIsCompositionEnabled;
+
+#endif /* Q_WS_WIN */
+
+// Hacks for create aligned string from variable X with specified LENGHT
+#define ALIGN_LEFT( X, LENGHT ) QVariant( X ).toString().append(QString(LENGHT - QVariant( X ).toString().length(), ' '))
+#define ALIGN_RIGHT( X, LENGHT ) QVariant( X ).toString().prepend(QString(LENGHT - QVariant( X ).toString().length(), ' '))
+
+#define ALIGNL10( X ) ALIGN_LEFT( X, 10 )
+#define ALIGNL12( X ) ALIGN_LEFT( X, 12 )
+#define ALIGNL14( X ) ALIGN_LEFT( X, 14 )
+
+#define ALIGNR10( X ) ALIGN_RIGHT( X, 10 )
+#define ALIGNR12( X ) ALIGN_RIGHT( X, 12 )
+#define ALIGNR14( X ) ALIGN_RIGHT( X, 14 )
+
+
+#define CSV_SEPARATOR   ", "
+
+
 SpeedTest::SpeedTest() : QObject()
 {
+
 }
 
 
@@ -70,29 +95,16 @@ void SpeedTest::start()
 
 void SpeedTest::printHeader()
 {
-#   ifdef Q_WS_WIN
-    switch( QSysInfo::windowsVersion() ){
-    case QSysInfo::WV_NT:       resultStream << "WinNT (4.0); "; break;
-    case QSysInfo::WV_2000:     resultStream << "Win2000 (5.0); "; break;
-    case QSysInfo::WV_XP:       resultStream << "WinXP (5.1); "; break;
-    case QSysInfo::WV_2003:     resultStream << "WinServer2003 (5.2); "; break;
-    case QSysInfo::WV_VISTA:    resultStream << "WinVista, WinServer2008 (6.0); "; break;
-    case QSysInfo::WV_WINDOWS7: resultStream << "Win7 (6.1); "; break;
-    default:                    resultStream << "Unknown: " << QSysInfo::windowsVersion() << "; ";
-    }
-#   endif
-
-    resultStream << endl;
-
-    resultStream << "Date; ";
-    resultStream << "Time; ";
-    resultStream << "Soft ver; ";
-
-    resultStream << "GrabQt; AARRGGBB; ";
+    resultStream << ALIGNL10("Date")        << CSV_SEPARATOR;
+    resultStream << ALIGNL12("Time")        << CSV_SEPARATOR;
+    resultStream << ALIGNL10("Lightpack")    << CSV_SEPARATOR;
+    resultStream << ALIGNL10("GrabQt")      << CSV_SEPARATOR;
 
 #   ifdef Q_WS_WIN
-    resultStream << "GrabWinAPI; AARRGGBB; ";
-#   endif
+    resultStream << ALIGNL10("GrabWinAPI")  << CSV_SEPARATOR;
+    resultStream << ALIGNL10("Precision")   << CSV_SEPARATOR;
+    resultStream << ALIGNL10("Windows")     << CSV_SEPARATOR;
+#   endif /* Q_WS_WIN */
 
     resultStream << endl;
 }
@@ -101,35 +113,29 @@ void SpeedTest::startTests()
 {
     QTime time;
 
-    resultStream << QDateTime::currentDateTime().date().toString("yyyy.MM.dd") << "; ";
-    resultStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << "; ";
-    resultStream << "sw" << VERSION_STR << "; ";
+    resultStream << ALIGNL10( QDateTime::currentDateTime().date().toString("yyyy.MM.dd")) << CSV_SEPARATOR;
+    resultStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << CSV_SEPARATOR;
+    resultStream << ALIGNR10( "sw" VERSION_STR ) << CSV_SEPARATOR;
 
     // Main screen geometry
     QRect screenRect = QApplication::desktop()->screenGeometry();
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Screen Rect:" << screenRect;
 
-    QRgb lastResultRgb = 0;
-
-    const int testTimes = 10;
+    const int testTimes = 5;
     const int ledsCount = 10;
 
     time.start();
     for(int test = 0; test < testTimes; test++){
         for(int led = 0; led < ledsCount; led++){
-            lastResultRgb = GrabQt::getColor(
+            GrabQt::getColor(
                     screenRect.x(),
                     screenRect.y(),
                     screenRect.width(),
                     screenRect.height());
         }
     }
-    resultStream << time.elapsed() << "; ";
-    resultStream << hex << lastResultRgb << dec << "; ";
-
-    lastResultRgb = 0;
-
+    resultStream << ALIGNR10( time.elapsed() ) << CSV_SEPARATOR;
 
 #   ifdef Q_WS_WIN
     // Desktop HWND == 0
@@ -141,16 +147,53 @@ void SpeedTest::startTests()
     for(int test = 0; test < testTimes; test++){
         GrabWinAPI::captureScreen();
         for(int led = 0; led < ledsCount; led++){
-            lastResultRgb = GrabWinAPI::getColor(
+            GrabWinAPI::getColor(
                     screenRect.x(),
                     screenRect.y(),
                     screenRect.width(),
                     screenRect.height());
         }
     }
-    resultStream << time.elapsed() << "; ";
-    resultStream << hex << lastResultRgb << dec << "; ";
-#   endif
+    resultStream << ALIGNR10( time.elapsed() ) << CSV_SEPARATOR;
+    resultStream << ALIGNR10( GrabWinAPI::getGrabPrecision() ) << CSV_SEPARATOR;
+
+    // Windows version
+    switch( QSysInfo::windowsVersion() ){
+    case QSysInfo::WV_NT:       resultStream << "WinNT (4.0)"; break;
+    case QSysInfo::WV_2000:     resultStream << "Win2000 (5.0)"; break;
+    case QSysInfo::WV_XP:       resultStream << "WinXP (5.1)"; break;
+    case QSysInfo::WV_2003:     resultStream << "WinServer2003 (5.2)"; break;
+    case QSysInfo::WV_VISTA:    resultStream << "WinVista, WinServer2008 (6.0)"; break;
+    case QSysInfo::WV_WINDOWS7: resultStream << "Win7 (6.1)"; break;
+    default:                    resultStream << "Unknown: " << QSysInfo::windowsVersion();
+    }
+    resultStream << CSV_SEPARATOR;
+
+
+
+    //
+    // Eval WinAPI function DwmIsCompositionEnabled to test enabled Aero
+    //
+    DEBUG_LOW_LEVEL << "Load library dwmapi.dll to test enabled Aero";
+
+    HINSTANCE hDll;
+    hDll = LoadLibrary(L"dwmapi.dll");
+    if(hDll == NULL){
+        qWarning() << "Error loading win32 dll: dwmapi.dll";
+    }else{
+        DwmIsCompositionEnabled = (DWM_IS_COMPOSITION_ENABLED) GetProcAddress(hDll,"DwmIsCompositionEnabled");
+        if(DwmIsCompositionEnabled != NULL){
+            BOOL result = false;
+            (*DwmIsCompositionEnabled)(&result);
+            if(result){
+                resultStream << "Aero (DWM Composition Enabled)" << CSV_SEPARATOR;
+            }
+        }else{
+            qWarning() << "Error:" << GetLastError();
+        }
+    }
+
+#   endif /* Q_WS_WIN */
 
 
 
