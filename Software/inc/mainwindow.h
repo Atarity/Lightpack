@@ -34,6 +34,7 @@
 #include "ambilightusb.h"           /* class AmbilightUsb */
 #include "grabmanager.h"            /* class GrabManager */
 #include "struct_rgb.h"
+#include "speedtest.h"
 
 namespace Ui {
     class MainWindow;
@@ -87,6 +88,7 @@ private slots:
     void loadTranslation(const QString & language);
 
     void switchQtWinAPIClick();
+    void startTestsClick();
 
 private:
     void connectSignalsSlots();
@@ -113,6 +115,7 @@ private:
     AmbilightUsb *ambilightUsb;
     GrabManager *grabManager;
     AboutDialog *aboutDialog;
+    SpeedTest *speedTest;
 
     bool isAmbilightOn; /* is grab desktop window ON */
     bool isErrorState;

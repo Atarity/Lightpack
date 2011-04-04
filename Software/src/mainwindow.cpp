@@ -73,6 +73,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     aboutDialog = new AboutDialog(this);
 
+    speedTest = new SpeedTest();
+
     profilesFindAll();
 
     initLanguages();
@@ -89,10 +91,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     logsFilePath = "";
 
-    ui->pushButton_SwitchQtWinAPI->setVisible( Settings::valueMain("GuiShowSwitchQtWinAPI").toBool() );
+    ui->groupBox_AnotherGUI->setVisible( Settings::valueMain("ShowAnotherGui").toBool() );
 
 #ifdef Q_WS_WIN
-    isWinAPIGrab = true;
+    isWinAPIGrab = true;    
 #else
     isWinAPIGrab = false;
 #endif
@@ -151,7 +153,11 @@ void MainWindow::connectSignalsSlots()
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
 
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
-    connect(ui->pushButton_SwitchQtWinAPI, SIGNAL(clicked()), this, SLOT(switchQtWinAPIClick()));
+
+    // Another GUI
+    connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
+    connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
+    connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
 }
 
 
@@ -734,25 +740,32 @@ void MainWindow::updatePwmFrequency()
 }
 
 void MainWindow::switchQtWinAPIClick()
-{
-    isWinAPIGrab = !isWinAPIGrab;
+{    
+    isWinAPIGrab = ui->radioButton_GrabWinAPI->isChecked();
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "isWinAPIGrab:" << isWinAPIGrab;
 
     grabSwitchQtWinAPI();
 }
 
 void MainWindow::grabSwitchQtWinAPI()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    if(isWinAPIGrab){
-        ui->pushButton_SwitchQtWinAPI->setText( "Grab with WinAPI" );
-    }else{
-        ui->pushButton_SwitchQtWinAPI->setText( "Grab with Qt grabWindow()" );
-    }
+{    
+    ui->radioButton_GrabWinAPI->setChecked(isWinAPIGrab);
 
     grabManager->switchQtWinApi( isWinAPIGrab );
 }
 
+// ----------------------------------------------------------------------------
+// Start grab speed tests
+// ----------------------------------------------------------------------------
+
+void MainWindow::startTestsClick()
+{
+    ui->pushButton_StartTests->setText( "Please wait..." );
+    ui->pushButton_StartTests->repaint(); // update right now
+    speedTest->start();
+    ui->pushButton_StartTests->setText( "Start tests" );
+}
 
 // ----------------------------------------------------------------------------
 // Create tray icon and actions
