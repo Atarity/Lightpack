@@ -79,6 +79,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initLanguages();
 
+    initLabelsForGrabbedColors();
+
     connectSignalsSlots();
 
     profileLoadLast();
@@ -88,8 +90,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     isErrorState = false;
     isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
-
-    logsFilePath = "";
 
     ui->groupBox_AnotherGUI->setVisible( Settings::valueMain("ShowAnotherGui").toBool() );
 
@@ -155,9 +155,15 @@ void MainWindow::connectSignalsSlots()
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
 
     // Another GUI
-    connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
-    connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
-    connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
+    // Connect signals to another GUI slots only if ShowAnotherGui == true
+    if( Settings::valueMain("ShowAnotherGui").toBool() ){
+        connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
+        connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
+
+        connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
+
+        connect(grabManager, SIGNAL(updateLedsColors(QList<StructRGB>)), this, SLOT(updateGrabbedColors(QList<StructRGB>)));
+    }
 }
 
 
@@ -304,6 +310,34 @@ void MainWindow::updateTrayAndActionStates()
             offAmbilightAction->setEnabled(false);
         }
     }    
+}
+
+// ----------------------------------------------------------------------------
+// Show grabbed colors in another GUI
+// ----------------------------------------------------------------------------
+
+void MainWindow::initLabelsForGrabbedColors()
+{
+    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+        QLabel *label = new QLabel(this);
+        label->setText(QString::number( ledIndex+1 ));
+        label->setAutoFillBackground(true);
+
+        labelsGrabbedColors.append(label);
+        ui->horizontalLayout_GrabbedColors->addWidget(label);
+    }
+}
+
+void MainWindow::updateGrabbedColors(const QList<StructRGB> & colors)
+{
+    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+        QLabel *label = labelsGrabbedColors[ ledIndex ];
+        QColor color(colors[ ledIndex ].rgb);
+
+        QPalette pal = label->palette();
+        pal.setBrush(QPalette::Window, QBrush(color));
+        label->setPalette(pal);
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -761,10 +795,14 @@ void MainWindow::grabSwitchQtWinAPI()
 
 void MainWindow::startTestsClick()
 {
+    QString saveText = ui->pushButton_StartTests->text();
     ui->pushButton_StartTests->setText( "Please wait..." );
     ui->pushButton_StartTests->repaint(); // update right now
+
+    // While testing this function freezes GUI
     speedTest->start();
-    ui->pushButton_StartTests->setText( "Start tests" );
+
+    ui->pushButton_StartTests->setText( saveText );
 }
 
 // ----------------------------------------------------------------------------

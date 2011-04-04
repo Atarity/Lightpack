@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>324</width>
-    <height>456</height>
+    <height>385</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -314,21 +314,38 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <widget class="QRadioButton" name="radioButton_GrabQt">
-             <property name="text">
-              <string>Qt grabWindow</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_GrabWinAPI">
-             <property name="text">
-              <string>WinAPI BitBlt</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Grab:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_GrabQt">
+               <property name="text">
+                <string>Qt grabWindow</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_GrabWinAPI">
+               <property name="text">
+                <string>WinAPI BitBlt</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_StartTests">
@@ -336,6 +353,9 @@
               <string notr="true">Start tests</string>
              </property>
             </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_GrabbedColors"/>
            </item>
           </layout>
          </widget>

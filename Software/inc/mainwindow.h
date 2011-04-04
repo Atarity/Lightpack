@@ -89,6 +89,7 @@ private slots:
 
     void switchQtWinAPIClick();
     void startTestsClick();
+    void updateGrabbedColors(const QList<StructRGB> & colors);
 
 private:
     void connectSignalsSlots();
@@ -111,6 +112,8 @@ private:
 
     void updatePwmFrequency();
 
+    void initLabelsForGrabbedColors();
+
 private:
     AmbilightUsb *ambilightUsb;
     GrabManager *grabManager;
@@ -124,7 +127,7 @@ private:
     // Evaluated frequency of the PWM generation
     double pwmFrequency;
 
-    QString logsFilePath;
+    QList<QLabel *> labelsGrabbedColors;
 
     Ui::MainWindow *ui;
 
