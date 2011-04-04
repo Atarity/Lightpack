@@ -61,7 +61,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isSetDebugLe
 
     setDefaultSettingIfNotFound(settingsMain, "ProfileLast",    PROFILE_DEFAULT_NAME);
     setDefaultSettingIfNotFound(settingsMain, "Language",       LANGUAGE_DEFAULT_NAME);    
-    setDefaultSettingIfNotFound(settingsMain, "GuiShowSwitchQtWinAPI", GUI_SHOW_SWITCH_GRAB_QT_WINAPI);
+    setDefaultSettingIfNotFound(settingsMain, "ShowAnotherGui", SHOW_ANOTHER_GUI);
     setDefaultSettingIfNotFound(settingsMain, "DebugLevel",     DEBUG_LEVEL_DEFAULT);
 
     if(isSetDebugLevelFromConfig){

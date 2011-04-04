@@ -39,7 +39,7 @@
 // [General]
 #define PROFILE_DEFAULT_NAME            "Lightpack"
 #define LANGUAGE_DEFAULT_NAME           "<System>" /* system lang */
-#define GUI_SHOW_SWITCH_GRAB_QT_WINAPI  false
+#define SHOW_ANOTHER_GUI                false
 #define DEBUG_LEVEL_DEFAULT             Debug::LowLevel
 
 // ProfileName.ini
