@@ -26,39 +26,39 @@
 
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QTime>
 
 #include <iostream>
+using namespace std;
 
 #include "speedtest.h"
 #include "settings.h"
 #include "version.h"
 #include "grab_api.h"
 
-using namespace std;
 
 #ifdef Q_WS_WIN
-#include <windows.h>
-
-typedef int (*DWM_IS_COMPOSITION_ENABLED)(BOOL *);
-DWM_IS_COMPOSITION_ENABLED DwmIsCompositionEnabled;
-
+#   include <windows.h>
 #endif /* Q_WS_WIN */
 
+
+
 // Hacks for create aligned string from variable X with specified LENGHT
-#define ALIGN_LEFT( X, LENGHT ) QVariant( X ).toString().append(QString(LENGHT - QVariant( X ).toString().length(), ' '))
-#define ALIGN_RIGHT( X, LENGHT ) QVariant( X ).toString().prepend(QString(LENGHT - QVariant( X ).toString().length(), ' '))
+#define ALIGN_RIGHT( LENGHT, X ) QVariant( X ).toString().prepend(QString(LENGHT - QVariant( X ).toString().length(), ' '))
+#define ALIGNR3( X ) ALIGN_RIGHT( 3, X )
+#define ALIGNR5( X ) ALIGN_RIGHT( 5, X )
 
-#define ALIGNL10( X ) ALIGN_LEFT( X, 10 )
-#define ALIGNL12( X ) ALIGN_LEFT( X, 12 )
-#define ALIGNL14( X ) ALIGN_LEFT( X, 14 )
-
-#define ALIGNR10( X ) ALIGN_RIGHT( X, 10 )
-#define ALIGNR12( X ) ALIGN_RIGHT( X, 12 )
-#define ALIGNR14( X ) ALIGN_RIGHT( X, 14 )
 
 
 #define CSV_SEPARATOR   ", "
+
+
+// For accurate assessment of the dynamics of productivity growth,
+// we must be sure that these constants do not change in the future.
+/*static*/ const int SpeedTest::TestTimes = 5;
+/*static*/ const int SpeedTest::LedsCount = 8;
+/*static*/ const int SpeedTest::LedWidth  = 150;
+/*static*/ const int SpeedTest::LedHeight = 150;
+
 
 
 SpeedTest::SpeedTest() : QObject()
@@ -95,15 +95,19 @@ void SpeedTest::start()
 
 void SpeedTest::printHeader()
 {
-    resultStream << ALIGNL10("Date")        << CSV_SEPARATOR;
-    resultStream << ALIGNL12("Time")        << CSV_SEPARATOR;
-    resultStream << ALIGNL10("Lightpack")    << CSV_SEPARATOR;
-    resultStream << ALIGNL10("GrabQt")      << CSV_SEPARATOR;
-
+    resultStream << "Date"                      << CSV_SEPARATOR;
+    resultStream << "Time"                      << CSV_SEPARATOR;
+    resultStream << "Lightpack version"         << CSV_SEPARATOR;
+    resultStream << "GrabQt FullScreen"         << CSV_SEPARATOR;
 #   ifdef Q_WS_WIN
-    resultStream << ALIGNL10("GrabWinAPI")  << CSV_SEPARATOR;
-    resultStream << ALIGNL10("Precision")   << CSV_SEPARATOR;
-    resultStream << ALIGNL10("Windows")     << CSV_SEPARATOR;
+    resultStream << "GrabWinAPI FullScreen"     << CSV_SEPARATOR;
+#   endif /* Q_WS_WIN */
+
+    resultStream << "GrabQt LedsDefaults"       << CSV_SEPARATOR;
+#   ifdef Q_WS_WIN
+    resultStream << "GrabWinAPI LedsDefaults"   << CSV_SEPARATOR;
+    resultStream << "Precision"                 << CSV_SEPARATOR;
+    resultStream << "Windows"                   << CSV_SEPARATOR;
 #   endif /* Q_WS_WIN */
 
     resultStream << endl;
@@ -111,53 +115,37 @@ void SpeedTest::printHeader()
 
 void SpeedTest::startTests()
 {
-    QTime time;
-
-    resultStream << ALIGNL10( QDateTime::currentDateTime().date().toString("yyyy.MM.dd")) << CSV_SEPARATOR;
+    resultStream << QDateTime::currentDateTime().date().toString("yyyy.MM.dd")   << CSV_SEPARATOR;
     resultStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << CSV_SEPARATOR;
-    resultStream << ALIGNR10( "sw" VERSION_STR ) << CSV_SEPARATOR;
+    resultStream << "sw" VERSION_STR << CSV_SEPARATOR;
 
     // Main screen geometry
     QRect screenRect = QApplication::desktop()->screenGeometry();
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Screen Rect:" << screenRect;
 
-    const int testTimes = 5;
-    const int ledsCount = 10;
 
-    time.start();
-    for(int test = 0; test < testTimes; test++){
-        for(int led = 0; led < ledsCount; led++){
-            GrabQt::getColor(
-                    screenRect.x(),
-                    screenRect.y(),
-                    screenRect.width(),
-                    screenRect.height());
-        }
-    }
-    resultStream << ALIGNR10( time.elapsed() ) << CSV_SEPARATOR;
+    //
+    // Grab full screen TestTimes times for each LED from LedsCount
+    //
+    testFullScreenGrabSpeed();
+
+    //
+    // Grab default led postion and size (LedWidth x LedHeight) TestTimes times
+    //
+    testDefaultLedWidgetsGrabSpeed();
+
 
 #   ifdef Q_WS_WIN
-    // Desktop HWND == 0
-    GrabWinAPI::findScreenOnNextCapture( 0 );
-    // re-Allocate memory
-    GrabWinAPI::captureScreen();
 
-    time.start();
-    for(int test = 0; test < testTimes; test++){
-        GrabWinAPI::captureScreen();
-        for(int led = 0; led < ledsCount; led++){
-            GrabWinAPI::getColor(
-                    screenRect.x(),
-                    screenRect.y(),
-                    screenRect.width(),
-                    screenRect.height());
-        }
-    }
-    resultStream << ALIGNR10( time.elapsed() ) << CSV_SEPARATOR;
-    resultStream << ALIGNR10( GrabWinAPI::getGrabPrecision() ) << CSV_SEPARATOR;
+    //
+    // Print grab WinAPI precision
+    //
+    resultStream << ALIGNR3( GrabWinAPI::getGrabPrecision() ) << CSV_SEPARATOR;
 
-    // Windows version
+    //
+    // Print windows version
+    //
     switch( QSysInfo::windowsVersion() ){
     case QSysInfo::WV_NT:       resultStream << "WinNT (4.0)"; break;
     case QSysInfo::WV_2000:     resultStream << "Win2000 (5.0)"; break;
@@ -172,9 +160,14 @@ void SpeedTest::startTests()
 
 
     //
-    // Eval WinAPI function DwmIsCompositionEnabled to test enabled Aero
+    // Aero enabled? Eval WinAPI function DwmIsCompositionEnabled for check it.
     //
     DEBUG_LOW_LEVEL << "Load library dwmapi.dll to test enabled Aero";
+
+
+    typedef int (*DWM_IS_COMPOSITION_ENABLED)(BOOL *);
+    DWM_IS_COMPOSITION_ENABLED DwmIsCompositionEnabled;
+
 
     HINSTANCE hDll;
     hDll = LoadLibrary(L"dwmapi.dll");
@@ -200,3 +193,128 @@ void SpeedTest::startTests()
     resultStream << endl;
 }
 
+
+void SpeedTest::testFullScreenGrabSpeed()
+{
+    // Main screen geometry
+    QRect screenRect = QApplication::desktop()->screenGeometry();
+
+    //
+    // Grab full screen via Qt grabWindow
+    //
+    time.start();
+    for(int test = 0; test < TestTimes; test++){
+        for(int led = 0; led < LedsCount; led++){
+            GrabQt::getColor(
+                    screenRect.x(),
+                    screenRect.y(),
+                    screenRect.width(),
+                    screenRect.height());
+        }
+    }
+    resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
+
+
+
+
+#   ifdef Q_WS_WIN
+    //
+    // Grab full screen via WinAPI BitBlt
+    //
+
+    // Initialize buffers, Desktop HWND == 0
+    GrabWinAPI::findScreenOnNextCapture( 0 );
+    // First time after findScreenOnNextCapture() call, captureScreen() will
+    // reallocate memory for pixels buffer
+    GrabWinAPI::captureScreen();
+
+    time.start();
+    for(int test = 0; test < TestTimes; test++){
+        GrabWinAPI::captureScreen();
+        for(int led = 0; led < LedsCount; led++){
+            GrabWinAPI::getColor(
+                    screenRect.x(),
+                    screenRect.y(),
+                    screenRect.width(),
+                    screenRect.height());
+        }
+    }
+    resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
+
+#   endif /* Q_WS_WIN */
+
+}
+
+
+void SpeedTest::testDefaultLedWidgetsGrabSpeed()
+{
+    // Main screen geometry
+    QRect screenRect = QApplication::desktop()->screenGeometry();
+
+    // Default leds size and position
+    QList<QRect> ledsRects;
+
+    for(int ledIndex=0; ledIndex < LedsCount; ledIndex++){
+        QRect ledRect;
+        if(ledIndex < 4 /* TODO: see below */){
+            ledRect.setX(0);
+        }else{
+            ledRect.setX(screenRect.width() - LedWidth);
+        }
+
+        // TODO: rewitre this stuff! I think this should be more independent from count of leds, same in settings
+        switch( ledIndex ){
+        case 0:
+        case 1: ledRect.setY(screenRect.height() / 2 - 2*LedHeight);  break;
+        case 2:
+        case 3: ledRect.setY(screenRect.height() / 2 - LedHeight);  break;
+        case 4:
+        case 5: ledRect.setY(screenRect.height() / 2 );  break;
+        case 6:
+        case 7: ledRect.setY(screenRect.height() / 2 + LedHeight);  break;
+        }
+
+        ledRect.setWidth( LedWidth );
+        ledRect.setHeight( LedHeight );
+
+        ledsRects << ledRect;
+    }
+
+
+    //
+    // Grab led widget via Qt grabWindow
+    //
+    time.start();
+    for(int test = 0; test < TestTimes; test++){
+        for(int led = 0; led < LedsCount; led++){
+            GrabQt::getColor(
+                    ledsRects[ led ].x(),
+                    ledsRects[ led ].y(),
+                    ledsRects[ led ].width(),
+                    ledsRects[ led ].height());
+        }
+    }
+    resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
+
+
+
+
+#   ifdef Q_WS_WIN
+    //
+    // Grab led widget via WinAPI BitBlt
+    //
+    time.start();
+    for(int test = 0; test < TestTimes; test++){
+        GrabWinAPI::captureScreen();
+        for(int led = 0; led < LedsCount; led++){
+            GrabWinAPI::getColor(
+                    ledsRects[ led ].x(),
+                    ledsRects[ led ].y(),
+                    ledsRects[ led ].width(),
+                    ledsRects[ led ].height());
+        }
+    }
+    resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
+
+#   endif /* Q_WS_WIN */
+}

@@ -30,6 +30,7 @@
 #include <QObject>
 #include <QFile>
 #include <QTextStream>
+#include <QTime>
 
 class SpeedTest : public QObject
 {
@@ -43,10 +44,19 @@ public:
 private:
     void printHeader();
     void startTests();
+    void testFullScreenGrabSpeed();
+    void testDefaultLedWidgetsGrabSpeed();
 
 private:
     QFile resultFile;
     QTextStream resultStream;
+
+    QTime time;
+
+    static const int TestTimes;
+    static const int LedsCount;
+    static const int LedWidth;
+    static const int LedHeight;
 };
 
 
