@@ -162,20 +162,23 @@ QRgb getColor(const QWidget * grabme)
 {    
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    int x = grabme->x();
-    int y = grabme->y();
+    return getColor(grabme->x(),
+                    grabme->y(),
+                    grabme->width(),
+                    grabme->height());
+}
 
-    unsigned width  = grabme->width();
-    unsigned height = grabme->height();
-
-    DEBUG_HIGH_LEVEL << "x y w h:" << x << y << width << height;
+QRgb getColor(int x, int y, int width, int height)
+{
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO
+            << "x y w h:" << x << y << width << height;
 
     unsigned r = 0, g = 0, b = 0;
 
     // Checking for the 'grabme' widget position inside the monitor that is used to capture color
-    if( x + (int)width  < monitorInfo.rcMonitor.left   ||
+    if( x + width  < monitorInfo.rcMonitor.left   ||
         x               > monitorInfo.rcMonitor.right  ||
-        y + (int)height < monitorInfo.rcMonitor.top    ||
+        y + height < monitorInfo.rcMonitor.top    ||
         y               > monitorInfo.rcMonitor.bottom ){
 
         DEBUG_MID_LEVEL << "Widget 'grabme' is out of screen, x y w h:" << x << y << width << height;
@@ -197,16 +200,23 @@ QRgb getColor(const QWidget * grabme)
         height += y;  /* reduce height */
         y = 0;
     }
-    if( x + width  > screenWidth  ) width  -= (x + width ) - screenWidth;
-    if( y + height > screenHeight ) height -= (y + height) - screenHeight;
+    if( x + width  > (int)screenWidth  ) width  -= (x + width ) - screenWidth;
+    if( y + height > (int)screenHeight ) height -= (y + height) - screenHeight;
+
+    if(width < 0 || height < 0){
+        qWarning() << Q_FUNC_INFO << "width < 0 || height < 0:" << width << height;
+
+        // width and height can't be negative
+        return 0x000000;
+    }
 
 
     unsigned index = 0; // index of the selected pixel in pbPixelsBuff
     unsigned count = 0; // count the amount of pixels taken into account
 
     // This is where all the magic happens: calculate the average RGB
-    for(unsigned i = x; i < x + width; i++){
-        for(unsigned j = y; j < y + height; j++){
+    for(int i = x; i < x + width; i++){
+        for(int j = y; j < y + height; j++){
             // Calculate new index value
             index = (bytesPerPixel * j * screenWidth) + (bytesPerPixel * i);
             if(index > pixelsBuffSize) {

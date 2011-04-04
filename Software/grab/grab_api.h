@@ -40,6 +40,7 @@
 namespace GrabQt
 {
     QRgb getColor(const QWidget * grabme);
+    QRgb getColor(int x, int y, int width, int height);
 };
 
 namespace GrabWinAPI
@@ -47,6 +48,7 @@ namespace GrabWinAPI
     void findScreenOnNextCapture( WId winId );
     void captureScreen();
     QRgb getColor(const QWidget * grabme);
+    QRgb getColor(int x, int y, int width, int height);
 };
 
 #endif // GRAB_API_H
