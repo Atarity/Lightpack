@@ -210,6 +210,13 @@ QString Settings::lastProfileName()
     return settingsMain->value("ProfileLast").toString();
 }
 
+QString Settings::getApplicationDirPath()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    return appDirPath;
+}
+
 
 // private
 

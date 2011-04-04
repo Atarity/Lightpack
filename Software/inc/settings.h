@@ -86,6 +86,7 @@ public:
     static void removeCurrentConfig();
 
     static QString lastProfileName();
+    static QString getApplicationDirPath();
 
 private:
     static void settingsInit();
