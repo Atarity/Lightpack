@@ -5,37 +5,37 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/mainwindow.ui" line="365"/>
+        <location filename="../../src/mainwindow.ui" line="450"/>
         <source>Hz</source>
         <translation>Гц</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="303"/>
+        <location filename="../../src/mainwindow.ui" line="332"/>
         <source>AVG color on all LEDs</source>
         <translation>Средний цвет на все светодиоды</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="265"/>
+        <location filename="../../src/mainwindow.ui" line="294"/>
         <source>Show grab widgets</source>
         <translation>Показать области захвата</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="284"/>
+        <location filename="../../src/mainwindow.ui" line="313"/>
         <source>Colored</source>
         <translation>Разноцветные</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="277"/>
+        <location filename="../../src/mainwindow.ui" line="306"/>
         <source>White</source>
         <translation>Белые</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="512"/>
+        <location filename="../../src/mainwindow.ui" line="597"/>
         <source>Profile</source>
         <translation>Профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="610"/>
+        <location filename="../../src/mainwindow.ui" line="695"/>
         <source>Open in text editor</source>
         <translation>Открыть в текстовом редакторе</translation>
     </message>
@@ -60,32 +60,32 @@
         <translation>мс</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="431"/>
+        <location filename="../../src/mainwindow.ui" line="516"/>
         <source>Color depth</source>
         <translation>Глубина цвета</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="482"/>
+        <location filename="../../src/mainwindow.ui" line="567"/>
         <source>USB send data only if colors changes</source>
         <translation>Посылать данные только при обновлении цвета</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="475"/>
+        <location filename="../../src/mainwindow.ui" line="560"/>
         <source>Smooth change colors</source>
         <translation>Плавное изменение цветов</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="626"/>
+        <location filename="../../src/mainwindow.ui" line="711"/>
         <source>User interface</source>
         <translation>Интерфейс пользователя</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="632"/>
+        <location filename="../../src/mainwindow.ui" line="717"/>
         <source>Language:</source>
         <translation>Язык:</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="327"/>
+        <location filename="../../src/mainwindow.ui" line="412"/>
         <source>Device</source>
         <translation>Устройство</translation>
     </message>
@@ -95,149 +95,137 @@
         <translation>Порог чувствительности:</translation>
     </message>
     <message>
+        <location filename="../../src/mainwindow.ui" line="141"/>
+        <source>Enable/Disable grab:</source>
+        <translation>Включение / Выключение захвата:</translation>
+    </message>
+    <message>
         <location filename="../../src/mainwindow.ui" line="215"/>
         <source>fps</source>
         <translation>к/с</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="335"/>
+        <location filename="../../src/mainwindow.ui" line="260"/>
+        <source>Grab precision (WinAPI only):</source>
+        <translation>Точность захвата (WinAPI):</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="420"/>
         <source>Frequency of PWM generation</source>
         <translation>Итоговая частота ШИМ</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="390"/>
+        <location filename="../../src/mainwindow.ui" line="475"/>
         <source>Timer</source>
         <translation>Задержка таймера ШИМ</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="506"/>
+        <location filename="../../src/mainwindow.ui" line="591"/>
         <source>Profiles</source>
         <translation>Профили</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="539"/>
+        <location filename="../../src/mainwindow.ui" line="624"/>
         <source>Add new profile</source>
         <translation>Добавить новый профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="662"/>
-        <source>Logs</source>
-        <translation>Логи</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="565"/>
+        <location filename="../../src/mainwindow.ui" line="650"/>
         <source>Reset current profile to defaults</source>
         <translation>Сбросить настройки текущего профиля</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="591"/>
+        <location filename="../../src/mainwindow.ui" line="676"/>
         <source>Delete profile</source>
         <translation>Удалить профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="683"/>
-        <source>Open logs in text editor</source>
-        <translation>Открыть логи в текстовом редакторе</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.ui" line="715"/>
+        <location filename="../../src/mainwindow.ui" line="762"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="196"/>
-        <location filename="../../src/mainwindow.cpp" line="534"/>
+        <location filename="../../src/mainwindow.cpp" line="219"/>
+        <location filename="../../src/mainwindow.cpp" line="627"/>
         <source>Lightpack: %1</source>
         <translation>Лайтпак: %1</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="194"/>
-        <location filename="../../src/mainwindow.cpp" line="263"/>
+        <location filename="../../src/mainwindow.cpp" line="217"/>
+        <location filename="../../src/mainwindow.cpp" line="294"/>
         <source>Error with connection device, verbose in logs</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="178"/>
-        <location filename="../../src/mainwindow.cpp" line="681"/>
+        <location filename="../../src/mainwindow.cpp" line="203"/>
+        <location filename="../../src/mainwindow.cpp" line="813"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="184"/>
-        <location filename="../../src/mainwindow.cpp" line="690"/>
+        <location filename="../../src/mainwindow.cpp" line="209"/>
+        <location filename="../../src/mainwindow.cpp" line="822"/>
         <source>&amp;Profiles</source>
         <translation>&amp;Профили</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="190"/>
-        <location filename="../../src/mainwindow.cpp" line="275"/>
+        <location filename="../../src/mainwindow.cpp" line="214"/>
+        <location filename="../../src/mainwindow.cpp" line="304"/>
         <source>Disabled</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="198"/>
-        <location filename="../../src/mainwindow.cpp" line="574"/>
+        <location filename="../../src/mainwindow.cpp" line="221"/>
+        <location filename="../../src/mainwindow.cpp" line="669"/>
         <source>System default</source>
         <translation>По умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="466"/>
+        <location filename="../../src/mainwindow.cpp" line="549"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="179"/>
-        <location filename="../../src/mainwindow.cpp" line="685"/>
+        <location filename="../../src/mainwindow.cpp" line="204"/>
+        <location filename="../../src/mainwindow.cpp" line="817"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="180"/>
-        <location filename="../../src/mainwindow.cpp" line="694"/>
+        <location filename="../../src/mainwindow.cpp" line="205"/>
+        <location filename="../../src/mainwindow.cpp" line="826"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="181"/>
-        <location filename="../../src/mainwindow.cpp" line="698"/>
+        <location filename="../../src/mainwindow.cpp" line="206"/>
+        <location filename="../../src/mainwindow.cpp" line="830"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="182"/>
-        <location filename="../../src/mainwindow.cpp" line="702"/>
+        <location filename="../../src/mainwindow.cpp" line="207"/>
+        <location filename="../../src/mainwindow.cpp" line="834"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="187"/>
-        <location filename="../../src/mainwindow.cpp" line="269"/>
-        <location filename="../../src/mainwindow.cpp" line="535"/>
+        <location filename="../../src/mainwindow.cpp" line="212"/>
+        <location filename="../../src/mainwindow.cpp" line="298"/>
+        <location filename="../../src/mainwindow.cpp" line="628"/>
         <source>Enabled profile: %1</source>
         <translation>Включен профиль: %1</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="188"/>
-        <location filename="../../src/mainwindow.cpp" line="255"/>
-        <source>Disable grab:</source>
-        <translation>Выключить захват:</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="191"/>
-        <location filename="../../src/mainwindow.cpp" line="258"/>
-        <source>Enable grab:</source>
-        <translation>Включить захват:</translation>
     </message>
 </context>
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="194"/>
+        <location filename="../../src/ambilightusb.cpp" line="212"/>
         <source>device unavailable</source>
         <translation>устройство недоступно</translation>
     </message>
     <message>
-        <location filename="../../src/ambilightusb.cpp" line="200"/>
+        <location filename="../../src/ambilightusb.cpp" line="218"/>
         <source>read device fail</source>
         <translation>устройство не отвечает</translation>
     </message>

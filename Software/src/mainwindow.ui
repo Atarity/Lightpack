@@ -138,7 +138,7 @@
              </font>
             </property>
             <property name="text">
-             <string notr="true">Enable/Disable grab:</string>
+             <string>Enable/Disable grab:</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -339,7 +339,7 @@
         <item>
          <widget class="QGroupBox" name="groupBox_AnotherGUI">
           <property name="title">
-           <string>Another GUI</string>
+           <string notr="true">Another GUI</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
@@ -353,14 +353,14 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Grab:</string>
+                <string notr="true">Grab:</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_GrabQt">
                <property name="text">
-                <string>Qt grabWindow</string>
+                <string notr="true">Qt grabWindow</string>
                </property>
                <property name="checked">
                 <bool>true</bool>
@@ -370,7 +370,7 @@
              <item>
               <widget class="QRadioButton" name="radioButton_GrabWinAPI">
                <property name="text">
-                <string>WinAPI BitBlt</string>
+                <string notr="true">WinAPI BitBlt</string>
                </property>
               </widget>
              </item>

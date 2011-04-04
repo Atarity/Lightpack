@@ -53,9 +53,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QRect screen = QApplication::desktop()->screenGeometry(this);
 
-    this->adjustSize();
-    this->move( screen.width() / 2  - this->width() / 2,
-                screen.height() / 2 - this->height() / 2 );
     this->setWindowFlags( Qt::Window
                           | Qt::WindowStaysOnTopHint
                           | Qt::CustomizeWindowHint
@@ -100,6 +97,11 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
     grabSwitchQtWinAPI();
+
+    this->adjustSize();
+    this->move( screen.width() / 2  - this->width() / 2,
+                screen.height() / 2 - this->height() / 2 );
+    this->repaint();
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
@@ -210,10 +212,8 @@ void MainWindow::changeEvent(QEvent *e)
 
         if( isAmbilightOn ){
             trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
-            ui->label_EnableDisableGrab->setText( tr("Disable grab:") );
         }else{
             trayIcon->setToolTip( tr("Disabled") );
-            ui->label_EnableDisableGrab->setText( tr("Enable grab:") );
         }
 
         if(isErrorState) trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
@@ -286,11 +286,9 @@ void MainWindow::updateTrayAndActionStates()
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     if( isAmbilightOn ){
-        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/off.png"));
-        ui->label_EnableDisableGrab->setText( tr("Disable grab:") );
-    }else{
         ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/on.png"));
-        ui->label_EnableDisableGrab->setText( tr("Enable grab:") );
+    }else{
+        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/off.png"));
     }
 
     if( isErrorState ){
