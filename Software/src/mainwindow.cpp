@@ -88,7 +88,9 @@ MainWindow::MainWindow(QWidget *parent) :
     isErrorState = false;
     isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
 
-    ui->groupBox_AnotherGUI->setVisible( Settings::valueMain("ShowAnotherGui").toBool() );
+    if( Settings::valueMain("ShowAnotherGui").toBool() == false ){
+        ui->tabWidget->removeTab( ui->tabWidget->indexOf( ui->tabAnotherGUI ) );
+    }
 
 #ifdef Q_WS_WIN
     isWinAPIGrab = true;    
