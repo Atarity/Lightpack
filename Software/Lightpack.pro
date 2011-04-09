@@ -123,7 +123,10 @@ HEADERS += hidapi/hidapi.h \
     inc/struct_rgb.h \
     inc/debug.h \
     inc/speedtest.h \
-    grab/grab_api.h
+    grab/grab_api.h \
+    alienfx/LFXDecl.h \
+    alienfx/LFX2.h \
+    inc/lfxapi.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui

@@ -39,7 +39,6 @@
 #include "../../CommonHeaders/commands.h"   /* CMD defines */
 #include "../../CommonHeaders/RGB.h"        /* Led defines */
 
-
 // This defines using in all data transfers to determine indexes in write_buffer[]
 // In device COMMAND have index 0, data 1 and so on, report id isn't using
 #define WRITE_BUFFER_INDEX_REPORT_ID    0

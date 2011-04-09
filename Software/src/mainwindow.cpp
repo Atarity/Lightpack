@@ -175,7 +175,6 @@ void MainWindow::connectSignalsSlots()
 MainWindow::~MainWindow()
 {    
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
     delete onAmbilightAction;
     delete offAmbilightAction;
     delete settingsAction;

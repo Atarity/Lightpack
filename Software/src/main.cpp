@@ -32,18 +32,31 @@
 #include "settings.h"
 #include "version.h"
 #include "ambilightusb.h"
+#include "lfxapi.h"
 
 #include <sys/time.h>
 #include "time.h"
 
 #include <QFileInfo>
+#include <windows.h>
 
 using namespace std;
 
+LFX2INITIALIZE lfxInitFunction;
+LFX2RELEASE lfxReleaseFunction;
+LFX2RESET lfxResetFunction;
+LFX2UPDATE lfxUpdateFunction;
+LFX2GETNUMDEVICES lfxGetNumDevicesFunction;
+LFX2GETDEVDESC lfxGetDeviceDescriptionFunction;
+LFX2GETNUMLIGHTS lfxGetNumLightsFunction;
+LFX2SETLIGHTCOL lfxSetLightColorFunction;
+LFX2GETLIGHTCOL lfxGetLightColorFunction;
+LFX2GETLIGHTDESC lfxGetLightDescriptionFunction;
+LFX2LIGHT lfxLightFunction;
 
 #include "debug.h"
 unsigned debugLevel = 0;
-
+HINSTANCE hLFXLibrary;
 
 QTextStream logStream;
 
@@ -124,6 +137,41 @@ void messageOutput(QtMsgType type, const char *msg)
     cout.flush();
 }
 
+HINSTANCE loadLightFX()
+{
+    HINSTANCE hLibrary = LoadLibrary(L"LightFX.dll");
+    if (hLibrary)
+    {
+        lfxInitFunction = (LFX2INITIALIZE)GetProcAddress(hLibrary, LFX_DLL_INITIALIZE);
+        lfxReleaseFunction = (LFX2RELEASE)GetProcAddress(hLibrary, LFX_DLL_RELEASE);
+        lfxResetFunction = (LFX2RESET)GetProcAddress(hLibrary, LFX_DLL_RESET);
+        lfxUpdateFunction = (LFX2UPDATE)GetProcAddress(hLibrary, LFX_DLL_UPDATE);
+        lfxGetNumDevicesFunction = (LFX2GETNUMDEVICES)GetProcAddress(hLibrary, LFX_DLL_GETNUMDEVICES);
+        lfxGetDeviceDescriptionFunction = (LFX2GETDEVDESC)GetProcAddress(hLibrary, LFX_DLL_GETDEVDESC);
+        lfxGetNumLightsFunction = (LFX2GETNUMLIGHTS)GetProcAddress(hLibrary, LFX_DLL_GETNUMLIGHTS);
+        lfxSetLightColorFunction = (LFX2SETLIGHTCOL)GetProcAddress(hLibrary, LFX_DLL_SETLIGHTCOL);
+        lfxGetLightColorFunction = (LFX2GETLIGHTCOL)GetProcAddress(hLibrary, LFX_DLL_GETLIGHTCOL);
+        lfxGetLightDescriptionFunction = (LFX2GETLIGHTDESC)GetProcAddress(hLibrary, LFX_DLL_GETLIGHTDESC);
+        lfxLightFunction = (LFX2LIGHT)GetProcAddress(hLibrary, LFX_DLL_LIGHT);
+    } else {
+        qWarning() << "couldn't load LightFX.dll";
+    }
+    return hLibrary;
+}
+
+void initLightFX()
+{
+    LFX_RESULT result = lfxInitFunction();
+    if (result == LFX_SUCCESS)
+    {
+        result = lfxResetFunction();
+    }
+}
+
+void releaseLightFX()
+{
+    LFX_RESULT result = lfxReleaseFunction();
+}
 
 int main(int argc, char **argv)
 {
@@ -247,5 +295,11 @@ int main(int argc, char **argv)
 
     qDebug() << "Start main event loop: app.exec();";
 
-    return app.exec();
+    HINSTANCE hLFXLibrary = loadLightFX();
+    initLightFX();
+    int result = app.exec();
+    releaseLightFX();
+    if (hLFXLibrary)
+        FreeLibrary(hLFXLibrary);
+    return result;
 }
