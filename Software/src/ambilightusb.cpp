@@ -31,17 +31,16 @@
 
 #include <QtDebug>
 #include "debug.h"
-#include "lfxapi.h"
 
 AmbilightUsb::AmbilightUsb(QObject *parent) :
         QObject(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-//    openDevice();
+    openDevice();
 
-  //  memset(write_buffer, 0, sizeof(write_buffer));
-   // memset(read_buffer, 0, sizeof(read_buffer));
+    memset(write_buffer, 0, sizeof(write_buffer));
+    memset(read_buffer, 0, sizeof(read_buffer));
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
@@ -49,12 +48,11 @@ AmbilightUsb::AmbilightUsb(QObject *parent) :
 AmbilightUsb::~AmbilightUsb()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "hid_close(ambilightDevice);";
-//    hid_close(ambilightDevice);
+    hid_close(ambilightDevice);
 }
 
 bool AmbilightUsb::deviceOpened()
 {
-    return true;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     return !(ambilightDevice == NULL);
@@ -62,7 +60,6 @@ bool AmbilightUsb::deviceOpened()
 
 bool AmbilightUsb::openDevice()
 {
-    return true;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     ambilightDevice = NULL;
@@ -116,23 +113,21 @@ bool AmbilightUsb::openDevice()
 
 bool AmbilightUsb::readDataFromDevice()
 {
-    return true;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     int bytes_read = hid_read(ambilightDevice, read_buffer, sizeof(read_buffer));
 
     if(bytes_read < 0){
         qWarning() << "error reading data:" << bytes_read;
-        emit readBufferFromDeviceSuccess(false);
+        emit ioDeviceSuccess(false);
         return false;
     }
-    emit readBufferFromDeviceSuccess(true);
+    emit ioDeviceSuccess(true);
     return true;
 }
 
 bool AmbilightUsb::writeBufferToDevice(int command)
 {
-    return true;
     DEBUG_MID_LEVEL << Q_FUNC_INFO << command;
 
     write_buffer[WRITE_BUFFER_INDEX_REPORT_ID] = 0x00;
@@ -141,16 +136,15 @@ bool AmbilightUsb::writeBufferToDevice(int command)
 
     if(bytes_write < 0){
         qWarning() << "error writing data:" << bytes_write;
-        emit writeBufferToDeviceSuccess(false);
+        emit ioDeviceSuccess(false);
         return false;
     }
-    emit writeBufferToDeviceSuccess(true);
+    emit ioDeviceSuccess(true);
     return true;
 }
 
 bool AmbilightUsb::tryToReopenDevice()
 {
-    return true;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     hid_close(ambilightDevice);
@@ -165,7 +159,6 @@ bool AmbilightUsb::tryToReopenDevice()
 
 bool AmbilightUsb::readDataFromDeviceWithCheck()
 {
-    return true;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     if(ambilightDevice != NULL){
@@ -188,7 +181,6 @@ bool AmbilightUsb::readDataFromDeviceWithCheck()
 
 bool AmbilightUsb::writeBufferToDeviceWithCheck(int command)
 {
-    return true;
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     if(ambilightDevice != NULL){
@@ -213,14 +205,31 @@ bool AmbilightUsb::writeBufferToDeviceWithCheck(int command)
 
 QString AmbilightUsb::firmwareVersion()
 {
-    QString firmwareVer = QString::number(0) + "." + QString::number(0);
+    DEBUG_OUT << Q_FUNC_INFO;
+
+    if(ambilightDevice == NULL){
+        if(!tryToReopenDevice()){
+            return QApplication::tr("device unavailable");
+        }
+    }
+    // TODO: write command CMD_GET_VERSION to device
+    bool result = readDataFromDeviceWithCheck();
+    if(!result){
+        return QApplication::tr("read device fail");
+    }
+
+    // read_buffer[0] - report ID, skip it by +1
+    int fw_major = read_buffer[INDEX_FW_VER_MAJOR];
+    int fw_minor = read_buffer[INDEX_FW_VER_MINOR];
+    QString firmwareVer = QString::number(fw_major) + "." + QString::number(fw_minor);
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << firmwareVer;
 
     return firmwareVer;
 }
 
 void AmbilightUsb::offLeds()
 {
-    return;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     writeBufferToDeviceWithCheck(CMD_OFF_ALL);
@@ -228,7 +237,6 @@ void AmbilightUsb::offLeds()
 
 void AmbilightUsb::smoothChangeColors(bool isSmooth)
 {
-    return;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     if(isSmooth){
@@ -243,7 +251,6 @@ void AmbilightUsb::smoothChangeColors(bool isSmooth)
 
 void AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
 {
-    return;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << prescallerIndex << outputCompareRegValue;
 
     write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)prescallerIndex;
@@ -254,7 +261,6 @@ void AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValu
 
 void AmbilightUsb::setColorDepth(int colorDepth)
 {
-    return;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << colorDepth;
 
     if(colorDepth <= 0){
@@ -272,28 +278,6 @@ void AmbilightUsb::updateColors(const QList<StructRGB> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    unsigned int numDevs = 0;
-    LFX_RESULT result = lfxGetNumDevicesFunction(&numDevs);
-
-    for(unsigned int devIndex = 0; devIndex < numDevs; devIndex++)
-    {
-        unsigned int numLights = 0;
-        result = lfxGetNumLightsFunction(devIndex, &numLights);
-
-        LFX_COLOR lfxColor;
-
-        lfxColor.red   = qRed   ( colors[0].rgb );
-        lfxColor.green = qGreen ( colors[0].rgb );
-        lfxColor.blue  = qBlue  ( colors[0].rgb );
-        lfxColor.brightness = 255;
-
-        for(unsigned int lightIndex = 0; lightIndex < numLights; lightIndex++)
-                lfxSetLightColorFunction(devIndex, lightIndex, &lfxColor);
-        lfxUpdateFunction();
-    }
-
-
-    return;
     // Fill write_buffer with new colors for all LEDs
 
     // First write_buffer[0] == 0x00 - ReportID, i have problems with using it

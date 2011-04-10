@@ -107,7 +107,8 @@ SOURCES += src/main.cpp \
     src/grabmanager.cpp \
     src/movemewidget.cpp \
     src/settings.cpp \
-    src/speedtest.cpp
+    src/speedtest.cpp \
+    src/lightfx.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/commands.h \
     ../CommonHeaders/RGB.h \
@@ -126,7 +127,9 @@ HEADERS += hidapi/hidapi.h \
     grab/grab_api.h \
     alienfx/LFXDecl.h \
     alienfx/LFX2.h \
-    inc/lfxapi.h
+    inc/lfxapi.h \
+    inc/lightfx.h \
+    inc/ileddevice.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui

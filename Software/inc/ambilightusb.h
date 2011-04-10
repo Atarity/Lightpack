@@ -30,7 +30,7 @@
 
 #include <QtGui>
 
-#include "struct_rgb.h"
+#include "ileddevice.h"
 #include "timeevaluations.h"
 
 #include "../../CommonHeaders/USB_ID.h"  /* For device VID, PID, vendor name and product name */
@@ -46,7 +46,7 @@
 #define WRITE_BUFFER_INDEX_DATA_START   2
 
 
-class AmbilightUsb : public QObject
+class AmbilightUsb : public QObject, ILedDevice
 {
     Q_OBJECT
 
@@ -68,9 +68,7 @@ public slots:
 
 signals:
     void openDeviceSuccess(bool isSuccess);
-    void writeBufferToDeviceSuccess(bool isSuccess);
-    void readBufferFromDeviceSuccess(bool isSuccess);
-
+    void ioDeviceSuccess(bool isSuccess);
 
 private:
     bool readDataFromDevice();
