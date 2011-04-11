@@ -46,10 +46,10 @@
 #define WRITE_BUFFER_INDEX_DATA_START   2
 
 
-class AmbilightUsb : public QObject, ILedDevice
+class AmbilightUsb : public ILedDevice
 {
     Q_OBJECT
-
+//    Q_INTERFACES(ILedDevice)
 public:
     AmbilightUsb(QObject *parent = 0);
     ~AmbilightUsb();        

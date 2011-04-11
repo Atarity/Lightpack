@@ -4,23 +4,27 @@
 #include <QtGui>
 #include "struct_rgb.h"
 
-class ILedDevice
+
+class ILedDevice : public QObject
 {
+    Q_OBJECT
 public:
-    virtual bool openDevice();
-    virtual bool deviceOpened();
-    virtual QString firmwareVersion();
-    virtual void offLeds();
+    ILedDevice(QObject * parent) : QObject(parent){}
+    virtual bool openDevice()=0;
+    virtual bool deviceOpened()=0;
+    virtual QString firmwareVersion()=0;
+    virtual void offLeds()=0;
 
-    virtual void updateColors(const QList<StructRGB> & colors);
-    virtual void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
-    virtual void setColorDepth(int colorDepth);
-    virtual void smoothChangeColors(bool isSmooth);
+public slots:
+    virtual void updateColors(const QList<StructRGB> & colors)=0;
+    virtual void setTimerOptions(int prescallerIndex, int outputCompareRegValue)=0;
+    virtual void setColorDepth(int colorDepth)=0;
+    virtual void smoothChangeColors(bool isSmooth)=0;
 
-    virtual void openDeviceSuccess(bool isSuccess);
-    virtual void ioDeviceSuccess(bool isSuccess);
+signals:
+    void openDeviceSuccess(bool isSuccess);
+    void ioDeviceSuccess(bool isSuccess);
 
-//    virtual void a();
 };
 
 #endif // ILEDDEVICE_H

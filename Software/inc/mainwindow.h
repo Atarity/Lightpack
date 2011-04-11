@@ -115,7 +115,7 @@ private:
     void initLabelsForGrabbedColors();
 
 private:
-    AmbilightUsb *ambilightUsb;
+    ILedDevice *ledDevice;
     GrabManager *grabManager;
     AboutDialog *aboutDialog;
     SpeedTest *speedTest;

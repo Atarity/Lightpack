@@ -32,12 +32,12 @@
 //#include "../../CommonHeaders/commands.h"   /* CMD defines */
 //#include "../../CommonHeaders/RGB.h"        /* Led defines */
 
-class LightFx : public QObject, ILedDevice
+class LightFx : public ILedDevice
 {
     Q_OBJECT
 
 public:
-    LightFx(QObject *parent = 0);
+    LightFx(QObject *parent);
     ~LightFx();
 
     bool openDevice();
@@ -46,15 +46,18 @@ public:
     void offLeds(); /* send CMD_OFF_ALL to device, it causes rapid shutdown LEDs */
 
 public slots:
-    virtual void updateColors(const QList<StructRGB> & colors);
-    virtual void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
-    virtual void setColorDepth(int colorDepth);
-    virtual void smoothChangeColors(bool isSmooth);
+    void updateColors(const QList<StructRGB> & colors);
+    void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
+    void setColorDepth(int colorDepth);
+    void smoothChangeColors(bool isSmooth);
 
 signals:
     void openDeviceSuccess(bool isSuccess);
     void ioDeviceSuccess(bool isSuccess);
 
+private:
+    HINSTANCE hLfxLibrary;
+    bool isInited;
 
 };
 

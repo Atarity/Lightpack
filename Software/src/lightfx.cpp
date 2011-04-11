@@ -31,18 +31,64 @@
 
 #include <QtDebug>
 #include "debug.h"
-#include "lfxapi.h"
+#include "../alienfx/LFX2.h"
+#include <windows.h>
+
+LFX2INITIALIZE lfxInitFunction;
+LFX2RELEASE lfxReleaseFunction;
+LFX2RESET lfxResetFunction;
+LFX2UPDATE lfxUpdateFunction;
+LFX2GETNUMDEVICES lfxGetNumDevicesFunction;
+LFX2GETDEVDESC lfxGetDeviceDescriptionFunction;
+LFX2GETNUMLIGHTS lfxGetNumLightsFunction;
+LFX2SETLIGHTCOL lfxSetLightColorFunction;
+LFX2GETLIGHTCOL lfxGetLightColorFunction;
+LFX2GETLIGHTDESC lfxGetLightDescriptionFunction;
+LFX2LIGHT lfxLightFunction;
 
 LightFx::LightFx(QObject *parent) :
-        QObject(parent)
+        ILedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    hLfxLibrary = LoadLibrary(L"LightFX.dll");
+    if (hLfxLibrary)
+    {
+        lfxInitFunction = (LFX2INITIALIZE)GetProcAddress(hLfxLibrary, LFX_DLL_INITIALIZE);
+        lfxReleaseFunction = (LFX2RELEASE)GetProcAddress(hLfxLibrary, LFX_DLL_RELEASE);
+        lfxResetFunction = (LFX2RESET)GetProcAddress(hLfxLibrary, LFX_DLL_RESET);
+        lfxUpdateFunction = (LFX2UPDATE)GetProcAddress(hLfxLibrary, LFX_DLL_UPDATE);
+        lfxGetNumDevicesFunction = (LFX2GETNUMDEVICES)GetProcAddress(hLfxLibrary, LFX_DLL_GETNUMDEVICES);
+        lfxGetDeviceDescriptionFunction = (LFX2GETDEVDESC)GetProcAddress(hLfxLibrary, LFX_DLL_GETDEVDESC);
+        lfxGetNumLightsFunction = (LFX2GETNUMLIGHTS)GetProcAddress(hLfxLibrary, LFX_DLL_GETNUMLIGHTS);
+        lfxSetLightColorFunction = (LFX2SETLIGHTCOL)GetProcAddress(hLfxLibrary, LFX_DLL_SETLIGHTCOL);
+        lfxGetLightColorFunction = (LFX2GETLIGHTCOL)GetProcAddress(hLfxLibrary, LFX_DLL_GETLIGHTCOL);
+        lfxGetLightDescriptionFunction = (LFX2GETLIGHTDESC)GetProcAddress(hLfxLibrary, LFX_DLL_GETLIGHTDESC);
+        lfxLightFunction = (LFX2LIGHT)GetProcAddress(hLfxLibrary, LFX_DLL_LIGHT);
+
+        LFX_RESULT result = lfxInitFunction();
+        if (result == LFX_SUCCESS)
+        {
+            isInited = true;
+            result = lfxResetFunction();
+        } else {
+            emit ioDeviceSuccess(false);
+        }
+
+    } else {
+        qWarning() << "couldn't load LightFX.dll";
+    }
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
 
 LightFx::~LightFx()
 {
+    if(isInited)
+        lfxReleaseFunction();
+    if (hLfxLibrary)
+        FreeLibrary(hLfxLibrary);
+
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "hid_close(lightFxDevice);";
 }
 
@@ -60,9 +106,7 @@ bool LightFx::openDevice()
 
 QString LightFx::firmwareVersion()
 {
-    QString firmwareVer = QString::number(0) + "." + QString::number(0);
-
-    return firmwareVer;
+    return "not supported";
 }
 
 void LightFx::offLeds()
@@ -86,31 +130,32 @@ void LightFx::setColorDepth(int colorDepth)
     return;
 }
 
-
 void LightFx::updateColors(const QList<StructRGB> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
-
-    unsigned int numDevs = 0;
-    LFX_RESULT result = lfxGetNumDevicesFunction(&numDevs);
-
-    for(unsigned int devIndex = 0; devIndex < numDevs; devIndex++)
+    if(isInited)
     {
-        unsigned int numLights = 0;
-        result = lfxGetNumLightsFunction(devIndex, &numLights);
+        unsigned int numDevs = 0;
+        LFX_RESULT result = lfxGetNumDevicesFunction(&numDevs);
 
-        LFX_COLOR lfxColor;
+        for(unsigned int devIndex = 0; devIndex < numDevs; devIndex++)
+        {
+            unsigned int numLights = 0;
+            result = lfxGetNumLightsFunction(devIndex, &numLights);
 
-        lfxColor.red   = qRed   ( colors[0].rgb );
-        lfxColor.green = qGreen ( colors[0].rgb );
-        lfxColor.blue  = qBlue  ( colors[0].rgb );
-        lfxColor.brightness = 255;
+            LFX_COLOR lfxColor;
 
-        for(unsigned int lightIndex = 0; lightIndex < numLights; lightIndex++)
+            lfxColor.red   = qRed   ( colors[0].rgb );
+            lfxColor.green = qGreen ( colors[0].rgb );
+            lfxColor.blue  = qBlue  ( colors[0].rgb );
+            lfxColor.brightness = 255;
+
+            for(unsigned int lightIndex = 0; lightIndex < numLights; lightIndex++)
                 lfxSetLightColorFunction(devIndex, lightIndex, &lfxColor);
-        lfxUpdateFunction();
+            lfxUpdateFunction();
+        }
+        emit ioDeviceSuccess(true);
     }
-
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     return;

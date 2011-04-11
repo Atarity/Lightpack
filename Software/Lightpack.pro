@@ -127,7 +127,6 @@ HEADERS += hidapi/hidapi.h \
     grab/grab_api.h \
     alienfx/LFXDecl.h \
     alienfx/LFX2.h \
-    inc/lfxapi.h \
     inc/lightfx.h \
     inc/ileddevice.h
 FORMS += src/mainwindow.ui \

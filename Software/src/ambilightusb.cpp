@@ -33,7 +33,7 @@
 #include "debug.h"
 
 AmbilightUsb::AmbilightUsb(QObject *parent) :
-        QObject(parent)
+        ILedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 

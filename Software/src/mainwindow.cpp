@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QRegExpValidator *validator = new QRegExpValidator(rx, this);
     ui->comboBox_Profiles->lineEdit()->setValidator(validator);
 
-    ambilightUsb = new AmbilightUsb(this);
+    ledDevice = new AmbilightUsb(this);
 
     grabManager = new GrabManager();
 
@@ -128,7 +128,7 @@ void MainWindow::connectSignalsSlots()
     connect(this, SIGNAL(settingsProfileChanged()), grabManager, SLOT(settingsProfileChanged()));    
 
     // Connect GrabManager with ambilightUsb
-    connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ambilightUsb, SLOT(updateColors(const QList<StructRGB> &)));
+    connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
 
     // Main options
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
@@ -140,9 +140,8 @@ void MainWindow::connectSignalsSlots()
     connect(ui->checkBox_SmoothChangeColors, SIGNAL(toggled(bool)), this, SLOT(settingsHardwareChangeColorsIsSmooth(bool)));
 
     // ambilightUsb to this
-    connect(ambilightUsb, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
-    connect(ambilightUsb, SIGNAL(readBufferFromDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
-    connect(ambilightUsb, SIGNAL(writeBufferToDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
+    connect(ledDevice, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
+    connect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
 
     // GrabManager to this
     connect(grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
@@ -184,7 +183,7 @@ MainWindow::~MainWindow()
     delete trayIcon;
     delete trayIconMenu;
 
-    delete ambilightUsb;
+    delete ledDevice;
     delete grabManager;
 
     delete ui;
@@ -350,7 +349,7 @@ void MainWindow::showAbout()
 
     QRect screen = QApplication::desktop()->screenGeometry(this);
 
-    aboutDialog->setFirmwareVersion( ambilightUsb->firmwareVersion() );
+    aboutDialog->setFirmwareVersion( ledDevice->firmwareVersion() );
 
     aboutDialog->move(screen.width() / 2 - aboutDialog->width() / 2,
             screen.height() / 2 - aboutDialog->height() / 2);
@@ -424,7 +423,7 @@ void MainWindow::settingsHardwareTimerOptionsChange()
         qWarning() << "PWM frequency to low! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
     }else{
         // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
-        ambilightUsb->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
+        ledDevice->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
     }
 }
 
@@ -447,7 +446,7 @@ void MainWindow::settingsHardwareColorDepthOptionChange()
         qWarning() << "PWM frequency to low! setColorDepth canceled. pwmFrequency =" << pwmFrequency << "Hz";
     }else{
         // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
-        ambilightUsb->setColorDepth(colorDepth);
+        ledDevice->setColorDepth(colorDepth);
     }
 }
 
@@ -456,7 +455,7 @@ void MainWindow::settingsHardwareChangeColorsIsSmooth(bool isSmooth)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     Settings::setValue("Firmware/IsSmoothChangeColors", isSmooth);
-    ambilightUsb->smoothChangeColors(isSmooth);
+    ledDevice->smoothChangeColors(isSmooth);
 }
 
 // ----------------------------------------------------------------------------
