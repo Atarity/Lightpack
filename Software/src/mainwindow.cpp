@@ -888,9 +888,19 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
         }
         break;
 
+
+#   ifdef Q_WS_WIN
     case QSystemTrayIcon::Context:
+        // Hide the tray after losing focus
+        //
+        // In Linux (Ubuntu 10.04) this code grab keyboard input and
+        // not give it back to the text editor after close application with
+        // "Quit" button in the tray menu
         trayIconMenu->activateWindow();
         break;
+#   endif
+
+
     default:
         ;
     }
