@@ -217,6 +217,29 @@ QString Settings::getApplicationDirPath()
     return appDirPath;
 }
 
+QPoint Settings::getDefaultPosition(int ledIndex)
+{
+    QPoint result;
+
+    QRect screen = QApplication::desktop()->screenGeometry();
+
+    int ledsCountDiv2 = LEDS_COUNT / 2;
+
+    if (ledIndex < ledsCountDiv2)
+    {
+        result.setX(0);
+    } else {
+        result.setX(screen.width() - LED_FIELD_WIDTH_DEFAULT_VALUE);
+    }
+
+    int height = LEDS_COUNT * LED_FIELD_HEIGHT_DEFAULT_VALUE / 2;
+
+    int y = screen.height() / 2 - height / 2;
+
+    result.setY(y + (ledIndex % ledsCountDiv2) * LED_FIELD_HEIGHT_DEFAULT_VALUE);
+
+    return result;
+}
 
 // private
 
@@ -249,8 +272,6 @@ void Settings::settingsInit()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    QRect screen = QApplication::desktop()->screenGeometry();
-
     setDefaultSettingIfNotFound("GrabSlowdownMs",                      GRAB_SLOWDOWN_MS_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
     setDefaultSettingIfNotFound("IsAvgColorsOn",                       IS_AVG_COLORS_ON_DEFAULT_VALUE);
@@ -264,29 +285,15 @@ void Settings::settingsInit()
 
     QPoint ledPosition;
 
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
+    for (int ledIndex = 0; ledIndex < LEDS_COUNT; ledIndex++)
+    {
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/CoefRed",   LED_COEF_RGB_DEFAULT_VALUE);
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/CoefGreen", LED_COEF_RGB_DEFAULT_VALUE);
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/CoefBlue",  LED_COEF_RGB_DEFAULT_VALUE);
-
-        if(ledIndex < 4){
-            ledPosition.setX(0);
-        }else{
-            ledPosition.setX(screen.width() - LED_FIELD_WIDTH_DEFAULT_VALUE);
-        }
-
-        switch( ledIndex ){
-        case LED1:
-        case LED5: ledPosition.setY(screen.height() / 2 - 2*LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
-        case LED2:
-        case LED6: ledPosition.setY(screen.height() / 2 - LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
-        case LED3:
-        case LED7: ledPosition.setY(screen.height() / 2 );  break;
-        case LED4:
-        case LED8: ledPosition.setY(screen.height() / 2 + LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
-        }
-
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/Size",      LED_FIELD_SIZE_DEFAULT_VALUE);
+
+        ledPosition = getDefaultPosition(ledIndex);
+
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/Position",  ledPosition);
         setDefaultSettingIfNotFound("LED_" + QString::number(ledIndex+1) + "/IsEnabled", LED_IS_ENABLED_DEFAULT_VALUE);
     }
@@ -300,8 +307,6 @@ void Settings::settingsInit()
 void Settings::resetToDefaults()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    QRect screen = QApplication::desktop()->screenGeometry();
 
     settingsNow->setValue("GrabSlowdownMs",                      GRAB_SLOWDOWN_MS_DEFAULT_VALUE);
     settingsNow->setValue("IsAmbilightOn",                       IS_AMBILIGHT_ON_DEFAULT_VALUE);
@@ -321,22 +326,7 @@ void Settings::resetToDefaults()
         settingsNow->setValue("LED_" + QString::number(ledIndex+1) + "/CoefGreen", LED_COEF_RGB_DEFAULT_VALUE);
         settingsNow->setValue("LED_" + QString::number(ledIndex+1) + "/CoefBlue",  LED_COEF_RGB_DEFAULT_VALUE);
 
-        if(ledIndex < 4){
-            ledPosition.setX(0);
-        }else{
-            ledPosition.setX(screen.width() - LED_FIELD_WIDTH_DEFAULT_VALUE);
-        }
-
-        switch( ledIndex ){
-        case LED1:
-        case LED5: ledPosition.setY(screen.height() / 2 - 2*LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
-        case LED2:
-        case LED6: ledPosition.setY(screen.height() / 2 - LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
-        case LED3:
-        case LED7: ledPosition.setY(screen.height() / 2 );  break;
-        case LED4:
-        case LED8: ledPosition.setY(screen.height() / 2 + LED_FIELD_HEIGHT_DEFAULT_VALUE);  break;
-        }
+        ledPosition = getDefaultPosition(ledIndex);
 
         settingsNow->setValue("LED_" + QString::number(ledIndex+1) + "/Size",      LED_FIELD_SIZE_DEFAULT_VALUE);
         settingsNow->setValue("LED_" + QString::number(ledIndex+1) + "/Position",  ledPosition);

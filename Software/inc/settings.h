@@ -88,6 +88,7 @@ public:
 
     static QString lastProfileName();
     static QString getApplicationDirPath();
+    static QPoint getDefaultPosition(int ledIndex);
 
 private:
     static void settingsInit();
