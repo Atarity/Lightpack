@@ -1,7 +1,7 @@
 /*
- * version.h
+ * datatypes.h
  *
- *  Created on: 03.11.2010
+ *  Created on: 13.04.2011
  *      Author: Mike Shatohin (brunql)
  *     Project: Lightpack
  *
@@ -24,18 +24,40 @@
  *
  */
 
-#ifndef VERSION_H_INCLUDED
-#define VERSION_H_INCLUDED
+#ifndef DATATYPES_H_INCLUDED
+#define DATATYPES_H_INCLUDED
 
-// Firmware version:
-#define VERSION_OF_FIRMWARE              (0x0403UL)
-#define VERSION_OF_FIRMWARE_MAJOR        ((VERSION_OF_FIRMWARE >> 8) & 0xff)
-#define VERSION_OF_FIRMWARE_MINOR        (VERSION_OF_FIRMWARE & 0x00ff)
+#include "../CommonHeaders/RGB.h"
 
-// Build firmware for hw5.x
-#define LIGHTPACK_HW 5
+typedef struct
+{
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
 
-// Build firmware for hw4.x
-//#define LIGHTPACK_HW 4
+} RGB_t;
 
-#endif /* VERSION_H_INCLUDED */
+typedef struct
+{
+    uint8_t sr;
+    uint8_t sg;
+    uint8_t sb;
+
+} SmoothStepsRGB_t;
+
+typedef struct
+{
+    RGB_t pixels[LEDS_COUNT];
+    SmoothStepsRGB_t steps[LEDS_COUNT];
+
+} ColorsAndSteps_t;
+
+typedef struct
+{
+    uint8_t isSmoothEnabled;
+    uint8_t maxPwmValue;
+    uint16_t timerOutputCompareRegValue;
+
+} Settings_t;
+
+#endif /* DATATYPES_H_INCLUDED */

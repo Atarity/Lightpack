@@ -1,6 +1,6 @@
 # Hey Emacs, this is a -*- makefile -*-
 #----------------------------------------------------------------------------
-# WinAVR Makefile Template written by Eric B. Weddington, Jörg Wunsch, et al.
+# WinAVR Makefile Template written by Eric B. Weddington, Jï¿½rg Wunsch, et al.
 #  >> Modified for use with the LUFA and Lightpack project. <<
 #
 # Released to the Public Domain
@@ -128,11 +128,12 @@ include $(LUFA_PATH)/LUFA/makefile
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).c                                                 \
-	  Descriptors.c                                               \
-	  $(LUFA_SRC_USB)                                             \
-	  $(LUFA_SRC_USBCLASS)
-
+SRC = $(LUFA_SRC_USB) \
+	  $(LUFA_SRC_USBCLASS) \
+	  $(TARGET).c  \
+	  Descriptors.c \
+	  LedDriver.c \
+	  LightpackUSB.c 
 
 # List C++ source files here. (C dependencies are automatically generated.)
 CPPSRC =
@@ -226,7 +227,6 @@ CFLAGS += -Wstrict-prototypes
 CFLAGS += -Wa,-adhlns=$(<:%.c=$(OBJDIR)/%.lst)
 CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += $(CSTANDARD)
-
 
 #---------------- Compiler Options C++ ----------------
 #  -g*:          generate debugging information
@@ -520,6 +520,7 @@ gccversion :
 program: $(OBJDIR)/$(TARGET).hex $(OBJDIR)/$(TARGET).eep
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
 
+
 flip: $(OBJDIR)/$(TARGET).hex
 	batchisp -hardware usb -device $(MCU) -operation erase f
 	batchisp -hardware usb -device $(MCU) -operation loadbuffer $(OBJDIR)/$(TARGET).hex program
@@ -528,6 +529,9 @@ flip: $(OBJDIR)/$(TARGET).hex
 dfu: $(OBJDIR)/$(TARGET).hex
 	(dfu-programmer $(MCU) erase --quiet) || ( true )
 	dfu-programmer $(MCU) flash $(OBJDIR)/$(TARGET).hex
+	dfu-programmer $(MCU) start
+
+dfu-start:
 	dfu-programmer $(MCU) start
 
 

@@ -2,12 +2,12 @@
  * Descriptors.h
  *
  *  Created on: 11.01.2011
- *      Author: Mike Shatohin (brunql)
+ *        Edit: Mike Shatohin (brunql)
  *     Project: Lightpack
  *
- *  Lightpack? This is content-appropriate ambient lighting system for your computer!
+ *  Lightpack is a content-appropriate ambient lighting system for any computer
  *
- *  Edited 2011 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  */
 
@@ -31,52 +31,52 @@
   in an action of contract, negligence or other tortious action,
   arising out of or in connection with the use or performance of
   this software.
-*/
+ */
 
 /** \file
  *
  *  Header file for Descriptors.c.
  */
 
-#ifndef _DESCRIPTORS_H_
-#define _DESCRIPTORS_H_
+#ifndef DESCRIPTORS_H_INCLUDED
+#define DESCRIPTORS_H_INCLUDED
 
-	/* Includes: */
-		#include <avr/pgmspace.h>
+/* Includes: */
+#include <avr/pgmspace.h>
 
-		#include <LUFA/Drivers/USB/USB.h>
+#include <LUFA/Drivers/USB/USB.h>
 
-        // USB VID:PID and EP size
-        #include "../CommonHeaders/USB_ID.h"
+// USB VID:PID and EP size
+#include "../CommonHeaders/USB_ID.h"
 
-	/* Type Defines: */
-		/** Type define for the device configuration descriptor structure. This must be defined in the
-		 *  application code, as the configuration descriptor contains several sub-descriptors which
-		 *  vary between devices, and which describe the device's usage to the host.
-		 */
-		typedef struct
-		{
-			USB_Descriptor_Configuration_Header_t Config;
-			USB_Descriptor_Interface_t            HID_Interface;
-			USB_HID_Descriptor_HID_t              HID_GenericHID;
-	        USB_Descriptor_Endpoint_t             HID_ReportINEndpoint;
-		} USB_Descriptor_Configuration_t;
+/* Type Defines: */
+/** Type define for the device configuration descriptor structure. This must be defined in the
+ *  application code, as the configuration descriptor contains several sub-descriptors which
+ *  vary between devices, and which describe the device's usage to the host.
+ */
+typedef struct
+{
+    USB_Descriptor_Configuration_Header_t Config;
+    USB_Descriptor_Interface_t            HID_Interface;
+    USB_HID_Descriptor_HID_t              HID_GenericHID;
+    USB_Descriptor_Endpoint_t             HID_ReportINEndpoint;
+} USB_Descriptor_Configuration_t;
 
-	/* Macros: */
-		/** Endpoint number of the Generic HID reporting IN endpoint. */
-		#define GENERIC_IN_EPNUM          1
+/* Macros: */
+/** Endpoint number of the Generic HID reporting IN endpoint. */
+#define GENERIC_IN_EPNUM          1
 
-		/** Size in bytes of the Generic HID reporting endpoint. */
-		#define GENERIC_EPSIZE            64
+/** Size in bytes of the Generic HID reporting endpoint. */
+#define GENERIC_EPSIZE            64
 
-		/** Size in bytes of the Generic HID reports (including report ID byte). */
-		#define GENERIC_REPORT_SIZE       64
+/** Size in bytes of the Generic HID reports (including report ID byte). */
+#define GENERIC_REPORT_SIZE       64
 
-	/* Function Prototypes: */
-		uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
-		                                    const uint8_t wIndex,
-		                                    const void** const DescriptorAddress)
-		                                    ATTR_WARN_UNUSED_RESULT ATTR_NON_NULL_PTR_ARG(3);
+/* Function Prototypes: */
+uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
+        const uint8_t wIndex,
+        const void** const DescriptorAddress)
+ATTR_WARN_UNUSED_RESULT ATTR_NON_NULL_PTR_ARG(3);
 
-#endif
+#endif /* DESCRIPTORS_H_INCLUDED */
 

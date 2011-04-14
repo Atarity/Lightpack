@@ -5,7 +5,7 @@
  *      Author: Mike Shatohin (brunql)
  *     Project: Lightpack
  *
- *  Lightpack? This is content-appropriate ambient lighting system for your computer!
+ *  Lightpack is a content-appropriate ambient lighting system for any computer
  *
  *  Copyright (c) 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
@@ -22,181 +22,144 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  GenericHID demo created by:
- *  Copyright (c) 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
- *
  */
-
 
 #include "Lightpack.h"
 
-#include "LedDriver.h"
 #include "../CommonHeaders/RGB.h"
-#include "../CommonHeaders/commands.h"
 
-#include "Version.h"
+#include "LedDriver.h"
+#include "LightpackUSB.h"
 
-volatile uint8_t UpdateColors = FALSE;
+// Flags register
+volatile uint8_t g_Flags = 0;
 
-volatile uint8_t ColorsLevelsForPWM[LEDS_COUNT][3]; // colors using in PWM generation
-volatile uint8_t ColorsLevelsForPWM_New[LEDS_COUNT][3]; // last colors comes from USB
+// New colors and steps comes from PC
+ColorsAndSteps_t g_ImageFrameNew = { };
 
-
-volatile uint8_t PwmIndexMaxValue = 64;
-
-volatile uint8_t Smooth = 0; // Index in smoothing algorithm
-volatile uint8_t SmoothDelay = 0; // 0 = smooth off, 1 = smooth on
-volatile uint8_t SmoothStep[LEDS_COUNT][3]; // Save steps for smoothing each led
-
-volatile uint8_t MaxDiff = 0; // Maximum difference between old and new color
-
-
-/** Buffer to hold the previously generated HID report, for comparison purposes inside the HID class driver. */
-uint8_t PrevHIDReportBuffer[GENERIC_REPORT_SIZE];
-
-
-/** LUFA HID Class driver interface configuration and state information. This structure is
- *  passed to all HID Class driver functions, so that multiple instances of the same class
- *  within a device can be differentiated from one another.
- */
-USB_ClassInfo_HID_Device_t Generic_HID_Interface =
-	{
-		.Config =
-			{
-				.InterfaceNumber              = 0,
-
-				.ReportINEndpointNumber       = GENERIC_IN_EPNUM,
-				.ReportINEndpointSize         = GENERIC_EPSIZE,
-				.ReportINEndpointDoubleBank   = false,
-
-				.PrevReportINBuffer           = PrevHIDReportBuffer,
-				.PrevReportINBufferSize       = sizeof(PrevHIDReportBuffer),
-			},
-	};
-
-
-
-void SmoothlyUpdateColors(void)
+Settings_t g_Settings =
 {
-	UpdateColors = FALSE;
+        .isSmoothEnabled = true,
 
-    for(uint8_t color=0; color < 3; color++){
-        for(uint8_t ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+        // Maximum number of different colors for each channel (Red, Green and Blue)
+        .maxPwmValue = 128,
 
-        	uint8_t now = ColorsLevelsForPWM[ledIndex][color];
-        	uint8_t new = ColorsLevelsForPWM_New[ledIndex][color];
+        // Timer OCR value
+        .timerOutputCompareRegValue = 100,
+};
 
-            if(Smooth % SmoothStep[ledIndex][color] == 0){
-                if(now < new){
-                    now++;
-                }
-                if(now > new){
-                    now--;
-                }
-                ColorsLevelsForPWM[ledIndex][color] = now;
-            }
 
-            if(now != new){
-            	UpdateColors = TRUE;
-            }
-        }
+
+// Colors using in PWM generation
+RGB_t m_ImageFrame[LEDS_COUNT] = { };
+
+// Index in smoothing algorithm
+volatile uint8_t m_Smooth = 0;
+
+// Index in smoothing algorithm
+volatile uint8_t m_IsColorsDiff = true;
+
+
+static inline uint8_t _GetNextSmoothColor(const uint8_t now, const uint8_t new, const uint8_t step)
+{
+    uint8_t result = now;
+
+    if (step == 0 || step > 64 /* TODO! */ || m_Smooth % step == 0)
+    {
+        if (now < new)
+            result++;
+
+        if (now > new)
+            result--;
     }
 
-    if(UpdateColors){
-    	Smooth++;
-    }else{
-    	Smooth = 0x00;
-    }
+    if (now != new)
+        m_IsColorsDiff = true;
+
+    return result;
 }
 
+static inline void _SmoothlyUpdateColors(void)
+{
+    m_IsColorsDiff = false;
 
+    for (uint8_t i = 0; i < LEDS_COUNT; i++)
+    {
+        m_ImageFrame[i].r = _GetNextSmoothColor(
+                m_ImageFrame[i].r,
+                g_ImageFrameNew.pixels[i].r,
+                g_ImageFrameNew.steps[i].sr );
 
+        m_ImageFrame[i].g = _GetNextSmoothColor(
+                m_ImageFrame[i].g,
+                g_ImageFrameNew.pixels[i].g,
+                g_ImageFrameNew.steps[i].sg );
 
+        m_ImageFrame[i].b = _GetNextSmoothColor(
+                m_ImageFrame[i].b,
+                g_ImageFrameNew.pixels[i].b,
+                g_ImageFrameNew.steps[i].sb );
+    }
+
+    if (m_IsColorsDiff)
+        m_Smooth++;
+    else
+        m_Smooth = 0x00;
+}
 
 void PWM(void)
 {
-    static uint8_t PwmIndex = 0; // index of current PWM level
+    static uint8_t s_pwmIndex = 0; // index of current PWM level
 
-    if(++PwmIndex >= PwmIndexMaxValue){
-        PwmIndex = 0x00;
+    if (s_pwmIndex >= g_Settings.maxPwmValue)
+    {
+        s_pwmIndex = 0x00;
 
-
-        if(SmoothDelay != 0){
-        	if(UpdateColors){
-        		SmoothlyUpdateColors(); // == 483us
-        	}else{
-        		_delay_us(483); // go away annoying flickering!
-        	}
+        SET(LEDR);
+        if (g_Settings.isSmoothEnabled)
+        {
+            _SmoothlyUpdateColors();
         }
+        CLR(LEDR);
     }
 
+    SET(LEDW);
 
-    // LedDriver connection: NC B G R
-    LedDrivers_ClkDown();
-    LedDriver1_OutOff();
-    LedDriver2_OutOff();
-    LedDrivers_ClkUp();
-
-    for(uint8_t color=0; color<3; color++){
-    	LedDrivers_ClkDown();
-    	if(ColorsLevelsForPWM[LED4][color] > PwmIndex) LedDriver1_OutOn(); else LedDriver1_OutOff();
-    	if(ColorsLevelsForPWM[LED8][color] > PwmIndex) LedDriver2_OutOn(); else LedDriver2_OutOff();
-    	LedDrivers_ClkUp();
+    if (g_Settings.isSmoothEnabled)
+    {
+        LedDriver_UpdatePWM(m_ImageFrame, s_pwmIndex);
+    } else {
+        LedDriver_UpdatePWM(g_ImageFrameNew.pixels, s_pwmIndex);
     }
 
-    LedDrivers_ClkDown();
-    LedDriver1_OutOff();
-    LedDriver2_OutOff();
-    LedDrivers_ClkUp();
+    CLR(LEDW);
 
-    for(uint8_t color=0; color<3; color++){
-    	LedDrivers_ClkDown();
-    	if(ColorsLevelsForPWM[LED3][color] > PwmIndex) LedDriver1_OutOn(); else LedDriver1_OutOff();
-    	if(ColorsLevelsForPWM[LED7][color] > PwmIndex) LedDriver2_OutOn(); else LedDriver2_OutOff();
-    	LedDrivers_ClkUp();
-    }
-
-    LedDrivers_ClkDown();
-    LedDriver1_OutOff();
-    LedDriver2_OutOff();
-    LedDrivers_ClkUp();
-
-    for(uint8_t color=0; color<3; color++){
-    	LedDrivers_ClkDown();
-    	if(ColorsLevelsForPWM[LED2][color] > PwmIndex) LedDriver1_OutOn(); else LedDriver1_OutOff();
-    	if(ColorsLevelsForPWM[LED6][color] > PwmIndex) LedDriver2_OutOn(); else LedDriver2_OutOff();
-    	LedDrivers_ClkUp();
-    }
-
-    LedDrivers_ClkDown();
-    LedDriver1_OutOff();
-    LedDriver2_OutOff();
-    LedDrivers_ClkUp();
-
-    for(uint8_t color=0; color<3; color++){
-    	LedDrivers_ClkDown();
-    	if(ColorsLevelsForPWM[LED1][color] > PwmIndex) LedDriver1_OutOn(); else LedDriver1_OutOff();
-    	if(ColorsLevelsForPWM[LED5][color] > PwmIndex) LedDriver2_OutOn(); else LedDriver2_OutOff();
-    	LedDrivers_ClkUp();
-    }
-
-    LedDrivers_LatchPulse();
+    s_pwmIndex++;
 }
 
-
-
-void SetAllLedsColors(uint8_t red, uint8_t green, uint8_t blue)
+void SetAllLedsColors(const uint8_t red, const uint8_t green, const uint8_t blue)
 {
-    for(uint8_t i=0; i<LEDS_COUNT; i++){
-        ColorsLevelsForPWM[i][R] = red;
-        ColorsLevelsForPWM[i][G] = green;
-        ColorsLevelsForPWM[i][B] = blue;
+    RGB_t * pixel;
+
+    if (g_Settings.isSmoothEnabled)
+        pixel = &m_ImageFrame[0];
+    else
+        pixel = &g_ImageFrameNew.pixels[0];
+
+
+    for (uint8_t i = 0; i < LEDS_COUNT; i++)
+    {
+        pixel->r = red;
+        pixel->g = green;
+        pixel->b = blue;
+
+        pixel++;
     }
 }
 
-//
-// Interrupts of the timer that generates PWM
-//
+/*
+ *  Interrupts of the timer that generates PWM
+ */
 ISR( TIMER1_COMPA_vect )
 {
     // Set next PWM states for all channels
@@ -222,6 +185,51 @@ static inline void TimerForPWM_Init(void)
     TIMSK1 = _BV(OCIE1A);
 }
 
+static inline void SetupHardware(void)
+{
+    /* Disable watchdog if enabled by bootloader/fuses */
+    MCUSR &= ~(1 << WDRF);
+    wdt_disable();
+
+    /* Disable clock division */
+    clock_prescale_set(clock_div_1);
+
+    /* Hardware Initialization */
+    PORTB = 0x00;
+    DDRB = 0x00;
+
+    PORTC = 0x00;
+    DDRC = 0x00;
+
+    PORTD = 0x00;
+    DDRD = 0x00;
+
+    OUTPUT( LEDR );
+    OUTPUT( LEDW );
+}
+
+
+static inline void _ProcessFlags(void)
+{
+    if (_FlagProcess(Flag_HaveNewColors))
+        m_Smooth = 0x00;
+
+    if (_FlagProcess(Flag_LedsOffAll))
+        SetAllLedsColors(0, 0, 0);
+
+    if (_FlagProcess(Flag_TimerOptionsChanged))
+    {
+        // Pause timer
+        TIMSK1 &= (uint8_t)~_BV(OCIE1A);
+
+        OCR1A = g_Settings.timerOutputCompareRegValue;
+
+        // Restart timer
+        TCNT1 = 0x0000;
+        TIMSK1 = _BV(OCIE1A);
+    }
+}
+
 
 /*
  *  Main program entry point
@@ -239,190 +247,22 @@ int main(void)
     // Initialize USB
     USB_Init();
 
-	sei();
+    SetAllLedsColors(64, 64, 64);
 
-	SmoothDelay = TRUE;
+    for (uint8_t i = 0; i < LEDS_COUNT; i++)
+    {
+        g_ImageFrameNew.steps[i].sr = 8;
+        g_ImageFrameNew.steps[i].sg = 7;
+        g_ImageFrameNew.steps[i].sb = 4;
+    }
 
-	SetAllLedsColors(20,20,20);
+    sei();
 
-	for (;;)
-	{
-		HID_Device_USBTask(&Generic_HID_Interface);
-		USB_USBTask();
-	}
-}
+    for (;;)
+    {
+        ProcessUsbTasks();
 
-void SetupHardware(void)
-{
-	/* Disable watchdog if enabled by bootloader/fuses */
-	MCUSR &= ~(1 << WDRF);
-	wdt_disable();
-
-	/* Disable clock division */
-	clock_prescale_set(clock_div_1);
-
-	/* Hardware Initialization */
-    PORTB = 0x00;
-    DDRB = 0x00;
-
-    PORTC = 0x00;
-    DDRC = 0x00;
-
-    PORTD = 0x00;
-    DDRD = 0x00;
-
-	OUTPUT( LED );
-	CLR( LED );
-}
-
-/** Event handler for the library USB Connection event. */
-void EVENT_USB_Device_Connect(void)
-{
-	SET( LED );
-}
-
-/** Event handler for the library USB Disconnection event. */
-void EVENT_USB_Device_Disconnect(void)
-{
-    CLR( LED );
-}
-
-/** Event handler for the library USB Configuration Changed event. */
-void EVENT_USB_Device_ConfigurationChanged(void)
-{
-	bool ConfigSuccess = true;
-
-	ConfigSuccess &= HID_Device_ConfigureEndpoints(&Generic_HID_Interface);
-
-	USB_Device_EnableSOFEvents();
-}
-
-/** Event handler for the library USB Control Request reception event. */
-void EVENT_USB_Device_ControlRequest(void)
-{
-	HID_Device_ProcessControlRequest(&Generic_HID_Interface);
-}
-
-/** Event handler for the USB device Start Of Frame event. */
-void EVENT_USB_Device_StartOfFrame(void)
-{
-	HID_Device_MillisecondElapsed(&Generic_HID_Interface);
-}
-
-/** HID class driver callback function for the creation of HID reports to the host.
- *
- *  \param[in]     HIDInterfaceInfo  Pointer to the HID class interface configuration structure being referenced
- *  \param[in,out] ReportID    Report ID requested by the host if non-zero, otherwise callback should set to the generated report ID
- *  \param[in]     ReportType  Type of the report to create, either HID_REPORT_ITEM_In or HID_REPORT_ITEM_Feature
- *  \param[out]    ReportData  Pointer to a buffer where the created report should be stored
- *  \param[out]    ReportSize  Number of bytes written in the report (or zero if no report is to be sent
- *
- *  \return Boolean true to force the sending of the report, false to let the library determine if it needs to be sent
- */
-bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
-                                         uint8_t* const ReportID,
-                                         const uint8_t ReportType,
-                                         void* ReportData,
-                                         uint16_t* const ReportSize)
-{
-	uint8_t *ReportData_u8 = (uint8_t *)ReportData;
-
-    // Firmware version
-	ReportData_u8[INDEX_FW_VER_MAJOR] = VERSION_OF_FIRMWARE_MAJOR;
-	ReportData_u8[INDEX_FW_VER_MINOR] = VERSION_OF_FIRMWARE_MINOR;
-
-	*ReportSize = GENERIC_REPORT_SIZE;
-	return true;
-}
-
-/** HID class driver callback function for the processing of HID reports from the host.
- *
- *  \param[in] HIDInterfaceInfo  Pointer to the HID class interface configuration structure being referenced
- *  \param[in] ReportID    Report ID of the received report from the host
- *  \param[in] ReportType  The type of report that the host has sent, either HID_REPORT_ITEM_Out or HID_REPORT_ITEM_Feature
- *  \param[in] ReportData  Pointer to a buffer where the created report has been stored
- *  \param[in] ReportSize  Size in bytes of the received HID report
- */
-void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
-                                          const uint8_t ReportID,
-                                          const uint8_t ReportType,
-                                          const void* ReportData,
-                                          const uint16_t ReportSize)
-{
-	uint8_t *ReportData_u8 = (uint8_t *)ReportData;
-
-	uint8_t cmd = ReportData_u8[0]; // command from enum COMMANDS{ ... };
-
-	uint8_t i = 1; // new data for colors levels starts form ReportData_u8[1]
-
-	switch(cmd){
-	case CMD_UPDATE_LEDS:
-	    if(SmoothDelay == 0){
-	        // Just put new colors directly to ColorsLevelsForPWM[]
-	        for(uint8_t ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-	            ColorsLevelsForPWM[ledIndex][R] = ReportData_u8[i++];
-	            ColorsLevelsForPWM[ledIndex][G] = ReportData_u8[i++];
-	            ColorsLevelsForPWM[ledIndex][B] = ReportData_u8[i++];
-	            SmoothStep[ledIndex][R] = ReportData_u8[i++];
-	            SmoothStep[ledIndex][G] = ReportData_u8[i++];
-	            SmoothStep[ledIndex][B] = ReportData_u8[i++];
-	        }
-	    }else{
-	        // SmoothDelay not zero and put new colors to ColorsLevelsForPWM_New[]
-	        for(uint8_t ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-	            ColorsLevelsForPWM_New[ledIndex][R] = ReportData_u8[i++];
-	            ColorsLevelsForPWM_New[ledIndex][G] = ReportData_u8[i++];
-	            ColorsLevelsForPWM_New[ledIndex][B] = ReportData_u8[i++];
-	            SmoothStep[ledIndex][R] = ReportData_u8[i++];
-	            SmoothStep[ledIndex][G] = ReportData_u8[i++];
-	            SmoothStep[ledIndex][B] = ReportData_u8[i++];
-	        }
-	        UpdateColors = TRUE;
-	        Smooth = 0x00;
-	    }
-	    break;
-	case CMD_OFF_ALL:
-	    if(SmoothDelay == 0){
-	        // Just put new colors directly to ColorsLevelsForPWM[]
-	        SetAllLedsColors(0, 0, 0);
-	    }else{
-	        // SmoothDelay not zero and put new colors to ColorsLevelsForPWM_New[]
-	        for(uint8_t ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-	            ColorsLevelsForPWM_New[ledIndex][R] = 0;
-	            ColorsLevelsForPWM_New[ledIndex][G] = 0;
-	            ColorsLevelsForPWM_New[ledIndex][B] = 0;
-	        }
-	        UpdateColors = TRUE;
-	        Smooth = 0x00;
-	    }
-
-	    break;
-	case CMD_SET_TIMER_OPTIONS:
-	    TIMSK1 &= (uint8_t)~_BV(OCIE1A);
-
-	    // TODO: ReportData_u8[DATA_INDEX_CMD_SET_PRESCALLER]
-	    switch(ReportData_u8[1]){
-	    case CMD_SET_PRESCALLER_1:      TCCR1B = _BV(CS10); break;
-	    case CMD_SET_PRESCALLER_8:      TCCR1B = _BV(CS11); break;
-	    case CMD_SET_PRESCALLER_64:     TCCR1B = _BV(CS11) | _BV(CS10); break;
-	    case CMD_SET_PRESCALLER_256:    TCCR1B = _BV(CS12); break;
-	    case CMD_SET_PRESCALLER_1024:   TCCR1B = _BV(CS12) | _BV(CS11); break;
-	    }
-
-	    // TODO: ReportData_u8[DATA_INDEX_CMD_SET_OCR]
-	    OCR1A = ReportData_u8[2];
-
-	    TCNT1 = 0x0000;
-	    TIMSK1 = _BV(OCIE1A);
-        break;
-	case CMD_SET_PWM_LEVEL_MAX_VALUE:
-	    PwmIndexMaxValue = ReportData_u8[1];
-	    break;
-	case CMD_SMOOTH_CHANGE_COLORS:
-	    SmoothDelay = ReportData_u8[1];
-        break;
-	case CMD_NOP:
-        break;
-	}
+        _ProcessFlags();
+    }
 }
 

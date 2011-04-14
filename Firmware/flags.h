@@ -1,7 +1,7 @@
 /*
- * version.h
+ * flags.h
  *
- *  Created on: 03.11.2010
+ *  Created on: 14.04.2011
  *      Author: Mike Shatohin (brunql)
  *     Project: Lightpack
  *
@@ -24,18 +24,51 @@
  *
  */
 
-#ifndef VERSION_H_INCLUDED
-#define VERSION_H_INCLUDED
+#ifndef FLAGS_H_INCLUDED
+#define FLAGS_H_INCLUDED
 
-// Firmware version:
-#define VERSION_OF_FIRMWARE              (0x0403UL)
-#define VERSION_OF_FIRMWARE_MAJOR        ((VERSION_OF_FIRMWARE >> 8) & 0xff)
-#define VERSION_OF_FIRMWARE_MINOR        (VERSION_OF_FIRMWARE & 0x00ff)
+extern volatile uint8_t g_Flags;
 
-// Build firmware for hw5.x
-#define LIGHTPACK_HW 5
+typedef enum FLAGS
+{
+    Flag_HaveNewColors			= (1 << 0),
+    Flag_LedsOffAll 			= (1 << 1),
+    Flag_TimerOptionsChanged 	= (1 << 2),
 
-// Build firmware for hw4.x
-//#define LIGHTPACK_HW 4
+} Flag_t;
 
-#endif /* VERSION_H_INCLUDED */
+static inline void _FlagSet(Flag_t flag)
+{
+    ATOMIC_BLOCK( ATOMIC_RESTORESTATE ){
+        g_Flags |= flag;
+    }
+}
+
+static inline void _FlagClear(Flag_t flag)
+{
+    ATOMIC_BLOCK( ATOMIC_RESTORESTATE ){
+        g_Flags &= (uint8_t) ~ flag;
+    }
+}
+
+static inline uint8_t _Flag(Flag_t flag)
+{
+    uint8_t result;
+
+    ATOMIC_BLOCK( ATOMIC_RESTORESTATE ){
+        result = (g_Flags & flag);
+    }
+
+    return result;
+}
+
+static inline uint8_t _FlagProcess(Flag_t flag)
+{
+    uint8_t result = _Flag(flag);
+
+    _FlagClear(flag);
+
+    return result;
+}
+
+#endif /* FLAGS_H_INCLUDED */

@@ -28,7 +28,7 @@
 #ifndef RGB_H_
 #define RGB_H_
 
-// Number of leds, using to define colors and colors_new arrays
+
 #define LEDS_COUNT  8
 
 
@@ -42,18 +42,6 @@ enum LEDS{
 	LED7,
 	LED8,
 };
-
-
-// Define indexes for colors and colors_new arrays
-#define R	2
-#define G	1
-#define B	0
-
-// Be sure that this is defined
-#ifndef TRUE
-#	define TRUE 	0xff
-#	define FALSE	0x00
-#endif
 
 
 #endif /* RGB_H_ */

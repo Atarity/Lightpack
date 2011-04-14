@@ -1,7 +1,7 @@
 /*
- * version.h
+ * LightpackUSB.h
  *
- *  Created on: 03.11.2010
+ *  Created on: 13.04.2011
  *      Author: Mike Shatohin (brunql)
  *     Project: Lightpack
  *
@@ -24,18 +24,11 @@
  *
  */
 
-#ifndef VERSION_H_INCLUDED
-#define VERSION_H_INCLUDED
+#ifndef LIGHTPACKUSB_H_INCLUDED
+#define LIGHTPACKUSB_H_INCLUDED
 
-// Firmware version:
-#define VERSION_OF_FIRMWARE              (0x0403UL)
-#define VERSION_OF_FIRMWARE_MAJOR        ((VERSION_OF_FIRMWARE >> 8) & 0xff)
-#define VERSION_OF_FIRMWARE_MINOR        (VERSION_OF_FIRMWARE & 0x00ff)
+#include "datatypes.h"
 
-// Build firmware for hw5.x
-#define LIGHTPACK_HW 5
+extern void ProcessUsbTasks(void);
 
-// Build firmware for hw4.x
-//#define LIGHTPACK_HW 4
-
-#endif /* VERSION_H_INCLUDED */
+#endif /* LIGHTPACKUSB_H_INCLUDED */
