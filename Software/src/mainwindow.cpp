@@ -27,7 +27,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "LedDeviceFactory.h"
 #include <QDesktopWidget>
 #include <QPlainTextEdit>
 
@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QRegExpValidator *validator = new QRegExpValidator(rx, this);
     ui->comboBox_Profiles->lineEdit()->setValidator(validator);
 
-    ledDevice = new AmbilightUsb(this);
+    ledDevice = LedDeviceFactory::create(this, Settings::value("IsAlienFxMode").toBool());
 
     grabManager = new GrabManager();
 
