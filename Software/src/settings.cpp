@@ -34,7 +34,7 @@
 #include <QFileInfo>
 #include <QDir>
 
-#include "../../CommonHeaders/RGB.h"        /* Led defines */
+#include "../../CommonHeaders/LEDS_COUNT.h"
 
 #include "debug.h"
 
@@ -232,7 +232,7 @@ QPoint Settings::getDefaultPosition(int ledIndex)
         result.setX(screen.width() - LED_FIELD_WIDTH_DEFAULT_VALUE);
     }
 
-    int height = LEDS_COUNT * LED_FIELD_HEIGHT_DEFAULT_VALUE / 2;
+    int height = ledsCountDiv2 * LED_FIELD_HEIGHT_DEFAULT_VALUE;
 
     int y = screen.height() / 2 - height / 2;
 

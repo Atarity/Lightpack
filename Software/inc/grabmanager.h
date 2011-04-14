@@ -29,7 +29,7 @@
 #define GRAB_MANAGER_H
 
 #include <QtGui>
-#include "../../CommonHeaders/RGB.h"        /* Led defines */
+#include "../../CommonHeaders/LEDS_COUNT.h"
 #include "settings.h"
 #include "timeevaluations.h"
 #include "struct_rgb.h"

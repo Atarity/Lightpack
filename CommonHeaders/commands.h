@@ -5,7 +5,7 @@
  *      Author: Mike Shatohin (brunql)
  *     Project: Lightpack
  *
- *  Lightpack is very simple implementation of the backlight for a laptop
+ *  Lightpack is a content-appropriate ambient lighting system for any computer
  *
  *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
@@ -25,8 +25,8 @@
  */
  
 
-#ifndef COMMANDS_H_
-#define COMMANDS_H_
+#ifndef COMMANDS_H_INCLUDED
+#define COMMANDS_H_INCLUDED
 
 // Commands to device, sends it in first byte of data[]
 enum COMMANDS{
@@ -53,4 +53,4 @@ enum DATA_VERSION_INDEXES{
     INDEX_FW_VER_MINOR,
 };
 
-#endif /* COMMANDS_H_ */
+#endif /* COMMANDS_H_INCLUDED */

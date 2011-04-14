@@ -46,6 +46,7 @@
 #include "datatypes.h"
 #include "version.h"
 
+#include "../CommonHeaders/LEDS_COUNT.h"
 
 /* LED use with I/O manipulations macroses from iodefs.h */
 #define LEDR    (D,2)

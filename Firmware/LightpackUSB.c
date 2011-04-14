@@ -28,7 +28,7 @@
 #include "LightpackUSB.h"
 #include "version.h"
 
-#include "../CommonHeaders/commands.h"
+#include "../CommonHeaders/COMMANDS.h"
 
 // Buffer to hold the previously generated HID report, for comparison purposes inside the HID class driver.
 uint8_t PrevHIDReportBuffer[GENERIC_REPORT_SIZE];

@@ -33,11 +33,11 @@
 #include "struct_rgb.h"
 #include "timeevaluations.h"
 
-#include "../../CommonHeaders/USB_ID.h"  /* For device VID, PID, vendor name and product name */
+#include "../../CommonHeaders/USB_ID.h"     /* For device VID, PID, vendor name and product name */
 #include "hidapi.h" /* USB HID API */
 
-#include "../../CommonHeaders/commands.h"   /* CMD defines */
-#include "../../CommonHeaders/RGB.h"        /* Led defines */
+#include "../../CommonHeaders/COMMANDS.h"   /* CMD defines */
+#include "../../CommonHeaders/LEDS_COUNT.h"
 
 
 // This defines using in all data transfers to determine indexes in write_buffer[]

@@ -1,13 +1,13 @@
 /*
- * version.h
+ * LEDS_COUNT.h
  *
- *  Created on: 03.11.2010
+ *  Created on: 23.07.2010
  *      Author: Mike Shatohin (brunql)
  *     Project: Lightpack
  *
  *  Lightpack is a content-appropriate ambient lighting system for any computer
  *
- *  Copyright (c) 2011 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  Lightpack is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,13 +23,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+ 
 
-#ifndef VERSION_H_INCLUDED
-#define VERSION_H_INCLUDED
+#ifndef LEDS_COUNT_H_INCLUDED
+#define LEDS_COUNT_H_INCLUDED
 
-// Firmware version:
-#define VERSION_OF_FIRMWARE              (0x0403UL)
-#define VERSION_OF_FIRMWARE_MAJOR        ((VERSION_OF_FIRMWARE >> 8) & 0xff)
-#define VERSION_OF_FIRMWARE_MINOR        (VERSION_OF_FIRMWARE & 0x00ff)
+#include "LIGHTPACK_HW.h"
 
-#endif /* VERSION_H_INCLUDED */
+#if (LIGHTPACK_HW == 5)
+
+#	define LEDS_COUNT  10
+
+#elif (LIGHTPACK_HW == 4)
+
+#	define LEDS_COUNT  8
+
+#else
+#   error "LIGHTPACK_HW must be defined in 'LIGHTPACK_HW.h' to major number of the hardware revision"
+#endif
+
+#endif /* LEDS_COUNT_H_INCLUDED */

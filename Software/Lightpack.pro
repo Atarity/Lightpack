@@ -109,8 +109,9 @@ SOURCES += src/main.cpp \
     src/settings.cpp \
     src/speedtest.cpp
 HEADERS += hidapi/hidapi.h \
-    ../CommonHeaders/commands.h \
-    ../CommonHeaders/RGB.h \
+    ../CommonHeaders/LIGHTPACK_HW.h \
+    ../CommonHeaders/COMMANDS.h \
+    ../CommonHeaders/LEDS_COUNT.h \
     ../CommonHeaders/USB_ID.h \
     inc/mainwindow.h \
     inc/ambilightusb.h \

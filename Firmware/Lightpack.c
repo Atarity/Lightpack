@@ -25,9 +25,6 @@
  */
 
 #include "Lightpack.h"
-
-#include "../CommonHeaders/RGB.h"
-
 #include "LedDriver.h"
 #include "LightpackUSB.h"
 

@@ -1,13 +1,13 @@
 /*
- * RGB.h
+ * LIGHTPACK_HW.h
  *
- *  Created on: 23.07.2010
+ *  Created on: 15.04.2010
  *      Author: Mike Shatohin (brunql)
  *     Project: Lightpack
  *
- *  Lightpack is very simple implementation of the backlight for a laptop
+ *  Lightpack is a content-appropriate ambient lighting system for any computer
  *
- *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
+ *  Copyright (c) 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
  *  Lightpack is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,23 +25,13 @@
  */
  
 
-#ifndef RGB_H_
-#define RGB_H_
+#ifndef LIGHTPACK_HW_H_INCLUDED
+#define LIGHTPACK_HW_H_INCLUDED
 
+// Build firmware for hw5.x
+#define LIGHTPACK_HW 5
 
-#define LEDS_COUNT  8
+// Build firmware for hw4.x
+//#define LIGHTPACK_HW 4
 
-
-enum LEDS{
-	LED1 = 0, /* this is indexes in colors and colors_new arrays */
-	LED2,
-	LED3,
-	LED4,
-	LED5,
-	LED6,
-	LED7,
-	LED8,
-};
-
-
-#endif /* RGB_H_ */
+#endif /* LIGHTPACK_HW_H_INCLUDED */

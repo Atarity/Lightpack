@@ -27,7 +27,7 @@
 #ifndef DATATYPES_H_INCLUDED
 #define DATATYPES_H_INCLUDED
 
-#include "../CommonHeaders/RGB.h"
+#include "../CommonHeaders/LEDS_COUNT.h"
 
 typedef struct
 {

@@ -30,7 +30,7 @@
 #include <stdint.h>
 
 #include "datatypes.h"
-#include "../CommonHeaders/RGB.h"
+#include "../CommonHeaders/LEDS_COUNT.h"
 
 void LedDriver_Init(void);
 void LedDriver_UpdatePWM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t pwmIndex);

@@ -29,6 +29,8 @@
 #include "Lightpack.h"
 #include "LedDriver.h"
 
+#include "../CommonHeaders/LIGHTPACK_HW.h"
+
 #if (LIGHTPACK_HW == 5)
 
 /*
@@ -136,6 +138,7 @@ void LedDriver_UpdatePWM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t pwmIn
 #define CLK_2	    (B, 1)
 #define DATA_2 	    (B, 2)
 
+enum LEDS { LED1, LED2, LED3, LED4, LED5, LED6, LED7, LED8 };
 
 static inline void _LedDrivers_LatchPulse(void)
 {
@@ -221,6 +224,6 @@ void LedDriver_UpdatePWM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t pwmIn
 }
 
 #else
-#	error "LIGHTPACK_HW must be defined in 'version.h' to major number of the hardware revision"
+#	error "LIGHTPACK_HW must be defined in '../CommonHeaders/LIGHTPACK_HW.h' to major number of the hardware revision"
 #endif /* (LIGHTPACK_HW switch) */
 
