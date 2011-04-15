@@ -154,6 +154,29 @@ void SetAllLedsColors(const uint8_t red, const uint8_t green, const uint8_t blue
     }
 }
 
+void _SetDefaultSmoothSteps(void)
+{
+#   if (LIGHTPACK_HW == 5)
+
+    for (uint8_t i = 0; i < LEDS_COUNT; i++)
+    {
+        g_ImageFrameNew.steps[i].sr = 5;
+        g_ImageFrameNew.steps[i].sg = 4;
+        g_ImageFrameNew.steps[i].sb = 3;
+    }
+
+#   elif (LIGHTPACK_HW == 4)
+
+    for (uint8_t i = 0; i < LEDS_COUNT; i++)
+    {
+        g_ImageFrameNew.steps[i].sr = 4;
+        g_ImageFrameNew.steps[i].sg = 5;
+        g_ImageFrameNew.steps[i].sb = 3;
+    }
+
+#   endif /* (LIGHTPACK_HW == x) */
+}
+
 /*
  *  Interrupts of the timer that generates PWM
  */
@@ -246,12 +269,7 @@ int main(void)
 
     SetAllLedsColors(64, 64, 64);
 
-    for (uint8_t i = 0; i < LEDS_COUNT; i++)
-    {
-        g_ImageFrameNew.steps[i].sr = 8;
-        g_ImageFrameNew.steps[i].sg = 7;
-        g_ImageFrameNew.steps[i].sb = 4;
-    }
+    _SetDefaultSmoothSteps();
 
     sei();
 
