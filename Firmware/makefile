@@ -63,12 +63,11 @@
 # MCU name
 MCU = at90usb162
 
+# Include file with LIGHTPACK_HW defines for make and C/C++ preprocessors
+include ../CommonHeaders/LIGHTPACK_HW.h
 
-# Target board (see library "Board Types" documentation, NONE for projects not requiring
-# LUFA board drivers). If USER is selected, put custom board drivers in a directory called
-# "Board" inside the application directory.
-BOARD = NONE
 
+# Build firmware for hw4.x
 
 # Processor frequency.
 #     This will define a symbol, F_CPU, in all source code files equal to the
@@ -97,13 +96,15 @@ F_CPU = 16000000
 #     CPU clock adjust registers or the clock division fuses), this will be equal to F_CPU.
 F_CLOCK = $(F_CPU)
 
+# LUFA board is not used in Lightpack
+BOARD = NONE
 
 # Output format. (can be srec, ihex, binary)
 FORMAT = ihex
 
 
 # Target file name (without extension).
-TARGET = Lightpack
+TARGET = Lightpack_hw$(LIGHTPACK_HW)
 
 # Object files directory
 #     To put object files in current directory, use a dot (.), do NOT make
@@ -122,6 +123,9 @@ LUFA_OPTS += -D FIXED_NUM_CONFIGURATIONS=1
 LUFA_OPTS += -D USE_FLASH_DESCRIPTORS
 LUFA_OPTS += -D USE_STATIC_OPTIONS="(USB_DEVICE_OPT_FULLSPEED | USB_OPT_REG_ENABLED | USB_OPT_AUTO_PLL)"
 
+# Lightpack project compile-time options
+LIGHTPACK_OPTS += -D LIGHTPACK_HW=$(LIGHTPACK_HW)
+
 
 # Create the LUFA source path variables by including the LUFA root makefile
 include $(LUFA_PATH)/LUFA/makefile
@@ -130,7 +134,7 @@ include $(LUFA_PATH)/LUFA/makefile
 # List C source files here. (C dependencies are automatically generated.)
 SRC = $(LUFA_SRC_USB) \
 	  $(LUFA_SRC_USBCLASS) \
-	  $(TARGET).c  \
+	  Lightpack.c  \
 	  Descriptors.c \
 	  LedDriver.c \
 	  LightpackUSB.c 
@@ -182,7 +186,7 @@ CDEFS  = -DF_CPU=$(F_CPU)UL
 CDEFS += -DF_CLOCK=$(F_CLOCK)UL
 CDEFS += -DBOARD=BOARD_$(BOARD)
 CDEFS += $(LUFA_OPTS)
-
+CDEFS += $(LIGHTPACK_OPTS)
 
 # Place -D or -U options here for ASM sources
 ADEFS  = -DF_CPU=$(F_CPU)

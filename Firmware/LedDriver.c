@@ -29,7 +29,7 @@
 #include "Lightpack.h"
 #include "LedDriver.h"
 
-#include "../CommonHeaders/LIGHTPACK_HW.h"
+#include "version.h"
 
 #if (LIGHTPACK_HW == 5)
 

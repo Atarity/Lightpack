@@ -32,4 +32,6 @@
 #define VERSION_OF_FIRMWARE_MAJOR        ((VERSION_OF_FIRMWARE >> 8) & 0xff)
 #define VERSION_OF_FIRMWARE_MINOR        (VERSION_OF_FIRMWARE & 0x00ff)
 
+#include "../CommonHeaders/LIGHTPACK_HW.h"
+
 #endif /* VERSION_H_INCLUDED */

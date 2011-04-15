@@ -28,7 +28,7 @@
 #ifndef LEDS_COUNT_H_INCLUDED
 #define LEDS_COUNT_H_INCLUDED
 
-#include "LIGHTPACK_HW.h"
+#include "version.h"
 
 #if (LIGHTPACK_HW == 5)
 
@@ -39,7 +39,7 @@
 #	define LEDS_COUNT  8
 
 #else
-#   error "LIGHTPACK_HW must be defined in 'LIGHTPACK_HW.h' to major number of the hardware revision"
+#   error "LIGHTPACK_HW must be defined in 'CommonHeaders/LIGHTPACK_HW' to major number of the hardware revision"
 #endif
 
 #endif /* LEDS_COUNT_H_INCLUDED */
