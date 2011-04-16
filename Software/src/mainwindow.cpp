@@ -27,7 +27,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "LedDeviceFactory.h"
+#include "LedDeviceFactory.hpp"
 #include <QDesktopWidget>
 #include <QPlainTextEdit>
 

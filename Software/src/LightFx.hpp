@@ -28,9 +28,7 @@
 #ifndef LIGHTFX_H
 #define LIGHTFX_H
 
-#include "ileddevice.h"
-//#include "../../CommonHeaders/commands.h"   /* CMD defines */
-//#include "../../CommonHeaders/RGB.h"        /* Led defines */
+#include "ILedDevice.hpp"
 
 class LightFx : public ILedDevice
 {

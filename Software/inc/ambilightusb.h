@@ -30,7 +30,7 @@
 
 #include <QtGui>
 
-#include "ileddevice.h"
+#include "../src/ILedDevice.hpp"
 #include "timeevaluations.h"
 
 #include "../../CommonHeaders/USB_ID.h"  /* For device VID, PID, vendor name and product name */

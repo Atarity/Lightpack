@@ -108,8 +108,8 @@ SOURCES += src/main.cpp \
     src/movemewidget.cpp \
     src/settings.cpp \
     src/speedtest.cpp \
-    src/lightfx.cpp \
-    src/LedDeviceFactory.cpp
+    src/LedDeviceFactory.cpp \
+    src/LightFx.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/commands.h \
     ../CommonHeaders/RGB.h \
@@ -128,9 +128,10 @@ HEADERS += hidapi/hidapi.h \
     grab/grab_api.h \
     alienfx/LFXDecl.h \
     alienfx/LFX2.h \
-    inc/lightfx.h \
-    inc/ileddevice.h \
-    src/LedDeviceFactory.h
+    src/LedDeviceFactory.h \
+    src/LightFx.hpp \
+    src/LedDeviceFactory.hpp \
+    src/ILedDevice.hpp
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui

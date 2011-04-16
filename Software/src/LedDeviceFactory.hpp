@@ -1,7 +1,7 @@
 #ifndef LEDDEVICEFACTORY_H
 #define LEDDEVICEFACTORY_H
 
-#include "ileddevice.h"
+#include "ILedDevice.hpp"
 
 class LedDeviceFactory
 {
