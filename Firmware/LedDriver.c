@@ -100,6 +100,8 @@ void LedDriver_Init(void)
     // Setup SPI Master with max SPI clock speed (F_CPU / 2)
     SPSR = (1 << SPI2X);
     SPCR = (1 << SPE) | (1 << MSTR);
+
+    LedDriver_OffLeds();
 }
 
 void LedDriver_UpdatePWM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t pwmIndex)
@@ -121,6 +123,13 @@ void LedDriver_UpdatePWM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t pwmIn
     _LedDriver_UpdateLeds(LedsNumberForOneDriver, LEDS_COUNT, imageFrame, pwmIndex);
     _LedDriver_UpdateLeds(0, LedsNumberForOneDriver, imageFrame, pwmIndex);
 
+    _LedDriver_LatchPulse();
+}
+
+void LedDriver_OffLeds(void)
+{
+    _SPI_Write16(0x0000);
+    _SPI_Write16(0x0000);
     _LedDriver_LatchPulse();
 }
 
@@ -219,6 +228,20 @@ void LedDriver_UpdatePWM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t pwmIn
     _LedDrivers_PSO(imageFrame, pwmIndex, LED3, LED7);
     _LedDrivers_PSO(imageFrame, pwmIndex, LED2, LED6);
     _LedDrivers_PSO(imageFrame, pwmIndex, LED1, LED5);
+
+    _LedDrivers_LatchPulse();
+}
+
+void LedDriver_OffLeds(void)
+{
+    CLR(DATA_1);
+    CLR(DATA_2);
+
+    for (uint8_t i = 0; i < 16; i++)
+    {
+        _LedDrivers_ClkDown();
+        _LedDrivers_ClkUp();
+    }
 
     _LedDrivers_LatchPulse();
 }

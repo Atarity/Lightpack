@@ -39,22 +39,16 @@ typedef struct
 
 typedef struct
 {
-    uint8_t sr;
-    uint8_t sg;
-    uint8_t sb;
+    RGB_t start[LEDS_COUNT];
+    RGB_t current[LEDS_COUNT];
+    RGB_t end[LEDS_COUNT];
 
-} SmoothStepsRGB_t;
-
-typedef struct
-{
-    RGB_t pixels[LEDS_COUNT];
-    SmoothStepsRGB_t steps[LEDS_COUNT];
-
-} ColorsAndSteps_t;
+} Images_t;
 
 typedef struct
 {
     uint8_t isSmoothEnabled;
+    uint8_t smoothSlowdown;
     uint8_t maxPwmValue;
     uint16_t timerOutputCompareRegValue;
 

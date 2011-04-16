@@ -31,12 +31,14 @@
 // Flags register
 volatile uint8_t g_Flags = 0;
 
-// New colors and steps comes from PC
-ColorsAndSteps_t g_ImageFrameNew = { };
+Images_t g_Images = { };
 
 Settings_t g_Settings =
 {
         .isSmoothEnabled = true,
+
+        // Number of intermediate colors between old and new, inversely to smooth speed
+        .smoothSlowdown = 100,
 
         // Maximum number of different colors for each channel (Red, Green and Blue)
         .maxPwmValue = 128,
@@ -45,78 +47,72 @@ Settings_t g_Settings =
         .timerOutputCompareRegValue = 100,
 };
 
+volatile uint8_t g_smoothIndex = 0;
 
 
-// Colors using in PWM generation
-RGB_t m_ImageFrame[LEDS_COUNT] = { };
-
-// Index in smoothing algorithm
-volatile uint8_t m_Smooth = 0;
-
-// Index in smoothing algorithm
-volatile uint8_t m_IsColorsDiff = true;
-
-
-static inline uint8_t _GetNextSmoothColor(const uint8_t now, const uint8_t new, const uint8_t step)
+static inline void _StartConstantTime(void)
 {
-    uint8_t result = now;
-
-    if (step == 0 || step > 64 /* TODO! */ || m_Smooth % step == 0)
-    {
-        if (now < new)
-            result++;
-
-        if (now > new)
-            result--;
-    }
-
-    if (now != new)
-        m_IsColorsDiff = true;
-
-    return result;
+    TCNT0 = 0;
+    TCCR0B = (1 << CS02) | (0 << CS01) | (1 << CS00);
 }
 
-static inline void _SmoothlyUpdateColors(void)
+static inline void _EndConstantTime(void)
 {
-    m_IsColorsDiff = false;
+    // Because of unstable power and temperature this
+    // constant time floats between 580us .. 650us at 16 MHz clock
+    while(TCNT0 < 10) { }
+    TCCR0B = 0;
+}
+
+void SmoothlyUpdateColors(void)
+{
+    uint16_t coefEnd = (g_smoothIndex << 8) / g_Settings.smoothSlowdown;
+    uint16_t coefStart = (1UL << 8) - coefEnd;
 
     for (uint8_t i = 0; i < LEDS_COUNT; i++)
     {
-        m_ImageFrame[i].r = _GetNextSmoothColor(
-                m_ImageFrame[i].r,
-                g_ImageFrameNew.pixels[i].r,
-                g_ImageFrameNew.steps[i].sr );
+        g_Images.current[i].r = (
+                coefStart * g_Images.start[i].r +
+                coefEnd   * g_Images.end[i].r) >> 8;
 
-        m_ImageFrame[i].g = _GetNextSmoothColor(
-                m_ImageFrame[i].g,
-                g_ImageFrameNew.pixels[i].g,
-                g_ImageFrameNew.steps[i].sg );
+        g_Images.current[i].g = (
+                coefStart * g_Images.start[i].g +
+                coefEnd   * g_Images.end[i].g) >> 8;
 
-        m_ImageFrame[i].b = _GetNextSmoothColor(
-                m_ImageFrame[i].b,
-                g_ImageFrameNew.pixels[i].b,
-                g_ImageFrameNew.steps[i].sb );
+        g_Images.current[i].b = (
+                coefStart * g_Images.start[i].b +
+                coefEnd   * g_Images.end[i].b) >> 8;
     }
 
-    if (m_IsColorsDiff)
-        m_Smooth++;
-    else
-        m_Smooth = 0x00;
+    g_smoothIndex++;
+
+    if (g_smoothIndex > g_Settings.smoothSlowdown)
+    {
+        g_smoothIndex = g_Settings.smoothSlowdown;
+    }
 }
 
 void PWM(void)
 {
     static uint8_t s_pwmIndex = 0; // index of current PWM level
 
-    if (s_pwmIndex >= g_Settings.maxPwmValue)
+    if (s_pwmIndex == g_Settings.maxPwmValue)
     {
-        s_pwmIndex = 0x00;
+        s_pwmIndex = 0;
 
         SET(LEDR);
+
+        LedDriver_OffLeds();
+
+        _StartConstantTime();
+
         if (g_Settings.isSmoothEnabled)
         {
-            _SmoothlyUpdateColors();
+            SmoothlyUpdateColors();
         }
+
+        _EndConstantTime();
+
         CLR(LEDR);
     }
 
@@ -124,9 +120,9 @@ void PWM(void)
 
     if (g_Settings.isSmoothEnabled)
     {
-        LedDriver_UpdatePWM(m_ImageFrame, s_pwmIndex);
+        LedDriver_UpdatePWM(g_Images.current, s_pwmIndex);
     } else {
-        LedDriver_UpdatePWM(g_ImageFrameNew.pixels, s_pwmIndex);
+        LedDriver_UpdatePWM(g_Images.end, s_pwmIndex);
     }
 
     CLR(LEDW);
@@ -136,45 +132,20 @@ void PWM(void)
 
 void SetAllLedsColors(const uint8_t red, const uint8_t green, const uint8_t blue)
 {
-    RGB_t * pixel;
-
-    if (g_Settings.isSmoothEnabled)
-        pixel = &m_ImageFrame[0];
-    else
-        pixel = &g_ImageFrameNew.pixels[0];
-
-
     for (uint8_t i = 0; i < LEDS_COUNT; i++)
     {
-        pixel->r = red;
-        pixel->g = green;
-        pixel->b = blue;
+        g_Images.start[i].r = red;
+        g_Images.start[i].g = green;
+        g_Images.start[i].b = blue;
 
-        pixel++;
+        g_Images.current[i].r = red;
+        g_Images.current[i].g = green;
+        g_Images.current[i].b = blue;
+
+        g_Images.end[i].r = red;
+        g_Images.end[i].g = green;
+        g_Images.end[i].b = blue;
     }
-}
-
-void _SetDefaultSmoothSteps(void)
-{
-#   if (LIGHTPACK_HW == 5)
-
-    for (uint8_t i = 0; i < LEDS_COUNT; i++)
-    {
-        g_ImageFrameNew.steps[i].sr = 5;
-        g_ImageFrameNew.steps[i].sg = 4;
-        g_ImageFrameNew.steps[i].sb = 3;
-    }
-
-#   elif (LIGHTPACK_HW == 4)
-
-    for (uint8_t i = 0; i < LEDS_COUNT; i++)
-    {
-        g_ImageFrameNew.steps[i].sr = 4;
-        g_ImageFrameNew.steps[i].sg = 5;
-        g_ImageFrameNew.steps[i].sb = 3;
-    }
-
-#   endif /* (LIGHTPACK_HW == x) */
 }
 
 /*
@@ -231,8 +202,7 @@ static inline void SetupHardware(void)
 
 static inline void _ProcessFlags(void)
 {
-    if (_FlagProcess(Flag_HaveNewColors))
-        m_Smooth = 0x00;
+    /* if (_FlagProcess(Flag_HaveNewColors)) */
 
     if (_FlagProcess(Flag_LedsOffAll))
         SetAllLedsColors(0, 0, 0);
@@ -242,7 +212,8 @@ static inline void _ProcessFlags(void)
         // Pause timer
         TIMSK1 &= (uint8_t)~_BV(OCIE1A);
 
-        OCR1A = g_Settings.timerOutputCompareRegValue;
+        // TODO: Use full 16 bit timer option, add support to Software;
+        OCR1A = 0xff & g_Settings.timerOutputCompareRegValue;
 
         // Restart timer
         TCNT1 = 0x0000;
@@ -267,11 +238,8 @@ int main(void)
     // Initialize USB
     USB_Init();
 
-    SetAllLedsColors(64, 64, 64);
-
-    _SetDefaultSmoothSteps();
-
     sei();
+
 
     for (;;)
     {

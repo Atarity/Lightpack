@@ -140,17 +140,25 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 
     case CMD_UPDATE_LEDS:
 
-        // TODO: All writes to UsbSetupDataPacket make atomic
-
         for (uint8_t ledIndex = 0; ledIndex < LEDS_COUNT; ledIndex++)
         {
-            g_ImageFrameNew.pixels[ledIndex].r = ReportData_u8[i++];
-            g_ImageFrameNew.pixels[ledIndex].g = ReportData_u8[i++];
-            g_ImageFrameNew.pixels[ledIndex].b = ReportData_u8[i++];
-            g_ImageFrameNew.steps[ledIndex].sr = ReportData_u8[i++];
-            g_ImageFrameNew.steps[ledIndex].sg = ReportData_u8[i++];
-            g_ImageFrameNew.steps[ledIndex].sb = ReportData_u8[i++];
+
+            g_Images.start[ledIndex].r = g_Images.current[ledIndex].r;
+            g_Images.start[ledIndex].g = g_Images.current[ledIndex].g;
+            g_Images.start[ledIndex].b = g_Images.current[ledIndex].b;
+
+            g_Images.end[ledIndex].r = ReportData_u8[i++];
+            g_Images.end[ledIndex].g = ReportData_u8[i++];
+            g_Images.end[ledIndex].b = ReportData_u8[i++];
+
+
+            // TODO: Remove smooth steps from software!
+            i++;
+            i++;
+            i++;
         }
+
+        g_smoothIndex = 0;
 
         _FlagSet(Flag_HaveNewColors);
 
@@ -181,6 +189,9 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
     case CMD_SMOOTH_CHANGE_COLORS:
 
         g_Settings.isSmoothEnabled = ReportData_u8[1];
+
+        // TODO: Add smooth speed option to Software
+        //g_Settings.smoothSlowdown  = ReportData_u8[2];
 
         break;
 

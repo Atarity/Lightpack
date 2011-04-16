@@ -34,6 +34,6 @@
 
 void LedDriver_Init(void);
 void LedDriver_UpdatePWM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t pwmIndex);
-
+void LedDriver_OffLeds(void);
 
 #endif /* LEDDRIVER_H_INCLUDED */
