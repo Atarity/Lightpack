@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>324</width>
+    <width>338</width>
     <height>376</height>
    </rect>
   </property>
@@ -768,7 +768,7 @@
         <item>
          <widget class="QGroupBox" name="groupBox_5">
           <property name="title">
-           <string>Brightness</string>
+           <string>Inverse of brightness (time LEDs OFF)</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_9">
            <item>
