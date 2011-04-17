@@ -25,7 +25,7 @@
  */
 
 
-#include "lightfx.h"
+#include "LightFx.hpp"
 
 #include <unistd.h>
 

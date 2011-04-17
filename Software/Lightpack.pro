@@ -128,10 +128,9 @@ HEADERS += hidapi/hidapi.h \
     grab/grab_api.h \
     alienfx/LFXDecl.h \
     alienfx/LFX2.h \
-    src/LedDeviceFactory.h \
     src/LightFx.hpp \
     src/LedDeviceFactory.hpp \
-    src/ILedDevice.hpp
+    src/ILedDevice.hpp \
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui

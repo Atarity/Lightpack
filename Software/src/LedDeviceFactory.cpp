@@ -1,5 +1,5 @@
-#include "LedDeviceFactory.h"
-#include "lightfx.h"
+#include "LedDeviceFactory.hpp"
+#include "LightFx.hpp"
 #include "ambilightusb.h"
 
 ILedDevice * LedDeviceFactory::create(QObject *parent, bool isAlienFx)
