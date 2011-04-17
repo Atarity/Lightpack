@@ -31,9 +31,9 @@ extern volatile uint8_t g_Flags;
 
 typedef enum FLAGS
 {
-    Flag_HaveNewColors			= (1 << 0),
-    Flag_LedsOffAll 			= (1 << 1),
-    Flag_TimerOptionsChanged 	= (1 << 2),
+    Flag_HaveNewColors          = (1 << 0),
+    Flag_LedsOffAll             = (1 << 1),
+    Flag_TimerOptionsChanged    = (1 << 2),
 
 } Flag_t;
 

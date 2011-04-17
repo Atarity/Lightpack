@@ -87,6 +87,13 @@ void EvalCurrentImage_SmoothlyAlg(void)
     if (g_smoothIndex > g_Settings.smoothSlowdown)
     {
         g_smoothIndex = g_Settings.smoothSlowdown;
+
+        for (uint8_t ledIndex = 0; ledIndex < LEDS_COUNT; ledIndex++)
+        {
+            g_Images.start[ledIndex].r = g_Images.end[ledIndex].r;
+            g_Images.start[ledIndex].g = g_Images.end[ledIndex].g;
+            g_Images.start[ledIndex].b = g_Images.end[ledIndex].b;
+        }
     }
 }
 
