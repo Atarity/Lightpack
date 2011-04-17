@@ -186,12 +186,16 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 
         break;
 
-    case CMD_SMOOTH_CHANGE_COLORS:
+    case CMD_SET_SMOOTH_SLOWDOWN:
 
         g_Settings.isSmoothEnabled = ReportData_u8[1];
+        g_Settings.smoothSlowdown  = ReportData_u8[1]; /* not a bug */
 
-        // TODO: Add smooth speed option to Software
-        //g_Settings.smoothSlowdown  = ReportData_u8[2];
+        break;
+
+    case CMD_SET_BRIGHTNESS:
+
+        g_Settings.brightness = ReportData_u8[1];
 
         break;
 

@@ -40,6 +40,8 @@ Settings_t g_Settings =
         // Number of intermediate colors between old and new, inversely to smooth speed
         .smoothSlowdown = 100,
 
+        .brightness = 50,
+
         // Maximum number of different colors for each channel (Red, Green and Blue)
         .maxPwmValue = 128,
 
@@ -47,24 +49,20 @@ Settings_t g_Settings =
         .timerOutputCompareRegValue = 100,
 };
 
-volatile uint8_t g_smoothIndex = 0;
+volatile uint16_t g_smoothIndex = 0;
 
 
 static inline void _StartConstantTime(void)
 {
-    TCNT0 = 0;
-    TCCR0B = (1 << CS02) | (0 << CS01) | (1 << CS00);
+    TCNT1 = 0;
 }
 
-static inline void _EndConstantTime(void)
+static inline void _EndConstantTime(const uint8_t time)
 {
-    // Because of unstable power and temperature this
-    // constant time floats between 580us .. 650us at 16 MHz clock
-    while(TCNT0 < 10) { }
-    TCCR0B = 0;
+    while(TCNT1 < time * 256UL) { }
 }
 
-void SmoothlyUpdateColors(void)
+void EvalCurrentImage_SmoothlyAlg(void)
 {
     uint16_t coefEnd = (g_smoothIndex << 8) / g_Settings.smoothSlowdown;
     uint16_t coefStart = (1UL << 8) - coefEnd;
@@ -73,15 +71,15 @@ void SmoothlyUpdateColors(void)
     {
         g_Images.current[i].r = (
                 coefStart * g_Images.start[i].r +
-                coefEnd   * g_Images.end[i].r) >> 8;
+                coefEnd   * g_Images.end  [i].r) >> 8;
 
         g_Images.current[i].g = (
                 coefStart * g_Images.start[i].g +
-                coefEnd   * g_Images.end[i].g) >> 8;
+                coefEnd   * g_Images.end  [i].g) >> 8;
 
         g_Images.current[i].b = (
                 coefStart * g_Images.start[i].b +
-                coefEnd   * g_Images.end[i].b) >> 8;
+                coefEnd   * g_Images.end  [i].b) >> 8;
     }
 
     g_smoothIndex++;
@@ -102,16 +100,18 @@ void PWM(void)
 
         SET(LEDR);
 
-        LedDriver_OffLeds();
-
         _StartConstantTime();
 
+        // Switch OFF LEDs on time sets in g_Settings.brightness
+        LedDriver_OffLeds();
+
+        // Also eval current image
         if (g_Settings.isSmoothEnabled)
         {
-            SmoothlyUpdateColors();
+            EvalCurrentImage_SmoothlyAlg();
         }
 
-        _EndConstantTime();
+        _EndConstantTime(g_Settings.brightness);
 
         CLR(LEDR);
     }

@@ -49,6 +49,7 @@ typedef struct
 {
     uint8_t isSmoothEnabled;
     uint8_t smoothSlowdown;
+    uint8_t brightness;
     uint8_t maxPwmValue;
     uint16_t timerOutputCompareRegValue;
 
