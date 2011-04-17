@@ -118,7 +118,7 @@ void MainWindow::connectSignalsSlots()
     // Connect to GrabManager
     connect(ui->spinBox_SlowdownGrab, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightSlowdownMs(int)));
     connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), grabManager, SLOT(setVisibleLedWidgets(bool)));
-    connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightColorDepth(int)));
+    connect(ui->spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightColorDepth(int)));
     connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), grabManager, SLOT(setColoredLedWidgets(bool)));
     connect(ui->radioButton_White, SIGNAL(toggled(bool)), grabManager, SLOT(setWhiteLedWidgets(bool)));
     connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), grabManager, SLOT(setUpdateColorsOnlyIfChanges(bool)));
@@ -135,9 +135,10 @@ void MainWindow::connectSignalsSlots()
     connect(ui->pushButton_EnableDisableGrab, SIGNAL(clicked()), this, SLOT(grabAmbilightOnOff()));
 
     // Hardware options
-    connect(ui->horizontalSlider_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareColorDepthOptionChange()));
-    connect(ui->horizontalSlider_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareTimerOptionsChange()));
-    connect(ui->checkBox_SmoothChangeColors, SIGNAL(toggled(bool)), this, SLOT(settingsHardwareChangeColorsIsSmooth(bool)));
+    connect(ui->spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetColorDepth(int)));
+    connect(ui->spinBox_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareTimerOptionsChange()));
+    // TODO: remove checkBox_SmoothChangeColors
+//    connect(ui->checkBox_SmoothChangeColors, SIGNAL(toggled(bool)), this, SLOT(settingsHardwareChangeColorsIsSmooth(bool)));
 
     // ambilightUsb to this
     connect(ambilightUsb, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ambilightUsbSuccess(bool)));
@@ -168,6 +169,8 @@ void MainWindow::connectSignalsSlots()
         connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
 
         connect(grabManager, SIGNAL(updateLedsColors(QList<StructRGB>)), this, SLOT(updateGrabbedColors(QList<StructRGB>)));
+        connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
+        connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
     }
 }
 
@@ -432,13 +435,11 @@ void MainWindow::settingsHardwareTimerOptionsChange()
 // ----------------------------------------------------------------------------
 // Send color depth to device
 // ----------------------------------------------------------------------------
-void MainWindow::settingsHardwareColorDepthOptionChange()
+void MainWindow::settingsHardwareSetColorDepth(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
-
-    Settings::setValue("Firmware/ColorDepth", colorDepth);
+    Settings::setValue("Firmware/ColorDepth", value);
 
     updatePwmFrequency();
 
@@ -448,16 +449,26 @@ void MainWindow::settingsHardwareColorDepthOptionChange()
         qWarning() << "PWM frequency to low! setColorDepth canceled. pwmFrequency =" << pwmFrequency << "Hz";
     }else{
         // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
-        ambilightUsb->setColorDepth(colorDepth);
+        ambilightUsb->setColorDepth(value);
     }
 }
 
-void MainWindow::settingsHardwareChangeColorsIsSmooth(bool isSmooth)
+void MainWindow::settingsHardwareSetSmoothSlowdown(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    Settings::setValue("Firmware/IsSmoothChangeColors", isSmooth);
-    ambilightUsb->smoothChangeColors(isSmooth);
+    // TODO: settings
+    //Settings::setValue("Firmware/SmoothSlowdown", value);
+    ambilightUsb->setSmoothSlowdown(value);
+}
+
+void MainWindow::settingsHardwareSetBrightness(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    // TODO: settings
+    //Settings::setValue("Firmware/Brightness", value);
+    ambilightUsb->setBrightness(value);
 }
 
 // ----------------------------------------------------------------------------
@@ -925,7 +936,6 @@ void MainWindow::loadSettingsToMainWindow()
 
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
-    settingsHardwareChangeColorsIsSmooth( ui->checkBox_SmoothChangeColors->isChecked() );
 }
 
 

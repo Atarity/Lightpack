@@ -72,8 +72,9 @@ private slots:
     void grabAmbilightOnOff();
 
     void settingsHardwareTimerOptionsChange();
-    void settingsHardwareColorDepthOptionChange();
-    void settingsHardwareChangeColorsIsSmooth(bool isSmooth);
+    void settingsHardwareSetColorDepth(int value);
+    void settingsHardwareSetSmoothSlowdown(int value);
+    void settingsHardwareSetBrightness(int value);
 
     void openCurrentProfile();
 

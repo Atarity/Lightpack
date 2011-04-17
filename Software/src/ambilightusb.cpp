@@ -235,20 +235,6 @@ void AmbilightUsb::offLeds()
     writeBufferToDeviceWithCheck(CMD_OFF_ALL);
 }
 
-void AmbilightUsb::smoothChangeColors(bool isSmooth)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    if(isSmooth){
-        write_buffer[WRITE_BUFFER_INDEX_DATA_START] = 0x93;
-    }else{
-        write_buffer[WRITE_BUFFER_INDEX_DATA_START] = 0x00;
-    }
-
-    writeBufferToDeviceWithCheck(CMD_SMOOTH_CHANGE_COLORS);
-}
-
-
 void AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << prescallerIndex << outputCompareRegValue;
@@ -259,19 +245,33 @@ void AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValu
     writeBufferToDeviceWithCheck(CMD_SET_TIMER_OPTIONS);
 }
 
-void AmbilightUsb::setColorDepth(int colorDepth)
+void AmbilightUsb::setColorDepth(int value)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << colorDepth;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    if(colorDepth <= 0){
-        qWarning("ambilightUsb::setColorDepth(%d): This is magic, colorDepth <= 0!", colorDepth);
-        return;
-    }
-
-    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)colorDepth;
+    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)value;
 
     writeBufferToDeviceWithCheck(CMD_SET_PWM_LEVEL_MAX_VALUE);
 }
+
+void AmbilightUsb::setSmoothSlowdown(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)value;
+
+    writeBufferToDeviceWithCheck(CMD_SET_SMOOTH_SLOWDOWN);
+}
+
+void AmbilightUsb::setBrightness(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)value;
+
+    writeBufferToDeviceWithCheck(CMD_SET_BRIGHTNESS);
+}
+
 
 
 void AmbilightUsb::updateColors(const QList<StructRGB> & colors)

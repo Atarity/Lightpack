@@ -453,6 +453,7 @@ void GrabManager::setAmbilightSlowdownMs(int ms)
     Settings::setValue("GrabSlowdownMs", ms);
 }
 
+// TODO: remove unused colorDepth
 void GrabManager::setAmbilightColorDepth(int depth)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << depth;

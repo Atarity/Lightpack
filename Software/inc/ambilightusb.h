@@ -64,8 +64,9 @@ public:
 public slots:
     void updateColors(const QList<StructRGB> & colors);
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
-    void setColorDepth(int colorDepth);
-    void smoothChangeColors(bool isSmooth);
+    void setColorDepth(int value);
+    void setSmoothSlowdown(int value);
+    void setBrightness(int value);
 
 signals:
     void openDeviceSuccess(bool isSuccess);
