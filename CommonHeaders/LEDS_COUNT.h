@@ -28,7 +28,6 @@
 #ifndef LEDS_COUNT_H_INCLUDED
 #define LEDS_COUNT_H_INCLUDED
 
-#include "version.h"
 #include "LIGHTPACK_HW.h"
 
 #if (LIGHTPACK_HW == 5)
