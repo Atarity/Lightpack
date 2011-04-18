@@ -239,8 +239,8 @@ void AmbilightUsb::setTimerOptions(int prescallerIndex, int outputCompareRegValu
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << prescallerIndex << outputCompareRegValue;
 
-    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)prescallerIndex;
-    write_buffer[WRITE_BUFFER_INDEX_DATA_START+1] = (unsigned char)outputCompareRegValue;
+    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = outputCompareRegValue & 0xff;
+    write_buffer[WRITE_BUFFER_INDEX_DATA_START+1] = (outputCompareRegValue >> 8);
 
     writeBufferToDeviceWithCheck(CMD_SET_TIMER_OPTIONS);
 }

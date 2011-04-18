@@ -219,8 +219,7 @@ static inline void _ProcessFlags(void)
         // Pause timer
         TIMSK1 &= (uint8_t)~_BV(OCIE1A);
 
-        // TODO: Use full 16 bit timer option, add support to Software;
-        OCR1A = 0xff & g_Settings.timerOutputCompareRegValue;
+        OCR1A = g_Settings.timerOutputCompareRegValue;
 
         // Restart timer
         TCNT1 = 0x0000;

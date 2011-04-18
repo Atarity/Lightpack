@@ -174,7 +174,7 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
     case CMD_SET_TIMER_OPTIONS:
 
         g_Settings.timerOutputCompareRegValue =
-                ((uint16_t)ReportData_u8[3] << 8) | ReportData_u8[2];
+                ((uint16_t)ReportData_u8[2] << 8) | ReportData_u8[1];
 
         _FlagSet(Flag_TimerOptionsChanged);
 

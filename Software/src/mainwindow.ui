@@ -32,7 +32,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -425,16 +425,16 @@
            <item>
             <widget class="QSlider" name="horizontalSlider_HW_OCR">
              <property name="minimum">
-              <number>1</number>
+              <number>10</number>
              </property>
              <property name="maximum">
-              <number>255</number>
+              <number>1023</number>
              </property>
              <property name="pageStep">
               <number>1</number>
              </property>
              <property name="value">
-              <number>7</number>
+              <number>10</number>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -444,13 +444,13 @@
            <item>
             <widget class="QSpinBox" name="spinBox_HW_OCR">
              <property name="minimum">
-              <number>1</number>
+              <number>10</number>
              </property>
              <property name="maximum">
-              <number>255</number>
+              <number>1023</number>
              </property>
              <property name="value">
-              <number>7</number>
+              <number>10</number>
              </property>
             </widget>
            </item>
@@ -910,8 +910,6 @@
   <tabstop>radioButton_Colored</tabstop>
   <tabstop>checkBox_AVG_Colors</tabstop>
   <tabstop>pushButton_Close</tabstop>
-  <tabstop>horizontalSlider_HW_OCR</tabstop>
-  <tabstop>spinBox_HW_OCR</tabstop>
   <tabstop>horizontalSlider_HW_ColorDepth</tabstop>
   <tabstop>spinBox_HW_ColorDepth</tabstop>
   <tabstop>checkBox_SmoothChangeColors</tabstop>
