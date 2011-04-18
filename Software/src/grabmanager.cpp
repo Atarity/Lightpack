@@ -39,6 +39,8 @@ GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
     fpsMs = 0;
     isGrabWinAPI = true;
 
+    m_gammaCorrection = 1.0;
+
     timerUpdateFPS = new QTimer(this);
     connect(timerUpdateFPS, SIGNAL(timeout()), this, SLOT(updateFpsOnMainWindow()));
     timerUpdateFPS->setSingleShot( false );
@@ -306,6 +308,23 @@ void GrabManager::updateLedsColorsIfChanged()
 
     updateSmoothSteps();
 
+
+    //--------------------------------------------------------------------------
+    // Gamma correction
+    // TODO: move this code to capturemath.cpp after merge
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
+        QRgb rgb = colorsNew[i].rgb;
+
+        unsigned r = 256.0 * pow( qRed(rgb)   / 256.0, m_gammaCorrection );
+        unsigned g = 256.0 * pow( qGreen(rgb) / 256.0, m_gammaCorrection );
+        unsigned b = 256.0 * pow( qBlue(rgb)  / 256.0, m_gammaCorrection );
+
+        colorsNew[i].rgb = qRgb(r, g, b);
+    }
+    //--------------------------------------------------------------------------
+
+
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         if( colorsCurrent[ledIndex].rgb != colorsNew[ledIndex].rgb ){
             colorsCurrent[ledIndex].rgb  = colorsNew[ledIndex].rgb;
@@ -313,6 +332,8 @@ void GrabManager::updateLedsColorsIfChanged()
         }
         colorsCurrent[ledIndex].steps = colorsNew[ledIndex].steps;
     }
+
+
 
     if((updateColorsOnlyIfChanges == false) || needToUpdate){
         // if updateColorsOnlyIfChanges == false, then update colors (not depending on needToUpdate flag)
@@ -529,3 +550,11 @@ void GrabManager::setGrabPrecision(int value)
     GrabWinAPI::setGrabPrecision( value );
     Settings::setValue("GrabPrecision", value);
 }
+
+void GrabManager::setGrabGammaCorrection(double value)
+{
+    m_gammaCorrection = value;
+}
+
+
+

@@ -125,6 +125,7 @@ void MainWindow::connectSignalsSlots()
     connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), grabManager, SLOT(setAvgColorsOnAllLeds(bool)));
     connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), grabManager, SLOT(setMinLevelOfSensivity(int)));
     connect(ui->spinBox_GrabPrecision, SIGNAL(valueChanged(int)), grabManager, SLOT(setGrabPrecision(int)));
+    connect(ui->doubleSpinBox_HW_GammaCorrection, SIGNAL(valueChanged(double)), grabManager, SLOT(setGrabGammaCorrection(double)));
     connect(this, SIGNAL(settingsProfileChanged()), grabManager, SLOT(settingsProfileChanged()));    
 
     // Connect GrabManager with ambilightUsb

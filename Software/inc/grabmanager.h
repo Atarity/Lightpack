@@ -59,6 +59,7 @@ public slots:
     void setAvgColorsOnAllLeds(bool state);
     void setMinLevelOfSensivity(int value);
     void setGrabPrecision(int value);
+    void setGrabGammaCorrection(double value);
 
     void setResizeOrMovingFalse();
     void setResizeOrMovingTrue();
@@ -110,6 +111,9 @@ private: // variables
     // Settings:
     int ambilightDelayMs;
     int colorDepth;
+
+
+    double m_gammaCorrection;
 };
 
 #endif // GRAB_MANAGER_H
