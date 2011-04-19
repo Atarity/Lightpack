@@ -53,7 +53,7 @@ signals:
 
 
 public slots:
-    void ambilightUsbSuccess(bool isSuccess);
+    void ledDeviceCallSuccess(bool isSuccess);
     void refreshAmbilightEvaluated(double updateResultMs);
 
 protected:
@@ -116,7 +116,7 @@ private:
     void initLabelsForGrabbedColors();
 
 private:
-    AmbilightUsb *ambilightUsb;
+    ILedDevice *ledDevice;
     GrabManager *grabManager;
     AboutDialog *aboutDialog;
     SpeedTest *speedTest;

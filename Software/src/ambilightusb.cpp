@@ -33,7 +33,7 @@
 #include "debug.h"
 
 AmbilightUsb::AmbilightUsb(QObject *parent) :
-        QObject(parent)
+        ILedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -112,17 +112,17 @@ bool AmbilightUsb::openDevice()
 }
 
 bool AmbilightUsb::readDataFromDevice()
-{    
+{
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     int bytes_read = hid_read(ambilightDevice, read_buffer, sizeof(read_buffer));
 
     if(bytes_read < 0){
         qWarning() << "error reading data:" << bytes_read;
-        emit readBufferFromDeviceSuccess(false);
+        emit ioDeviceSuccess(false);
         return false;
     }
-    emit readBufferFromDeviceSuccess(true);
+    emit ioDeviceSuccess(true);
     return true;
 }
 
@@ -136,10 +136,10 @@ bool AmbilightUsb::writeBufferToDevice(int command)
 
     if(bytes_write < 0){
         qWarning() << "error writing data:" << bytes_write;
-        emit writeBufferToDeviceSuccess(false);
+        emit ioDeviceSuccess(false);
         return false;
     }
-    emit writeBufferToDeviceSuccess(true);
+    emit ioDeviceSuccess(true);
     return true;
 }
 

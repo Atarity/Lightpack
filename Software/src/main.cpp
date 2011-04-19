@@ -38,12 +38,11 @@
 
 #include <QFileInfo>
 
-using namespace std;
 
+using namespace std;
 
 #include "debug.h"
 unsigned debugLevel = 0;
-
 
 QTextStream logStream;
 
@@ -123,7 +122,6 @@ void messageOutput(QtMsgType type, const char *msg)
     cerr.flush();
     cout.flush();
 }
-
 
 int main(int argc, char **argv)
 {

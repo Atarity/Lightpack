@@ -30,7 +30,7 @@
 
 #include <QtGui>
 
-#include "struct_rgb.h"
+#include "../src/ILedDevice.hpp"
 #include "timeevaluations.h"
 
 #include "../../CommonHeaders/USB_ID.h"     /* For device VID, PID, vendor name and product name */
@@ -39,7 +39,6 @@
 #include "../../CommonHeaders/COMMANDS.h"   /* CMD defines */
 #include "../../CommonHeaders/LEDS_COUNT.h"
 
-
 // This defines using in all data transfers to determine indexes in write_buffer[]
 // In device COMMAND have index 0, data 1 and so on, report id isn't using
 #define WRITE_BUFFER_INDEX_REPORT_ID    0
@@ -47,10 +46,10 @@
 #define WRITE_BUFFER_INDEX_DATA_START   2
 
 
-class AmbilightUsb : public QObject
+class AmbilightUsb : public ILedDevice
 {
     Q_OBJECT
-
+//    Q_INTERFACES(ILedDevice)
 public:
     AmbilightUsb(QObject *parent = 0);
     ~AmbilightUsb();        
@@ -70,9 +69,7 @@ public slots:
 
 signals:
     void openDeviceSuccess(bool isSuccess);
-    void writeBufferToDeviceSuccess(bool isSuccess);
-    void readBufferFromDeviceSuccess(bool isSuccess);
-
+    void ioDeviceSuccess(bool isSuccess);
 
 private:
     bool readDataFromDevice();
