@@ -458,8 +458,7 @@ void MainWindow::settingsHardwareSetSmoothSlowdown(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    // TODO: settings
-    //Settings::setValue("Firmware/SmoothSlowdown", value);
+    Settings::setValue("Firmware/SmoothSlowdown", value);
     ambilightUsb->setSmoothSlowdown(value);
 }
 
@@ -929,11 +928,12 @@ void MainWindow::loadSettingsToMainWindow()
     ui->spinBox_SlowdownGrab->setValue              ( Settings::value("GrabSlowdownMs").toInt() );
     ui->spinBox_MinLevelOfSensitivity->setValue     ( Settings::value("MinimumLevelOfSensitivity").toInt() );
     ui->spinBox_GrabPrecision->setValue             ( Settings::value("GrabPrecision").toInt() );
+    ui->doubleSpinBox_HW_GammaCorrection->setValue  ( Settings::value("GammaCorrection").toDouble() );
     ui->checkBox_AVG_Colors->setChecked             ( Settings::value("IsAvgColorsOn").toBool() );
 
     ui->horizontalSlider_HW_OCR->setValue           ( Settings::value("Firmware/TimerOCR").toInt() );
     ui->horizontalSlider_HW_ColorDepth->setValue    ( Settings::value("Firmware/ColorDepth").toInt() );
-    ui->checkBox_SmoothChangeColors->setChecked     ( Settings::value("Firmware/IsSmoothChangeColors").toBool() );
+    ui->spinBox_HW_SmoothSlowdown->setValue         ( Settings::value("Firmware/SmoothSlowdown").toInt());
 
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings

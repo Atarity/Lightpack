@@ -39,8 +39,6 @@ GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
     fpsMs = 0;
     isGrabWinAPI = true;
 
-    m_gammaCorrection = 1.0;
-
     timerUpdateFPS = new QTimer(this);
     connect(timerUpdateFPS, SIGNAL(timeout()), this, SLOT(updateFpsOnMainWindow()));
     timerUpdateFPS->setSingleShot( false );
@@ -448,6 +446,7 @@ void GrabManager::settingsProfileChanged()
     this->avgColorsOnAllLeds = Settings::value("IsAvgColorsOn").toBool();
     this->minLevelOfSensivity = Settings::value("MinimumLevelOfSensitivity").toInt();
     GrabWinAPI::setGrabPrecision( Settings::value("GrabPrecision").toInt() );
+    this->m_gammaCorrection = Settings::value("GammaCorrection").toDouble();
 
     this->ambilightDelayMs = Settings::value("GrabSlowdownMs").toInt();
     this->colorDepth = Settings::value("Firmware/ColorDepth").toInt();
@@ -554,6 +553,7 @@ void GrabManager::setGrabPrecision(int value)
 void GrabManager::setGrabGammaCorrection(double value)
 {
     m_gammaCorrection = value;
+    Settings::setValue("GammaCorrection", value);
 }
 
 

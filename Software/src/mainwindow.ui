@@ -503,6 +503,9 @@
         </item>
         <item>
          <widget class="QCheckBox" name="checkBox_SmoothChangeColors">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Smooth change colors</string>
           </property>
@@ -827,13 +830,13 @@
              <double>0.010000000000000</double>
             </property>
             <property name="maximum">
-             <double>2.000000000000000</double>
+             <double>10.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.050000000000000</double>
             </property>
             <property name="value">
-             <double>1.500000000000000</double>
+             <double>2.000000000000000</double>
             </property>
            </widget>
           </item>

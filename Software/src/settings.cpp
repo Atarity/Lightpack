@@ -277,6 +277,9 @@ void Settings::settingsInit(bool isResetDefault)
                  isResetDefault);
     setNewOption("GrabPrecision",                  GRAB_PRECISION_WINAPI_DEFAULT,
                  isResetDefault);
+    setNewOption("GammaCorrection",                GAMMA_CORRECTION_DEFAULT_VALUE,
+                 isResetDefault);
+
 
     setNewOption("Firmware/TimerPrescallerIndex",  FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE,
                  isResetDefault);
@@ -284,7 +287,7 @@ void Settings::settingsInit(bool isResetDefault)
                  isResetDefault);
     setNewOption("Firmware/ColorDepth",            FW_COLOR_DEPTH_DEFAULT_VALUE,
                  isResetDefault);
-    setNewOption("Firmware/IsSmoothChangeColors",  FW_IS_SMOOTH_CHANGE_COLORS_DEFAULT_VALUE,
+    setNewOption("Firmware/SmoothSlowdown",        FW_SMOOTH_SLOWDOWN_DEFAULT,
                  isResetDefault);
 
     QPoint ledPosition;

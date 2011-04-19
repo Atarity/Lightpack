@@ -49,12 +49,13 @@
 #define IS_AVG_COLORS_ON_DEFAULT_VALUE          false
 #define MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT    3
 #define GRAB_PRECISION_WINAPI_DEFAULT           2
+#define GAMMA_CORRECTION_DEFAULT_VALUE          2.0
 
 // [Firmware]
 #define FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE     0 /* prescaller == 1 */
 #define FW_TIMER_OCR_DEFAULT_VALUE                  100
 #define FW_COLOR_DEPTH_DEFAULT_VALUE                128
-#define FW_IS_SMOOTH_CHANGE_COLORS_DEFAULT_VALUE    true
+#define FW_SMOOTH_SLOWDOWN_DEFAULT                  100
 
 // [LED_i]
 #define LED_FIELD_WIDTH_DEFAULT_VALUE       150
