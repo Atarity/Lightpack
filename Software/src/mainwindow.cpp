@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QRegExpValidator *validator = new QRegExpValidator(rx, this);
     ui->comboBox_Profiles->lineEdit()->setValidator(validator);
 
-    ledDevice = LedDeviceFactory::create(this, Settings::value("IsAlienFxMode").toBool());
+    ledDevice = LedDeviceFactory::create(this, Settings::valueMain("IsAlienFxMode").toBool());
 
     grabManager = new GrabManager();
 
