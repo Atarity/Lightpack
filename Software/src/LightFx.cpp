@@ -54,6 +54,8 @@ LightFx::LightFx(QObject *parent) :
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    isInitialized = false;
+
     hLfxLibrary = LoadLibrary(L"LightFX.dll");
     if (hLfxLibrary)
     {
@@ -98,7 +100,7 @@ LightFx::~LightFx()
 void LightFx::updateColors(const QList<StructRGB> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
-    if(isInitialized)
+    if (isInitialized)
     {
         unsigned int numDevs = 0;
         LFX_RESULT result = lfxGetNumDevicesFunction(&numDevs);
