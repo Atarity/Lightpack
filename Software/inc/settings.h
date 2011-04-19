@@ -72,16 +72,15 @@ class Settings : public QObject
 public:
     static void Initialize(const QString & applicationDirPath, bool isSetDebugLevelFromConfig);
 
-    // Simple abstraction functions for forwarding to settingsNow object
+    // Simple functions forwarding to m_currentProfile object
     static void setValue(const QString & key, const QVariant & value);
     static QVariant value(const QString & key);
     static QString fileName();
 
-    // forwarding to settingsMain object
+    // forwarding to m_mainConfig object
     static void setValueMain(const QString & key, const QVariant & value);
     static QVariant valueMain(const QString & key);
 
-    static void resetToDefaults();
     static void loadOrCreateConfig(const QString & configName);
     static void renameCurrentConfig(const QString & configName);
     static void removeCurrentConfig();
@@ -89,16 +88,19 @@ public:
     static QString lastProfileName();
     static QString getApplicationDirPath();
     static QPoint getDefaultPosition(int ledIndex);
+    static void resetDefaults();
 
 private:
-    static void settingsInit();
-    static void setDefaultSettingIfNotFound(const QString & name, const QVariant & value);
-    static void setDefaultSettingIfNotFound(QSettings *settings, const QString & name, const QVariant & value);
+    static void settingsInit(bool isResetDefault);
+    static void setNewOption(const QString & name, const QVariant & value,
+                            bool isForceSetOption = false, QSettings * settings = m_currentProfile);
+    static void setNewOptionMain(const QString & name, const QVariant & value,
+                                bool isForceSetOption = false);
 
 private:
-    static QSettings * settingsNow; // using profile
-    static QSettings * settingsMain; // store last used profile name
-    static QString appDirPath; // path to store app generated stuff
+    static QSettings * m_currentProfile; // using profile
+    static QSettings * m_mainConfig; // store last used profile name, locale and so on
+    static QString m_applicationDirPath; // path to store app generated stuff
 };
 
 #endif // SETTINGS_H

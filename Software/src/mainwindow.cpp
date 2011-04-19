@@ -583,7 +583,7 @@ void MainWindow::profileResetToDefaultCurrent()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    Settings::resetToDefaults();
+    Settings::resetDefaults();
     // Update settings
     loadSettingsToMainWindow();
     emit settingsProfileChanged();
