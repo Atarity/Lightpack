@@ -72,7 +72,7 @@ LightFx::LightFx(QObject *parent) :
         LFX_RESULT result = lfxInitFunction();
         if (result == LFX_SUCCESS)
         {
-            isInited = true;
+            isInitialized = true;
             result = lfxResetFunction();
         } else {
             emit ioDeviceSuccess(false);
@@ -87,56 +87,18 @@ LightFx::LightFx(QObject *parent) :
 
 LightFx::~LightFx()
 {
-    if(isInited)
+    if (isInitialized)
         lfxReleaseFunction();
     if (hLfxLibrary)
         FreeLibrary(hLfxLibrary);
 
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "hid_close(lightFxDevice);";
-}
-
-bool LightFx::deviceOpened()
-{
-    return true;
-}
-
-bool LightFx::openDevice()
-{
-    return true;
-}
-
-
-
-QString LightFx::firmwareVersion()
-{
-    return "not supported";
-}
-
-void LightFx::offLeds()
-{
-    return;
-}
-
-void LightFx::smoothChangeColors(bool isSmooth)
-{
-    return;
-}
-
-
-void LightFx::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
-{
-    return;
-}
-
-void LightFx::setColorDepth(int colorDepth)
-{
-    return;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "destroy LightFx : ILedDevice complete";
 }
 
 void LightFx::updateColors(const QList<StructRGB> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
-    if(isInited)
+    if(isInitialized)
     {
         unsigned int numDevs = 0;
         LFX_RESULT result = lfxGetNumDevicesFunction(&numDevs);

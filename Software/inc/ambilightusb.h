@@ -67,10 +67,6 @@ public slots:
     void setSmoothSlowdown(int value);
     void setBrightness(int value);
 
-signals:
-    void openDeviceSuccess(bool isSuccess);
-    void ioDeviceSuccess(bool isSuccess);
-
 private:
     bool readDataFromDevice();
     bool readDataFromDeviceWithCheck();
@@ -79,7 +75,6 @@ private:
     bool tryToReopenDevice();
 
     hid_device *ambilightDevice;
-
 
     unsigned char read_buffer[65];    /* 0-ReportID, 1..65-data */
     unsigned char write_buffer[65];   /* 0-ReportID, 1..65-data */

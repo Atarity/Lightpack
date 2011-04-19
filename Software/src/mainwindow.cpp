@@ -142,8 +142,8 @@ void MainWindow::connectSignalsSlots()
 //    connect(ui->checkBox_SmoothChangeColors, SIGNAL(toggled(bool)), this, SLOT(settingsHardwareChangeColorsIsSmooth(bool)));
 
     // ledDevice to this
-    connect(ledDevice, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ledDeviceSuccess(bool)));
-    connect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), this, SLOT(ledDeviceSuccess(bool)));
+    connect(ledDevice, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
+    connect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
 
     // GrabManager to this
     connect(grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));

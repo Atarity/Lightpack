@@ -40,24 +40,35 @@ public:
     LightFx(QObject *parent);
     ~LightFx();
 
-    bool openDevice();
-    bool deviceOpened();
-    QString firmwareVersion();
-    void offLeds(); /* send CMD_OFF_ALL to device, it causes rapid shutdown LEDs */
+    bool openDevice()
+    {
+        return true;
+    }
+
+    bool deviceOpened()
+    {
+        return true;
+    }
+
+    QString firmwareVersion()
+    {
+        return "unknown";
+    }
+
+public:
+    void offLeds() { }
 
 public slots:
     void updateColors(const QList<StructRGB> & colors);
-    void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
-    void setColorDepth(int colorDepth);
-    void smoothChangeColors(bool isSmooth);
 
-signals:
-    void openDeviceSuccess(bool isSuccess);
-    void ioDeviceSuccess(bool isSuccess);
+    void setTimerOptions(int prescallerIndex, int outputCompareRegValue) { }
+    void setColorDepth(int value) { }
+    void setSmoothSlowdown(int value) { }
+    void setBrightness(int value) { }
 
 private:
     HINSTANCE hLfxLibrary;
-    bool isInited;
+    bool isInitialized;
 
 };
 
