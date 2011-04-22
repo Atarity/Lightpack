@@ -217,7 +217,7 @@ QRgb getColor(int x, int y, int width, int height)
     unsigned endIndex = (screenWidth * (y + height) + x + width) * bytesPerPixel;
     register unsigned index = (screenWidth * y + x) * bytesPerPixel; // index of the selected pixel in pbPixelsBuff
     register unsigned r = 0, g = 0, b = 0;
-    while (index < endIndex ) {
+    while (index < endIndex - width * bytesPerPixel) {
         for(int i = 0; i < width; i += 4) {
             b += pbPixelsBuff[index]     + pbPixelsBuff[index + 4] + pbPixelsBuff[index + 8 ] + pbPixelsBuff[index + 12];
             g += pbPixelsBuff[index + 1] + pbPixelsBuff[index + 5] + pbPixelsBuff[index + 9 ] + pbPixelsBuff[index + 13];
