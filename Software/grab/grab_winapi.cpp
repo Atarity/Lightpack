@@ -175,8 +175,6 @@ QRgb getColor(int x, int y, int width, int height)
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO
             << "x y w h:" << x << y << width << height;
 
-    unsigned r = 0, g = 0, b = 0;
-
     // Checking for the 'grabme' widget position inside the monitor that is used to capture color
     if( x + width  < monitorInfo.rcMonitor.left   ||
         x               > monitorInfo.rcMonitor.right  ||
@@ -205,6 +203,9 @@ QRgb getColor(int x, int y, int width, int height)
     if( x + width  > (int)screenWidth  ) width  -= (x + width ) - screenWidth;
     if( y + height > (int)screenHeight ) height -= (y + height) - screenHeight;
 
+    //calculate aligned width (align by 4 pixels)
+    width = width - (width % 4);
+
     if(width < 0 || height < 0){
         qWarning() << Q_FUNC_INFO << "width < 0 || height < 0:" << width << height;
 
@@ -212,27 +213,21 @@ QRgb getColor(int x, int y, int width, int height)
         return 0x000000;
     }
 
-
-    unsigned index = 0; // index of the selected pixel in pbPixelsBuff
     unsigned count = 0; // count the amount of pixels taken into account
+    unsigned endIndex = (screenWidth * (y + height) + x + width) * bytesPerPixel;
+    register unsigned index = (screenWidth * y + x) * bytesPerPixel; // index of the selected pixel in pbPixelsBuff
+    register unsigned r = 0, g = 0, b = 0;
+    while (index < endIndex ) {
+        for(int i = 0; i < width; i += 4) {
+            b += pbPixelsBuff[index]     + pbPixelsBuff[index + 4] + pbPixelsBuff[index + 8 ] + pbPixelsBuff[index + 12];
+            g += pbPixelsBuff[index + 1] + pbPixelsBuff[index + 5] + pbPixelsBuff[index + 9 ] + pbPixelsBuff[index + 13];
+            r += pbPixelsBuff[index + 2] + pbPixelsBuff[index + 6] + pbPixelsBuff[index + 10] + pbPixelsBuff[index + 14];
 
-    // This is where all the magic happens: calculate the average RGB
-    for(int i = x; i < x + width; i += grabPrecision){
-        for(int j = y; j < y + height; j += grabPrecision){
-            // Calculate new index value
-            index = (bytesPerPixel * j * screenWidth) + (bytesPerPixel * i);
-            if(index > pixelsBuffSize) {
-                qDebug() << "index out of range pbPixelsBuff[]" << index << x << y << width << height;
-                break;
-            }
-
-            // Get RGB values (stored in reversed order)
-            b += pbPixelsBuff[index];
-            g += pbPixelsBuff[index+1];
-            r += pbPixelsBuff[index+2];
-
-            count++;
+            count+=4;
+            index += bytesPerPixel * 4;
         }
+
+        index += (screenWidth - width) * bytesPerPixel;
     }
 
     if( count != 0 ){
