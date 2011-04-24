@@ -63,7 +63,7 @@ static inline void _LedDriver_LatchPulse(void)
     CLR(LATCH_PIN);
 }
 
-static inline void _LedDriver_UpdateLeds(
+static inline void _LedDriver_UpdateLedsPWM(
         const uint8_t startIndex, const uint8_t endIndex,
         const RGB_t imageFrame[LEDS_COUNT],
         const uint8_t pwmIndex )
@@ -82,6 +82,33 @@ static inline void _LedDriver_UpdateLeds(
         bit <<= 1;
 
         if (imageFrame[i].b > pwmIndex)
+            sendme |= bit;
+        bit <<= 1;
+    }
+
+    _SPI_Write16(sendme);
+}
+
+
+static inline void _LedDriver_UpdateLedsBAM(
+        const uint8_t startIndex, const uint8_t endIndex,
+        const RGB_t imageFrame[LEDS_COUNT],
+        const uint8_t bitMask )
+{
+    uint16_t sendme = 0x0000;
+    uint16_t bit  = 1;
+
+    for (uint8_t i = startIndex; i < endIndex; i++)
+    {
+        if (imageFrame[i].r & bitMask)
+            sendme |= bit;
+        bit <<= 1;
+
+        if (imageFrame[i].g & bitMask)
+            sendme |= bit;
+        bit <<= 1;
+
+        if (imageFrame[i].b & bitMask)
             sendme |= bit;
         bit <<= 1;
     }
@@ -120,8 +147,16 @@ void LedDriver_UpdatePWM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t pwmIn
 //                LevelsForPWM, pwmIndex);
 //    }
 
-    _LedDriver_UpdateLeds(LedsNumberForOneDriver, LEDS_COUNT, imageFrame, pwmIndex);
-    _LedDriver_UpdateLeds(0, LedsNumberForOneDriver, imageFrame, pwmIndex);
+    _LedDriver_UpdateLedsPWM(LedsNumberForOneDriver, LEDS_COUNT, imageFrame, pwmIndex);
+    _LedDriver_UpdateLedsPWM(0, LedsNumberForOneDriver, imageFrame, pwmIndex);
+
+    _LedDriver_LatchPulse();
+}
+
+void LedDriver_UpdateBAM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t bitMask)
+{
+    _LedDriver_UpdateLedsBAM(LedsNumberForOneDriver, LEDS_COUNT, imageFrame, bitMask);
+    _LedDriver_UpdateLedsBAM(0, LedsNumberForOneDriver, imageFrame, bitMask);
 
     _LedDriver_LatchPulse();
 }
@@ -170,8 +205,8 @@ static inline void _LedDrivers_ClkDown(void)
     CLR(CLK_2);
 }
 
-// Parallel serial output of the one led for each driver
-static inline void _LedDrivers_PSO(
+// Parallel serial output of the one led for each driver, Pulse Width Modulation
+static inline void _LedDrivers_PSO_PWM(
         const RGB_t imageFrame[LEDS_COUNT],
         const uint8_t pwmIndex,
         const uint8_t ledIndex1,
@@ -200,6 +235,36 @@ static inline void _LedDrivers_PSO(
 
 }
 
+// Parallel serial output of the one led for each driver, Bit Angle Modulation
+static inline void _LedDrivers_PSO_BAM(
+        const RGB_t imageFrame[LEDS_COUNT],
+        const uint8_t bitMask,
+        const uint8_t ledIndex1,
+        const uint8_t ledIndex2 )
+{
+    // LedDriver connection: NC B G R
+    _LedDrivers_ClkDown();
+    CLR(DATA_1);
+    CLR(DATA_2);
+    _LedDrivers_ClkUp();
+
+    _LedDrivers_ClkDown();
+    if (imageFrame[ledIndex1].b & bitMask) SET(DATA_1) else CLR(DATA_1)
+    if (imageFrame[ledIndex2].b & bitMask) SET(DATA_2) else CLR(DATA_2)
+    _LedDrivers_ClkUp();
+
+    _LedDrivers_ClkDown();
+    if (imageFrame[ledIndex1].g & bitMask) SET(DATA_1) else CLR(DATA_1)
+    if (imageFrame[ledIndex2].g & bitMask) SET(DATA_2) else CLR(DATA_2)
+    _LedDrivers_ClkUp();
+
+    _LedDrivers_ClkDown();
+    if (imageFrame[ledIndex1].r & bitMask) SET(DATA_1) else CLR(DATA_1)
+    if (imageFrame[ledIndex2].r & bitMask) SET(DATA_2) else CLR(DATA_2)
+    _LedDrivers_ClkUp();
+
+}
+
 
 void LedDriver_Init(void)
 {
@@ -224,10 +289,20 @@ void LedDriver_Init(void)
 
 void LedDriver_UpdatePWM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t pwmIndex)
 {
-    _LedDrivers_PSO(imageFrame, pwmIndex, LED4, LED8);
-    _LedDrivers_PSO(imageFrame, pwmIndex, LED3, LED7);
-    _LedDrivers_PSO(imageFrame, pwmIndex, LED2, LED6);
-    _LedDrivers_PSO(imageFrame, pwmIndex, LED1, LED5);
+    _LedDrivers_PSO_PWM(imageFrame, pwmIndex, LED4, LED8);
+    _LedDrivers_PSO_PWM(imageFrame, pwmIndex, LED3, LED7);
+    _LedDrivers_PSO_PWM(imageFrame, pwmIndex, LED2, LED6);
+    _LedDrivers_PSO_PWM(imageFrame, pwmIndex, LED1, LED5);
+
+    _LedDrivers_LatchPulse();
+}
+
+void LedDriver_UpdateBAM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t bitMask)
+{
+    _LedDrivers_PSO_BAM(imageFrame, bitMask, LED4, LED8);
+    _LedDrivers_PSO_BAM(imageFrame, bitMask, LED3, LED7);
+    _LedDrivers_PSO_BAM(imageFrame, bitMask, LED2, LED6);
+    _LedDrivers_PSO_BAM(imageFrame, bitMask, LED1, LED5);
 
     _LedDrivers_LatchPulse();
 }

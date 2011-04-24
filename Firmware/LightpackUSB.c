@@ -140,6 +140,9 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 
     case CMD_UPDATE_LEDS:
 
+        _FlagSet(Flag_ChangingColors);
+
+        SET(LEDR);
         for (uint8_t ledIndex = 0; ledIndex < LEDS_COUNT; ledIndex++)
         {
 
@@ -160,7 +163,10 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 
         g_smoothIndex = 0;
 
+        _FlagClear(Flag_ChangingColors);
         _FlagSet(Flag_HaveNewColors);
+
+        CLR(LEDR);
 
         break;
 
@@ -201,5 +207,6 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 
     case CMD_NOP:
         break;
+
     }
 }

@@ -28,7 +28,6 @@
 #include "LedDriver.h"
 #include "LightpackUSB.h"
 
-// Flags register
 volatile uint8_t g_Flags = 0;
 
 Images_t g_Images = { };
@@ -37,7 +36,7 @@ Settings_t g_Settings =
 {
         .isSmoothEnabled = true,
 
-        // Number of intermediate colors between old and new, inversely to smooth speed
+        // Number of intermediate colors between old and new
         .smoothSlowdown = 100,
 
         .brightness = 50,
@@ -82,20 +81,60 @@ void EvalCurrentImage_SmoothlyAlg(void)
                 coefEnd   * g_Images.end  [i].b) >> 8;
     }
 
-    g_smoothIndex++;
-
     if (g_smoothIndex > g_Settings.smoothSlowdown)
     {
-        g_smoothIndex = g_Settings.smoothSlowdown;
-
-        for (uint8_t ledIndex = 0; ledIndex < LEDS_COUNT; ledIndex++)
+        for (uint8_t i = 0; i < LEDS_COUNT; i++)
         {
-            g_Images.start[ledIndex].r = g_Images.end[ledIndex].r;
-            g_Images.start[ledIndex].g = g_Images.end[ledIndex].g;
-            g_Images.start[ledIndex].b = g_Images.end[ledIndex].b;
+            // Smooth change colors complete, rewrite start image
+            g_Images.current[i].r = g_Images.start[i].r = g_Images.end[i].r;
+            g_Images.current[i].g = g_Images.start[i].g = g_Images.end[i].g;
+            g_Images.current[i].b = g_Images.start[i].b = g_Images.end[i].b;
         }
+    } else {
+        g_smoothIndex++;
     }
 }
+
+#if (USE_BAM == 1)
+
+void BAM(void)
+{
+    SET(LEDW);
+
+    static uint8_t s_bitNum = 0;
+
+    s_bitNum++;
+
+    if (s_bitNum == 8)
+        s_bitNum = 0;
+
+    if (s_bitNum == 7)
+    {
+        // Clear counter to restart the timer before the computation
+        TCNT1 = 0x0000;
+
+        if (g_Settings.isSmoothEnabled)
+        {
+            EvalCurrentImage_SmoothlyAlg();
+        }
+    }
+
+    if (g_Settings.isSmoothEnabled)
+    {
+        LedDriver_UpdateBAM(g_Images.current, (1 << (s_bitNum)));
+    } else {
+        LedDriver_UpdateBAM(g_Images.end, (1 << (s_bitNum)));
+    }
+
+    OCR1A = ((g_Settings.timerOutputCompareRegValue) << (s_bitNum));
+
+    if (s_bitNum != 7)
+        TCNT1 = 0x0000;
+
+    CLR(LEDW);
+}
+
+#else
 
 void PWM(void)
 {
@@ -135,7 +174,11 @@ void PWM(void)
     CLR(LEDW);
 
     s_pwmIndex++;
+
+    // Clear timer counter
+    TCNT1 = 0x0000;
 }
+#endif
 
 void SetAllLedsColors(const uint8_t red, const uint8_t green, const uint8_t blue)
 {
@@ -160,27 +203,38 @@ void SetAllLedsColors(const uint8_t red, const uint8_t green, const uint8_t blue
  */
 ISR( TIMER1_COMPA_vect )
 {
-    // Set next PWM states for all channels
+#   if (USE_BAM == 1)
+
+    // Set next Bit Angle Modulation states for all channels
+    // Update OCR1A value for next bit
+    BAM();
+
+#   else
+
+    // Set next Pulse Width Modulation states for all channels
     PWM();
+
+#   endif
 
     // Clear timer interrupt flag
     TIFR1 = _BV(OCF1A);
-
-    // Clear timer counter
-    TCNT1 = 0x0000;
 }
 
-static inline void TimerForPWM_Init(void)
+static inline void Timer_Init(void)
 {
     TCCR1A = 0x00;
     TCCR1C = 0x00;
+    TCCR1B = 0x00;
 
-    // Default values of timer prescaller and output compare register
+    // Setup default value
+    OCR1A = g_Settings.timerOutputCompareRegValue;
+
+    TIMSK1 = _BV(OCIE1A);
+
+    // Start timer
     TCCR1B = _BV(CS10); // div1
-    OCR1A = 100;
 
     TCNT1 = 0x0000;
-    TIMSK1 = _BV(OCIE1A);
 }
 
 static inline void SetupHardware(void)
@@ -202,8 +256,8 @@ static inline void SetupHardware(void)
     PORTD = 0x00;
     DDRD = 0x00;
 
-    OUTPUT( LEDR );
-    OUTPUT( LEDW );
+    OUTPUT(LEDR);
+    OUTPUT(LEDW);
 }
 
 
@@ -238,14 +292,13 @@ int main(void)
     // Led driver ports initialization
     LedDriver_Init();
 
-    // Initialize timer for PWM
-    TimerForPWM_Init();
+    // Initialize timer for update LedDriver-s
+    Timer_Init();
 
     // Initialize USB
     USB_Init();
 
     sei();
-
 
     for (;;)
     {

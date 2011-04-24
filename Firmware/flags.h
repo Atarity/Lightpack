@@ -34,6 +34,7 @@ typedef enum FLAGS
     Flag_HaveNewColors          = (1 << 0),
     Flag_LedsOffAll             = (1 << 1),
     Flag_TimerOptionsChanged    = (1 << 2),
+    Flag_ChangingColors         = (1 << 3),
 
 } Flag_t;
 
