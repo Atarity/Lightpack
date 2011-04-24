@@ -355,6 +355,9 @@ void MainWindow::setAvgColorOnAllLEDs(int value)
     }
 
     ledDevice->updateColors(colors);
+
+    ui->label_HW_SetAvgColor_Value->setText(
+            QString("0b%1").arg(QString::number(value, 2), 8, '0'));
 }
 
 // ----------------------------------------------------------------------------

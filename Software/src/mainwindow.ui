@@ -849,6 +849,13 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_10">
            <item>
+            <widget class="QLabel" name="label_HW_SetAvgColor_Value">
+             <property name="text">
+              <string>0b00000000</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QSlider" name="horizontalSlider_HW_SetAvgColor">
              <property name="minimum">
               <number>0</number>
