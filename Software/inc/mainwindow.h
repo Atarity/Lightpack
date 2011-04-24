@@ -92,6 +92,8 @@ private slots:
     void startTestsClick();
     void updateGrabbedColors(const QList<StructRGB> & colors);
 
+    void setAvgColorOnAllLEDs(int value);
+
 private:
     void connectSignalsSlots();
 

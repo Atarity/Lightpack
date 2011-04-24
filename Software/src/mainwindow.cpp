@@ -171,6 +171,7 @@ void MainWindow::connectSignalsSlots()
         connect(grabManager, SIGNAL(updateLedsColors(QList<StructRGB>)), this, SLOT(updateGrabbedColors(QList<StructRGB>)));
         connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
         connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
+        connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
     }
 }
 
@@ -342,6 +343,18 @@ void MainWindow::updateGrabbedColors(const QList<StructRGB> & colors)
         pal.setBrush(QPalette::Window, QBrush(color));
         label->setPalette(pal);
     }
+}
+
+void MainWindow::setAvgColorOnAllLEDs(int value)
+{
+    QList<StructRGB> colors;
+
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
+        colors << StructRGB(qRgb(value, value, value), 0);
+    }
+
+    ledDevice->updateColors(colors);
 }
 
 // ----------------------------------------------------------------------------

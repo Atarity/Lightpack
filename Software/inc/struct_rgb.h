@@ -26,17 +26,22 @@
 
 #include <QRgb>
  
-#ifndef STRUCT_RGB_H
-#define STRUCT_RGB_H
+#pragma once
 
 struct StructRGB
 {
     QRgb rgb;
     QRgb steps;
-    StructRGB( ){
-        rgb = 0;
-        steps = 0;
+
+    StructRGB()
+    {
+        this->rgb = 0;
+        this->steps = 0;
+    }
+
+    StructRGB(QRgb rgb, QRgb steps)
+    {
+        this->rgb = rgb;
+        this->steps = steps;
     }
 };
-
-#endif // STRUCT_RGB_H
