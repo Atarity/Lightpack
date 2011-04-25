@@ -35,6 +35,6 @@
 #include "../CommonHeaders/LIGHTPACK_HW.h"
 
 // Use Bit Angle Modulation (BAM) instead of Pulse Width Modulation (PWM)
-#define USE_BAM 1
+#define USE_BAM 0
 
 #endif /* VERSION_H_INCLUDED */

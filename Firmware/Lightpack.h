@@ -55,7 +55,6 @@
 // Global variables
 extern Settings_t g_Settings;
 extern Images_t g_Images;
-extern volatile uint16_t g_smoothIndex;
 
 #endif /* LIGHTPACK_H_INCLUDED */
 

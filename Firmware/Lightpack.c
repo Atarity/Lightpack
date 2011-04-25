@@ -48,9 +48,6 @@ Settings_t g_Settings =
         .timerOutputCompareRegValue = 100,
 };
 
-volatile uint16_t g_smoothIndex = 0;
-
-
 static inline void _StartConstantTime(void)
 {
     TCNT1 = 0;
@@ -63,35 +60,33 @@ static inline void _EndConstantTime(const uint8_t time)
 
 void EvalCurrentImage_SmoothlyAlg(void)
 {
-    uint16_t coefEnd = (g_smoothIndex << 8) / g_Settings.smoothSlowdown;
-    uint16_t coefStart = (1UL << 8) - coefEnd;
-
     for (uint8_t i = 0; i < LEDS_COUNT; i++)
     {
-        g_Images.current[i].r = (
-                coefStart * g_Images.start[i].r +
-                coefEnd   * g_Images.end  [i].r) >> 8;
-
-        g_Images.current[i].g = (
-                coefStart * g_Images.start[i].g +
-                coefEnd   * g_Images.end  [i].g) >> 8;
-
-        g_Images.current[i].b = (
-                coefStart * g_Images.start[i].b +
-                coefEnd   * g_Images.end  [i].b) >> 8;
-    }
-
-    if (g_smoothIndex > g_Settings.smoothSlowdown)
-    {
-        for (uint8_t i = 0; i < LEDS_COUNT; i++)
+        if (g_Images.smoothIndex[i] > g_Settings.smoothSlowdown)
         {
             // Smooth change colors complete, rewrite start image
             g_Images.current[i].r = g_Images.start[i].r = g_Images.end[i].r;
             g_Images.current[i].g = g_Images.start[i].g = g_Images.end[i].g;
             g_Images.current[i].b = g_Images.start[i].b = g_Images.end[i].b;
+
+        } else {
+            uint16_t coefEnd = ((uint16_t)g_Images.smoothIndex[i] << 8) / g_Settings.smoothSlowdown;
+            uint16_t coefStart = (1UL << 8) - coefEnd;
+
+            g_Images.current[i].r = (
+                    coefStart * g_Images.start[i].r +
+                    coefEnd   * g_Images.end  [i].r) >> 8;
+
+            g_Images.current[i].g = (
+                    coefStart * g_Images.start[i].g +
+                    coefEnd   * g_Images.end  [i].g) >> 8;
+
+            g_Images.current[i].b = (
+                    coefStart * g_Images.start[i].b +
+                    coefEnd   * g_Images.end  [i].b) >> 8;
+
+            g_Images.smoothIndex[i]++;
         }
-    } else {
-        g_smoothIndex++;
     }
 }
 
@@ -178,7 +173,8 @@ void PWM(void)
     // Clear timer counter
     TCNT1 = 0x0000;
 }
-#endif
+
+#endif /* (USE_BAM == 1) */
 
 void SetAllLedsColors(const uint8_t red, const uint8_t green, const uint8_t blue)
 {
@@ -214,7 +210,7 @@ ISR( TIMER1_COMPA_vect )
     // Set next Pulse Width Modulation states for all channels
     PWM();
 
-#   endif
+#   endif /* (USE_BAM == 1) */
 
     // Clear timer interrupt flag
     TIFR1 = _BV(OCF1A);

@@ -27,6 +27,7 @@
 #ifndef DATATYPES_H_INCLUDED
 #define DATATYPES_H_INCLUDED
 
+#include <stdint.h>
 #include "../CommonHeaders/LEDS_COUNT.h"
 
 typedef struct
@@ -42,6 +43,8 @@ typedef struct
     RGB_t start[LEDS_COUNT];
     RGB_t current[LEDS_COUNT];
     RGB_t end[LEDS_COUNT];
+
+    uint8_t smoothIndex[LEDS_COUNT];
 
 } Images_t;
 

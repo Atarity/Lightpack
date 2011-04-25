@@ -131,37 +131,43 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 {
     uint8_t *ReportData_u8 = (uint8_t *)ReportData;
 
-    uint8_t cmd = ReportData_u8[0]; // command from enum COMMANDS{ ... };
-
-    uint8_t i = 1; // new data for colors levels starts form ReportData_u8[1]
+    uint8_t cmd = ReportData_u8[0]; //[0]; // command from enum COMMANDS{ ... };
 
     switch (cmd)
     {
 
     case CMD_UPDATE_LEDS:
+    {
+        SET(LEDR);
 
         _FlagSet(Flag_ChangingColors);
 
-        SET(LEDR);
-        for (uint8_t ledIndex = 0; ledIndex < LEDS_COUNT; ledIndex++)
+        uint8_t reportDataIndex = 1; // new data starts form ReportData_u8[1]
+
+        for (uint8_t i = 0; i < LEDS_COUNT; i++)
         {
+            g_Images.start[i].r = g_Images.current[i].r;
+            g_Images.start[i].g = g_Images.current[i].g;
+            g_Images.start[i].b = g_Images.current[i].b;
 
-            g_Images.start[ledIndex].r = g_Images.current[ledIndex].r;
-            g_Images.start[ledIndex].g = g_Images.current[ledIndex].g;
-            g_Images.start[ledIndex].b = g_Images.current[ledIndex].b;
+            g_Images.end[i].r = ReportData_u8[reportDataIndex++];
+            g_Images.end[i].g = ReportData_u8[reportDataIndex++];
+            g_Images.end[i].b = ReportData_u8[reportDataIndex++];
 
-            g_Images.end[ledIndex].r = ReportData_u8[i++];
-            g_Images.end[ledIndex].g = ReportData_u8[i++];
-            g_Images.end[ledIndex].b = ReportData_u8[i++];
-
+            // If pixel changed, then restart smooth algorithm
+            // for current pixel by clearing smoothIndex
+            if (g_Images.start[i].r != g_Images.end[i].r ||
+                g_Images.start[i].g != g_Images.end[i].g ||
+                g_Images.start[i].b != g_Images.end[i].b)
+            {
+                g_Images.smoothIndex[i] = 0;
+            }
 
             // TODO: Remove smooth steps from software!
-            i++;
-            i++;
-            i++;
+            reportDataIndex++;
+            reportDataIndex++;
+            reportDataIndex++;
         }
-
-        g_smoothIndex = 0;
 
         _FlagClear(Flag_ChangingColors);
         _FlagSet(Flag_HaveNewColors);
@@ -169,7 +175,7 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
         CLR(LEDR);
 
         break;
-
+    }
     case CMD_OFF_ALL:
 
         // TODO: Test me!

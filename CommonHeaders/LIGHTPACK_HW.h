@@ -35,7 +35,7 @@
 # *     2) #define LIGHTPACK_HW  5
 # */
 
-# /* FIRST for make preprocessor */
+# /* FIRST for firmware make preprocessor */
 # /*
            LIGHTPACK_HW = 5
 # */
