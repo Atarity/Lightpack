@@ -62,7 +62,7 @@ void EvalCurrentImage_SmoothlyAlg(void)
 {
     for (uint8_t i = 0; i < LEDS_COUNT; i++)
     {
-        if (g_Images.smoothIndex[i] > g_Settings.smoothSlowdown)
+        if (g_Images.smoothIndex[i] >= g_Settings.smoothSlowdown)
         {
             // Smooth change colors complete, rewrite start image
             g_Images.current[i].r = g_Images.start[i].r = g_Images.end[i].r;
