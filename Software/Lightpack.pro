@@ -97,6 +97,11 @@ macx{
     SOURCES += hidapi/mac/hid.c
     # MacOS version using Qt grabWindow(..) for grab colors
     SOURCES += grab/grab_qt.cpp
+    CONFIG += x86_64
+    LIBS += /usr/local/lib/libusb-1.0.dylib
+    INCLUDEPATH += /usr/local/include/libusb-1.0
+    LIBS +=-framework IOKit -framework CoreFoundation
+    ICON = res/icons/Lightpack.icns
 }
 
 INCLUDEPATH += ./inc ./hidapi ./grab
