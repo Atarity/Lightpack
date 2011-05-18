@@ -32,6 +32,7 @@
 
 // Buffer to hold the previously generated HID report, for comparison purposes inside the HID class driver.
 uint8_t PrevHIDReportBuffer[GENERIC_REPORT_SIZE];
+uint8_t PrevUsbLedState;
 
 USB_ClassInfo_HID_Device_t Generic_HID_Interface =
 {
@@ -115,6 +116,11 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
     return true;
 }
 
+inline void UpdateUsbLed()
+{
+    TOGGLE(USBLED);
+}
+
 /** HID class driver callback function for the processing of HID reports from the host.
  *
  *  \param[in] HIDInterfaceInfo  Pointer to the HID class interface configuration structure being referenced
@@ -129,6 +135,8 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
         const void* ReportData,
         const uint16_t ReportSize)
 {
+    UpdateUsbLed();
+    
     uint8_t *ReportData_u8 = (uint8_t *)ReportData;
 
     uint8_t cmd = ReportData_u8[0]; //[0]; // command from enum COMMANDS{ ... };

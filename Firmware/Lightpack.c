@@ -30,6 +30,9 @@
 
 volatile uint8_t g_Flags = 0;
 
+uint8_t t0_counter = 0;
+const uint8_t T0_POSTPRESCALER = 30;
+
 Images_t g_Images = { };
 
 Settings_t g_Settings =
@@ -216,21 +219,36 @@ ISR( TIMER1_COMPA_vect )
     TIFR1 = _BV(OCF1A);
 }
 
+ISR ( TIMER0_OVF_vect )
+{
+    t0_counter ++;
+    if ( t0_counter > T0_POSTPRESCALER)
+    {
+        t0_counter = 0;
+        SET(USBLED);
+    }
+}
+
 static inline void Timer_Init(void)
 {
     TCCR1A = 0x00;
     TCCR1C = 0x00;
     TCCR1B = 0x00;
+    TCCR0A = 0x00;
+    TCCR0B = 0x00;
 
     // Setup default value
     OCR1A = g_Settings.timerOutputCompareRegValue;
 
     TIMSK1 = _BV(OCIE1A);
+    TIMSK0 = _BV(TOIE0);
 
     // Start timer
     TCCR1B = _BV(CS10); // div1
+    TCCR0B = _BV(CS00 | CS02); // div by 1024
 
     TCNT1 = 0x0000;
+    TCNT0 = 0x0000;
 }
 
 static inline void SetupHardware(void)
@@ -254,6 +272,8 @@ static inline void SetupHardware(void)
 
     OUTPUT(LEDR);
     OUTPUT(LEDW);
+    OUTPUT(USBLED);
+    SET(USBLED);
 }
 
 
@@ -299,7 +319,6 @@ int main(void)
     for (;;)
     {
         ProcessUsbTasks();
-
         _ProcessFlags();
     }
 }
