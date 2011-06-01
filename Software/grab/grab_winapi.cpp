@@ -58,9 +58,6 @@ HDC hScreenDC;
 HDC hMemDC;
 HBITMAP hBitmap;
 
-// If grab precision == 2, then using only every 4-th pixel of grabbing area
-int grabPrecision = 1;
-
 //
 // Save winId for find screen/monitor what will using for full screen capture
 //
@@ -256,20 +253,4 @@ QRgb getColor(int x, int y, int width, int height)
 
     return result;
 }
-
-
-void setGrabPrecision(int precision)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << precision;
-
-    grabPrecision = precision;
-}
-
-int getGrabPrecision()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << grabPrecision;
-
-    return grabPrecision;
-}
-
 }

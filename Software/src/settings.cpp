@@ -296,8 +296,6 @@ void Settings::settingsInit(bool isResetDefault)
                  isResetDefault);
     setNewOption("MinimumLevelOfSensitivity",      MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT,
                  isResetDefault);
-    setNewOption("GrabPrecision",                  GRAB_PRECISION_WINAPI_DEFAULT,
-                 isResetDefault);
     setNewOption("GammaCorrection",                GAMMA_CORRECTION_DEFAULT_VALUE,
                  isResetDefault);
 

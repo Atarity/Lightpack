@@ -106,7 +106,6 @@ void SpeedTest::printHeader()
     resultStream << "GrabQt LedsDefaults"       << CSV_SEPARATOR;
 #   ifdef Q_WS_WIN
     resultStream << "GrabWinAPI LedsDefaults"   << CSV_SEPARATOR;
-    resultStream << "Precision"                 << CSV_SEPARATOR;
     resultStream << "Windows"                   << CSV_SEPARATOR;
 #   endif /* Q_WS_WIN */
 
@@ -137,11 +136,6 @@ void SpeedTest::startTests()
 
 
 #   ifdef Q_WS_WIN
-
-    //
-    // Print grab WinAPI precision
-    //
-    resultStream << ALIGNR3( GrabWinAPI::getGrabPrecision() ) << CSV_SEPARATOR;
 
     //
     // Print windows version

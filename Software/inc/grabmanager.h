@@ -58,7 +58,6 @@ public slots:
     void setUpdateColorsOnlyIfChanges(bool state);
     void setAvgColorsOnAllLeds(bool state);
     void setMinLevelOfSensivity(int value);
-    void setGrabPrecision(int value);
     void setGrabGammaCorrection(double value);
 
     void setResizeOrMovingFalse();

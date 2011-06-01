@@ -48,7 +48,6 @@
 #define IS_AMBILIGHT_ON_DEFAULT_VALUE           true
 #define IS_AVG_COLORS_ON_DEFAULT_VALUE          false
 #define MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT    3
-#define GRAB_PRECISION_WINAPI_DEFAULT           2
 #define GAMMA_CORRECTION_DEFAULT_VALUE          2.0
 
 // [Firmware]

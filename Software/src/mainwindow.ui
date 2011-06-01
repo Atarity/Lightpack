@@ -43,8 +43,8 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0">
-          <item row="6" column="0">
+         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0">
+          <item row="5" column="0">
            <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -104,7 +104,7 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1" colspan="3">
+          <item row="3" column="1" colspan="2">
            <widget class="QSpinBox" name="spinBox_SlowdownGrab">
             <property name="minimum">
              <number>1</number>
@@ -173,7 +173,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1" colspan="3">
+          <item row="1" column="1" colspan="2">
            <widget class="QLabel" name="label_GrabFrequency_value">
             <property name="text">
              <string notr="true">0</string>
@@ -186,7 +186,7 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="1" colspan="3">
+          <item row="4" column="1" colspan="2">
            <widget class="QSpinBox" name="spinBox_MinLevelOfSensitivity">
             <property name="minimum">
              <number>0</number>
@@ -199,7 +199,7 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="4">
+          <item row="3" column="3">
            <widget class="QLabel" name="label_SlowdownGrab_txt_ms">
             <property name="text">
              <string>ms</string>
@@ -209,7 +209,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="4">
+          <item row="1" column="3">
            <widget class="QLabel" name="label_GrabFrequency_txt_fps">
             <property name="text">
              <string>fps</string>
@@ -222,7 +222,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1" colspan="3">
+          <item row="0" column="1" colspan="2">
            <widget class="QPushButton" name="pushButton_EnableDisableGrab">
             <property name="focusPolicy">
              <enum>Qt::TabFocus</enum>
@@ -245,35 +245,6 @@
             </property>
             <property name="flat">
              <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_GrabPrecision">
-            <property name="font">
-             <font>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Grab precision (WinAPI only):</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1" colspan="3">
-           <widget class="QSpinBox" name="spinBox_GrabPrecision">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>20</number>
-            </property>
-            <property name="value">
-             <number>1</number>
             </property>
            </widget>
           </item>

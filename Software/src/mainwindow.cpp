@@ -124,7 +124,6 @@ void MainWindow::connectSignalsSlots()
     connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), grabManager, SLOT(setUpdateColorsOnlyIfChanges(bool)));
     connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), grabManager, SLOT(setAvgColorsOnAllLeds(bool)));
     connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), grabManager, SLOT(setMinLevelOfSensivity(int)));
-    connect(ui->spinBox_GrabPrecision, SIGNAL(valueChanged(int)), grabManager, SLOT(setGrabPrecision(int)));
     connect(ui->doubleSpinBox_HW_GammaCorrection, SIGNAL(valueChanged(double)), grabManager, SLOT(setGrabGammaCorrection(double)));
     connect(this, SIGNAL(settingsProfileChanged()), grabManager, SLOT(settingsProfileChanged()));    
 
@@ -942,7 +941,6 @@ void MainWindow::loadSettingsToMainWindow()
 
     ui->spinBox_SlowdownGrab->setValue              ( Settings::getGrabSlowdownMs());
     ui->spinBox_MinLevelOfSensitivity->setValue     ( Settings::value("MinimumLevelOfSensitivity").toInt() );
-    ui->spinBox_GrabPrecision->setValue             ( Settings::value("GrabPrecision").toInt() );
     ui->doubleSpinBox_HW_GammaCorrection->setValue  ( Settings::value("GammaCorrection").toDouble() );
     ui->checkBox_AVG_Colors->setChecked             ( Settings::value("IsAvgColorsOn").toBool() );
 

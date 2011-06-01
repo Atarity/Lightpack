@@ -445,7 +445,6 @@ void GrabManager::settingsProfileChanged()
 
     this->avgColorsOnAllLeds = Settings::value("IsAvgColorsOn").toBool();
     this->minLevelOfSensivity = Settings::value("MinimumLevelOfSensitivity").toInt();
-    GrabWinAPI::setGrabPrecision( Settings::value("GrabPrecision").toInt() );
     this->m_gammaCorrection = Settings::value("GammaCorrection").toDouble();
 
     this->ambilightDelayMs = Settings::getGrabSlowdownMs();
@@ -541,13 +540,6 @@ void GrabManager::setMinLevelOfSensivity(int value)
 
     this->minLevelOfSensivity = value;
     Settings::setValue("MinimumLevelOfSensitivity", value);
-}
-
-
-void GrabManager::setGrabPrecision(int value)
-{
-    GrabWinAPI::setGrabPrecision( value );
-    Settings::setValue("GrabPrecision", value);
 }
 
 void GrabManager::setGrabGammaCorrection(double value)
