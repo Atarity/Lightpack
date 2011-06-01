@@ -34,18 +34,18 @@
 
 // Colors changes when middle button clicked
 const QColor MoveMeWidget::colors[MoveMeWidget::ColorsCount][2] = {
-    { Qt::red,        Qt::black }, /* LED1 */
-    { Qt::green,      Qt::black }, /* LED2 */
-    { Qt::blue,       Qt::white }, /* LED3 */
-    { Qt::yellow,     Qt::black }, /* LED4 */
-    { Qt::darkRed,    Qt::white }, /* LED5 */
-    { Qt::darkGreen,  Qt::white }, /* LED6 */
-    { Qt::darkBlue,   Qt::white }, /* LED7 */
-    { Qt::darkYellow, Qt::white }, /* LED8 */
-    { Qt::black,      Qt::white },
-    { Qt::magenta,    Qt::black },
-    { Qt::cyan,       Qt::black },
-    { Qt::white,      Qt::black }, // ColorIndexWhite == 11
+    { Qt::red,         Qt::black }, /* LED1 */
+    { Qt::green,       Qt::black }, /* LED2 */
+    { Qt::blue,        Qt::white }, /* LED3 */
+    { Qt::yellow,      Qt::black }, /* LED4 */
+    { Qt::darkRed,     Qt::white }, /* LED5 */
+    { Qt::darkGreen,   Qt::white }, /* LED6 */
+    { Qt::darkBlue,    Qt::white }, /* LED7 */
+    { Qt::darkYellow,  Qt::white }, /* LED8 */
+    { qRgb(0,242,123), Qt::black },
+    { Qt::magenta,     Qt::black },
+    { Qt::cyan,        Qt::black },
+    { Qt::white,       Qt::black }, // ColorIndexWhite == 11
 };
 
 
