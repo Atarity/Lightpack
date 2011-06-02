@@ -28,11 +28,17 @@
 #define VERSION_H_INCLUDED
 
 // Firmware version:
-#define VERSION_OF_FIRMWARE              (0x0403UL)
-#define VERSION_OF_FIRMWARE_MAJOR        ((VERSION_OF_FIRMWARE >> 8) & 0xff)
-#define VERSION_OF_FIRMWARE_MINOR        (VERSION_OF_FIRMWARE & 0x00ff)
-
 #include "../CommonHeaders/LIGHTPACK_HW.h"
+
+#if(LIGHTPACK_HW == 5)
+#define VERSION_OF_FIRMWARE              (0x0500UL)
+#else
+#define VERSION_OF_FIRMWARE              (0x0403UL)
+#endif
+
+#define VERSION_OF_FIRMWARE_MAJOR        ((VERSION_OF_FIRMWARE & 0xff00) >> 8)
+#define VERSION_OF_FIRMWARE_MINOR         (VERSION_OF_FIRMWARE & 0x00ff)
+
 
 // Use Bit Angle Modulation (BAM) instead of Pulse Width Modulation (PWM)
 #define USE_BAM 0
