@@ -91,6 +91,9 @@ public:
     static QPoint getDefaultPosition(int ledIndex);
     static void resetDefaults();
 
+    //
+    static int getGrabSlowdownMs();
+    static void setGrabSlowdownMs(int value);
 private:
     static void settingsInit(bool isResetDefault);
     static void setNewOption(const QString & name, const QVariant & value,

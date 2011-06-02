@@ -249,6 +249,27 @@ QPoint Settings::getDefaultPosition(int ledIndex)
     return result;
 }
 
+static int getValidGrabSlowdownMs(int value)
+{
+    if (value < 1)
+        value = 1;
+    else if (value > 1000)
+        value = 1000;
+    return value;
+}
+
+int Settings::getGrabSlowdownMs()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    return getValidGrabSlowdownMs(m_currentProfile->value("GrabSlowdownMs").toInt());
+}
+
+void Settings::setGrabSlowdownMs(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_currentProfile->setValue("GrabSlowdownMs", getValidGrabSlowdownMs(value));
+}
+
 //
 //  Set all settings in current config to default values
 //

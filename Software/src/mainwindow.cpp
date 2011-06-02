@@ -940,7 +940,7 @@ void MainWindow::loadSettingsToMainWindow()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    ui->spinBox_SlowdownGrab->setValue              ( Settings::value("GrabSlowdownMs").toInt() );
+    ui->spinBox_SlowdownGrab->setValue              ( Settings::getGrabSlowdownMs());
     ui->spinBox_MinLevelOfSensitivity->setValue     ( Settings::value("MinimumLevelOfSensitivity").toInt() );
     ui->spinBox_GrabPrecision->setValue             ( Settings::value("GrabPrecision").toInt() );
     ui->doubleSpinBox_HW_GammaCorrection->setValue  ( Settings::value("GammaCorrection").toDouble() );

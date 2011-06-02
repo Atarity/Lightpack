@@ -448,7 +448,7 @@ void GrabManager::settingsProfileChanged()
     GrabWinAPI::setGrabPrecision( Settings::value("GrabPrecision").toInt() );
     this->m_gammaCorrection = Settings::value("GammaCorrection").toDouble();
 
-    this->ambilightDelayMs = Settings::value("GrabSlowdownMs").toInt();
+    this->ambilightDelayMs = Settings::getGrabSlowdownMs();
     this->colorDepth = Settings::value("Firmware/ColorDepth").toInt();
 
     for(int i=0; i<ledWidgets.count(); i++){
@@ -470,7 +470,7 @@ void GrabManager::setAmbilightSlowdownMs(int ms)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << ms;
 
     this->ambilightDelayMs = ms;
-    Settings::setValue("GrabSlowdownMs", ms);
+    Settings::setGrabSlowdownMs(ms);
 }
 
 // TODO: remove unused colorDepth
