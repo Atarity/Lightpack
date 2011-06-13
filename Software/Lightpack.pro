@@ -136,7 +136,8 @@ HEADERS += hidapi/hidapi.h \
     alienfx/LFX2.h \
     src/LightFx.hpp \
     src/LedDeviceFactory.hpp \
-    src/ILedDevice.hpp
+    src/ILedDevice.hpp \
+    src/LightpackMock.hpp
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui

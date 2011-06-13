@@ -35,6 +35,8 @@
 #include <cmath>
 
 #include "grab_api.h"
+//#include "qmutex.h"
+//#include "qthread.h"
 
 namespace GrabWinAPI
 {
@@ -57,6 +59,8 @@ bool updateScreenAndAllocateMemory = true;
 HDC hScreenDC;
 HDC hMemDC;
 HBITMAP hBitmap;
+//QMutex mutex;
+
 
 //
 // Save winId for find screen/monitor what will using for full screen capture

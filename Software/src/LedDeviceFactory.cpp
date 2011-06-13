@@ -28,12 +28,14 @@
 
 #include "LedDeviceFactory.hpp"
 #include "LightFx.hpp"
+#include "LightpackMock.hpp"
 #include "ambilightusb.h"
 
 ILedDevice * LedDeviceFactory::create(QObject *parent, bool isAlienFx)
 {
 #   ifdef Q_WS_WIN
 
+//    return new LightpackMock(parent);
     return isAlienFx ? (ILedDevice *)new LightFx(parent) : (ILedDevice *)new AmbilightUsb(parent);
 
 #   else
