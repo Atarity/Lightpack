@@ -35,12 +35,12 @@
 #include "struct_rgb.h"
 #include "movemewidget.h"
 
-class GrabManager : public QWidget
+class GrabManager : public QThread
 {
     Q_OBJECT
 
 public:
-    GrabManager(QWidget *parent = 0);
+    GrabManager(QObject *parent = 0);
     ~GrabManager();
 
 signals:

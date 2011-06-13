@@ -66,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ledDevice = LedDeviceFactory::create(this, Settings::valueMain("IsAlienFxMode").toBool());
 
-    grabManager = new GrabManager();
+    grabManager = new GrabManager(this);
 
     aboutDialog = new AboutDialog(this);
 
@@ -173,12 +173,16 @@ void MainWindow::connectSignalsSlots()
         connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
         connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
     }
+    grabManager->start();
 }
 
 
 MainWindow::~MainWindow()
 {    
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    grabManager->terminate();
+    grabManager->wait();
 
     delete onAmbilightAction;
     delete offAmbilightAction;

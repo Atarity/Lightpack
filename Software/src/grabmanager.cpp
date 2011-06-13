@@ -29,7 +29,7 @@
 
 #include "debug.h"
 
-GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
+GrabManager::GrabManager(QObject *parent) : QThread(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -111,7 +111,7 @@ void GrabManager::initLedWidgets()
     ledWidgets.clear();
 
     for(int i=0; i<LEDS_COUNT; i++){
-        ledWidgets << new MoveMeWidget(i, this);
+        ledWidgets << new MoveMeWidget(i, QApplication::activeWindow());
     }
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
