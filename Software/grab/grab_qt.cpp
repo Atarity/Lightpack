@@ -45,6 +45,34 @@ namespace GrabWinAPI
 
 namespace GrabQt
 {
+ QPixmap capture = NULL;
+ QRect screenres;
+ bool updateScreenAndAllocateMemory = true;
+ int screen = 0;
+
+  void setScreenOnNextCapture( int screenId )
+ {
+             DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+            updateScreenAndAllocateMemory = true;
+            screen = screenId;
+ }
+
+ void captureScreen()
+ {
+           DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+
+            if( updateScreenAndAllocateMemory ){
+            capture =  QPixmap();
+            screenres = QApplication::desktop()->screenGeometry(screen);
+            updateScreenAndAllocateMemory = false;
+            }
+            capture = QPixmap::grabWindow(QApplication::desktop()->screen(screen) ->winId(),
+                                                screenres.x(), //!
+                                                screenres.y(), //!
+                                                screenres.width(),
+                                                screenres.height());
+}
+
 
 QRgb getColor(const QWidget * grabme)
 {
@@ -61,7 +89,7 @@ QRgb getColor(int x, int y, int width, int height)
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO
             << "x y w h:" << x << y << width << height;
 
-    QPixmap pix = QPixmap::grabWindow(QApplication::desktop()->winId(), x, y, width, height);
+    QPixmap pix = capture.copy(x,y, width, height);
     QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     QImage im = scaledPix.toImage();
     QRgb result = im.pixel(0,0);

@@ -135,6 +135,11 @@ void GrabManager::firstWidgetPositionChanged()
     if(isGrabWinAPI){
         GrabWinAPI::findScreenOnNextCapture( ledWidgets[0]->winId() );
     }
+    else
+    {
+        GrabQt::setScreenOnNextCapture(screenSavedIndex);
+    }
+
 }
 
 
@@ -229,6 +234,10 @@ void GrabManager::updateLedsColorsIfChanged()
     // Capture screen what contains first LED widgets
     if(isGrabWinAPI){
         GrabWinAPI::captureScreen();
+    }
+    else
+    {
+        GrabQt::captureScreen();
     }
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){

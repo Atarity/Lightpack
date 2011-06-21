@@ -39,6 +39,8 @@
 
 namespace GrabQt
 {
+    void setScreenOnNextCapture( int screenId );
+    void captureScreen();
     QRgb getColor(const QWidget * grabme);
     QRgb getColor(int x, int y, int width, int height);
 };
