@@ -91,12 +91,15 @@ MainWindow::MainWindow(QWidget *parent) :
     if( Settings::valueMain("ShowAnotherGui").toBool() == false ){
         ui->tabWidget->removeTab( ui->tabWidget->indexOf( ui->tabAnotherGUI ) );
     }
-
+    isWinAPIGrab = false;
 #ifdef Q_WS_WIN
     isWinAPIGrab = true;    
-#else
-    isWinAPIGrab = false;
 #endif
+#ifdef Q_WS_X11
+    isWinAPIGrab = true;
+    ui->radioButton_GrabWinAPI->setText(tr("GrabX11"));
+#endif
+
 
     grabSwitchQtWinAPI();
 

@@ -133,7 +133,13 @@ void GrabManager::firstWidgetPositionChanged()
     screenSaved = QApplication::desktop()->screenGeometry( screenSavedIndex );
 
     if(isGrabWinAPI){
-        GrabWinAPI::findScreenOnNextCapture( ledWidgets[0]->winId() );
+        #ifdef Q_WS_WIN
+            GrabWinAPI::findScreenOnNextCapture( ledWidgets[0]->winId() );
+        #endif
+        #ifdef Q_WS_X11
+            GrabQt::setScreenOnNextCapture(screenSavedIndex);
+        #endif
+
     }
     else
     {
@@ -233,7 +239,12 @@ void GrabManager::updateLedsColorsIfChanged()
 
     // Capture screen what contains first LED widgets
     if(isGrabWinAPI){
-        GrabWinAPI::captureScreen();
+        #ifdef Q_WS_WIN
+            GrabWinAPI::captureScreen();
+        #endif
+        #ifdef Q_WS_X11
+            GrabX11::captureScreen();
+        #endif
     }
     else
     {
@@ -244,7 +255,12 @@ void GrabManager::updateLedsColorsIfChanged()
         if(ledWidgets[ledIndex]->isGrabEnabled()){
             QRgb rgb;
             if(isGrabWinAPI){
-                rgb = GrabWinAPI::getColor( ledWidgets[ledIndex] );
+                #ifdef Q_WS_WIN
+                    rgb = GrabWinAPI::getColor( ledWidgets[ledIndex] );
+                #endif
+                #ifdef Q_WS_X11
+                    rgb = GrabX11::getColor( ledWidgets[ledIndex] );
+                #endif
             } else {
                 rgb = GrabQt::getColor( ledWidgets[ledIndex] );
             }

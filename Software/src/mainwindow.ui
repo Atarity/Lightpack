@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>338</width>
-    <height>480</height>
+    <height>486</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,7 +32,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">

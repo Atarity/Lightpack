@@ -38,6 +38,8 @@
 //#include "qmutex.h"
 //#include "qthread.h"
 
+
+
 namespace GrabWinAPI
 {
 

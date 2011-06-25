@@ -99,11 +99,17 @@ void SpeedTest::printHeader()
     resultStream << "Time"                      << CSV_SEPARATOR;
     resultStream << "Lightpack version"         << CSV_SEPARATOR;
     resultStream << "GrabQt FullScreen"         << CSV_SEPARATOR;
+#   ifdef Q_WS_X11
+    resultStream << "GrabX11 FullScreen"     << CSV_SEPARATOR;
+#   endif /* Q_WS_X11 */
 #   ifdef Q_WS_WIN
     resultStream << "GrabWinAPI FullScreen"     << CSV_SEPARATOR;
 #   endif /* Q_WS_WIN */
 
     resultStream << "GrabQt LedsDefaults"       << CSV_SEPARATOR;
+#   ifdef Q_WS_X11
+    resultStream << "GrabX11 LedsDefaults"   << CSV_SEPARATOR;
+#   endif /* Q_WS_X11 */
 #   ifdef Q_WS_WIN
     resultStream << "GrabWinAPI LedsDefaults"   << CSV_SEPARATOR;
     resultStream << "Windows"                   << CSV_SEPARATOR;
@@ -196,8 +202,11 @@ void SpeedTest::testFullScreenGrabSpeed()
     //
     // Grab full screen via Qt grabWindow
     //
+    GrabQt::setScreenOnNextCapture(0);
+    GrabQt::captureScreen();
     time.start();
     for(int test = 0; test < TestTimes; test++){
+        GrabQt::captureScreen();
         for(int led = 0; led < LedsCount; led++){
             GrabQt::getColor(
                     screenRect.x(),
@@ -209,7 +218,31 @@ void SpeedTest::testFullScreenGrabSpeed()
     resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
 
 
+#ifdef Q_WS_X11
+    //
+    // Grab full screen via WinAPI BitBlt
+    //
 
+    // Initialize buffers, Desktop HWND == 0
+    GrabX11::setScreenOnNextCapture( 0 );
+    // First time after findScreenOnNextCapture() call, captureScreen() will
+    // reallocate memory for pixels buffer
+    GrabX11::captureScreen();
+
+    time.start();
+    for(int test = 0; test < TestTimes; test++){
+        GrabX11::captureScreen();
+        for(int led = 0; led < LedsCount; led++){
+            GrabX11::getColor(
+                    screenRect.x(),
+                    screenRect.y(),
+                    screenRect.width(),
+                    screenRect.height());
+        }
+    }
+    resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
+
+#endif /* Q_WS_X11 */
 
 #   ifdef Q_WS_WIN
     //
@@ -280,6 +313,7 @@ void SpeedTest::testDefaultLedWidgetsGrabSpeed()
     //
     time.start();
     for(int test = 0; test < TestTimes; test++){
+        GrabQt::captureScreen();
         for(int led = 0; led < LedsCount; led++){
             GrabQt::getColor(
                     ledsRects[ led ].x(),
@@ -292,6 +326,21 @@ void SpeedTest::testDefaultLedWidgetsGrabSpeed()
 
 
 
+#   ifdef Q_WS_X11
+    time.start();
+    for(int test = 0; test < TestTimes; test++){
+        GrabX11::captureScreen();
+        for(int led = 0; led < LedsCount; led++){
+            GrabX11::getColor(
+                    ledsRects[ led ].x(),
+                    ledsRects[ led ].y(),
+                    ledsRects[ led ].width(),
+                    ledsRects[ led ].height());
+        }
+    }
+    resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
+
+#   endif /* Q_WS_X11 */
 
 #   ifdef Q_WS_WIN
     //
