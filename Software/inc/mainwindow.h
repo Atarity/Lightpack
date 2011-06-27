@@ -62,7 +62,6 @@ protected:
 
 private slots:
     void on_horizontalSlider_Speed_valueChanged(int value);
-    void on_pushButton_clicked();
     void on_horizontalSlider_Brightness_valueChanged(int value);
     void on_cb_Modes_currentIndexChanged(int index);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
@@ -97,6 +96,8 @@ private slots:
     void updateGrabbedColors(const QList<StructRGB> & colors);
 
     void setAvgColorOnAllLEDs(int value);
+
+    void on_pushButton_SelectColor_clicked();
 
 private:
     void connectSignalsSlots();

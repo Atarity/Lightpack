@@ -1000,20 +1000,21 @@ void MainWindow::on_horizontalSlider_Brightness_valueChanged(int value)
     grabManager->setBrightness(value);
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_SelectColor_clicked()
 {
     //QColorDialog cdialog = QColorDialog();
    // ui->pushButton->setPalette( QPalette( QColorDialog::getColor()));
-    QColor color= QColorDialog::getColor(
-                                        Qt::black,
+    QColor currentColor = ui->label_SelectedColor->palette().color(QPalette::Background);
+    QColor color = QColorDialog::getColor(
+                                        currentColor,
                                         this,
                                         tr("Выберите цвет")
                                         );
-    ui->pushButton->setStyleSheet("color: rgb("
-                                    +QString::number(color.red())+ ", "
-                                    +QString::number(color.green())+ ", "
-                                    +QString::number(color.blue())+ ");"
-                                    );
+
+    ui->label_SelectedColor->setStyleSheet("background: rgb("
+                                           +QString::number(color.red())+ ", "
+                                           +QString::number(color.green())+ ", "
+                                           +QString::number(color.blue())+ ");");
 
     grabManager->setBackLightColor(color);
 }
