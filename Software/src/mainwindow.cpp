@@ -84,7 +84,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadTranslation( Settings::valueMain( "Language" ).toString() );
 
-
     isErrorState = false;
     isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
 

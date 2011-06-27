@@ -59,10 +59,10 @@ GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
     initColorLists();
     initLedWidgets();
 
-    firstWidgetPositionChanged();
-
     connect(timerGrab, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
     connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(scaleLedWidgets(int)));
+
+    firstWidgetPositionChanged();
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
@@ -126,7 +126,7 @@ void GrabManager::initLedWidgets()
         connect(ledWidgets[ledIndex], SIGNAL(resizeOrMoveStarted()), this, SLOT(setResizeOrMovingTrue()));
     }
 
-    firstWidgetPositionChanged();
+//    firstWidgetPositionChanged();
 
     // First LED widget using to determine grabbing-monitor in WinAPI version of Grab
     connect(ledWidgets[0], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(firstWidgetPositionChanged()));
@@ -435,7 +435,7 @@ void GrabManager::ambilight()
         }
     }
 
-    updateSmoothSteps();
+//    updateSmoothSteps();
 
 
     //--------------------------------------------------------------------------
@@ -589,6 +589,7 @@ void GrabManager::switchQtWinApi(bool isWinApi)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isWinApi;
 
     this->isGrabWinAPI = isWinApi;
+    firstWidgetPositionChanged();
 }
 
 void GrabManager:: setSpeedMoodLamp(int value)
