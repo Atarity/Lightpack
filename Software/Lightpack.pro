@@ -90,6 +90,7 @@ unix:!macx{
     SOURCES += hidapi/linux/hid-libusb.c
     # Linux version using Qt grabWindow(..) for grab colors
     SOURCES += grab/grab_qt.cpp
+    SOURCES += grab/grab_x11.cpp
 }
 
 macx{
@@ -97,6 +98,7 @@ macx{
     SOURCES += hidapi/mac/hid.c
     # MacOS version using Qt grabWindow(..) for grab colors
     SOURCES += grab/grab_qt.cpp
+    SOURCES += grab/grab_x11.cpp
     CONFIG += x86_64
     LIBS += /usr/local/lib/libusb-1.0.dylib
     INCLUDEPATH += /usr/local/include/libusb-1.0

@@ -29,15 +29,6 @@
 
 #include <QWidget>
 #include <QColor>
-#include <qtextstream.h>
-
-// X Server
- #include <X11/Xlib.h>
- #include <X11/Xutil.h>
-
-// X shared-mem extension
- #include <sys/shm.h>
- #include <X11/extensions/XShm.h>
 
 // Using WinAPI:
 //      if grabbing-monitor has been changed call findScreenOnNextCapture( HWND ) for update buffer size

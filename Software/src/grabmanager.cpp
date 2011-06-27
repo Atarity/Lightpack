@@ -26,6 +26,7 @@
 
 #include "grabmanager.h"
 #include "grab_api.h"
+#include <QtCore/qmath.h>
 
 #include "debug.h"
 
@@ -33,11 +34,17 @@ GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+
     timerGrab = new QTimer(this);
     timeEval = new TimeEvaluations();
 
     fpsMs = 0;
     isGrabWinAPI = true;
+    m_SpeedMoodLamp = 0;
+    m_brightness = 150;
+
+    m_backlightColor = QColor(255,255,255);
 
     timerUpdateFPS = new QTimer(this);
     connect(timerUpdateFPS, SIGNAL(timeout()), this, SLOT(updateFpsOnMainWindow()));
@@ -212,8 +219,107 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
     firstWidgetPositionChanged();
 }
 
+////**** FOR MOOD LAMP ****************************************************
+int newRed=0;
+int newGreen=0;
+int newBlue=0;
+int Red=0;
+int Green=0;
+int Blue=0;
+int speed=0;
+/////////////////////////
 
 void GrabManager::updateLedsColorsIfChanged()
+{
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+    int timer = ambilightDelayMs;
+    switch (m_mode)
+    {
+    case 0:
+        ambilight();
+        break;
+    case 1:
+       moodlamp();
+       timer = speed;
+       break;
+    }
+
+    if(isAmbilightOn){
+        timerGrab->start( timer );
+    }
+}
+
+int random(int val)
+{
+    return qrand()%val;
+}
+
+void GrabManager::moodlamp()
+{
+      DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+
+      if (m_SpeedMoodLamp>0)
+      {
+
+        if ((Red==newRed) && (Green==newGreen) && (Blue==newBlue))
+        {
+            newRed = random(255);
+            newGreen =random(255);
+            newBlue =random(255);
+            speed = 1000 /  ( random(m_SpeedMoodLamp)+1);
+            int sw = random(9);
+            switch (sw)
+            {
+                case 0:             newRed=0;            break;
+                case 1:            newGreen=0;            break;
+                case 2:            newBlue=0;            break;
+                case 3:             newBlue=0;            newRed=0;            break;
+                case 4:            newGreen=0;            newRed=0;            break;
+                case 5:            newGreen=0;            newBlue=0;            break;
+            }
+        }
+
+               if(newRed!=Red) { if (Red>newRed) --Red; else ++Red;}
+               if(newGreen!=Green)  {if (Green>newGreen) --Green; else ++Green;}
+               if(newBlue!=Blue)  {if (Blue>newBlue) --Blue; else ++Blue;}
+
+               int coef = 255 -  m_brightness;
+               int prRed=(Red-(qFloor(Red*coef)/ 255.0));
+               int prGreen=(Green-(qFloor(Green*coef)/ 255.0));//brightness
+               int prBlue=(Blue-(qFloor(Blue*coef)/ 255.0));
+
+               if(prRed > 0xff) prRed = 0xff;
+               if(prGreen > 0xff) prGreen = 0xff;
+               if(prBlue > 0xff) prBlue = 0xff;
+
+
+            for (int i = 0; i < LEDS_COUNT; i++)
+            {
+                if(ledWidgets[i]->isGrabEnabled())
+                    colorsCurrent[i].rgb = qRgb(prRed,prGreen, prBlue);
+                else
+                    colorsCurrent[i].rgb = 0; // off led
+            }
+        }
+      else
+      {
+          //todo backlight
+                  for (int i = 0; i < LEDS_COUNT; i++)
+                  {
+                      if(ledWidgets[i]->isGrabEnabled())
+                          colorsCurrent[i].rgb = qRgb(m_backlightColor.red(),m_backlightColor.green(),m_backlightColor.blue());
+                      else
+                          colorsCurrent[i].rgb = 0; // off led
+                  }
+
+      }
+
+  emit updateLedsColors( colorsCurrent );
+
+}
+
+
+void GrabManager::ambilight()
 {    
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
@@ -366,9 +472,6 @@ void GrabManager::updateLedsColorsIfChanged()
     fpsMs = timeEval->howLongItEnd();
     timeEval->howLongItStart();
 
-    if(isAmbilightOn){
-        timerGrab->start( ambilightDelayMs );
-    }
 }
 
 //
@@ -488,6 +591,42 @@ void GrabManager::switchQtWinApi(bool isWinApi)
     this->isGrabWinAPI = isWinApi;
 }
 
+void GrabManager:: setSpeedMoodLamp(int value)
+{
+     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+    this->m_SpeedMoodLamp = value;
+    moodlamp();
+
+    Settings::setValue("SpeedMoodLamp", value);
+}
+
+void GrabManager::setBackLightColor(QColor color)
+{
+     DEBUG_LOW_LEVEL << Q_FUNC_INFO << color;
+    this->m_backlightColor = color;
+    moodlamp();
+    //todo save color
+}
+
+ void GrabManager::switchMode(int mode)
+ {
+     DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
+
+     this->m_mode = mode;
+
+     Settings::setValue("Mode", mode);
+ }
+
+ void GrabManager::setBrightness(int value)
+ {
+     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+     this->m_brightness = value;
+
+     moodlamp();
+
+     Settings::setValue("Brightness", value);
+ }
 
 void GrabManager::setAmbilightSlowdownMs(int ms)
 {

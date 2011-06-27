@@ -66,6 +66,10 @@ public slots:
     void settingsProfileChanged();
 
     void switchQtWinApi(bool isWinApi);
+    void switchMode(int mode);
+    void setSpeedMoodLamp(int value);
+    void setBrightness(int value);
+    void setBackLightColor(QColor color);
 
 private slots:
     void scaleLedWidgets(int screenIndexResized);
@@ -81,6 +85,8 @@ private:
     void clearColorsNew();
     void clearColorsCurrent();
     void initLedWidgets();
+    void ambilight();
+    void moodlamp();
 
 
 private: // variables
@@ -108,6 +114,11 @@ private: // variables
     bool isGrabWinAPI;
 
     // Settings:
+    int m_mode;
+    int m_SpeedMoodLamp;
+    int m_brightness;
+    QColor m_backlightColor;
+
     int ambilightDelayMs;
     int colorDepth;
 

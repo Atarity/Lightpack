@@ -288,6 +288,8 @@ void Settings::settingsInit(bool isResetDefault)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isResetDefault;
 
+    setNewOption("Mode",                 MODE_DEFAULT,
+                 isResetDefault);
     setNewOption("GrabSlowdownMs",                 GRAB_SLOWDOWN_MS_DEFAULT_VALUE,
                  isResetDefault);
     setNewOption("IsAmbilightOn",                  IS_AMBILIGHT_ON_DEFAULT_VALUE,
@@ -298,7 +300,10 @@ void Settings::settingsInit(bool isResetDefault)
                  isResetDefault);
     setNewOption("GammaCorrection",                GAMMA_CORRECTION_DEFAULT_VALUE,
                  isResetDefault);
-
+    setNewOption("SpeedMoodLamp",                SPEED_MOOD_LAMP_DEFAULT_VALUE,
+                 isResetDefault);
+    setNewOption("Brightness",                BRIGHTNESS_DEFAULT_VALUE,
+                 isResetDefault);
 
     setNewOption("Firmware/TimerPrescallerIndex",  FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE,
                  isResetDefault);

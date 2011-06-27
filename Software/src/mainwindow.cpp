@@ -946,7 +946,11 @@ void MainWindow::loadSettingsToMainWindow()
     ui->spinBox_MinLevelOfSensitivity->setValue     ( Settings::value("MinimumLevelOfSensitivity").toInt() );
     ui->doubleSpinBox_HW_GammaCorrection->setValue  ( Settings::value("GammaCorrection").toDouble() );
     ui->checkBox_AVG_Colors->setChecked             ( Settings::value("IsAvgColorsOn").toBool() );
+    ui->cb_Modes->setCurrentIndex       (Settings::value("Mode").toInt() );
+    ui->horizontalSlider_Speed->setValue        (Settings::value("SpeedMoodLamp").toInt());
+    ui->horizontalSlider_Brightness->setValue(Settings::value("Brightness").toInt());
 
+    ui->horizontalSlider_HW_OCR->setValue           ( Settings::value("Firmware/TimerOCR").toInt() );
     ui->horizontalSlider_HW_OCR->setValue           ( Settings::value("Firmware/TimerOCR").toInt() );
     ui->horizontalSlider_HW_ColorDepth->setValue    ( Settings::value("Firmware/ColorDepth").toInt() );
     ui->spinBox_HW_SmoothSlowdown->setValue         ( Settings::value("Firmware/SmoothSlowdown").toInt());
@@ -969,4 +973,55 @@ void MainWindow::quit()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "QApplication::quit();";
 
     QApplication::quit();
+}
+
+void MainWindow::on_cb_Modes_currentIndexChanged(int index)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << index;
+
+    switch (index)
+    {
+    case 0:
+        ui->frmBacklight->setVisible(false);
+        ui->frmAmbilight->setVisible(true);
+        grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && this->isVisible());
+        break;
+    case 1:
+        ui->frmAmbilight->setVisible(false);
+        ui->frmBacklight->setVisible(true);
+        grabManager->setVisibleLedWidgets(false);
+        break;
+    }
+    grabManager->switchMode(index);
+}
+
+void MainWindow::on_horizontalSlider_Brightness_valueChanged(int value)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << value;
+    grabManager->setBrightness(value);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    //QColorDialog cdialog = QColorDialog();
+   // ui->pushButton->setPalette( QPalette( QColorDialog::getColor()));
+    QColor color= QColorDialog::getColor(
+                                        Qt::black,
+                                        this,
+                                        tr("Выберите цвет")
+                                        );
+    ui->pushButton->setStyleSheet("color: rgb("
+                                    +QString::number(color.red())+ ", "
+                                    +QString::number(color.green())+ ", "
+                                    +QString::number(color.blue())+ ");"
+                                    );
+
+    grabManager->setBackLightColor(color);
+}
+
+
+void MainWindow::on_horizontalSlider_Speed_valueChanged(int value)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO<< value;
+    grabManager->setSpeedMoodLamp(value);
 }
