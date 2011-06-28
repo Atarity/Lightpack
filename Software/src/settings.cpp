@@ -38,6 +38,9 @@
 
 #include "debug.h"
 
+#define KEY_MOOD_LAMP_COLOR "MoodLampColor"
+#define KEY_MOOD_LAMP_SPEED "MoodLampSpeed"
+
 QSettings * Settings::m_currentProfile;
 QSettings * Settings::m_mainConfig; // LightpackMain.conf contains last profile
 
@@ -258,6 +261,40 @@ static int getValidGrabSlowdownMs(int value)
     return value;
 }
 
+static int getValidMoodLampSpeed(int value)
+{
+    if (value < 0)
+        value = 0;
+    else if (value > 255)
+        value = 255;
+    return value;
+}
+
+QColor Settings::getMoodLampColor()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    return QColor(m_currentProfile->value(KEY_MOOD_LAMP_COLOR).toString());
+}
+
+void Settings::setMoodLampColor(QColor value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_currentProfile->setValue(KEY_MOOD_LAMP_COLOR, value.name() );
+}
+
+int Settings::getMoodLampSpeed()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    return getValidMoodLampSpeed(m_currentProfile->value(KEY_MOOD_LAMP_SPEED).toInt());
+}
+
+void Settings::setMoodLampSpeed(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_currentProfile->setValue(KEY_MOOD_LAMP_SPEED, getValidMoodLampSpeed(value));
+}
+
+
 int Settings::getGrabSlowdownMs()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -300,7 +337,9 @@ void Settings::settingsInit(bool isResetDefault)
                  isResetDefault);
     setNewOption("GammaCorrection",                GAMMA_CORRECTION_DEFAULT_VALUE,
                  isResetDefault);
-    setNewOption("SpeedMoodLamp",                SPEED_MOOD_LAMP_DEFAULT_VALUE,
+    setNewOption(KEY_MOOD_LAMP_COLOR,              MOOD_LAMP_COLOR_DEFAULT_VALUE,
+                 isResetDefault);
+    setNewOption(KEY_MOOD_LAMP_SPEED,              SPEED_MOOD_LAMP_DEFAULT_VALUE,
                  isResetDefault);
     setNewOption("Brightness",                BRIGHTNESS_DEFAULT_VALUE,
                  isResetDefault);

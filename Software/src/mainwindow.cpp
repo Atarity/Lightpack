@@ -87,6 +87,9 @@ MainWindow::MainWindow(QWidget *parent) :
     isErrorState = false;
     isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
 
+    ui->pushButton_SelectColor->setColor(Settings::getMoodLampColor());
+    ui->horizontalSlider_Speed->setValue(Settings::getMoodLampSpeed());
+
     if( Settings::valueMain("ShowAnotherGui").toBool() == false ){
         ui->tabWidget->removeTab( ui->tabWidget->indexOf( ui->tabAnotherGUI ) );
     }
@@ -1004,6 +1007,7 @@ void MainWindow::on_horizontalSlider_Brightness_valueChanged(int value)
 void MainWindow::onMoodLampColorChanged(QColor color)
 {
     grabManager->setBackLightColor(color);
+    Settings::setMoodLampColor(color);
 }
 
 
@@ -1011,4 +1015,5 @@ void MainWindow::on_horizontalSlider_Speed_valueChanged(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO<< value;
     grabManager->setSpeedMoodLamp(value);
+    Settings::setMoodLampSpeed(value);
 }

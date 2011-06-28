@@ -27,20 +27,26 @@ void QColorButton::updateColorLabelSize()
     colorLabel->move(COLOR_LABEL_SPACING, COLOR_LABEL_SPACING);
     colorLabel->resize(this->width()-(COLOR_LABEL_SPACING * 2),this->height()-(COLOR_LABEL_SPACING * 2));
 }
-
-void QColorButton::click()
+void QColorButton::setColor(QColor color)
 {
-    QColor currentColor = colorLabel->palette().color(QPalette::Background);
-    QColor color = QColorDialog::getColor(
-                                        currentColor,
-                                        this,
-                                        trUtf8("Choose color")
-                                        );
     colorLabel->setStyleSheet("background: rgb("
                                            +QString::number(color.red())+ ", "
                                            +QString::number(color.green())+ ", "
                                            +QString::number(color.blue())+ ");"
                               +"border: solid 1px #000000;");
     emit colorChanged(color);
+}
+QColor QColorButton::getColor()
+{
+    return colorLabel->palette().color(QPalette::Background);
+}
+
+void QColorButton::click()
+{
+    QColor newColor = QColorDialog::getColor(
+                this->getColor(),
+                this,
+                trUtf8("Choose color"));
+    this->setColor(newColor);
 }
 

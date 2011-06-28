@@ -52,6 +52,7 @@
 
 #define MODE_DEFAULT    0
 #define SPEED_MOOD_LAMP_DEFAULT_VALUE 50
+#define MOOD_LAMP_COLOR_DEFAULT_VALUE "#00FF00"
 #define BRIGHTNESS_DEFAULT_VALUE  200
 
 // [Firmware]
@@ -95,6 +96,10 @@ public:
     static void resetDefaults();
 
     //
+    static QColor getMoodLampColor();
+    static void setMoodLampColor(QColor color);
+    static int getMoodLampSpeed();
+    static void setMoodLampSpeed(int value);
     static int getGrabSlowdownMs();
     static void setGrabSlowdownMs(int value);
 private:

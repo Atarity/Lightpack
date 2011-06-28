@@ -9,6 +9,8 @@ class QColorButton : public QPushButton
 public:
     QColorButton(QWidget *parent);
     ~QColorButton();
+    QColor getColor();
+    void setColor(QColor color);
 protected:
     void updateColorLabelSize();
     virtual void resizeEvent(QResizeEvent *);
