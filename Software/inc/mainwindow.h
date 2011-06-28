@@ -35,6 +35,7 @@
 #include "grabmanager.h"            /* class GrabManager */
 #include "struct_rgb.h"
 #include "speedtest.h"
+#include "../src/qcolorbutton.hpp"
 
 namespace Ui {
     class MainWindow;
@@ -97,7 +98,7 @@ private slots:
 
     void setAvgColorOnAllLEDs(int value);
 
-    void on_pushButton_SelectColor_clicked();
+    void onMoodLampColorChanged(QColor color);
 
 private:
     void connectSignalsSlots();

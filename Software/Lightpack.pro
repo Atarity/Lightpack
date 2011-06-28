@@ -116,7 +116,8 @@ SOURCES += src/main.cpp \
     src/settings.cpp \
     src/speedtest.cpp \
     src/LedDeviceFactory.cpp \
-    src/LightFx.cpp
+    src/LightFx.cpp \
+    src/qcolorbutton.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/LIGHTPACK_HW.h \
     ../CommonHeaders/COMMANDS.h \
@@ -139,7 +140,8 @@ HEADERS += hidapi/hidapi.h \
     src/LightFx.hpp \
     src/LedDeviceFactory.hpp \
     src/ILedDevice.hpp \
-    src/LightpackMock.hpp
+    src/LightpackMock.hpp \
+    src/qcolorbutton.hpp
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui

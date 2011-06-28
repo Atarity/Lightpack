@@ -160,6 +160,7 @@ void MainWindow::connectSignalsSlots()
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
 
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
+    connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColorChanged(QColor)));
 
     // Another GUI
     // Connect signals to another GUI slots only if ShowAnotherGui == true
@@ -1000,22 +1001,8 @@ void MainWindow::on_horizontalSlider_Brightness_valueChanged(int value)
     grabManager->setBrightness(value);
 }
 
-void MainWindow::on_pushButton_SelectColor_clicked()
+void MainWindow::onMoodLampColorChanged(QColor color)
 {
-    //QColorDialog cdialog = QColorDialog();
-   // ui->pushButton->setPalette( QPalette( QColorDialog::getColor()));
-    QColor currentColor = ui->label_SelectedColor->palette().color(QPalette::Background);
-    QColor color = QColorDialog::getColor(
-                                        currentColor,
-                                        this,
-                                        tr("Выберите цвет")
-                                        );
-
-    ui->label_SelectedColor->setStyleSheet("background: rgb("
-                                           +QString::number(color.red())+ ", "
-                                           +QString::number(color.green())+ ", "
-                                           +QString::number(color.blue())+ ");");
-
     grabManager->setBackLightColor(color);
 }
 
