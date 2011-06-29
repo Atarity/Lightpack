@@ -60,6 +60,7 @@ public slots:
 protected:
     virtual void changeEvent(QEvent *e);
     virtual void closeEvent(QCloseEvent *event);
+    virtual void paintEvent(QPaintEvent * event);
 
 private slots:
     void on_horizontalSlider_Speed_valueChanged(int value);
@@ -122,6 +123,8 @@ private:
     void updatePwmFrequency();
 
     void initLabelsForGrabbedColors();
+
+    void updateCbModesPosition();
 
 private:
     ILedDevice *ledDevice;

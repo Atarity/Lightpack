@@ -110,6 +110,7 @@ MainWindow::MainWindow(QWidget *parent) :
                 screen.height() / 2 - this->height() / 2 );
     this->repaint();
 
+    updateCbModesPosition();
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
 
@@ -1016,4 +1017,17 @@ void MainWindow::on_horizontalSlider_Speed_valueChanged(int value)
     DEBUG_MID_LEVEL << Q_FUNC_INFO<< value;
     grabManager->setSpeedMoodLamp(value);
     Settings::setMoodLampSpeed(value);
+}
+
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+    updateCbModesPosition();
+}
+
+void MainWindow::updateCbModesPosition()
+{
+    int newX = ui->groupBox_7->x() + 10;
+    int newY = ui->groupBox_7->y();
+    ui->cb_Modes->move(newX, newY);
+    ui->cb_Modes->raise();
 }
