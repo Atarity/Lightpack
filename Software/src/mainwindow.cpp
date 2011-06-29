@@ -88,6 +88,7 @@ MainWindow::MainWindow(QWidget *parent) :
     isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
 
     ui->pushButton_SelectColor->setColor(Settings::getMoodLampColor());
+    ui->radioButton_LiquidColorMoodLampMode->setChecked(Settings::isMoodLampLiquidMode());
     ui->horizontalSlider_Speed->setValue(Settings::getMoodLampSpeed());
 
     if( Settings::valueMain("ShowAnotherGui").toBool() == false ){
@@ -131,7 +132,8 @@ void MainWindow::connectSignalsSlots()
     connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), grabManager, SLOT(setAvgColorsOnAllLeds(bool)));
     connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), grabManager, SLOT(setMinLevelOfSensivity(int)));
     connect(ui->doubleSpinBox_HW_GammaCorrection, SIGNAL(valueChanged(double)), grabManager, SLOT(setGrabGammaCorrection(double)));
-    connect(this, SIGNAL(settingsProfileChanged()), grabManager, SLOT(settingsProfileChanged()));    
+    connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLampModeChanged(bool)));
+    connect(this, SIGNAL(settingsProfileChanged()), grabManager, SLOT(settingsProfileChanged()));
 
     // Connect GrabManager with ledDevice
     connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
@@ -1030,4 +1032,29 @@ void MainWindow::updateCbModesPosition()
     int newY = ui->groupBox_7->y();
     ui->cb_Modes->move(newX, newY);
     ui->cb_Modes->raise();
+}
+
+void MainWindow::onMoodLampModeChanged(bool checked)
+{
+    Settings::setMoodLampLiquidMode(checked);
+    if(!checked)
+    {
+        //constant mode
+        ui->pushButton_SelectColor->setEnabled(true);
+        ui->label_MoodLampColor->setEnabled(true);
+        ui->horizontalSlider_Speed->setEnabled(false);
+        ui->label_MoodLampSpeed->setEnabled(false);
+        ui->horizontalSlider_Brightness->setEnabled(false);
+        ui->label_MoodLampBrightness->setEnabled(false);
+        grabManager->setSpeedMoodLamp(0);
+    } else {
+        //liquid mode
+        ui->pushButton_SelectColor->setEnabled(false);
+        ui->label_MoodLampColor->setEnabled(false);
+        ui->horizontalSlider_Speed->setEnabled(true);
+        ui->label_MoodLampSpeed->setEnabled(true);
+        ui->horizontalSlider_Brightness->setEnabled(true);
+        ui->label_MoodLampBrightness->setEnabled(true);
+        grabManager->setSpeedMoodLamp(Settings::getMoodLampSpeed());
+    }
 }

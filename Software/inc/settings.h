@@ -52,6 +52,7 @@
 
 #define MODE_DEFAULT    0
 #define SPEED_MOOD_LAMP_DEFAULT_VALUE 50
+#define MOOD_LAMP_MODE_DEFAULT_VALUE true
 #define MOOD_LAMP_COLOR_DEFAULT_VALUE "#00FF00"
 #define BRIGHTNESS_DEFAULT_VALUE  200
 
@@ -96,6 +97,8 @@ public:
     static void resetDefaults();
 
     //
+    static bool isMoodLampLiquidMode();
+    static void setMoodLampLiquidMode(bool isLiquidMode);
     static QColor getMoodLampColor();
     static void setMoodLampColor(QColor color);
     static int getMoodLampSpeed();

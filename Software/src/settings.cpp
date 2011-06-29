@@ -40,6 +40,7 @@
 
 #define KEY_MOOD_LAMP_COLOR "MoodLampColor"
 #define KEY_MOOD_LAMP_SPEED "MoodLampSpeed"
+#define KEY_MOOD_LAMP_LIQUID_MODE "MoodLampLiquidMode"
 
 QSettings * Settings::m_currentProfile;
 QSettings * Settings::m_mainConfig; // LightpackMain.conf contains last profile
@@ -270,6 +271,18 @@ static int getValidMoodLampSpeed(int value)
     return value;
 }
 
+bool Settings::isMoodLampLiquidMode()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    return m_currentProfile->value(KEY_MOOD_LAMP_LIQUID_MODE).toBool();
+}
+
+void Settings::setMoodLampLiquidMode(bool value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_currentProfile->setValue(KEY_MOOD_LAMP_LIQUID_MODE, value );
+}
+
 QColor Settings::getMoodLampColor()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -325,7 +338,7 @@ void Settings::settingsInit(bool isResetDefault)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isResetDefault;
 
-    setNewOption("Mode",                 MODE_DEFAULT,
+    setNewOption("Mode",                           MODE_DEFAULT,
                  isResetDefault);
     setNewOption("GrabSlowdownMs",                 GRAB_SLOWDOWN_MS_DEFAULT_VALUE,
                  isResetDefault);
@@ -337,11 +350,13 @@ void Settings::settingsInit(bool isResetDefault)
                  isResetDefault);
     setNewOption("GammaCorrection",                GAMMA_CORRECTION_DEFAULT_VALUE,
                  isResetDefault);
+    setNewOption(KEY_MOOD_LAMP_LIQUID_MODE,        MOOD_LAMP_MODE_DEFAULT_VALUE,
+                 isResetDefault);
     setNewOption(KEY_MOOD_LAMP_COLOR,              MOOD_LAMP_COLOR_DEFAULT_VALUE,
                  isResetDefault);
     setNewOption(KEY_MOOD_LAMP_SPEED,              SPEED_MOOD_LAMP_DEFAULT_VALUE,
                  isResetDefault);
-    setNewOption("Brightness",                BRIGHTNESS_DEFAULT_VALUE,
+    setNewOption("Brightness",                     BRIGHTNESS_DEFAULT_VALUE,
                  isResetDefault);
 
     setNewOption("Firmware/TimerPrescallerIndex",  FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE,
