@@ -101,29 +101,6 @@
          </layout>
         </item>
         <item>
-         <widget class="QComboBox" name="cb_Modes">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">#cb_Modes {margin-bottom:-10px;margin-left:10px;padding-left:4px;}</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Ambilight</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Backlight (MoodLamp)</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
          <widget class="QGroupBox" name="groupBox_7">
           <property name="minimumSize">
            <size>
@@ -132,7 +109,7 @@
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">#groupBox_7 {padding-top:0px; margin-top:0px}</string>
+           <string notr="true">#groupBox_7 {margin-top: 10px;padding-top:10px;}</string>
           </property>
           <property name="title">
            <string/>
@@ -511,6 +488,26 @@
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="cb_Modes">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <item>
+           <property name="text">
+            <string>Ambilight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Backlight (MoodLamp)</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item>
