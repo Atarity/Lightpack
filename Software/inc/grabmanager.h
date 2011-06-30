@@ -119,6 +119,9 @@ private: // variables
     int m_brightness;
     QColor m_backlightColor;
 
+    static const int ColorsMoodLampCount = 15;
+    static const QColor colorsMoodLamp[ColorsMoodLampCount];
+
     int ambilightDelayMs;
     int colorDepth;
 

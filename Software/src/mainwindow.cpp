@@ -390,7 +390,7 @@ void MainWindow::showSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    grabManager->setVisibleLedWidgets( ui->groupBox_ShowGrabWidgets->isChecked() );
+    grabManager->setVisibleLedWidgets( ui->groupBox_ShowGrabWidgets->isChecked() && ui->cb_Modes->currentIndex()==0 );
     this->show();
 }
 

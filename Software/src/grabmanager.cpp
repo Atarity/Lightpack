@@ -226,7 +226,15 @@ int newBlue=0;
 int Red=0;
 int Green=0;
 int Blue=0;
-int speed=0;
+int speed=1000;
+
+// Colors changes when middle button clicked
+const QColor GrabManager::colorsMoodLamp[GrabManager::ColorsMoodLampCount] = {
+    Qt::white, Qt::black ,
+    Qt::red, qRgb(255,128,0) , Qt::yellow, Qt::green, qRgb(128,255,255), Qt::blue, qRgb(128,0,255), //rainbow
+    Qt::darkRed, Qt::darkGreen, Qt::darkBlue, Qt::darkYellow,
+    Qt::magenta, Qt::cyan,
+};
 /////////////////////////
 
 void GrabManager::updateLedsColorsIfChanged()
@@ -263,20 +271,27 @@ void GrabManager::moodlamp()
 
         if ((Red==newRed) && (Green==newGreen) && (Blue==newBlue))
         {
-            newRed = random(255);
-            newGreen =random(255);
-            newBlue =random(255);
             speed = 1000 /  ( random(m_SpeedMoodLamp)+1);
-            int sw = random(9);
-            switch (sw)
-            {
-                case 0:             newRed=0;            break;
-                case 1:            newGreen=0;            break;
-                case 2:            newBlue=0;            break;
-                case 3:             newBlue=0;            newRed=0;            break;
-                case 4:            newGreen=0;            newRed=0;            break;
-                case 5:            newGreen=0;            newBlue=0;            break;
-            }
+            QColor newColor = colorsMoodLamp[random(ColorsMoodLampCount)];
+            newRed = newColor.red();
+            newGreen = newColor.green();
+            newBlue = newColor.blue();
+            DEBUG_HIGH_LEVEL << Q_FUNC_INFO << newColor;
+
+//old metod
+//            newRed = random(255);
+//            newGreen =random(255);
+//            newBlue =random(255);
+//            int sw = random(9);
+//            switch (sw)
+//            {
+//                case 0:             newRed=0;            break;
+//                case 1:            newGreen=0;            break;
+//                case 2:            newBlue=0;            break;
+//                case 3:             newBlue=0;            newRed=0;            break;
+//                case 4:            newGreen=0;            newRed=0;            break;
+//                case 5:            newGreen=0;            newBlue=0;            break;
+//            }
         }
 
                if(newRed!=Red) { if (Red>newRed) --Red; else ++Red;}
@@ -623,8 +638,6 @@ void GrabManager::setBackLightColor(QColor color)
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
      this->m_brightness = value;
-
-     moodlamp();
 
      Settings::setValue("Brightness", value);
  }
