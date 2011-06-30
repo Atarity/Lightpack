@@ -56,5 +56,6 @@ void QColorButton::click()
     dialog->setCurrentColor(getColor());
     if (dialog->exec() != QDialog::Accepted)
         setColor(savedColor);
+    delete dialog;
 }
 
