@@ -87,10 +87,6 @@ MainWindow::MainWindow(QWidget *parent) :
     isErrorState = false;
     isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
 
-    ui->pushButton_SelectColor->setColor(Settings::getMoodLampColor());
-    ui->radioButton_LiquidColorMoodLampMode->setChecked(Settings::isMoodLampLiquidMode());
-    ui->horizontalSlider_Speed->setValue(Settings::getMoodLampSpeed());
-
     if( Settings::valueMain("ShowAnotherGui").toBool() == false ){
         ui->tabWidget->removeTab( ui->tabWidget->indexOf( ui->tabAnotherGUI ) );
     }
@@ -948,21 +944,24 @@ void MainWindow::loadSettingsToMainWindow()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    ui->spinBox_SlowdownGrab->setValue              ( Settings::getGrabSlowdownMs());
-    ui->spinBox_MinLevelOfSensitivity->setValue     ( Settings::value("MinimumLevelOfSensitivity").toInt() );
-    ui->doubleSpinBox_HW_GammaCorrection->setValue  ( Settings::value("GammaCorrection").toDouble() );
-    ui->checkBox_AVG_Colors->setChecked             ( Settings::value("IsAvgColorsOn").toBool() );
-    ui->cb_Modes->setCurrentIndex       (Settings::value("Mode").toInt() );
-    ui->horizontalSlider_Speed->setValue        (Settings::value("SpeedMoodLamp").toInt());
-    ui->horizontalSlider_Brightness->setValue(Settings::value("Brightness").toInt());
+    ui->spinBox_SlowdownGrab->setValue                  ( Settings::getGrabSlowdownMs());
+    ui->spinBox_MinLevelOfSensitivity->setValue         ( Settings::value("MinimumLevelOfSensitivity").toInt() );
+    ui->doubleSpinBox_HW_GammaCorrection->setValue      ( Settings::value("GammaCorrection").toDouble() );
+    ui->checkBox_AVG_Colors->setChecked                 ( Settings::value("IsAvgColorsOn").toBool() );
+    ui->cb_Modes->setCurrentIndex                       ( Settings::getMode()); // we assume that LightpackMode in same order as cb_Modes
+    ui->horizontalSlider_Speed->setValue                ( Settings::getMoodLampSpeed());
+    ui->horizontalSlider_Brightness->setValue           ( Settings::value("Brightness").toInt());
+    ui->pushButton_SelectColor->setColor                ( Settings::getMoodLampColor());
+    ui->radioButton_LiquidColorMoodLampMode->setChecked ( Settings::isMoodLampLiquidMode());
 
     ui->horizontalSlider_HW_OCR->setValue           ( Settings::value("Firmware/TimerOCR").toInt() );
     ui->horizontalSlider_HW_OCR->setValue           ( Settings::value("Firmware/TimerOCR").toInt() );
     ui->horizontalSlider_HW_ColorDepth->setValue    ( Settings::value("Firmware/ColorDepth").toInt() );
     ui->spinBox_HW_SmoothSlowdown->setValue         ( Settings::value("Firmware/SmoothSlowdown").toInt());
 
-
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
+    on_cb_Modes_currentIndexChanged ( ui->cb_Modes->currentIndex() );
+    onMoodLampModeChanged(ui->radioButton_LiquidColorMoodLampMode->isChecked());
 }
 
 
@@ -999,6 +998,7 @@ void MainWindow::on_cb_Modes_currentIndexChanged(int index)
         break;
     }
     grabManager->switchMode(index);
+    Settings::setMode(index == 0 ? Grab : MoodLamp);
 }
 
 void MainWindow::on_horizontalSlider_Brightness_valueChanged(int value)

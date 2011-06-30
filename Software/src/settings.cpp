@@ -38,9 +38,10 @@
 
 #include "debug.h"
 
-#define KEY_MOOD_LAMP_COLOR "MoodLampColor"
-#define KEY_MOOD_LAMP_SPEED "MoodLampSpeed"
+#define KEY_MOOD_LAMP_COLOR       "MoodLampColor"
+#define KEY_MOOD_LAMP_SPEED       "MoodLampSpeed"
 #define KEY_MOOD_LAMP_LIQUID_MODE "MoodLampLiquidMode"
+#define KEY_MODE                  "Mode"
 
 QSettings * Settings::m_currentProfile;
 QSettings * Settings::m_mainConfig; // LightpackMain.conf contains last profile
@@ -271,6 +272,25 @@ static int getValidMoodLampSpeed(int value)
     return value;
 }
 
+LightpackMode Settings::getMode()
+{
+    QString strMode = m_currentProfile->value(KEY_MODE).toString().toLower();
+    if (strMode == "grab")
+        return Grab;
+    else
+        return MoodLamp;
+}
+
+void Settings::setMode(LightpackMode mode)
+{
+    QString strMode;
+    if(mode == Grab)
+        strMode = "Grab";
+    else
+        strMode = "MoodLamp";
+    m_currentProfile->setValue(KEY_MODE, strMode);
+}
+
 bool Settings::isMoodLampLiquidMode()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -338,7 +358,7 @@ void Settings::settingsInit(bool isResetDefault)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isResetDefault;
 
-    setNewOption("Mode",                           MODE_DEFAULT,
+    setNewOption(KEY_MODE,                         MODE_DEFAULT,
                  isResetDefault);
     setNewOption("GrabSlowdownMs",                 GRAB_SLOWDOWN_MS_DEFAULT_VALUE,
                  isResetDefault);

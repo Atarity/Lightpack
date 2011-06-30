@@ -50,7 +50,7 @@
 #define MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT    3
 #define GAMMA_CORRECTION_DEFAULT_VALUE          2.0
 
-#define MODE_DEFAULT    0
+#define MODE_DEFAULT    "Grab"
 #define SPEED_MOOD_LAMP_DEFAULT_VALUE 50
 #define MOOD_LAMP_MODE_DEFAULT_VALUE true
 #define MOOD_LAMP_COLOR_DEFAULT_VALUE "#00FF00"
@@ -69,7 +69,7 @@
 #define LED_COEF_RGB_DEFAULT_VALUE          1
 #define LED_IS_ENABLED_DEFAULT_VALUE        true
 
-
+enum LightpackMode { Grab, MoodLamp };
 
 class Settings : public QObject
 {
@@ -97,6 +97,8 @@ public:
     static void resetDefaults();
 
     //
+    static LightpackMode getMode();
+    static void setMode(LightpackMode mode);
     static bool isMoodLampLiquidMode();
     static void setMoodLampLiquidMode(bool isLiquidMode);
     static QColor getMoodLampColor();
@@ -114,7 +116,7 @@ private:
 
 private:
     static QSettings * m_currentProfile; // using profile
-    static QSettings * m_mainConfig; // store last used profile name, locale and so on
+    static QSettings * m_mainConfig;     // store last used profile name, locale and so on
     static QString m_applicationDirPath; // path to store app generated stuff
 };
 
