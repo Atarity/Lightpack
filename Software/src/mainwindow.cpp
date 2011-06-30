@@ -108,8 +108,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->adjustSize();
     this->move( screen.width() / 2  - this->width() / 2,
-                screen.height() / 2 - this->height() / 2 );
-    this->repaint();
+                screen.height() / 2 - this->height() / 2);
+    this->resize(this->minimumSize());
 
     updateCbModesPosition();
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
