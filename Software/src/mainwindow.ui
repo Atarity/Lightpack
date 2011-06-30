@@ -32,7 +32,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -966,9 +966,37 @@ margin-top: 0px;
       </widget>
       <widget class="QWidget" name="tabAnotherGUI">
        <attribute name="title">
-        <string notr="true">Another GUI</string>
+        <string>Dev tab</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_7">
+        <item>
+         <widget class="QGroupBox" name="groupBox_8">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="title">
+           <string notr="true"/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_12">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>This tab is used only by project developers. Any tuning with all these controls provide inevetible plane crash, miscarrige or nuclear disaster. Use it on your own risk.</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item>
          <widget class="QGroupBox" name="groupBox">
           <property name="title">
@@ -998,7 +1026,7 @@ margin-top: 0px;
         <item>
          <widget class="QPushButton" name="pushButton_StartTests">
           <property name="text">
-           <string notr="true">Start tests</string>
+           <string>Start tests</string>
           </property>
          </widget>
         </item>
@@ -1086,6 +1114,15 @@ margin-top: 0px;
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_11">
+          <property name="leftMargin">
+           <number>9</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>9</number>
+          </property>
           <item>
            <widget class="QLabel" name="label_GammaCorrection">
             <property name="sizePolicy">

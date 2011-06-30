@@ -174,37 +174,52 @@
         <translation>Удалить профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="975"/>
+        <location filename="../../src/mainwindow.ui" line="969"/>
+        <source>Dev tab</source>
+        <translation>Отладка</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="990"/>
+        <source>This tab is used only by project developers. Any tuning with all these controls provide inevetible plane crash, miscarrige or nuclear disaster. Use it on your own risk.</source>
+        <translation>Эта вкладка используется разработчиками. Все настройки на ней профилируются и вы меняете их на свой страх и риск.</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="1003"/>
         <source>Capture source:</source>
         <translation>Источник захвата</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="1008"/>
+        <location filename="../../src/mainwindow.ui" line="1029"/>
+        <source>Start tests</source>
+        <translation>Запустить тесты</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="1036"/>
         <source>Smooth slowdown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="1049"/>
+        <location filename="../../src/mainwindow.ui" line="1077"/>
         <source>Inverse of brightness (time LEDs OFF)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="1098"/>
+        <location filename="../../src/mainwindow.ui" line="1135"/>
         <source>Gamma correction:</source>
-        <translation>Гамма-коррекция</translation>
+        <translation type="unfinished">Гамма-коррекция:</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="1123"/>
+        <location filename="../../src/mainwindow.ui" line="1160"/>
         <source>Installing average color on all LEDs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="1129"/>
+        <location filename="../../src/mainwindow.ui" line="1166"/>
         <source>0b00000000</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="1206"/>
+        <location filename="../../src/mainwindow.ui" line="1243"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
@@ -297,14 +312,6 @@
         <location filename="../../src/ambilightusb.cpp" line="218"/>
         <source>read device fail</source>
         <translation>устройство не отвечает</translation>
-    </message>
-</context>
-<context>
-    <name>QColorButton</name>
-    <message>
-        <location filename="../../src/qcolorbutton.cpp" line="49"/>
-        <source>Choose color</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
