@@ -960,7 +960,7 @@ void MainWindow::loadSettingsToMainWindow()
     ui->spinBox_HW_SmoothSlowdown->setValue         ( Settings::value("Firmware/SmoothSlowdown").toInt());
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
-    on_cb_Modes_currentIndexChanged ( ui->cb_Modes->currentIndex() );
+    on_cb_Modes_currentIndexChanged ( ui->cb_Modes->currentIndex() ); //
     onMoodLampModeChanged(ui->radioButton_LiquidColorMoodLampMode->isChecked());
 }
 
