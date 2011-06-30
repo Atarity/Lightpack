@@ -17,6 +17,7 @@ protected:
 
 protected slots:
     void click();
+    void currentColorChanged(QColor color);
 signals:
     void colorChanged(QColor);
 
