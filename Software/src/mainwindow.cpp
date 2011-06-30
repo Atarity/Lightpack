@@ -136,7 +136,7 @@ void MainWindow::connectSignalsSlots()
 
     // Main options
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
-    connect(ui->pushButton_EnableDisableGrab, SIGNAL(clicked()), this, SLOT(grabAmbilightOnOff()));
+    connect(ui->pushButton_EnableDisableDevice, SIGNAL(clicked()), this, SLOT(grabAmbilightOnOff()));
 
     // Hardware options
     connect(ui->spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetColorDepth(int)));
@@ -296,9 +296,11 @@ void MainWindow::updateTrayAndActionStates()
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     if( isAmbilightOn ){
-        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/on.png"));
+        ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
+        ui->label_EnableDisableDevice->setText(tr("Switch off Lightpack"));
     }else{
-        ui->pushButton_EnableDisableGrab->setIcon(QIcon(":/icons/off.png"));
+        ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/on.png"));
+        ui->label_EnableDisableDevice->setText(tr("Switch on Lightpack"));
     }
 
     if( isErrorState ){

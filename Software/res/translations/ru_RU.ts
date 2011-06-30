@@ -94,14 +94,19 @@
         <translation>Порог чувствительности:</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.ui" line="68"/>
         <source>Enable/Disable grab:</source>
-        <translation>Включение / Выключение захвата:</translation>
+        <translation type="obsolete">Включение / Выключение захвата:</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="42"/>
         <source>Mode</source>
         <translation>Режимы</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.ui" line="68"/>
+        <location filename="../../src/mainwindow.cpp" line="300"/>
+        <source>Switch off Lightpack</source>
+        <translation>Выключить Лайтпак</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.ui" line="175"/>
@@ -224,79 +229,84 @@
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="235"/>
-        <location filename="../../src/mainwindow.cpp" line="665"/>
+        <location filename="../../src/mainwindow.cpp" line="231"/>
+        <location filename="../../src/mainwindow.cpp" line="663"/>
         <source>Lightpack: %1</source>
         <translation>Лайтпак: %1</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="233"/>
-        <location filename="../../src/mainwindow.cpp" line="310"/>
+        <location filename="../../src/mainwindow.cpp" line="229"/>
+        <location filename="../../src/mainwindow.cpp" line="308"/>
         <source>Error with connection device, verbose in logs</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="103"/>
+        <location filename="../../src/mainwindow.cpp" line="99"/>
         <source>GrabX11</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="219"/>
-        <location filename="../../src/mainwindow.cpp" line="851"/>
+        <location filename="../../src/mainwindow.cpp" line="215"/>
+        <location filename="../../src/mainwindow.cpp" line="849"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="225"/>
-        <location filename="../../src/mainwindow.cpp" line="860"/>
+        <location filename="../../src/mainwindow.cpp" line="221"/>
+        <location filename="../../src/mainwindow.cpp" line="858"/>
         <source>&amp;Profiles</source>
         <translation>&amp;Профили</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="230"/>
-        <location filename="../../src/mainwindow.cpp" line="320"/>
+        <location filename="../../src/mainwindow.cpp" line="226"/>
+        <location filename="../../src/mainwindow.cpp" line="318"/>
         <source>Disabled</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="237"/>
-        <location filename="../../src/mainwindow.cpp" line="707"/>
+        <location filename="../../src/mainwindow.cpp" line="233"/>
+        <location filename="../../src/mainwindow.cpp" line="705"/>
         <source>System default</source>
         <translation>По умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="587"/>
+        <location filename="../../src/mainwindow.cpp" line="303"/>
+        <source>Switch on Lightpack</source>
+        <translation>Включить Лайтпак</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="585"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="220"/>
-        <location filename="../../src/mainwindow.cpp" line="855"/>
+        <location filename="../../src/mainwindow.cpp" line="216"/>
+        <location filename="../../src/mainwindow.cpp" line="853"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="221"/>
-        <location filename="../../src/mainwindow.cpp" line="864"/>
+        <location filename="../../src/mainwindow.cpp" line="217"/>
+        <location filename="../../src/mainwindow.cpp" line="862"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="222"/>
-        <location filename="../../src/mainwindow.cpp" line="868"/>
+        <location filename="../../src/mainwindow.cpp" line="218"/>
+        <location filename="../../src/mainwindow.cpp" line="866"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="223"/>
-        <location filename="../../src/mainwindow.cpp" line="872"/>
+        <location filename="../../src/mainwindow.cpp" line="219"/>
+        <location filename="../../src/mainwindow.cpp" line="870"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="228"/>
-        <location filename="../../src/mainwindow.cpp" line="314"/>
-        <location filename="../../src/mainwindow.cpp" line="666"/>
+        <location filename="../../src/mainwindow.cpp" line="224"/>
+        <location filename="../../src/mainwindow.cpp" line="312"/>
+        <location filename="../../src/mainwindow.cpp" line="664"/>
         <source>Enabled profile: %1</source>
         <translation>Включен профиль: %1</translation>
     </message>
