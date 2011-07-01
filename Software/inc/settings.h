@@ -41,6 +41,7 @@
 #define LANGUAGE_DEFAULT_NAME           "<System>" /* system lang */
 #define SHOW_ANOTHER_GUI                false
 #define DEBUG_LEVEL_DEFAULT             Debug::LowLevel
+#define EXPERT_MODE_ENABLED_DEFAULT     false
 
 // ProfileName.ini
 // [General]
@@ -97,6 +98,8 @@ public:
     static void resetDefaults();
 
     //
+    static bool isExpertModeEnabled();
+    static void setExpertModeEnabled(bool isEnabled);
     static LightpackMode getMode();
     static void setMode(LightpackMode mode);
     static bool isMoodLampLiquidMode();

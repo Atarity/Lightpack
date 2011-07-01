@@ -42,6 +42,7 @@
 #define KEY_MOOD_LAMP_SPEED       "MoodLampSpeed"
 #define KEY_MOOD_LAMP_LIQUID_MODE "MoodLampLiquidMode"
 #define KEY_MODE                  "Mode"
+#define KEY_EXPERT_MODE_ENABLED   "ExpertModeEnabled"
 
 QSettings * Settings::m_currentProfile;
 QSettings * Settings::m_mainConfig; // LightpackMain.conf contains last profile
@@ -67,6 +68,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isSetDebugLe
     setNewOptionMain("Language",       LANGUAGE_DEFAULT_NAME);
     setNewOptionMain("ShowAnotherGui", SHOW_ANOTHER_GUI);
     setNewOptionMain("DebugLevel",     DEBUG_LEVEL_DEFAULT);
+    setNewOptionMain(KEY_EXPERT_MODE_ENABLED, EXPERT_MODE_ENABLED_DEFAULT);
 
     if (isSetDebugLevelFromConfig)
     {
@@ -252,6 +254,16 @@ QPoint Settings::getDefaultPosition(int ledIndex)
     result.setY(y + (ledIndex % ledsCountDiv2) * LED_FIELD_HEIGHT_DEFAULT_VALUE);
 
     return result;
+}
+
+bool Settings::isExpertModeEnabled()
+{
+    return m_mainConfig->value(KEY_EXPERT_MODE_ENABLED).toBool();
+}
+
+void Settings::setExpertModeEnabled(bool isEnabled)
+{
+    m_mainConfig->setValue(KEY_EXPERT_MODE_ENABLED, isEnabled);
 }
 
 static int getValidGrabSlowdownMs(int value)

@@ -101,11 +101,13 @@ private slots:
     void setAvgColorOnAllLEDs(int value);
 
     void onMoodLampColorChanged(QColor color);
+    void onExpertModeEnabledChanged(bool isEnabled);
 
 private:
     void connectSignalsSlots();
 
     void updateTrayAndActionStates();
+    void updateExpertModeWidgetsVisibility();
 
     void createTrayIcon();
     void createActions();

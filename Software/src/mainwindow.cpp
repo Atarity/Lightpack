@@ -90,6 +90,7 @@ MainWindow::MainWindow(QWidget *parent) :
     if( Settings::valueMain("ShowAnotherGui").toBool() == false ){
         ui->tabWidget->removeTab( ui->tabWidget->indexOf( ui->tabAnotherGUI ) );
     }
+
     isWinAPIGrab = false;
 #ifdef Q_WS_WIN
     isWinAPIGrab = true;    
@@ -163,7 +164,7 @@ void MainWindow::connectSignalsSlots()
 
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
     connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColorChanged(QColor)));
-
+    connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabledChanged(bool)));
     // Another GUI
     // Connect signals to another GUI slots only if ShowAnotherGui == true
     if( Settings::valueMain("ShowAnotherGui").toBool() ){
@@ -247,6 +248,20 @@ void MainWindow::closeEvent(QCloseEvent *event)
         hideSettings();
         event->ignore();
     }
+}
+void MainWindow::onExpertModeEnabledChanged(bool isEnabled)
+{
+    Settings::setExpertModeEnabled(isEnabled);
+    updateExpertModeWidgetsVisibility();
+}
+
+void MainWindow::updateExpertModeWidgetsVisibility()
+{
+    ui->groupBox_pwmColorDepth->setVisible(Settings::isExpertModeEnabled());
+    ui->groupBox_pwmTimerDelay->setVisible(Settings::isExpertModeEnabled());
+    ui->label_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
+    ui->doubleSpinBox_HW_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
+    ui->checkBox_USB_SendDataOnlyIfColorsChanges->setVisible(Settings::isExpertModeEnabled());
 }
 
 // ----------------------------------------------------------------------------
@@ -961,9 +976,12 @@ void MainWindow::loadSettingsToMainWindow()
     ui->horizontalSlider_HW_ColorDepth->setValue    ( Settings::value("Firmware/ColorDepth").toInt() );
     ui->spinBox_HW_SmoothSlowdown->setValue         ( Settings::value("Firmware/SmoothSlowdown").toInt());
 
+    ui->checkBox_ExpertModeEnabled->setChecked      ( Settings::isExpertModeEnabled() );
+
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
     on_cb_Modes_currentIndexChanged ( ui->cb_Modes->currentIndex() ); //
     onMoodLampModeChanged(ui->radioButton_LiquidColorMoodLampMode->isChecked());
+    updateExpertModeWidgetsVisibility();
 }
 
 
