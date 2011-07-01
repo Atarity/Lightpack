@@ -30,7 +30,8 @@
 #include "LedDeviceFactory.hpp"
 #include <QDesktopWidget>
 #include <QPlainTextEdit>
-
+#include "WinAPIGrabber.hpp"
+#include "QtGrabber.hpp"
 #include "debug.h"
 
 // ----------------------------------------------------------------------------
@@ -66,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ledDevice = LedDeviceFactory::create(this, Settings::valueMain("IsAlienFxMode").toBool());
 
-    grabManager = new GrabManager();
+    grabManager = new GrabManager(new QtGrabber(grabManager));
 
     aboutDialog = new AboutDialog(this);
 
@@ -834,7 +835,7 @@ void MainWindow::grabSwitchQtWinAPI()
 {    
     ui->radioButton_GrabWinAPI->setChecked(isWinAPIGrab);
 
-    grabManager->switchQtWinApi( isWinAPIGrab );
+    grabManager->setGrabber( new QtGrabber(grabManager) );
 }
 
 // ----------------------------------------------------------------------------

@@ -117,7 +117,9 @@ SOURCES += src/main.cpp \
     src/speedtest.cpp \
     src/LedDeviceFactory.cpp \
     src/LightFx.cpp \
-    src/qcolorbutton.cpp
+    src/qcolorbutton.cpp \
+    grab/WinAPIGrabber.cpp \
+    grab/QtGrabber.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/LIGHTPACK_HW.h \
     ../CommonHeaders/COMMANDS.h \
@@ -141,7 +143,10 @@ HEADERS += hidapi/hidapi.h \
     src/LedDeviceFactory.hpp \
     src/ILedDevice.hpp \
     src/LightpackMock.hpp \
-    src/qcolorbutton.hpp
+    src/qcolorbutton.hpp \
+    grab/IGrabber.hpp \
+    grab/WinAPIGrabber.hpp \
+    grab/QtGrabber.hpp
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui
