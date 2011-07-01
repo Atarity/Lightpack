@@ -227,8 +227,10 @@ int Red=0;
 int Green=0;
 int Blue=0;
 int speed=1000;
-
-// Colors changes when middle button clicked
+QColor prevColor=Qt::black;
+int checkInd = 0;
+int GrabManager::checkColors[GrabManager::ColorsMoodLampCount];
+// Colors for Moodlamp
 const QColor GrabManager::colorsMoodLamp[GrabManager::ColorsMoodLampCount] = {
     Qt::white, Qt::black ,
     Qt::red, qRgb(255,128,0) , Qt::yellow, Qt::green, qRgb(128,255,255), Qt::blue, qRgb(128,0,255), //rainbow
@@ -262,6 +264,49 @@ int random(int val)
     return qrand()%val;
 }
 
+int GrabManager::genNewSpeed(int value)
+{
+    //speed = 1000 /  ( random(m_SpeedMoodLamp)+1);
+    return  speed = 1000 /  ( value+random(25)+1);
+}
+
+QColor GrabManager::genNewColor()
+{
+    QColor newColor;
+#if 0
+    // not repeat previous color
+    do {
+        newColor = colorsMoodLamp[random( ColorsMoodLampCount)];
+    } while (newColor == prevColor);
+     prevColor = newColor;
+#endif
+
+     // once per cycle
+     bool fl=false;
+     do {
+         int ind = random( ColorsMoodLampCount);
+         newColor =  colorsMoodLamp[ind];
+         fl=false;
+         if (checkInd<ColorsMoodLampCount)
+         {
+             for (int i=0;i<checkInd;i++)
+                 if (checkColors[i]==ind)
+                     fl=true;
+             if (!fl)
+             {
+                 checkColors[checkInd]=ind;
+                 checkInd++;
+             }
+         }
+         else
+         {
+             checkInd=0;
+             checkColors[checkInd]=ind;
+         }
+     } while (fl);
+     return newColor;
+}
+
 void GrabManager::moodlamp()
 {
       DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
@@ -271,8 +316,8 @@ void GrabManager::moodlamp()
 
         if ((Red==newRed) && (Green==newGreen) && (Blue==newBlue))
         {
-            speed = 1000 /  ( random(m_SpeedMoodLamp)+1);
-            QColor newColor = colorsMoodLamp[random(ColorsMoodLampCount)];
+            speed = genNewSpeed(m_SpeedMoodLamp);
+            QColor newColor = genNewColor();
             newRed = newColor.red();
             newGreen = newColor.green();
             newBlue = newColor.blue();
@@ -307,7 +352,6 @@ void GrabManager::moodlamp()
                if(prGreen > 0xff) prGreen = 0xff;
                if(prBlue > 0xff) prBlue = 0xff;
 
-
             for (int i = 0; i < LEDS_COUNT; i++)
             {
                 if(ledWidgets[i]->isGrabEnabled())
@@ -318,7 +362,6 @@ void GrabManager::moodlamp()
         }
       else
       {
-          //todo backlight
                   for (int i = 0; i < LEDS_COUNT; i++)
                   {
                       if(ledWidgets[i]->isGrabEnabled())
@@ -326,11 +369,8 @@ void GrabManager::moodlamp()
                       else
                           colorsCurrent[i].rgb = 0; // off led
                   }
-
       }
-
   emit updateLedsColors( colorsCurrent );
-
 }
 
 
@@ -611,8 +651,7 @@ void GrabManager:: setSpeedMoodLamp(int value)
 {
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
     this->m_SpeedMoodLamp = value;
-    moodlamp();
-
+    speed = genNewSpeed(value);
     Settings::setValue("SpeedMoodLamp", value);
 }
 

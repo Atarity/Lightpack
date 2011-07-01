@@ -87,6 +87,8 @@ private:
     void initLedWidgets();
     void ambilight();
     void moodlamp();
+    int genNewSpeed(int value);
+    QColor genNewColor();
 
 
 private: // variables
@@ -120,6 +122,7 @@ private: // variables
     QColor m_backlightColor;
 
     static const int ColorsMoodLampCount = 15;
+    static int checkColors[ColorsMoodLampCount];
     static const QColor colorsMoodLamp[ColorsMoodLampCount];
 
     int ambilightDelayMs;
