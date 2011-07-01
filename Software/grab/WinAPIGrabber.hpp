@@ -1,5 +1,6 @@
 #ifndef WINAPIGRABBER_HPP
 #define WINAPIGRABBER_HPP
+#ifdef Q_WS_WIN
 
 #include "IGrabber.hpp"
 #define WINVER 0x0500 /* Windows2000 for MonitorFromWindow(..) func */
@@ -41,5 +42,5 @@ private:
     HBITMAP hBitmap;
 
 };
-
+#endif
 #endif // WINAPIGRABBER_HPP

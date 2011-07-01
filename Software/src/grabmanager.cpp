@@ -27,7 +27,9 @@
 #include "grabmanager.h"
 #include "grab_api.h"
 #include <QtCore/qmath.h>
-#include "WinAPIGrabber.hpp"
+#ifdef Q_WS_WIN
+    #include "WinAPIGrabber.hpp"
+#endif
 #include "debug.h"
 
 GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)

@@ -1,3 +1,5 @@
+#ifdef Q_WS_WIN
+
 #include"WinAPIGrabber.hpp"
 #include"debug.h"
 #include<cmath>
@@ -208,3 +210,4 @@ void WinAPIGrabber::releaseScreenBuffer()
 {
 
 }
+#endif
