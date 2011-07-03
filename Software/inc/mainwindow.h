@@ -35,6 +35,7 @@
 #include "grabmanager.h"            /* class GrabManager */
 #include "struct_rgb.h"
 #include "speedtest.h"
+#include "../src/apiserver.h"
 #include "../src/qcolorbutton.hpp"
 
 namespace Ui {
@@ -56,6 +57,11 @@ signals:
 public slots:
     void ledDeviceCallSuccess(bool isSuccess);
     void refreshAmbilightEvaluated(double updateResultMs);
+    void ambilightOn(); /* using in actions */
+    void ambilightOff(); /* using in actions */
+    QStringList profilesFindAll();
+    void profileSwitch(const QString & configName);
+
 
 protected:
     virtual void changeEvent(QEvent *e);
@@ -71,8 +77,7 @@ private slots:
     void showAbout(); /* using in actions */
     void showSettings(); /* using in actions */
     void hideSettings(); /* using in iconActivated(..) */
-    void ambilightOn(); /* using in actions */
-    void ambilightOff(); /* using in actions */
+
     void quit(); /* using in actions */
 
     void grabAmbilightOnOff();
@@ -85,7 +90,6 @@ private slots:
     void openCurrentProfile();
 
     void profileRename();
-    void profileSwitch(const QString & configName);
     void profileTraySwitch();
     void profileNew();
     void profileResetToDefaultCurrent();
@@ -115,7 +119,6 @@ private:
 
     void grabSwitchQtWinAPI();
 
-    void profilesFindAll();
     void profileLoadLast();
     void profileTraySync();
 
@@ -129,13 +132,18 @@ private:
 
     void updateCbModesPosition();
 
+public:
+    bool isAmbilightOn; /* is grab desktop window ON */
+
 private:
     ILedDevice *ledDevice;
     GrabManager *grabManager;
     AboutDialog *aboutDialog;
     SpeedTest *speedTest;
 
-    bool isAmbilightOn; /* is grab desktop window ON */
+    ApiServer *server;
+
+
     bool isErrorState;
     bool isWinAPIGrab;
 

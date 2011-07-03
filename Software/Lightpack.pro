@@ -70,6 +70,8 @@ TRANSLATIONS = res/translations/ru_RU.ts
 RESOURCES    = res/LightpackResources.qrc
 RC_FILE      = res/Lightpack.rc
 
+QT           += network
+
 unix{
     CONFIG    += link_pkgconfig
     PKGCONFIG += libusb-1.0
@@ -117,7 +119,8 @@ SOURCES += src/main.cpp \
     src/speedtest.cpp \
     src/LedDeviceFactory.cpp \
     src/LightFx.cpp \
-    src/qcolorbutton.cpp
+    src/qcolorbutton.cpp \
+    src/apiserver.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/LIGHTPACK_HW.h \
     ../CommonHeaders/COMMANDS.h \
@@ -141,7 +144,8 @@ HEADERS += hidapi/hidapi.h \
     src/LedDeviceFactory.hpp \
     src/ILedDevice.hpp \
     src/LightpackMock.hpp \
-    src/qcolorbutton.hpp
+    src/qcolorbutton.hpp \
+    src/apiserver.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui

@@ -68,6 +68,8 @@ void Settings::Initialize( const QString & applicationDirPath, bool isSetDebugLe
     setNewOptionMain("Language",       LANGUAGE_DEFAULT_NAME);
     setNewOptionMain("ShowAnotherGui", SHOW_ANOTHER_GUI);
     setNewOptionMain("DebugLevel",     DEBUG_LEVEL_DEFAULT);
+    setNewOptionMain("ApiPort",        API_PORT_DEFAULT);
+    setNewOptionMain("EnableApi",      ENABLE_API_DEFAULT);
     setNewOptionMain(KEY_EXPERT_MODE_ENABLED, EXPERT_MODE_ENABLED_DEFAULT);
 
     if (isSetDebugLevelFromConfig)

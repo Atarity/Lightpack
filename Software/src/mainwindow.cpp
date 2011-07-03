@@ -32,6 +32,7 @@
 #include <QPlainTextEdit>
 
 #include "debug.h"
+#include "../src/apiserver.h"
 
 // ----------------------------------------------------------------------------
 // Lightpack settings window
@@ -46,7 +47,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ui->tabWidget->setCurrentIndex( 0 );
-
 
     createActions();
     createTrayIcon();
@@ -81,6 +81,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connectSignalsSlots();
 
     profileLoadLast();
+
+    if (Settings::valueMain("EnableApi").toBool())
+    {
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "start API server";
+        server = new ApiServer(this);
+        if (!server->listen(QHostAddress::Any, Settings::valueMain("ApiPort").toInt())) {
+                     QMessageBox::critical(this, tr("API Server"),
+                                           tr("Unable to start the server: %1.").arg(server->errorString()));
+                     close();
+                     return;
+        }
+    }
 
     loadTranslation( Settings::valueMain( "Language" ).toString() );
 
@@ -639,7 +651,7 @@ void MainWindow::profileDeleteCurrent()
     ui->comboBox_Profiles->removeItem( ui->comboBox_Profiles->currentIndex() );
 }
 
-void MainWindow::profilesFindAll()
+QStringList MainWindow::profilesFindAll()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -658,6 +670,7 @@ void MainWindow::profilesFindAll()
             ui->comboBox_Profiles->addItem(settingsFiles.at(i));
         }
     }
+    return settingsFiles;
 }
 
 void MainWindow::profileLoadLast()
