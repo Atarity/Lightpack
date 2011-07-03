@@ -13,14 +13,17 @@
 // commands
 // lock - begin work with api (disable capture,backlight)
 // unlock - end work with api (enable capture,backlight)
-// setColor() - на все
-// setProfile(<name>)
+// setcolor:1-r,g,b;5-r,g,b;
+// setprofile:<name>
 // setstatus: - on, off
 
 ApiServer::ApiServer(QObject *parent)
     : QTcpServer(parent)
 {
     activeClient = NULL;
+    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
+        colorsNew     << StructRGB();
+    }
 }
 
 void ApiServer::incomingConnection(int socketfd)
@@ -83,6 +86,7 @@ void ApiServer::readyRead()
                     activeClient = client;
                     ret="success";
                     //todo disable capture
+                    mw->grabManager->setAmbilightOn(false,true);
 
                 }
                 if(activeClient == client) ret = "success";
@@ -95,11 +99,27 @@ void ApiServer::readyRead()
                     activeClient = NULL;
                     ret="success";
                     //todo enable capture
+                    mw->grabManager->setAmbilightOn(true,true);
 
                 }
                 client->write(QString("unlock:%1\n").arg(ret).toUtf8());
-            }else if (line.left(7)=="setcolor") {
+            }else if (line.left(8)=="setcolor") {
                 //todo
+                QString str = line.split(":")[1];
+                qDebug() << "Colors line:" << str;
+                QStringList colors = str.split(";");
+                for (int i = 0; i < colors.size(); ++i)
+                {
+                    QString color = colors.at(i);
+                    if (color!="")
+                    {
+                        qDebug() << "Color:" << color;
+                        QString num = color.split("-")[0];
+                        QStringList rgb = color.split("-")[1].split(",");
+                        colorsNew[num.toInt()].rgb = qRgb(rgb[0].toInt(),rgb[1].toInt(),rgb[2].toInt());
+                    }
+                }
+                emit updateLedsColors( colorsNew );
 
                 client->write(QString("blabla\n").toUtf8());
             }else{
@@ -118,6 +138,11 @@ void ApiServer::disconnected()
 {
     QTcpSocket *client = (QTcpSocket*)sender();
     qDebug() << "Client disconnected:" << client->peerAddress().toString();
-
+    if (activeClient==client)
+    {
+        activeClient = NULL;
+        MainWindow *mw = (MainWindow*)parent();
+        mw->grabManager->setAmbilightOn(true,true);
+    }
     clients.remove(client);
 }

@@ -78,9 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initLabelsForGrabbedColors();
 
-    connectSignalsSlots();
 
-    profileLoadLast();
 
     if (Settings::valueMain("EnableApi").toBool())
     {
@@ -93,6 +91,10 @@ MainWindow::MainWindow(QWidget *parent) :
                      return;
         }
     }
+
+    connectSignalsSlots();
+
+    profileLoadLast();
 
     loadTranslation( Settings::valueMain( "Language" ).toString() );
 
@@ -146,6 +148,7 @@ void MainWindow::connectSignalsSlots()
 
     // Connect GrabManager with ledDevice
     connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
+    connect(server, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
 
     // Main options
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));

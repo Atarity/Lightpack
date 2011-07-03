@@ -134,10 +134,11 @@ private:
 
 public:
     bool isAmbilightOn; /* is grab desktop window ON */
+    GrabManager *grabManager;
 
 private:
     ILedDevice *ledDevice;
-    GrabManager *grabManager;
+
     AboutDialog *aboutDialog;
     SpeedTest *speedTest;
 

@@ -7,6 +7,8 @@
 #include <QMap>
 #include <QSet>
 
+#include "struct_rgb.h"
+
 #define VERSION_API      "1.0"
 
 
@@ -16,6 +18,9 @@ class ApiServer : public QTcpServer
 
     public:
         ApiServer(QObject *parent=0);
+
+    signals:
+        void updateLedsColors(const QList<StructRGB> & colorsNew);
 
     private slots:
         void readyRead();
@@ -27,6 +32,8 @@ class ApiServer : public QTcpServer
     private:
         QSet<QTcpSocket*> clients;
         QTcpSocket* activeClient;
+        QList<StructRGB> colorsNew;
+
 
 };
 
