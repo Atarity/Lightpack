@@ -61,6 +61,9 @@ public slots:
     void ambilightOff(); /* using in actions */
     QStringList profilesFindAll();
     void profileSwitch(const QString & configName);
+    void profileSwitchCombobox(QString profile);
+    void updateGrabbedColors(const QList<StructRGB> & colors);
+
 
 
 protected:
@@ -100,7 +103,6 @@ private slots:
 
     void switchQtWinAPIClick();
     void startTestsClick();
-    void updateGrabbedColors(const QList<StructRGB> & colors);
 
     void setAvgColorOnAllLEDs(int value);
 
@@ -135,9 +137,9 @@ private:
 public:
     bool isAmbilightOn; /* is grab desktop window ON */
     GrabManager *grabManager;
+    ILedDevice *ledDevice;
 
 private:
-    ILedDevice *ledDevice;
 
     AboutDialog *aboutDialog;
     SpeedTest *speedTest;

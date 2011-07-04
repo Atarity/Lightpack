@@ -595,8 +595,7 @@ void MainWindow::profileTraySwitch()
         if( action->isChecked() ){
             if( action->text() != ui->comboBox_Profiles->currentText() ){
                 DEBUG_LOW_LEVEL << Q_FUNC_INFO << "switch to" << action->text();
-                int index = ui->comboBox_Profiles->findText( action->text() );
-                ui->comboBox_Profiles->setCurrentIndex( index );
+                profileSwitchCombobox( action->text() );
                 return;
             }
         }else{
@@ -606,6 +605,12 @@ void MainWindow::profileTraySwitch()
             }
         }
     }
+}
+
+void MainWindow::profileSwitchCombobox(QString profile)
+{
+    int index = ui->comboBox_Profiles->findText( profile );
+    ui->comboBox_Profiles->setCurrentIndex( index );
 }
 
 void MainWindow::profileNew()

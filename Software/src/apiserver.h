@@ -11,6 +11,12 @@
 
 #define VERSION_API      "1.0"
 
+class ClientSettings
+{
+    public:
+        int smooth;
+        double gamma;
+};
 
 class ApiServer : public QTcpServer
 {
@@ -30,10 +36,13 @@ class ApiServer : public QTcpServer
         void incomingConnection(int socketfd);
 
     private:
-        QSet<QTcpSocket*> clients;
+        //QSet<QTcpSocket*> clients;
+        QMap<QTcpSocket*,ClientSettings>clients;
         QTcpSocket* activeClient;
         QList<StructRGB> colorsNew;
 
+        QString getCommand(QString str);
+        QString getArg(QString str);
 
 };
 

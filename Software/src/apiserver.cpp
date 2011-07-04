@@ -13,9 +13,11 @@
 // commands
 // lock - begin work with api (disable capture,backlight)
 // unlock - end work with api (enable capture,backlight)
-// setcolor:1-r,g,b;5-r,g,b;
-// setprofile:<name>
-// setstatus: - on, off
+// setcolor:1-r,g,b;5-r,g,b;   numbering starts with 1
+// setgamma:2.00 - set gamma for setcolor
+// setsmooth:100 -set smooth in device
+// setprofile:<name> - set profile
+// setstatus:on - set status (on, off)
 
 ApiServer::ApiServer(QObject *parent)
     : QTcpServer(parent)
@@ -30,14 +32,38 @@ void ApiServer::incomingConnection(int socketfd)
 {
     QTcpSocket *client = new QTcpSocket(this);
     client->setSocketDescriptor(socketfd);
-    clients.insert(client);
+    ClientSettings cs;
+    cs.gamma = 2;
+    cs.smooth = 100;
+    clients.insert(client,cs);
 
     client->write(QString("version:%1\n").arg(VERSION_API).toUtf8());
 
-    qDebug() << "New client from:" << client->peerAddress().toString();
+    DEBUG_LOW_LEVEL << "New client from:" << client->peerAddress().toString();
 
     connect(client, SIGNAL(readyRead()), this, SLOT(readyRead()));
     connect(client, SIGNAL(disconnected()), this, SLOT(disconnected()));
+}
+
+QString ApiServer::getCommand(QString str)
+{
+    QString command = "empty";
+    if (str.length()>0)
+    {
+        if (str.indexOf(":")>0)
+            command = str.split(":")[0];
+        else
+            command=str;
+    }
+    return command;
+ }
+
+QString ApiServer::getArg(QString str)
+{
+    QString arg = "";
+    if(str.indexOf(":"))
+        arg = str.split(":")[1];
+    return arg;
 }
 
 void ApiServer::readyRead()
@@ -46,82 +72,161 @@ void ApiServer::readyRead()
     while(client->canReadLine())
     {
         QString line = QString::fromUtf8(client->readLine()).trimmed();
-        qDebug() << "Read line:" << line;
+        DEBUG_LOW_LEVEL << "Read line:" << line;
+
+        QString command = getCommand(line);
 
         MainWindow *mw = (MainWindow*)parent();
         try{
-            if (line=="getstatus")
+            if (command=="getstatus")
             {
                 QString status = "off";
                 if (mw->isAmbilightOn) status="on" ;
                 client->write(QString("status:%1\n").arg(status).toUtf8());
-            }else if (line.left(9)=="setstatus") {
-                    QString status = line.split(":")[1];
-                    if  (status=="on") mw->ambilightOn();
-                    if  (status=="off") mw->ambilightOff();
-                    client->write(QString("ok\n").toUtf8());
-            }else if (line=="getstatusapi") {
+            }else if (command=="setstatus") {
+                    QString status = getArg(line);
+                    QString tmp = "error";
+                    if  (status=="on") {mw->ambilightOn();tmp = "ok";}
+                    if  (status=="off") {mw->ambilightOff();tmp="ok";}
+                    client->write(QString("setstatus:%1\n").arg(tmp).toUtf8());
+            }else if (command=="getstatusapi") {
                 QString statusApi = "busy";
                 if (this->activeClient==NULL) statusApi="idle" ;
-                client->write(QString("status:%1\n").arg(statusApi).toUtf8());
-            }else if (line=="getprofile") {
-                QString profile = Settings::fileName();
+                client->write(QString("statusapi:%1\n").arg(statusApi).toUtf8());
+            }else if (command=="getprofile") {
+                QString profile =  QFileInfo(Settings::fileName()).completeBaseName();
                 client->write(QString("profile:%1\n").arg(profile).toUtf8());
-            }else if (line=="getprofiles") {
+            }else if (command=="getprofiles") {
                 QString profiles;
                 QStringList settingsFiles = mw->profilesFindAll();
                 for(int i=0; i<settingsFiles.count(); i++){
                     profiles +=settingsFiles.at(i)+";";
                 }
                 client->write(QString("profiles:%1\n").arg(profiles).toUtf8());
-            }else if (line.left(10)=="setprofile") {
-                QString profile = line.split(":")[1];
-                // load profile
-                mw->profileSwitch(profile);
-                client->write(QString("profile:%1\n").arg(profile).toUtf8());
-            }else if (line=="lock") {
+            }else if (command=="setprofile") {
+                QString profile = getArg(line);
+                QString tmp = "unknow";
+                QStringList settingsFiles = mw->profilesFindAll();
+                for(int i=0; i<settingsFiles.count(); i++){
+                    if (profile==settingsFiles.at(i)){
+                    //load profile
+                    mw->profileSwitchCombobox(profile);
+                    tmp = "set";
+                    break;
+                    }
+                }
+                client->write(QString("profile:%1 %2\n").arg(tmp,profile).toUtf8());
+            }else if (command=="lock") {
                 QString ret = "error";
                 if (activeClient==NULL)
                 {
                     activeClient = client;
                     ret="success";
-                    //todo disable capture
+                    //disable capture
                     mw->grabManager->setAmbilightOn(false,true);
-
+                    // mw->ledDevice->setSmoothSlowdown(cs.smooth);
                 }
                 if(activeClient == client) ret = "success";
                 client->write(QString("lock:%1\n").arg(ret).toUtf8());
-            }else if (line=="unlock") {
+            }else if (command=="unlock") {
                 QString ret = "error";
                 if (activeClient == NULL) ret = "success";
                 if (activeClient==client)
                 {
                     activeClient = NULL;
                     ret="success";
-                    //todo enable capture
+                    //enable capture
                     mw->grabManager->setAmbilightOn(true,true);
-
                 }
                 client->write(QString("unlock:%1\n").arg(ret).toUtf8());
-            }else if (line.left(8)=="setcolor") {
-                //todo
-                QString str = line.split(":")[1];
-                qDebug() << "Colors line:" << str;
-                QStringList colors = str.split(";");
-                for (int i = 0; i < colors.size(); ++i)
+            }else if(command=="setgamma"){
+                QString str = getArg(line);
+                bool ok;
+                 QString ret = "error";
+                double gamma = str.toDouble(&ok);
+                if (ok)
                 {
-                    QString color = colors.at(i);
-                    if (color!="")
-                    {
-                        qDebug() << "Color:" << color;
-                        QString num = color.split("-")[0];
-                        QStringList rgb = color.split("-")[1].split(",");
-                        colorsNew[num.toInt()].rgb = qRgb(rgb[0].toInt(),rgb[1].toInt(),rgb[2].toInt());
-                    }
+                     ClientSettings cs = clients.value(client);
+                     cs.gamma = gamma;
+                     clients.remove(client);
+                     clients.insert(client,cs);
+                     ret = "ok";
                 }
-                emit updateLedsColors( colorsNew );
+                client->write(QString("setgamma:%1\n").arg(ret).toUtf8());
+            }else if(command=="setsmooth"){
+            QString str = getArg(line);
+            bool ok;
+             QString ret = "error";
+            double smooth = str.toDouble(&ok);
+            if (ok)
+            {
+                 ClientSettings cs = clients.value(client);
+                 cs.smooth = smooth;
+                 clients.remove(client);
+                 clients.insert(client,cs);
+                 mw->ledDevice->setSmoothSlowdown(cs.smooth);
+                 ret = "ok";
+            }
+            client->write(QString("setsmooth:%1\n").arg(ret).toUtf8());
+        }else if (command=="setcolor") {
+                if (client == activeClient)
+                {
+                    QString str = getArg(line);
+                    DEBUG_HIGH_LEVEL << "Colors line:" << str;
+                    // parse colors
+                    QString tmp="ok";
+                    if (str=="") tmp = "error";
+                    QStringList colors = str.split(";");
+                    for (int i = 0; i < colors.size(); ++i)
+                    {
+                        QString color = colors.at(i);
+                        if (color!="")
+                        {
+                            qDebug() << "Color:" << color;
+                            bool ok;
+                            int num=0,r=0,g=0,b=0;
+                            if (color.indexOf("-")>0)
+                            {
+                                   num= color.split("-")[0].toInt(&ok);
+                                   if (ok)
+                                   {
+                                       QStringList rgb = color.split("-")[1].split(",");
+                                       if (rgb.count()>0) r = rgb[0].toInt(&ok);
+                                       if (rgb.count()>1) g = rgb[1].toInt(&ok);
+                                       if (rgb.count()>2) b = rgb[2].toInt(&ok);
+                                   }
+                            }
+                            if ((ok)&&(num>0)&&(num<11))
+                            {
+                                ClientSettings cs = clients.value(client);
+                                qDebug() << "gamma "<< cs.gamma;
 
-                client->write(QString("blabla\n").toUtf8());
+                                mw->ledDevice->setSmoothSlowdown(cs.smooth);
+
+                                r = 256.0 * pow( r  / 256.0, cs.gamma );
+                                g = 256.0 * pow( g / 256.0, cs.gamma );
+                                b = 256.0 * pow( b  / 256.0, cs.gamma );
+
+                                if(r > 0xff) r = 0xff;
+                                if(g > 0xff) g = 0xff;
+                                if(b > 0xff) b = 0xff;
+                                colorsNew[num-1].rgb = qRgb(r,g,b);
+                            }
+                            else
+                                tmp = "error";
+                        }
+                    }
+                    emit updateLedsColors( colorsNew );
+                    mw->updateGrabbedColors(colorsNew);
+                    client->write(QString("setcolor:%1\n").arg(tmp).toUtf8());
+                }
+                else
+                {
+                    if (activeClient!=NULL)
+                        client->write(QString("setcolor:busy\n").toUtf8());
+                    else
+                        client->write(QString("setcolor:need lock\n").toUtf8());
+                }
             }else{
                 client->write(QString("unknow\n").toUtf8());
             }
@@ -137,7 +242,7 @@ void ApiServer::readyRead()
 void ApiServer::disconnected()
 {
     QTcpSocket *client = (QTcpSocket*)sender();
-    qDebug() << "Client disconnected:" << client->peerAddress().toString();
+    DEBUG_LOW_LEVEL << "Client disconnected:" << client->peerAddress().toString();
     if (activeClient==client)
     {
         activeClient = NULL;
