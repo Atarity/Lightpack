@@ -405,35 +405,10 @@ void GrabManager::ambilight()
     QTime t; t.start();
 #endif    
 
-//    grabber->captureScreen();
-    // Capture screen what contains first LED widgets
-    if(isGrabWinAPI){
-        #ifdef Q_WS_WIN
-//            GrabWinAPI::captureScreen();
-        #endif
-        #ifdef Q_WS_X11
-//            GrabX11::captureScreen();
-        #endif
-    }
-    else
-    {
-//        GrabQt::captureScreen();
-    }
-
-    grabber->grabWidgets(ledWidgets, colorsNew, ledWidgets.count());
+    QList<QRgb> widgetsColors = grabber->grabWidgetsColors(ledWidgets);
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         if(ledWidgets[ledIndex]->isGrabEnabled()){
-//            QRgb rgb = grabber->getColor(ledWidgets[ledIndex]);
-            if(isGrabWinAPI){
-                #ifdef Q_WS_WIN
-//                    rgb = GrabWinAPI::getColor( ledWidgets[ledIndex] );
-                #endif
-                #ifdef Q_WS_X11
-//                    rgb = GrabX11::getColor( ledWidgets[ledIndex] );
-                #endif
-            } else {
-//                rgb = GrabQt::getColor( ledWidgets[ledIndex] );
-            }
+            QRgb rgb = widgetsColors[ledIndex];
 
             if( avgColorsOnAllLeds ){
                 avgR += qRed(colorsNew[ledIndex].rgb);
@@ -441,7 +416,7 @@ void GrabManager::ambilight()
                 avgB += qBlue(colorsNew[ledIndex].rgb);
                 countGrabEnabled++;
             }else{
-//                colorsNew[ledIndex].rgb = rgb;
+                colorsNew[ledIndex].rgb = rgb;
             }
         }else{
             colorsNew[ledIndex].rgb = 0; // off led

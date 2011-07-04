@@ -4,14 +4,14 @@
 #include "IGrabber.hpp"
 class QtGrabber : public IGrabber
 {
-    Q_OBJECT
+//    Q_OBJECT
 
 public:
-    QtGrabber(QObject * parent);
+    QtGrabber();
     ~QtGrabber();
     virtual const char * getName();
     virtual void updateGrabScreenFromWidget( QWidget * widget );
-    virtual void grabWidgets(QList<MoveMeWidget *> &widgets, QList<StructRGB> &colors, int widgets_count);
+    virtual QList<QRgb> grabWidgetsColors(QList<MoveMeWidget *> &widgets);
 
 private:
     QRgb getColor(QPixmap pixmap, const QWidget * grabme);

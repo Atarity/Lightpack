@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ledDevice = LedDeviceFactory::create(this, Settings::valueMain("IsAlienFxMode").toBool());
 
-    grabManager = new GrabManager(new QtGrabber(grabManager));
+    grabManager = new GrabManager(new QtGrabber());
 
     aboutDialog = new AboutDialog(this);
 
@@ -835,7 +835,7 @@ void MainWindow::grabSwitchQtWinAPI()
 {    
     ui->radioButton_GrabWinAPI->setChecked(isWinAPIGrab);
 
-    grabManager->setGrabber( new QtGrabber(grabManager) );
+//    grabManager->setGrabber( new QtGrabber() );
 }
 
 // ----------------------------------------------------------------------------

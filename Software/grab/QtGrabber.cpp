@@ -1,9 +1,9 @@
 #include"QtGrabber.hpp"
 #include"debug.h"
 #include"QtGui"
-QtGrabber::QtGrabber(QObject *parent) : IGrabber(parent)
+
+QtGrabber::QtGrabber() : IGrabber()
 {
-//    capture = NULL;
     screen = 0;
 }
 
@@ -22,16 +22,18 @@ void QtGrabber::updateGrabScreenFromWidget(QWidget *widget)
     screenres = QApplication::desktop()->screenGeometry( screen );
 }
 
-void QtGrabber::grabWidgets(QList<MoveMeWidget *> &widgets, QList<StructRGB> &colors, int widgets_count)
+QList<QRgb> QtGrabber::grabWidgetsColors(QList<MoveMeWidget *> &widgets)
 {
     QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->screen(screen) ->winId(),
                                   screenres.x(), //!
                                   screenres.y(), //!
                                   screenres.width(),
                                   screenres.height());
-    for(int i = 0; i < widgets_count; i++) {
-        colors[i].rgb = getColor(pixmap, widgets[i]);
+    QList<QRgb> result;
+    for(int i = 0; i < widgets.size(); i++) {
+        result.append(getColor(pixmap, widgets[i]));
     }
+    return result;
 }
 
 QRgb QtGrabber::getColor(QPixmap pixmap, const QWidget * grabme)
