@@ -87,10 +87,6 @@ MainWindow::MainWindow(QWidget *parent) :
     isErrorState = false;
     isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
 
-    if( Settings::valueMain("ShowAnotherGui").toBool() == false ){
-        ui->tabWidget->removeTab( ui->tabWidget->indexOf( ui->tabAnotherGUI ) );
-    }
-
     isWinAPIGrab = false;
 #ifdef Q_WS_WIN
     isWinAPIGrab = true;    
@@ -167,18 +163,15 @@ void MainWindow::connectSignalsSlots()
     connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColorChanged(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabledChanged(bool)));
     // Another GUI
-    // Connect signals to another GUI slots only if ShowAnotherGui == true
-    if( Settings::valueMain("ShowAnotherGui").toBool() ){
-        connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
-        connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
+    connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
+    connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
 
-        connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
+    connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
 
-        connect(grabManager, SIGNAL(updateLedsColors(QList<StructRGB>)), this, SLOT(updateGrabbedColors(QList<StructRGB>)));
-        connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
-        connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
-        connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
-    }
+    connect(grabManager, SIGNAL(updateLedsColors(QList<StructRGB>)), this, SLOT(updateGrabbedColors(QList<StructRGB>)));
+    connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
+    connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
+    connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
 }
 
 
@@ -263,6 +256,12 @@ void MainWindow::updateExpertModeWidgetsVisibility()
     ui->label_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
     ui->doubleSpinBox_HW_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
     ui->checkBox_USB_SendDataOnlyIfColorsChanges->setVisible(Settings::isExpertModeEnabled());
+    if(Settings::isExpertModeEnabled()) {
+        if (ui->tabWidget->indexOf(ui->tabAnotherGUI) < 0);
+            ui->tabWidget->addTab(ui->tabAnotherGUI, tr("Dev tab"));
+    } else {
+        ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabAnotherGUI));
+    }
 }
 
 // ----------------------------------------------------------------------------
