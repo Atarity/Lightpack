@@ -41,7 +41,7 @@ GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
 
     fpsMs = 0;
     isGrabWinAPI = true;
-    m_SpeedMoodLamp = 0;
+    m_moodLampSpeed = 0;
     m_brightness = 150;
 
     m_backlightColor = QColor(255,255,255);
@@ -245,10 +245,10 @@ void GrabManager::updateLedsColorsIfChanged()
     int timer = ambilightDelayMs;
     switch (m_mode)
     {
-    case 0:
+    case Grab:
         ambilight();
         break;
-    case 1:
+    case MoodLamp:
        moodlamp();
        timer = speed;
        break;
@@ -311,12 +311,12 @@ void GrabManager::moodlamp()
 {
       DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-      if (m_SpeedMoodLamp>0)
+      if (m_moodLampSpeed>0)
       {
 
         if ((Red==newRed) && (Green==newGreen) && (Blue==newBlue))
         {
-            speed = genNewSpeed(m_SpeedMoodLamp);
+            speed = genNewSpeed(m_moodLampSpeed);
             QColor newColor = genNewColor();
             newRed = newColor.red();
             newGreen = newColor.green();
@@ -633,6 +633,8 @@ void GrabManager::settingsProfileChanged()
     this->ambilightDelayMs = Settings::getGrabSlowdownMs();
     this->colorDepth = Settings::value("Firmware/ColorDepth").toInt();
 
+    this->m_mode = Settings::getMode();
+
     for(int i=0; i<ledWidgets.count(); i++){
         ledWidgets[i]->settingsProfileChanged();
     }
@@ -647,12 +649,12 @@ void GrabManager::switchQtWinApi(bool isWinApi)
     firstWidgetPositionChanged();
 }
 
-void GrabManager:: setSpeedMoodLamp(int value)
+void GrabManager::setMoodLampSpeed(int value)
 {
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-    this->m_SpeedMoodLamp = value;
+    this->m_moodLampSpeed = value;
     speed = genNewSpeed(value);
-    Settings::setValue("SpeedMoodLamp", value);
+    Settings::setMoodLampSpeed(value);
 }
 
 void GrabManager::setBackLightColor(QColor color)
@@ -660,16 +662,16 @@ void GrabManager::setBackLightColor(QColor color)
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << color;
     this->m_backlightColor = color;
     moodlamp();
-    //todo save color
+    Settings::setMoodLampColor(color);
 }
 
- void GrabManager::switchMode(int mode)
+ void GrabManager::switchMode(LightpackMode mode)
  {
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
 
      this->m_mode = mode;
 
-     Settings::setValue("Mode", mode);
+     Settings::setMode(mode);
  }
 
  void GrabManager::setBrightness(int value)

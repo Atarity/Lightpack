@@ -66,8 +66,8 @@ public slots:
     void settingsProfileChanged();
 
     void switchQtWinApi(bool isWinApi);
-    void switchMode(int mode);
-    void setSpeedMoodLamp(int value);
+    void switchMode(LightpackMode mode);
+    void setMoodLampSpeed(int value);
     void setBrightness(int value);
     void setBackLightColor(QColor color);
 
@@ -116,8 +116,8 @@ private: // variables
     bool isGrabWinAPI;
 
     // Settings:
-    int m_mode;
-    int m_SpeedMoodLamp;
+    LightpackMode m_mode;
+    int m_moodLampSpeed;
     int m_brightness;
     QColor m_backlightColor;
 
