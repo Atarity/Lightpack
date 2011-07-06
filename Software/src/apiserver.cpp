@@ -6,7 +6,7 @@
 
 // get
 // getstatus - on off
-// getstatusapi - work idle
+// getstatusapi - busy idle
 // getprofiles - list name profiles
 // getprofile - current name profile
 
@@ -15,7 +15,7 @@
 // unlock - end work with api (enable capture,backlight)
 // setcolor:1-r,g,b;5-r,g,b;   numbering starts with 1
 // setgamma:2.00 - set gamma for setcolor
-// setsmooth:100 -set smooth in device
+// setsmooth:100 - set smooth in device
 // setprofile:<name> - set profile
 // setstatus:on - set status (on, off)
 
@@ -105,7 +105,7 @@ void ApiServer::readyRead()
                 client->write(QString("profiles:%1\n").arg(profiles).toUtf8());
             }else if (command=="setprofile") {
                 QString profile = getArg(line);
-                QString tmp = "unknow";
+                QString tmp = "unknownn";
                 QStringList settingsFiles = mw->profilesFindAll();
                 for(int i=0; i<settingsFiles.count(); i++){
                     if (profile==settingsFiles.at(i)){
@@ -235,7 +235,7 @@ void ApiServer::readyRead()
                         client->write(QString("setcolor:need lock\n").toUtf8());
                 }
             }else{
-                client->write(QString("unknow command\n").toUtf8());
+                client->write(QString("unknown command\n").toUtf8());
             }
         }
         catch(...)
