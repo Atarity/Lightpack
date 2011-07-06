@@ -61,7 +61,7 @@ QString ApiServer::getCommand(QString str)
 QString ApiServer::getArg(QString str)
 {
     QString arg = "";
-    if(str.indexOf(":"))
+    if(str.indexOf(":")>0)
         arg = str.split(":")[1];
     return arg;
 }
@@ -196,7 +196,7 @@ void ApiServer::readyRead()
                                        if (rgb.count()>2) b = rgb[2].toInt(&ok);
                                    }
                             }
-                            if ((ok)&&(num>0)&&(num<11))
+                            if ((ok)&&(num>0)&&(num<LEDS_COUNT+1))
                             {
                                 ClientSettings cs = clients.value(client);
                                 qDebug() << "gamma "<< cs.gamma;
