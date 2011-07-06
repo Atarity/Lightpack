@@ -115,7 +115,7 @@ void ApiServer::readyRead()
                     break;
                     }
                 }
-                client->write(QString("profile:%1 %2\n").arg(tmp,profile).toUtf8());
+                client->write(QString("setprofile:%1 %2\n").arg(tmp,profile).toUtf8());
             }else if (command=="lock") {
                 QString ret = "error";
                 if (activeClient==NULL)
@@ -146,11 +146,13 @@ void ApiServer::readyRead()
                 double gamma = str.toDouble(&ok);
                 if (ok)
                 {
+                     ret = "ok";
+                    if (gamma<0.01) {gamma=0.01;ret="ok(0.01)";};
+                    if (gamma>3) {gamma=3;ret="ok(3.00)";};
                      ClientSettings cs = clients.value(client);
                      cs.gamma = gamma;
                      clients.remove(client);
                      clients.insert(client,cs);
-                     ret = "ok";
                 }
                 client->write(QString("setgamma:%1\n").arg(ret).toUtf8());
             }else if(command=="setsmooth"){
@@ -160,12 +162,14 @@ void ApiServer::readyRead()
             double smooth = str.toDouble(&ok);
             if (ok)
             {
+                ret = "ok";
+               if (smooth<0) {smooth=0;ret="ok(0)";};
+               if (smooth>255) {smooth=255;ret="ok(255)";};
                  ClientSettings cs = clients.value(client);
                  cs.smooth = smooth;
                  clients.remove(client);
                  clients.insert(client,cs);
                  mw->ledDevice->setSmoothSlowdown(cs.smooth);
-                 ret = "ok";
             }
             client->write(QString("setsmooth:%1\n").arg(ret).toUtf8());
         }else if (command=="setcolor") {
@@ -194,6 +198,9 @@ void ApiServer::readyRead()
                                        if (rgb.count()>0) r = rgb[0].toInt(&ok);
                                        if (rgb.count()>1) g = rgb[1].toInt(&ok);
                                        if (rgb.count()>2) b = rgb[2].toInt(&ok);
+                                       if (r<0)r=0; if (r>255)r=255;
+                                       if (g<0)g=0; if (g>255)g=255;
+                                       if (b<0)b=0; if (b>255)b=255;
                                    }
                             }
                             if ((ok)&&(num>0)&&(num<LEDS_COUNT+1))
@@ -228,7 +235,7 @@ void ApiServer::readyRead()
                         client->write(QString("setcolor:need lock\n").toUtf8());
                 }
             }else{
-                client->write(QString("unknow\n").toUtf8());
+                client->write(QString("unknow command\n").toUtf8());
             }
         }
         catch(...)
