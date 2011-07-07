@@ -39,7 +39,6 @@
 // [General]
 #define PROFILE_DEFAULT_NAME            "Lightpack"
 #define LANGUAGE_DEFAULT_NAME           "<System>" /* system lang */
-#define SHOW_ANOTHER_GUI                false
 #define DEBUG_LEVEL_DEFAULT             Debug::LowLevel
 #define ENABLE_API_DEFAULT              true
 #define API_PORT_DEFAULT                3636

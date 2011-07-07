@@ -75,7 +75,7 @@ private slots:
     void on_horizontalSlider_Speed_valueChanged(int value);
     void on_horizontalSlider_Brightness_valueChanged(int value);
     void onMoodLampModeChanged(bool isConstantColor);
-    void on_cb_Modes_currentIndexChanged(int index);
+    void onCbModesChanged(int index);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void showAbout(); /* using in actions */
     void showSettings(); /* using in actions */
