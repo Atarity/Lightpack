@@ -78,46 +78,67 @@ void ApiServer::readyRead()
 
         MainWindow *mw = (MainWindow*)parent();
         try{
-            if (command=="getstatus")
-            {
+            if (command=="getstatus"){
+
                 QString status = "off";
                 if (mw->isAmbilightOn) status="on" ;
                 client->write(QString("status:%1\n").arg(status).toUtf8());
+
             }else if (command=="setstatus") {
+
+                QString tmp = "error";
+                if (activeClient!=client) tmp="busy";
+                if (activeClient==NULL) tmp="need lock";
+                if (activeClient==client)
+                {
                     QString status = getArg(line);
-                    QString tmp = "error";
                     if  (status=="on") {mw->ambilightOn();tmp = "ok";}
                     if  (status=="off") {mw->ambilightOff();tmp="ok";}
-                    client->write(QString("setstatus:%1\n").arg(tmp).toUtf8());
+                }
+                client->write(QString("setstatus:%1\n").arg(tmp).toUtf8());
+
             }else if (command=="getstatusapi") {
+
                 QString statusApi = "busy";
                 if (this->activeClient==NULL) statusApi="idle" ;
                 client->write(QString("statusapi:%1\n").arg(statusApi).toUtf8());
+
             }else if (command=="getprofile") {
+
                 QString profile =  QFileInfo(Settings::fileName()).completeBaseName();
                 client->write(QString("profile:%1\n").arg(profile).toUtf8());
+
             }else if (command=="getprofiles") {
+
                 QString profiles;
                 QStringList settingsFiles = mw->profilesFindAll();
                 for(int i=0; i<settingsFiles.count(); i++){
                     profiles +=settingsFiles.at(i)+";";
                 }
                 client->write(QString("profiles:%1\n").arg(profiles).toUtf8());
+
             }else if (command=="setprofile") {
+
                 QString profile = getArg(line);
-                QString tmp = "unknownn";
-                QStringList settingsFiles = mw->profilesFindAll();
-                for(int i=0; i<settingsFiles.count(); i++){
-                    if (profile==settingsFiles.at(i)){
-                    //load profile
-                    mw->profileSwitchCombobox(profile);
-                    tmp = "set";
-                    break;
+                QString tmp = QString("unknown %1").arg(profile);
+                if (activeClient!=client) tmp="busy";
+                if (activeClient==NULL) tmp="need lock";
+                if (activeClient==client)
+                {
+                    QStringList settingsFiles = mw->profilesFindAll();
+                    for(int i=0; i<settingsFiles.count(); i++){
+                        if (profile==settingsFiles.at(i)){
+                            //load profile
+                            mw->profileSwitchCombobox(profile);
+                            tmp = QString("set %1").arg(profile);
+                            break;
+                        }
                     }
                 }
-                client->write(QString("setprofile:%1 %2\n").arg(tmp,profile).toUtf8());
+                client->write(QString("setprofile:%1\n").arg(tmp).toUtf8());
+
             }else if (command=="lock") {
-                QString ret = "error";
+                QString ret = "busy";
                 if (activeClient==NULL)
                 {
                     activeClient = client;
@@ -129,7 +150,7 @@ void ApiServer::readyRead()
                 if(activeClient == client) ret = "success";
                 client->write(QString("lock:%1\n").arg(ret).toUtf8());
             }else if (command=="unlock") {
-                QString ret = "error";
+                QString ret = "busy";
                 if (activeClient == NULL) ret = "success";
                 if (activeClient==client)
                 {
@@ -140,38 +161,47 @@ void ApiServer::readyRead()
                 }
                 client->write(QString("unlock:%1\n").arg(ret).toUtf8());
             }else if(command=="setgamma"){
-                QString str = getArg(line);
-                bool ok;
-                 QString ret = "error";
-                double gamma = str.toDouble(&ok);
-                if (ok)
+                QString ret = "error";
+                if (activeClient!=client) ret="busy";
+                if (activeClient==NULL) ret="need lock";
+                if (activeClient==client)
                 {
-                     ret = "ok";
-                    if (gamma<0.01) {gamma=0.01;ret="ok(0.01)";};
-                    if (gamma>3) {gamma=3;ret="ok(3.00)";};
-                     ClientSettings cs = clients.value(client);
-                     cs.gamma = gamma;
-                     clients.remove(client);
-                     clients.insert(client,cs);
+                    QString str = getArg(line);
+                    bool ok;
+                    double gamma = str.toDouble(&ok);
+                    if (ok)
+                    {
+                         ret = "ok";
+                        if (gamma<0.01) {gamma=0.01;ret="ok(0.01)";};
+                        if (gamma>3) {gamma=3;ret="ok(3.00)";};
+                         ClientSettings cs = clients.value(client);
+                         cs.gamma = gamma;
+                         clients.remove(client);
+                         clients.insert(client,cs);
+                    }
                 }
                 client->write(QString("setgamma:%1\n").arg(ret).toUtf8());
             }else if(command=="setsmooth"){
-            QString str = getArg(line);
-            bool ok;
-             QString ret = "error";
-            double smooth = str.toDouble(&ok);
-            if (ok)
-            {
-                ret = "ok";
-               if (smooth<0) {smooth=0;ret="ok(0)";};
-               if (smooth>255) {smooth=255;ret="ok(255)";};
-                 ClientSettings cs = clients.value(client);
-                 cs.smooth = smooth;
-                 clients.remove(client);
-                 clients.insert(client,cs);
-                 mw->ledDevice->setSmoothSlowdown(cs.smooth);
-            }
-            client->write(QString("setsmooth:%1\n").arg(ret).toUtf8());
+                QString ret = "error";
+                if (activeClient!=client) ret="busy";
+                if (activeClient==NULL) ret="need lock";
+                if (activeClient==client)
+                {
+                    QString str = getArg(line);
+                    bool ok;
+                    double smooth = str.toDouble(&ok);
+                    if (ok)
+                    {
+                        ret = "ok";
+                       if (smooth<0) {smooth=0;ret="ok(0)";};
+                       if (smooth>255) {smooth=255;ret="ok(255)";};
+                         ClientSettings cs = clients.value(client);
+                         cs.smooth = smooth;
+                         clients.remove(client);
+                         clients.insert(client,cs);
+                    }
+                }
+                client->write(QString("setsmooth:%1\n").arg(ret).toUtf8());
         }else if (command=="setcolor") {
                 if (client == activeClient)
                 {
