@@ -25,16 +25,16 @@ while True :
 		lpack.lock()
 		lpack.setColorToAll(0,0,0)
 		time.sleep(2)
-		lpack.setSmooth(20)		
-		i = 1;
+		lpack.setSmooth(8)		
+		i = 1
 		while i < 80 :
 			i = i+1
 			for k  in range (0, 10) :	
 				idx = (i+k) % 10
-				if k < 4 :
+				if k < 3 :
 					lpack.setColor(idx,255,0,0)					
 				else :
 					lpack.setColor(idx,0,0,125)												
-			time.sleep(0.15)						
+			time.sleep(0.05)						
 		lpack.unlock()				
 	time.sleep(30);

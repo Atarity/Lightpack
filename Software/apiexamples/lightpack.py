@@ -62,9 +62,9 @@ class lightpack:
 		cmdstr = ''
 		for i in self.ledMap:
 			cmdstr = str(cmdstr) + str(i) + '-{0},{1},{2};'.format(r,g,b)		
-		cmd = 'setcolor:' + cmdstr + '\n'	
-		self.__readResult()
+		cmd = 'setcolor:' + cmdstr + '\n'			
 		self.connection.send(cmd)
+		self.__readResult()
 
 	def setGamma(self, g):
 		cmd = 'setgamma:{0}\n'.format(g)
