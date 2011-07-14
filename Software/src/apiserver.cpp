@@ -157,7 +157,7 @@ void ApiServer::readyRead()
                     activeClient = NULL;
                     ret="success";
                     //enable capture
-                    mw->grabManager->setAmbilightOn(true,true);
+                    mw->grabManager->setAmbilightOn(mw->isAmbilightOn,true);
                 }
                 client->write(QString("unlock:%1\n").arg(ret).toUtf8());
             }else if(command=="setgamma"){
@@ -284,7 +284,7 @@ void ApiServer::disconnected()
     {
         activeClient = NULL;
         MainWindow *mw = (MainWindow*)parent();
-        mw->grabManager->setAmbilightOn(true,true);
+        mw->grabManager->setAmbilightOn(mw->isAmbilightOn,true);
     }
     clients.remove(client);
 }
