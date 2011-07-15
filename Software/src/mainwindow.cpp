@@ -418,6 +418,8 @@ void MainWindow::showSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    LightpackMode mode = Settings::getMode();
+    ui->cb_Modes->setCurrentIndex   ( mode == Grab ? 0 : 1 ); // we assume that LightpackMode in same order as cb_Modes
     grabManager->setVisibleLedWidgets( ui->groupBox_ShowGrabWidgets->isChecked() && ui->cb_Modes->currentIndex()==0 );
     this->show();
 }
@@ -992,6 +994,7 @@ void MainWindow::loadSettingsToMainWindow()
     ui->horizontalSlider_Brightness->setValue           ( Settings::value("Brightness").toInt());
     ui->pushButton_SelectColor->setColor                ( Settings::getMoodLampColor());
     ui->radioButton_LiquidColorMoodLampMode->setChecked ( Settings::isMoodLampLiquidMode());
+    ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
 
     ui->horizontalSlider_HW_OCR->setValue           ( Settings::value("Firmware/TimerOCR").toInt() );
     ui->horizontalSlider_HW_OCR->setValue           ( Settings::value("Firmware/TimerOCR").toInt() );
@@ -1095,6 +1098,5 @@ void MainWindow::onMoodLampModeChanged(bool checked)
         ui->label_MoodLampSpeed->setEnabled(true);
         ui->horizontalSlider_Brightness->setEnabled(true);
         ui->label_MoodLampBrightness->setEnabled(true);
-        grabManager->setMoodLampSpeed(0);
     }
 }
