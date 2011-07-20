@@ -49,7 +49,7 @@
 class AmbilightUsb : public ILedDevice
 {
     Q_OBJECT
-//    Q_INTERFACES(ILedDevice)
+
 public:
     AmbilightUsb(QObject *parent = 0);
     ~AmbilightUsb();        

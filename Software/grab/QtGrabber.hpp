@@ -4,8 +4,6 @@
 #include "IGrabber.hpp"
 class QtGrabber : public IGrabber
 {
-//    Q_OBJECT
-
 public:
     QtGrabber();
     ~QtGrabber();

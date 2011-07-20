@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ledDevice = LedDeviceFactory::create(this, Settings::valueMain("IsAlienFxMode").toBool());
 
-    grabManager = new GrabManager(new QtGrabber());
+    grabManager = new GrabManager(new WinAPIGrabber());
 
     aboutDialog = new AboutDialog(this);
 

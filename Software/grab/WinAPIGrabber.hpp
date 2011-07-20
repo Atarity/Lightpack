@@ -1,5 +1,9 @@
+
 #ifndef WINAPIGRABBER_HPP
 #define WINAPIGRABBER_HPP
+
+#include<qglobal.h>
+
 #ifdef Q_WS_WIN
 
 #include "IGrabber.hpp"
@@ -9,19 +13,16 @@
 
 class WinAPIGrabber : public IGrabber
 {
-    Q_OBJECT
-
 public:
-    WinAPIGrabber(QObject * parent);
+    WinAPIGrabber();
     ~WinAPIGrabber();
     virtual const char * getName();
     virtual void updateGrabScreenFromWidget( QWidget * widget );
-    virtual QList<QRgb> grabWidgetsColors(QList<MoveMeWidget *> widgets);
+    virtual QList<QRgb> grabWidgetsColors(QList<MoveMeWidget *> &widgets);
 private:
     void captureScreen();
     QRgb getColor(const QWidget * grabme);
     QRgb getColor(int x, int y, int width, int height);
-    void releaseScreenBuffer();
 
 private:
     HMONITOR hMonitor;

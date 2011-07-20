@@ -119,7 +119,8 @@ SOURCES += src/main.cpp \
     src/LightFx.cpp \
     src/qcolorbutton.cpp \
     grab/WinAPIGrabber.cpp \
-    grab/QtGrabber.cpp
+    grab/QtGrabber.cpp \
+    grab/X11Grabber.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/LIGHTPACK_HW.h \
     ../CommonHeaders/COMMANDS.h \
@@ -146,7 +147,8 @@ HEADERS += hidapi/hidapi.h \
     src/qcolorbutton.hpp \
     grab/IGrabber.hpp \
     grab/WinAPIGrabber.hpp \
-    grab/QtGrabber.hpp
+    grab/QtGrabber.hpp \
+    grab/X11Grabber.hpp
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui

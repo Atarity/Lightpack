@@ -1,10 +1,10 @@
-#ifdef Q_WS_WIN
 
 #include"WinAPIGrabber.hpp"
+#ifdef WIN32 || WIN64
 #include"debug.h"
 #include<cmath>
 
-WinAPIGrabber::WinAPIGrabber(QObject *parent) : IGrabber(parent)
+WinAPIGrabber::WinAPIGrabber()
 {
     pbPixelsBuff = NULL;
     isBufferNeedsResize = true;
@@ -26,12 +26,14 @@ void WinAPIGrabber::updateGrabScreenFromWidget(QWidget *widget)
     isBufferNeedsResize = true;
 }
 
-void WinAPIGrabber::grabWidgets(QList<MoveMeWidget *> widgets, QList<StructRGB> colors, int widgets_count)
+QList<QRgb> WinAPIGrabber::grabWidgetsColors(QList<MoveMeWidget *> &widgets)
 {
+    QList<QRgb> widgetsColors;
     captureScreen();
-    for(int i = 0; i < widgets_count; i++) {
-        colors[i].rgb = getColor(widgets[i]);
+    for(int i = 0; i < widgets.size(); i++) {
+        widgetsColors.append(getColor(widgets[i]));
     }
+    return widgetsColors;
 }
 
 void WinAPIGrabber::captureScreen()
@@ -206,8 +208,4 @@ QRgb WinAPIGrabber::getColor(int x, int y, int width, int height)
     return result;
 }
 
-void WinAPIGrabber::releaseScreenBuffer()
-{
-
-}
 #endif
