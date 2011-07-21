@@ -32,6 +32,7 @@
 #include <QPlainTextEdit>
 #include "WinAPIGrabber.hpp"
 #include "QtGrabber.hpp"
+#include "X11Grabber.hpp"
 #include "debug.h"
 
 // ----------------------------------------------------------------------------
@@ -67,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ledDevice = LedDeviceFactory::create(this, Settings::valueMain("IsAlienFxMode").toBool());
 
-    grabManager = new GrabManager(new WinAPIGrabber());
+    grabManager = new GrabManager(new X11Grabber());
 
     aboutDialog = new AboutDialog(this);
 

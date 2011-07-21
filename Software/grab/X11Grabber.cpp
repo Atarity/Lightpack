@@ -1,13 +1,15 @@
 #include"X11Grabber.hpp"
-#include"QtGui"
+#include<cmath>
 
-#ifdef X11_SUPPORT
 X11Grabber::X11Grabber() : IGrabber()
 {
     this->updateScreenAndAllocateMemory = true;
     this->screen = 0;
 }
-
+const char * X11Grabber::getName()
+{
+    return "X11Grabber";
+}
 void X11Grabber::updateGrabScreenFromWidget(QWidget *widget)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
@@ -17,17 +19,12 @@ void X11Grabber::updateGrabScreenFromWidget(QWidget *widget)
 
 QList<QRgb> X11Grabber::grabWidgetsColors(QList<MoveMeWidget *> &widgets)
 {
-//    QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->screen(screen) ->winId(),
-//                                  screenres.x(), //!
-//                                  screenres.y(), //!
-//                                  screenres.width(),
-//                                  screenres.height());
-//    QList<QRgb> result;
-//    for(int i = 0; i < widgets.size(); i++) {
-//        result.append(getColor(pixmap, widgets[i]));
-//    }
-//    return result;
-    return QList<QRgb>();
+    captureScreen();
+    QList<QRgb> result;
+    for(int i = 0; i < widgets.size(); i++) {
+        result.append(getColor(widgets[i]));
+    }
+    return result;
 }
 
 void X11Grabber::captureScreen()
@@ -38,22 +35,22 @@ void X11Grabber::captureScreen()
         //screenres = QApplication::desktop()->screenGeometry(screen);
         updateScreenAndAllocateMemory = false;
 
-        Display *display = XOpenDisplay(NULL);
+        this->display = XOpenDisplay(NULL);
         // todo test and fix dual monitor configuration
-        Screen *Xscreen = DefaultScreenOfDisplay(display);
+        Xscreen = DefaultScreenOfDisplay(display);
 
         long width=DisplayWidth(display,screen);
         long height=DisplayHeight(display,screen);
+	
+	DEBUG_HIGH_LEVEL << "dimensions " << width << "x" << height << screen;
+        screenres = QRect(0,0,width,height);
 
-        QRect screenres = QRect(0,0,width,height);
-
-        XImage *image = XShmCreateImage(display,   DefaultVisualOfScreen(Xscreen),
+        image = XShmCreateImage(display,   DefaultVisualOfScreen(Xscreen),
                                         DefaultDepthOfScreen(Xscreen),
                                         ZPixmap, NULL, &shminfo,
                                         screenres.width(), screenres.height() );
         uint imagesize;
         imagesize = image->bytes_per_line * image->height;
-        XShmSegmentInfo shminfo;
         shminfo.shmid = shmget(    IPC_PRIVATE,
                                    imagesize,
                                    IPC_CREAT|0777
@@ -76,12 +73,12 @@ void X11Grabber::captureScreen()
                  );
 #if 0
     DEBUG_LOW_LEVEL << "QImage";
-    QImage *pic = new QImage(w,h,QImage::Format_RGB32);
+    QImage *pic = new QImage(1024,768,QImage::Format_RGB32);
     DEBUG_LOW_LEVEL << "format";
     unsigned long pixel;
-    for (int y = 0; y < h; y++)
+    for (int y = 0; y < 768; y++)
     {
-        for (int x = 0; x < w; x++)
+        for (int x = 0; x < 1024; x++)
         {
             pixel = XGetPixel(image, x, y);
             int r = (pixel >> 16) & 0xff;
@@ -92,7 +89,7 @@ void X11Grabber::captureScreen()
         }
     }
     DEBUG_LOW_LEVEL << "save";
-    pic->save("/home/eraser/test.bmp");
+    pic->save("/home/atarity/.Lightpack/test.bmp");
 #endif
 }
 
@@ -179,4 +176,3 @@ QRgb X11Grabber::getColor(int x, int y, int width, int height)
 
     return result;
 }
-#endif
