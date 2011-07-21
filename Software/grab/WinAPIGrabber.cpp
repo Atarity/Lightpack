@@ -1,6 +1,6 @@
 
 #include"WinAPIGrabber.hpp"
-#ifdef WIN32 || WIN64
+#ifdef Q_WS_WIN
 #include"debug.h"
 #include<cmath>
 

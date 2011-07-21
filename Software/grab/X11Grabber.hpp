@@ -2,29 +2,32 @@
 #define X11GRABBER_H
 
 #include<qglobal.h>
-#ifdef Q_WS_X11
+#define X11_SUPPORT
+#ifdef X11_SUPPORT
 #include "IGrabber.hpp"
+#include "debug.h"
 
 class X11Grabber : public IGrabber
 {
 public:
-    X11Grabber(){}
+    X11Grabber();
     virtual const char * getName() = 0;
     virtual void updateGrabScreenFromWidget( QWidget * widget ) = 0;
     virtual QList<QRgb> grabWidgetsColors(QList<MoveMeWidget *> &widgets) = 0;
 private:
+    char * getImage();
     QRgb getColor(const QWidget * grabme);
     QRgb getColor(int x, int y, int width, int height);
 
 private:
     bool updateScreenAndAllocateMemory;
-    int screen = 0;
-    QRect screenres;
-    Display *display;
-    Screen *Xscreen;
+    int screen;
+//    QRect screenres;
+//    Display *display;
+//    Screen *Xscreen;
     XImage *image;
     XShmSegmentInfo shminfo;
-    int w, h;
+//    int w, h;
 };
 #endif
 

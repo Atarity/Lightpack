@@ -1,80 +1,98 @@
 #include"X11Grabber.hpp"
+#include"QtGui"
 
-#ifdef Q_WS_X11
+#ifdef X11_SUPPORT
 X11Grabber::X11Grabber() : IGrabber()
 {
     this->updateScreenAndAllocateMemory = true;
+    this->screen = 0;
 }
 
 void X11Grabber::updateGrabScreenFromWidget(QWidget *widget)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
     updateScreenAndAllocateMemory = true;
-    screen = QApplication::desktop()->screenNumber( ledWidgets[0] );
+    screen = QApplication::desktop()->screenNumber( widget );
+}
+
+QList<QRgb> X11Grabber::grabWidgetsColors(QList<MoveMeWidget *> &widgets)
+{
+//    QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->screen(screen) ->winId(),
+//                                  screenres.x(), //!
+//                                  screenres.y(), //!
+//                                  screenres.width(),
+//                                  screenres.height());
+//    QList<QRgb> result;
+//    for(int i = 0; i < widgets.size(); i++) {
+//        result.append(getColor(pixmap, widgets[i]));
+//    }
+//    return result;
+    return QList<QRgb>();
 }
 
 void X11Grabber::captureScreen()
 {
-          DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-           if( updateScreenAndAllocateMemory ){
-           //screenres = QApplication::desktop()->screenGeometry(screen);
-           updateScreenAndAllocateMemory = false;
+    if( updateScreenAndAllocateMemory ){
+        //screenres = QApplication::desktop()->screenGeometry(screen);
+        updateScreenAndAllocateMemory = false;
 
-           display = XOpenDisplay(NULL);
-           // todo test and fix dual monitor configuration
-           Xscreen = DefaultScreenOfDisplay(display);
+        Display *display = XOpenDisplay(NULL);
+        // todo test and fix dual monitor configuration
+        Screen *Xscreen = DefaultScreenOfDisplay(display);
 
-           long width=DisplayWidth(display,screen);
-           long height=DisplayHeight(display,screen);
+        long width=DisplayWidth(display,screen);
+        long height=DisplayHeight(display,screen);
 
-           screenres = QRect(0,0,width,height);
+        QRect screenres = QRect(0,0,width,height);
 
-           image = XShmCreateImage(display,   DefaultVisualOfScreen(Xscreen),
-                                   DefaultDepthOfScreen(Xscreen),
-                                   ZPixmap, NULL, &shminfo,
-                                   screenres.width(), screenres.height() );
-           uint imagesize;
-           imagesize = image->bytes_per_line * image->height;
-           shminfo.shmid = shmget(    IPC_PRIVATE,
-                                imagesize,
+        XImage *image = XShmCreateImage(display,   DefaultVisualOfScreen(Xscreen),
+                                        DefaultDepthOfScreen(Xscreen),
+                                        ZPixmap, NULL, &shminfo,
+                                        screenres.width(), screenres.height() );
+        uint imagesize;
+        imagesize = image->bytes_per_line * image->height;
+        XShmSegmentInfo shminfo;
+        shminfo.shmid = shmget(    IPC_PRIVATE,
+                                   imagesize,
                                    IPC_CREAT|0777
-                                       );
+                                   );
 
-           char* mem = (char*)shmat(shminfo.shmid, 0, 0);
-                shminfo.shmaddr = mem;
-                image->data = mem;
-                shminfo.readOnly = False;
+        char* mem = (char*)shmat(shminfo.shmid, 0, 0);
+        shminfo.shmaddr = mem;
+        image->data = mem;
+        shminfo.readOnly = False;
 
-                XShmAttach(display, &shminfo);
-           }
-            // DEBUG_LOW_LEVEL << "XShmGetImage";
-             XShmGetImage(display,
-                              RootWindow(display, screen),
-                              image,
-                              0,
-                              0,
-                              0x00FFFFFF
-                          );
+        XShmAttach(display, &shminfo);
+    }
+    // DEBUG_LOW_LEVEL << "XShmGetImage";
+    XShmGetImage(display,
+                 RootWindow(display, screen),
+                 image,
+                 0,
+                 0,
+                 0x00FFFFFF
+                 );
 #if 0
-             DEBUG_LOW_LEVEL << "QImage";
-             QImage *pic = new QImage(w,h,QImage::Format_RGB32);
-             DEBUG_LOW_LEVEL << "format";
-             unsigned long pixel;
-             for (int y = 0; y < h; y++)
-             {
-                 for (int x = 0; x < w; x++)
-                 {
-                     pixel = XGetPixel(image, x, y);
-                     int r = (pixel >> 16) & 0xff;
-                     int g = (pixel >>  8) & 0xff;
-                     int b = (pixel >>  0) & 0xff;
-                     //QRgb rgb = QRgb() (r,g,b);
-                     pic->setPixel(x,y,pixel);
-                 }
-             }
-             DEBUG_LOW_LEVEL << "save";
-             pic->save("/home/eraser/test.bmp");
+    DEBUG_LOW_LEVEL << "QImage";
+    QImage *pic = new QImage(w,h,QImage::Format_RGB32);
+    DEBUG_LOW_LEVEL << "format";
+    unsigned long pixel;
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            pixel = XGetPixel(image, x, y);
+            int r = (pixel >> 16) & 0xff;
+            int g = (pixel >>  8) & 0xff;
+            int b = (pixel >>  0) & 0xff;
+            //QRgb rgb = QRgb() (r,g,b);
+            pic->setPixel(x,y,pixel);
+        }
+    }
+    DEBUG_LOW_LEVEL << "save";
+    pic->save("/home/eraser/test.bmp");
 #endif
 }
 
