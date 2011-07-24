@@ -32,7 +32,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -130,9 +130,6 @@
            <string/>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetMinimumSize</enum>
-           </property>
            <item>
             <widget class="QFrame" name="frmAmbilight">
              <property name="frameShape">
@@ -516,12 +513,6 @@ margin-top: 0px;
               </item>
               <item>
                <layout class="QFormLayout" name="formLayout">
-                <property name="sizeConstraint">
-                 <enum>QLayout::SetFixedSize</enum>
-                </property>
-                <property name="fieldGrowthPolicy">
-                 <enum>QFormLayout::ExpandingFieldsGrow</enum>
-                </property>
                 <property name="labelAlignment">
                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                 </property>
@@ -548,24 +539,6 @@ margin-top: 0px;
                   <property name="enabled">
                    <bool>false</bool>
                   </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="baseSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
                   <property name="text">
                    <string>Brightness</string>
                   </property>
@@ -575,18 +548,6 @@ margin-top: 0px;
                  <widget class="QSlider" name="horizontalSlider_Brightness">
                   <property name="enabled">
                    <bool>false</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="baseSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
                   </property>
                   <property name="styleSheet">
                    <string notr="true"/>
@@ -604,24 +565,6 @@ margin-top: 0px;
                   <property name="enabled">
                    <bool>false</bool>
                   </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="baseSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
                   <property name="text">
                    <string>Speed</string>
                   </property>
@@ -631,18 +574,6 @@ margin-top: 0px;
                  <widget class="QSlider" name="horizontalSlider_Speed">
                   <property name="enabled">
                    <bool>false</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="baseSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
                   </property>
                   <property name="minimum">
                    <number>1</number>
@@ -853,17 +784,8 @@ margin-top: 0px;
           <property name="title">
            <string>Smooth slowdown</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0" columnstretch="0,0,0">
-           <property name="verticalSpacing">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>9</number>
-           </property>
-           <property name="bottomMargin">
-            <number>9</number>
-           </property>
-           <item row="0" column="0" rowspan="2" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
             <widget class="QSlider" name="horizontalSlider_HW_SmoothSlowdown">
              <property name="minimum">
               <number>0</number>
@@ -882,20 +804,8 @@ margin-top: 0px;
              </property>
             </widget>
            </item>
-           <item row="0" column="2" rowspan="2">
+           <item>
             <widget class="QSpinBox" name="spinBox_HW_SmoothSlowdown">
-             <property name="minimumSize">
-              <size>
-               <width>20</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>43</width>
-               <height>16777215</height>
-              </size>
-             </property>
              <property name="minimum">
               <number>0</number>
              </property>
@@ -904,16 +814,6 @@ margin-top: 0px;
              </property>
              <property name="value">
               <number>100</number>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_3">
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="text">
-              <string>off</string>
              </property>
             </widget>
            </item>
@@ -1143,6 +1043,19 @@ margin-top: 0px;
               </widget>
              </item>
              <item>
+              <widget class="QComboBox" name="comboBox_Language">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="sizeAdjustPolicy">
+                <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
               <spacer name="horizontalSpacer_5">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -1154,31 +1067,6 @@ margin-top: 0px;
                 </size>
                </property>
               </spacer>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboBox_Language">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>150</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>150</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="sizeAdjustPolicy">
-                <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
-               </property>
-              </widget>
              </item>
             </layout>
            </item>
@@ -1259,6 +1147,13 @@ margin-top: 0px;
              </property>
              <property name="checked">
               <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_GrabX11">
+             <property name="text">
+              <string>X11</string>
              </property>
             </widget>
            </item>

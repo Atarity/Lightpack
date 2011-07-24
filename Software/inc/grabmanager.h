@@ -34,13 +34,13 @@
 #include "timeevaluations.h"
 #include "struct_rgb.h"
 #include "movemewidget.h"
-
+#include "IGrabber.hpp"
 class GrabManager : public QWidget
 {
     Q_OBJECT
 
 public:
-    GrabManager(QWidget *parent = 0);
+    GrabManager(IGrabber *grabber, QWidget *parent = 0);
     ~GrabManager();
 
 signals:
@@ -65,9 +65,9 @@ public slots:
 
     void settingsProfileChanged();
 
-    void switchQtWinApi(bool isWinApi);
-    void switchMode(LightpackMode mode);
-    void setMoodLampSpeed(int value);
+    void setGrabber(IGrabber * newGrabber);
+    void switchMode(int mode);
+    void setSpeedMoodLamp(int value);
     void setBrightness(int value);
     void setBackLightColor(QColor color);
 
@@ -92,6 +92,7 @@ private:
 
 
 private: // variables
+    IGrabber * grabber;
     QTimer *timerGrab;
     QTimer *timerUpdateFPS;
     QList<MoveMeWidget *> ledWidgets;
@@ -113,11 +114,9 @@ private: // variables
     // Store last grabbing time in milliseconds
     double fpsMs;
 
-    bool isGrabWinAPI;
-
     // Settings:
-    LightpackMode m_mode;
-    int m_moodLampSpeed;
+    int m_mode;
+    int m_SpeedMoodLamp;
     int m_brightness;
     QColor m_backlightColor;
 

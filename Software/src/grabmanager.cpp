@@ -27,10 +27,9 @@
 #include "grabmanager.h"
 #include "grab_api.h"
 #include <QtCore/qmath.h>
-
 #include "debug.h"
 
-GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
+GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -40,11 +39,12 @@ GrabManager::GrabManager(QWidget *parent) : QWidget(parent)
     timeEval = new TimeEvaluations();
 
     fpsMs = 0;
-    isGrabWinAPI = true;
-    m_moodLampSpeed = 0;
+    m_SpeedMoodLamp = 0;
     m_brightness = 150;
 
     m_backlightColor = QColor(255,255,255);
+
+    this->grabber = grabber;
 
     timerUpdateFPS = new QTimer(this);
     connect(timerUpdateFPS, SIGNAL(timeout()), this, SLOT(updateFpsOnMainWindow()));
@@ -73,6 +73,7 @@ GrabManager::~GrabManager()
 
     delete timerGrab;
     delete timeEval;
+    delete grabber;
 
     for(int i=0; i<ledWidgets.count(); i++){
         ledWidgets[i]->close();
@@ -139,20 +140,7 @@ void GrabManager::firstWidgetPositionChanged()
     screenSavedIndex = QApplication::desktop()->screenNumber( ledWidgets[0] );
     screenSaved = QApplication::desktop()->screenGeometry( screenSavedIndex );
 
-    if(isGrabWinAPI){
-        #ifdef Q_WS_WIN
-            GrabWinAPI::findScreenOnNextCapture( ledWidgets[0]->winId() );
-        #endif
-        #ifdef Q_WS_X11
-            GrabQt::setScreenOnNextCapture(screenSavedIndex);
-        #endif
-
-    }
-    else
-    {
-        GrabQt::setScreenOnNextCapture(screenSavedIndex);
-    }
-
+    grabber->updateGrabScreenFromWidget(ledWidgets[0]);
 }
 
 
@@ -245,10 +233,10 @@ void GrabManager::updateLedsColorsIfChanged()
     int timer = ambilightDelayMs;
     switch (m_mode)
     {
-    case Grab:
+    case 0:
         ambilight();
         break;
-    case MoodLamp:
+    case 1:
        moodlamp();
        timer = speed;
        break;
@@ -311,12 +299,12 @@ void GrabManager::moodlamp()
 {
       DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-      if (m_moodLampSpeed>0)
+      if (m_SpeedMoodLamp>0)
       {
 
         if ((Red==newRed) && (Green==newGreen) && (Blue==newBlue))
         {
-            speed = genNewSpeed(m_moodLampSpeed);
+            speed = genNewSpeed(m_SpeedMoodLamp);
             QColor newColor = genNewColor();
             newRed = newColor.red();
             newGreen = newColor.green();
@@ -398,38 +386,15 @@ void GrabManager::ambilight()
     QTime t; t.start();
 #endif    
 
-    // Capture screen what contains first LED widgets
-    if(isGrabWinAPI){
-        #ifdef Q_WS_WIN
-            GrabWinAPI::captureScreen();
-        #endif
-        #ifdef Q_WS_X11
-            GrabX11::captureScreen();
-        #endif
-    }
-    else
-    {
-        GrabQt::captureScreen();
-    }
-
+    QList<QRgb> widgetsColors = grabber->grabWidgetsColors(ledWidgets);
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         if(ledWidgets[ledIndex]->isGrabEnabled()){
-            QRgb rgb;
-            if(isGrabWinAPI){
-                #ifdef Q_WS_WIN
-                    rgb = GrabWinAPI::getColor( ledWidgets[ledIndex] );
-                #endif
-                #ifdef Q_WS_X11
-                    rgb = GrabX11::getColor( ledWidgets[ledIndex] );
-                #endif
-            } else {
-                rgb = GrabQt::getColor( ledWidgets[ledIndex] );
-            }
+            QRgb rgb = widgetsColors[ledIndex];
 
             if( avgColorsOnAllLeds ){
-                avgR += qRed(rgb);
-                avgG += qGreen(rgb);
-                avgB += qBlue(rgb);
+                avgR += qRed(colorsNew[ledIndex].rgb);
+                avgG += qGreen(colorsNew[ledIndex].rgb);
+                avgB += qBlue(colorsNew[ledIndex].rgb);
                 countGrabEnabled++;
             }else{
                 colorsNew[ledIndex].rgb = rgb;
@@ -633,28 +598,28 @@ void GrabManager::settingsProfileChanged()
     this->ambilightDelayMs = Settings::getGrabSlowdownMs();
     this->colorDepth = Settings::value("Firmware/ColorDepth").toInt();
 
-    this->m_mode = Settings::getMode();
-
     for(int i=0; i<ledWidgets.count(); i++){
         ledWidgets[i]->settingsProfileChanged();
     }
 }
 
 
-void GrabManager::switchQtWinApi(bool isWinApi)
+void GrabManager::setGrabber(IGrabber * newGrabber)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isWinApi;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    this->isGrabWinAPI = isWinApi;
+    if (this->grabber)
+        delete grabber;
+    this->grabber = newGrabber;
     firstWidgetPositionChanged();
 }
 
-void GrabManager::setMoodLampSpeed(int value)
+void GrabManager:: setSpeedMoodLamp(int value)
 {
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-    this->m_moodLampSpeed = value;
+    this->m_SpeedMoodLamp = value;
     speed = genNewSpeed(value);
-    Settings::setMoodLampSpeed(value);
+    Settings::setValue("SpeedMoodLamp", value);
 }
 
 void GrabManager::setBackLightColor(QColor color)
@@ -662,16 +627,16 @@ void GrabManager::setBackLightColor(QColor color)
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << color;
     this->m_backlightColor = color;
     moodlamp();
-    Settings::setMoodLampColor(color);
+    //todo save color
 }
 
- void GrabManager::switchMode(LightpackMode mode)
+ void GrabManager::switchMode(int mode)
  {
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
 
      this->m_mode = mode;
 
-     Settings::setMode(mode);
+     Settings::setValue("Mode", mode);
  }
 
  void GrabManager::setBrightness(int value)

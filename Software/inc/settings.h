@@ -73,6 +73,8 @@
 
 enum LightpackMode { Grab, MoodLamp };
 
+enum GrabMode {WinAPIGrabMode, QtGrabMode, X11GrabMode};
+
 class Settings : public QObject
 {
     Q_OBJECT
