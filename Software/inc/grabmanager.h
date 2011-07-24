@@ -114,8 +114,6 @@ private: // variables
     // Store last grabbing time in milliseconds
     double fpsMs;
 
-    bool isGrabWinAPI;
-
     // Settings:
     int m_mode;
     int m_SpeedMoodLamp;

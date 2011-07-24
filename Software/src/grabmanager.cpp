@@ -27,9 +27,6 @@
 #include "grabmanager.h"
 #include "grab_api.h"
 #include <QtCore/qmath.h>
-#ifdef Q_WS_WIN
-    #include "WinAPIGrabber.hpp"
-#endif
 #include "debug.h"
 
 GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)
@@ -42,7 +39,6 @@ GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)
     timeEval = new TimeEvaluations();
 
     fpsMs = 0;
-    isGrabWinAPI = true;
     m_SpeedMoodLamp = 0;
     m_brightness = 150;
 
@@ -145,21 +141,6 @@ void GrabManager::firstWidgetPositionChanged()
     screenSaved = QApplication::desktop()->screenGeometry( screenSavedIndex );
 
     grabber->updateGrabScreenFromWidget(ledWidgets[0]);
-
-    if(isGrabWinAPI){
-        #ifdef Q_WS_WIN
-//            GrabWinAPI::findScreenOnNextCapture( ledWidgets[0]->winId() );
-        #endif
-        #ifdef Q_WS_X11
-//            GrabQt::setScreenOnNextCapture(screenSavedIndex);
-        #endif
-
-    }
-    else
-    {
-//        GrabQt::setScreenOnNextCapture(screenSavedIndex);
-    }
-
 }
 
 

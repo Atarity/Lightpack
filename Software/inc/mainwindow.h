@@ -94,7 +94,7 @@ private slots:
 
     void loadTranslation(const QString & language);
 
-    void switchQtWinAPIClick();
+    void onGrabModeChanged();
     void startTestsClick();
     void updateGrabbedColors(const QList<StructRGB> & colors);
 
@@ -112,8 +112,6 @@ private:
     void createTrayIcon();
     void createActions();
     void loadSettingsToMainWindow();
-
-    void grabSwitchQtWinAPI();
 
     void profilesFindAll();
     void profileLoadLast();
@@ -137,7 +135,8 @@ private:
 
     bool isAmbilightOn; /* is grab desktop window ON */
     bool isErrorState;
-    bool isWinAPIGrab;
+
+    GrabMode getGrabMode();
 
     // Evaluated frequency of the PWM generation
     double pwmFrequency;

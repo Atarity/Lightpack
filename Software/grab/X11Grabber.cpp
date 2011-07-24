@@ -1,4 +1,7 @@
 #include"X11Grabber.hpp"
+
+#ifdef Q_WS_X11
+
 #include<cmath>
 
 X11Grabber::X11Grabber() : IGrabber()
@@ -176,3 +179,4 @@ QRgb X11Grabber::getColor(int x, int y, int width, int height)
 
     return result;
 }
+#endif

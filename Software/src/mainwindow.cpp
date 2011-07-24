@@ -68,11 +68,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ledDevice = LedDeviceFactory::create(this, Settings::valueMain("IsAlienFxMode").toBool());
 
-    grabManager = new GrabManager(new X11Grabber());
+    grabManager = new GrabManager(new QtGrabber());
 
     aboutDialog = new AboutDialog(this);
 
     speedTest = new SpeedTest();
+
+#ifndef Q_WS_WIN
+    ui->radioButton_GrabWinAPI->setVisible(false);
+#endif
+#ifndef Q_WS_X11
+    ui->radioButton_GrabX11->setVisible(false);
+#endif
+    ui->radioButton_GrabQt->setChecked(true);
 
     profilesFindAll();
 
@@ -93,17 +101,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->tabWidget->removeTab( ui->tabWidget->indexOf( ui->tabAnotherGUI ) );
     }
 
-    isWinAPIGrab = false;
-#ifdef Q_WS_WIN
-    isWinAPIGrab = true;    
-#endif
-#ifdef Q_WS_X11
-    isWinAPIGrab = true;
-    ui->radioButton_GrabWinAPI->setText(tr("GrabX11"));
-#endif
-
-
-    grabSwitchQtWinAPI();
+    onGrabModeChanged();
 
     this->adjustSize();
     this->move( screen.width() / 2  - this->width() / 2,
@@ -170,9 +168,14 @@ void MainWindow::connectSignalsSlots()
     // Another GUI
     // Connect signals to another GUI slots only if ShowAnotherGui == true
     if( Settings::valueMain("ShowAnotherGui").toBool() ){
-        connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
-        connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
 
+        connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
+#ifdef Q_WS_WIN
+        connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
+#endif
+#ifdef Q_WS_X11
+        connect(ui->radioButton_GrabX11, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
+#endif
         connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
 
         connect(grabManager, SIGNAL(updateLedsColors(QList<StructRGB>)), this, SLOT(updateGrabbedColors(QList<StructRGB>)));
@@ -823,20 +826,29 @@ void MainWindow::updatePwmFrequency()
     ui->label_PWM_Freq->setText(QString::number(pwmFrequency,'f',2));
 }
 
-void MainWindow::switchQtWinAPIClick()
-{    
-    isWinAPIGrab = ui->radioButton_GrabWinAPI->isChecked();
 
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "isWinAPIGrab:" << isWinAPIGrab;
+void MainWindow::onGrabModeChanged()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "GrabMode" << getGrabMode();
+    IGrabber * grabber;
+    switch (getGrabMode())
+    {
+    case QtGrabMode:
+        grabber = new QtGrabber();
+        break;
+#ifdef Q_WS_X11
+    case X11GrabMode:
+        grabber = new X11Grabber();
+        break;
+#endif
+#ifdef Q_WS_WIN
+    case WinAPIGrabMode:
+        grabber = new WinAPIGrabber();
+        break;
+    }
+#endif
 
-    grabSwitchQtWinAPI();
-}
-
-void MainWindow::grabSwitchQtWinAPI()
-{    
-    ui->radioButton_GrabWinAPI->setChecked(isWinAPIGrab);
-
-//    grabManager->setGrabber( new QtGrabber() );
+    grabManager->setGrabber(grabber);
 }
 
 // ----------------------------------------------------------------------------
@@ -986,6 +998,21 @@ void MainWindow::loadSettingsToMainWindow()
     updateExpertModeWidgetsVisibility();
 }
 
+GrabMode MainWindow::getGrabMode()
+{
+#ifdef Q_WS_X11
+    if (ui->radioButton_GrabX11->isChecked()) {
+        return X11GrabMode;
+    }
+#endif
+#ifdef Q_WS_WIN
+    if (ui->radioButton_GrabWinAPI->isChecked()) {
+        return WinAPIGrabMode;
+    }
+#endif
+
+    return QtGrabMode;
+}
 
 // ----------------------------------------------------------------------------
 // Quit application
