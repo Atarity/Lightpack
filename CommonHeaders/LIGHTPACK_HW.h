@@ -44,7 +44,7 @@
 
 # /* SECOND for C/C++ preprocessor */
 
-#   define LIGHTPACK_HW   4
+#   define LIGHTPACK_HW   5
 
 #endif /* !defined( LIGHTPACK_HW ) */
 
