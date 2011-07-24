@@ -833,9 +833,6 @@ void MainWindow::onGrabModeChanged()
     IGrabber * grabber;
     switch (getGrabMode())
     {
-    case QtGrabMode:
-        grabber = new QtGrabber();
-        break;
 #ifdef Q_WS_X11
     case X11GrabMode:
         grabber = new X11Grabber();
@@ -845,8 +842,11 @@ void MainWindow::onGrabModeChanged()
     case WinAPIGrabMode:
         grabber = new WinAPIGrabber();
         break;
-    }
 #endif
+    default:
+        grabber = new QtGrabber();
+        break;
+    }
 
     grabManager->setGrabber(grabber);
 }
