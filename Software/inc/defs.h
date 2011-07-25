@@ -5,7 +5,7 @@
 #define QT_GRAB_SUPPORT
 #ifdef Q_WS_WIN
 #   define WINAPI_GRAB_SUPPORT
-#elif Q_OS_UNIX
+#elif defined(Q_OS_UNIX)
 #   define X11_GRAB_SUPPORT
 #endif
 
