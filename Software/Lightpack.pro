@@ -83,7 +83,7 @@ win32 {
     SOURCES += hidapi/windows/hid.cpp
     # Windows version using WinAPI + GDI for grab colors
     LIBS    += -lgdi32
-    SOURCES += grab/grab_winapi.cpp
+    SOURCES +=
     SOURCES +=
 }
 
@@ -92,7 +92,7 @@ unix:!macx{
     SOURCES += hidapi/linux/hid-libusb.c
     # Linux version using Qt grabWindow(..) for grab colors
     SOURCES +=
-    SOURCES += grab/grab_x11.cpp
+    SOURCES +=
 }
 
 macx{
@@ -100,7 +100,7 @@ macx{
     SOURCES += hidapi/mac/hid.c
     # MacOS version using Qt grabWindow(..) for grab colors
     SOURCES +=
-    SOURCES += grab/grab_x11.cpp
+    SOURCES +=
     CONFIG += x86_64
     LIBS += /usr/local/lib/libusb-1.0.dylib
     INCLUDEPATH += /usr/local/include/libusb-1.0
@@ -123,8 +123,7 @@ SOURCES += src/main.cpp \
     src/apiserver.cpp \
     grab/X11Grabber.cpp \
     grab/WinAPIGrabber.cpp \
-    grab/QtGrabber.cpp \
-    grab/grab_qt.cpp
+    grab/QtGrabber.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/LIGHTPACK_HW.h \
     ../CommonHeaders/COMMANDS.h \
@@ -141,7 +140,6 @@ HEADERS += hidapi/hidapi.h \
     inc/struct_rgb.h \
     inc/debug.h \
     inc/speedtest.h \
-    grab/grab_api.h \
     alienfx/LFXDecl.h \
     alienfx/LFX2.h \
     src/LightFx.hpp \
