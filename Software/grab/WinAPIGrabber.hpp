@@ -2,11 +2,9 @@
 #ifndef WINAPIGRABBER_HPP
 #define WINAPIGRABBER_HPP
 
-#include<qglobal.h>
-
-#ifdef Q_WS_WIN
-
 #include "IGrabber.hpp"
+#ifdef WINAPI_GRAB_SUPPORT
+
 #define WINVER 0x0500 /* Windows2000 for MonitorFromWindow(..) func */
 
 #include <windows.h>

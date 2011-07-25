@@ -74,14 +74,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     speedTest = new SpeedTest();
 
-#ifndef Q_WS_WIN
+#ifndef WINAPI_GRAB_SUPPORT
     ui->radioButton_GrabWinAPI->setVisible(false);
 #endif
-#ifndef Q_WS_X11
+#ifndef X11_GRAB_SUPPORT
     ui->radioButton_GrabX11->setVisible(false);
 #endif
+#ifndef QT_GRAB_SUPPORT
+    ui->radioButton_GrabQt->setVisible(false);
+#else
     ui->radioButton_GrabQt->setChecked(true);
-
+#endif
     profilesFindAll();
 
     initLanguages();
@@ -182,11 +185,11 @@ void MainWindow::connectSignalsSlots()
     connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
 
     connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
-#ifdef Q_WS_WIN
+#ifdef WINAPI_GRAB_SUPPORT
     connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
 #endif
-#ifdef Q_WS_X11
-    connect(ui->radioButton_GrabX11, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
+#ifdef X11_GRAB_SUPPORT
+    connect(ui->radioButton_GrabX11, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
 #endif
 
     connect(grabManager, SIGNAL(updateLedsColors(QList<StructRGB>)), this, SLOT(updateGrabbedColors(QList<StructRGB>)));
@@ -871,7 +874,7 @@ void MainWindow::onGrabModeChanged()
         grabber = new QtGrabber();
         break;
     }
-
+    Settings::setGrabMode(getGrabMode());
     grabManager->setGrabber(grabber);
 }
 
@@ -1018,20 +1021,37 @@ void MainWindow::loadSettingsToMainWindow()
 
     ui->checkBox_ExpertModeEnabled->setChecked      ( Settings::isExpertModeEnabled() );
 
+    switch(Settings::getGrabMode())
+    {
+#ifdef WINAPI_GRAB_SUPPORT
+    case WinAPIGrabMode:
+        ui->radioButton_GrabWinAPI->setChecked(true);
+        break;
+#endif
+#ifdef X11_GRAB_SUPPORT
+    case X11GrabMode:
+        ui->radioButton_GrabX11->setChecked(true);
+        break;
+#endif
+    default:
+        ui->radioButton_GrabQt->setChecked(true);
+    }
+
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
     onCbModesChanged ( ui->cb_Modes->currentIndex() ); //
     onMoodLampModeChanged(ui->radioButton_LiquidColorMoodLampMode->isChecked());
     updateExpertModeWidgetsVisibility();
+    onGrabModeChanged();
 }
 
 GrabMode MainWindow::getGrabMode()
 {
-#ifdef Q_WS_X11
+#ifdef X11_GRAB_SUPPORT
     if (ui->radioButton_GrabX11->isChecked()) {
         return X11GrabMode;
     }
 #endif
-#ifdef Q_WS_WIN
+#ifdef WINAPI_GRAB_SUPPORT
     if (ui->radioButton_GrabWinAPI->isChecked()) {
         return WinAPIGrabMode;
     }

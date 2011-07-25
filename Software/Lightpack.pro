@@ -151,7 +151,8 @@ HEADERS += hidapi/hidapi.h \
     grab/X11Grabber.hpp \
     grab/WinAPIGrabber.hpp \
     grab/QtGrabber.hpp \
-    grab/IGrabber.hpp
+    grab/IGrabber.hpp \
+    inc/defs.h
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui

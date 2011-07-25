@@ -25,7 +25,6 @@
  */
 
 #include "grabmanager.h"
-#include "grab_api.h"
 #include <QtCore/qmath.h>
 
 #include "debug.h"

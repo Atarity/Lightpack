@@ -2,6 +2,8 @@
 #define QTGRABBER_HPP
 
 #include "IGrabber.hpp"
+
+#ifdef QT_GRAB_SUPPORT
 class QtGrabber : public IGrabber
 {
 public:
@@ -18,5 +20,5 @@ private:
     QRect screenres;
     int screen;
 };
-
+#endif // QT_GRAB_SUPPORT
 #endif // QTGRABBER_HPP

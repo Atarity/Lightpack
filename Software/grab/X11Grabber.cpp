@@ -1,6 +1,6 @@
 #include"X11Grabber.hpp"
 
-#ifdef Q_WS_X11
+#ifdef X11_GRAB_SUPPORT
 
 #include<cmath>
 

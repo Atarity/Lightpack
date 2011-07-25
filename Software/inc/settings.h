@@ -31,6 +31,7 @@
 #include <QSettings>
 #include <QVariant>
 
+#include "defs.h"
 #include "debug.h"
 
 // Default values:
@@ -51,6 +52,8 @@
 #define IS_AVG_COLORS_ON_DEFAULT_VALUE          false
 #define MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT    3
 #define GAMMA_CORRECTION_DEFAULT_VALUE          2.0
+
+#define GRAB_MODE_DEFAULT    "Qt"
 
 #define MODE_DEFAULT    "Grab"
 #define SPEED_MOOD_LAMP_DEFAULT_VALUE 50
@@ -73,7 +76,15 @@
 
 enum LightpackMode { Grab, MoodLamp };
 
-enum GrabMode {WinAPIGrabMode, QtGrabMode, X11GrabMode};
+enum GrabMode {
+    QtGrabMode
+#ifdef WINAPI_GRAB_SUPPORT
+    ,WinAPIGrabMode
+#endif
+#ifdef X11_GRAB_SUPPORT
+    ,X11GrabMode
+#endif
+};
 
 class Settings : public QObject
 {
@@ -103,6 +114,8 @@ public:
     //
     static bool isExpertModeEnabled();
     static void setExpertModeEnabled(bool isEnabled);
+    static GrabMode getGrabMode();
+    static void setGrabMode(GrabMode grabMode);
     static LightpackMode getMode();
     static void setMode(LightpackMode mode);
     static bool isMoodLampLiquidMode();

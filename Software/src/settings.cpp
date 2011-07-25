@@ -42,6 +42,7 @@
 #define KEY_MOOD_LAMP_SPEED       "MoodLampSpeed"
 #define KEY_MOOD_LAMP_LIQUID_MODE "MoodLampLiquidMode"
 #define KEY_MODE                  "Mode"
+#define KEY_GRAB_MODE             "GrabMode"
 #define KEY_EXPERT_MODE_ENABLED   "ExpertModeEnabled"
 
 QSettings * Settings::m_currentProfile;
@@ -285,6 +286,41 @@ static int getValidMoodLampSpeed(int value)
     return value;
 }
 
+GrabMode Settings::getGrabMode()
+{
+    QString strGrabMode = m_currentProfile->value(KEY_GRAB_MODE).toString().toLower();
+#ifdef WINAPI_GRAB_SUPPORT
+    if (strGrabMode == "winapi")
+        return WinAPIGrabMode;
+#endif
+#ifdef X11_GRAB_SUPPORT
+    if (strGrabMode == "x11")
+        return X11GrabMode;
+#endif
+    return QtGrabMode;
+}
+
+void Settings::setGrabMode(GrabMode grabMode)
+{
+    QString strGrabMode;
+    switch (grabMode)
+    {
+#ifdef WINAPI_GRAB_SUPPORT
+    case WinAPIGrabMode:
+        strGrabMode = "Winapi";
+        break;
+#endif
+#ifdef X11_GRAB_SUPPORT
+    case X11GrabMode:
+        strGrabMode = "X11";
+        break;
+#endif
+    default:
+        strGrabMode = "Qt";
+    }
+    m_currentProfile->setValue(KEY_GRAB_MODE, strGrabMode);
+}
+
 LightpackMode Settings::getMode()
 {
     QString strMode = m_currentProfile->value(KEY_MODE).toString().toLower();
@@ -370,6 +406,9 @@ void Settings::resetDefaults()
 void Settings::settingsInit(bool isResetDefault)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isResetDefault;
+
+    setNewOption(KEY_GRAB_MODE,                    GRAB_MODE_DEFAULT,
+                 isResetDefault);
 
     setNewOption(KEY_MODE,                         MODE_DEFAULT,
                  isResetDefault);

@@ -1,9 +1,10 @@
 #ifndef X11GRABBER_H
 #define X11GRABBER_H
 
-#include<qglobal.h>
+#include "IGrabber.hpp"
 
-#ifdef Q_WS_X11
+#ifdef X11_GRAB_SUPPORT
+
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QPixmap>
@@ -11,7 +12,6 @@
 
 #include <qtextstream.h>
 
-#include "IGrabber.hpp"
 #include "debug.h"
 
 #include <X11/Xlib.h>
@@ -43,5 +43,5 @@ private:
     XShmSegmentInfo shminfo;
 //    int w, h;
 };
-#endif // Q_WS_X11
+#endif // X11_GRAB_SUPPORT
 #endif // X11GRABBER_H

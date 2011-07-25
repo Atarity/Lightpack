@@ -1,4 +1,6 @@
 #include"QtGrabber.hpp"
+
+#ifdef QT_GRAB_SUPPORT
 #include"debug.h"
 #include"QtGui"
 
@@ -61,3 +63,4 @@ QRgb QtGrabber::getColor(QPixmap pixmap, int x, int y, int width, int height)
 
     return result;
 }
+#endif

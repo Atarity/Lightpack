@@ -1,10 +1,10 @@
 
 #include"WinAPIGrabber.hpp"
-#ifdef Q_WS_WIN
+#ifdef WINAPI_GRAB_SUPPORT
 #include"debug.h"
 #include<cmath>
 
-WinAPIGrabber::WinAPIGrabber()
+WinAPIGrabber::WinAPIGrabber() : IGrabber()
 {
     pbPixelsBuff = NULL;
     isBufferNeedsResize = true;
