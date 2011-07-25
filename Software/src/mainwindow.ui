@@ -32,7 +32,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -1266,6 +1266,13 @@ margin-top: 0px;
             <widget class="QRadioButton" name="radioButton_GrabWinAPI">
              <property name="text">
               <string notr="true">WinAPI</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_GrabX11">
+             <property name="text">
+              <string>X11</string>
              </property>
             </widget>
            </item>

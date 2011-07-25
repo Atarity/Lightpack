@@ -101,7 +101,7 @@ private slots:
 
     void loadTranslation(const QString & language);
 
-    void switchQtWinAPIClick();
+    void onGrabModeChanged();
     void startTestsClick();
 
     void setAvgColorOnAllLEDs(int value);
@@ -148,7 +148,8 @@ private:
 
 
     bool isErrorState;
-    bool isWinAPIGrab;
+
+    GrabMode getGrabMode();
 
     // Evaluated frequency of the PWM generation
     double pwmFrequency;
