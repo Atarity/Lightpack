@@ -207,7 +207,7 @@ QRgb getColor(int x, int y, int width, int height)
     for(int j = 0; j < height; j++) {
         int index = image->bytes_per_line * (y+j) + x * bytesPerPixel;
         for(int i = 0; i < width; i+=4) {
-            b += pbPixelsBuff[index]   + pbPixelsBuff[index + 4] + pbPixelsBuff[index + 8 ] + pbPixelsBuff[index + 12];
+            b += pbPixelsBuff[index] + pbPixelsBuff[index + 4] + pbPixelsBuff[index + 8 ] + pbPixelsBuff[index + 12];
             g += pbPixelsBuff[index+1] + pbPixelsBuff[index + 5] + pbPixelsBuff[index + 9 ] + pbPixelsBuff[index + 13];
             r += pbPixelsBuff[index+2] + pbPixelsBuff[index + 6] + pbPixelsBuff[index + 10] + pbPixelsBuff[index + 14];
             count+=4;

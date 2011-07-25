@@ -30,10 +30,9 @@
 #include "LedDeviceFactory.hpp"
 #include <QDesktopWidget>
 #include <QPlainTextEdit>
-#include "WinAPIGrabber.hpp"
-#include "QtGrabber.hpp"
-#include "X11Grabber.hpp"
+
 #include "debug.h"
+#include "../src/apiserver.h"
 
 // ----------------------------------------------------------------------------
 // Lightpack settings window
@@ -48,7 +47,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ui->tabWidget->setCurrentIndex( 0 );
-
 
     createActions();
     createTrayIcon();
@@ -68,25 +66,31 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ledDevice = LedDeviceFactory::create(this, Settings::valueMain("IsAlienFxMode").toBool());
 
-    grabManager = new GrabManager(new QtGrabber());
+    grabManager = new GrabManager();
 
     aboutDialog = new AboutDialog(this);
 
     speedTest = new SpeedTest();
-
-#ifndef Q_WS_WIN
-    ui->radioButton_GrabWinAPI->setVisible(false);
-#endif
-#ifndef Q_WS_X11
-    ui->radioButton_GrabX11->setVisible(false);
-#endif
-    ui->radioButton_GrabQt->setChecked(true);
 
     profilesFindAll();
 
     initLanguages();
 
     initLabelsForGrabbedColors();
+
+
+
+    if (Settings::valueMain("EnableApi").toBool())
+    {
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "start API server";
+        server = new ApiServer(this);
+        if (!server->listen(QHostAddress::Any, Settings::valueMain("ApiPort").toInt())) {
+                     QMessageBox::critical(this, tr("API Server"),
+                                           tr("Unable to start the server: %1.").arg(server->errorString()));
+                     close();
+                     return;
+        }
+    }
 
     connectSignalsSlots();
 
@@ -97,11 +101,17 @@ MainWindow::MainWindow(QWidget *parent) :
     isErrorState = false;
     isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
 
-    if( Settings::valueMain("ShowAnotherGui").toBool() == false ){
-        ui->tabWidget->removeTab( ui->tabWidget->indexOf( ui->tabAnotherGUI ) );
-    }
+    isWinAPIGrab = false;
+#ifdef Q_WS_WIN
+    isWinAPIGrab = true;    
+#endif
+#ifdef Q_WS_X11
+    isWinAPIGrab = true;
+    ui->radioButton_GrabWinAPI->setText(tr("GrabX11"));
+#endif
 
-    onGrabModeChanged();
+
+    grabSwitchQtWinAPI();
 
     this->adjustSize();
     this->move( screen.width() / 2  - this->width() / 2,
@@ -134,8 +144,10 @@ void MainWindow::connectSignalsSlots()
 
     // Connect GrabManager with ledDevice
     connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
+    connect(server, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
 
     // Main options
+    connect(ui->cb_Modes,SIGNAL(activated(int)), this, SLOT(onCbModesChanged(int)));
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
     connect(ui->pushButton_EnableDisableDevice, SIGNAL(clicked()), this, SLOT(grabAmbilightOnOff()));
 
@@ -166,23 +178,15 @@ void MainWindow::connectSignalsSlots()
     connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColorChanged(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabledChanged(bool)));
     // Another GUI
-    // Connect signals to another GUI slots only if ShowAnotherGui == true
-    if( Settings::valueMain("ShowAnotherGui").toBool() ){
+    connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
+    connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
 
-        connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
-#ifdef Q_WS_WIN
-        connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
-#endif
-#ifdef Q_WS_X11
-        connect(ui->radioButton_GrabX11, SIGNAL(toggled(bool)), this, SLOT(switchQtWinAPIClick()));
-#endif
-        connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
+    connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
 
-        connect(grabManager, SIGNAL(updateLedsColors(QList<StructRGB>)), this, SLOT(updateGrabbedColors(QList<StructRGB>)));
-        connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
-        connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
-        connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
-    }
+    connect(grabManager, SIGNAL(updateLedsColors(QList<StructRGB>)), this, SLOT(updateGrabbedColors(QList<StructRGB>)));
+    connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
+    connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
+    connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
 }
 
 
@@ -216,8 +220,8 @@ void MainWindow::changeEvent(QEvent *e)
     QMainWindow::changeEvent(e);
     switch (e->type()) {
     case QEvent::LanguageChange:
-        ui->retranslateUi(this);
 
+        ui->retranslateUi(this);
         onAmbilightAction->setText( tr("&Turn on") );
         offAmbilightAction->setText( tr("&Turn off") );
         settingsAction->setText( tr("&Settings") );
@@ -267,6 +271,12 @@ void MainWindow::updateExpertModeWidgetsVisibility()
     ui->label_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
     ui->doubleSpinBox_HW_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
     ui->checkBox_USB_SendDataOnlyIfColorsChanges->setVisible(Settings::isExpertModeEnabled());
+    if(Settings::isExpertModeEnabled()) {
+        if (ui->tabWidget->indexOf(ui->tabAnotherGUI) < 0);
+            ui->tabWidget->addTab(ui->tabAnotherGUI, tr("Dev tab"));
+    } else {
+        ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabAnotherGUI));
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -408,6 +418,8 @@ void MainWindow::showSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    LightpackMode mode = Settings::getMode();
+    ui->cb_Modes->setCurrentIndex   ( mode == Grab ? 0 : 1 ); // we assume that LightpackMode in same order as cb_Modes
     grabManager->setVisibleLedWidgets( ui->groupBox_ShowGrabWidgets->isChecked() && ui->cb_Modes->currentIndex()==0 );
     this->show();
 }
@@ -508,7 +520,7 @@ void MainWindow::settingsHardwareSetBrightness(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     // TODO: settings
-    //Settings::setValue("Firmware/Brightness", value);
+    Settings::setValue("Firmware/Brightness", value);
     ledDevice->setBrightness(value);
 }
 
@@ -585,8 +597,7 @@ void MainWindow::profileTraySwitch()
         if( action->isChecked() ){
             if( action->text() != ui->comboBox_Profiles->currentText() ){
                 DEBUG_LOW_LEVEL << Q_FUNC_INFO << "switch to" << action->text();
-                int index = ui->comboBox_Profiles->findText( action->text() );
-                ui->comboBox_Profiles->setCurrentIndex( index );
+                profileSwitchCombobox( action->text() );
                 return;
             }
         }else{
@@ -596,6 +607,12 @@ void MainWindow::profileTraySwitch()
             }
         }
     }
+}
+
+void MainWindow::profileSwitchCombobox(QString profile)
+{
+    int index = ui->comboBox_Profiles->findText( profile );
+    ui->comboBox_Profiles->setCurrentIndex( index );
 }
 
 void MainWindow::profileNew()
@@ -644,7 +661,7 @@ void MainWindow::profileDeleteCurrent()
     ui->comboBox_Profiles->removeItem( ui->comboBox_Profiles->currentIndex() );
 }
 
-void MainWindow::profilesFindAll()
+QStringList MainWindow::profilesFindAll()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -663,6 +680,7 @@ void MainWindow::profilesFindAll()
             ui->comboBox_Profiles->addItem(settingsFiles.at(i));
         }
     }
+    return settingsFiles;
 }
 
 void MainWindow::profileLoadLast()
@@ -826,29 +844,20 @@ void MainWindow::updatePwmFrequency()
     ui->label_PWM_Freq->setText(QString::number(pwmFrequency,'f',2));
 }
 
+void MainWindow::switchQtWinAPIClick()
+{    
+    isWinAPIGrab = ui->radioButton_GrabWinAPI->isChecked();
 
-void MainWindow::onGrabModeChanged()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "GrabMode" << getGrabMode();
-    IGrabber * grabber;
-    switch (getGrabMode())
-    {
-#ifdef Q_WS_X11
-    case X11GrabMode:
-        grabber = new X11Grabber();
-        break;
-#endif
-#ifdef Q_WS_WIN
-    case WinAPIGrabMode:
-        grabber = new WinAPIGrabber();
-        break;
-#endif
-    default:
-        grabber = new QtGrabber();
-        break;
-    }
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "isWinAPIGrab:" << isWinAPIGrab;
 
-    grabManager->setGrabber(grabber);
+    grabSwitchQtWinAPI();
+}
+
+void MainWindow::grabSwitchQtWinAPI()
+{    
+    ui->radioButton_GrabWinAPI->setChecked(isWinAPIGrab);
+
+    grabManager->switchQtWinApi( isWinAPIGrab );
 }
 
 // ----------------------------------------------------------------------------
@@ -979,11 +988,13 @@ void MainWindow::loadSettingsToMainWindow()
     ui->spinBox_MinLevelOfSensitivity->setValue         ( Settings::value("MinimumLevelOfSensitivity").toInt() );
     ui->doubleSpinBox_HW_GammaCorrection->setValue      ( Settings::value("GammaCorrection").toDouble() );
     ui->checkBox_AVG_Colors->setChecked                 ( Settings::value("IsAvgColorsOn").toBool() );
-    ui->cb_Modes->setCurrentIndex                       ( Settings::getMode()); // we assume that LightpackMode in same order as cb_Modes
+    LightpackMode mode = Settings::getMode();
+    ui->cb_Modes->setCurrentIndex                       ( mode == Grab ? 0 : 1 ); // we assume that LightpackMode in same order as cb_Modes
     ui->horizontalSlider_Speed->setValue                ( Settings::getMoodLampSpeed());
     ui->horizontalSlider_Brightness->setValue           ( Settings::value("Brightness").toInt());
     ui->pushButton_SelectColor->setColor                ( Settings::getMoodLampColor());
     ui->radioButton_LiquidColorMoodLampMode->setChecked ( Settings::isMoodLampLiquidMode());
+    ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
 
     ui->horizontalSlider_HW_OCR->setValue           ( Settings::value("Firmware/TimerOCR").toInt() );
     ui->horizontalSlider_HW_OCR->setValue           ( Settings::value("Firmware/TimerOCR").toInt() );
@@ -993,26 +1004,11 @@ void MainWindow::loadSettingsToMainWindow()
     ui->checkBox_ExpertModeEnabled->setChecked      ( Settings::isExpertModeEnabled() );
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
-    on_cb_Modes_currentIndexChanged ( ui->cb_Modes->currentIndex() ); //
+    onCbModesChanged ( ui->cb_Modes->currentIndex() ); //
     onMoodLampModeChanged(ui->radioButton_LiquidColorMoodLampMode->isChecked());
     updateExpertModeWidgetsVisibility();
 }
 
-GrabMode MainWindow::getGrabMode()
-{
-#ifdef Q_WS_X11
-    if (ui->radioButton_GrabX11->isChecked()) {
-        return X11GrabMode;
-    }
-#endif
-#ifdef Q_WS_WIN
-    if (ui->radioButton_GrabWinAPI->isChecked()) {
-        return WinAPIGrabMode;
-    }
-#endif
-
-    return QtGrabMode;
-}
 
 // ----------------------------------------------------------------------------
 // Quit application
@@ -1029,7 +1025,7 @@ void MainWindow::quit()
     QApplication::quit();
 }
 
-void MainWindow::on_cb_Modes_currentIndexChanged(int index)
+void MainWindow::onCbModesChanged(int index)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << index;
 
@@ -1041,13 +1037,13 @@ void MainWindow::on_cb_Modes_currentIndexChanged(int index)
         grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && this->isVisible());
         break;
     case 1:
-        ui->frmAmbilight->setVisible(false);
         ui->frmBacklight->setVisible(true);
+        ui->frmAmbilight->setVisible(false);
         grabManager->setVisibleLedWidgets(false);
         break;
     }
-    grabManager->switchMode(index);
-    Settings::setMode(index == 0 ? Grab : MoodLamp);
+    grabManager->switchMode(index == 0 ? Grab : MoodLamp);
+//    Settings::setMode(index == 0 ? Grab : MoodLamp);
 }
 
 void MainWindow::on_horizontalSlider_Brightness_valueChanged(int value)
@@ -1059,15 +1055,13 @@ void MainWindow::on_horizontalSlider_Brightness_valueChanged(int value)
 void MainWindow::onMoodLampColorChanged(QColor color)
 {
     grabManager->setBackLightColor(color);
-    Settings::setMoodLampColor(color);
 }
 
 
 void MainWindow::on_horizontalSlider_Speed_valueChanged(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO<< value;
-    grabManager->setSpeedMoodLamp(value);
-    Settings::setMoodLampSpeed(value);
+    grabManager->setMoodLampSpeed(value);
 }
 
 void MainWindow::paintEvent(QPaintEvent *event)
@@ -1095,7 +1089,7 @@ void MainWindow::onMoodLampModeChanged(bool checked)
         ui->label_MoodLampSpeed->setEnabled(false);
         ui->horizontalSlider_Brightness->setEnabled(false);
         ui->label_MoodLampBrightness->setEnabled(false);
-        grabManager->setSpeedMoodLamp(0);
+        grabManager->setMoodLampSpeed(0);
     } else {
         //liquid mode
         ui->pushButton_SelectColor->setEnabled(false);
@@ -1104,6 +1098,5 @@ void MainWindow::onMoodLampModeChanged(bool checked)
         ui->label_MoodLampSpeed->setEnabled(true);
         ui->horizontalSlider_Brightness->setEnabled(true);
         ui->label_MoodLampBrightness->setEnabled(true);
-        grabManager->setSpeedMoodLamp(Settings::getMoodLampSpeed());
     }
 }

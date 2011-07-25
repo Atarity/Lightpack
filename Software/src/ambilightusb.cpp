@@ -63,7 +63,6 @@ bool AmbilightUsb::openDevice()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     ambilightDevice = NULL;
-
     struct hid_device_info *devs, *cur_dev;
 
     DEBUG_LOW_LEVEL << "Start enumeration of all HID devices";
