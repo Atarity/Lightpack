@@ -1,3 +1,4 @@
+#include"defs.h"
 #include"qcolorbutton.hpp"
 #include"debug.h"
 #define COLOR_LABEL_SPACING 5
@@ -24,8 +25,13 @@ QColorButton::~QColorButton()
 
 void QColorButton::updateColorLabelSize()
 {
+#ifdef MAC_OS
+    colorLabel->move(COLOR_LABEL_SPACING*2, COLOR_LABEL_SPACING+3);
+    colorLabel->resize(this->width()-(COLOR_LABEL_SPACING * 4),this->height()-(COLOR_LABEL_SPACING * 2));
+#else
     colorLabel->move(COLOR_LABEL_SPACING, COLOR_LABEL_SPACING);
     colorLabel->resize(this->width()-(COLOR_LABEL_SPACING * 2),this->height()-(COLOR_LABEL_SPACING * 2));
+#endif
 }
 
 void QColorButton::setColor(QColor color)
