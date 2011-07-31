@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ledDevice = LedDeviceFactory::create(this, Settings::valueMain("IsAlienFxMode").toBool());
 
-    grabManager = new GrabManager(new QtGrabber());
+    grabManager = new GrabManager(createGrabber(Settings::getGrabMode()));
 
     aboutDialog = new AboutDialog(this);
 
@@ -858,25 +858,26 @@ void MainWindow::updatePwmFrequency()
 void MainWindow::onGrabModeChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "GrabMode" << getGrabMode();
-    IGrabber * grabber;
-    switch (getGrabMode())
+    IGrabber * grabber = createGrabber(getGrabMode());
+    Settings::setGrabMode(getGrabMode());
+    grabManager->setGrabber(grabber);
+}
+
+IGrabber * MainWindow::createGrabber(GrabMode grabMode)
+{
+    switch (grabMode)
     {
 #ifdef Q_WS_X11
     case X11GrabMode:
-        grabber = new X11Grabber();
-        break;
+        return new X11Grabber();
 #endif
 #ifdef Q_WS_WIN
     case WinAPIGrabMode:
-        grabber = new WinAPIGrabber();
-        break;
+        return new WinAPIGrabber();
 #endif
     default:
-        grabber = new QtGrabber();
-        break;
+        return new QtGrabber();
     }
-    Settings::setGrabMode(getGrabMode());
-    grabManager->setGrabber(grabber);
 }
 
 // ----------------------------------------------------------------------------

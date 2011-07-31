@@ -134,6 +134,8 @@ private:
 
     void updateCbModesPosition();
 
+    IGrabber * createGrabber(GrabMode grabMode);
+
 public:
     bool isAmbilightOn; /* is grab desktop window ON */
     GrabManager *grabManager;
