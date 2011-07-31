@@ -53,7 +53,13 @@
 #define MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT    3
 #define GAMMA_CORRECTION_DEFAULT_VALUE          2.0
 
-#define GRAB_MODE_DEFAULT    "Qt"
+#ifdef WINAPI_GRAB_SUPPORT
+#   define GRAB_MODE_DEFAULT    "Winapi"
+#elif X11_GRAB_SUPPORT
+#   define GRAB_MODE_DEFAULT    "X11"
+#else
+#   define GRAB_MODE_DEFAULT    "Qt"
+#endif
 
 #define MODE_DEFAULT    "Grab"
 #define SPEED_MOOD_LAMP_DEFAULT_VALUE 50
