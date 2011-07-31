@@ -14,9 +14,20 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 ===================================================================================
 -----------------------------------------------------------------------------------
 
+Version hw5.1
+-------------
+April 29, 2011
+
+* Linear regulator 3.3V for MCU and LED drivers
+* Voltage on LEDs is reduced by the diode, 
+  it is necessary to reduce the heat LED drivers
+* Added LED for blink when transmitting data via USB
+* Added 100nF capacitor for each chip
+* Remove RESET button
+
 Version hw5.0
 -------------
-brunql, April 3, 2011
+April 3, 2011
 
 * Led drivers connection via SPI
 * Each led driver controls 5 LEDs (summary 10 LEDs)
@@ -25,8 +36,6 @@ brunql, April 3, 2011
 * Pads to connect the SPI
 * Pads to connect the USART
 * Main board: 86 х 38 mm; Led board: 15 x 15 mm
-- Unfortunately 8 wires on bottom layer
-
 
 Version hw4.3
 -------------

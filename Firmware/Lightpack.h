@@ -51,6 +51,7 @@
 /* LED use with I/O manipulations macroses from iodefs.h */
 #define LEDR    (D,2)
 #define LEDW    (D,3)
+#define USBLED  (C,5)
 
 // Global variables
 extern Settings_t g_Settings;
