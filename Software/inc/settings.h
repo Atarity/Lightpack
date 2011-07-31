@@ -55,7 +55,7 @@
 
 #ifdef WINAPI_GRAB_SUPPORT
 #   define GRAB_MODE_DEFAULT    "Winapi"
-#elif X11_GRAB_SUPPORT
+#elif defined(X11_GRAB_SUPPORT)
 #   define GRAB_MODE_DEFAULT    "X11"
 #else
 #   define GRAB_MODE_DEFAULT    "Qt"
