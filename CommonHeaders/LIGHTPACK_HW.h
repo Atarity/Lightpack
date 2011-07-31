@@ -37,7 +37,7 @@
 
 # /* FIRST for firmware make preprocessor */
 # /*
-           LIGHTPACK_HW = 4
+           LIGHTPACK_HW = 5
 # */
 
 #if !defined( LIGHTPACK_HW )
