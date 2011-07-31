@@ -4,7 +4,7 @@
 #include"debug.h"
 #include<cmath>
 
-WinAPIGrabber::WinAPIGrabber() : IGrabber()
+WinAPIGrabber::WinAPIGrabber()
 {
     pbPixelsBuff = NULL;
     isBufferNeedsResize = true;

@@ -4,7 +4,7 @@
 #include"debug.h"
 #include"QtGui"
 
-QtGrabber::QtGrabber() : IGrabber()
+QtGrabber::QtGrabber()
 {
     screen = 0;
 }

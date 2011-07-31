@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>394</width>
+    <width>398</width>
     <height>503</height>
    </rect>
   </property>
@@ -32,7 +32,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -135,6 +135,9 @@
            </property>
            <item>
             <widget class="QFrame" name="frmAmbilight">
+             <property name="styleSheet">
+              <string notr="true">#frmAmbilight {border: 0px;}</string>
+             </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
@@ -407,6 +410,9 @@ margin-top: 0px;
            </item>
            <item>
             <widget class="QFrame" name="frmBacklight">
+             <property name="styleSheet">
+              <string notr="true">#frmBacklight {border: 0px}</string>
+             </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
@@ -895,14 +901,14 @@ margin-top: 0px;
            <string>Smooth slowdown</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0" columnstretch="0,0,0">
-           <property name="verticalSpacing">
-            <number>0</number>
-           </property>
            <property name="topMargin">
             <number>9</number>
            </property>
            <property name="bottomMargin">
             <number>9</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>0</number>
            </property>
            <item row="0" column="0" rowspan="2">
             <widget class="QSlider" name="horizontalSlider_HW_SmoothSlowdown">

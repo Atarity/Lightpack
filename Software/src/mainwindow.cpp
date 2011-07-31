@@ -33,6 +33,7 @@
 #include "WinAPIGrabber.hpp"
 #include "QtGrabber.hpp"
 #include "X11Grabber.hpp"
+#include "MacOSGrabber.hpp"
 #include "debug.h"
 #include "../src/apiserver.h"
 

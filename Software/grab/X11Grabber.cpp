@@ -4,7 +4,7 @@
 
 #include<cmath>
 
-X11Grabber::X11Grabber() : IGrabber()
+X11Grabber::X11Grabber()
 {
     this->updateScreenAndAllocateMemory = true;
     this->screen = 0;

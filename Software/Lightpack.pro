@@ -104,7 +104,7 @@ macx{
     CONFIG += x86_64
     LIBS += /usr/local/lib/libusb-1.0.dylib
     INCLUDEPATH += /usr/local/include/libusb-1.0
-    LIBS +=-framework IOKit -framework CoreFoundation
+    LIBS +=-framework IOKit -framework CoreFoundation -framework ApplicationServices -framework OpenGL
     ICON = res/icons/Lightpack.icns
 }
 
@@ -123,7 +123,8 @@ SOURCES += src/main.cpp \
     src/apiserver.cpp \
     grab/X11Grabber.cpp \
     grab/WinAPIGrabber.cpp \
-    grab/QtGrabber.cpp
+    grab/QtGrabber.cpp \
+    grab/MacOSGrabber.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/LIGHTPACK_HW.h \
     ../CommonHeaders/COMMANDS.h \
@@ -152,7 +153,8 @@ HEADERS += hidapi/hidapi.h \
     grab/WinAPIGrabber.hpp \
     grab/QtGrabber.hpp \
     grab/IGrabber.hpp \
-    inc/defs.h
+    inc/defs.h \
+    grab/MacOSGrabber.hpp
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui
