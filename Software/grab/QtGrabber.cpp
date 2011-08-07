@@ -20,13 +20,18 @@ const char * QtGrabber::getName()
 
 void QtGrabber::updateGrabScreenFromWidget(QWidget *widget)
 {
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
     screen = QApplication::desktop()->screenNumber( widget );
     screenres = QApplication::desktop()->screenGeometry( screen );
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenWidth x screenHeight" << screenres.width() << "x" << screenres.height();
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screen " << screen;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenres " << screenres;
 }
 
 QList<QRgb> QtGrabber::grabWidgetsColors(QList<MoveMeWidget *> &widgets)
 {
-    QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->screen(screen) ->winId(),
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+    QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->screen(-1) ->winId(),
                                   screenres.x(), //!
                                   screenres.y(), //!
                                   screenres.width(),
@@ -35,6 +40,10 @@ QList<QRgb> QtGrabber::grabWidgetsColors(QList<MoveMeWidget *> &widgets)
     for(int i = 0; i < widgets.size(); i++) {
         result.append(getColor(pixmap, widgets[i]));
     }
+#if 0
+    if (screenres.width() < 1920)
+        pixmap.toImage().save("screen.jpg");
+#endif
     return result;
 }
 

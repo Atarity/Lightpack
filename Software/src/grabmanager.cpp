@@ -157,8 +157,10 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screen:" << screen;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screenSaved:" << screenSaved;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screenSavedIndex:" << screenSavedIndex;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screenIndexOfFirstLedWidget:" << screenIndexOfFirstLedWidget;
 
-    if(screenIndexResized != screenIndexOfFirstLedWidget){
+    if(screenIndexResized != -1 && screenIndexOfFirstLedWidget != -1 && screenIndexResized != screenIndexOfFirstLedWidget ) {
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "not interesting monitor has been resized";
         return;
     }
 

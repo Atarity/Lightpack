@@ -188,17 +188,22 @@ QRgb WinAPIGrabber::getColor(int x, int y, int width, int height)
     }
 
 #if 0
-    // Save image of screen:
-    QImage * im = new QImage( monitorWidth, monitorHeight, QImage::Format_RGB32 );
-    for(int i=0; i<monitorWidth; i++){
-        for(int j=0; j<monitorHeight; j++){
-            index = (BytesPerPixel * j * monitorWidth) + (BytesPerPixel * i);
-            QRgb rgb = pbPixels[index+2] << 16 | pbPixels[index+1] << 8 | pbPixels[index];
-            im->setPixel(i, j, rgb);
+    if (screenWidth < 1920 && (r > 120 || g > 120 || b > 120)) {
+        int monitorWidth = screenWidth;
+        int monitorHeight = screenHeight;
+        const int BytesPerPixel = 4;
+        // Save image of screen:
+        QImage * im = new QImage( monitorWidth, monitorHeight, QImage::Format_RGB32 );
+        for(int i=0; i<monitorWidth; i++){
+            for(int j=0; j<monitorHeight; j++){
+                index = (BytesPerPixel * j * monitorWidth) + (BytesPerPixel * i);
+                QRgb rgb = pbPixelsBuff[index+2] << 16 | pbPixelsBuff[index+1] << 8 | pbPixelsBuff[index];
+                im->setPixel(i, j, rgb);
+            }
         }
+        im->save("screen.jpg");
+        delete im;
     }
-    im->save("screen.jpg");
-    delete im;
 #endif
 
     QRgb result = qRgb(r, g, b);
