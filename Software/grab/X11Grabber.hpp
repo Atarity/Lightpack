@@ -25,6 +25,7 @@ class X11Grabber : public IGrabber
 {
 public:
     X11Grabber();
+    ~X11Grabber();
     virtual const char * getName();
     virtual void updateGrabScreenFromWidget( QWidget * widget );
     virtual QList<QRgb> grabWidgetsColors(QList<MoveMeWidget *> &widgets);

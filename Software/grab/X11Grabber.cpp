@@ -3,12 +3,21 @@
 #ifdef X11_GRAB_SUPPORT
 
 #include<cmath>
+#include<sys/ipc.h>
 
 X11Grabber::X11Grabber()
 {
     this->updateScreenAndAllocateMemory = true;
     this->screen = 0;
+    image = NULL;
+    display = XOpenDisplay(NULL);
 }
+
+X11Grabber::~X11Grabber()
+{
+    XCloseDisplay(display);
+}
+
 const char * X11Grabber::getName()
 {
     return "X11Grabber";
@@ -38,7 +47,6 @@ void X11Grabber::captureScreen()
         //screenres = QApplication::desktop()->screenGeometry(screen);
         updateScreenAndAllocateMemory = false;
 
-        this->display = XOpenDisplay(NULL);
         // todo test and fix dual monitor configuration
         Xscreen = DefaultScreenOfDisplay(display);
 
@@ -48,6 +56,12 @@ void X11Grabber::captureScreen()
 	DEBUG_HIGH_LEVEL << "dimensions " << width << "x" << height << screen;
         screenres = QRect(0,0,width,height);
 
+	if (image != NULL) {
+            XShmDetach(display, &shminfo);
+            XDestroyImage(image);
+            shmdt (shminfo.shmaddr);
+            shmctl(shminfo.shmid, IPC_RMID, 0);
+        }
         image = XShmCreateImage(display,   DefaultVisualOfScreen(Xscreen),
                                         DefaultDepthOfScreen(Xscreen),
                                         ZPixmap, NULL, &shminfo,
