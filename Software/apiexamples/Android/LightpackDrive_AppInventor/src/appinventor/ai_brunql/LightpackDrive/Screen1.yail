@@ -1,0 +1,67 @@
+#|
+$Source $Yail
+|#
+
+(define-form appinventor.ai_brunql.LightpackDrive.Screen1 Screen1)
+(require <com.google.youngandroid.runtime>)
+(def status "on")
+
+;;; Screen1
+(do-after-form-creation (set-and-coerce-property! 'Screen1 'Title "Screen1" 'text)
+)
+;;; VerticalArrangement2
+(add-component Screen1 VerticalArrangement VerticalArrangement2 )
+;;; VerticalArrangement1
+(add-component Screen1 VerticalArrangement VerticalArrangement1 (set-and-coerce-property! 'VerticalArrangement1 'Height -2 'number)
+(set-and-coerce-property! 'VerticalArrangement1 'Width -2 'number)
+)
+;;; LabelStatus
+(add-component VerticalArrangement1 Label LabelStatus (set-and-coerce-property! 'LabelStatus 'Text "\u0421\u0442\u0430\u0442\u0443\u0441" 'text)
+(set-and-coerce-property! 'LabelStatus 'TextAlignment 1 'number)
+(set-and-coerce-property! 'LabelStatus 'Width -2 'number)
+)
+;;; ButtonOnOff
+(add-component VerticalArrangement1 Button ButtonOnOff (set-and-coerce-property! 'ButtonOnOff 'Text "\u041d\u0430\u0436\u043c\u0438 \u043c\u0435\u043d\u044f!" 'text)
+(set-and-coerce-property! 'ButtonOnOff 'Width -2 'number)
+)
+(define-event ButtonOnOff Click()
+ (set-this-form)
+ (if (call-yail-primitive string=? (*list-for-runtime* (get-var status)
+ "on")
+ '( text text)
+ "text=")
+ (begin (set-var! status  "off")
+
+)
+ (begin (set-var! status  "on")
+
+)
+)
+
+(set-and-coerce-property! 'WebHttpRequest 'Url "http://192.168.1.2:8080/" 'text)
+
+(call-component-method 'WebHttpRequest 'PostText (*list-for-runtime* (call-yail-primitive string-append (*list-for-runtime* "lock\n" (call-yail-primitive string-append (*list-for-runtime* "setstatus:" (call-yail-primitive string-append (*list-for-runtime* (get-var status)
+ "\nunlock\n")
+ '( text text)
+ "join")
+)
+ '( text text)
+ "join")
+)
+ '( text text)
+ "join")
+)
+ '( text)
+)
+
+(set-and-coerce-property! 'LabelStatus 'Text (call-yail-primitive string-append (*list-for-runtime* "\u0421\u0442\u0430\u0442\u0443\u0441: " (get-var status)
+)
+ '( text text)
+ "join")
+ 'text)
+
+)
+;;; WebHttpRequest
+(add-component Screen1 Web WebHttpRequest )
+(init-runtime  #f)
+

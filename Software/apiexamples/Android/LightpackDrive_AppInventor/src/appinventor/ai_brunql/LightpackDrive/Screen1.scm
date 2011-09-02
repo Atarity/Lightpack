@@ -1,0 +1,4 @@
+#|
+$JSON
+{"YaVersion":"51","Source":"Form","Properties":{"$Name":"Screen1","$Type":"Form","$Version":"6","Uuid":"0","Title":"Screen1","$Components":[{"$Name":"VerticalArrangement2","$Type":"VerticalArrangement","$Version":"1","Uuid":"-957935281"},{"$Name":"VerticalArrangement1","$Type":"VerticalArrangement","$Version":"1","Uuid":"-2123959742","Width":"-2","Height":"-2","$Components":[{"$Name":"LabelStatus","$Type":"Label","$Version":"2","Uuid":"2131961819","Text":"Status: -","TextAlignment":"1","Width":"-2"},{"$Name":"ButtonOnOff","$Type":"Button","$Version":"3","Uuid":"696639650","Text":"On \/ Off","Width":"-2"}]},{"$Name":"WebHttpRequest","$Type":"Web","$Version":"2","Uuid":"1704331198"}]}}
+|#
