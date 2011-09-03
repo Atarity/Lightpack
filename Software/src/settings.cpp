@@ -38,12 +38,14 @@
 
 #include "debug.h"
 
-#define KEY_MOOD_LAMP_COLOR       "MoodLampColor"
-#define KEY_MOOD_LAMP_SPEED       "MoodLampSpeed"
-#define KEY_MOOD_LAMP_LIQUID_MODE "MoodLampLiquidMode"
-#define KEY_MODE                  "Mode"
-#define KEY_GRAB_MODE             "GrabMode"
-#define KEY_EXPERT_MODE_ENABLED   "ExpertModeEnabled"
+#define KEY_MOOD_LAMP_COLOR        "MoodLampColor"
+#define KEY_MOOD_LAMP_SPEED        "MoodLampSpeed"
+#define KEY_MOOD_LAMP_LIQUID_MODE  "MoodLampLiquidMode"
+#define KEY_MODE                   "Mode"
+#define KEY_GRAB_MODE              "GrabMode"
+#define KEY_EXPERT_MODE_ENABLED    "ExpertModeEnabled"
+#define KEY_CONNECTED_DEVICE       "ConnectedDevice"
+#define KEY_SUPPORTED_DEVICES      "SupportedDevices"
 
 QSettings * Settings::m_currentProfile;
 QSettings * Settings::m_mainConfig; // LightpackMain.conf contains last profile
@@ -71,6 +73,9 @@ void Settings::Initialize( const QString & applicationDirPath, bool isSetDebugLe
     setNewOptionMain("ApiPort",        API_PORT_DEFAULT);
     setNewOptionMain("EnableApi",      ENABLE_API_DEFAULT);
     setNewOptionMain(KEY_EXPERT_MODE_ENABLED, EXPERT_MODE_ENABLED_DEFAULT);
+    setNewOptionMain(KEY_CONNECTED_DEVICE,  CONNECTED_DEVICE_DEFAULT);
+    setNewOptionMain(KEY_SUPPORTED_DEVICES, SUPPORTED_DEVICES);
+
 
     if (isSetDebugLevelFromConfig)
     {
@@ -266,6 +271,47 @@ bool Settings::isExpertModeEnabled()
 void Settings::setExpertModeEnabled(bool isEnabled)
 {
     m_mainConfig->setValue(KEY_EXPERT_MODE_ENABLED, isEnabled);
+}
+
+SupportedDevices Settings::getConnectedDevice()
+{
+    QString deviceName = m_mainConfig->value(KEY_CONNECTED_DEVICE).toString();
+
+    if (deviceName == "Lightpack")
+        return SupportedDevice_Lightpack;
+    else if (deviceName == "AlienFx")
+        return SupportedDevice_AlienFx;
+    else if (deviceName == "Virtual")
+        return SupportedDevice_Virtual;
+    else {
+        qWarning() << Q_FUNC_INFO << "ConnectedDevice in lightpack main config file contains crap. Reset to default.";
+
+        setConnectedDevice(SupportedDevice_Default);
+        return SupportedDevice_Default;
+    }
+}
+
+void Settings::setConnectedDevice(SupportedDevices device)
+{
+    QString deviceName;
+
+    switch (device){
+    case SupportedDevice_Lightpack:
+        deviceName = "Lightpack";
+        break;
+    case SupportedDevice_AlienFx:
+        deviceName = "AlienFx";
+        break;
+    case SupportedDevice_Virtual:
+        deviceName = "Virtual";
+        break;
+    default:
+        qWarning() << Q_FUNC_INFO << "'device' not found in SupportedDevices. Reset to default.";
+        deviceName = CONNECTED_DEVICE_DEFAULT;
+        return;
+    }
+
+    m_mainConfig->setValue(KEY_CONNECTED_DEVICE, deviceName);
 }
 
 static int getValidGrabSlowdownMs(int value)

@@ -31,5 +31,5 @@
 class LedDeviceFactory
 {
 public:
-    static ILedDevice * create(QObject *parent, bool isAlienFx);
+    static ILedDevice * create(QObject *parent);
 };

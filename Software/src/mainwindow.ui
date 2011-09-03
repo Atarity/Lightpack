@@ -32,7 +32,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -1456,6 +1456,16 @@ margin-top: 0px;
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_ConnectVirtualDevice">
+          <property name="toolTip">
+           <string>If you haven't real device this option avoid usb errors.</string>
+          </property>
+          <property name="text">
+           <string>Connect Lightpack virtual device</string>
+          </property>
          </widget>
         </item>
         <item>

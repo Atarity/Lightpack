@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QRegExpValidator *validator = new QRegExpValidator(rx, this);
     ui->comboBox_Profiles->lineEdit()->setValidator(validator);
 
-    ledDevice = LedDeviceFactory::create(this, Settings::valueMain("IsAlienFxMode").toBool());
+    ledDevice = LedDeviceFactory::create(this);
 
     grabManager = new GrabManager(createGrabber(Settings::getGrabMode()));
 
@@ -146,10 +146,6 @@ void MainWindow::connectSignalsSlots()
     connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLampModeChanged(bool)));
     connect(this, SIGNAL(settingsProfileChanged()), grabManager, SLOT(settingsProfileChanged()));
 
-    // Connect GrabManager with ledDevice
-    connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
-    connect(server, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
-
     // Main options
     connect(ui->cb_Modes,SIGNAL(activated(int)), this, SLOT(onCbModesChanged(int)));
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
@@ -161,9 +157,8 @@ void MainWindow::connectSignalsSlots()
     // TODO: remove checkBox_SmoothChangeColors
 //    connect(ui->checkBox_SmoothChangeColors, SIGNAL(toggled(bool)), this, SLOT(settingsHardwareChangeColorsIsSmooth(bool)));
 
-    // ledDevice to this
-    connect(ledDevice, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
-    connect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
+    // LedDevice connections
+    connectLedDeviceSignalsSlots();
 
     // GrabManager to this
     connect(grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
@@ -181,8 +176,9 @@ void MainWindow::connectSignalsSlots()
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
     connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColorChanged(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabledChanged(bool)));
-    // Another GUI
 
+
+    // Dev tab
     connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
 
     connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
@@ -197,8 +193,30 @@ void MainWindow::connectSignalsSlots()
     connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
     connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
     connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
+    connect(ui->checkBox_ConnectVirtualDevice, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ConnectVirtualDeviceToggled(bool)));
 }
 
+void MainWindow::connectLedDeviceSignalsSlots()
+{
+    // Connect GrabManager with ledDevice
+    connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
+    connect(server, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
+
+    // ledDevice to this
+    connect(ledDevice, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
+    connect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
+}
+
+void MainWindow::disconnectLedDeviceSignalsSlots()
+{
+    // Connect GrabManager with ledDevice
+    disconnect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
+    disconnect(server, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
+
+    // ledDevice to this
+    disconnect(ledDevice, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
+    disconnect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
+}
 
 MainWindow::~MainWindow()
 {    
@@ -287,6 +305,25 @@ void MainWindow::updateExpertModeWidgetsVisibility()
     } else {
         ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabAnotherGUI));
     }
+}
+
+void MainWindow::onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
+
+    if (isEnabled){
+        Settings::setConnectedDevice(SupportedDevice_Virtual);
+    } else {
+        // TODO: think about saving last connected device to main config
+        Settings::setConnectedDevice(SupportedDevice_Default);
+    }
+
+    disconnectLedDeviceSignalsSlots();
+
+    delete ledDevice;
+    ledDevice = LedDeviceFactory::create(this);
+
+    connectLedDeviceSignalsSlots();
 }
 
 // ----------------------------------------------------------------------------
@@ -1022,6 +1059,7 @@ void MainWindow::loadSettingsToMainWindow()
     ui->spinBox_HW_SmoothSlowdown->setValue         ( Settings::value("Firmware/SmoothSlowdown").toInt());
 
     ui->checkBox_ExpertModeEnabled->setChecked      ( Settings::isExpertModeEnabled() );
+    ui->checkBox_ConnectVirtualDevice->setChecked   ( Settings::getConnectedDevice() == SupportedDevice_Virtual );
 
     switch(Settings::getGrabMode())
     {

@@ -44,6 +44,9 @@
 #define ENABLE_API_DEFAULT              true
 #define API_PORT_DEFAULT                3636
 #define EXPERT_MODE_ENABLED_DEFAULT     false
+#define CONNECTED_DEVICE_DEFAULT        "Lightpack"
+#define SUPPORTED_DEVICES               "Lightpack,AlienFx,Virtual"
+
 
 // ProfileName.ini
 // [General]
@@ -92,6 +95,13 @@ enum GrabMode {
 #endif
 };
 
+enum SupportedDevices {
+    SupportedDevice_Lightpack,
+    SupportedDevice_AlienFx,
+    SupportedDevice_Virtual,
+    SupportedDevice_Default = SupportedDevice_Lightpack
+};
+
 class Settings : public QObject
 {
     Q_OBJECT
@@ -117,9 +127,13 @@ public:
     static QPoint getDefaultPosition(int ledIndex);
     static void resetDefaults();
 
-    //
+    // Main
     static bool isExpertModeEnabled();
     static void setExpertModeEnabled(bool isEnabled);
+    static SupportedDevices getConnectedDevice();
+    static void setConnectedDevice(SupportedDevices device);
+
+    // Profile
     static GrabMode getGrabMode();
     static void setGrabMode(GrabMode grabMode);
     static LightpackMode getMode();
@@ -132,6 +146,7 @@ public:
     static void setMoodLampSpeed(int value);
     static int getGrabSlowdownMs();
     static void setGrabSlowdownMs(int value);
+
 private:
     static void settingsInit(bool isResetDefault);
     static void setNewOption(const QString & name, const QVariant & value,

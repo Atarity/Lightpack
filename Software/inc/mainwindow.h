@@ -108,9 +108,12 @@ private slots:
 
     void onMoodLampColorChanged(QColor color);
     void onExpertModeEnabledChanged(bool isEnabled);
+    void onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled);
 
 private:
     void connectSignalsSlots();
+    void connectLedDeviceSignalsSlots();
+    void disconnectLedDeviceSignalsSlots();
 
     void updateTrayAndActionStates();
     void updateExpertModeWidgetsVisibility();

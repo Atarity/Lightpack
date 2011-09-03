@@ -30,24 +30,44 @@
 #include "LightFx.hpp"
 #include "LightpackMock.hpp"
 #include "LightpackDevice.hpp"
+#include "settings.h"
 
-ILedDevice * LedDeviceFactory::create(QObject *parent, bool isAlienFx)
+ILedDevice * LedDeviceFactory::create(QObject *parent)
 {
-#   ifdef Q_WS_WIN
+    SupportedDevices connectedDevice = Settings::getConnectedDevice();
 
-//
-//    use LightpackMock to run software without lightpack device, as following:
-//    return new LightpackMock(parent);
-//
+    if (connectedDevice == SupportedDevice_AlienFx){
+#       if !defined(Q_WS_WIN)
+        qWarning() << Q_FUNC_INFO << "AlienFx not supported on current platform";
 
-    return isAlienFx ? (ILedDevice *)new LightFx(parent) : (ILedDevice *)new LightpackDevice(parent);
+        Settings::setConnectedDevice(SupportedDevice_Default);
+        connectedDevice = Settings::getConnectedDevice();
+#       endif /* Q_WS_WIN */
+    }
 
-#   else
+    switch (connectedDevice){
 
-    if (isAlienFx)
-        qWarning() << "AlienFx not supported on current platform";
+    case SupportedDevice_Lightpack:
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevice_Lightpack";
+        return (ILedDevice *)new LightpackDevice(parent);
 
-    return (ILedDevice *)new LightpackDevice(parent);
+    case SupportedDevice_AlienFx:
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevice_AlienFx";
 
-#   endif /* Q_WS_WIN */
+#       ifdef Q_WS_WIN
+        return (ILedDevice *)new LightFx(parent);
+#       else
+        break;
+#       endif /* Q_WS_WIN */
+
+    case SupportedDevice_Virtual:
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevice_Virtual";
+        return (ILedDevice *)new LightpackMock(parent);
+    }
+
+    qFatal("%s %s%d%s", Q_FUNC_INFO,
+           "Create LedDevice fail. connectedDevice = '", connectedDevice,
+           "'. Application exit.");
+
+    return NULL; // Avoid compiler warning,
 }
