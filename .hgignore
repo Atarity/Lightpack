@@ -17,4 +17,4 @@ Software/Makefile
 Lightpack-Software-linux-x86_64-build/
 Lightpack-Software-linux-x86-build/
 Lightpack-Software-win32-build/
-Lightpack-build-desktop/
+Lightpack-build-desktop[^\/]*/

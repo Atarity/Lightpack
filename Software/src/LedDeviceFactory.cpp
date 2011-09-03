@@ -29,7 +29,7 @@
 #include "LedDeviceFactory.hpp"
 #include "LightFx.hpp"
 #include "LightpackMock.hpp"
-#include "ambilightusb.h"
+#include "LightpackDevice.hpp"
 
 ILedDevice * LedDeviceFactory::create(QObject *parent, bool isAlienFx)
 {
@@ -40,14 +40,14 @@ ILedDevice * LedDeviceFactory::create(QObject *parent, bool isAlienFx)
 //    return new LightpackMock(parent);
 //
 
-    return isAlienFx ? (ILedDevice *)new LightFx(parent) : (ILedDevice *)new AmbilightUsb(parent);
+    return isAlienFx ? (ILedDevice *)new LightFx(parent) : (ILedDevice *)new LightpackDevice(parent);
 
 #   else
 
     if (isAlienFx)
         qWarning() << "AlienFx not supported on current platform";
 
-    return (ILedDevice *)new AmbilightUsb(parent);
+    return (ILedDevice *)new LightpackDevice(parent);
 
 #   endif /* Q_WS_WIN */
 }

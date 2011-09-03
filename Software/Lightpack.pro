@@ -108,10 +108,10 @@ macx{
     ICON = res/icons/Lightpack.icns
 }
 
-INCLUDEPATH += ./inc ./hidapi ./grab
+INCLUDEPATH += ./src ./inc ./hidapi ./grab
 SOURCES += src/main.cpp \
     src/mainwindow.cpp \
-    src/ambilightusb.cpp \
+    src/LightpackDevice.cpp \
     src/aboutdialog.cpp \
     src/grabmanager.cpp \
     src/movemewidget.cpp \
@@ -131,7 +131,6 @@ HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/LEDS_COUNT.h \
     ../CommonHeaders/USB_ID.h \
     inc/mainwindow.h \
-    inc/ambilightusb.h \
     inc/version.h \
     inc/settings.h \
     inc/aboutdialog.h \
@@ -147,6 +146,7 @@ HEADERS += hidapi/hidapi.h \
     src/LedDeviceFactory.hpp \
     src/ILedDevice.hpp \
     src/LightpackMock.hpp \
+    src/LightpackDevice.hpp \
     src/qcolorbutton.hpp \
     src/apiserver.h \
     grab/X11Grabber.hpp \

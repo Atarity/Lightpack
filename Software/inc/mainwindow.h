@@ -29,14 +29,14 @@
 #define MAINWINDOW_H
 
 #include <QtGui>
-#include "aboutdialog.h"            /* About dialog */
-#include "settings.h"               /* QSettings */
-#include "ambilightusb.h"           /* class AmbilightUsb */
-#include "grabmanager.h"            /* class GrabManager */
+#include "aboutdialog.h"
+#include "settings.h"
+#include "LightpackDevice.hpp"
+#include "grabmanager.h"
 #include "struct_rgb.h"
 #include "speedtest.h"
-#include "../src/apiserver.h"
-#include "../src/qcolorbutton.hpp"
+#include "apiserver.h"
+#include "qcolorbutton.hpp"
 
 namespace Ui {
     class MainWindow;

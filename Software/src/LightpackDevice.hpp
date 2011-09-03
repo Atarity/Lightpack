@@ -1,5 +1,5 @@
 /*
- * ambilightusb.h
+ * LightpackDevice.hpp
  *
  *  Created on: 26.07.2010
  *      Author: Mike Shatohin (brunql)
@@ -24,13 +24,11 @@
  *
  */
 
-
-#ifndef AMBILIGHTUSB_H
-#define AMBILIGHTUSB_H
+#pragma once
 
 #include <QtGui>
 
-#include "../src/ILedDevice.hpp"
+#include "ILedDevice.hpp"
 #include "timeevaluations.h"
 
 #include "../../CommonHeaders/USB_ID.h"     /* For device VID, PID, vendor name and product name */
@@ -46,13 +44,13 @@
 #define WRITE_BUFFER_INDEX_DATA_START   2
 
 
-class AmbilightUsb : public ILedDevice
+class LightpackDevice : public ILedDevice
 {
     Q_OBJECT
 
 public:
-    AmbilightUsb(QObject *parent = 0);
-    ~AmbilightUsb();        
+    LightpackDevice(QObject *parent = 0);
+    ~LightpackDevice();
 
 public:
     bool openDevice();
@@ -74,10 +72,8 @@ private:
     bool writeBufferToDeviceWithCheck(int command);
     bool tryToReopenDevice();
 
-    hid_device *ambilightDevice;
+    hid_device *hidDevice;
 
     unsigned char read_buffer[65];    /* 0-ReportID, 1..65-data */
     unsigned char write_buffer[65];   /* 0-ReportID, 1..65-data */
 };
-
-#endif // AMBILIGHTUSB_H

@@ -31,7 +31,7 @@
 
 #include "settings.h"
 #include "version.h"
-#include "ambilightusb.h"
+#include "LightpackDevice.hpp"
 
 #include <sys/time.h>
 #include "time.h"
@@ -173,8 +173,8 @@ int main(int argc, char **argv)
 
     if(argc > 1){
         if(strcmp(argv[1], "--off") == 0){
-            AmbilightUsb ambilight_usb;
-            ambilight_usb.offLeds();
+            LightpackDevice lightpackDevice;
+            lightpackDevice.offLeds();
             return 0;
         }else if( strcmp(argv[1], "--debug_high") == 0 ){
             debugLevel = Debug::HighLevel;
