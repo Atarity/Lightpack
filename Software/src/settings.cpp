@@ -74,7 +74,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isSetDebugLe
     setNewOptionMain("EnableApi",      ENABLE_API_DEFAULT);
     setNewOptionMain(KEY_EXPERT_MODE_ENABLED, EXPERT_MODE_ENABLED_DEFAULT);
     setNewOptionMain(KEY_CONNECTED_DEVICE,  CONNECTED_DEVICE_DEFAULT);
-    setNewOptionMain(KEY_SUPPORTED_DEVICES, SUPPORTED_DEVICES);
+    setNewOptionMain(KEY_SUPPORTED_DEVICES, SUPPORTED_DEVICES, true /* always rewrite this information to main config */);
 
 
     if (isSetDebugLevelFromConfig)
@@ -512,11 +512,11 @@ void Settings::settingsInit(bool isResetDefault)
 
 
 void Settings::setNewOption(const QString & name, const QVariant & value,
-                                        bool isForceSetOption, QSettings * settings)
+                                        bool isForceSetOption, QSettings * settings /*= m_currentProfile*/)
 {
     if (isForceSetOption)
     {
-        m_currentProfile->setValue(name, value);
+        settings->setValue(name, value);
     } else {
         if (settings->contains(name) == false)
         {
@@ -529,7 +529,7 @@ void Settings::setNewOption(const QString & name, const QVariant & value,
     }
 }
 
-void Settings::setNewOptionMain(const QString & name, const QVariant & value, bool isForceSetOption)
+void Settings::setNewOptionMain(const QString & name, const QVariant & value, bool isForceSetOption /*= false*/)
 {
     setNewOption(name, value, isForceSetOption, m_mainConfig);
 }

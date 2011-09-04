@@ -300,7 +300,7 @@ void MainWindow::updateExpertModeWidgetsVisibility()
     ui->doubleSpinBox_HW_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
     ui->checkBox_USB_SendDataOnlyIfColorsChanges->setVisible(Settings::isExpertModeEnabled());
     if(Settings::isExpertModeEnabled()) {
-        if (ui->tabWidget->indexOf(ui->tabAnotherGUI) < 0);
+        if (ui->tabWidget->indexOf(ui->tabAnotherGUI) < 0)
             ui->tabWidget->addTab(ui->tabAnotherGUI, tr("Dev tab"));
     } else {
         ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabAnotherGUI));
@@ -1154,7 +1154,7 @@ void MainWindow::on_horizontalSlider_Speed_valueChanged(int value)
     grabManager->setMoodLampSpeed(value);
 }
 
-void MainWindow::paintEvent(QPaintEvent *event)
+void MainWindow::paintEvent(QPaintEvent */*event*/)
 {
     updateCbModesPosition();
 }

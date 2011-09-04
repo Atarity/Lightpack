@@ -15,11 +15,11 @@ public:
     void offLeds(){}
 
 public slots:
-    void updateColors(const QList<StructRGB> & colors){}
-    void setTimerOptions(int prescallerIndex, int outputCompareRegValue){}
-    void setColorDepth(int value){}
-    void setSmoothSlowdown(int value){}
-    void setBrightness(int value){}
+    void updateColors(const QList<StructRGB> & /*colors*/){}
+    void setTimerOptions(int /*prescallerIndex*/, int /*outputCompareRegValue*/){}
+    void setColorDepth(int /*value*/){}
+    void setSmoothSlowdown(int /*value*/){}
+    void setBrightness(int /*value*/){}
 
 };
 

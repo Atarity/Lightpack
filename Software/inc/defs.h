@@ -15,4 +15,8 @@
 #   undef X11_GRAB_SUPPORT
 #endif
 
+#ifdef Q_WS_WIN
+#   define ALIEN_FX_SUPPORTED
+#endif
+
 #endif // DEFS_H

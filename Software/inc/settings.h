@@ -45,8 +45,11 @@
 #define API_PORT_DEFAULT                3636
 #define EXPERT_MODE_ENABLED_DEFAULT     false
 #define CONNECTED_DEVICE_DEFAULT        "Lightpack"
-#define SUPPORTED_DEVICES               "Lightpack,AlienFx,Virtual"
-
+#ifdef ALIEN_FX_SUPPORTED
+#   define SUPPORTED_DEVICES            "Lightpack,AlienFx,Virtual"
+#else
+#   define SUPPORTED_DEVICES            "Lightpack,Virtual"
+#endif
 
 // ProfileName.ini
 // [General]

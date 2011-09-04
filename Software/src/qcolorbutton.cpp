@@ -13,7 +13,7 @@ QColorButton::QColorButton(QWidget * parent) : QPushButton(parent)
     connect(this, SIGNAL(clicked()), this, SLOT(click()));
 }
 
-void QColorButton::resizeEvent(QResizeEvent * event)
+void QColorButton::resizeEvent(QResizeEvent * /*event*/)
 {
     updateColorLabelSize();
 }
