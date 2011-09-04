@@ -92,17 +92,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initLabelsForGrabbedColors();
 
-
-
     if (Settings::valueMain("EnableApi").toBool())
-    {
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "start API server";
+    {       
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Start API server";
+
+        int port = Settings::valueMain("ApiPort").toInt();
+
         server = new ApiServer(this);
-        if (!server->listen(QHostAddress::Any, Settings::valueMain("ApiPort").toInt())) {
-                     QMessageBox::critical(this, tr("API Server"),
-                                           tr("Unable to start the server: %1.").arg(server->errorString()));
-                     close();
-                     return;
+
+        if (!server->listen(QHostAddress::Any, port)) {
+            QString errorStr = tr("API server unable to start (port: %1): %2.").arg(port).arg(server->errorString());
+
+            QMessageBox::critical(this, tr("API Server"), errorStr);
+            qCritical() << Q_FUNC_INFO << errorStr;
         }
     }
 
