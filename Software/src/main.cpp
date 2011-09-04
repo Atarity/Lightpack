@@ -31,7 +31,7 @@
 
 #include "settings.h"
 #include "version.h"
-#include "LightpackDevice.hpp"
+#include "LedDeviceLightpack.hpp"
 
 #include <sys/time.h>
 #include "time.h"
@@ -173,7 +173,7 @@ int main(int argc, char **argv)
 
     if(argc > 1){
         if(strcmp(argv[1], "--off") == 0){
-            LightpackDevice lightpackDevice;
+            LedDeviceLightpack lightpackDevice;
             lightpackDevice.offLeds();
             return 0;
         }else if( strcmp(argv[1], "--debug_high") == 0 ){

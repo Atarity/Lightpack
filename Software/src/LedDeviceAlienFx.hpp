@@ -1,5 +1,5 @@
 /*
- * LightFx.hpp
+ * LedDeviceAlienFx.hpp
  *
  *  Created on: 17.04.2011
  *      Author: Timur Sattarov && Mike Shatohin
@@ -32,13 +32,13 @@
 
 #include "ILedDevice.hpp"
 
-class LightFx : public ILedDevice
+class LedDeviceAlienFx : public ILedDevice
 {
     Q_OBJECT
 
 public:
-    LightFx(QObject *parent);
-    ~LightFx();
+    LedDeviceAlienFx(QObject *parent);
+    ~LedDeviceAlienFx();
 
     bool openDevice()
     {

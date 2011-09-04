@@ -1,5 +1,5 @@
 /*
- * LightpackDevice.hpp
+ * LedDeviceLightpack.hpp
  *
  *  Created on: 26.07.2010
  *      Author: Mike Shatohin (brunql)
@@ -44,13 +44,13 @@
 #define WRITE_BUFFER_INDEX_DATA_START   2
 
 
-class LightpackDevice : public ILedDevice
+class LedDeviceLightpack : public ILedDevice
 {
     Q_OBJECT
 
 public:
-    LightpackDevice(QObject *parent = 0);
-    ~LightpackDevice();
+    LedDeviceLightpack(QObject *parent = 0);
+    ~LedDeviceLightpack();
 
 public:
     bool openDevice();

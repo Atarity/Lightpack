@@ -25,14 +25,14 @@
  */
 
 
-#include "LightpackDevice.hpp"
+#include "LedDeviceLightpack.hpp"
 
 #include <unistd.h>
 
 #include <QtDebug>
 #include "debug.h"
 
-LightpackDevice::LightpackDevice(QObject *parent) :
+LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
         ILedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -45,20 +45,20 @@ LightpackDevice::LightpackDevice(QObject *parent) :
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
 
-LightpackDevice::~LightpackDevice()
+LedDeviceLightpack::~LedDeviceLightpack()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "hid_close(ambilightDevice);";
     hid_close(hidDevice);
 }
 
-bool LightpackDevice::deviceOpened()
+bool LedDeviceLightpack::deviceOpened()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     return !(hidDevice == NULL);
 }
 
-bool LightpackDevice::openDevice()
+bool LedDeviceLightpack::openDevice()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -112,7 +112,7 @@ bool LightpackDevice::openDevice()
     return true;
 }
 
-bool LightpackDevice::readDataFromDevice()
+bool LedDeviceLightpack::readDataFromDevice()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -127,7 +127,7 @@ bool LightpackDevice::readDataFromDevice()
     return true;
 }
 
-bool LightpackDevice::writeBufferToDevice(int command)
+bool LedDeviceLightpack::writeBufferToDevice(int command)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << command;
 
@@ -144,7 +144,7 @@ bool LightpackDevice::writeBufferToDevice(int command)
     return true;
 }
 
-bool LightpackDevice::tryToReopenDevice()
+bool LedDeviceLightpack::tryToReopenDevice()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -158,7 +158,7 @@ bool LightpackDevice::tryToReopenDevice()
     }
 }
 
-bool LightpackDevice::readDataFromDeviceWithCheck()
+bool LedDeviceLightpack::readDataFromDeviceWithCheck()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -180,7 +180,7 @@ bool LightpackDevice::readDataFromDeviceWithCheck()
     }
 }
 
-bool LightpackDevice::writeBufferToDeviceWithCheck(int command)
+bool LedDeviceLightpack::writeBufferToDeviceWithCheck(int command)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
@@ -204,7 +204,7 @@ bool LightpackDevice::writeBufferToDeviceWithCheck(int command)
     }
 }
 
-QString LightpackDevice::firmwareVersion()
+QString LedDeviceLightpack::firmwareVersion()
 {
     DEBUG_OUT << Q_FUNC_INFO;
 
@@ -229,14 +229,14 @@ QString LightpackDevice::firmwareVersion()
     return firmwareVer;
 }
 
-void LightpackDevice::offLeds()
+void LedDeviceLightpack::offLeds()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     writeBufferToDeviceWithCheck(CMD_OFF_ALL);
 }
 
-void LightpackDevice::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
+void LedDeviceLightpack::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << prescallerIndex << outputCompareRegValue;
 
@@ -246,7 +246,7 @@ void LightpackDevice::setTimerOptions(int prescallerIndex, int outputCompareRegV
     writeBufferToDeviceWithCheck(CMD_SET_TIMER_OPTIONS);
 }
 
-void LightpackDevice::setColorDepth(int value)
+void LedDeviceLightpack::setColorDepth(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
@@ -255,7 +255,7 @@ void LightpackDevice::setColorDepth(int value)
     writeBufferToDeviceWithCheck(CMD_SET_PWM_LEVEL_MAX_VALUE);
 }
 
-void LightpackDevice::setSmoothSlowdown(int value)
+void LedDeviceLightpack::setSmoothSlowdown(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
@@ -264,7 +264,7 @@ void LightpackDevice::setSmoothSlowdown(int value)
     writeBufferToDeviceWithCheck(CMD_SET_SMOOTH_SLOWDOWN);
 }
 
-void LightpackDevice::setBrightness(int value)
+void LedDeviceLightpack::setBrightness(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
@@ -275,7 +275,7 @@ void LightpackDevice::setBrightness(int value)
 
 
 
-void LightpackDevice::updateColors(const QList<StructRGB> & colors)
+void LedDeviceLightpack::updateColors(const QList<StructRGB> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 

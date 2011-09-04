@@ -111,14 +111,14 @@ macx{
 INCLUDEPATH += ./src ./inc ./hidapi ./grab
 SOURCES += src/main.cpp \
     src/mainwindow.cpp \
-    src/LightpackDevice.cpp \
     src/aboutdialog.cpp \
     src/grabmanager.cpp \
     src/movemewidget.cpp \
     src/settings.cpp \
     src/speedtest.cpp \
     src/LedDeviceFactory.cpp \
-    src/LightFx.cpp \
+    src/LedDeviceLightpack.cpp \
+    src/LedDeviceAlienFx.cpp \
     src/qcolorbutton.cpp \
     src/apiserver.cpp \
     grab/X11Grabber.cpp \
@@ -142,11 +142,11 @@ HEADERS += hidapi/hidapi.h \
     inc/speedtest.h \
     alienfx/LFXDecl.h \
     alienfx/LFX2.h \
-    src/LightFx.hpp \
     src/LedDeviceFactory.hpp \
-    src/ILedDevice.hpp \
-    src/LightpackMock.hpp \
-    src/LightpackDevice.hpp \
+    src/ILedDevice.hpp \    
+    src/LedDeviceLightpack.hpp \
+    src/LedDeviceAlienFx.hpp \
+    src/LedDeviceVirtual.hpp \
     src/qcolorbutton.hpp \
     src/apiserver.h \
     grab/X11Grabber.hpp \

@@ -27,9 +27,9 @@
 #include <qglobal.h>
 
 #include "LedDeviceFactory.hpp"
-#include "LightFx.hpp"
-#include "LightpackMock.hpp"
-#include "LightpackDevice.hpp"
+#include "LedDeviceLightpack.hpp"
+#include "LedDeviceAlienFx.hpp"
+#include "LedDeviceVirtual.hpp"
 #include "settings.h"
 
 ILedDevice * LedDeviceFactory::create(QObject *parent)
@@ -49,20 +49,20 @@ ILedDevice * LedDeviceFactory::create(QObject *parent)
 
     case SupportedDevice_Lightpack:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevice_Lightpack";
-        return (ILedDevice *)new LightpackDevice(parent);
+        return (ILedDevice *)new LedDeviceLightpack(parent);
 
     case SupportedDevice_AlienFx:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevice_AlienFx";
 
 #       ifdef Q_WS_WIN
-        return (ILedDevice *)new LightFx(parent);
+        return (ILedDevice *)new LedDeviceAlienFx(parent);
 #       else
         break;
 #       endif /* Q_WS_WIN */
 
     case SupportedDevice_Virtual:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevice_Virtual";
-        return (ILedDevice *)new LightpackMock(parent);
+        return (ILedDevice *)new LedDeviceVirtual(parent);
     }
 
     qFatal("%s %s%d%s", Q_FUNC_INFO,

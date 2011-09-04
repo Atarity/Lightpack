@@ -1,5 +1,5 @@
 /*
- * LightFx.cpp
+ * LedDeviceAlienFx.cpp
  *
  *  Created on: 17.04.2011
  *      Author: Timur Sattarov && Mike Shatohin
@@ -28,7 +28,7 @@
 
 #ifdef Q_WS_WIN
 
-#include "LightFx.hpp"
+#include "LedDeviceAlienFx.hpp"
 
 #include <unistd.h>
 
@@ -49,7 +49,7 @@ LFX2GETLIGHTCOL lfxGetLightColorFunction;
 LFX2GETLIGHTDESC lfxGetLightDescriptionFunction;
 LFX2LIGHT lfxLightFunction;
 
-LightFx::LightFx(QObject *parent) :
+LedDeviceAlienFx::LedDeviceAlienFx(QObject *parent) :
         ILedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -87,17 +87,17 @@ LightFx::LightFx(QObject *parent) :
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
 
-LightFx::~LightFx()
+LedDeviceAlienFx::~LedDeviceAlienFx()
 {
     if (isInitialized)
         lfxReleaseFunction();
     if (hLfxLibrary)
         FreeLibrary(hLfxLibrary);
 
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "destroy LightFx : ILedDevice complete";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "destroy LedDeviceAlienFx : ILedDevice complete";
 }
 
-void LightFx::updateColors(const QList<StructRGB> & colors)
+void LedDeviceAlienFx::updateColors(const QList<StructRGB> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
     if (isInitialized)

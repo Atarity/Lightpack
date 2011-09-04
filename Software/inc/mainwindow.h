@@ -31,7 +31,7 @@
 #include <QtGui>
 #include "aboutdialog.h"
 #include "settings.h"
-#include "LightpackDevice.hpp"
+#include "LedDeviceLightpack.hpp"
 #include "grabmanager.h"
 #include "struct_rgb.h"
 #include "speedtest.h"
