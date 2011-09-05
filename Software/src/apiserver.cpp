@@ -35,6 +35,7 @@ void ApiServer::incomingConnection(int socketfd)
     ClientSettings cs;
     cs.gamma = 2;
     cs.smooth = 100;
+    cs.auth = false;
     clients.insert(client,cs);
 
     client->write(QString("version:%1\n").arg(VERSION_API).toUtf8());
@@ -75,6 +76,28 @@ void ApiServer::readyRead()
         DEBUG_LOW_LEVEL << "Read line:" << line;
 
         QString command = getCommand(line);
+
+        if (command=="apikey")
+        {
+            QString apikey = getArg(line);
+            if (ApiKey == apikey)
+            {
+                ClientSettings cs = clients.value(client);
+                cs.auth = true;
+                clients.remove(client);
+                clients.insert(client,cs);
+                client->write(QString("apikey:%1\n").arg("ok").toUtf8());
+            }
+            else
+                client->write(QString("apikey:%1\n").arg("no").toUtf8());
+            return;
+        }
+        ClientSettings cs = clients.value(client);
+        if (!cs.auth)
+        {
+            client->write(QString("error:%1\n").arg("need auth").toUtf8());
+            return;
+        }
 
         MainWindow *mw = (MainWindow*)parent();
         try{

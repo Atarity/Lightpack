@@ -9,13 +9,14 @@
 
 #include "struct_rgb.h"
 
-#define VERSION_API      "1.0"
+#define VERSION_API      "1.1"
 
 class ClientSettings
 {
     public:
         int smooth;
         double gamma;
+        bool auth;
 };
 
 class ApiServer : public QTcpServer
@@ -23,7 +24,9 @@ class ApiServer : public QTcpServer
     Q_OBJECT
 
     public:
+        QString ApiKey;
         ApiServer(QObject *parent=0);
+
 
     signals:
         void updateLedsColors(const QList<StructRGB> & colorsNew);

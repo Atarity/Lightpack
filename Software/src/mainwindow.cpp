@@ -99,6 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
         int port = Settings::valueMain("ApiPort").toInt();
 
         server = new ApiServer(this);
+        server-> ApiKey = Settings::valueMain("ApiKey").toString();
 
         if (!server->listen(QHostAddress::Any, port)) {
             QString errorStr = tr("API server unable to start (port: %1): %2.").arg(port).arg(server->errorString());
