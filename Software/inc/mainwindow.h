@@ -113,6 +113,7 @@ private slots:
     void genNewKey();
     void onApiPort_Changed(QString apiport);
     void onApiKey_Changed(QString apikey);
+    void onApiAuth_Toggled(bool isEnabled);
 
 private:
     void connectSignalsSlots();

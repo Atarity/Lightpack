@@ -74,6 +74,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isSetDebugLe
     setNewOptionMain("DebugLevel",     DEBUG_LEVEL_DEFAULT);
     setNewOptionMain("ApiPort",        API_PORT_DEFAULT);
     setNewOptionMain(KEY_API_ENABLED,  ENABLE_API_DEFAULT);
+    setNewOptionMain("ApiAuth",        true);
     setNewOptionMain("ApiKey",         QUuid::createUuid().toString());
     setNewOptionMain(KEY_EXPERT_MODE_ENABLED, EXPERT_MODE_ENABLED_DEFAULT);
     setNewOptionMain(KEY_CONNECTED_DEVICE,  CONNECTED_DEVICE_DEFAULT);

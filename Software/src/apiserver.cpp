@@ -23,6 +23,7 @@ ApiServer::ApiServer(QObject *parent)
     : QTcpServer(parent)
 {
     activeClient = NULL;
+    enableAuth = true;
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
         colorsNew     << StructRGB();
     }
@@ -35,7 +36,10 @@ void ApiServer::incomingConnection(int socketfd)
     ClientSettings cs;
     cs.gamma = 2;
     cs.smooth = 100;
-    cs.auth = false;
+    if (enableAuth)
+        cs.auth = false;
+    else
+        cs.auth = true;
     clients.insert(client,cs);
 
     client->write(QString("version:%1\n").arg(VERSION_API).toUtf8());

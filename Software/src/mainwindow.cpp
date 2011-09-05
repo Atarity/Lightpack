@@ -206,6 +206,7 @@ void MainWindow::connectSignalsSlots()
     connect(ui->lineEdit_ApiPort,SIGNAL(textChanged(QString)),this,SLOT(onApiPort_Changed(QString)));
     connect(ui->pushButton_NewKey,SIGNAL(clicked()),this,SLOT(genNewKey()));
     connect(ui->lineEdit_ApiKey,SIGNAL(textChanged(QString)),this,SLOT(onApiKey_Changed(QString)));
+    connect(ui->checkBox_ApiAuth,SIGNAL(toggled(bool)),this,SLOT(onApiAuth_Toggled(bool)));
 }
 
 void MainWindow::connectLedDeviceSignalsSlots()
@@ -380,6 +381,16 @@ void MainWindow::genNewKey()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     ui->lineEdit_ApiKey->setText(QUuid::createUuid().toString());
+}
+
+void MainWindow::onApiAuth_Toggled(bool isEnabled)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
+    Settings::setValueMain("ApiAuth",isEnabled);
+    if (server!=NULL)
+    {
+        server->enableAuth = isEnabled;
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -1120,6 +1131,7 @@ void MainWindow::loadSettingsToMainWindow()
     ui->groupBox_Api->setChecked    ( Settings::valueMain("EnableApi").toBool());
     ui->lineEdit_ApiPort->setText   ( Settings::valueMain("ApiPort").toString());
     ui->lineEdit_ApiKey->setText    ( Settings::valueMain("ApiKey").toString());
+    ui->checkBox_ApiAuth->setChecked( Settings::valueMain("ApiAuth").toBool());
 
     switch(Settings::getGrabMode())
     {

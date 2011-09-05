@@ -24,6 +24,7 @@ class ApiServer : public QTcpServer
     Q_OBJECT
 
     public:
+        bool enableAuth;
         QString ApiKey;
         ApiServer(QObject *parent=0);
 
