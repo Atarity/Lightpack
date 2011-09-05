@@ -198,6 +198,9 @@ void MainWindow::connectSignalsSlots()
     connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
     connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
     connect(ui->checkBox_ConnectVirtualDevice, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ConnectVirtualDeviceToggled(bool)));
+
+    connect(server, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
+    connect(grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
 }
 
 MainWindow::~MainWindow()
@@ -470,6 +473,9 @@ void MainWindow::hideSettings()
 void MainWindow::ledDeviceCallSuccess(bool isSuccess)
 {    
     DEBUG_MID_LEVEL << Q_FUNC_INFO << isSuccess;
+#if 0
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
+#endif
 
     if(isErrorState != ! isSuccess){
         isErrorState = ! isSuccess;

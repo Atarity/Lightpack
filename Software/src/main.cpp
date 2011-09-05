@@ -241,7 +241,7 @@ int main(int argc, char **argv)
     }
     QApplication::setQuitOnLastWindowClosed(false);
 
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << app.thread()->currentThreadId();
 
 
     QThread *ledDeviceThread = new QThread();
@@ -251,15 +251,13 @@ int main(int argc, char **argv)
     MainWindow *window = new MainWindow();   /* Create MainWindow */
     window->setVisible(false);   /* And load to tray. */
 
-
+    // Register QMeteType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
 
+    app.connect(window, SIGNAL(updateLedsColors(const QList<QRgb> &)), ledDevice, SLOT(updateColors(const QList<QRgb> &)), Qt::QueuedConnection);
 
-    app.connect(window->grabManager, SIGNAL(updateLedsColors(const QList<QRgb> &)), ledDevice, SLOT(updateColors(const QList<QRgb> &)), Qt::QueuedConnection);
-//    connect(window->server, SIGNAL(updateLedsColors(const QList<QRgb> &)), ledDevice, SLOT(updateColors(const QList<QRgb> &)), Qt::QueuedConnection);
-
-    app.connect(ledDevice, SIGNAL(openDeviceSuccess(bool)), window, SLOT(ledDeviceCallSuccess(bool)));
-    app.connect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), window, SLOT(ledDeviceCallSuccess(bool)));
+    app.connect(ledDevice, SIGNAL(openDeviceSuccess(bool)), window, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
+    app.connect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), window, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
 
     ledDeviceThread->start();
 

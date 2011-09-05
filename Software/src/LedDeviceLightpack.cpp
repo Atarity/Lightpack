@@ -280,7 +280,9 @@ void LedDeviceLightpack::setBrightness(int value)
 void LedDeviceLightpack::updateColors(const QList<QRgb> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
+#if 1
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
+#endif
 
     // Fill write_buffer with new colors for all LEDs
 

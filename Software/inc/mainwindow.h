@@ -50,7 +50,7 @@ public:
 
 signals:
     void settingsProfileChanged();
-
+    void updateLedsColors(const QList<QRgb> &);
 
 public slots:
     void ledDeviceCallSuccess(bool isSuccess);

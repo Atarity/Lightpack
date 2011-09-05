@@ -78,7 +78,7 @@ void ApiServer::readyRead()
         DEBUG_LOW_LEVEL << "Read line:" << line;
 
         QString command = getCommand(line);
-
+#if 0
         if (command=="apikey")
         {
             QString apikey = getArg(line);
@@ -100,7 +100,7 @@ void ApiServer::readyRead()
             client->write(QString("error:%1\n").arg("need auth").toUtf8());
             return;
         }
-
+#endif
         MainWindow *mw = (MainWindow*)parent();
         try{
             if (command=="getstatus"){
@@ -230,6 +230,8 @@ void ApiServer::readyRead()
         }else if (command=="setcolor") {
                 if (client == activeClient)
                 {
+                    // setcolor:2-0,255,0;3-0,255,0;6-0,255,0;7-0,255,0;8-0,255,0;9-0,255,0;10-0,255,0;4-0,255,0;5-0,255,0;1-0,255,0;
+
                     QString str = getArg(line);
                     DEBUG_HIGH_LEVEL << "Colors line:" << str;
                     // parse colors
