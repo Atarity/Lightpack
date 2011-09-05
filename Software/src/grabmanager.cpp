@@ -87,8 +87,8 @@ void GrabManager::initColorLists()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){       
-        colorsCurrent << StructRGB();
-        colorsNew     << StructRGB();
+        colorsCurrent << 0;
+        colorsNew     << 0;
     }
 }
 
@@ -97,8 +97,7 @@ void GrabManager::clearColorsCurrent()
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        colorsCurrent[ledIndex].rgb = 0;
-        colorsCurrent[ledIndex].steps = 0;
+        colorsCurrent[ledIndex] = 0;
     }
 }
 
@@ -107,8 +106,7 @@ void GrabManager::clearColorsNew()
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        colorsNew[ledIndex].rgb = 0;
-        colorsNew[ledIndex].steps = 0;
+        colorsNew[ledIndex] = 0;
     }
 }
 
@@ -345,9 +343,9 @@ void GrabManager::moodlamp()
             for (int i = 0; i < LEDS_COUNT; i++)
             {
                 if(ledWidgets[i]->isGrabEnabled())
-                    colorsCurrent[i].rgb = qRgb(prRed,prGreen, prBlue);
+                    colorsCurrent[i] = qRgb(prRed,prGreen, prBlue);
                 else
-                    colorsCurrent[i].rgb = 0; // off led
+                    colorsCurrent[i] = 0; // off led
             }
         }
       else
@@ -355,9 +353,9 @@ void GrabManager::moodlamp()
                   for (int i = 0; i < LEDS_COUNT; i++)
                   {
                       if(ledWidgets[i]->isGrabEnabled())
-                          colorsCurrent[i].rgb = qRgb(m_backlightColor.red(),m_backlightColor.green(),m_backlightColor.blue());
+                          colorsCurrent[i] = qRgb(m_backlightColor.red(),m_backlightColor.green(),m_backlightColor.blue());
                       else
-                          colorsCurrent[i].rgb = 0; // off led
+                          colorsCurrent[i] = 0; // off led
                   }
       }
   emit updateLedsColors( colorsCurrent );
@@ -399,10 +397,10 @@ void GrabManager::ambilight()
                 avgB += qBlue(rgb);
                 countGrabEnabled++;
             }else{
-                colorsNew[ledIndex].rgb = rgb;
+                colorsNew[ledIndex] = rgb;
             }
         }else{
-            colorsNew[ledIndex].rgb = 0; // off led
+            colorsNew[ledIndex] = 0; // off led
         }
     }
 
@@ -419,7 +417,7 @@ void GrabManager::ambilight()
         // Set one AVG color to all LEDs
         for(int ledIndex = 0; ledIndex < LEDS_COUNT; ledIndex++){
             if(ledWidgets[ledIndex]->isGrabEnabled()){
-                colorsNew[ledIndex].rgb = qRgb(avgR, avgG, avgB);
+                colorsNew[ledIndex] = qRgb(avgR, avgG, avgB);
             }
         }
     }
@@ -435,7 +433,7 @@ void GrabManager::ambilight()
 
     // White balance
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        QRgb rgb = colorsNew[ledIndex].rgb;
+        QRgb rgb = colorsNew[ledIndex];
 
         unsigned r = qRed(rgb)   * ledWidgets[ledIndex]->getCoefRed();
         unsigned g = qGreen(rgb) * ledWidgets[ledIndex]->getCoefGreen();
@@ -445,15 +443,15 @@ void GrabManager::ambilight()
         if(g > 0xff) g = 0xff;
         if(b > 0xff) b = 0xff;
 
-        colorsNew[ledIndex].rgb = qRgb(r, g, b);
+        colorsNew[ledIndex] = qRgb(r, g, b);
     }
 
     // Check minimum level of sensivity
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        QRgb rgb = colorsNew[ledIndex].rgb;
+        QRgb rgb = colorsNew[ledIndex];
         int avg = round( (qRed(rgb) + qGreen(rgb) + qBlue(rgb)) / 3.0 );
         if(avg <= minLevelOfSensivity){
-            colorsNew[ledIndex].rgb = 0;
+            colorsNew[ledIndex] = 0;
         }
     }
 
@@ -465,23 +463,22 @@ void GrabManager::ambilight()
     // TODO: move this code to capturemath.cpp after merge
     for (int i = 0; i < LEDS_COUNT; i++)
     {
-        QRgb rgb = colorsNew[i].rgb;
+        QRgb rgb = colorsNew[i];
 
         unsigned r = 256.0 * pow( qRed(rgb)   / 256.0, m_gammaCorrection );
         unsigned g = 256.0 * pow( qGreen(rgb) / 256.0, m_gammaCorrection );
         unsigned b = 256.0 * pow( qBlue(rgb)  / 256.0, m_gammaCorrection );
 
-        colorsNew[i].rgb = qRgb(r, g, b);
+        colorsNew[i] = qRgb(r, g, b);
     }
     //--------------------------------------------------------------------------
 
 
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        if( colorsCurrent[ledIndex].rgb != colorsNew[ledIndex].rgb ){
-            colorsCurrent[ledIndex].rgb  = colorsNew[ledIndex].rgb;
+        if( colorsCurrent[ledIndex] != colorsNew[ledIndex] ){
+            colorsCurrent[ledIndex]  = colorsNew[ledIndex];
             needToUpdate = true;
         }
-        colorsCurrent[ledIndex].steps = colorsNew[ledIndex].steps;
     }
 
 
@@ -494,54 +491,6 @@ void GrabManager::ambilight()
     fpsMs = timeEval->howLongItEnd();
     timeEval->howLongItStart();
 
-}
-
-//
-// Update steps for smooth change colors
-// Using for linear interpolation from 'colors' to 'colorsNew'
-//
-void GrabManager::updateSmoothSteps()
-{
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
-
-    double maxDiff = 0, diff = 0;
-
-    // First find MAX diff between old and new colors, and save all diffs in each smooth_step
-    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        QRgb rgbCurrent = colorsCurrent[ledIndex].rgb;
-        QRgb rgbNew = colorsNew[ledIndex].rgb;
-        int stepR, stepG, stepB;
-
-        diff = qRed(rgbCurrent) - qRed(rgbNew);
-        if(diff < 0) diff *= -1;
-        if(diff > maxDiff) maxDiff = diff;
-        stepR = (diff != 0) ? diff : 1;
-
-        diff = qGreen(rgbCurrent) - qGreen(rgbNew);
-        if(diff < 0) diff *= -1;
-        if(diff > maxDiff) maxDiff = diff;
-        stepG = (diff != 0) ? diff : 1;
-
-        diff = qBlue(rgbCurrent) - qBlue(rgbNew);
-        if(diff < 0) diff *= -1;
-        if(diff > maxDiff) maxDiff = diff;
-        stepB = (diff != 0) ? diff : 1;
-
-        colorsNew[ledIndex].steps = qRgb(stepR, stepG, stepB);
-    }
-
-    // To find smooth_step which will be using max_diff divide on each smooth_step
-    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        QRgb steps = colorsNew[ledIndex].steps;
-        int stepR, stepG, stepB;
-        stepR = round( maxDiff / qRed(steps)   );
-        stepG = round( maxDiff / qGreen(steps) );
-        stepB = round( maxDiff / qBlue(steps)  );
-        if(stepR == 0) stepR = 1;
-        if(stepG == 0) stepG = 1;
-        if(stepB == 0) stepB = 1;
-        colorsNew[ledIndex].steps = qRgb(stepR, stepG, stepB);
-    }
 }
 
 // Send each second new grabbing time in ms to main window
@@ -566,7 +515,6 @@ void GrabManager::setAmbilightOn(bool isAmbilightOn, bool isErrorState)
     }else{
         // Switch ambilight off
         timerGrab->stop();
-        updateSmoothSteps();
         clearColorsCurrent();
 
         if(isErrorState == false){

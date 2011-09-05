@@ -31,12 +31,15 @@
 
 #include "settings.h"
 #include "version.h"
+#include "ILedDevice.hpp"
+#include "LedDeviceFactory.hpp"
 #include "LedDeviceLightpack.hpp"
 
 #include <sys/time.h>
 #include "time.h"
 
 #include <QFileInfo>
+#include <QMetaType>
 
 
 using namespace std;
@@ -238,8 +241,27 @@ int main(int argc, char **argv)
     }
     QApplication::setQuitOnLastWindowClosed(false);
 
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
+
+
+    QThread *ledDeviceThread = new QThread();
+    ILedDevice *ledDevice = LedDeviceFactory::create();
+    ledDevice->moveToThread(ledDeviceThread);
+
     MainWindow *window = new MainWindow();   /* Create MainWindow */
     window->setVisible(false);   /* And load to tray. */
+
+
+    qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
+
+
+    app.connect(window->grabManager, SIGNAL(updateLedsColors(const QList<QRgb> &)), ledDevice, SLOT(updateColors(const QList<QRgb> &)), Qt::QueuedConnection);
+//    connect(window->server, SIGNAL(updateLedsColors(const QList<QRgb> &)), ledDevice, SLOT(updateColors(const QList<QRgb> &)), Qt::QueuedConnection);
+
+    app.connect(ledDevice, SIGNAL(openDeviceSuccess(bool)), window, SLOT(ledDeviceCallSuccess(bool)));
+    app.connect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), window, SLOT(ledDeviceCallSuccess(bool)));
+
+    ledDeviceThread->start();
 
     window->startAmbilight();
 

@@ -137,7 +137,6 @@ HEADERS += hidapi/hidapi.h \
     inc/timeevaluations.h \
     inc/grabmanager.h \
     inc/movemewidget.h \
-    inc/struct_rgb.h \
     inc/debug.h \
     inc/speedtest.h \
     alienfx/LFXDecl.h \

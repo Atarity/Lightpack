@@ -25,15 +25,13 @@
  */
 
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QtGui>
 #include "aboutdialog.h"
 #include "settings.h"
 #include "LedDeviceLightpack.hpp"
 #include "grabmanager.h"
-#include "struct_rgb.h"
 #include "speedtest.h"
 #include "apiserver.h"
 #include "qcolorbutton.hpp"
@@ -62,7 +60,7 @@ public slots:
     QStringList profilesFindAll();
     void profileSwitch(const QString & configName);
     void profileSwitchCombobox(QString profile);
-    void updateGrabbedColors(const QList<StructRGB> & colors);
+    void updateGrabbedColors(const QList<QRgb> & colors);
 
 
 
@@ -112,8 +110,8 @@ private slots:
 
 private:
     void connectSignalsSlots();
-    void connectLedDeviceSignalsSlots();
-    void disconnectLedDeviceSignalsSlots();
+//    void connectLedDeviceSignalsSlots();
+//    void disconnectLedDeviceSignalsSlots();
 
     void updateTrayAndActionStates();
     void updateExpertModeWidgetsVisibility();
@@ -142,7 +140,7 @@ private:
 public:
     bool isAmbilightOn; /* is grab desktop window ON */
     GrabManager *grabManager;
-    ILedDevice *ledDevice;
+//    ILedDevice *ledDevice;
 
 private:
 
@@ -175,5 +173,3 @@ private:
 
     QTranslator *translator;
 };
-
-#endif // MAINWINDOW_H

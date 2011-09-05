@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 
     ui->setupUi(this);
 
@@ -67,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QRegExpValidator *validator = new QRegExpValidator(rx, this);
     ui->comboBox_Profiles->lineEdit()->setValidator(validator);
 
-    ledDevice = LedDeviceFactory::create(this);
+//    ledDevice = LedDeviceFactory::create(this);
 
     grabManager = new GrabManager(createGrabber(Settings::getGrabMode()));
 
@@ -161,7 +162,7 @@ void MainWindow::connectSignalsSlots()
 //    connect(ui->checkBox_SmoothChangeColors, SIGNAL(toggled(bool)), this, SLOT(settingsHardwareChangeColorsIsSmooth(bool)));
 
     // LedDevice connections
-    connectLedDeviceSignalsSlots();
+//    connectLedDeviceSignalsSlots();
 
     // GrabManager to this
     connect(grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
@@ -192,33 +193,11 @@ void MainWindow::connectSignalsSlots()
     connect(ui->radioButton_GrabX11, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
 #endif
 
-    connect(grabManager, SIGNAL(updateLedsColors(QList<StructRGB>)), this, SLOT(updateGrabbedColors(QList<StructRGB>)));
+    connect(grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SLOT(updateGrabbedColors(QList<QRgb>)));
     connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
     connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
     connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
     connect(ui->checkBox_ConnectVirtualDevice, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ConnectVirtualDeviceToggled(bool)));
-}
-
-void MainWindow::connectLedDeviceSignalsSlots()
-{
-    // Connect GrabManager with ledDevice
-    connect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
-    connect(server, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
-
-    // ledDevice to this
-    connect(ledDevice, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
-    connect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
-}
-
-void MainWindow::disconnectLedDeviceSignalsSlots()
-{
-    // Connect GrabManager with ledDevice
-    disconnect(grabManager, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
-    disconnect(server, SIGNAL(updateLedsColors(const QList<StructRGB> &)), ledDevice, SLOT(updateColors(const QList<StructRGB> &)));
-
-    // ledDevice to this
-    disconnect(ledDevice, SIGNAL(openDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
-    disconnect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), this, SLOT(ledDeviceCallSuccess(bool)));
 }
 
 MainWindow::~MainWindow()
@@ -234,7 +213,7 @@ MainWindow::~MainWindow()
     delete trayIcon;
     delete trayIconMenu;
 
-    delete ledDevice;
+//    delete ledDevice;
     delete grabManager;
 
     delete ui;
@@ -321,12 +300,14 @@ void MainWindow::onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled)
         Settings::setConnectedDevice(SupportedDevice_Default);
     }
 
-    disconnectLedDeviceSignalsSlots();
+    qWarning() << Q_FUNC_INFO << "not implemented";
 
-    delete ledDevice;
-    ledDevice = LedDeviceFactory::create(this);
+//    disconnectLedDeviceSignalsSlots();
 
-    connectLedDeviceSignalsSlots();
+//    delete ledDevice;
+//    ledDevice = LedDeviceFactory::create(this);
+
+//    connectLedDeviceSignalsSlots();
 }
 
 // ----------------------------------------------------------------------------
@@ -419,11 +400,11 @@ void MainWindow::initLabelsForGrabbedColors()
     }
 }
 
-void MainWindow::updateGrabbedColors(const QList<StructRGB> & colors)
+void MainWindow::updateGrabbedColors(const QList<QRgb> & colors)
 {
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         QLabel *label = labelsGrabbedColors[ ledIndex ];
-        QColor color(colors[ ledIndex ].rgb);
+        QColor color(colors[ ledIndex ]);
 
         QPalette pal = label->palette();
         pal.setBrush(QPalette::Window, QBrush(color));
@@ -433,14 +414,14 @@ void MainWindow::updateGrabbedColors(const QList<StructRGB> & colors)
 
 void MainWindow::setAvgColorOnAllLEDs(int value)
 {
-    QList<StructRGB> colors;
+    QList<QRgb> colors;
 
     for (int i = 0; i < LEDS_COUNT; i++)
     {
-        colors << StructRGB(qRgb(value, value, value), 0);
+        colors << qRgb(value, value, value);
     }
 
-    ledDevice->updateColors(colors);
+//    ledDevice->updateColors(colors);
 
     ui->label_HW_SetAvgColor_Value->setText(
             QString("0b%1").arg(QString::number(value, 2), 8, '0'));
@@ -456,7 +437,7 @@ void MainWindow::showAbout()
 
     QRect screen = QApplication::desktop()->screenGeometry(this);
 
-    aboutDialog->setFirmwareVersion( ledDevice->firmwareVersion() );
+//    aboutDialog->setFirmwareVersion( ledDevice->firmwareVersion() );
 
     aboutDialog->move(screen.width() / 2 - aboutDialog->width() / 2,
             screen.height() / 2 - aboutDialog->height() / 2);
@@ -532,7 +513,7 @@ void MainWindow::settingsHardwareTimerOptionsChange()
         qWarning() << "PWM frequency to low! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
     }else{
         // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
-        ledDevice->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
+//        ledDevice->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
     }
 }
 
@@ -553,7 +534,7 @@ void MainWindow::settingsHardwareSetColorDepth(int value)
         qWarning() << "PWM frequency to low! setColorDepth canceled. pwmFrequency =" << pwmFrequency << "Hz";
     }else{
         // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
-        ledDevice->setColorDepth(value);
+//        ledDevice->setColorDepth(value);
     }
 }
 
@@ -562,7 +543,7 @@ void MainWindow::settingsHardwareSetSmoothSlowdown(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     Settings::setValue("Firmware/SmoothSlowdown", value);
-    ledDevice->setSmoothSlowdown(value);
+//    ledDevice->setSmoothSlowdown(value);
 }
 
 void MainWindow::settingsHardwareSetBrightness(int value)
@@ -571,7 +552,7 @@ void MainWindow::settingsHardwareSetBrightness(int value)
 
     // TODO: settings
     Settings::setValue("Firmware/Brightness", value);
-    ledDevice->setBrightness(value);
+//    ledDevice->setBrightness(value);
 }
 
 // ----------------------------------------------------------------------------

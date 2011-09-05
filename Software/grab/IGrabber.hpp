@@ -4,7 +4,6 @@
 #include "defs.h"
 #include <movemewidget.h>
 #include <QColor>
-#include "struct_rgb.h"
 
 class IGrabber
 {

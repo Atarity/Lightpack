@@ -36,8 +36,10 @@ LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
         ILedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 
     openDevice();
+
 
     memset(write_buffer, 0, sizeof(write_buffer));
     memset(read_buffer, 0, sizeof(read_buffer));
@@ -275,9 +277,10 @@ void LedDeviceLightpack::setBrightness(int value)
 
 
 
-void LedDeviceLightpack::updateColors(const QList<StructRGB> & colors)
+void LedDeviceLightpack::updateColors(const QList<QRgb> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 
     // Fill write_buffer with new colors for all LEDs
 
@@ -286,14 +289,14 @@ void LedDeviceLightpack::updateColors(const QList<StructRGB> & colors)
     int i = WRITE_BUFFER_INDEX_DATA_START;
     for(int led=0; led < LEDS_COUNT; led++){
         // Send colors values
-        write_buffer[i++] = qRed  ( colors[led].rgb );
-        write_buffer[i++] = qGreen( colors[led].rgb );
-        write_buffer[i++] = qBlue ( colors[led].rgb );
+        write_buffer[i++] = qRed  ( colors[led] );
+        write_buffer[i++] = qGreen( colors[led] );
+        write_buffer[i++] = qBlue ( colors[led] );
 
         // Send change colors steps
-        write_buffer[i++] = qRed  ( colors[led].steps );
-        write_buffer[i++] = qGreen( colors[led].steps );
-        write_buffer[i++] = qBlue ( colors[led].steps );
+        write_buffer[i++] = 0;
+        write_buffer[i++] = 0;
+        write_buffer[i++] = 0;
     }
 
 #if 0

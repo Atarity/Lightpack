@@ -4,6 +4,8 @@
 #include "apiserver.h"
 #include "../inc/mainwindow.h"
 
+#include "settings.h"
+
 // get
 // getstatus - on off
 // getstatusapi - busy idle
@@ -24,7 +26,7 @@ ApiServer::ApiServer(QObject *parent)
 {
     activeClient = NULL;
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        colorsNew     << StructRGB();
+        colorsNew     << 0;
     }
 }
 
@@ -33,14 +35,14 @@ void ApiServer::incomingConnection(int socketfd)
     QTcpSocket *client = new QTcpSocket(this);
     client->setSocketDescriptor(socketfd);
     ClientSettings cs;
-    cs.gamma = 2;
-    cs.smooth = 100;
+    cs.gamma = GAMMA_CORRECTION_DEFAULT_VALUE;
+    cs.smooth = FW_SMOOTH_SLOWDOWN_DEFAULT;
     cs.auth = false;
     clients.insert(client,cs);
 
     client->write(QString("version:%1\n").arg(VERSION_API).toUtf8());
 
-    DEBUG_LOW_LEVEL << "New client from:" << client->peerAddress().toString();
+    DEBUG_LOW_LEVEL << "New client from:" << client->peerName();// client->peerAddress().toString();
 
     connect(client, SIGNAL(readyRead()), this, SLOT(readyRead()));
     connect(client, SIGNAL(disconnected()), this, SLOT(disconnected()));
@@ -136,7 +138,7 @@ void ApiServer::readyRead()
                 QString profiles;
                 QStringList settingsFiles = mw->profilesFindAll();
                 for(int i=0; i<settingsFiles.count(); i++){
-                    profiles +=settingsFiles.at(i)+";";
+                    profiles += settingsFiles.at(i)+";";
                 }
                 client->write(QString("profiles:%1\n").arg(profiles).toUtf8());
 
@@ -259,9 +261,8 @@ void ApiServer::readyRead()
                             if ((ok)&&(num>0)&&(num<LEDS_COUNT+1))
                             {
                                 ClientSettings cs = clients.value(client);
-                                qDebug() << "gamma "<< cs.gamma;
 
-                                mw->ledDevice->setSmoothSlowdown(cs.smooth);
+//                                mw->ledDevice->setSmoothSlowdown(cs.smooth);
 
                                 r = 256.0 * pow( r  / 256.0, cs.gamma );
                                 g = 256.0 * pow( g / 256.0, cs.gamma );
@@ -270,7 +271,7 @@ void ApiServer::readyRead()
                                 if(r > 0xff) r = 0xff;
                                 if(g > 0xff) g = 0xff;
                                 if(b > 0xff) b = 0xff;
-                                colorsNew[num-1].rgb = qRgb(r,g,b);
+                                colorsNew[num-1] = qRgb(r,g,b);
                             }
                             else
                                 tmp = "error";

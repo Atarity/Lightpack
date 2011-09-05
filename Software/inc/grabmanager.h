@@ -32,7 +32,6 @@
 #include "../../CommonHeaders/LEDS_COUNT.h"
 #include "settings.h"
 #include "timeevaluations.h"
-#include "struct_rgb.h"
 #include "movemewidget.h"
 #include "IGrabber.hpp"
 class GrabManager : public QWidget
@@ -44,7 +43,7 @@ public:
     ~GrabManager();
 
 signals:
-    void updateLedsColors(const QList<StructRGB> & colorsNew);
+    void updateLedsColors(const QList<QRgb> & colorsNew);
     void ambilightTimeOfUpdatingColors(double ms);
 
 
@@ -99,8 +98,8 @@ private: // variables
     const static QColor backgroundAndTextColors[LEDS_COUNT][2];
     TimeEvaluations *timeEval;
 
-    QList<StructRGB> colorsCurrent;
-    QList<StructRGB> colorsNew;
+    QList<QRgb> colorsCurrent;
+    QList<QRgb> colorsNew;
 
     QRect screenSaved;
     int screenSavedIndex;

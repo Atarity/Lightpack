@@ -27,7 +27,6 @@
 #pragma once
 
 #include <QtGui>
-#include "struct_rgb.h"
 
 
 class ILedDevice : public QObject
@@ -41,7 +40,7 @@ public:
     virtual void offLeds() = 0;
 
 public slots:
-    virtual void updateColors(const QList<StructRGB> & colors) = 0;
+    virtual void updateColors(const QList<QRgb> & colors) = 0;
     virtual void setTimerOptions(int prescallerIndex, int outputCompareRegValue) = 0;
     virtual void setColorDepth(int value) = 0;
     virtual void setSmoothSlowdown(int value) = 0;

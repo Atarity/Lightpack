@@ -59,7 +59,7 @@ public:
     void offLeds(); /* send CMD_OFF_ALL to device, it causes rapid shutdown LEDs */
 
 public slots:
-    void updateColors(const QList<StructRGB> & colors);
+    void updateColors(const QList<QRgb> & colors);
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);
