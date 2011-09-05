@@ -50,17 +50,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
-    ui->tabWidget->setCurrentIndex( 0 );
+    ui->tabWidget->setCurrentIndex(0);
 
     createActions();
     createTrayIcon();
 
     QRect screen = QApplication::desktop()->screenGeometry(this);
 
-    this->setWindowFlags( Qt::Window
+    this->setWindowFlags(Qt::Window
                           | Qt::WindowStaysOnTopHint
                           | Qt::CustomizeWindowHint
-                          | Qt::WindowCloseButtonHint );
+                          | Qt::WindowCloseButtonHint);
     this->setFocus(Qt::OtherFocusReason);
 
     // Check windows reserved simbols in profile input name
@@ -93,14 +93,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initLabelsForGrabbedColors();
 
-    if (Settings::valueMain("EnableApi").toBool())
+    if (Settings::isEnabledApi())
     {       
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Start API server";
 
-        int port = Settings::valueMain("ApiPort").toInt();
+        int port = Settings::getApiPort();
 
         server = new ApiServer(this);
-        server-> ApiKey = Settings::valueMain("ApiKey").toString();
+        server->ApiKey = Settings::getApiKey();
 
         if (!server->listen(QHostAddress::Any, port)) {
             QString errorStr = tr("API server unable to start (port: %1): %2.").arg(port).arg(server->errorString());
@@ -114,15 +114,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     profileLoadLast();
 
-    loadTranslation( Settings::valueMain( "Language" ).toString() );
+    loadTranslation(Settings::getLanguage());
 
     isErrorState = false;
-    isAmbilightOn = Settings::value("IsAmbilightOn").toBool();
+    isAmbilightOn = Settings::isAmbilightOn();
 
     onGrabModeChanged();
 
     this->adjustSize();
-    this->move( screen.width() / 2  - this->width() / 2,
+    this->move(screen.width() / 2  - this->width() / 2,
                 screen.height() / 2 - this->height() / 2);
     this->resize(this->minimumSize());
 
@@ -235,25 +235,25 @@ void MainWindow::changeEvent(QEvent *e)
     case QEvent::LanguageChange:
 
         ui->retranslateUi(this);
-        onAmbilightAction->setText( tr("&Turn on") );
-        offAmbilightAction->setText( tr("&Turn off") );
-        settingsAction->setText( tr("&Settings") );
-        aboutAction->setText( tr("&About") );
-        quitAction->setText( tr("&Quit") );
+        onAmbilightAction->setText(tr("&Turn on"));
+        offAmbilightAction->setText(tr("&Turn off"));
+        settingsAction->setText(tr("&Settings"));
+        aboutAction->setText(tr("&About"));
+        quitAction->setText(tr("&Quit"));
 
-        profilesMenu->setTitle( tr("&Profiles") );
+        profilesMenu->setTitle(tr("&Profiles"));
 
-        if( isAmbilightOn ){
-            trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
+        if(isAmbilightOn){
+            trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
         }else{
-            trayIcon->setToolTip( tr("Disabled") );
+            trayIcon->setToolTip(tr("Disabled"));
         }
 
         if(isErrorState) trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
 
-        setWindowTitle( tr("Lightpack: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
+        setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
-        ui->comboBox_Language->setItemText( 0, tr("System default") );
+        ui->comboBox_Language->setItemText(0, tr("System default"));
 
         break;
     default:
@@ -265,7 +265,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    if( trayIcon->isVisible() ){
+    if(trayIcon->isVisible()){
         // Just hide settings
         hideSettings();
         event->ignore();
@@ -345,8 +345,8 @@ void MainWindow::startAmbilight()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isAmbilightOn;
 
-    Settings::setValue("IsAmbilightOn", isAmbilightOn);
-    grabManager->setAmbilightOn( isAmbilightOn, isErrorState );
+    Settings::setAmbilightOn(isAmbilightOn);
+    grabManager->setAmbilightOn(isAmbilightOn, isErrorState);
 
     if(isAmbilightOn == false){
         isErrorState = false;
@@ -359,7 +359,7 @@ void MainWindow::updateTrayAndActionStates()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    if( isAmbilightOn ){
+    if(isAmbilightOn){
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
         ui->label_EnableDisableDevice->setText(tr("Switch off Lightpack"));
     }else{
@@ -367,13 +367,13 @@ void MainWindow::updateTrayAndActionStates()
         ui->label_EnableDisableDevice->setText(tr("Switch on Lightpack"));
     }
 
-    if( isErrorState ){
+    if(isErrorState){
         trayIcon->setIcon(QIcon(":/icons/error.png"));
         trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
     }else{
-        if( isAmbilightOn ){
+        if(isAmbilightOn){
             trayIcon->setIcon(QIcon(":/icons/on.png"));
-            trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
+            trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
             onAmbilightAction->setEnabled(false);
             offAmbilightAction->setEnabled(true);
@@ -395,7 +395,7 @@ void MainWindow::initLabelsForGrabbedColors()
 {
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         QLabel *label = new QLabel(this);
-        label->setText(QString::number( ledIndex+1 ));
+        label->setText(QString::number(ledIndex+1));
         label->setAutoFillBackground(true);
 
         labelsGrabbedColors.append(label);
@@ -440,7 +440,7 @@ void MainWindow::showAbout()
 
     QRect screen = QApplication::desktop()->screenGeometry(this);
 
-//    aboutDialog->setFirmwareVersion( ledDevice->firmwareVersion() );
+//    aboutDialog->setFirmwareVersion(ledDevice->firmwareVersion());
 
     aboutDialog->move(screen.width() / 2 - aboutDialog->width() / 2,
             screen.height() / 2 - aboutDialog->height() / 2);
@@ -453,8 +453,8 @@ void MainWindow::showSettings()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     LightpackMode mode = Settings::getMode();
-    ui->cb_Modes->setCurrentIndex   ( mode == Grab ? 0 : 1 ); // we assume that LightpackMode in same order as cb_Modes
-    grabManager->setVisibleLedWidgets( ui->groupBox_ShowGrabWidgets->isChecked() && ui->cb_Modes->currentIndex()==0 );
+    ui->cb_Modes->setCurrentIndex   (mode == Grab ? 0 : 1); // we assume that LightpackMode in same order as cb_Modes
+    grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && ui->cb_Modes->currentIndex()==0);
     this->show();
 }
 
@@ -496,7 +496,7 @@ void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
         hz = 1 / secs;
     }
 
-    ui->label_GrabFrequency_value->setText( QString::number(hz,'f', 2) /* ms to hz */ );
+    ui->label_GrabFrequency_value->setText(QString::number(hz,'f', 2) /* ms to hz */);
 }
 
 // ----------------------------------------------------------------------------
@@ -506,10 +506,10 @@ void MainWindow::settingsHardwareTimerOptionsChange()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    int timerPrescallerIndex = Settings::value("Firmware/TimerPrescallerIndex").toInt();
+    int timerPrescallerIndex = Settings::getFwTimerPrescallerIndex();
     int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
 
-    Settings::setValue("Firmware/TimerOCR", timerOutputCompareRegValue);
+    Settings::setFwTimerOCR(timerOutputCompareRegValue);
 
     updatePwmFrequency();
 
@@ -530,7 +530,7 @@ void MainWindow::settingsHardwareSetColorDepth(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    Settings::setValue("Firmware/ColorDepth", value);
+    Settings::setFwColorDepth(value);
 
     updatePwmFrequency();
 
@@ -548,7 +548,7 @@ void MainWindow::settingsHardwareSetSmoothSlowdown(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    Settings::setValue("Firmware/SmoothSlowdown", value);
+    Settings::setFwSmoothSlowdown(value);
 //    ledDevice->setSmoothSlowdown(value);
 }
 
@@ -556,8 +556,9 @@ void MainWindow::settingsHardwareSetBrightness(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    qWarning() << Q_FUNC_INFO << "not implemented";
     // TODO: settings
-    Settings::setValue("Firmware/Brightness", value);
+//    Settings::setValue("Firmware/Brightness", value);
 //    ledDevice->setBrightness(value);
 }
 
@@ -574,7 +575,7 @@ void MainWindow::openFile(const QString &filePath)
     filePrefix = "file:///";
 #endif
 
-    QDesktopServices::openUrl( QUrl( filePrefix + filePath, QUrl::TolerantMode) );
+    QDesktopServices::openUrl(QUrl(filePrefix + filePath, QUrl::TolerantMode));
 }
 
 // ----------------------------------------------------------------------------
@@ -585,7 +586,7 @@ void MainWindow::openCurrentProfile()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    openFile( Settings::fileName() );
+    openFile(Settings::getFileName());
 }
 
 void MainWindow::profileRename()
@@ -597,7 +598,7 @@ void MainWindow::profileRename()
     // also update settings for usable configuration LED coefs
     //
     QString configName = ui->comboBox_Profiles->currentText().trimmed();
-    ui->comboBox_Profiles->setItemText( ui->comboBox_Profiles->currentIndex(), configName );
+    ui->comboBox_Profiles->setItemText(ui->comboBox_Profiles->currentIndex(), configName);
 
     if(configName == ""){
         return;
@@ -631,14 +632,14 @@ void MainWindow::profileTraySwitch()
 
     for(int i=0; i < profilesMenu->actions().count(); i++){
         QAction * action = profilesMenu->actions().at(i);
-        if( action->isChecked() ){
-            if( action->text() != ui->comboBox_Profiles->currentText() ){
+        if(action->isChecked()){
+            if(action->text() != ui->comboBox_Profiles->currentText()){
                 DEBUG_LOW_LEVEL << Q_FUNC_INFO << "switch to" << action->text();
-                profileSwitchCombobox( action->text() );
+                profileSwitchCombobox(action->text());
                 return;
             }
         }else{
-            if( action->text() == ui->comboBox_Profiles->currentText() ){
+            if(action->text() == ui->comboBox_Profiles->currentText()){
                 DEBUG_LOW_LEVEL << Q_FUNC_INFO << "set checked" << action->text();
                 action->setChecked(true);
             }
@@ -648,8 +649,8 @@ void MainWindow::profileTraySwitch()
 
 void MainWindow::profileSwitchCombobox(QString profile)
 {
-    int index = ui->comboBox_Profiles->findText( profile );
-    ui->comboBox_Profiles->setCurrentIndex( index );
+    int index = ui->comboBox_Profiles->findText(profile);
+    ui->comboBox_Profiles->setCurrentIndex(index);
 }
 
 void MainWindow::profileNew()
@@ -660,14 +661,14 @@ void MainWindow::profileNew()
 
     if(ui->comboBox_Profiles->findText(profileName) != -1){
         int i = 1;
-        while( ui->comboBox_Profiles->findText(profileName +" "+ QString::number(i)) != -1 ){
+        while(ui->comboBox_Profiles->findText(profileName +" "+ QString::number(i)) != -1){
             i++;
         }
         profileName += + " " + QString::number(i);
     }
 
-    ui->comboBox_Profiles->insertItem( 0, profileName );
-    ui->comboBox_Profiles->setCurrentIndex( 0 );
+    ui->comboBox_Profiles->insertItem(0, profileName);
+    ui->comboBox_Profiles->setCurrentIndex(0);
 
     ui->comboBox_Profiles->lineEdit()->selectAll();
     ui->comboBox_Profiles->lineEdit()->setFocus(Qt::MouseFocusReason);
@@ -695,20 +696,20 @@ void MainWindow::profileDeleteCurrent()
     // Delete settings file
     Settings::removeCurrentConfig();
     // Remove from combobox
-    ui->comboBox_Profiles->removeItem( ui->comboBox_Profiles->currentIndex() );
+    ui->comboBox_Profiles->removeItem(ui->comboBox_Profiles->currentIndex());
 }
 
 QStringList MainWindow::profilesFindAll()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    QFileInfo setsFile( Settings::fileName() );
+    QFileInfo setsFile(Settings::getFileName());
     QFileInfoList iniFiles = setsFile.absoluteDir().entryInfoList(QStringList("*.ini"));
 
     QStringList settingsFiles;
     for(int i=0; i<iniFiles.count(); i++){
         QString compBaseName = iniFiles.at(i).completeBaseName();
-        settingsFiles.append( compBaseName );
+        settingsFiles.append(compBaseName);
     }
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "found profiles:" << settingsFiles;
@@ -724,7 +725,7 @@ void MainWindow::profileLoadLast()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    ui->comboBox_Profiles->setCurrentIndex( ui->comboBox_Profiles->findText( Settings::lastProfileName() ) );
+    ui->comboBox_Profiles->setCurrentIndex(ui->comboBox_Profiles->findText(Settings::getLastProfileName()));
 
     // Update settings
     loadSettingsToMainWindow();
@@ -735,8 +736,8 @@ void MainWindow::settingsProfileChanged_UpdateUI()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    setWindowTitle( tr("Lightpack: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
-    if(isAmbilightOn) trayIcon->setToolTip( tr("Enabled profile: %1").arg( ui->comboBox_Profiles->lineEdit()->text() ) );
+    setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+    if(isAmbilightOn) trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
     if(ui->comboBox_Profiles->count() > 1){
         ui->pushButton_DeleteProfile->setEnabled(true);
@@ -757,12 +758,12 @@ void MainWindow::profileTraySync()
     profilesMenu->clear();
 
     for(int i=0; i < ui->comboBox_Profiles->count(); i++){
-        profileAction = new QAction( ui->comboBox_Profiles->itemText( i ), this );
-        profileAction->setCheckable( true );
-        if( i == ui->comboBox_Profiles->currentIndex() ){
-            profileAction->setChecked( true );
+        profileAction = new QAction(ui->comboBox_Profiles->itemText(i), this);
+        profileAction->setCheckable(true);
+        if(i == ui->comboBox_Profiles->currentIndex()){
+            profileAction->setChecked(true);
         }
-        profilesMenu->addAction( profileAction );
+        profilesMenu->addAction(profileAction);
         connect(profileAction, SIGNAL(triggered()), this, SLOT(profileTraySwitch()));
     }
 }
@@ -777,16 +778,16 @@ void MainWindow::initLanguages()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     ui->comboBox_Language->clear();
-    ui->comboBox_Language->addItem( tr("System default") );
-    ui->comboBox_Language->addItem( "English" );
-    ui->comboBox_Language->addItem( "Russian" );
+    ui->comboBox_Language->addItem(tr("System default"));
+    ui->comboBox_Language->addItem("English");
+    ui->comboBox_Language->addItem("Russian");
 
     int langIndex = 0; // "System default"
-    QString langSaved = Settings::valueMain("Language").toString();
-    if( langSaved != "<System>" ){
-        langIndex = ui->comboBox_Language->findText( langSaved );
+    QString langSaved = Settings::getLanguage();
+    if(langSaved != "<System>"){
+        langIndex = ui->comboBox_Language->findText(langSaved);
     }
-    ui->comboBox_Language->setCurrentIndex( langIndex );
+    ui->comboBox_Language->setCurrentIndex(langIndex);
 
     translator = NULL;
 }
@@ -795,7 +796,7 @@ void MainWindow::loadTranslation(const QString & language)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << language;
 
-    Settings::setValueMain( "Language", language );
+    Settings::setLanguage(language);
 
     QString locale = QLocale::system().name();
 
@@ -807,35 +808,35 @@ void MainWindow::loadTranslation(const QString & language)
     // add new language to MainWindow::initLanguages() function
     // and only when all this done - append new line
     // locale - name of translation binary file form resources: %locale%.qm
-    if( ui->comboBox_Language->currentIndex() == 0 /* System */ ){
+    if(ui->comboBox_Language->currentIndex() == 0 /* System */){
         qDebug() << "System locale" << locale;
-        Settings::setValueMain( "Language", LANGUAGE_DEFAULT_NAME );
+        Settings::setLanguage(LANGUAGE_DEFAULT_NAME);
     }
-    else if ( language == "English" ) locale = "en_EN"; // :/translations/en_EN.qm
-    else if ( language == "Russian" ) locale = "ru_RU"; // :/translations/ru_RU.qm
+    else if (language == "English") locale = "en_EN"; // :/translations/en_EN.qm
+    else if (language == "Russian") locale = "ru_RU"; // :/translations/ru_RU.qm
     // append line for new language/locale here
     else {
         qWarning() << "Language" << language << "not found. Set to default" << LANGUAGE_DEFAULT_NAME;
         qDebug() << "System locale" << locale;
 
-        Settings::setValueMain( "Language", LANGUAGE_DEFAULT_NAME );
+        Settings::setLanguage(LANGUAGE_DEFAULT_NAME);
     }
 
     QString pathToLocale = QString(":/translations/") + locale;
 
-    if( translator != NULL ){
+    if(translator != NULL){
         qApp->removeTranslator(translator);
         delete translator;
         translator = NULL;
     }
 
-    if( locale == "en_EN" /* default no need to translate */ ){
+    if(locale == "en_EN" /* default no need to translate */){
         qDebug() << "Translation removed, using default locale" << locale;
         return;
     }
 
     translator = new QTranslator();
-    if(translator->load( pathToLocale )){
+    if(translator->load(pathToLocale)){
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Load translation for locale" << locale;
         qApp->installTranslator(translator);
     }else{
@@ -850,7 +851,7 @@ void MainWindow::updatePwmFrequency()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    int timerPrescallerIndex = Settings::value("Firmware/TimerPrescallerIndex").toInt();
+    int timerPrescallerIndex = Settings::getFwTimerPrescallerIndex();
     int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
     int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
 
@@ -914,13 +915,13 @@ IGrabber * MainWindow::createGrabber(GrabMode grabMode)
 void MainWindow::startTestsClick()
 {
     QString saveText = ui->pushButton_StartTests->text();
-    ui->pushButton_StartTests->setText( "Please wait..." );
+    ui->pushButton_StartTests->setText("Please wait...");
     ui->pushButton_StartTests->repaint(); // update right now
 
     // While testing this function freezes GUI
     speedTest->start();
 
-    ui->pushButton_StartTests->setText( saveText );
+    ui->pushButton_StartTests->setText(saveText);
 }
 
 // ----------------------------------------------------------------------------
@@ -941,7 +942,7 @@ void MainWindow::createActions()
 
 
     profilesMenu = new QMenu(tr("&Profiles"), this);
-    profilesMenu->setIcon( QIcon(":/icons/profiles.png"));
+    profilesMenu->setIcon(QIcon(":/icons/profiles.png"));
     profilesMenu->clear();
 
     settingsAction = new QAction(QIcon(":/icons/settings.png"), tr("&Settings"), this);
@@ -998,7 +999,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
         break;
 
     case QSystemTrayIcon::MiddleClick:
-        if( this->isVisible() ){
+        if(this->isVisible()){
             hideSettings();
         }else{
             showSettings();
@@ -1031,25 +1032,23 @@ void MainWindow::loadSettingsToMainWindow()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    ui->spinBox_SlowdownGrab->setValue                  ( Settings::getGrabSlowdownMs());
-    ui->spinBox_MinLevelOfSensitivity->setValue         ( Settings::value("MinimumLevelOfSensitivity").toInt() );
-    ui->doubleSpinBox_HW_GammaCorrection->setValue      ( Settings::value("GammaCorrection").toDouble() );
-    ui->checkBox_AVG_Colors->setChecked                 ( Settings::value("IsAvgColorsOn").toBool() );
-    LightpackMode mode = Settings::getMode();
-    ui->cb_Modes->setCurrentIndex                       ( mode == Grab ? 0 : 1 ); // we assume that LightpackMode in same order as cb_Modes
-    ui->horizontalSlider_Speed->setValue                ( Settings::getMoodLampSpeed());
-    ui->horizontalSlider_Brightness->setValue           ( Settings::value("Brightness").toInt());
-    ui->pushButton_SelectColor->setColor                ( Settings::getMoodLampColor());
-    ui->radioButton_LiquidColorMoodLampMode->setChecked ( Settings::isMoodLampLiquidMode());
+    ui->spinBox_SlowdownGrab->setValue                  (Settings::getGrabSlowdownMs());
+    ui->spinBox_MinLevelOfSensitivity->setValue         (Settings::getMinimumLevelOfSensitivity());
+    ui->doubleSpinBox_HW_GammaCorrection->setValue      (Settings::getGammaCorrection());
+    ui->checkBox_AVG_Colors->setChecked                 (Settings::isAvgColorsOn());
+    ui->cb_Modes->setCurrentIndex                       (Settings::getMode() == Grab ? 0 : 1); // we assume that LightpackMode in same order as cb_Modes
+    ui->horizontalSlider_Speed->setValue                (Settings::getMoodLampSpeed());
+    ui->horizontalSlider_Brightness->setValue           (Settings::getBrightness());
+    ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
+    ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());
     ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
 
-    ui->horizontalSlider_HW_OCR->setValue           ( Settings::value("Firmware/TimerOCR").toInt() );
-    ui->horizontalSlider_HW_OCR->setValue           ( Settings::value("Firmware/TimerOCR").toInt() );
-    ui->horizontalSlider_HW_ColorDepth->setValue    ( Settings::value("Firmware/ColorDepth").toInt() );
-    ui->spinBox_HW_SmoothSlowdown->setValue         ( Settings::value("Firmware/SmoothSlowdown").toInt());
+    ui->horizontalSlider_HW_OCR->setValue               (Settings::getFwTimerOCR());
+    ui->horizontalSlider_HW_ColorDepth->setValue        (Settings::getFwColorDepth());
+    ui->spinBox_HW_SmoothSlowdown->setValue             (Settings::getFwSmoothSlowdown());
 
-    ui->checkBox_ExpertModeEnabled->setChecked      ( Settings::isExpertModeEnabled() );
-    ui->checkBox_ConnectVirtualDevice->setChecked   ( Settings::getConnectedDevice() == SupportedDevice_Virtual );
+    ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
+    ui->checkBox_ConnectVirtualDevice->setChecked       (Settings::getConnectedDevice() == SupportedDevice_Virtual);
 
     switch(Settings::getGrabMode())
     {
@@ -1068,7 +1067,7 @@ void MainWindow::loadSettingsToMainWindow()
     }
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
-    onCbModesChanged ( ui->cb_Modes->currentIndex() ); //
+    onCbModesChanged (ui->cb_Modes->currentIndex()); //
     onMoodLampModeChanged(ui->radioButton_LiquidColorMoodLampMode->isChecked());
     updateExpertModeWidgetsVisibility();
     onGrabModeChanged();

@@ -53,7 +53,7 @@ public:
 signals:
     void resizeOrMoveStarted();
     void resizeOrMoveCompleted(int id);
-    void mouseRightButtonClicked(int selfId);
+    void mouseRightButtonClicked(int m_selfId);
     void sizeAndPositionChanged(int w, int h, int x, int y);
 
 public slots:
@@ -64,7 +64,6 @@ private slots:
 
 private:
     virtual void closeEvent(QCloseEvent *event);
-    double loadCoefWithCheck(QString coefStr);
     void setCursorOnAll(Qt::CursorShape cursor);
     void checkAndSetCursors(QMouseEvent *pe);
 
@@ -82,7 +81,7 @@ private:
         RESIZE_RIGHT_DOWN,
         RESIZE_RIGHT_UP,
         RESIZE_LEFT_DOWN,
-        RESIZE_LEFT_UP,
+        RESIZE_LEFT_UP
     } cmd;
 
     QPoint mousePressPosition;
@@ -99,7 +98,7 @@ private:
     static const QColor colors[ColorsCount][2]; // background and text colors
     int colorIndex; // index of color which using now
 
-    int selfId; // ID of this object
+    int m_selfId; // ID of this object
 
     double coefRed;
     double coefGreen;

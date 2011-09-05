@@ -24,12 +24,11 @@
  *
  */
 
-
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#pragma once
 
 #include <QSettings>
 #include <QVariant>
+#include <QMutex>
 
 #include "defs.h"
 #include "debug.h"
@@ -67,11 +66,11 @@
 #   define GRAB_MODE_DEFAULT    "Qt"
 #endif
 
-#define MODE_DEFAULT    "Grab"
-#define SPEED_MOOD_LAMP_DEFAULT_VALUE 50
-#define MOOD_LAMP_MODE_DEFAULT_VALUE true
-#define MOOD_LAMP_COLOR_DEFAULT_VALUE "#00FF00"
-#define BRIGHTNESS_DEFAULT_VALUE  200
+#define MODE_DEFAULT                        "Grab"
+#define SPEED_MOOD_LAMP_DEFAULT_VALUE       50
+#define MOOD_LAMP_MODE_DEFAULT_VALUE        true
+#define MOOD_LAMP_COLOR_DEFAULT_VALUE       "#00FF00"
+#define BRIGHTNESS_DEFAULT_VALUE            200
 
 // [Firmware]
 #define FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE     0 /* prescaller == 1 */
@@ -85,6 +84,9 @@
 #define LED_FIELD_SIZE_DEFAULT_VALUE        QSize(LED_FIELD_WIDTH_DEFAULT_VALUE, LED_FIELD_HEIGHT_DEFAULT_VALUE)
 #define LED_COEF_RGB_DEFAULT_VALUE          1
 #define LED_IS_ENABLED_DEFAULT_VALUE        true
+
+#define LED_COEF_MIN_VALUE  0.1
+#define LED_COEF_MAX_VALUE  3
 
 enum LightpackMode { Grab, MoodLamp };
 
@@ -111,32 +113,47 @@ class Settings : public QObject
 
 public:
     static void Initialize(const QString & applicationDirPath, bool isSetDebugLevelFromConfig);
-
-    // Simple functions forwarding to m_currentProfile object
-    static void setValue(const QString & key, const QVariant & value);
-    static QVariant value(const QString & key);
-    static QString fileName();
-
-    // forwarding to m_mainConfig object
-    static void setValueMain(const QString & key, const QVariant & value);
-    static QVariant valueMain(const QString & key);
+    static void resetDefaults();
 
     static void loadOrCreateConfig(const QString & configName);
     static void renameCurrentConfig(const QString & configName);
     static void removeCurrentConfig();
 
-    static QString lastProfileName();
+    static QString getFileName();
     static QString getApplicationDirPath();
     static QPoint getDefaultPosition(int ledIndex);
-    static void resetDefaults();
 
     // Main
+    static QString getLastProfileName();
+    static QString getLanguage();
+    static void setLanguage(const QString & language);
+    static int getDebugLevel();
+    static void setDebugLevel(int debugLevel);
+    static bool isEnabledApi();
+    static void setEnableApi(bool isEnabled);
+    static int getApiPort();
+    static void setApiPort(int apiPort);
+    static QString getApiKey();
+    static void setApiKey(const QString & apiKey);
     static bool isExpertModeEnabled();
     static void setExpertModeEnabled(bool isEnabled);
     static SupportedDevices getConnectedDevice();
     static void setConnectedDevice(SupportedDevices device);
 
     // Profile
+    static int getGrabSlowdownMs();
+    static void setGrabSlowdownMs(int value);
+    static bool isAmbilightOn();
+    static void setAmbilightOn(bool isEnabled);
+    static bool isAvgColorsOn();
+    static void setAvgColorsOn(bool isEnabled);
+    static int getMinimumLevelOfSensitivity();
+    static void setMinimumLevelOfSensitivity(int value);
+    static double getGammaCorrection();
+    static void setGammaCorrection(double gamma);
+    static int getBrightness();
+    static void setBrightness(int value);
+
     static GrabMode getGrabMode();
     static void setGrabMode(GrabMode grabMode);
     static LightpackMode getMode();
@@ -147,20 +164,53 @@ public:
     static void setMoodLampColor(QColor color);
     static int getMoodLampSpeed();
     static void setMoodLampSpeed(int value);
-    static int getGrabSlowdownMs();
-    static void setGrabSlowdownMs(int value);
+    static int getFwTimerPrescallerIndex();
+    static void setFwTimerPrescallerIndex(int value);
+    static int getFwTimerOCR();
+    static void setFwTimerOCR(int value);
+    static int getFwColorDepth();
+    static void setFwColorDepth(int value);
+    static int getFwSmoothSlowdown();
+    static void setFwSmoothSlowdown(int value);
 
-private:
+    static double getLedCoefRed(int ledIndex);
+    static double getLedCoefGreen(int ledIndex);
+    static double getLedCoefBlue(int ledIndex);
+
+    static void setLedCoefRed(int ledIndex, double value);
+    static void setLedCoefGreen(int ledIndex, double value);
+    static void setLedCoefBlue(int ledIndex, double value);
+
+    static QSize getLedSize(int ledIndex);
+    static void setLedSize(int ledIndex, QSize size);
+    static QPoint getLedPosition(int ledIndex);
+    static void setLedPosition(int ledIndex, QPoint position);
+    static bool isLedEnabled(int ledIndex);
+    static void setLedEnabled(int ledIndex, bool isEnabled);
+
+private:    
+    static int getValidGrabSlowdownMs(int value);
+    static int getValidMoodLampSpeed(int value);
+    static void setValidLedCoef(int ledIndex, const QString & keyCoef, double coef);
+    static double getValidLedCoef(int ledIndex, const QString & keyCoef);
+
     static void settingsInit(bool isResetDefault);
     static void setNewOption(const QString & name, const QVariant & value,
                             bool isForceSetOption = false, QSettings * settings = m_currentProfile);
     static void setNewOptionMain(const QString & name, const QVariant & value,
                                 bool isForceSetOption = false);
+    // forwarding to m_mainConfig object
+    static void setValueMain(const QString & key, const QVariant & value);
+    static QVariant valueMain(const QString & key);
+    // forwarding to m_currentProfile object
+    static void setValue(const QString & key, const QVariant & value);
+    static QVariant value(const QString & key);
+
+
 
 private:
+    static QMutex m_mutex; // for thread-safe access to QSettings* variables
     static QSettings * m_currentProfile; // using profile
     static QSettings * m_mainConfig;     // store last used profile name, locale and so on
     static QString m_applicationDirPath; // path to store app generated stuff
 };
-
-#endif // SETTINGS_H

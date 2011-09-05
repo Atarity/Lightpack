@@ -39,7 +39,7 @@ class GrabManager : public QWidget
     Q_OBJECT
 
 public:
-    GrabManager(IGrabber *grabber, QWidget *parent = 0);
+    GrabManager(IGrabber *m_grabber, QWidget *parent = 0);
     ~GrabManager();
 
 signals:
@@ -48,7 +48,7 @@ signals:
 
 
 public slots:
-    void setAmbilightOn(bool isAmbilightOn, bool isErrorState);
+    void setAmbilightOn(bool m_isAmbilightOn, bool isErrorState);
     void setAmbilightSlowdownMs(int ms);
     void setAmbilightColorDepth(int depth);
     void setVisibleLedWidgets(bool state);
@@ -91,8 +91,8 @@ private:
 
 
 private: // variables
-    IGrabber * grabber;
-    QTimer *timerGrab;
+    IGrabber * m_grabber;
+    QTimer *m_timerGrab;
     QTimer *timerUpdateFPS;
     QList<MoveMeWidget *> ledWidgets;
     const static QColor backgroundAndTextColors[LEDS_COUNT][2];
@@ -104,11 +104,11 @@ private: // variables
     QRect screenSaved;
     int screenSavedIndex;
 
-    bool isAmbilightOn;    
+    bool m_isAmbilightOn;
     bool isResizeOrMoving;
     bool updateColorsOnlyIfChanges;
-    bool avgColorsOnAllLeds;
-    int minLevelOfSensivity;
+    bool m_avgColorsOnAllLeds;
+    int m_minLevelOfSensivity;
 
     // Store last grabbing time in milliseconds
     double fpsMs;
@@ -123,8 +123,8 @@ private: // variables
     static int checkColors[ColorsMoodLampCount];
     static const QColor colorsMoodLamp[ColorsMoodLampCount];
 
-    int ambilightDelayMs;
-    int colorDepth;
+    int m_grabSmoothSlowdown;
+    int m_colorDepth;
 
 
     double m_gammaCorrection;

@@ -130,7 +130,7 @@ void ApiServer::readyRead()
 
             }else if (command=="getprofile") {
 
-                QString profile =  QFileInfo(Settings::fileName()).completeBaseName();
+                QString profile =  QFileInfo(Settings::getFileName()).completeBaseName();
                 client->write(QString("profile:%1\n").arg(profile).toUtf8());
 
             }else if (command=="getprofiles") {

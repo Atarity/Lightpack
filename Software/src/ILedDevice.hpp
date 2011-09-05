@@ -44,7 +44,7 @@ public slots:
     virtual void setTimerOptions(int prescallerIndex, int outputCompareRegValue) = 0;
     virtual void setColorDepth(int value) = 0;
     virtual void setSmoothSlowdown(int value) = 0;
-    virtual void setBrightness(int value) = 0;
+//    virtual void setBrightness(int value) = 0;
 
 signals:
     void openDeviceSuccess(bool isSuccess);

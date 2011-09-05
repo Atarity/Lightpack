@@ -57,18 +57,18 @@ MoveMeWidget::MoveMeWidget(int id, QWidget *parent) :
 
     ui->setupUi(this);
 
-    this->selfId = id;
+    this->m_selfId = id;
 
     this->setCursorOnAll(Qt::OpenHandCursor);
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
     this->setFocusPolicy(Qt::NoFocus);
-    ui->checkBox_SelfId->setText(QString::number(this->selfId + 1));
+    ui->checkBox_SelfId->setText(QString::number(this->m_selfId + 1));
 
     this->setMouseTracking(true);
 
     this->resize(100, 100);
 
-    setColors( selfId );
+    setColors( m_selfId );
 
     connect(ui->checkBox_SelfId, SIGNAL(toggled(bool)), this, SLOT(checkBoxSelfId_Toggled(bool)));
 }
@@ -82,7 +82,7 @@ MoveMeWidget::~MoveMeWidget()
 
 void MoveMeWidget::closeEvent(QCloseEvent *event)
 {
-    qWarning() << Q_FUNC_INFO << "event->type():" << event->type() << "Id:" << selfId;
+    qWarning() << Q_FUNC_INFO << "event->type():" << event->type() << "Id:" << m_selfId;
 
     event->ignore();
 }
@@ -92,24 +92,24 @@ void MoveMeWidget::saveSizeAndPosition()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    Settings::setValue("LED_" + QString::number(selfId+1) + "/Position", pos() );
-    Settings::setValue("LED_" + QString::number(selfId+1) + "/Size", size() );
+    Settings::setLedPosition(m_selfId, pos());
+    Settings::setLedSize(m_selfId, size());
 }
 
 void MoveMeWidget::settingsProfileChanged()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << selfId;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_selfId;
 
-    coefRed = loadCoefWithCheck("CoefRed");
-    coefGreen = loadCoefWithCheck("CoefGreen");
-    coefBlue = loadCoefWithCheck("CoefBlue");
+    coefRed = Settings::getLedCoefRed(m_selfId);
+    coefGreen = Settings::getLedCoefGreen(m_selfId);
+    coefBlue = Settings::getLedCoefBlue(m_selfId);
 
-    this->move( Settings::value("LED_" + QString::number(selfId+1) + "/Position").toPoint() );
-    this->resize( Settings::value("LED_" + QString::number(selfId+1) + "/Size").toSize() );
+    this->move(Settings::getLedPosition(m_selfId));
+    this->resize(Settings::getLedSize(m_selfId));
 
-    emit resizeOrMoveCompleted( selfId );
+    emit resizeOrMoveCompleted( m_selfId );
 
-    ui->checkBox_SelfId->setChecked( Settings::value("LED_" + QString::number(selfId+1) + "/IsEnabled").toBool() );
+    ui->checkBox_SelfId->setChecked(Settings::isLedEnabled(m_selfId));
 }
 
 
@@ -159,24 +159,7 @@ void MoveMeWidget::setCursorOnAll(Qt::CursorShape cursor)
     this->setCursor(cursor);
 }
 
-// private
-double MoveMeWidget::loadCoefWithCheck(QString coefStr)
-{
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << coefStr;
 
-    bool ok = false;
-    double coef = Settings::value("LED_" + QString::number(selfId + 1) + "/" + coefStr).toDouble(&ok);
-    if(ok == false){
-        qWarning() << "LedWidget:" << "Settings bad value" << "[LED_" + QString::number(selfId + 1) + "]" << coefStr << "Convert to double error. Set it to default value" << coefStr << "= 1";
-        coef = 1;
-        Settings::setValue("LED_" + QString::number(selfId + 1) + "/" + coefStr, coef);
-    }else if(coef < 0.1 || coef > 3){
-        qWarning() << "LedWidget:" << "Settings bad value" << "[LED_" + QString::number(selfId + 1) + "]" << coefStr << "=" << coef << "Set it to default value" << coefStr << "= 1";
-        coef = 1;
-        Settings::setValue("LED_" + QString::number(selfId + 1) + "/" + coefStr, coef);
-    }
-    return coef;
-}
 
 
 void MoveMeWidget::mousePressEvent(QMouseEvent *pe)
@@ -190,7 +173,7 @@ void MoveMeWidget::mousePressEvent(QMouseEvent *pe)
 
     if(pe->buttons() == Qt::RightButton){
         // Send signal RightButtonClicked to main window for grouping widgets
-        emit mouseRightButtonClicked(selfId);
+        emit mouseRightButtonClicked(m_selfId);
 
     }else if(pe->buttons() == Qt::LeftButton){
         // First check corners
@@ -405,7 +388,7 @@ void MoveMeWidget::mouseReleaseEvent(QMouseEvent *pe)
 
     saveSizeAndPosition();
 
-    emit resizeOrMoveCompleted(selfId);
+    emit resizeOrMoveCompleted(m_selfId);
 }
 
 
@@ -509,5 +492,5 @@ void MoveMeWidget::checkBoxSelfId_Toggled(bool state)
 
     setColors(colorIndex); // just update color
 
-    Settings::setValue("LED_" + QString::number(selfId+1) + "/IsEnabled", state);
+    Settings::setLedEnabled(m_selfId, state);
 }

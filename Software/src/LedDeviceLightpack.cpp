@@ -266,21 +266,19 @@ void LedDeviceLightpack::setSmoothSlowdown(int value)
     writeBufferToDeviceWithCheck(CMD_SET_SMOOTH_SLOWDOWN);
 }
 
-void LedDeviceLightpack::setBrightness(int value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)value;
-
-    writeBufferToDeviceWithCheck(CMD_SET_BRIGHTNESS);
-}
+//void LedDeviceLightpack::setBrightness(int value)
+//{
+//    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+//    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)value;
+//    writeBufferToDeviceWithCheck(CMD_SET_BRIGHTNESS);
+//}
 
 
 
 void LedDeviceLightpack::updateColors(const QList<QRgb> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
-#if 1
+#if 0
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
 
