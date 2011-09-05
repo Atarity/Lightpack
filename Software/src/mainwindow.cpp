@@ -47,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    server = NULL;
+
     ui->setupUi(this);
 
     ui->tabWidget->setCurrentIndex( 0 );
@@ -92,23 +94,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initLabelsForGrabbedColors();
 
-    if (Settings::valueMain("EnableApi").toBool())
-    {       
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Start API server";
-
-        int port = Settings::valueMain("ApiPort").toInt();
-
-        server = new ApiServer(this);
-        server-> ApiKey = Settings::valueMain("ApiKey").toString();
-
-        if (!server->listen(QHostAddress::Any, port)) {
-            QString errorStr = tr("API server unable to start (port: %1): %2.").arg(port).arg(server->errorString());
-
-            QMessageBox::critical(this, tr("API Server"), errorStr);
-            qCritical() << Q_FUNC_INFO << errorStr;
-        }
-    }
-
     connectSignalsSlots();
 
     profileLoadLast();
@@ -127,6 +112,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
     updateCbModesPosition();
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
+}
+
+void MainWindow::startApi()
+{
+    if (!Settings::isApiEnabled()) return;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Start API server";
+
+    int port = Settings::valueMain("ApiPort").toInt();
+
+    server = new ApiServer(this);
+    server-> ApiKey = Settings::valueMain("ApiKey").toString();
+
+    if (!server->listen(QHostAddress::Any, port)) {
+        QString errorStr = tr("API server unable to start (port: %1): %2.").arg(port).arg(server->errorString());
+
+        QMessageBox::critical(this, tr("API Server"), errorStr);
+        qCritical() << Q_FUNC_INFO << errorStr;
+    }
 }
 
 void MainWindow::connectSignalsSlots()
@@ -181,6 +184,7 @@ void MainWindow::connectSignalsSlots()
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabledChanged(bool)));
 
 
+
     // Dev tab
     connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
 
@@ -197,6 +201,11 @@ void MainWindow::connectSignalsSlots()
     connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
     connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
     connect(ui->checkBox_ConnectVirtualDevice, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ConnectVirtualDeviceToggled(bool)));
+
+    connect(ui->groupBox_Api,SIGNAL(toggled(bool)),this,SLOT(onGroupBox_EnableApiToggled(bool)));
+    connect(ui->lineEdit_ApiPort,SIGNAL(textChanged(QString)),this,SLOT(onApiPort_Changed(QString)));
+    connect(ui->pushButton_NewKey,SIGNAL(clicked()),this,SLOT(genNewKey()));
+    connect(ui->lineEdit_ApiKey,SIGNAL(textChanged(QString)),this,SLOT(onApiKey_Changed(QString)));
 }
 
 void MainWindow::connectLedDeviceSignalsSlots()
@@ -327,6 +336,50 @@ void MainWindow::onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled)
     ledDevice = LedDeviceFactory::create(this);
 
     connectLedDeviceSignalsSlots();
+}
+
+void MainWindow::onGroupBox_EnableApiToggled(bool isEnabled)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
+
+    Settings::setApiEnabled(isEnabled);
+    if (isEnabled){
+        startApi();
+    } else {
+        if (server!=NULL)
+        {
+            server->close();
+            delete server;
+        }
+    }
+}
+
+void MainWindow::onApiPort_Changed(QString apiport)
+{
+     DEBUG_LOW_LEVEL << Q_FUNC_INFO << apiport;
+     Settings::setValueMain("ApiPort",apiport);
+     if (server!=NULL)
+     {
+         server->close();
+         delete server;
+     }
+     startApi();
+}
+
+void MainWindow::onApiKey_Changed(QString apikey)
+{
+     DEBUG_LOW_LEVEL << Q_FUNC_INFO << apikey;
+     Settings::setValueMain("ApiKey",apikey);
+     if (server!=NULL)
+     {
+         server->ApiKey = apikey;
+     }
+}
+
+void MainWindow::genNewKey()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    ui->lineEdit_ApiKey->setText(QUuid::createUuid().toString());
 }
 
 // ----------------------------------------------------------------------------
@@ -1063,6 +1116,10 @@ void MainWindow::loadSettingsToMainWindow()
 
     ui->checkBox_ExpertModeEnabled->setChecked      ( Settings::isExpertModeEnabled() );
     ui->checkBox_ConnectVirtualDevice->setChecked   ( Settings::getConnectedDevice() == SupportedDevice_Virtual );
+
+    ui->groupBox_Api->setChecked    ( Settings::valueMain("EnableApi").toBool());
+    ui->lineEdit_ApiPort->setText   ( Settings::valueMain("ApiPort").toString());
+    ui->lineEdit_ApiKey->setText    ( Settings::valueMain("ApiKey").toString());
 
     switch(Settings::getGrabMode())
     {

@@ -109,6 +109,10 @@ private slots:
     void onMoodLampColorChanged(QColor color);
     void onExpertModeEnabledChanged(bool isEnabled);
     void onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled);
+    void onGroupBox_EnableApiToggled(bool isEnabled);
+    void genNewKey();
+    void onApiPort_Changed(QString apiport);
+    void onApiKey_Changed(QString apikey);
 
 private:
     void connectSignalsSlots();
@@ -136,6 +140,8 @@ private:
     void initLabelsForGrabbedColors();
 
     void updateCbModesPosition();
+
+    void startApi();
 
     IGrabber * createGrabber(GrabMode grabMode);
 

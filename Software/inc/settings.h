@@ -133,6 +133,8 @@ public:
     // Main
     static bool isExpertModeEnabled();
     static void setExpertModeEnabled(bool isEnabled);
+    static bool isApiEnabled();
+    static void setApiEnabled(bool isEnabled);
     static SupportedDevices getConnectedDevice();
     static void setConnectedDevice(SupportedDevices device);
 

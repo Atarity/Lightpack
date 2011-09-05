@@ -44,6 +44,7 @@
 #define KEY_MOOD_LAMP_LIQUID_MODE  "MoodLampLiquidMode"
 #define KEY_MODE                   "Mode"
 #define KEY_GRAB_MODE              "GrabMode"
+#define KEY_API_ENABLED            "EnableApi"
 #define KEY_EXPERT_MODE_ENABLED    "ExpertModeEnabled"
 #define KEY_CONNECTED_DEVICE       "ConnectedDevice"
 #define KEY_SUPPORTED_DEVICES      "SupportedDevices"
@@ -72,7 +73,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isSetDebugLe
     setNewOptionMain("Language",       LANGUAGE_DEFAULT_NAME);
     setNewOptionMain("DebugLevel",     DEBUG_LEVEL_DEFAULT);
     setNewOptionMain("ApiPort",        API_PORT_DEFAULT);
-    setNewOptionMain("EnableApi",      ENABLE_API_DEFAULT);
+    setNewOptionMain(KEY_API_ENABLED,  ENABLE_API_DEFAULT);
     setNewOptionMain("ApiKey",         QUuid::createUuid().toString());
     setNewOptionMain(KEY_EXPERT_MODE_ENABLED, EXPERT_MODE_ENABLED_DEFAULT);
     setNewOptionMain(KEY_CONNECTED_DEVICE,  CONNECTED_DEVICE_DEFAULT);
@@ -273,6 +274,16 @@ bool Settings::isExpertModeEnabled()
 void Settings::setExpertModeEnabled(bool isEnabled)
 {
     m_mainConfig->setValue(KEY_EXPERT_MODE_ENABLED, isEnabled);
+}
+
+bool Settings::isApiEnabled()
+{
+    return m_mainConfig->value(KEY_API_ENABLED).toBool();
+}
+
+void Settings::setApiEnabled(bool isEnabled)
+{
+    m_mainConfig->setValue(KEY_API_ENABLED, isEnabled);
 }
 
 SupportedDevices Settings::getConnectedDevice()
