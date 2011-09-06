@@ -75,7 +75,7 @@ void ApiServer::readyRead()
     while(client->canReadLine())
     {
         QString line = QString::fromUtf8(client->readLine()).trimmed();
-        DEBUG_LOW_LEVEL << "Read line:" << line;
+        //DEBUG_LOW_LEVEL << "Read line:" << line;
 
         QString command = getCommand(line);
 #if 0
@@ -243,7 +243,7 @@ void ApiServer::readyRead()
                         QString color = colors.at(i);
                         if (color!="")
                         {
-                            qDebug() << "Color:" << color;
+                            //qDebug() << "Color:" << color;
                             bool ok;
                             int num=0,r=0,g=0,b=0;
                             if (color.indexOf("-")>0)
@@ -296,6 +296,7 @@ void ApiServer::readyRead()
         }
         catch(...)
         {
+            qFatal("This is impossible but i'm here! In API server catch(...)");
             client->write(QString("error\n").toUtf8());
         }
 

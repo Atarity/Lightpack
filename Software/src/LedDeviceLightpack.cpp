@@ -59,23 +59,28 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 #if 0
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
-#endif
 
-    // Fill write_buffer with new colors for all LEDs
+    // Check out events work fine
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "sleep";
+    usleep(500*1000);
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "get up!";
+#endif
 
     // First write_buffer[0] == 0x00 - ReportID, i have problems with using it
     // Second byte of usb buffer is command (write_buffer[1] == CMD_UPDATE_LEDS, see below)
-    int i = WRITE_BUFFER_INDEX_DATA_START;
-    for(int led=0; led < LEDS_COUNT; led++){
+    int index = WRITE_BUFFER_INDEX_DATA_START;
+
+    for (int led = 0; led < LEDS_COUNT; led++)
+    {
         // Send colors values
-        m_writeBuffer[i++] = qRed  ( colors[led] );
-        m_writeBuffer[i++] = qGreen( colors[led] );
-        m_writeBuffer[i++] = qBlue ( colors[led] );
+        m_writeBuffer[index++] = qRed  ( colors[led] );
+        m_writeBuffer[index++] = qGreen( colors[led] );
+        m_writeBuffer[index++] = qBlue ( colors[led] );
 
         // Send change colors steps
-        m_writeBuffer[i++] = 0;
-        m_writeBuffer[i++] = 0;
-        m_writeBuffer[i++] = 0;
+        m_writeBuffer[index++] = 0;
+        m_writeBuffer[index++] = 0;
+        m_writeBuffer[index++] = 0;
     }
 
 #if 0
@@ -246,12 +251,17 @@ bool LedDeviceLightpack::writeBufferToDevice(int command)
 
     m_writeBuffer[WRITE_BUFFER_INDEX_REPORT_ID] = 0x00;
     m_writeBuffer[WRITE_BUFFER_INDEX_COMMAND] = command;
-    int bytes_write = hid_write(m_hidDevice, m_writeBuffer, sizeof(m_writeBuffer));
 
-    if(bytes_write < 0){
-        qWarning() << "error writing data:" << bytes_write;
-        emit ioDeviceSuccess(false);
-        return false;
+    int error = hid_write(m_hidDevice, m_writeBuffer, sizeof(m_writeBuffer));
+    if (error < 0)
+    {
+        // Trying to repeat sending data:
+        error = hid_write(m_hidDevice, m_writeBuffer, sizeof(m_writeBuffer));
+        if(error < 0){
+            qWarning() << "error writing data:" << error;
+            emit ioDeviceSuccess(false);
+            return false;
+        }
     }
     emit ioDeviceSuccess(true);
     return true;

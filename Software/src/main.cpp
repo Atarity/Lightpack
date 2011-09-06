@@ -243,15 +243,15 @@ int main(int argc, char **argv)
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << app.thread()->currentThreadId();
 
+    ILedDevice *ledDevice = LedDeviceFactory::create();
 
     QThread *ledDeviceThread = new QThread();
-    ILedDevice *ledDevice = LedDeviceFactory::create();
     ledDevice->moveToThread(ledDeviceThread);
 
     MainWindow *window = new MainWindow();   /* Create MainWindow */
     window->setVisible(false);   /* And load to tray. */
 
-    // Register QMeteType for Qt::QueuedConnection
+    // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
 
     app.connect(window, SIGNAL(updateLedsColors(const QList<QRgb> &)), ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
