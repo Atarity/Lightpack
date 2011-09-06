@@ -51,6 +51,10 @@ public:
 signals:
     void settingsProfileChanged();
     void updateLedsColors(const QList<QRgb> &);
+    void updateTimerOptions(int prescallerIndex, int outputCompareRegValue);
+    void updateColorDepth(int value);
+    void updateSmoothSlowdown(int value);
+
 
 public slots:
     void ledDeviceCallSuccess(bool isSuccess);
@@ -139,7 +143,7 @@ private:
 
 public:
     bool isAmbilightOn; /* is grab desktop window ON */
-    GrabManager *grabManager;
+    GrabManager *m_grabManager;
 //    ILedDevice *ledDevice;
 
 private:
@@ -147,7 +151,7 @@ private:
     AboutDialog *aboutDialog;
     SpeedTest *speedTest;
 
-    ApiServer *server;
+    ApiServer *m_apiServer;
 
 
     bool isErrorState;
@@ -161,14 +165,14 @@ private:
 
     Ui::MainWindow *ui;
 
-    QAction *onAmbilightAction;
-    QAction *offAmbilightAction;
-    QAction *settingsAction;
-    QAction *aboutAction;
-    QAction *quitAction;
+    QAction *m_onAmbilightAction;
+    QAction *m_offAmbilightAction;
+    QAction *m_settingsAction;
+    QAction *m_aboutAction;
+    QAction *m_quitAction;
 
-    QSystemTrayIcon *trayIcon;
-    QMenu *trayIconMenu;
+    QSystemTrayIcon *m_trayIcon;
+    QMenu *m_trayIconMenu;
     QMenu *profilesMenu;
 
     QTranslator *translator;

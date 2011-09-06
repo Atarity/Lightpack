@@ -130,8 +130,11 @@ bool LedDeviceLightpack::readDataFromDevice()
 }
 
 bool LedDeviceLightpack::writeBufferToDevice(int command)
-{
+{    
     DEBUG_MID_LEVEL << Q_FUNC_INFO << command;
+#if 0
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
+#endif
 
     write_buffer[WRITE_BUFFER_INDEX_REPORT_ID] = 0x00;
     write_buffer[WRITE_BUFFER_INDEX_COMMAND] = command;

@@ -169,7 +169,7 @@ void ApiServer::readyRead()
                     activeClient = client;
                     ret="success";
                     //disable capture
-                    mw->grabManager->setAmbilightOn(false,true);
+                    mw->m_grabManager->setAmbilightOn(false,true);
                     // mw->ledDevice->setSmoothSlowdown(cs.smooth);
                 }
                 if(activeClient == client) ret = "success";
@@ -182,7 +182,7 @@ void ApiServer::readyRead()
                     activeClient = NULL;
                     ret="success";
                     //enable capture
-                    mw->grabManager->setAmbilightOn(mw->isAmbilightOn,true);
+                    mw->m_grabManager->setAmbilightOn(mw->isAmbilightOn,true);
                 }
                 client->write(QString("unlock:%1\n").arg(ret).toUtf8());
             }else if(command=="setgamma"){
@@ -310,7 +310,7 @@ void ApiServer::disconnected()
     {
         activeClient = NULL;
         MainWindow *mw = (MainWindow*)parent();
-        mw->grabManager->setAmbilightOn(mw->isAmbilightOn,true);
+        mw->m_grabManager->setAmbilightOn(mw->isAmbilightOn,true);
     }
     clients.remove(client);
 }

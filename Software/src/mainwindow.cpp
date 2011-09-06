@@ -70,7 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //    ledDevice = LedDeviceFactory::create(this);
 
-    grabManager = new GrabManager(createGrabber(Settings::getGrabMode()));
+    m_grabManager = new GrabManager(createGrabber(Settings::getGrabMode()));
 
     aboutDialog = new AboutDialog(this);
 
@@ -99,11 +99,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
         int port = Settings::getApiPort();
 
-        server = new ApiServer(this);
-        server->ApiKey = Settings::getApiKey();
+        m_apiServer = new ApiServer(this);
+        m_apiServer->ApiKey = Settings::getApiKey();
 
-        if (!server->listen(QHostAddress::Any, port)) {
-            QString errorStr = tr("API server unable to start (port: %1): %2.").arg(port).arg(server->errorString());
+        if (!m_apiServer->listen(QHostAddress::Any, port)) {
+            QString errorStr = tr("API server unable to start (port: %1): %2.").arg(port).arg(m_apiServer->errorString());
 
             QMessageBox::critical(this, tr("API Server"), errorStr);
             qCritical() << Q_FUNC_INFO << errorStr;
@@ -134,21 +134,21 @@ void MainWindow::connectSignalsSlots()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));
 
     // Connect to GrabManager
-    connect(ui->spinBox_SlowdownGrab, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightSlowdownMs(int)));
-    connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), grabManager, SLOT(setVisibleLedWidgets(bool)));
-    connect(ui->spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), grabManager, SLOT(setAmbilightColorDepth(int)));
-    connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), grabManager, SLOT(setColoredLedWidgets(bool)));
-    connect(ui->radioButton_White, SIGNAL(toggled(bool)), grabManager, SLOT(setWhiteLedWidgets(bool)));
-    connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), grabManager, SLOT(setUpdateColorsOnlyIfChanges(bool)));
-    connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), grabManager, SLOT(setAvgColorsOnAllLeds(bool)));
-    connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), grabManager, SLOT(setMinLevelOfSensivity(int)));
-    connect(ui->doubleSpinBox_HW_GammaCorrection, SIGNAL(valueChanged(double)), grabManager, SLOT(setGrabGammaCorrection(double)));
+    connect(ui->spinBox_SlowdownGrab, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setAmbilightSlowdownMs(int)));
+    connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), m_grabManager, SLOT(setVisibleLedWidgets(bool)));
+    connect(ui->spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setAmbilightColorDepth(int)));
+    connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), m_grabManager, SLOT(setColoredLedWidgets(bool)));
+    connect(ui->radioButton_White, SIGNAL(toggled(bool)), m_grabManager, SLOT(setWhiteLedWidgets(bool)));
+    connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), m_grabManager, SLOT(setUpdateColorsOnlyIfChanges(bool)));
+    connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), m_grabManager, SLOT(setAvgColorsOnAllLeds(bool)));
+    connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setMinLevelOfSensivity(int)));
+    connect(ui->doubleSpinBox_HW_GammaCorrection, SIGNAL(valueChanged(double)), m_grabManager, SLOT(setGrabGammaCorrection(double)));
     connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLampModeChanged(bool)));
-    connect(this, SIGNAL(settingsProfileChanged()), grabManager, SLOT(settingsProfileChanged()));
+    connect(this, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
 
     // Main options
     connect(ui->cb_Modes,SIGNAL(activated(int)), this, SLOT(onCbModesChanged(int)));
@@ -158,14 +158,12 @@ void MainWindow::connectSignalsSlots()
     // Hardware options
     connect(ui->spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetColorDepth(int)));
     connect(ui->spinBox_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareTimerOptionsChange()));
-    // TODO: remove checkBox_SmoothChangeColors
-//    connect(ui->checkBox_SmoothChangeColors, SIGNAL(toggled(bool)), this, SLOT(settingsHardwareChangeColorsIsSmooth(bool)));
-
-    // LedDevice connections
-//    connectLedDeviceSignalsSlots();
+    connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
+    connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
+    connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
 
     // GrabManager to this
-    connect(grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
+    connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
 
     // Open Settings file
     connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openCurrentProfile()));
@@ -193,31 +191,29 @@ void MainWindow::connectSignalsSlots()
     connect(ui->radioButton_GrabX11, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
 #endif
 
-    connect(grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SLOT(updateGrabbedColors(QList<QRgb>)));
-    connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
-    connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
-    connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
+    connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SLOT(updateGrabbedColors(QList<QRgb>)));
     connect(ui->checkBox_ConnectVirtualDevice, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ConnectVirtualDeviceToggled(bool)));
 
-    connect(server, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
-    connect(grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
+    // Connections to signals which will be connected to ILedDevice
+    connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
+    connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
 }
 
 MainWindow::~MainWindow()
 {    
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    delete onAmbilightAction;
-    delete offAmbilightAction;
-    delete settingsAction;
-    delete aboutAction;
-    delete quitAction;
+    delete m_onAmbilightAction;
+    delete m_offAmbilightAction;
+    delete m_settingsAction;
+    delete m_aboutAction;
+    delete m_quitAction;
 
-    delete trayIcon;
-    delete trayIconMenu;
+    delete m_trayIcon;
+    delete m_trayIconMenu;
 
-//    delete ledDevice;
-    delete grabManager;
+    delete m_grabManager;
+    delete m_apiServer;
 
     delete ui;
 }
@@ -235,21 +231,21 @@ void MainWindow::changeEvent(QEvent *e)
     case QEvent::LanguageChange:
 
         ui->retranslateUi(this);
-        onAmbilightAction->setText(tr("&Turn on"));
-        offAmbilightAction->setText(tr("&Turn off"));
-        settingsAction->setText(tr("&Settings"));
-        aboutAction->setText(tr("&About"));
-        quitAction->setText(tr("&Quit"));
+        m_onAmbilightAction->setText(tr("&Turn on"));
+        m_offAmbilightAction->setText(tr("&Turn off"));
+        m_settingsAction->setText(tr("&Settings"));
+        m_aboutAction->setText(tr("&About"));
+        m_quitAction->setText(tr("&Quit"));
 
         profilesMenu->setTitle(tr("&Profiles"));
 
         if(isAmbilightOn){
-            trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+            m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
         }else{
-            trayIcon->setToolTip(tr("Disabled"));
+            m_trayIcon->setToolTip(tr("Disabled"));
         }
 
-        if(isErrorState) trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
+        if(isErrorState) m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
 
         setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
@@ -265,7 +261,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    if(trayIcon->isVisible()){
+    if(m_trayIcon->isVisible()){
         // Just hide settings
         hideSettings();
         event->ignore();
@@ -346,7 +342,7 @@ void MainWindow::startAmbilight()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isAmbilightOn;
 
     Settings::setAmbilightOn(isAmbilightOn);
-    grabManager->setAmbilightOn(isAmbilightOn, isErrorState);
+    m_grabManager->setAmbilightOn(isAmbilightOn, isErrorState);
 
     if(isAmbilightOn == false){
         isErrorState = false;
@@ -368,21 +364,21 @@ void MainWindow::updateTrayAndActionStates()
     }
 
     if(isErrorState){
-        trayIcon->setIcon(QIcon(":/icons/error.png"));
-        trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
+        m_trayIcon->setIcon(QIcon(":/icons/error.png"));
+        m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
     }else{
         if(isAmbilightOn){
-            trayIcon->setIcon(QIcon(":/icons/on.png"));
-            trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+            m_trayIcon->setIcon(QIcon(":/icons/on.png"));
+            m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
-            onAmbilightAction->setEnabled(false);
-            offAmbilightAction->setEnabled(true);
+            m_onAmbilightAction->setEnabled(false);
+            m_offAmbilightAction->setEnabled(true);
         }else{
-            trayIcon->setIcon(QIcon(":/icons/off.png"));
-            trayIcon->setToolTip(tr("Disabled"));
+            m_trayIcon->setIcon(QIcon(":/icons/off.png"));
+            m_trayIcon->setToolTip(tr("Disabled"));
 
-            onAmbilightAction->setEnabled(true);
-            offAmbilightAction->setEnabled(false);
+            m_onAmbilightAction->setEnabled(true);
+            m_offAmbilightAction->setEnabled(false);
         }
     }    
 }
@@ -454,7 +450,7 @@ void MainWindow::showSettings()
 
     LightpackMode mode = Settings::getMode();
     ui->cb_Modes->setCurrentIndex   (mode == Grab ? 0 : 1); // we assume that LightpackMode in same order as cb_Modes
-    grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && ui->cb_Modes->currentIndex()==0);
+    m_grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && ui->cb_Modes->currentIndex()==0);
     this->show();
 }
 
@@ -462,7 +458,7 @@ void MainWindow::hideSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    grabManager->setVisibleLedWidgets(false);
+    m_grabManager->setVisibleLedWidgets(false);
     this->hide();
 }
 
@@ -519,7 +515,7 @@ void MainWindow::settingsHardwareTimerOptionsChange()
         qWarning() << "PWM frequency to low! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
     }else{
         // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
-//        ledDevice->setTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
+        emit updateTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
     }
 }
 
@@ -540,7 +536,7 @@ void MainWindow::settingsHardwareSetColorDepth(int value)
         qWarning() << "PWM frequency to low! setColorDepth canceled. pwmFrequency =" << pwmFrequency << "Hz";
     }else{
         // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
-//        ledDevice->setColorDepth(value);
+        emit updateColorDepth(value);
     }
 }
 
@@ -549,7 +545,7 @@ void MainWindow::settingsHardwareSetSmoothSlowdown(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     Settings::setFwSmoothSlowdown(value);
-//    ledDevice->setSmoothSlowdown(value);
+    emit updateSmoothSlowdown(value);
 }
 
 void MainWindow::settingsHardwareSetBrightness(int value)
@@ -737,7 +733,7 @@ void MainWindow::settingsProfileChanged_UpdateUI()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
-    if(isAmbilightOn) trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+    if(isAmbilightOn) m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
     if(ui->comboBox_Profiles->count() > 1){
         ui->pushButton_DeleteProfile->setEnabled(true);
@@ -888,7 +884,7 @@ void MainWindow::onGrabModeChanged()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "GrabMode" << getGrabMode();
     IGrabber * grabber = createGrabber(getGrabMode());
     Settings::setGrabMode(getGrabMode());
-    grabManager->setGrabber(grabber);
+    m_grabManager->setGrabber(grabber);
 }
 
 IGrabber * MainWindow::createGrabber(GrabMode grabMode)
@@ -932,49 +928,49 @@ void MainWindow::createActions()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    onAmbilightAction = new QAction(QIcon(":/icons/on.png"), tr("&Turn on"), this);
-    onAmbilightAction->setIconVisibleInMenu(true);
-    connect(onAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOn()));
+    m_onAmbilightAction = new QAction(QIcon(":/icons/on.png"), tr("&Turn on"), this);
+    m_onAmbilightAction->setIconVisibleInMenu(true);
+    connect(m_onAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOn()));
 
-    offAmbilightAction = new QAction(QIcon(":/icons/off.png"), tr("&Turn off"), this);
-    offAmbilightAction->setIconVisibleInMenu(true);
-    connect(offAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOff()));
+    m_offAmbilightAction = new QAction(QIcon(":/icons/off.png"), tr("&Turn off"), this);
+    m_offAmbilightAction->setIconVisibleInMenu(true);
+    connect(m_offAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOff()));
 
 
     profilesMenu = new QMenu(tr("&Profiles"), this);
     profilesMenu->setIcon(QIcon(":/icons/profiles.png"));
     profilesMenu->clear();
 
-    settingsAction = new QAction(QIcon(":/icons/settings.png"), tr("&Settings"), this);
-    settingsAction->setIconVisibleInMenu(true);
-    connect(settingsAction, SIGNAL(triggered()), this, SLOT(showSettings()));
+    m_settingsAction = new QAction(QIcon(":/icons/settings.png"), tr("&Settings"), this);
+    m_settingsAction->setIconVisibleInMenu(true);
+    connect(m_settingsAction, SIGNAL(triggered()), this, SLOT(showSettings()));
 
-    aboutAction = new QAction(QIcon(":/icons/about.png"), tr("&About"), this);
-    aboutAction->setIconVisibleInMenu(true);
-    connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAbout()));
+    m_aboutAction = new QAction(QIcon(":/icons/about.png"), tr("&About"), this);
+    m_aboutAction->setIconVisibleInMenu(true);
+    connect(m_aboutAction, SIGNAL(triggered()), this, SLOT(showAbout()));
 
-    quitAction = new QAction(tr("&Quit"), this);
-    connect(quitAction, SIGNAL(triggered()), this, SLOT(quit()));
+    m_quitAction = new QAction(tr("&Quit"), this);
+    connect(m_quitAction, SIGNAL(triggered()), this, SLOT(quit()));
 }
 
 void MainWindow::createTrayIcon()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    trayIconMenu = new QMenu(this);
-    trayIconMenu->addAction(onAmbilightAction);
-    trayIconMenu->addAction(offAmbilightAction);
-    trayIconMenu->addSeparator();    
-    trayIconMenu->addMenu(profilesMenu);
-    trayIconMenu->addAction(settingsAction);
-    trayIconMenu->addAction(aboutAction);
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction(quitAction);
+    m_trayIconMenu = new QMenu(this);
+    m_trayIconMenu->addAction(m_onAmbilightAction);
+    m_trayIconMenu->addAction(m_offAmbilightAction);
+    m_trayIconMenu->addSeparator();
+    m_trayIconMenu->addMenu(profilesMenu);
+    m_trayIconMenu->addAction(m_settingsAction);
+    m_trayIconMenu->addAction(m_aboutAction);
+    m_trayIconMenu->addSeparator();
+    m_trayIconMenu->addAction(m_quitAction);
 
-    trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setContextMenu(trayIconMenu);
-    trayIcon->setIcon(QIcon(":/icons/off.png"));
-    trayIcon->show();
+    m_trayIcon = new QSystemTrayIcon(this);
+    m_trayIcon->setContextMenu(m_trayIconMenu);
+    m_trayIcon->setIcon(QIcon(":/icons/off.png"));
+    m_trayIcon->show();
 }
 
 // ----------------------------------------------------------------------------
@@ -1097,7 +1093,7 @@ void MainWindow::quit()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "trayIcon->hide();";
 
-    trayIcon->hide();
+    m_trayIcon->hide();
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "QApplication::quit();";
 
@@ -1113,34 +1109,34 @@ void MainWindow::onCbModesChanged(int index)
     case 0:
         ui->frmBacklight->setVisible(false);
         ui->frmAmbilight->setVisible(true);
-        grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && this->isVisible());
+        m_grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && this->isVisible());
         break;
     case 1:
         ui->frmBacklight->setVisible(true);
         ui->frmAmbilight->setVisible(false);
-        grabManager->setVisibleLedWidgets(false);
+        m_grabManager->setVisibleLedWidgets(false);
         break;
     }
-    grabManager->switchMode(index == 0 ? Grab : MoodLamp);
+    m_grabManager->switchMode(index == 0 ? Grab : MoodLamp);
 //    Settings::setMode(index == 0 ? Grab : MoodLamp);
 }
 
 void MainWindow::on_horizontalSlider_Brightness_valueChanged(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << value;
-    grabManager->setBrightness(value);
+    m_grabManager->setBrightness(value);
 }
 
 void MainWindow::onMoodLampColorChanged(QColor color)
 {
-    grabManager->setBackLightColor(color);
+    m_grabManager->setBackLightColor(color);
 }
 
 
 void MainWindow::on_horizontalSlider_Speed_valueChanged(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO<< value;
-    grabManager->setMoodLampSpeed(value);
+    m_grabManager->setMoodLampSpeed(value);
 }
 
 void MainWindow::paintEvent(QPaintEvent */*event*/)
@@ -1168,7 +1164,7 @@ void MainWindow::onMoodLampModeChanged(bool checked)
         ui->label_MoodLampSpeed->setEnabled(false);
         ui->horizontalSlider_Brightness->setEnabled(false);
         ui->label_MoodLampBrightness->setEnabled(false);
-        grabManager->setMoodLampSpeed(0);
+        m_grabManager->setMoodLampSpeed(0);
     } else {
         //liquid mode
         ui->pushButton_SelectColor->setEnabled(false);
