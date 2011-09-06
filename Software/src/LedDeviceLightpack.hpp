@@ -47,33 +47,35 @@
 class LedDeviceLightpack : public ILedDevice
 {
     Q_OBJECT
-
 public:
     LedDeviceLightpack(QObject *parent = 0);
     ~LedDeviceLightpack();
 
-public:
-    bool openDevice();
-    bool deviceOpened();
-    QString firmwareVersion();
-    void offLeds(); /* send CMD_OFF_ALL to device, it causes rapid shutdown LEDs */
+signals:
+    void openDeviceSuccess(bool isSuccess);
+    void ioDeviceSuccess(bool isSuccess);
+    void firmwareVersion(const QString & fwVersion);
 
 public slots:
-    void updateColors(const QList<QRgb> & colors);
+    void setColors(const QList<QRgb> & colors);
+    void offLeds();
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);
 //    void setBrightness(int value);
+    void requestFirmwareVersion();
 
 private:
+    bool openDevice();
     bool readDataFromDevice();
-    bool readDataFromDeviceWithCheck();
     bool writeBufferToDevice(int command);
-    bool writeBufferToDeviceWithCheck(int command);
     bool tryToReopenDevice();
+    bool readDataFromDeviceWithCheck();
+    bool writeBufferToDeviceWithCheck(int command);    
+    void updateDeviceSettings();
 
-    hid_device *hidDevice;
+    hid_device *m_hidDevice;
 
-    unsigned char read_buffer[65];    /* 0-ReportID, 1..65-data */
-    unsigned char write_buffer[65];   /* 0-ReportID, 1..65-data */
+    unsigned char m_readBuffer[65];    /* 0-ReportID, 1..65-data */
+    unsigned char m_writeBuffer[65];   /* 0-ReportID, 1..65-data */
 };

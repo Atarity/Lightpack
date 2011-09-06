@@ -33,21 +33,22 @@ class ILedDevice : public QObject
 {
     Q_OBJECT
 public:
-    ILedDevice(QObject * parent) : QObject(parent){}
-    virtual bool openDevice() = 0;
-    virtual bool deviceOpened() = 0;
-    virtual QString firmwareVersion() = 0;
-    virtual void offLeds() = 0;
-
-public slots:
-    virtual void updateColors(const QList<QRgb> & colors) = 0;
-    virtual void setTimerOptions(int prescallerIndex, int outputCompareRegValue) = 0;
-    virtual void setColorDepth(int value) = 0;
-    virtual void setSmoothSlowdown(int value) = 0;
-//    virtual void setBrightness(int value) = 0;
+    ILedDevice(QObject * parent) : QObject(parent) {}
 
 signals:
     void openDeviceSuccess(bool isSuccess);
     void ioDeviceSuccess(bool isSuccess);
+    void firmwareVersion(const QString & fwVersion);
 
+public slots:
+    virtual void setColors(const QList<QRgb> & colors) = 0;
+    virtual void offLeds() = 0;
+    virtual void setTimerOptions(int prescallerIndex, int outputCompareRegValue) = 0;
+    virtual void setColorDepth(int value) = 0;
+    virtual void setSmoothSlowdown(int value) = 0;
+//    virtual void setBrightness(int value) = 0;
+    virtual void requestFirmwareVersion() = 0;
+
+private:
+    virtual bool openDevice() = 0;
 };

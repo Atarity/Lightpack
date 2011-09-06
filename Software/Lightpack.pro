@@ -124,7 +124,8 @@ SOURCES += src/main.cpp \
     grab/X11Grabber.cpp \
     grab/WinAPIGrabber.cpp \
     grab/QtGrabber.cpp \
-    grab/MacOSGrabber.cpp
+    grab/MacOSGrabber.cpp \
+    src/LedDeviceVirtual.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/LIGHTPACK_HW.h \
     ../CommonHeaders/COMMANDS.h \
@@ -157,3 +158,4 @@ HEADERS += hidapi/hidapi.h \
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui
+

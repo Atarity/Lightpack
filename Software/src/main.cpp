@@ -254,7 +254,7 @@ int main(int argc, char **argv)
     // Register QMeteType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
 
-    app.connect(window, SIGNAL(updateLedsColors(const QList<QRgb> &)), ledDevice, SLOT(updateColors(const QList<QRgb> &)), Qt::QueuedConnection);
+    app.connect(window, SIGNAL(updateLedsColors(const QList<QRgb> &)), ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
     app.connect(window, SIGNAL(updateColorDepth(int)), ledDevice, SLOT(setColorDepth(int)), Qt::QueuedConnection);
     app.connect(window, SIGNAL(updateSmoothSlowdown(int)), ledDevice, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
     app.connect(window, SIGNAL(updateTimerOptions(int,int)), ledDevice, SLOT(setTimerOptions(int,int)), Qt::QueuedConnection);

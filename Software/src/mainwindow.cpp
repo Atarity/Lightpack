@@ -548,7 +548,7 @@ void MainWindow::settingsHardwareSetSmoothSlowdown(int value)
     emit updateSmoothSlowdown(value);
 }
 
-void MainWindow::settingsHardwareSetBrightness(int value)
+void MainWindow::settingsHardwareSetBrightness(int /*value*/)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
