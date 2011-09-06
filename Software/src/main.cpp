@@ -26,80 +26,82 @@
 
 
 #include <QtGui>
-#include <iostream>
-#include "mainwindow.h"
-
-#include "settings.h"
-#include "version.h"
-#include "ILedDevice.hpp"
-#include "LedDeviceFactory.hpp"
-#include "LedDeviceLightpack.hpp"
-
-#include <sys/time.h>
-#include "time.h"
-
 #include <QFileInfo>
 #include <QMetaType>
+#include <iostream>
 
+#include "LightpackApplication.hpp"
+#include "settings.h"
+#include "version.h"
+#include "debug.h"
 
 using namespace std;
 
-#include "debug.h"
-unsigned debugLevel = 0;
+unsigned g_debugLevel = DEBUG_LEVEL_DEFAULT;
+QTextStream m_logStream;
 
-QTextStream logStream;
-
-QString logWhileWindowNotInitialized = "";
-
-static void showHelpMessage()
+QString createApplicationDirectory(const char * firstCmdArgument)
 {
-    fprintf(stderr, "\n");
-    fprintf(stderr, "Project  : Lightpack \n");
-    fprintf(stderr, "Author   : Mike Shatohin \n");
-    fprintf(stderr, "Version  : %s\n", VERSION_STR);
-#ifdef HG_REVISION
-    fprintf(stderr, "Revision : %s \n", HG_REVISION);
+    QString appDirPath = QString(firstCmdArgument);
+
+#ifdef PORTABLE_VERSION
+    // Find application directory
+    QFileInfo fileInfo(appDirPath);
+    appDirPath = fileInfo.absoluteDir().absolutePath();
+    cout << "Application directory: " << appDirPath.toStdString() << endl;
+
+#else
+
+#   ifdef Q_WS_WIN
+    appDirPath = QDir::homePath() + "/Lightpack";
+#   else
+    appDirPath = QDir::homePath() + "/.Lightpack";
+#   endif
+
+    QDir dir(appDirPath);
+    if (dir.exists() == false)
+    {
+        cout << "mkdir " << appDirPath.toStdString() << endl;
+        if (dir.mkdir(appDirPath) == false)
+        {
+            cerr << "Failed mkdir '" << appDirPath.toStdString() << "' for application generated stuff. Exit." << endl;
+            exit(LightpackApplication::AppDirectoryCreationFail_ErrorCode);
+        }
+    }
 #endif
-    fprintf(stderr, "Site     : lightpack.googlecode.com \n");
-    fprintf(stderr, "\n");
-    fprintf(stderr, "Build with Qt version %s \n", QT_VERSION_STR);
-    fprintf(stderr, "\n");
-    fprintf(stderr, "Options: \n");
-    fprintf(stderr, "  --off         - send 'off leds' cmd to device \n");
-    fprintf(stderr, "  --help        - show this help \n");
-    fprintf(stderr, "  --debug_high  - maximum verbose level of debug output\n");
-    fprintf(stderr, "  --debug_mid   - middle debug level\n");
-    fprintf(stderr, "  --debug_low   - low debug level, DEFAULT\n");
-    fprintf(stderr, "  --debug_zero  - minimum debug output\n");
-    fprintf(stderr, "\n");
+
+    return appDirPath;
 }
 
-bool openLogFile(const QString & filePath)
+void openLogsFile(const QString & appDirPath)
 {
-    QFile *logFile = new QFile(filePath);
+    QString logFilePath = appDirPath + "/Lightpack.log";
+
+    QFile *logFile = new QFile(logFilePath);
     QIODevice::OpenMode openFileAppendOrTruncateFlag = QIODevice::Append;
-    QFileInfo info(filePath);
+    QFileInfo info(logFilePath);
     if(info.size() > 1*1024*1024){
         cout << "Log file size > 1 Mb. I'm going to clear it. Now!" << endl;
         openFileAppendOrTruncateFlag = QIODevice::Truncate;
     }
     if(logFile->open(QIODevice::WriteOnly | openFileAppendOrTruncateFlag | QIODevice::Text)){
-        logStream.setDevice(logFile);
-        logStream << endl;
-        logStream << QDateTime::currentDateTime().date().toString("yyyy_MM_dd") << " ";
-        logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Lightpack sw" << VERSION_STR << endl;
+        m_logStream.setDevice(logFile);
+        m_logStream << endl;
+        m_logStream << QDateTime::currentDateTime().date().toString("yyyy_MM_dd") << " ";
+        m_logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Lightpack sw" << VERSION_STR << endl;
     }else{
-        cerr << "Error open file for write: " << filePath.toStdString() << endl;
-        return false;
+        cerr << "Failed to open logs file: '" << logFilePath.toStdString() << "'. Exit." << endl;
+        exit(LightpackApplication::OpenLogsFail_ErrorCode);
     }
-    return true;
+
+    qDebug() << "Logs file: " << logFilePath;
 }
 
-void messageOutput(QtMsgType type, const char *msg)
+void messageHandler(QtMsgType type, const char *msg)
 {
     QString out = QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") + " ";
     switch (type) {
-    case QtDebugMsg:        
+    case QtDebugMsg:
         out.append("Debug: " + QString::fromLocal8Bit(msg));
         cout << out.toStdString() << endl;
         break;
@@ -115,160 +117,36 @@ void messageOutput(QtMsgType type, const char *msg)
         cerr << "Fatal: " << msg << endl;
         cerr.flush();
 
-        logStream << "Fatal: " << msg << endl;
-        logStream.flush();
+        m_logStream << "Fatal: " << msg << endl;
+        m_logStream.flush();
 
-        abort();
-    }    
-    logStream << out << endl;
-    logStream.flush();
+        exit(LightpackApplication::QFatalMessageHandler_ErrorCode);
+    }
+    m_logStream << out << endl;
+    m_logStream.flush();
     cerr.flush();
     cout.flush();
 }
 
 int main(int argc, char **argv)
 {
-    QApplication app(argc, argv);
-    QApplication::setApplicationName("Lightpack");
-    QApplication::setOrganizationName("Lightpack");
-    QApplication::setApplicationVersion(VERSION_STR);
-
-    // Using locale codec for console output in messageOutput(..) function ( cout << qstring.toStdString() )
+    // Using locale codec for console output in messageHandler(..) function ( cout << qstring.toStdString() )
     QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
 
-    qInstallMsgHandler(messageOutput);
+    QString appDirPath = createApplicationDirectory(argv[0]);
 
-#ifdef PORTABLE_VERSION
-    // Find application directory
-    QString applicationDirPath( argv[0] );
-    QFileInfo fileInfo( applicationDirPath );
-    applicationDirPath = fileInfo.absoluteDir().absolutePath();
-    cout << "Application directory: " << applicationDirPath.toStdString() << endl;
-#else
+    openLogsFile(appDirPath);
 
-#   ifdef Q_WS_WIN
-    QString applicationDirPath = QDir::homePath() + "/Lightpack";
-#   else
-    QString applicationDirPath = QDir::homePath() + "/.Lightpack";
-#   endif
+    qInstallMsgHandler(messageHandler);
 
-    QDir dir( applicationDirPath );
-    if(dir.exists() == false){
-        cout << "mkdir " << applicationDirPath.toStdString() << endl;
-        if(dir.mkdir( applicationDirPath ) == false){
-            cerr << "Failed mkdir '" << applicationDirPath.toStdString() << "' for application generated stuff. Exit." << endl;
-            return 3;
-        }
-    }
-#endif
-
-    QString logFilePath = applicationDirPath + "/Lightpack.log";
-    if(openLogFile(logFilePath)){
-        qDebug() << "Logs file: " << logFilePath;
-    }else{
-        cerr << "Log file '" << logFilePath.toStdString() << "' didn't opened. Exit." << endl;
-        return 2;
-    }
-
-    // Default debug level
-    debugLevel = Debug::LowLevel;
-    bool isSetDebugLevelFromConfig = true;
-
-    if(argc > 1){
-        if(strcmp(argv[1], "--off") == 0){
-            LedDeviceLightpack lightpackDevice;
-            lightpackDevice.offLeds();
-            return 0;
-        }else if( strcmp(argv[1], "--debug_high") == 0 ){
-            debugLevel = Debug::HighLevel;
-            isSetDebugLevelFromConfig = false;
-
-        }else if( strcmp(argv[1], "--debug_mid") == 0 ){
-            debugLevel = Debug::MidLevel;
-            isSetDebugLevelFromConfig = false;
-
-        }else if( strcmp(argv[1], "--debug_low") == 0 ){
-            debugLevel = Debug::LowLevel;
-            isSetDebugLevelFromConfig = false;
-
-        }else if( strcmp(argv[1], "--debug_zero") == 0 ){
-            debugLevel = Debug::ZeroLevel;
-            isSetDebugLevelFromConfig = false;
-
-        }else{
-            showHelpMessage();
-            return 1;
-        }
-    }
-
-
-    if(debugLevel > 0){
-        qDebug() << "Build with Qt verison:" << QT_VERSION_STR;
-        qDebug() << "Qt version currently in use:" << qVersion();
-
-#ifdef Q_WS_WIN
-        switch( QSysInfo::windowsVersion() ){
-        case QSysInfo::WV_NT:       qDebug() << "Windows NT (operating system version 4.0)"; break;
-        case QSysInfo::WV_2000:     qDebug() << "Windows 2000 (operating system version 5.0)"; break;
-        case QSysInfo::WV_XP:       qDebug() << "Windows XP (operating system version 5.1)"; break;
-        case QSysInfo::WV_2003:     qDebug() << "Windows Server 2003, Windows Server 2003 R2, Windows Home Server, Windows XP Professional x64 Edition (operating system version 5.2)"; break;
-        case QSysInfo::WV_VISTA:    qDebug() << "Windows Vista, Windows Server 2008 (operating system version 6.0)"; break;
-        case QSysInfo::WV_WINDOWS7: qDebug() << "Windows 7, Windows Server 2008 R2 (operating system version 6.1)"; break;
-        default:                    qDebug() << "Unknown windows version:" << QSysInfo::windowsVersion();
-        }
-#endif
-        }
-
-    // Open last used profile, if profile doesn't exists it will be created
-    Settings::Initialize( applicationDirPath, isSetDebugLevelFromConfig );
-
-    QString debugLevelStr = "";
-    switch( debugLevel ){
-    case Debug::HighLevel:  debugLevelStr = "High"; break;
-    case Debug::MidLevel:   debugLevelStr = "Mid"; break;
-    case Debug::LowLevel:   debugLevelStr = "Low"; break;
-    case Debug::ZeroLevel:  debugLevelStr = "Zero"; break;
-    }
-    qDebug() << "Debug level" << debugLevelStr;
-
+    LightpackApplication lightpackApp(argc, argv);
 
     Q_INIT_RESOURCE(LightpackResources);
 
-    if (!QSystemTrayIcon::isSystemTrayAvailable()) {
-        QMessageBox::critical(0, "Lightpack",
-                              "I couldn't detect any system tray on this system.");
-        return 1;
-    }
-    QApplication::setQuitOnLastWindowClosed(false);
 
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << app.thread()->currentThreadId();
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << lightpackApp.thread()->currentThreadId();
 
-    ILedDevice *ledDevice = LedDeviceFactory::create();
+    qDebug() << "Start main event loop: lightpackApp.exec();";
 
-    QThread *ledDeviceThread = new QThread();
-    ledDevice->moveToThread(ledDeviceThread);
-
-    MainWindow *window = new MainWindow();   /* Create MainWindow */
-    window->setVisible(false);   /* And load to tray. */
-
-    // Register QMetaType for Qt::QueuedConnection
-    qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
-
-    app.connect(window, SIGNAL(updateLedsColors(const QList<QRgb> &)), ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
-    app.connect(window, SIGNAL(updateColorDepth(int)), ledDevice, SLOT(setColorDepth(int)), Qt::QueuedConnection);
-    app.connect(window, SIGNAL(updateSmoothSlowdown(int)), ledDevice, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
-    app.connect(window, SIGNAL(updateTimerOptions(int,int)), ledDevice, SLOT(setTimerOptions(int,int)), Qt::QueuedConnection);
-    app.connect(window, SIGNAL(requestFirmwareVersion()), ledDevice, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
-
-    app.connect(ledDevice, SIGNAL(openDeviceSuccess(bool)), window, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
-    app.connect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), window, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
-    app.connect(ledDevice, SIGNAL(firmwareVersion(QString)), window, SLOT(ledDeviceGetFirmwareVersion(QString)), Qt::QueuedConnection);
-
-    ledDeviceThread->start();
-
-    window->startAmbilight();
-
-    qDebug() << "Start main event loop: app.exec();";
-
-    return app.exec();
+    return lightpackApp.exec();
 }

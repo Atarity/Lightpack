@@ -86,7 +86,7 @@ QSettings * Settings::m_mainConfig; // LightpackMain.conf contains last profile
 QString Settings::m_applicationDirPath = "";
 
 // Desktop should be initialized before call Settings::Initialize()
-void Settings::Initialize( const QString & applicationDirPath, bool isSetDebugLevelFromConfig)
+void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevelObtainedFromCmdArgs)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -109,19 +109,19 @@ void Settings::Initialize( const QString & applicationDirPath, bool isSetDebugLe
     setNewOptionMain(KEY_CONNECTED_DEVICE,      CONNECTED_DEVICE_DEFAULT);
     setNewOptionMain(KEY_SUPPORTED_DEVICES,     SUPPORTED_DEVICES, true /* always rewrite this information to main config */);
 
-    if (isSetDebugLevelFromConfig)
+    if (isDebugLevelObtainedFromCmdArgs == false)
     {
         bool ok = false;
         int sDebugLevel = valueMain(KEY_DEBUG_LEVEL).toInt(&ok);
 
         if (ok && sDebugLevel >= 0)
         {
-            debugLevel = sDebugLevel;
-            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "debugLevel =" << debugLevel;
+            g_debugLevel = sDebugLevel;
+            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "debugLevel =" << g_debugLevel;
         } else {
             qWarning() << "DebugLevel in config has an invalid value, set the default" << DEBUG_LEVEL_DEFAULT;
             setValueMain(KEY_DEBUG_LEVEL, DEBUG_LEVEL_DEFAULT);
-            debugLevel = DEBUG_LEVEL_DEFAULT;
+            g_debugLevel = DEBUG_LEVEL_DEFAULT;
         }
     }
 
@@ -295,9 +295,9 @@ int Settings::getDebugLevel()
     return valueMain(KEY_DEBUG_LEVEL).toInt();
 }
 
-void Settings::setDebugLevel(int debugLevel)
+void Settings::setDebugLevel(int debugLvl)
 {
-    setValueMain(KEY_DEBUG_LEVEL, debugLevel);
+    setValueMain(KEY_DEBUG_LEVEL, debugLvl);
 }
 
 bool Settings::isEnabledApi()

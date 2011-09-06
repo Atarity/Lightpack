@@ -55,6 +55,7 @@ signals:
     void updateColorDepth(int value);
     void updateSmoothSlowdown(int value);
     void requestFirmwareVersion();
+    void recreateLedDevice();
 
 
 public slots:

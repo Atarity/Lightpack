@@ -128,7 +128,7 @@ public:
     static QString getLanguage();
     static void setLanguage(const QString & language);
     static int getDebugLevel();
-    static void setDebugLevel(int debugLevel);
+    static void setDebugLevel(int debugLvl);
     static bool isEnabledApi();
     static void setEnableApi(bool isEnabled);
     static int getApiPort();

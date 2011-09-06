@@ -297,14 +297,7 @@ void MainWindow::onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled)
         Settings::setConnectedDevice(SupportedDevice_Default);
     }
 
-    qWarning() << Q_FUNC_INFO << "not implemented";
-
-//    disconnectLedDeviceSignalsSlots();
-
-//    delete ledDevice;
-//    ledDevice = LedDeviceFactory::create(this);
-
-//    connectLedDeviceSignalsSlots();
+    emit recreateLedDevice();
 }
 
 // ----------------------------------------------------------------------------

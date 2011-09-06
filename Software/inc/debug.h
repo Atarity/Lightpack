@@ -30,7 +30,7 @@
 #include <QtDebug>
 
 // Set and store in main.cpp file
-extern unsigned debugLevel;
+extern unsigned g_debugLevel;
 
 
 // Using:
@@ -56,6 +56,6 @@ namespace Debug
 #define DEBUG_LOW_LEVEL     DEBUG_OUT_FUNC_INFO( 1 )
 #define DEBUG_OUT           qDebug()
 
-#define DEBUG_OUT_FUNC_INFO( DEBUG_LEVEL )   if(debugLevel >= DEBUG_LEVEL) qDebug()
+#define DEBUG_OUT_FUNC_INFO( DEBUG_LEVEL )   if(g_debugLevel >= DEBUG_LEVEL) qDebug()
 
 #endif // DEBUG_H
