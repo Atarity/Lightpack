@@ -258,9 +258,11 @@ int main(int argc, char **argv)
     app.connect(window, SIGNAL(updateColorDepth(int)), ledDevice, SLOT(setColorDepth(int)), Qt::QueuedConnection);
     app.connect(window, SIGNAL(updateSmoothSlowdown(int)), ledDevice, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
     app.connect(window, SIGNAL(updateTimerOptions(int,int)), ledDevice, SLOT(setTimerOptions(int,int)), Qt::QueuedConnection);
+    app.connect(window, SIGNAL(requestFirmwareVersion()), ledDevice, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
 
     app.connect(ledDevice, SIGNAL(openDeviceSuccess(bool)), window, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
     app.connect(ledDevice, SIGNAL(ioDeviceSuccess(bool)), window, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
+    app.connect(ledDevice, SIGNAL(firmwareVersion(QString)), window, SLOT(ledDeviceGetFirmwareVersion(QString)), Qt::QueuedConnection);
 
     ledDeviceThread->start();
 

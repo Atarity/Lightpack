@@ -54,10 +54,12 @@ signals:
     void updateTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void updateColorDepth(int value);
     void updateSmoothSlowdown(int value);
+    void requestFirmwareVersion();
 
 
 public slots:
     void ledDeviceCallSuccess(bool isSuccess);
+    void ledDeviceGetFirmwareVersion(const QString & fwVersion);
     void refreshAmbilightEvaluated(double updateResultMs);
     void ambilightOn(); /* using in actions */
     void ambilightOff(); /* using in actions */
@@ -142,19 +144,19 @@ private:
     IGrabber * createGrabber(GrabMode grabMode);
 
 public:
-    bool isAmbilightOn; /* is grab desktop window ON */
+    bool m_isAmbilightOn; /* is grab desktop window ON */
     GrabManager *m_grabManager;
 //    ILedDevice *ledDevice;
 
 private:
 
-    AboutDialog *aboutDialog;
+    AboutDialog *m_aboutDialog;
     SpeedTest *speedTest;
 
     ApiServer *m_apiServer;
 
 
-    bool isErrorState;
+    bool m_isErrorState;
 
     GrabMode getGrabMode();
 

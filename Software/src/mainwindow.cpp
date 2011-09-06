@@ -68,11 +68,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QRegExpValidator *validator = new QRegExpValidator(rx, this);
     ui->comboBox_Profiles->lineEdit()->setValidator(validator);
 
-//    ledDevice = LedDeviceFactory::create(this);
-
     m_grabManager = new GrabManager(createGrabber(Settings::getGrabMode()));
 
-    aboutDialog = new AboutDialog(this);
+    m_aboutDialog = new AboutDialog(this);
 
     speedTest = new SpeedTest();
 
@@ -116,8 +114,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadTranslation(Settings::getLanguage());
 
-    isErrorState = false;
-    isAmbilightOn = Settings::isAmbilightOn();
+    m_isErrorState = false;
+    m_isAmbilightOn = Settings::isAmbilightOn();
 
     onGrabModeChanged();
 
@@ -239,13 +237,13 @@ void MainWindow::changeEvent(QEvent *e)
 
         profilesMenu->setTitle(tr("&Profiles"));
 
-        if(isAmbilightOn){
+        if(m_isAmbilightOn){
             m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
         }else{
             m_trayIcon->setToolTip(tr("Disabled"));
         }
 
-        if(isErrorState) m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
+        if(m_isErrorState) m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
 
         setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
@@ -317,7 +315,7 @@ void MainWindow::ambilightOn()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    isAmbilightOn = true;
+    m_isAmbilightOn = true;
     startAmbilight();
 }
 
@@ -325,7 +323,7 @@ void MainWindow::ambilightOff()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    isAmbilightOn = false;
+    m_isAmbilightOn = false;
     startAmbilight();
 }
 
@@ -333,19 +331,19 @@ void MainWindow::grabAmbilightOnOff()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    isAmbilightOn = !isAmbilightOn;
+    m_isAmbilightOn = !m_isAmbilightOn;
     startAmbilight();
 }
 
 void MainWindow::startAmbilight()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isAmbilightOn;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_isAmbilightOn;
 
-    Settings::setAmbilightOn(isAmbilightOn);
-    m_grabManager->setAmbilightOn(isAmbilightOn, isErrorState);
+    Settings::setAmbilightOn(m_isAmbilightOn);
+    m_grabManager->setAmbilightOn(m_isAmbilightOn, m_isErrorState);
 
-    if(isAmbilightOn == false){
-        isErrorState = false;
+    if(m_isAmbilightOn == false){
+        m_isErrorState = false;
     }
 
     updateTrayAndActionStates();
@@ -355,7 +353,7 @@ void MainWindow::updateTrayAndActionStates()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    if(isAmbilightOn){
+    if(m_isAmbilightOn){
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
         ui->label_EnableDisableDevice->setText(tr("Switch off Lightpack"));
     }else{
@@ -363,11 +361,11 @@ void MainWindow::updateTrayAndActionStates()
         ui->label_EnableDisableDevice->setText(tr("Switch on Lightpack"));
     }
 
-    if(isErrorState){
+    if(m_isErrorState){
         m_trayIcon->setIcon(QIcon(":/icons/error.png"));
         m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
     }else{
-        if(isAmbilightOn){
+        if(m_isAmbilightOn){
             m_trayIcon->setIcon(QIcon(":/icons/on.png"));
             m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
@@ -436,12 +434,12 @@ void MainWindow::showAbout()
 
     QRect screen = QApplication::desktop()->screenGeometry(this);
 
-//    aboutDialog->setFirmwareVersion(ledDevice->firmwareVersion());
+    emit requestFirmwareVersion();
 
-    aboutDialog->move(screen.width() / 2 - aboutDialog->width() / 2,
-            screen.height() / 2 - aboutDialog->height() / 2);
+    m_aboutDialog->move(screen.width() / 2 - m_aboutDialog->width() / 2,
+            screen.height() / 2 - m_aboutDialog->height() / 2);
 
-    aboutDialog->show();
+    m_aboutDialog->show();
 }
 
 void MainWindow::showSettings()
@@ -473,12 +471,20 @@ void MainWindow::ledDeviceCallSuccess(bool isSuccess)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
 
-    if(isErrorState != ! isSuccess){
-        isErrorState = ! isSuccess;
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "isErrorState" << isErrorState;
+    if(m_isErrorState != ! isSuccess){
+        m_isErrorState = ! isSuccess;
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "isErrorState" << m_isErrorState;
     }
 
     updateTrayAndActionStates();
+}
+
+void MainWindow::ledDeviceGetFirmwareVersion(const QString & fwVersion)
+{
+    if (m_aboutDialog != NULL)
+    {
+        m_aboutDialog->setFirmwareVersion(fwVersion);
+    }
 }
 
 void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
@@ -733,7 +739,7 @@ void MainWindow::settingsProfileChanged_UpdateUI()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
-    if(isAmbilightOn) m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+    if(m_isAmbilightOn) m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
     if(ui->comboBox_Profiles->count() > 1){
         ui->pushButton_DeleteProfile->setEnabled(true);
@@ -983,10 +989,10 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
     switch (reason) {
     case QSystemTrayIcon::DoubleClick:
-        if(isErrorState){
+        if(m_isErrorState){
             ambilightOff();
         }else{
-            if(isAmbilightOn){
+            if(m_isAmbilightOn){
                 ambilightOff();
             }else{
                 ambilightOn();

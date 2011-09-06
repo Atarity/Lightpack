@@ -106,7 +106,7 @@ void ApiServer::readyRead()
             if (command=="getstatus"){
 
                 QString status = "off";
-                if (mw->isAmbilightOn) status="on" ;
+                if (mw->m_isAmbilightOn) status="on" ;
                 client->write(QString("status:%1\n").arg(status).toUtf8());
 
             }else if (command=="setstatus") {
@@ -182,7 +182,7 @@ void ApiServer::readyRead()
                     activeClient = NULL;
                     ret="success";
                     //enable capture
-                    mw->m_grabManager->setAmbilightOn(mw->isAmbilightOn,true);
+                    mw->m_grabManager->setAmbilightOn(mw->m_isAmbilightOn,true);
                 }
                 client->write(QString("unlock:%1\n").arg(ret).toUtf8());
             }else if(command=="setgamma"){
@@ -310,7 +310,7 @@ void ApiServer::disconnected()
     {
         activeClient = NULL;
         MainWindow *mw = (MainWindow*)parent();
-        mw->m_grabManager->setAmbilightOn(mw->isAmbilightOn,true);
+        mw->m_grabManager->setAmbilightOn(mw->m_isAmbilightOn,true);
     }
     clients.remove(client);
 }
