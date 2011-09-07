@@ -12,39 +12,48 @@
 
 class ClientSettings
 {
-    public:
-        int smooth;
-        double gamma;
-        bool auth;
+public:
+    int smooth;
+    double gamma;
+    bool auth;
 };
 
 class ApiServer : public QTcpServer
 {
     Q_OBJECT
 
-    public:
-        QString ApiKey;
-        ApiServer(QObject *parent = 0);
+public:
+    QString ApiKey;
+    ApiServer(QObject *parent = 0);
 
 
-    signals:
-        void updateLedsColors(const QList<QRgb> & colorsNew);
+signals:
+    void updateLedsColors(const QList<QRgb> & colorsNew);
 
-    private slots:
-        void readyRead();
-        void disconnected();
+private slots:
+    void readyRead();
+    void readyRead_Buffer();
+    void disconnected();
 
-    protected:
-        void incomingConnection(int socketfd);
+protected:
+    void incomingConnection(int socketfd);
 
-    private:
-        //QSet<QTcpSocket*> clients;
-        QMap<QTcpSocket*,ClientSettings>clients;
-        QTcpSocket* activeClient;
-        QList<QRgb> colorsNew;
+private:
+    //QSet<QTcpSocket*> clients;
+    QMap<QTcpSocket*,ClientSettings>clients;
+    QTcpSocket* activeClient;
+    QList<QRgb> colorsNew;
 
-        QString getCommand(QString str);
-        QString getArg(QString str);
+    QString getCommand(const QString &  str);
+    QString getArg(const QString &  str);
+
+
+private:
+    enum BuffRgbIndexes{
+        bRed, bGreen, bBlue, bSize
+    };
+
+    int buffRgb[bSize]; // buffer for store temp red, green and blue values
 
 };
 
