@@ -152,9 +152,7 @@ public:
 private:
 
     AboutDialog *m_aboutDialog;
-    SpeedTest *speedTest;
-
-    ApiServer *m_apiServer;
+    SpeedTest *speedTest;   
 
 
     bool m_isErrorState;

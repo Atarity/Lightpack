@@ -28,6 +28,7 @@
 
 #include <QApplication>
 #include "mainwindow.h"
+#include "apiserver.h"
 #include "ILedDevice.hpp"
 #include "LedDeviceFactory.hpp"
 
@@ -61,11 +62,14 @@ private:
     void printHelpMessage() const;
     void printVersionsSoftwareQtOS() const;
     void checkSystemTrayAvailability() const;
+    void startApiServer();
 
 private:
     MainWindow *m_mainWindow;
+    ApiServer *m_apiServer;
     ILedDevice *m_ledDevice;
     QThread *m_ledDeviceThread;
+    QThread *m_apiServerThread;
 
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;

@@ -51,9 +51,7 @@ LightpackApplication::LightpackApplication(int &argc, char **argv)
     checkSystemTrayAvailability();
 
     m_ledDevice = LedDeviceFactory::create();
-
     m_ledDeviceThread = new QThread();
-    m_ledDevice->moveToThread(m_ledDeviceThread);
 
     m_mainWindow = new MainWindow();   /* Create MainWindow */
     m_mainWindow->setVisible(false);   /* And load to tray. */
@@ -61,10 +59,13 @@ LightpackApplication::LightpackApplication(int &argc, char **argv)
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
 
+    startApiServer();
+
     connect(m_mainWindow, SIGNAL(recreateLedDevice()), this, SLOT(recreateLedDevice()), Qt::DirectConnection);
 
     connectSignalSlotsLedDevice();
 
+    m_ledDevice->moveToThread(m_ledDeviceThread);
     m_ledDeviceThread->start();
     m_mainWindow->startAmbilight();
 }
@@ -247,5 +248,32 @@ void LightpackApplication::checkSystemTrayAvailability() const
     {
         QMessageBox::critical(0, "Lightpack", "I couldn't detect any system tray on this system.");
         qFatal("%s %s", Q_FUNC_INFO, "I couldn't detect any system tray on this system.");
+    }
+}
+
+void LightpackApplication::startApiServer()
+{
+    if (Settings::isEnabledApi())
+    {
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Start API server";
+
+        int port = Settings::getApiPort();
+
+        m_apiServer = new ApiServer();
+        m_apiServerThread = new QThread();
+
+        connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
+
+        m_apiServer->ApiKey = Settings::getApiKey();
+
+        if (!m_apiServer->listen(QHostAddress::Any, port)) {
+            QString errorStr = tr("API server unable to start (port: %1): %2.").arg(port).arg(m_apiServer->errorString());
+
+            QMessageBox::critical(0, tr("API Server"), errorStr);
+            qCritical() << Q_FUNC_INFO << errorStr;
+        }
+
+        m_apiServer->moveToThread(m_apiServerThread);
+        m_apiServerThread->start();
     }
 }

@@ -24,7 +24,7 @@ class ApiServer : public QTcpServer
 
     public:
         QString ApiKey;
-        ApiServer(QObject *parent=0);
+        ApiServer(QObject *parent = 0);
 
 
     signals:

@@ -91,23 +91,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initLabelsForGrabbedColors();
 
-    if (Settings::isEnabledApi())
-    {       
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Start API server";
-
-        int port = Settings::getApiPort();
-
-        m_apiServer = new ApiServer(this);
-        m_apiServer->ApiKey = Settings::getApiKey();
-
-        if (!m_apiServer->listen(QHostAddress::Any, port)) {
-            QString errorStr = tr("API server unable to start (port: %1): %2.").arg(port).arg(m_apiServer->errorString());
-
-            QMessageBox::critical(this, tr("API Server"), errorStr);
-            qCritical() << Q_FUNC_INFO << errorStr;
-        }
-    }
-
     connectSignalsSlots();
 
     profileLoadLast();
@@ -193,7 +176,6 @@ void MainWindow::connectSignalsSlots()
     connect(ui->checkBox_ConnectVirtualDevice, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ConnectVirtualDeviceToggled(bool)));
 
     // Connections to signals which will be connected to ILedDevice
-    connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
     connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
 }
 
@@ -211,7 +193,6 @@ MainWindow::~MainWindow()
     delete m_trayIconMenu;
 
     delete m_grabManager;
-    delete m_apiServer;
 
     delete ui;
 }
