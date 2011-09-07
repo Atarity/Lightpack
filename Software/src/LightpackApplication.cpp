@@ -264,7 +264,7 @@ void LightpackApplication::startApiServer()
 
         connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
 
-        m_apiServer->ApiKey = Settings::getApiKey();
+//        m_apiServer->ApiKey = Settings::getApiKey();
 
         if (!m_apiServer->listen(QHostAddress::Any, port)) {
             QString errorStr = tr("API server unable to start (port: %1): %2.").arg(port).arg(m_apiServer->errorString());

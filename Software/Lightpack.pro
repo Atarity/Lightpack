@@ -83,24 +83,16 @@ win32 {
     SOURCES += hidapi/windows/hid.cpp
     # Windows version using WinAPI + GDI for grab colors
     LIBS    += -lgdi32
-    SOURCES +=
-    SOURCES +=
 }
 
 unix:!macx{
     # Linux version using libusb and hidapi codes
     SOURCES += hidapi/linux/hid-libusb.c
-    # Linux version using Qt grabWindow(..) for grab colors
-    SOURCES +=
-    SOURCES +=
 }
 
 macx{
     # MacOS version using libusb and hidapi codes
     SOURCES += hidapi/mac/hid.c
-    # MacOS version using Qt grabWindow(..) for grab colors
-    SOURCES +=
-    SOURCES +=
     CONFIG += x86_64
     LIBS += /usr/local/lib/libusb-1.0.dylib
     INCLUDEPATH += /usr/local/include/libusb-1.0
@@ -120,13 +112,14 @@ SOURCES += src/main.cpp \
     src/LedDeviceLightpack.cpp \
     src/LedDeviceAlienFx.cpp \
     src/qcolorbutton.cpp \
-    src/apiserver.cpp \
     grab/X11Grabber.cpp \
     grab/WinAPIGrabber.cpp \
     grab/QtGrabber.cpp \
     grab/MacOSGrabber.cpp \
     src/LedDeviceVirtual.cpp \
-    src/LightpackApplication.cpp
+    src/LightpackApplication.cpp \
+    src/ApiServer.cpp \
+    src/ApiServerSetColorTask.cpp
 HEADERS += hidapi/hidapi.h \
     ../CommonHeaders/LIGHTPACK_HW.h \
     ../CommonHeaders/COMMANDS.h \
@@ -149,21 +142,17 @@ HEADERS += hidapi/hidapi.h \
     src/LedDeviceAlienFx.hpp \
     src/LedDeviceVirtual.hpp \
     src/qcolorbutton.hpp \
-    src/apiserver.h \
     grab/X11Grabber.hpp \
     grab/WinAPIGrabber.hpp \
     grab/QtGrabber.hpp \
     grab/IGrabber.hpp \
     inc/defs.h \
     grab/MacOSGrabber.hpp \
-    src/LightpackApplication.hpp
+    src/LightpackApplication.hpp \
+    src/inlinemath.hpp \
+    src/apidebug.h \
+    src/ApiServer.hpp \
+    src/ApiServerSetColorTask.hpp
 FORMS += src/mainwindow.ui \
     src/aboutdialog.ui \
     src/movemewidget.ui
-
-
-
-
-
-
-

@@ -30,10 +30,8 @@
 #include <QtGui>
 #include "aboutdialog.h"
 #include "settings.h"
-#include "LedDeviceLightpack.hpp"
 #include "grabmanager.h"
 #include "speedtest.h"
-#include "apiserver.h"
 #include "qcolorbutton.hpp"
 
 namespace Ui {
