@@ -39,6 +39,7 @@ using namespace std;
 
 unsigned g_debugLevel = DEBUG_LEVEL_DEFAULT;
 QTextStream m_logStream;
+QMutex m_mutex;
 
 QString createApplicationDirectory(const char * firstCmdArgument)
 {
@@ -99,6 +100,8 @@ void openLogsFile(const QString & appDirPath)
 
 void messageHandler(QtMsgType type, const char *msg)
 {
+    QMutexLocker locker(&m_mutex);
+
     QString out = QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") + " ";
     switch (type) {
     case QtDebugMsg:
