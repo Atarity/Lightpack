@@ -29,8 +29,6 @@
 #include "version.h"
 
 #include <unistd.h>
-#include <sys/types.h>
-#include <wait.h>
 #include <stdio.h>
 #include <iostream>
 using namespace std;

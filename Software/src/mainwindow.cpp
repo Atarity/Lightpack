@@ -991,7 +991,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
         // In Linux (Ubuntu 10.04) this code grab keyboard input and
         // not give it back to the text editor after close application with
         // "Quit" button in the tray menu
-        trayIconMenu->activateWindow();
+        m_trayIconMenu->activateWindow();
         break;
 #   endif
 
