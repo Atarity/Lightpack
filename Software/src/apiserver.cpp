@@ -118,7 +118,7 @@ void ApiServer::readyRead()
 
                 emit startTask(buffer);
             } else {
-                qWarning() << "Task setcolor is not completed (you should increase the delay to not skip commands), skip command:" << QString(buffer);
+                qWarning() << Q_FUNC_INFO << "Task setcolor is not completed (you should increase the delay to not skip commands), skip setcolor.";
             }
         }
         else if (buffer.startsWith("lock"))

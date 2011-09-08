@@ -39,6 +39,7 @@ signals:
     void openDeviceSuccess(bool isSuccess);
     void ioDeviceSuccess(bool isSuccess);
     void firmwareVersion(const QString & fwVersion);
+    void setColorsDone();
 
 public slots:
     virtual void setColors(const QList<QRgb> & colors) = 0;
@@ -48,7 +49,4 @@ public slots:
     virtual void setSmoothSlowdown(int value) = 0;
 //    virtual void setBrightness(int value) = 0;
     virtual void requestFirmwareVersion() = 0;
-
-private:
-    virtual bool openDevice() = 0;
 };

@@ -28,8 +28,7 @@
 
 #include <QApplication>
 #include "mainwindow.h"
-#include "apiserver.h"
-#include "ILedDevice.hpp"
+#include "ApiServer.hpp"
 #include "LedDeviceFactory.hpp"
 
 class LightpackApplication : public QApplication
@@ -52,23 +51,19 @@ signals:
 
 public slots:
 
-private slots:
-    void recreateLedDevice();
-
 private:
-    void connectSignalSlotsLedDevice();
-    void disconnectSignalSlotsLedDevice();
     void processCommandLineArguments();
     void printHelpMessage() const;
     void printVersionsSoftwareQtOS() const;
     void checkSystemTrayAvailability() const;
     void startApiServer();
+    void startLedDeviceFactory();
 
 private:
     MainWindow *m_mainWindow;
     ApiServer *m_apiServer;
-    ILedDevice *m_ledDevice;
-    QThread *m_ledDeviceThread;
+    LedDeviceFactory *m_ledDeviceFactory;
+    QThread *m_ledDeviceFactoryThread;
     QThread *m_apiServerThread;
 
     QString m_applicationDirPath;

@@ -54,6 +54,7 @@ public:
 signals:
     void openDeviceSuccess(bool isSuccess);
     void ioDeviceSuccess(bool isSuccess);
+    void setColorsSuccess(bool isSuccess);
     void firmwareVersion(const QString & fwVersion);
 
 public slots:

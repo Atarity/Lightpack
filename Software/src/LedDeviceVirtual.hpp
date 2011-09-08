@@ -32,7 +32,7 @@ class LedDeviceVirtual : public ILedDevice
 {
     Q_OBJECT
 public:
-    LedDeviceVirtual(QObject * parent) : ILedDevice(parent) {}
+    LedDeviceVirtual(QObject * parent = 0) : ILedDevice(parent) {}
 
 public slots:
     void setColors(const QList<QRgb> & /*colors*/) {}
@@ -47,7 +47,4 @@ signals:
     void openDeviceSuccess(bool isSuccess);
     void ioDeviceSuccess(bool isSuccess);
     void firmwareVersion(const QString & fwVersion);
-
-private:
-    bool openDevice() { return true; }
 };

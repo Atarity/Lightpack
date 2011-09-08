@@ -60,12 +60,6 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
 #if 0
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
-#if 0
-    // Check out events work fine
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "sleep";
-    usleep(500*1000);
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "get up!";
-#endif
 
     // First write_buffer[0] == 0x00 - ReportID, i have problems with using it
     // Second byte of usb buffer is command (write_buffer[1] == CMD_UPDATE_LEDS, see below)
@@ -84,28 +78,10 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
         m_writeBuffer[index++] = 0;
     }
 
-#if 0
-    QString res = "";
-    for(unsigned i=0; i<sizeof(write_buffer); i++){
-        res += QString().sprintf("%02x", write_buffer[i]);
-    }
-    qDebug() << "write:" << res;
-#endif
-
     writeBufferToDeviceWithCheck(CMD_UPDATE_LEDS);
 
-#if 0
-    usleep(100*1000);
-
-    memset(read_buffer,0x00,sizeof(read_buffer));
-
-    readDataFromDevice();
-    res = "";
-    for(unsigned i=0; i<sizeof(read_buffer); i++){
-        res += QString().sprintf("%02x", read_buffer[i]);
-    }
-    qDebug() << "read :" << res;
-#endif
+    // WARNING: LedDeviceFactory sends data only when the arrival of this signal
+    emit setColorsDone();
 }
 
 void LedDeviceLightpack::offLeds()

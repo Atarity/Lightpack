@@ -25,6 +25,7 @@
  */
 
 #include "LightpackApplication.hpp"
+#include "LedDeviceLightpack.hpp"
 #include "version.h"
 
 #include <unistd.h>
@@ -50,80 +51,17 @@ LightpackApplication::LightpackApplication(int &argc, char **argv)
 
     checkSystemTrayAvailability();
 
-    m_ledDevice = LedDeviceFactory::create();
-    m_ledDeviceThread = new QThread();
-
     m_mainWindow = new MainWindow();   /* Create MainWindow */
     m_mainWindow->setVisible(false);   /* And load to tray. */
 
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
 
+    startLedDeviceFactory();
+
     startApiServer();
 
-    connect(m_mainWindow, SIGNAL(recreateLedDevice()), this, SLOT(recreateLedDevice()), Qt::DirectConnection);
-
-    connectSignalSlotsLedDevice();
-
-    m_ledDevice->moveToThread(m_ledDeviceThread);
-    m_ledDeviceThread->start();
     m_mainWindow->startAmbilight();
-}
-
-void LightpackApplication::recreateLedDevice()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    disconnectSignalSlotsLedDevice();
-    m_ledDeviceThread->quit();
-    m_ledDevice->deleteLater();
-
-    m_ledDevice = LedDeviceFactory::create();
-    m_ledDevice->moveToThread(m_ledDeviceThread);
-    connectSignalSlotsLedDevice();
-    m_ledDeviceThread->start();
-}
-
-void LightpackApplication::connectSignalSlotsLedDevice()
-{
-    if (m_mainWindow == NULL && m_ledDevice == NULL)
-    {
-        qWarning() << Q_FUNC_INFO
-                   << "Is m_mainWindow == NULL?" << (m_mainWindow == NULL)
-                   << "Is m_ledDevice == NULL?" << (m_ledDevice == NULL);
-        return;
-    }
-
-    connect(m_mainWindow, SIGNAL(updateLedsColors(const QList<QRgb> &)), m_ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
-    connect(m_mainWindow, SIGNAL(updateColorDepth(int)), m_ledDevice, SLOT(setColorDepth(int)), Qt::QueuedConnection);
-    connect(m_mainWindow, SIGNAL(updateSmoothSlowdown(int)), m_ledDevice, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
-    connect(m_mainWindow, SIGNAL(updateTimerOptions(int,int)), m_ledDevice, SLOT(setTimerOptions(int,int)), Qt::QueuedConnection);
-    connect(m_mainWindow, SIGNAL(requestFirmwareVersion()), m_ledDevice, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
-
-    connect(m_ledDevice, SIGNAL(openDeviceSuccess(bool)), m_mainWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
-    connect(m_ledDevice, SIGNAL(ioDeviceSuccess(bool)), m_mainWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
-    connect(m_ledDevice, SIGNAL(firmwareVersion(QString)), m_mainWindow, SLOT(ledDeviceGetFirmwareVersion(QString)), Qt::QueuedConnection);
-}
-
-void LightpackApplication::disconnectSignalSlotsLedDevice()
-{
-    if (m_mainWindow == NULL && m_ledDevice == NULL)
-    {
-        qWarning() << Q_FUNC_INFO
-                   << "Is m_mainWindow == NULL?" << (m_mainWindow == NULL)
-                   << "Is m_ledDevice == NULL?" << (m_ledDevice == NULL);
-        return;
-    }
-
-    disconnect(m_mainWindow, SIGNAL(updateLedsColors(const QList<QRgb> &)), m_ledDevice, SLOT(setColors(QList<QRgb>)));
-    disconnect(m_mainWindow, SIGNAL(updateColorDepth(int)), m_ledDevice, SLOT(setColorDepth(int)));
-    disconnect(m_mainWindow, SIGNAL(updateSmoothSlowdown(int)), m_ledDevice, SLOT(setSmoothSlowdown(int)));
-    disconnect(m_mainWindow, SIGNAL(updateTimerOptions(int,int)), m_ledDevice, SLOT(setTimerOptions(int,int)));
-    disconnect(m_mainWindow, SIGNAL(requestFirmwareVersion()), m_ledDevice, SLOT(requestFirmwareVersion()));
-
-    disconnect(m_ledDevice, SIGNAL(openDeviceSuccess(bool)), m_mainWindow, SLOT(ledDeviceCallSuccess(bool)));
-    disconnect(m_ledDevice, SIGNAL(ioDeviceSuccess(bool)), m_mainWindow, SLOT(ledDeviceCallSuccess(bool)));
-    disconnect(m_ledDevice, SIGNAL(firmwareVersion(QString)), m_mainWindow, SLOT(ledDeviceGetFirmwareVersion(QString)));
 }
 
 void LightpackApplication::processCommandLineArguments()
@@ -262,7 +200,7 @@ void LightpackApplication::startApiServer()
         m_apiServer = new ApiServer();
         m_apiServerThread = new QThread();
 
-        connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
+        connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDeviceFactory, SLOT(setColorsIfDeviceAvailable(QList<QRgb>)), Qt::QueuedConnection);
 
 //        m_apiServer->ApiKey = Settings::getApiKey();
 
@@ -276,4 +214,25 @@ void LightpackApplication::startApiServer()
         m_apiServer->moveToThread(m_apiServerThread);
         m_apiServerThread->start();
     }
+}
+
+void LightpackApplication::startLedDeviceFactory()
+{
+    m_ledDeviceFactory = new LedDeviceFactory();
+    m_ledDeviceFactoryThread = new QThread();
+
+    connect(m_mainWindow, SIGNAL(recreateLedDevice()), m_ledDeviceFactory, SLOT(recreateLedDevice()), Qt::DirectConnection);
+    connect(m_mainWindow, SIGNAL(updateLedsColors(const QList<QRgb> &)), m_ledDeviceFactory, SLOT(setColorsIfDeviceAvailable(QList<QRgb>)), Qt::QueuedConnection);
+
+    connect(m_mainWindow, SIGNAL(updateColorDepth(int)), m_ledDeviceFactory, SIGNAL(setColorDepth(int)), Qt::QueuedConnection);
+    connect(m_mainWindow, SIGNAL(updateSmoothSlowdown(int)), m_ledDeviceFactory, SIGNAL(setSmoothSlowdown(int)), Qt::QueuedConnection);
+    connect(m_mainWindow, SIGNAL(updateTimerOptions(int,int)), m_ledDeviceFactory, SIGNAL(setTimerOptions(int,int)), Qt::QueuedConnection);
+    connect(m_mainWindow, SIGNAL(requestFirmwareVersion()), m_ledDeviceFactory, SIGNAL(requestFirmwareVersion()), Qt::QueuedConnection);
+
+    connect(m_ledDeviceFactory, SIGNAL(openDeviceSuccess(bool)), m_mainWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
+    connect(m_ledDeviceFactory, SIGNAL(ioDeviceSuccess(bool)), m_mainWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
+    connect(m_ledDeviceFactory, SIGNAL(firmwareVersion(QString)), m_mainWindow, SLOT(ledDeviceGetFirmwareVersion(QString)), Qt::QueuedConnection);
+
+    m_ledDeviceFactory->moveToThread(m_ledDeviceFactoryThread);
+    m_ledDeviceFactoryThread->start();
 }

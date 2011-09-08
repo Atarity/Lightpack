@@ -35,7 +35,8 @@
 #include "X11Grabber.hpp"
 #include "MacOSGrabber.hpp"
 #include "debug.h"
-#include "../src/apiserver.h"
+
+#include "../../CommonHeaders/COMMANDS.h"
 
 // ----------------------------------------------------------------------------
 // Lightpack settings window
