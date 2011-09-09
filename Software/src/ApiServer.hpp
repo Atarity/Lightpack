@@ -36,7 +36,7 @@
 #include "inlinemath.hpp"
 #include "ApiServerSetColorTask.hpp"
 
-#define VERSION_API      "1.1"
+#include "mainwindow.h"
 
 struct ClientSettings
 {
@@ -49,53 +49,76 @@ class ApiServer : public QTcpServer
 {
     Q_OBJECT
 
-    // get
-    // getstatus - on off
-    // getstatusapi - busy idle
-    // getprofiles - list name profiles
-    // getprofile - current name profile
-
-    // commands
-    // lock - begin work with api (disable capture,backlight)
-    // unlock - end work with api (enable capture,backlight)
-    // setcolor:1-r,g,b;5-r,g,b;   numbering starts with 1
-    // setgamma:2.00 - set gamma for setcolor
-    // setsmooth:100 - set smooth in device
-    // setprofile:<name> - set profile
-    // setstatus:on - set status (on, off)
-
-
 public:
     ApiServer(QObject *parent = 0);
+    ApiServer(quint16 port, QObject *parent = 0);
+
+public:
+    static const char * ApiVersion;
+    static const char * CmdGetStatus;
+    static const char * CmdResultStatus_On;
+    static const char * CmdResultStatus_Off;
+    static const char * CmdResultStatus_DeviceError;
+
+    static const char * CmdGetStatusAPI;
+    static const char * CmdResultStatusAPI_Busy;
+    static const char * CmdResultStatusAPI_Idle;
+
+    static const char * CmdGetProfiles;
+    static const char * CmdResultProfiles;
+
+    static const char * CmdGetProfile;
+    static const char * CmdResultProfile;
+
+    static const char * CmdLock;
+    static const char * CmdResultLock_Success;
+    static const char * CmdResultLock_Busy;
+
+    static const char * CmdUnlock;
+    static const char * CmdResultUnlock_Success;
+    static const char * CmdResultUnlock_NotLocked;
+
+    // Set-commands works only after success lock
+    static const char * CmdSetResult_Ok;
+    static const char * CmdSetResult_Error;
+    static const char * CmdSetResult_Busy;
+    static const char * CmdSetResult_NotLocked;
+
+    static const char * CmdSetColor;
+    static const char * CmdSetGamma;
+    static const char * CmdSetSmooth;
+    static const char * CmdSetProfile;
+    static const char * CmdSetStatus;
 
 signals:
-    void requestStatus();
-
+    void requestAppMainStatus();
     void updateLedsColors(const QList<QRgb> & colors);
     void startTask(QByteArray buffer);
-
-private slots:
-    void readyRead();
-    void taskSetColorIsSuccess(bool isSuccess);
-    void disconnected();
 
 protected:
     void incomingConnection(int socketfd);
 
+private slots:
+    void disconnected();
+    void readyRead();
+    void answerAppMainStatus(MainWindow::AppMainStatus status);
+    void taskSetColorIsSuccess(bool isSuccess);
+
 private:
-    //QSet<QTcpSocket*> clients;
-    QMap<QTcpSocket*,ClientSettings>clients;
-    QTcpSocket* activeClient;
-    QList<QRgb> colorsNew;
-
-    QString getCommand(const QString &  str);
-    QString getArg(const QString &  str);
-
+    void initApiSetColorTask();
+    void initColorsNew();
 
 private:
     QString m_apiKey;
 
-    QThread *m_apiTaskThread;
+    QTcpSocket *m_lockedClient;
+    QMap <QTcpSocket*, ClientSettings> m_clients;
+
+    QThread *m_apiSetColorTaskThread;
     ApiServerSetColorTask *m_apiSetColorTask;
+
+    MainWindow::AppMainStatus m_appMainStatus;
+
     bool m_isTaskSetColorDone;
+    bool m_isAnswerAppMainStatusDone;
 };

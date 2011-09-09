@@ -16,7 +16,7 @@ TEMPLATE = app
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-INCLUDEPATH += ../../../src/ ../../../inc
+INCLUDEPATH += ../../../src/ ../../../inc ../../../grab
 SOURCES += LightpackApiTest.cpp \
     ../../../src/ApiServerSetColorTask.cpp \
     ../../../src/ApiServer.cpp

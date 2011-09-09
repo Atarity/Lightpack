@@ -27,9 +27,12 @@
 #include <QtCore/QString>
 #include <QtTest/QtTest>
 #include <QtCore/QCoreApplication>
+#include <QtNetwork>
 
 #include "debug.h"
 #include "ApiServer.hpp"
+
+#define VERSION_API_TESTS   "1.2"
 
 // get
 // getstatus - on off
@@ -57,24 +60,31 @@ private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
 
-    void testCase_getstatus();
-    void testCase_getstatusapi();
-    void testCase_getprofiles();
-    void testCase_getprofile();
+    void testCase_ApiVersion();
 
-    void testCase_lock();
-    void testCase_unlock();
+    void testCase_GetStatus();
+    void testCase_GetStatusAPI();
+    void testCase_GetProfiles();
+    void testCase_GetProfile();
 
-    void testCase_setcolor();
-    void testCase_setgamma();
-    void testCase_setsmooth();
-    void testCase_setprofile();
-    void testCase_setstatus();
+    void testCase_Lock();
+    void testCase_Unlock();
+
+    void testCase_SetColor();
+    void testCase_SetGamma();
+    void testCase_SetSmooth();
+    void testCase_SetProfile();
+    void testCase_SetStatus();
 
 //    void testCase_CmdLock_data();
 
 private:
+    QByteArray socketReadLine(QTcpSocket * socket, bool *ok);
+    void socketWriteCmd(QTcpSocket * socket, const char * cmd);
+
+private:
     ApiServer *m_apiServer;
+    QThread *m_apiServerThread;
 };
 
 LightpackApiTest::LightpackApiTest()
@@ -85,78 +95,122 @@ LightpackApiTest::LightpackApiTest()
 
 void LightpackApiTest::initTestCase()
 {
-    m_apiServer = new ApiServer();
+    // Start Api Server in separate thread for access by QTcpSocket-s
+    m_apiServer = new ApiServer(3636);
+    m_apiServerThread = new QThread();
 
-    int port = 3636;
-
-    bool ok = m_apiServer->listen(QHostAddress::Any, port);
-
-    if (!ok)
-    {
-        QFAIL("API Server start listen fail");
-    }
+    m_apiServer->moveToThread(m_apiServerThread);
+    m_apiServerThread->start();
 }
 
 void LightpackApiTest::cleanupTestCase()
 {
-    delete m_apiServer;
 }
 
 //
 // Test cases
 //
+void LightpackApiTest::testCase_ApiVersion()
+{
+    QTcpSocket sock;
+    sock.connectToHost("127.0.0.1", 3636);
 
-void LightpackApiTest::testCase_getstatus()
+    // Check the version of the API and Tests for a match
+    bool sockReadLineOk = false;
+    QString readApiVersion = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(sockReadLineOk);
+    QVERIFY(readApiVersion.remove("version:").trimmed() == VERSION_API_TESTS);
+}
+
+void LightpackApiTest::testCase_GetStatus()
 {       
     QVERIFY(false);
 }
 
-void LightpackApiTest::testCase_getstatusapi()
+void LightpackApiTest::testCase_GetStatusAPI()
 {
-    //QSignalSpy spy(m_apiServer, SIGNAL(updateLedsColors(API::Status)));
-    QVERIFY(false);
+    QTcpSocket sock;
+    sock.connectToHost("127.0.0.1", 3636);
+
+    bool sockReadLineOk = false;
+    socketReadLine(&sock, &sockReadLineOk); // skip version line
+    QVERIFY(sockReadLineOk);
+
+    // Test idle state:
+
+    sock.write(ApiServer::CmdGetStatusAPI);
+    sock.write("\n");
+
+    QByteArray result = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(result == ApiServer::CmdResultStatusAPI_Idle);
+
+    // Test lock and busy state:
+
+    QTcpSocket sockLock;
+    sockLock.connectToHost("127.0.0.1", 3636);
+    socketReadLine(&sockLock, &sockReadLineOk); // skip version line
+    QVERIFY(sockReadLineOk);
+
+    socketWriteCmd(&sockLock, ApiServer::CmdLock);
+    QVERIFY(socketReadLine(&sockLock, &sockReadLineOk) == ApiServer::CmdResultLock_Success);
+    QVERIFY(sockReadLineOk);
+
+    socketWriteCmd(&sock, ApiServer::CmdGetStatusAPI);
+    QVERIFY(socketReadLine(&sock, &sockReadLineOk) == ApiServer::CmdResultStatusAPI_Busy);
+    QVERIFY(sockReadLineOk);
+
+    // Test unlock and return to idle state
+
+    socketWriteCmd(&sockLock, ApiServer::CmdUnlock);
+    QVERIFY(socketReadLine(&sockLock, &sockReadLineOk) == ApiServer::CmdResultUnlock_Success);
+    QVERIFY(sockReadLineOk);
+
+    socketWriteCmd(&sock, ApiServer::CmdGetStatusAPI);
+    QVERIFY(socketReadLine(&sock, &sockReadLineOk) == ApiServer::CmdResultStatusAPI_Idle);
+    QVERIFY(sockReadLineOk);
 }
-void LightpackApiTest::testCase_getprofiles()
+
+void LightpackApiTest::testCase_GetProfiles()
 {
     QVERIFY(false);
 }
 
-void LightpackApiTest::testCase_getprofile()
+void LightpackApiTest::testCase_GetProfile()
 {
     QVERIFY(false);
 }
 
-void LightpackApiTest::testCase_lock()
+void LightpackApiTest::testCase_Lock()
 {
     QVERIFY(false);
 }
 
-void LightpackApiTest::testCase_unlock()
+void LightpackApiTest::testCase_Unlock()
 {
     QVERIFY(false);
 }
 
-void LightpackApiTest::testCase_setcolor()
+void LightpackApiTest::testCase_SetColor()
 {
     QVERIFY(false);
 }
 
-void LightpackApiTest::testCase_setgamma()
+void LightpackApiTest::testCase_SetGamma()
 {
     QVERIFY(false);
 }
 
-void LightpackApiTest::testCase_setsmooth()
+void LightpackApiTest::testCase_SetSmooth()
 {
     QVERIFY(false);
 }
 
-void LightpackApiTest::testCase_setprofile()
+void LightpackApiTest::testCase_SetProfile()
 {
     QVERIFY(false);
 }
 
-void LightpackApiTest::testCase_setstatus()
+void LightpackApiTest::testCase_SetStatus()
 {
     QVERIFY(false);
 }
@@ -173,6 +227,25 @@ void LightpackApiTest::testCase_setstatus()
 //    QTest::newRow("0") << QString();
 //}
 
+
+#define QVERIFY_R(statement, RETURN_VALUE) \
+do {\
+    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))\
+        return (RETURN_VALUE);\
+} while (0)
+
+QByteArray LightpackApiTest::socketReadLine(QTcpSocket * socket, bool *ok)
+{
+    *ok = socket->waitForReadyRead(1000) && socket->canReadLine();
+
+    return socket->readLine();
+}
+
+void LightpackApiTest::socketWriteCmd(QTcpSocket * socket, const char * cmd)
+{
+    socket->write(cmd);
+    socket->write("\n");
+}
 
 unsigned g_debugLevel = Debug::LowLevel;
 

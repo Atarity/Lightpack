@@ -44,6 +44,14 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public:
+    enum AppMainStatus {
+        Status_Off = 0,
+        Status_On = -1,
+        Status_DeviceError = -2
+    };
+
+public:
     void startAmbilight();
 
 signals:
