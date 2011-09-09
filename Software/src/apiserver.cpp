@@ -29,10 +29,11 @@
 
 #include "ApiServer.hpp"
 #include "ApiServerSetColorTask.hpp"
-#include "../inc/mainwindow.h"
 
 #include "settings.h"
 #include "timeevaluations.h"
+
+#include "../../CommonHeaders/LEDS_COUNT.h"
 
 // get
 // getstatus - on off
@@ -54,22 +55,22 @@ ApiServer::ApiServer(QObject *parent)
 {
     activeClient = NULL;
 
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
+    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         colorsNew     << 0;
     }
 
-    isTaskSetColorDone = true;
+    m_isTaskSetColorDone = true;
 
-    apiTaskThread = new QThread();
-    apiSetColorTask = new ApiServerSetColorTask();
+    m_apiTaskThread = new QThread();
+    m_apiSetColorTask = new ApiServerSetColorTask();
 
-    connect(apiSetColorTask, SIGNAL(taskDone(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)), Qt::QueuedConnection);
+    connect(m_apiSetColorTask, SIGNAL(taskDone(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)), Qt::QueuedConnection);
 
-    connect(apiSetColorTask, SIGNAL(taskIsSuccess(bool)), this, SLOT(taskSetColorIsSuccess(bool)), Qt::QueuedConnection);
-    connect(this, SIGNAL(startTask(QByteArray)), apiSetColorTask, SLOT(startTask(QByteArray)), Qt::QueuedConnection);
+    connect(m_apiSetColorTask, SIGNAL(taskIsSuccess(bool)), this, SLOT(taskSetColorIsSuccess(bool)), Qt::QueuedConnection);
+    connect(this, SIGNAL(startTask(QByteArray)), m_apiSetColorTask, SLOT(startTask(QByteArray)), Qt::QueuedConnection);
 
-    apiSetColorTask->moveToThread(apiTaskThread);
-    apiTaskThread->start();
+    m_apiSetColorTask->moveToThread(m_apiTaskThread);
+    m_apiTaskThread->start();
 }
 
 void ApiServer::incomingConnection(int socketfd)
@@ -84,7 +85,7 @@ void ApiServer::incomingConnection(int socketfd)
 
     client->write(QString("version:%1\n").arg(VERSION_API).toUtf8());
 
-    DEBUG_LOW_LEVEL << "New client from:" << client->peerName();// client->peerAddress().toString();
+    DEBUG_LOW_LEVEL << "New client from:" << client->peerAddress().toString();
 
     connect(client, SIGNAL(readyRead()), this, SLOT(readyRead()));
     connect(client, SIGNAL(disconnected()), this, SLOT(disconnected()));
@@ -92,7 +93,7 @@ void ApiServer::incomingConnection(int socketfd)
 
 void ApiServer::taskSetColorIsSuccess(bool /*isSuccess*/)
 {
-    isTaskSetColorDone = true;
+    m_isTaskSetColorDone = true;
 }
 
 void ApiServer::readyRead()
@@ -112,9 +113,9 @@ void ApiServer::readyRead()
             buffer.remove(0, buffer.indexOf(':') + 1);
             API_DEBUG_OUT << QString(buffer);
 
-            if (isTaskSetColorDone)
+            if (m_isTaskSetColorDone)
             {
-                isTaskSetColorDone = false;
+                m_isTaskSetColorDone = false;
 
                 emit startTask(buffer);
             } else {
@@ -124,6 +125,7 @@ void ApiServer::readyRead()
         else if (buffer.startsWith("lock"))
         {
             API_DEBUG_OUT << "lock not implemented";
+
         }
         else if (buffer.startsWith("unlock"))
         {

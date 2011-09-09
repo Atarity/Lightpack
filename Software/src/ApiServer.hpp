@@ -38,9 +38,8 @@
 
 #define VERSION_API      "1.1"
 
-class ClientSettings
+struct ClientSettings
 {
-public:
     int smooth;
     double gamma;
     bool auth;
@@ -50,10 +49,28 @@ class ApiServer : public QTcpServer
 {
     Q_OBJECT
 
+    // get
+    // getstatus - on off
+    // getstatusapi - busy idle
+    // getprofiles - list name profiles
+    // getprofile - current name profile
+
+    // commands
+    // lock - begin work with api (disable capture,backlight)
+    // unlock - end work with api (enable capture,backlight)
+    // setcolor:1-r,g,b;5-r,g,b;   numbering starts with 1
+    // setgamma:2.00 - set gamma for setcolor
+    // setsmooth:100 - set smooth in device
+    // setprofile:<name> - set profile
+    // setstatus:on - set status (on, off)
+
+
 public:
     ApiServer(QObject *parent = 0);
 
 signals:
+    void requestStatus();
+
     void updateLedsColors(const QList<QRgb> & colors);
     void startTask(QByteArray buffer);
 
@@ -76,9 +93,9 @@ private:
 
 
 private:
-    QString apiKey;
+    QString m_apiKey;
 
-    QThread *apiTaskThread;
-    ApiServerSetColorTask *apiSetColorTask;
-    bool isTaskSetColorDone;
+    QThread *m_apiTaskThread;
+    ApiServerSetColorTask *m_apiSetColorTask;
+    bool m_isTaskSetColorDone;
 };
