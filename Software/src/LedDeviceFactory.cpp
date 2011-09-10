@@ -39,13 +39,52 @@ LedDeviceFactory::LedDeviceFactory(QObject *parent)
     isSetColorsDone = true;
 
     m_ledDeviceThread = new QThread();
+
+    initLedDevice();
+}
+
+void LedDeviceFactory::recreateLedDevice()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    disconnectSignalSlotsLedDevice();
+    m_ledDeviceThread->quit();
+
+    if (m_ledDevice != NULL)
+    {
+        m_ledDevice->deleteLater();
+    }
+
+    initLedDevice();
+}
+
+
+void LedDeviceFactory::setColorsDone()
+{
+    isSetColorsDone = true;
+}
+
+void LedDeviceFactory::setColorsIfDeviceAvailable(const QList<QRgb> & colors)
+{
+    if (isSetColorsDone)
+    {
+        emit setLedDeviceColors(colors);
+        isSetColorsDone = false;
+    } else {
+        //qWarning() << Q_FUNC_INFO << "Hey! hey! hey! No so fast!";
+    }
+}
+
+void LedDeviceFactory::initLedDevice()
+{
     m_ledDevice = createLedDevice();
     connectSignalSlotsLedDevice();
 
     m_ledDevice->moveToThread(m_ledDeviceThread);
     m_ledDeviceThread->start();
-}
 
+    emit offLeds();
+}
 
 ILedDevice * LedDeviceFactory::createLedDevice()
 {
@@ -85,42 +124,6 @@ ILedDevice * LedDeviceFactory::createLedDevice()
            "'. Application exit.");
 
     return NULL; // Avoid compiler warning
-}
-
-void LedDeviceFactory::recreateLedDevice()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    disconnectSignalSlotsLedDevice();
-    m_ledDeviceThread->quit();
-
-    if (m_ledDevice != NULL)
-    {
-        m_ledDevice->deleteLater();
-    }
-
-    m_ledDevice = createLedDevice();
-    connectSignalSlotsLedDevice();
-
-    m_ledDevice->moveToThread(m_ledDeviceThread);
-    m_ledDeviceThread->start();
-}
-
-
-void LedDeviceFactory::setColorsDone()
-{
-    isSetColorsDone = true;
-}
-
-void LedDeviceFactory::setColorsIfDeviceAvailable(const QList<QRgb> & colors)
-{
-    if (isSetColorsDone)
-    {
-        emit setLedDeviceColors(colors);
-        isSetColorsDone = false;
-    } else {
-        //qWarning() << Q_FUNC_INFO << "Hey! hey! hey! No so fast!";
-    }
 }
 
 void LedDeviceFactory::connectSignalSlotsLedDevice()

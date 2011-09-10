@@ -39,8 +39,7 @@ LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 
-    openDevice();
-
+    m_hidDevice = NULL;
 
     memset(m_writeBuffer, 0, sizeof(m_writeBuffer));
     memset(m_readBuffer, 0, sizeof(m_readBuffer));
@@ -282,7 +281,7 @@ bool LedDeviceLightpack::readDataFromDeviceWithCheck()
 
 bool LedDeviceLightpack::writeBufferToDeviceWithCheck(int command)
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     if(m_hidDevice != NULL){
         if(!writeBufferToDevice(command)){

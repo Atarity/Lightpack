@@ -61,6 +61,7 @@ public slots:
     void setColorsIfDeviceAvailable(const QList<QRgb> & colors);
 
 private:
+    void initLedDevice();
     ILedDevice * createLedDevice();
     void connectSignalSlotsLedDevice();
     void disconnectSignalSlotsLedDevice();
