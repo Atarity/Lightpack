@@ -24,16 +24,15 @@
  *
  */
 
-
-#ifndef GRAB_MANAGER_H
-#define GRAB_MANAGER_H
+#pragma once
 
 #include <QtGui>
 #include "../../CommonHeaders/LEDS_COUNT.h"
 #include "settings.h"
 #include "timeevaluations.h"
 #include "movemewidget.h"
-#include "IGrabber.hpp"
+#include "grab/IGrabber.hpp"
+
 class GrabManager : public QWidget
 {
     Q_OBJECT
@@ -48,7 +47,7 @@ signals:
 
 
 public slots:
-    void setAmbilightOn(bool m_isAmbilightOn, bool isErrorState);
+    void setAmbilightOn(bool isAmbilightOn, bool isErrorState);
     void setAmbilightSlowdownMs(int ms);
     void setAmbilightColorDepth(int depth);
     void setVisibleLedWidgets(bool state);
@@ -94,7 +93,7 @@ private: // variables
     IGrabber * m_grabber;
     QTimer *m_timerGrab;
     QTimer *timerUpdateFPS;
-    QList<MoveMeWidget *> ledWidgets;
+    QList<MoveMeWidget *> m_ledWidgets;
     const static QColor backgroundAndTextColors[LEDS_COUNT][2];
     TimeEvaluations *timeEval;
 
@@ -105,8 +104,8 @@ private: // variables
     int screenSavedIndex;
 
     bool m_isAmbilightOn;
-    bool isResizeOrMoving;
-    bool updateColorsOnlyIfChanges;
+    bool m_isResizeOrMoving;
+    bool m_updateColorsOnlyIfChanges;
     bool m_avgColorsOnAllLeds;
     int m_minLevelOfSensivity;
 
@@ -129,5 +128,3 @@ private: // variables
 
     double m_gammaCorrection;
 };
-
-#endif // GRAB_MANAGER_H
