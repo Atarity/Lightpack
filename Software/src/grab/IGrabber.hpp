@@ -1,16 +1,14 @@
-#ifndef IGRABBER_HPP
-#define IGRABBER_HPP
+#pragma once
+
+#include <QColor>
 
 #include "defs.h"
-#include <movemewidget.h>
-#include <QColor>
+#include "GrabWidget.hpp"
 
 class IGrabber
 {
 public:
     virtual const char * getName() = 0;
     virtual void updateGrabScreenFromWidget( QWidget * widget ) = 0;
-    virtual QList<QRgb> grabWidgetsColors(QList<MoveMeWidget *> &widgets) = 0;
+    virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets) = 0;
 };
-
-#endif // IGRABBER_HPP

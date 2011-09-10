@@ -1,5 +1,5 @@
 /*
- * aboutdialog.h
+ * AboutDialog.h
  *
  *  Created on: 26.07.2010
  *      Author: Mike Shatohin (brunql)
@@ -24,15 +24,13 @@
  *
  */
 
-
-#ifndef ABOUTDIALOG_H
-#define ABOUTDIALOG_H
+#pragma once 
 
 #include <QDialog>
 #include <QCloseEvent>
 
 namespace Ui {
-    class aboutDialog;
+    class AboutDialog;
 }
 
 class AboutDialog : public QDialog {
@@ -51,9 +49,8 @@ protected:
     virtual void closeEvent(QCloseEvent *event);
 
 private:
-    Ui::aboutDialog *ui;
+    Ui::AboutDialog *ui;
 
     QString fimwareVersion;
 };
 
-#endif // ABOUTDIALOG_H

@@ -49,7 +49,7 @@ LightpackApplication::LightpackApplication(int &argc, char **argv)
 
     checkSystemTrayAvailability();
 
-    m_mainWindow = new MainWindow();   /* Create MainWindow */
+    m_mainWindow = new SettingsWindow();   /* Create MainWindow */
     m_mainWindow->setVisible(false);   /* And load to tray. */
 
     // Register QMetaType for Qt::QueuedConnection

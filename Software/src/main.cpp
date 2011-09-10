@@ -31,7 +31,7 @@
 #include <iostream>
 
 #include "LightpackApplication.hpp"
-#include "settings.h"
+#include "Settings.hpp"
 #include "version.h"
 #include "debug.h"
 

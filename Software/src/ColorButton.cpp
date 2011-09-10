@@ -1,9 +1,10 @@
-#include"defs.h"
-#include"qcolorbutton.hpp"
-#include"debug.h"
+#include "defs.h"
+#include "ColorButton.hpp"
+#include "debug.h"
+
 #define COLOR_LABEL_SPACING 5
 
-QColorButton::QColorButton(QWidget * parent) : QPushButton(parent)
+ColorButton::ColorButton(QWidget * parent) : QPushButton(parent)
 {
     this->setText("");
     colorLabel = new QLabel(this);
@@ -13,17 +14,17 @@ QColorButton::QColorButton(QWidget * parent) : QPushButton(parent)
     connect(this, SIGNAL(clicked()), this, SLOT(click()));
 }
 
-void QColorButton::resizeEvent(QResizeEvent * /*event*/)
+void ColorButton::resizeEvent(QResizeEvent * /*event*/)
 {
     updateColorLabelSize();
 }
 
-QColorButton::~QColorButton()
+ColorButton::~ColorButton()
 {
     delete colorLabel;
 }
 
-void QColorButton::updateColorLabelSize()
+void ColorButton::updateColorLabelSize()
 {
 #ifdef MAC_OS
     colorLabel->move(COLOR_LABEL_SPACING*2, COLOR_LABEL_SPACING+3);
@@ -34,7 +35,7 @@ void QColorButton::updateColorLabelSize()
 #endif
 }
 
-void QColorButton::setColor(QColor color)
+void ColorButton::setColor(QColor color)
 {
     colorLabel->setStyleSheet("background: rgb("
                                            +QString::number(color.red())+ ", "
@@ -44,17 +45,17 @@ void QColorButton::setColor(QColor color)
     emit colorChanged(color);
 }
 
-QColor QColorButton::getColor()
+QColor ColorButton::getColor()
 {
     return colorLabel->palette().color(QPalette::Background);
 }
 
-void QColorButton::currentColorChanged(QColor color)
+void ColorButton::currentColorChanged(QColor color)
 {
     this->setColor(color);
 }
 
-void QColorButton::click()
+void ColorButton::click()
 {
     QColorDialog * dialog = new QColorDialog(this);
     QColor savedColor = getColor();

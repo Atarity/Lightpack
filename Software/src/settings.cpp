@@ -1,5 +1,5 @@
 /*
- * settings.cpp
+ * Settings.cpp
  *
  *  Created on: 22.02.2011
  *      Author: Mike Shatohin (brunql)
@@ -24,7 +24,7 @@
  *
  */
 
-#include "settings.h"
+#include "Settings.hpp"
 
 #include <QtDebug>
 #include <QApplication>

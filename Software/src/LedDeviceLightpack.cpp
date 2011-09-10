@@ -31,7 +31,7 @@
 
 #include <QtDebug>
 #include "debug.h"
-#include "settings.h"
+#include "Settings.hpp"
 
 LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
         ILedDevice(parent)

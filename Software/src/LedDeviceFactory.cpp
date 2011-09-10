@@ -30,7 +30,7 @@
 #include "LedDeviceLightpack.hpp"
 #include "LedDeviceAlienFx.hpp"
 #include "LedDeviceVirtual.hpp"
-#include "settings.h"
+#include "Settings.hpp"
 
 
 LedDeviceFactory::LedDeviceFactory(QObject *parent)

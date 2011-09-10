@@ -1,5 +1,5 @@
 /*
- * mainwindow.cpp
+ * SettingsWindow.cpp
  *
  *  Created on: 26.07.2010
  *      Author: Mike Shatohin (brunql)
@@ -25,8 +25,8 @@
  */
 
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "SettingsWindow.hpp"
+#include "ui_SettingsWindow.h"
 #include "LedDeviceFactory.hpp"
 #include <QDesktopWidget>
 #include <QPlainTextEdit>
@@ -42,9 +42,9 @@
 // Lightpack settings window
 // ----------------------------------------------------------------------------
 
-MainWindow::MainWindow(QWidget *parent) :
+SettingsWindow::SettingsWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::SettingsWindow)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
@@ -112,7 +112,7 @@ MainWindow::MainWindow(QWidget *parent) :
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
 
-void MainWindow::connectSignalsSlots()
+void SettingsWindow::connectSignalsSlots()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -180,7 +180,7 @@ void MainWindow::connectSignalsSlots()
     connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
 }
 
-MainWindow::~MainWindow()
+SettingsWindow::~SettingsWindow()
 {    
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -202,7 +202,7 @@ MainWindow::~MainWindow()
 // Events
 // ----------------------------------------------------------------------------
 
-void MainWindow::changeEvent(QEvent *e)
+void SettingsWindow::changeEvent(QEvent *e)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << e->type();
 
@@ -237,7 +237,7 @@ void MainWindow::changeEvent(QEvent *e)
     }
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void SettingsWindow::closeEvent(QCloseEvent *event)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -247,13 +247,13 @@ void MainWindow::closeEvent(QCloseEvent *event)
         event->ignore();
     }
 }
-void MainWindow::onExpertModeEnabledChanged(bool isEnabled)
+void SettingsWindow::onExpertModeEnabledChanged(bool isEnabled)
 {
     Settings::setExpertModeEnabled(isEnabled);
     updateExpertModeWidgetsVisibility();
 }
 
-void MainWindow::updateExpertModeWidgetsVisibility()
+void SettingsWindow::updateExpertModeWidgetsVisibility()
 {
     ui->groupBox_pwmColorDepth->setVisible(Settings::isExpertModeEnabled());
     ui->groupBox_pwmTimerDelay->setVisible(Settings::isExpertModeEnabled());
@@ -268,7 +268,7 @@ void MainWindow::updateExpertModeWidgetsVisibility()
     }
 }
 
-void MainWindow::onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled)
+void SettingsWindow::onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
 
@@ -286,7 +286,7 @@ void MainWindow::onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled)
 // Ambilight On / Off
 // ----------------------------------------------------------------------------
 
-void MainWindow::ambilightOn()
+void SettingsWindow::ambilightOn()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -294,7 +294,7 @@ void MainWindow::ambilightOn()
     startAmbilight();
 }
 
-void MainWindow::ambilightOff()
+void SettingsWindow::ambilightOff()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -302,7 +302,7 @@ void MainWindow::ambilightOff()
     startAmbilight();
 }
 
-void MainWindow::grabAmbilightOnOff()
+void SettingsWindow::grabAmbilightOnOff()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -310,7 +310,7 @@ void MainWindow::grabAmbilightOnOff()
     startAmbilight();
 }
 
-void MainWindow::startAmbilight()
+void SettingsWindow::startAmbilight()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_isAmbilightOn;
 
@@ -324,7 +324,7 @@ void MainWindow::startAmbilight()
     updateTrayAndActionStates();
 }
 
-void MainWindow::updateTrayAndActionStates()
+void SettingsWindow::updateTrayAndActionStates()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
@@ -360,7 +360,7 @@ void MainWindow::updateTrayAndActionStates()
 // Show grabbed colors in another GUI
 // ----------------------------------------------------------------------------
 
-void MainWindow::initLabelsForGrabbedColors()
+void SettingsWindow::initLabelsForGrabbedColors()
 {
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         QLabel *label = new QLabel(this);
@@ -372,7 +372,7 @@ void MainWindow::initLabelsForGrabbedColors()
     }
 }
 
-void MainWindow::updateGrabbedColors(const QList<QRgb> & colors)
+void SettingsWindow::updateGrabbedColors(const QList<QRgb> & colors)
 {
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         QLabel *label = labelsGrabbedColors[ ledIndex ];
@@ -384,7 +384,7 @@ void MainWindow::updateGrabbedColors(const QList<QRgb> & colors)
     }
 }
 
-void MainWindow::setAvgColorOnAllLEDs(int value)
+void SettingsWindow::setAvgColorOnAllLEDs(int value)
 {
     QList<QRgb> colors;
 
@@ -403,7 +403,7 @@ void MainWindow::setAvgColorOnAllLEDs(int value)
 // Show / Hide settings and about windows
 // ----------------------------------------------------------------------------
 
-void MainWindow::showAbout()
+void SettingsWindow::showAbout()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -417,7 +417,7 @@ void MainWindow::showAbout()
     m_aboutDialog->show();
 }
 
-void MainWindow::showSettings()
+void SettingsWindow::showSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -427,7 +427,7 @@ void MainWindow::showSettings()
     this->show();
 }
 
-void MainWindow::hideSettings()
+void SettingsWindow::hideSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -439,7 +439,7 @@ void MainWindow::hideSettings()
 // Public slots
 // ----------------------------------------------------------------------------
 
-void MainWindow::ledDeviceCallSuccess(bool isSuccess)
+void SettingsWindow::ledDeviceCallSuccess(bool isSuccess)
 {    
     DEBUG_MID_LEVEL << Q_FUNC_INFO << isSuccess;
 #if 0
@@ -454,7 +454,7 @@ void MainWindow::ledDeviceCallSuccess(bool isSuccess)
     updateTrayAndActionStates();
 }
 
-void MainWindow::ledDeviceGetFirmwareVersion(const QString & fwVersion)
+void SettingsWindow::ledDeviceGetFirmwareVersion(const QString & fwVersion)
 {
     if (m_aboutDialog != NULL)
     {
@@ -462,7 +462,7 @@ void MainWindow::ledDeviceGetFirmwareVersion(const QString & fwVersion)
     }
 }
 
-void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
+void SettingsWindow::refreshAmbilightEvaluated(double updateResultMs)
 {    
     DEBUG_MID_LEVEL << Q_FUNC_INFO << updateResultMs;
 
@@ -479,7 +479,7 @@ void MainWindow::refreshAmbilightEvaluated(double updateResultMs)
 // ----------------------------------------------------------------------------
 // Send timer options to device
 // ----------------------------------------------------------------------------
-void MainWindow::settingsHardwareTimerOptionsChange()
+void SettingsWindow::settingsHardwareTimerOptionsChange()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -503,7 +503,7 @@ void MainWindow::settingsHardwareTimerOptionsChange()
 // ----------------------------------------------------------------------------
 // Send color depth to device
 // ----------------------------------------------------------------------------
-void MainWindow::settingsHardwareSetColorDepth(int value)
+void SettingsWindow::settingsHardwareSetColorDepth(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -521,7 +521,7 @@ void MainWindow::settingsHardwareSetColorDepth(int value)
     }
 }
 
-void MainWindow::settingsHardwareSetSmoothSlowdown(int value)
+void SettingsWindow::settingsHardwareSetSmoothSlowdown(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -529,7 +529,7 @@ void MainWindow::settingsHardwareSetSmoothSlowdown(int value)
     emit updateSmoothSlowdown(value);
 }
 
-void MainWindow::settingsHardwareSetBrightness(int /*value*/)
+void SettingsWindow::settingsHardwareSetBrightness(int /*value*/)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -542,7 +542,7 @@ void MainWindow::settingsHardwareSetBrightness(int /*value*/)
 // ----------------------------------------------------------------------------
 
 
-void MainWindow::openFile(const QString &filePath)
+void SettingsWindow::openFile(const QString &filePath)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -559,14 +559,14 @@ void MainWindow::openFile(const QString &filePath)
 // Profiles
 // ----------------------------------------------------------------------------
 
-void MainWindow::openCurrentProfile()
+void SettingsWindow::openCurrentProfile()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     openFile(Settings::getFileName());
 }
 
-void MainWindow::profileRename()
+void SettingsWindow::profileRename()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -589,7 +589,7 @@ void MainWindow::profileRename()
     emit settingsProfileChanged();
 }
 
-void MainWindow::profileSwitch(const QString & configName)
+void SettingsWindow::profileSwitch(const QString & configName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << configName;
 
@@ -603,7 +603,7 @@ void MainWindow::profileSwitch(const QString & configName)
 }
 
 // Slot for switch profiles by tray menu
-void MainWindow::profileTraySwitch()
+void SettingsWindow::profileTraySwitch()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -624,13 +624,13 @@ void MainWindow::profileTraySwitch()
     }
 }
 
-void MainWindow::profileSwitchCombobox(QString profile)
+void SettingsWindow::profileSwitchCombobox(QString profile)
 {
     int index = ui->comboBox_Profiles->findText(profile);
     ui->comboBox_Profiles->setCurrentIndex(index);
 }
 
-void MainWindow::profileNew()
+void SettingsWindow::profileNew()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -651,7 +651,7 @@ void MainWindow::profileNew()
     ui->comboBox_Profiles->lineEdit()->setFocus(Qt::MouseFocusReason);
 }
 
-void MainWindow::profileResetToDefaultCurrent()
+void SettingsWindow::profileResetToDefaultCurrent()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -661,7 +661,7 @@ void MainWindow::profileResetToDefaultCurrent()
     emit settingsProfileChanged();
 }
 
-void MainWindow::profileDeleteCurrent()
+void SettingsWindow::profileDeleteCurrent()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -676,7 +676,7 @@ void MainWindow::profileDeleteCurrent()
     ui->comboBox_Profiles->removeItem(ui->comboBox_Profiles->currentIndex());
 }
 
-QStringList MainWindow::profilesFindAll()
+QStringList SettingsWindow::profilesFindAll()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -698,7 +698,7 @@ QStringList MainWindow::profilesFindAll()
     return settingsFiles;
 }
 
-void MainWindow::profileLoadLast()
+void SettingsWindow::profileLoadLast()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -709,7 +709,7 @@ void MainWindow::profileLoadLast()
     emit settingsProfileChanged();
 }
 
-void MainWindow::settingsProfileChanged_UpdateUI()
+void SettingsWindow::settingsProfileChanged_UpdateUI()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -726,7 +726,7 @@ void MainWindow::settingsProfileChanged_UpdateUI()
 }
 
 // Syncronize profiles from combobox with tray menu
-void MainWindow::profileTraySync()
+void SettingsWindow::profileTraySync()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -750,7 +750,7 @@ void MainWindow::profileTraySync()
 // Translate GUI
 // ----------------------------------------------------------------------------
 
-void MainWindow::initLanguages()
+void SettingsWindow::initLanguages()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -769,7 +769,7 @@ void MainWindow::initLanguages()
     translator = NULL;
 }
 
-void MainWindow::loadTranslation(const QString & language)
+void SettingsWindow::loadTranslation(const QString & language)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << language;
 
@@ -824,7 +824,7 @@ void MainWindow::loadTranslation(const QString & language)
 // ----------------------------------------------------------------------------
 
 
-void MainWindow::updatePwmFrequency()
+void SettingsWindow::updatePwmFrequency()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -860,7 +860,7 @@ void MainWindow::updatePwmFrequency()
 }
 
 
-void MainWindow::onGrabModeChanged()
+void SettingsWindow::onGrabModeChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "GrabMode" << getGrabMode();
     IGrabber * grabber = createGrabber(getGrabMode());
@@ -868,7 +868,7 @@ void MainWindow::onGrabModeChanged()
     m_grabManager->setGrabber(grabber);
 }
 
-IGrabber * MainWindow::createGrabber(GrabMode grabMode)
+IGrabber * SettingsWindow::createGrabber(GrabMode grabMode)
 {
     switch (grabMode)
     {
@@ -889,7 +889,7 @@ IGrabber * MainWindow::createGrabber(GrabMode grabMode)
 // Start grab speed tests
 // ----------------------------------------------------------------------------
 
-void MainWindow::startTestsClick()
+void SettingsWindow::startTestsClick()
 {
     QString saveText = ui->pushButton_StartTests->text();
     ui->pushButton_StartTests->setText("Please wait...");
@@ -905,7 +905,7 @@ void MainWindow::startTestsClick()
 // Create tray icon and actions
 // ----------------------------------------------------------------------------
 
-void MainWindow::createActions()
+void SettingsWindow::createActions()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -934,7 +934,7 @@ void MainWindow::createActions()
     connect(m_quitAction, SIGNAL(triggered()), this, SLOT(quit()));
 }
 
-void MainWindow::createTrayIcon()
+void SettingsWindow::createTrayIcon()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -958,7 +958,7 @@ void MainWindow::createTrayIcon()
 // Process icon click event
 // ----------------------------------------------------------------------------
 
-void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+void SettingsWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -1005,7 +1005,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 // Read current profile to main settings window
 // ----------------------------------------------------------------------------
 
-void MainWindow::loadSettingsToMainWindow()
+void SettingsWindow::loadSettingsToMainWindow()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -1050,7 +1050,7 @@ void MainWindow::loadSettingsToMainWindow()
     onGrabModeChanged();
 }
 
-GrabMode MainWindow::getGrabMode()
+GrabMode SettingsWindow::getGrabMode()
 {
 #ifdef X11_GRAB_SUPPORT
     if (ui->radioButton_GrabX11->isChecked()) {
@@ -1070,7 +1070,7 @@ GrabMode MainWindow::getGrabMode()
 // Quit application
 // ----------------------------------------------------------------------------
 
-void MainWindow::quit()
+void SettingsWindow::quit()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "trayIcon->hide();";
 
@@ -1081,7 +1081,7 @@ void MainWindow::quit()
     QApplication::quit();
 }
 
-void MainWindow::onCbModesChanged(int index)
+void SettingsWindow::onCbModesChanged(int index)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << index;
 
@@ -1102,30 +1102,30 @@ void MainWindow::onCbModesChanged(int index)
 //    Settings::setMode(index == 0 ? Grab : MoodLamp);
 }
 
-void MainWindow::on_horizontalSlider_Brightness_valueChanged(int value)
+void SettingsWindow::on_horizontalSlider_Brightness_valueChanged(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << value;
     m_grabManager->setBrightness(value);
 }
 
-void MainWindow::onMoodLampColorChanged(QColor color)
+void SettingsWindow::onMoodLampColorChanged(QColor color)
 {
     m_grabManager->setBackLightColor(color);
 }
 
 
-void MainWindow::on_horizontalSlider_Speed_valueChanged(int value)
+void SettingsWindow::on_horizontalSlider_Speed_valueChanged(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO<< value;
     m_grabManager->setMoodLampSpeed(value);
 }
 
-void MainWindow::paintEvent(QPaintEvent */*event*/)
+void SettingsWindow::paintEvent(QPaintEvent */*event*/)
 {
     updateCbModesPosition();
 }
 
-void MainWindow::updateCbModesPosition()
+void SettingsWindow::updateCbModesPosition()
 {
     int newX = ui->groupBox_7->x() + 10;
     int newY = ui->groupBox_7->y();
@@ -1133,7 +1133,7 @@ void MainWindow::updateCbModesPosition()
     ui->cb_Modes->raise();
 }
 
-void MainWindow::onMoodLampModeChanged(bool checked)
+void SettingsWindow::onMoodLampModeChanged(bool checked)
 {
     Settings::setMoodLampLiquidMode(checked);
     if(!checked)

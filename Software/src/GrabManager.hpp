@@ -1,5 +1,5 @@
 /*
- * grabmanager.h
+ * GrabManager.hpp
  *
  *  Created on: 26.07.2010
  *      Author: Mike Shatohin (brunql)
@@ -28,9 +28,9 @@
 
 #include <QtGui>
 #include "../../CommonHeaders/LEDS_COUNT.h"
-#include "settings.h"
-#include "timeevaluations.h"
-#include "movemewidget.h"
+#include "Settings.hpp"
+#include "TimeEvaluations.hpp"
+#include "GrabWidget.hpp"
 #include "grab/IGrabber.hpp"
 
 class GrabManager : public QWidget
@@ -93,7 +93,7 @@ private: // variables
     IGrabber * m_grabber;
     QTimer *m_timerGrab;
     QTimer *timerUpdateFPS;
-    QList<MoveMeWidget *> m_ledWidgets;
+    QList<GrabWidget *> m_ledWidgets;
     const static QColor backgroundAndTextColors[LEDS_COUNT][2];
     TimeEvaluations *timeEval;
 

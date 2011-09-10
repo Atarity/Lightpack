@@ -29,9 +29,8 @@
 
 #include "ApiServer.hpp"
 #include "ApiServerSetColorTask.hpp"
-
-#include "settings.h"
-#include "timeevaluations.h"
+#include "Settings.hpp"
+#include "TimeEvaluations.hpp"
 
 #include "../../CommonHeaders/LEDS_COUNT.h"
 
@@ -195,7 +194,7 @@ void ApiServer::taskSetColorIsSuccess(bool /*isSuccess*/)
     m_isTaskSetColorDone = true;
 }
 
-void ApiServer::answerAppMainStatus(MainWindow::AppMainStatus status)
+void ApiServer::answerAppMainStatus(SettingsWindow::AppMainStatus status)
 {
     m_appMainStatus = status;
     m_isAnswerAppMainStatusDone = true;

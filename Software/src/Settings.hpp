@@ -1,5 +1,5 @@
 /*
- * settings.h
+ * Settings.hpp
  *
  *  Created on: 29.07.2010
  *      Author: Mike Shatohin (brunql)

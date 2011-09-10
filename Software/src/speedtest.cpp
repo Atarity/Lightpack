@@ -1,5 +1,5 @@
 /*
- * speedtest.cpp
+ * SpeedTest.cpp
  *
  *  Created on: 4.04.2011
  *      Author: Mike Shatohin (brunql)
@@ -30,8 +30,8 @@
 #include <iostream>
 using namespace std;
 
-#include "speedtest.h"
-#include "settings.h"
+#include "SpeedTest.hpp"
+#include "Settings.hpp"
 #include "version.h"
 
 

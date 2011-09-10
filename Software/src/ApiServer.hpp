@@ -32,11 +32,10 @@
 #include <QMap>
 #include <QSet>
 #include <QRgb>
-#include "apidebug.h"
-#include "inlinemath.hpp"
 #include "ApiServerSetColorTask.hpp"
-
-#include "mainwindow.h"
+#include "SettingsWindow.hpp"
+#include "inlinemath.hpp"
+#include "debug.h"
 
 struct ClientSettings
 {
@@ -101,7 +100,7 @@ protected:
 private slots:
     void disconnected();
     void readyRead();
-    void answerAppMainStatus(MainWindow::AppMainStatus status);
+    void answerAppMainStatus(SettingsWindow::AppMainStatus status);
     void taskSetColorIsSuccess(bool isSuccess);
 
 private:
@@ -117,7 +116,7 @@ private:
     QThread *m_apiSetColorTaskThread;
     ApiServerSetColorTask *m_apiSetColorTask;
 
-    MainWindow::AppMainStatus m_appMainStatus;
+    SettingsWindow::AppMainStatus m_appMainStatus;
 
     bool m_isTaskSetColorDone;
     bool m_isAnswerAppMainStatusDone;

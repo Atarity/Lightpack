@@ -27,7 +27,7 @@
 #pragma once
 
 #include <QApplication>
-#include "mainwindow.h"
+#include "SettingsWindow.hpp"
 #include "ApiServer.hpp"
 #include "LedDeviceFactory.hpp"
 
@@ -60,7 +60,7 @@ private:
     void startLedDeviceFactory();
 
 private:
-    MainWindow *m_mainWindow;
+    SettingsWindow *m_mainWindow;
     ApiServer *m_apiServer;
     LedDeviceFactory *m_ledDeviceFactory;
     QThread *m_ledDeviceFactoryThread;

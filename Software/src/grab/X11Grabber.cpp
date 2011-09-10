@@ -29,7 +29,7 @@ void X11Grabber::updateGrabScreenFromWidget(QWidget *widget)
     screen = QApplication::desktop()->screenNumber( widget );
 }
 
-QList<QRgb> X11Grabber::grabWidgetsColors(QList<MoveMeWidget *> &widgets)
+QList<QRgb> X11Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
 {
     captureScreen();
     QList<QRgb> result;

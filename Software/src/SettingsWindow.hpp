@@ -1,5 +1,5 @@
 /*
- * mainwindow.h
+ * SettingsWindow.hpp
  *
  *  Created on: 26.07.2010
  *      Author: Mike Shatohin (brunql)
@@ -28,21 +28,21 @@
 #pragma once
 
 #include <QtGui>
-#include "aboutdialog.h"
-#include "settings.h"
-#include "grabmanager.h"
-#include "speedtest.h"
-#include "qcolorbutton.hpp"
+#include "AboutDialog.hpp"
+#include "Settings.hpp"
+#include "GrabManager.hpp"
+#include "SpeedTest.hpp"
+#include "ColorButton.hpp"
 
 namespace Ui {
-    class MainWindow;
+    class SettingsWindow;
 }
 
-class MainWindow : public QMainWindow {
+class SettingsWindow : public QMainWindow {
     Q_OBJECT
 public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    SettingsWindow(QWidget *parent = 0);
+    ~SettingsWindow();
 
 public:
     enum AppMainStatus {
@@ -170,7 +170,7 @@ private:
 
     QList<QLabel *> labelsGrabbedColors;
 
-    Ui::MainWindow *ui;
+    Ui::SettingsWindow *ui;
 
     QAction *m_onAmbilightAction;
     QAction *m_offAmbilightAction;

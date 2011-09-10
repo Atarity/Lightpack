@@ -24,14 +24,12 @@
  *
  */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#pragma once
 
 #include <QtDebug>
 
 // Set and store in main.cpp file
 extern unsigned g_debugLevel;
-
 
 // Using:
 //
@@ -50,7 +48,6 @@ namespace Debug
     };
 }
 
-
 #define DEBUG_HIGH_LEVEL    DEBUG_OUT_FUNC_INFO( 3 )
 #define DEBUG_MID_LEVEL     DEBUG_OUT_FUNC_INFO( 2 )
 #define DEBUG_LOW_LEVEL     DEBUG_OUT_FUNC_INFO( 1 )
@@ -58,4 +55,11 @@ namespace Debug
 
 #define DEBUG_OUT_FUNC_INFO( DEBUG_LEVEL )   if(g_debugLevel >= DEBUG_LEVEL) qDebug()
 
-#endif // DEBUG_H
+// Define this to 1 and rebuild project to enable API debug mode
+#define API_DEBUG           0
+
+#if API_DEBUG
+#   define API_DEBUG_OUT   qDebug()
+#else
+#   define API_DEBUG_OUT   if(0) qDebug()
+#endif

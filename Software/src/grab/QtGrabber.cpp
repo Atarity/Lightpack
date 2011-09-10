@@ -28,7 +28,7 @@ void QtGrabber::updateGrabScreenFromWidget(QWidget *widget)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenres " << screenres;
 }
 
-QList<QRgb> QtGrabber::grabWidgetsColors(QList<MoveMeWidget *> &widgets)
+QList<QRgb> QtGrabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
     QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->screen(-1) ->winId(),

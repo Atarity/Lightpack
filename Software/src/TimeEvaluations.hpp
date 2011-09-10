@@ -1,5 +1,5 @@
 /*
- * timeevaluations.h
+ * TimeEvaluations.hpp
  *
  *  Created on: 4.08.2010
  *      Author: Mike Shatohin (brunql)
@@ -24,9 +24,7 @@
  *
  */
 
-
-#ifndef TIMEEVALUATIONS_H
-#define TIMEEVALUATIONS_H
+#pragma once
 
 #include <sys/time.h> // for timeval and gettimeofday()
 
@@ -66,4 +64,3 @@ public:
 
 };
 
-#endif // TIMEEVALUATIONS_H

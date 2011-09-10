@@ -79,17 +79,17 @@ INCLUDEPATH += ./hidapi ./grab ./alienfx ./
 SOURCES += \
     LightpackApplication.cpp \
     main.cpp \
-    mainwindow.cpp \
-    aboutdialog.cpp \
-    grabmanager.cpp \
-    movemewidget.cpp \
-    settings.cpp \
-    speedtest.cpp \
+    SettingsWindow.cpp \
+    Settings.cpp \
+    AboutDialog.cpp \
+    GrabManager.cpp \
+    GrabWidget.cpp \
+    SpeedTest.cpp \
     LedDeviceFactory.cpp \
     LedDeviceLightpack.cpp \
     LedDeviceAlienFx.cpp \
     LedDeviceVirtual.cpp \
-    qcolorbutton.cpp \
+    ColorButton.cpp \
     grab/X11Grabber.cpp \
     grab/WinAPIGrabber.cpp \
     grab/QtGrabber.cpp \
@@ -99,15 +99,15 @@ SOURCES += \
 
 HEADERS += \
     LightpackApplication.hpp \
-    mainwindow.h \
+    SettingsWindow.hpp \
+    Settings.hpp \
     version.h \
-    settings.h \
-    aboutdialog.h \
-    timeevaluations.h \
-    grabmanager.h \
-    movemewidget.h \
+    AboutDialog.hpp \
+    TimeEvaluations.hpp \
+    GrabManager.hpp \
+    GrabWidget.hpp \
     debug.h \
-    speedtest.h \
+    SpeedTest.hpp \
     alienfx/LFXDecl.h \
     alienfx/LFX2.h \
     LedDeviceFactory.hpp \
@@ -115,7 +115,7 @@ HEADERS += \
     LedDeviceLightpack.hpp \
     LedDeviceAlienFx.hpp \
     LedDeviceVirtual.hpp \
-    qcolorbutton.hpp \
+    ColorButton.hpp \
     grab/IGrabber.hpp \
     grab/QtGrabber.hpp \
     grab/X11Grabber.hpp \
@@ -123,7 +123,6 @@ HEADERS += \
     grab/WinAPIGrabber.hpp \
     defs.h \
     inlinemath.hpp \
-    apidebug.h \
     ApiServer.hpp \
     ApiServerSetColorTask.hpp \
     hidapi/hidapi.h \
@@ -132,6 +131,6 @@ HEADERS += \
     ../../CommonHeaders/LEDS_COUNT.h \
     ../../CommonHeaders/USB_ID.h
 
-FORMS += mainwindow.ui \
-    aboutdialog.ui \
-    movemewidget.ui
+FORMS += SettingsWindow.ui \
+    AboutDialog.ui \
+    GrabWidget.ui

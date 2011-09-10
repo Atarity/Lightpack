@@ -1,5 +1,5 @@
 /*
- * movemewidget.h
+ * GrabWidget.hpp
  *
  *  Created on: 29.01.2011
  *      Author: Mike Shatohin (brunql)
@@ -24,21 +24,20 @@
  *
  */
 
-#ifndef MOVEMEWIDGET_H
-#define MOVEMEWIDGET_H
+#pragma once
 
 #include <QWidget>
 
 namespace Ui {
-    class MoveMeWidget;
+    class GrabWidget;
 }
 
-class MoveMeWidget : public QWidget
+class GrabWidget : public QWidget
 {
     Q_OBJECT
 public:
-    MoveMeWidget(int id, QWidget *parent = 0);
-    ~MoveMeWidget();
+    GrabWidget(int id, QWidget *parent = 0);
+    ~GrabWidget();
 
     void saveSizeAndPosition();
 
@@ -104,7 +103,7 @@ private:
     double coefGreen;
     double coefBlue;
 
-    Ui::MoveMeWidget *ui;
+    Ui::GrabWidget *ui;
 
 protected:
     virtual void mousePressEvent(QMouseEvent *pe);
@@ -115,4 +114,3 @@ protected:
     virtual void paintEvent(QPaintEvent *);
 };
 
-#endif // MOVEMEWIDGET_H

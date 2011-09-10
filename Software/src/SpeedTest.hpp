@@ -1,5 +1,5 @@
 /*
- * speedtest.h
+ * SpeedTest.hpp
  *
  *  Created on: 4.04.2011
  *      Author: Mike Shatohin (brunql)
@@ -24,8 +24,7 @@
  *
  */
 
-#ifndef SPEEDTEST_H
-#define SPEEDTEST_H
+#pragma once
 
 #include <QObject>
 #include <QFile>
@@ -59,5 +58,3 @@ private:
     static const int LedHeight;
 };
 
-
-#endif // SPEEDTEST_H

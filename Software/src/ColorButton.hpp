@@ -1,14 +1,17 @@
-#ifndef QCOLORBUTTON_H
-#define QCOLORBUTTON_H
 
-#include<QtGui>
+//#pragma once
+#ifndef CB_H
+#define CB_H
 
-class QColorButton : public QPushButton
+#include <QtGui>
+
+class ColorButton : public QPushButton
 {
     Q_OBJECT
+
 public:
-    QColorButton(QWidget *parent);
-    ~QColorButton();
+    ColorButton(QWidget *parent);
+    ~ColorButton();
     QColor getColor();
     void setColor(QColor color);
 protected:
@@ -30,4 +33,4 @@ protected:
     QLabel * colorLabel;
 };
 
-#endif // QCOLORBUTTON_H
+#endif //CB_H

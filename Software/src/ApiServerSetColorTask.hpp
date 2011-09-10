@@ -28,7 +28,7 @@
 
 #include <QObject>
 #include <QRgb>
-#include "apidebug.h"
+#include "debug.h"
 #include "inlinemath.hpp"
 
 class ApiServerSetColorTask : public QObject

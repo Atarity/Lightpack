@@ -1,5 +1,5 @@
 /*
- * grabmanager.cpp
+ * GrabManager.cpp
  *
  *  Created on: 26.07.2010
  *      Author: Mike Shatohin (brunql)
@@ -24,7 +24,7 @@
  *
  */
 
-#include "grabmanager.h"
+#include "GrabManager.hpp"
 #include <QtCore/qmath.h>
 
 #include "debug.h"
@@ -117,7 +117,7 @@ void GrabManager::initLedWidgets()
     m_ledWidgets.clear();
 
     for(int i=0; i<LEDS_COUNT; i++){
-        m_ledWidgets << new MoveMeWidget(i, this);
+        m_ledWidgets << new GrabWidget(i, this);
     }
 
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
@@ -635,7 +635,7 @@ void GrabManager::setWhiteLedWidgets(bool state)
     if(state){
         for(int i=0; i<m_ledWidgets.count(); i++){
             // Fill labels white
-            m_ledWidgets[i]->setColors(MoveMeWidget::ColorIndexWhite);
+            m_ledWidgets[i]->setColors(GrabWidget::ColorIndexWhite);
         }
     }
 }

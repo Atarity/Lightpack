@@ -11,7 +11,7 @@ public:
     ~QtGrabber();
     virtual const char * getName();
     virtual void updateGrabScreenFromWidget( QWidget * widget );
-    virtual QList<QRgb> grabWidgetsColors(QList<MoveMeWidget *> &widgets);
+    virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
 
 private:
     QRgb getColor(QPixmap pixmap, const QWidget * grabme);
