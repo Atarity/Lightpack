@@ -146,26 +146,42 @@ void Settings::resetDefaults()
     settingsInit(true /* = reset to default values */);
 }
 
-void Settings::loadOrCreateConfig(const QString & configName)
+QStringList Settings::findAllProfiles()
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << configName;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    QFileInfo setsFile(Settings::getFileName());
+    QFileInfoList iniFiles = setsFile.absoluteDir().entryInfoList(QStringList("*.ini"));
+
+    QStringList settingsFiles;
+    for(int i=0; i<iniFiles.count(); i++){
+        QString compBaseName = iniFiles.at(i).completeBaseName();
+        settingsFiles.append(compBaseName);
+    }
+
+    return settingsFiles;
+}
+
+void Settings::loadOrCreateProfile(const QString & profileName)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << profileName;
 
     QMutexLocker locker(&m_mutex);
 
     if (m_currentProfile != NULL)
     {
         // Copy current settings to new one
-        QString settingsDir = QFileInfo(m_currentProfile->fileName()).absoluteDir().absolutePath();
-        QString settingsNewFileName = settingsDir + "/" + configName + ".ini";
+        QString profilesDir = QFileInfo(m_currentProfile->fileName()).absoluteDir().absolutePath();
+        QString profileNewPath = profilesDir + "/" + profileName + ".ini";
 
-        if (m_currentProfile->fileName() != settingsNewFileName)
-            QFile::copy(m_currentProfile->fileName(), settingsNewFileName);
+        if (m_currentProfile->fileName() != profileNewPath)
+            QFile::copy(m_currentProfile->fileName(), profileNewPath);
 
         delete m_currentProfile;
     }
 
 
-    m_currentProfile = new QSettings(m_applicationDirPath + "Profiles/" + configName + ".ini", QSettings::IniFormat );
+    m_currentProfile = new QSettings(m_applicationDirPath + "Profiles/" + profileName + ".ini", QSettings::IniFormat );
     m_currentProfile->setIniCodec("UTF-8");
 
     locker.unlock();
@@ -174,12 +190,12 @@ void Settings::loadOrCreateConfig(const QString & configName)
 
     qDebug() << "Settings file:" << m_currentProfile->fileName();
 
-    m_mainConfig->setValue(KEY_PROFILE_LAST, configName);
+    m_mainConfig->setValue(KEY_PROFILE_LAST, profileName);
 }
 
-void Settings::renameCurrentConfig(const QString & configName)
+void Settings::renameCurrentProfile(const QString & profileName)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << configName;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << profileName;
 
     QMutexLocker locker(&m_mutex);
 
@@ -190,28 +206,28 @@ void Settings::renameCurrentConfig(const QString & configName)
     }
 
     // Copy current settings to new one
-    QString settingsDir = QFileInfo( m_currentProfile->fileName() ).absoluteDir().absolutePath();
-    QString settingsNewFileName = settingsDir + "/" + configName + ".ini";
+    QString profilesDir = QFileInfo( m_currentProfile->fileName() ).absoluteDir().absolutePath();
+    QString profileNewPath = profilesDir + "/" + profileName + ".ini";
 
-    if (m_currentProfile->fileName() != settingsNewFileName)
+    if (m_currentProfile->fileName() != profileNewPath)
     {
-        QFile::rename(m_currentProfile->fileName(), settingsNewFileName);
+        QFile::rename(m_currentProfile->fileName(), profileNewPath);
 
         delete m_currentProfile;
 
         // Update m_currentProfile point to new QSettings with configName
-        m_currentProfile = new QSettings(m_applicationDirPath + "Profiles/" + configName + ".ini", QSettings::IniFormat );
+        m_currentProfile = new QSettings(m_applicationDirPath + "Profiles/" + profileName + ".ini", QSettings::IniFormat );
         m_currentProfile->setIniCodec("UTF-8");
 
         qDebug() << "Settings file renamed:" << m_currentProfile->fileName();
 
-        m_mainConfig->setValue(KEY_PROFILE_LAST, configName);
+        m_mainConfig->setValue(KEY_PROFILE_LAST, profileName);
     }
 
     m_currentProfile->sync();
 }
 
-void Settings::removeCurrentConfig()
+void Settings::removeCurrentProfile()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -219,7 +235,7 @@ void Settings::removeCurrentConfig()
 
     if (m_currentProfile == NULL)
     {
-        qWarning() << "void Settings::removeCurrentConfig() nothing to remove";
+        qWarning() << Q_FUNC_INFO << "current profile not loaded, nothing to remove";
         return;
     }
 
@@ -227,7 +243,7 @@ void Settings::removeCurrentConfig()
 
     if (result == false)
     {
-        qWarning() << "void Settings::removeCurrentConfig() QFile::remove() fail";
+        qWarning() << Q_FUNC_INFO << "QFile::remove(" << m_currentProfile->fileName() << ") fail";
         return;
     }
 

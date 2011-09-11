@@ -115,9 +115,10 @@ public:
     static void Initialize(const QString & applicationDirPath, bool isSetDebugLevelFromConfig);
     static void resetDefaults();
 
-    static void loadOrCreateConfig(const QString & configName);
-    static void renameCurrentConfig(const QString & configName);
-    static void removeCurrentConfig();
+    static QStringList findAllProfiles();
+    static void loadOrCreateProfile(const QString & configName);
+    static void renameCurrentProfile(const QString & configName);
+    static void removeCurrentProfile();
 
     static QString getFileName();
     static QString getApplicationDirPath();

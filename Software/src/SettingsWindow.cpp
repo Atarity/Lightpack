@@ -86,7 +86,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 #else
     ui->radioButton_GrabQt->setChecked(true);
 #endif
-    profilesFindAll();
+    profilesLoadAll();
 
     initLanguages();
 
@@ -581,7 +581,7 @@ void SettingsWindow::profileRename()
         return;
     }
 
-    Settings::renameCurrentConfig(configName);
+    Settings::renameCurrentProfile(configName);
 
     this->setFocus(Qt::OtherFocusReason);
 
@@ -593,7 +593,7 @@ void SettingsWindow::profileSwitch(const QString & configName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << configName;
 
-    Settings::loadOrCreateConfig(configName);
+    Settings::loadOrCreateProfile(configName);
 
     this->setFocus(Qt::OtherFocusReason);
 
@@ -671,31 +671,22 @@ void SettingsWindow::profileDeleteCurrent()
     }
 
     // Delete settings file
-    Settings::removeCurrentConfig();
+    Settings::removeCurrentProfile();
     // Remove from combobox
     ui->comboBox_Profiles->removeItem(ui->comboBox_Profiles->currentIndex());
 }
 
-QStringList SettingsWindow::profilesFindAll()
+void SettingsWindow::profilesLoadAll()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    QStringList profiles = Settings::findAllProfiles();
 
-    QFileInfo setsFile(Settings::getFileName());
-    QFileInfoList iniFiles = setsFile.absoluteDir().entryInfoList(QStringList("*.ini"));
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "found profiles:" << profiles;
 
-    QStringList settingsFiles;
-    for(int i=0; i<iniFiles.count(); i++){
-        QString compBaseName = iniFiles.at(i).completeBaseName();
-        settingsFiles.append(compBaseName);
+    for (int i = 0; i < profiles.count(); i++)
+    {
+        if (ui->comboBox_Profiles->findText(profiles.at(i)) == -1)
+            ui->comboBox_Profiles->addItem(profiles.at(i));
     }
-
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "found profiles:" << settingsFiles;
-    for(int i=0; i<settingsFiles.count(); i++){
-        if(ui->comboBox_Profiles->findText(settingsFiles.at(i)) == -1){
-            ui->comboBox_Profiles->addItem(settingsFiles.at(i));
-        }
-    }
-    return settingsFiles;
 }
 
 void SettingsWindow::profileLoadLast()

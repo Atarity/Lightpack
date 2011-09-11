@@ -70,7 +70,7 @@ public slots:
     void refreshAmbilightEvaluated(double updateResultMs);
     void ambilightOn(); /* using in actions */
     void ambilightOff(); /* using in actions */
-    QStringList profilesFindAll();
+    void profilesLoadAll();
     void profileSwitch(const QString & configName);
     void profileSwitchCombobox(QString profile);
     void updateGrabbedColors(const QList<QRgb> & colors);
