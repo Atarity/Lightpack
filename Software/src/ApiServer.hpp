@@ -37,11 +37,10 @@
 #include "inlinemath.hpp"
 #include "debug.h"
 
-struct ClientSettings
+struct ClientInfo
 {
-    int smooth;
+    bool isAuthorized;
     double gamma;
-    bool auth;
 };
 
 class ApiServer : public QTcpServer
@@ -53,11 +52,14 @@ public:
     ApiServer(quint16 port, QObject *parent = 0);
 
 public:
-    static const char * ApiVersion;
+    static const char * ApiVersion;   
+    static const char * CmdUnknown;
+
     static const char * CmdGetStatus;
     static const char * CmdResultStatus_On;
     static const char * CmdResultStatus_Off;
     static const char * CmdResultStatus_DeviceError;
+    static const char * CmdResultStatus_Unknown;
 
     static const char * CmdGetStatusAPI;
     static const char * CmdResultStatusAPI_Busy;
@@ -89,18 +91,20 @@ public:
     static const char * CmdSetProfile;
     static const char * CmdSetStatus;
 
+    static const int SignalWaitTimeoutMs;
+
 signals:
-    void requestAppMainStatus();
+    void requestBacklightStatus();
     void updateLedsColors(const QList<QRgb> & colors);
     void startTask(QByteArray buffer);
 
 protected:
-    void incomingConnection(int socketfd);
+    void incomingConnection(int socketDescriptor);
 
 private slots:
-    void disconnected();
-    void readyRead();
-    void answerAppMainStatus(SettingsWindow::AppMainStatus status);
+    void clientDisconnected();
+    void clientReadyRead();
+    void resultBacklightStatus(Backlight::Status status);
     void taskSetColorIsSuccess(bool isSuccess);
 
 private:
@@ -111,13 +115,16 @@ private:
     QString m_apiKey;
 
     QTcpSocket *m_lockedClient;
-    QMap <QTcpSocket*, ClientSettings> m_clients;
+    QMap <QTcpSocket*, ClientInfo> m_clients;
 
     QThread *m_apiSetColorTaskThread;
     ApiServerSetColorTask *m_apiSetColorTask;
 
-    SettingsWindow::AppMainStatus m_appMainStatus;
+    QTime m_time;
 
     bool m_isTaskSetColorDone;
-    bool m_isAnswerAppMainStatusDone;
+    bool m_isTaskSetColorParseSuccess;
+
+    bool m_isRequestBacklightStatusDone;
+    Backlight::Status m_backlightStatus;
 };

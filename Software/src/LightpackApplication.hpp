@@ -60,7 +60,7 @@ private:
     void startLedDeviceFactory();
 
 private:
-    SettingsWindow *m_mainWindow;
+    SettingsWindow *m_settingsWindow;
     ApiServer *m_apiServer;
     LedDeviceFactory *m_ledDeviceFactory;
     QThread *m_ledDeviceFactoryThread;

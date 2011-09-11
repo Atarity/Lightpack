@@ -88,25 +88,25 @@ void LedDeviceFactory::initLedDevice()
 
 ILedDevice * LedDeviceFactory::createLedDevice()
 {
-    SupportedDevices connectedDevice = Settings::getConnectedDevice();
+    SupportedDevices::DeviceType connectedDevice = Settings::getConnectedDevice();
 
-    if (connectedDevice == SupportedDevice_AlienFx){
+    if (connectedDevice == SupportedDevices::AlienFxDevice){
 #       if !defined(Q_WS_WIN)
         qWarning() << Q_FUNC_INFO << "AlienFx not supported on current platform";
 
-        Settings::setConnectedDevice(SupportedDevice_Default);
+        Settings::setConnectedDevice(SupportedDevices::DefaultDevice);
         connectedDevice = Settings::getConnectedDevice();
 #       endif /* Q_WS_WIN */
     }
 
     switch (connectedDevice){
 
-    case SupportedDevice_Lightpack:
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevice_Lightpack";
+    case SupportedDevices::LightpackDevice:
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::LightpackDevice";
         return (ILedDevice *)new LedDeviceLightpack();
 
-    case SupportedDevice_AlienFx:
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevice_AlienFx";
+    case SupportedDevices::AlienFxDevice:
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::AlienFxDevice";
 
 #       ifdef Q_WS_WIN
         return (ILedDevice *)new LedDeviceAlienFx();
@@ -114,8 +114,8 @@ ILedDevice * LedDeviceFactory::createLedDevice()
         break;
 #       endif /* Q_WS_WIN */
 
-    case SupportedDevice_Virtual:
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevice_Virtual";
+    case SupportedDevices::VirtualDevice:
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::VirtualDevice";
         return (ILedDevice *)new LedDeviceVirtual();
     }
 

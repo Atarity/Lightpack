@@ -58,7 +58,7 @@
 #define KEY_MODE                    "Mode"
 
 #define KEY_GRAB_SLOWDOWN_MS        "GrabSlowdownMs"
-#define KEY_IS_AMBILIGHT_ON         "IsAmbilightOn"
+#define KEY_IS_BACKLIGHT_ON         "IsBacklightOn"
 #define KEY_IS_AVG_COLORS_ON        "IsAvgColorsOn"
 #define KEY_MIN_LVL_SENSITIVITY     "MinimumLevelOfSensitivity"
 #define KEY_GAMMA_CORRECTION        "GammaCorrection"
@@ -150,7 +150,7 @@ QStringList Settings::findAllProfiles()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    QFileInfo setsFile(Settings::getFileName());
+    QFileInfo setsFile(Settings::getCurrentProfilePath());
     QFileInfoList iniFiles = setsFile.absoluteDir().entryInfoList(QStringList("*.ini"));
 
     QStringList settingsFiles;
@@ -253,7 +253,15 @@ void Settings::removeCurrentProfile()
     m_mainConfig->setValue(KEY_PROFILE_LAST, PROFILE_DEFAULT_NAME);
 }
 
-QString Settings::getFileName()
+QString Settings::getCurrentProfileName()
+{
+    QMutexLocker locker(&m_mutex);
+
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << m_currentProfile->fileName();
+    return QFileInfo(m_currentProfile->fileName()).completeBaseName();
+}
+
+QString Settings::getCurrentProfilePath()
 {
     QMutexLocker locker(&m_mutex);
 
@@ -356,36 +364,36 @@ void Settings::setExpertModeEnabled(bool isEnabled)
     setValueMain(KEY_EXPERT_MODE_ENABLED, isEnabled);
 }
 
-SupportedDevices Settings::getConnectedDevice()
+SupportedDevices::DeviceType Settings::getConnectedDevice()
 {
     QString deviceName = valueMain(KEY_CONNECTED_DEVICE).toString();
 
     if (deviceName == "Lightpack")
-        return SupportedDevice_Lightpack;
+        return SupportedDevices::LightpackDevice;
     else if (deviceName == "AlienFx")
-        return SupportedDevice_AlienFx;
+        return SupportedDevices::AlienFxDevice;
     else if (deviceName == "Virtual")
-        return SupportedDevice_Virtual;
+        return SupportedDevices::VirtualDevice;
     else {
         qWarning() << Q_FUNC_INFO << "ConnectedDevice in lightpack main config file contains crap. Reset to default.";
 
-        setConnectedDevice(SupportedDevice_Default);
-        return SupportedDevice_Default;
+        setConnectedDevice(SupportedDevices::DefaultDevice);
+        return SupportedDevices::DefaultDevice;
     }
 }
 
-void Settings::setConnectedDevice(SupportedDevices device)
+void Settings::setConnectedDevice(SupportedDevices::DeviceType device)
 {
     QString deviceName;
 
     switch (device){
-    case SupportedDevice_Lightpack:
+    case SupportedDevices::LightpackDevice:
         deviceName = "Lightpack";
         break;
-    case SupportedDevice_AlienFx:
+    case SupportedDevices::AlienFxDevice:
         deviceName = "AlienFx";
         break;
-    case SupportedDevice_Virtual:
+    case SupportedDevices::VirtualDevice:
         deviceName = "Virtual";
         break;
     default:
@@ -409,14 +417,14 @@ void Settings::setGrabSlowdownMs(int value)
     setValue(KEY_GRAB_SLOWDOWN_MS, getValidGrabSlowdownMs(value));
 }
 
-bool Settings::isAmbilightOn()
+bool Settings::isBacklightOn()
 {
-    return value(KEY_IS_AMBILIGHT_ON).toBool();
+    return value(KEY_IS_BACKLIGHT_ON).toBool();
 }
 
-void Settings::setAmbilightOn(bool isEnabled)
+void Settings::setIsBacklightOn(bool isEnabled)
 {
-    setValue(KEY_IS_AMBILIGHT_ON, isEnabled);
+    setValue(KEY_IS_BACKLIGHT_ON, isEnabled);
 }
 
 bool Settings::isAvgColorsOn()
@@ -459,32 +467,32 @@ void Settings::setBrightness(int value)
     setValue(KEY_BRIGHTNESS, value);
 }
 
-GrabMode Settings::getGrabMode()
+Grab::Mode Settings::getGrabMode()
 {
     QString strGrabMode = value(KEY_GRAB_MODE).toString().toLower();
 #ifdef WINAPI_GRAB_SUPPORT
     if (strGrabMode == "winapi")
-        return WinAPIGrabMode;
+        return Grab::WinAPIGrabMode;
 #endif
 #ifdef X11_GRAB_SUPPORT
     if (strGrabMode == "x11")
-        return X11GrabMode;
+        return Grab::X11GrabMode;
 #endif
-    return QtGrabMode;
+    return Grab::QtGrabMode;
 }
 
-void Settings::setGrabMode(GrabMode grabMode)
+void Settings::setGrabMode(Grab::Mode grabMode)
 {
     QString strGrabMode;
     switch (grabMode)
     {
 #ifdef WINAPI_GRAB_SUPPORT
-    case WinAPIGrabMode:
+    case Grab::WinAPIGrabMode:
         strGrabMode = "Winapi";
         break;
 #endif
 #ifdef X11_GRAB_SUPPORT
-    case X11GrabMode:
+    case Grab::X11GrabMode:
         strGrabMode = "X11";
         break;
 #endif
@@ -494,19 +502,19 @@ void Settings::setGrabMode(GrabMode grabMode)
     setValue(KEY_GRAB_MODE, strGrabMode);
 }
 
-LightpackMode Settings::getMode()
+Lightpack::Mode Settings::getMode()
 {
-    QString strMode = value(KEY_MODE).toString().toLower();
+    QString strMode = value(KEY_MODE).toString();
     if (strMode == "grab")
-        return Grab;
+        return Lightpack::GrabScreenMode;
     else
-        return MoodLamp;
+        return Lightpack::MoodLampMode;
 }
 
-void Settings::setMode(LightpackMode mode)
+void Settings::setMode(Lightpack::Mode mode)
 {
     QString strMode;
-    if(mode == Grab)
+    if(mode == Lightpack::GrabScreenMode)
         strMode = "Grab";
     else
         strMode = "MoodLamp";
@@ -721,7 +729,7 @@ void Settings::settingsInit(bool isResetDefault)
                  isResetDefault);
     setNewOption(KEY_GRAB_SLOWDOWN_MS,              GRAB_SLOWDOWN_MS_DEFAULT_VALUE,
                  isResetDefault);
-    setNewOption(KEY_IS_AMBILIGHT_ON,               IS_AMBILIGHT_ON_DEFAULT_VALUE,
+    setNewOption(KEY_IS_BACKLIGHT_ON,               IS_BACKLIGHT_ON_DEFAULT_VALUE,
                  isResetDefault);
     setNewOption(KEY_IS_AVG_COLORS_ON,              IS_AVG_COLORS_ON_DEFAULT_VALUE,
                  isResetDefault);

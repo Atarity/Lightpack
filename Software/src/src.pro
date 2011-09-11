@@ -122,6 +122,7 @@ HEADERS += \
     grab/MacOSGrabber.hpp \
     grab/WinAPIGrabber.hpp \
     defs.h \
+    enums.hpp \
     inlinemath.hpp \
     ApiServer.hpp \
     ApiServerSetColorTask.hpp \
@@ -134,3 +135,6 @@ HEADERS += \
 FORMS += SettingsWindow.ui \
     AboutDialog.ui \
     GrabWidget.ui
+
+
+

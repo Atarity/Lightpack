@@ -24,9 +24,7 @@
  *
  */
 
-
-#ifndef VERSION_H
-#define VERSION_H
+#pragma once
 
 // Current version of Lightpack software
 #define VERSION_STR     "5.5.0"
@@ -46,4 +44,5 @@
 #define VER_ORIGINALFILENAME_STR    "Lightpack_sw" VERSION_STR ".exe"
 
 
-#endif // VERSION_H
+// Lightpack API version
+#define API_VERSION     "1.2"

@@ -100,12 +100,15 @@ void ApiServerSetColorTask::startTask(QByteArray buffer)
 
         // Read led red, green and blue colors to buffer buffRgb[]
         int indexBuffer = 0;
-        int indexRgb = 0;
+        int indexRgb = 0;        
         memset(buffRgb, 0, sizeof(buffRgb));
 
-        for (indexBuffer = 0; indexBuffer < buffer.length(); indexBuffer++){
+        bool isDigitExpected = true;
+        for (indexBuffer = 0; indexBuffer < buffer.length(); indexBuffer++)
+        {
             int d = getDigit(buffer[indexBuffer]);
-            if (d < 0) {
+            if (d < 0)
+            {
                 if (buffer[indexBuffer] == ';')
                 {
                     break;
@@ -116,10 +119,26 @@ void ApiServerSetColorTask::startTask(QByteArray buffer)
                     isReadFail = true;
                     goto end;
                 }
+                else if (isDigitExpected)
+                {
+                    API_DEBUG_OUT << "expected digit, buffer:" << QString(buffer) << indexBuffer << buffer[indexBuffer];
+                    isReadFail = true;
+                    goto end;
+                }
+                isDigitExpected = true;
                 indexRgb++;
             } else {
                 buffRgb[indexRgb] *= 10;
                 buffRgb[indexRgb] += d;
+
+                isDigitExpected = false;
+
+                if (buffRgb[indexRgb] > 255)
+                {
+                    API_DEBUG_OUT << "rgb value > 255";
+                    isReadFail = true;
+                    goto end;
+                }
             }
         }
 
@@ -137,7 +156,7 @@ void ApiServerSetColorTask::startTask(QByteArray buffer)
             // Remove semicolon
             buffer.remove(0, 1);
 
-            API_DEBUG_OUT << buffer.isEmpty();
+            API_DEBUG_OUT << "buffer.isEmpty() == " << buffer.isEmpty();
         }
     }
 
@@ -147,8 +166,8 @@ end:
         API_DEBUG_OUT << "errors while reading buffer";
         emit taskIsSuccess(false);
     } else {
-        API_DEBUG_OUT << "setcolor-ok";
+        API_DEBUG_OUT << "read setcolor buffer - ok";
         emit taskDone(colors);
-        emit taskIsSuccess(false);
+        emit taskIsSuccess(true);
     }
 }

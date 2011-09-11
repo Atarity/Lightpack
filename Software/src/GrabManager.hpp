@@ -28,10 +28,13 @@
 
 #include <QtGui>
 #include "../../CommonHeaders/LEDS_COUNT.h"
+#include "grab/IGrabber.hpp"
 #include "Settings.hpp"
+#include "SettingsWindow.hpp"
 #include "TimeEvaluations.hpp"
 #include "GrabWidget.hpp"
-#include "grab/IGrabber.hpp"
+
+#include "enums.hpp"
 
 class GrabManager : public QWidget
 {
@@ -47,7 +50,7 @@ signals:
 
 
 public slots:
-    void setAmbilightOn(bool isAmbilightOn, bool isErrorState);
+    void updateBacklightState(Backlight::Status backlightStatus);
     void setAmbilightSlowdownMs(int ms);
     void setAmbilightColorDepth(int depth);
     void setVisibleLedWidgets(bool state);
@@ -64,7 +67,7 @@ public slots:
     void settingsProfileChanged();
 
     void setGrabber(IGrabber * newGrabber);
-    void switchMode(LightpackMode mode);
+    void switchMode(Lightpack::Mode mode);
     void setMoodLampSpeed(int value);
     void setBrightness(int value);
     void setBackLightColor(QColor color);
@@ -103,7 +106,7 @@ private: // variables
     QRect screenSaved;
     int screenSavedIndex;
 
-    bool m_isAmbilightOn;
+    bool m_isGrabOn;
     bool m_isResizeOrMoving;
     bool m_updateColorsOnlyIfChanges;
     bool m_avgColorsOnAllLeds;
@@ -113,7 +116,7 @@ private: // variables
     double fpsMs;
 
     // Settings:
-    LightpackMode m_mode;
+    Lightpack::Mode m_mode;
     int m_moodLampSpeed;
     int m_brightness;
     QColor m_backlightColor;

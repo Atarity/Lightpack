@@ -98,8 +98,12 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     loadTranslation(Settings::getLanguage());
 
-    m_isErrorState = false;
-    m_isAmbilightOn = Settings::isAmbilightOn();
+    if (Settings::isBacklightOn())
+    {
+        m_backlightStatus = Backlight::StatusOn;
+    } else {
+        m_backlightStatus = Backlight::StatusOff;
+    }
 
     onGrabModeChanged();
 
@@ -135,7 +139,7 @@ void SettingsWindow::connectSignalsSlots()
     // Main options
     connect(ui->cb_Modes,SIGNAL(activated(int)), this, SLOT(onCbModesChanged(int)));
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
-    connect(ui->pushButton_EnableDisableDevice, SIGNAL(clicked()), this, SLOT(grabAmbilightOnOff()));
+    connect(ui->pushButton_EnableDisableDevice, SIGNAL(clicked()), this, SLOT(switchBacklightOnOff()));
 
     // Hardware options
     connect(ui->spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetColorDepth(int)));
@@ -219,13 +223,21 @@ void SettingsWindow::changeEvent(QEvent *e)
 
         profilesMenu->setTitle(tr("&Profiles"));
 
-        if(m_isAmbilightOn){
+        switch (m_backlightStatus)
+        {
+        case Backlight::StatusOn:
             m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
-        }else{
+            break;
+        case Backlight::StatusOff:
             m_trayIcon->setToolTip(tr("Disabled"));
+            break;
+        case Backlight::StatusDeviceError:
+            m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
+            break;
+        default:
+            qWarning() << Q_FUNC_INFO << "m_backlightStatus contains crap =" << m_backlightStatus;
+            break;
         }
-
-        if(m_isErrorState) m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
 
         setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
@@ -273,53 +285,65 @@ void SettingsWindow::onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
 
     if (isEnabled){
-        Settings::setConnectedDevice(SupportedDevice_Virtual);
+        Settings::setConnectedDevice(SupportedDevices::VirtualDevice);
     } else {
         // TODO: think about saving last connected device to main config
-        Settings::setConnectedDevice(SupportedDevice_Default);
+        Settings::setConnectedDevice(SupportedDevices::DefaultDevice);
     }
 
     emit recreateLedDevice();
 }
 
 // ----------------------------------------------------------------------------
-// Ambilight On / Off
+// Backlight On / Off
 // ----------------------------------------------------------------------------
 
-void SettingsWindow::ambilightOn()
+void SettingsWindow::backlightOn()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_isAmbilightOn = true;
-    startAmbilight();
+    m_backlightStatus = Backlight::StatusOn;
+    startBacklight();
 }
 
-void SettingsWindow::ambilightOff()
+void SettingsWindow::backlightOff()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_isAmbilightOn = false;
-    startAmbilight();
+    m_backlightStatus = Backlight::StatusOff;
+    startBacklight();
 }
 
-void SettingsWindow::grabAmbilightOnOff()
+void SettingsWindow::switchBacklightOnOff()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_isAmbilightOn = !m_isAmbilightOn;
-    startAmbilight();
-}
-
-void SettingsWindow::startAmbilight()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_isAmbilightOn;
-
-    Settings::setAmbilightOn(m_isAmbilightOn);
-    m_grabManager->setAmbilightOn(m_isAmbilightOn, m_isErrorState);
-
-    if(m_isAmbilightOn == false){
-        m_isErrorState = false;
+    switch (m_backlightStatus)
+    {
+    case Backlight::StatusOn:
+        m_backlightStatus = Backlight::StatusOff;
+        break;
+    case Backlight::StatusOff:
+        m_backlightStatus = Backlight::StatusOn;
+        break;
+    case Backlight::StatusDeviceError:
+        m_backlightStatus = Backlight::StatusOff;
+        break;
+    default:
+        qWarning() << Q_FUNC_INFO << "m_backlightStatus contains crap =" << m_backlightStatus;
+        break;
     }
+
+    startBacklight();
+}
+
+void SettingsWindow::startBacklight()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_backlightStatus;
+
+    Settings::setIsBacklightOn(m_backlightStatus != Backlight::StatusOff);
+
+    m_grabManager->updateBacklightState(m_backlightStatus);
 
     updateTrayAndActionStates();
 }
@@ -328,32 +352,38 @@ void SettingsWindow::updateTrayAndActionStates()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    if(m_isAmbilightOn){
+    switch (m_backlightStatus)
+    {
+    case Backlight::StatusOn:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
         ui->label_EnableDisableDevice->setText(tr("Switch off Lightpack"));
-    }else{
+        m_onAmbilightAction->setEnabled(false);
+        m_offAmbilightAction->setEnabled(true);
+        m_trayIcon->setIcon(QIcon(":/icons/on.png"));
+        m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+        break;
+
+    case Backlight::StatusOff:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/on.png"));
         ui->label_EnableDisableDevice->setText(tr("Switch on Lightpack"));
-    }
+        m_onAmbilightAction->setEnabled(true);
+        m_offAmbilightAction->setEnabled(false);
+        m_trayIcon->setIcon(QIcon(":/icons/off.png"));
+        m_trayIcon->setToolTip(tr("Disabled"));
+        break;
 
-    if(m_isErrorState){
+    case Backlight::StatusDeviceError:
+        ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
+        ui->label_EnableDisableDevice->setText(tr("Switch off Lightpack"));
+        m_onAmbilightAction->setEnabled(false);
+        m_offAmbilightAction->setEnabled(true);
         m_trayIcon->setIcon(QIcon(":/icons/error.png"));
         m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
-    }else{
-        if(m_isAmbilightOn){
-            m_trayIcon->setIcon(QIcon(":/icons/on.png"));
-            m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
-
-            m_onAmbilightAction->setEnabled(false);
-            m_offAmbilightAction->setEnabled(true);
-        }else{
-            m_trayIcon->setIcon(QIcon(":/icons/off.png"));
-            m_trayIcon->setToolTip(tr("Disabled"));
-
-            m_onAmbilightAction->setEnabled(true);
-            m_offAmbilightAction->setEnabled(false);
-        }
-    }    
+        break;
+    default:
+        qWarning() << Q_FUNC_INFO << "m_backlightStatus = " << m_backlightStatus;
+        break;
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -382,6 +412,11 @@ void SettingsWindow::updateGrabbedColors(const QList<QRgb> & colors)
         pal.setBrush(QPalette::Window, QBrush(color));
         label->setPalette(pal);
     }
+}
+
+void SettingsWindow::requestBacklightStatus()
+{
+    emit resultBacklightStatus(m_backlightStatus);
 }
 
 void SettingsWindow::setAvgColorOnAllLEDs(int value)
@@ -421,8 +456,8 @@ void SettingsWindow::showSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    LightpackMode mode = Settings::getMode();
-    ui->cb_Modes->setCurrentIndex   (mode == Grab ? 0 : 1); // we assume that LightpackMode in same order as cb_Modes
+    Lightpack::Mode mode = Settings::getMode();
+    ui->cb_Modes->setCurrentIndex((mode == Lightpack::GrabScreenMode) ? 0 : 1); // we assume that Lightpack::Mode in same order as cb_Modes
     m_grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && ui->cb_Modes->currentIndex()==0);
     this->show();
 }
@@ -446,11 +481,12 @@ void SettingsWindow::ledDeviceCallSuccess(bool isSuccess)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
 
-    if(m_isErrorState != ! isSuccess){
-        m_isErrorState = ! isSuccess;
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "isErrorState" << m_isErrorState;
+    if (isSuccess == false)
+    {
+        if (m_backlightStatus == Backlight::StatusOn)
+            m_backlightStatus = Backlight::StatusDeviceError;
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Backlight::StatusDeviceError";
     }
-
     updateTrayAndActionStates();
 }
 
@@ -563,7 +599,7 @@ void SettingsWindow::openCurrentProfile()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    openFile(Settings::getFileName());
+    openFile(Settings::getCurrentProfilePath());
 }
 
 void SettingsWindow::profileRename()
@@ -705,7 +741,9 @@ void SettingsWindow::settingsProfileChanged_UpdateUI()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
-    if(m_isAmbilightOn) m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+
+    if (m_backlightStatus == Backlight::StatusOn)
+        m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
     if(ui->comboBox_Profiles->count() > 1){
         ui->pushButton_DeleteProfile->setEnabled(true);
@@ -859,16 +897,16 @@ void SettingsWindow::onGrabModeChanged()
     m_grabManager->setGrabber(grabber);
 }
 
-IGrabber * SettingsWindow::createGrabber(GrabMode grabMode)
+IGrabber * SettingsWindow::createGrabber(Grab::Mode grabMode)
 {
     switch (grabMode)
     {
 #ifdef Q_WS_X11
-    case X11GrabMode:
+    case Grab::X11GrabMode:
         return new X11Grabber();
 #endif
 #ifdef Q_WS_WIN
-    case WinAPIGrabMode:
+    case Grab::WinAPIGrabMode:
         return new WinAPIGrabber();
 #endif
     default:
@@ -902,11 +940,11 @@ void SettingsWindow::createActions()
 
     m_onAmbilightAction = new QAction(QIcon(":/icons/on.png"), tr("&Turn on"), this);
     m_onAmbilightAction->setIconVisibleInMenu(true);
-    connect(m_onAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOn()));
+    connect(m_onAmbilightAction, SIGNAL(triggered()), this, SLOT(backlightOn()));
 
     m_offAmbilightAction = new QAction(QIcon(":/icons/off.png"), tr("&Turn off"), this);
     m_offAmbilightAction->setIconVisibleInMenu(true);
-    connect(m_offAmbilightAction, SIGNAL(triggered()), this, SLOT(ambilightOff()));
+    connect(m_offAmbilightAction, SIGNAL(triggered()), this, SLOT(backlightOff()));
 
 
     profilesMenu = new QMenu(tr("&Profiles"), this);
@@ -953,23 +991,29 @@ void SettingsWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    switch (reason) {
+    switch (reason)
+    {
     case QSystemTrayIcon::DoubleClick:
-        if(m_isErrorState){
-            ambilightOff();
-        }else{
-            if(m_isAmbilightOn){
-                ambilightOff();
-            }else{
-                ambilightOn();
-            }
+        switch (m_backlightStatus)
+        {
+        case Backlight::StatusOff:
+            backlightOn();
+            break;
+        case Backlight::StatusOn:
+        case Backlight::StatusDeviceError:
+            backlightOff();
+            break;
+        default:
+            qWarning() << Q_FUNC_INFO << "m_backlightStatus = " << m_backlightStatus;
+            break;
         }
         break;
 
     case QSystemTrayIcon::MiddleClick:
-        if(this->isVisible()){
+        if (this->isVisible())
+        {
             hideSettings();
-        }else{
+        } else {
             showSettings();
         }
         break;
@@ -1004,7 +1048,7 @@ void SettingsWindow::loadSettingsToMainWindow()
     ui->spinBox_MinLevelOfSensitivity->setValue         (Settings::getMinimumLevelOfSensitivity());
     ui->doubleSpinBox_HW_GammaCorrection->setValue      (Settings::getGammaCorrection());
     ui->checkBox_AVG_Colors->setChecked                 (Settings::isAvgColorsOn());
-    ui->cb_Modes->setCurrentIndex                       (Settings::getMode() == Grab ? 0 : 1); // we assume that LightpackMode in same order as cb_Modes
+    ui->cb_Modes->setCurrentIndex                       (Settings::getMode() == Lightpack::GrabScreenMode ? 0 : 1); // we assume that Lightpack::Mode in same order as cb_Modes
     ui->horizontalSlider_Speed->setValue                (Settings::getMoodLampSpeed());
     ui->horizontalSlider_Brightness->setValue           (Settings::getBrightness());
     ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
@@ -1016,17 +1060,17 @@ void SettingsWindow::loadSettingsToMainWindow()
     ui->spinBox_HW_SmoothSlowdown->setValue             (Settings::getFwSmoothSlowdown());
 
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
-    ui->checkBox_ConnectVirtualDevice->setChecked       (Settings::getConnectedDevice() == SupportedDevice_Virtual);
+    ui->checkBox_ConnectVirtualDevice->setChecked       (Settings::getConnectedDevice() == SupportedDevices::VirtualDevice);
 
-    switch(Settings::getGrabMode())
+    switch (Settings::getGrabMode())
     {
 #ifdef WINAPI_GRAB_SUPPORT
-    case WinAPIGrabMode:
+    case Grab::WinAPIGrabMode:
         ui->radioButton_GrabWinAPI->setChecked(true);
         break;
 #endif
 #ifdef X11_GRAB_SUPPORT
-    case X11GrabMode:
+    case Grab::X11GrabMode:
         ui->radioButton_GrabX11->setChecked(true);
         break;
 #endif
@@ -1041,20 +1085,20 @@ void SettingsWindow::loadSettingsToMainWindow()
     onGrabModeChanged();
 }
 
-GrabMode SettingsWindow::getGrabMode()
+Grab::Mode SettingsWindow::getGrabMode()
 {
 #ifdef X11_GRAB_SUPPORT
     if (ui->radioButton_GrabX11->isChecked()) {
-        return X11GrabMode;
+        return Grab::X11GrabMode;
     }
 #endif
 #ifdef WINAPI_GRAB_SUPPORT
     if (ui->radioButton_GrabWinAPI->isChecked()) {
-        return WinAPIGrabMode;
+        return Grab::WinAPIGrabMode;
     }
 #endif
 
-    return QtGrabMode;
+    return Grab::QtGrabMode;
 }
 
 // ----------------------------------------------------------------------------
@@ -1089,8 +1133,10 @@ void SettingsWindow::onCbModesChanged(int index)
         m_grabManager->setVisibleLedWidgets(false);
         break;
     }
-    m_grabManager->switchMode(index == 0 ? Grab : MoodLamp);
-//    Settings::setMode(index == 0 ? Grab : MoodLamp);
+    m_grabManager->switchMode(index == 0 ? Lightpack::GrabScreenMode : Lightpack::MoodLampMode);
+
+    // TODO: save mode to settings if need it!!!
+    //    Settings::setMode(index == 0 ? Grab : MoodLamp);
 }
 
 void SettingsWindow::on_horizontalSlider_Brightness_valueChanged(int value)
@@ -1103,7 +1149,6 @@ void SettingsWindow::onMoodLampColorChanged(QColor color)
 {
     m_grabManager->setBackLightColor(color);
 }
-
 
 void SettingsWindow::on_horizontalSlider_Speed_valueChanged(int value)
 {

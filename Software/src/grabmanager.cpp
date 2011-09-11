@@ -26,7 +26,6 @@
 
 #include "GrabManager.hpp"
 #include <QtCore/qmath.h>
-
 #include "debug.h"
 
 GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)
@@ -75,10 +74,10 @@ GrabManager::~GrabManager()
     delete timeEval;
     delete m_grabber;
 
-    for(int i=0; i<m_ledWidgets.count(); i++){
+    for (int i = 0; i < m_ledWidgets.count(); i++)
+    {
         m_ledWidgets[i]->close();
     }
-
     m_ledWidgets.clear();
 }
 
@@ -86,7 +85,8 @@ void GrabManager::initColorLists()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){       
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
         colorsCurrent << 0;
         colorsNew     << 0;
     }
@@ -96,8 +96,9 @@ void GrabManager::clearColorsCurrent()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        colorsCurrent[ledIndex] = 0;
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
+        colorsCurrent[i] = 0;
     }
 }
 
@@ -105,8 +106,9 @@ void GrabManager::clearColorsNew()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        colorsNew[ledIndex] = 0;
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
+        colorsNew[i] = 0;
     }
 }
 
@@ -116,13 +118,15 @@ void GrabManager::initLedWidgets()
 
     m_ledWidgets.clear();
 
-    for(int i=0; i<LEDS_COUNT; i++){
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
         m_ledWidgets << new GrabWidget(i, this);
     }
 
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        connect(m_ledWidgets[ledIndex], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(setResizeOrMovingFalse()));
-        connect(m_ledWidgets[ledIndex], SIGNAL(resizeOrMoveStarted()), this, SLOT(setResizeOrMovingTrue()));
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
+        connect(m_ledWidgets[i], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(setResizeOrMovingFalse()));
+        connect(m_ledWidgets[i], SIGNAL(resizeOrMoveStarted()), this, SLOT(setResizeOrMovingTrue()));
     }
 
 //    firstWidgetPositionChanged();
@@ -233,16 +237,16 @@ void GrabManager::updateLedsColorsIfChanged()
     int timer = m_grabSmoothSlowdown;
     switch (m_mode)
     {
-    case Grab:
+    case Lightpack::GrabScreenMode:
         ambilight();
         break;
-    case MoodLamp:
+    case Lightpack::MoodLampMode:
        moodlamp();
        timer = speed;
        break;
     }
 
-    if(m_isAmbilightOn){
+    if(m_isGrabOn){
         m_timerGrab->start( timer );
     }
 }
@@ -486,24 +490,27 @@ void GrabManager::updateFpsOnMainWindow()
     emit ambilightTimeOfUpdatingColors( fpsMs );
 }
 
-void GrabManager::setAmbilightOn(bool isAmbilightOn, bool isErrorState)
+void GrabManager::updateBacklightState(Backlight::Status backlightStatus)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isAmbilightOn << isErrorState;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << backlightStatus;
 
-    m_isAmbilightOn = isAmbilightOn;
+    m_isGrabOn = (backlightStatus == Backlight::StatusOn);
 
     clearColorsNew();
 
-    if( isAmbilightOn ){
-        // Restart ambilight timer
+    if (backlightStatus == Backlight::StatusOn)
+    {
+        // Start grabbing colors and sending signals
         m_timerGrab->start( 0 );
-    }else{
-        // Switch ambilight off
+    } else {
+        // Backlight is off or in an error state and we need to turn off the grab and stop sending signals
         m_timerGrab->stop();
-        clearColorsCurrent();
 
-        if(isErrorState == false){
-            emit updateLedsColors( colorsNew );
+        // Send signal to switch off leds if led device isn't in error state
+        clearColorsCurrent();
+        if (backlightStatus != Backlight::StatusDeviceError)
+        {
+            emit updateLedsColors(colorsCurrent);
         }
     }
 }
@@ -567,7 +574,7 @@ void GrabManager::setBackLightColor(QColor color)
     Settings::setMoodLampColor(color);
 }
 
- void GrabManager::switchMode(LightpackMode mode)
+ void GrabManager::switchMode(Lightpack::Mode mode)
  {
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
 

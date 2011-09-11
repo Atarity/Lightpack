@@ -30,6 +30,7 @@
 #include <QVariant>
 #include <QMutex>
 
+#include "enums.hpp"
 #include "defs.h"
 #include "debug.h"
 
@@ -53,7 +54,7 @@
 // ProfileName.ini
 // [General]
 #define GRAB_SLOWDOWN_MS_DEFAULT_VALUE          50
-#define IS_AMBILIGHT_ON_DEFAULT_VALUE           true
+#define IS_BACKLIGHT_ON_DEFAULT_VALUE           true
 #define IS_AVG_COLORS_ON_DEFAULT_VALUE          false
 #define MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT    3
 #define GAMMA_CORRECTION_DEFAULT_VALUE          2.0
@@ -88,25 +89,6 @@
 #define LED_COEF_MIN_VALUE  0.1
 #define LED_COEF_MAX_VALUE  3
 
-enum LightpackMode { Grab, MoodLamp };
-
-enum GrabMode {
-    QtGrabMode
-#ifdef WINAPI_GRAB_SUPPORT
-    ,WinAPIGrabMode
-#endif
-#ifdef X11_GRAB_SUPPORT
-    ,X11GrabMode
-#endif
-};
-
-enum SupportedDevices {
-    SupportedDevice_Lightpack,
-    SupportedDevice_AlienFx,
-    SupportedDevice_Virtual,
-    SupportedDevice_Default = SupportedDevice_Lightpack
-};
-
 class Settings : public QObject
 {
     Q_OBJECT
@@ -120,7 +102,8 @@ public:
     static void renameCurrentProfile(const QString & configName);
     static void removeCurrentProfile();
 
-    static QString getFileName();
+    static QString getCurrentProfileName();
+    static QString getCurrentProfilePath();
     static QString getApplicationDirPath();
     static QPoint getDefaultPosition(int ledIndex);
 
@@ -138,14 +121,14 @@ public:
     static void setApiKey(const QString & apiKey);
     static bool isExpertModeEnabled();
     static void setExpertModeEnabled(bool isEnabled);
-    static SupportedDevices getConnectedDevice();
-    static void setConnectedDevice(SupportedDevices device);
+    static SupportedDevices::DeviceType getConnectedDevice();
+    static void setConnectedDevice(SupportedDevices::DeviceType device);
 
     // Profile
     static int getGrabSlowdownMs();
     static void setGrabSlowdownMs(int value);
-    static bool isAmbilightOn();
-    static void setAmbilightOn(bool isEnabled);
+    static bool isBacklightOn();
+    static void setIsBacklightOn(bool isEnabled);
     static bool isAvgColorsOn();
     static void setAvgColorsOn(bool isEnabled);
     static int getMinimumLevelOfSensitivity();
@@ -155,10 +138,10 @@ public:
     static int getBrightness();
     static void setBrightness(int value);
 
-    static GrabMode getGrabMode();
-    static void setGrabMode(GrabMode grabMode);
-    static LightpackMode getMode();
-    static void setMode(LightpackMode mode);
+    static Grab::Mode getGrabMode();
+    static void setGrabMode(Grab::Mode grabMode);
+    static Lightpack::Mode getMode();
+    static void setMode(Lightpack::Mode mode);
     static bool isMoodLampLiquidMode();
     static void setMoodLampLiquidMode(bool isLiquidMode);
     static QColor getMoodLampColor();

@@ -33,10 +33,13 @@
 #include "GrabManager.hpp"
 #include "SpeedTest.hpp"
 #include "ColorButton.hpp"
+#include "enums.hpp"
 
 namespace Ui {
     class SettingsWindow;
 }
+
+class GrabManager; // forward declaration
 
 class SettingsWindow : public QMainWindow {
     Q_OBJECT
@@ -45,14 +48,7 @@ public:
     ~SettingsWindow();
 
 public:
-    enum AppMainStatus {
-        Status_Off = 0,
-        Status_On = -1,
-        Status_DeviceError = -2
-    };
-
-public:
-    void startAmbilight();
+    void startBacklight();
 
 signals:
     void settingsProfileChanged();
@@ -62,18 +58,20 @@ signals:
     void updateSmoothSlowdown(int value);
     void requestFirmwareVersion();
     void recreateLedDevice();
+    void resultBacklightStatus(Backlight::Status);
 
 
 public slots:
     void ledDeviceCallSuccess(bool isSuccess);
     void ledDeviceGetFirmwareVersion(const QString & fwVersion);
     void refreshAmbilightEvaluated(double updateResultMs);
-    void ambilightOn(); /* using in actions */
-    void ambilightOff(); /* using in actions */
+    void backlightOn(); /* using in actions */
+    void backlightOff(); /* using in actions */
     void profilesLoadAll();
     void profileSwitch(const QString & configName);
     void profileSwitchCombobox(QString profile);
     void updateGrabbedColors(const QList<QRgb> & colors);
+    void requestBacklightStatus();
 
 
 
@@ -94,7 +92,7 @@ private slots:
 
     void quit(); /* using in actions */
 
-    void grabAmbilightOnOff();
+    void switchBacklightOnOff();
 
     void settingsHardwareTimerOptionsChange();
     void settingsHardwareSetColorDepth(int value);
@@ -148,22 +146,18 @@ private:
 
     void updateCbModesPosition();
 
-    IGrabber * createGrabber(GrabMode grabMode);
+    IGrabber * createGrabber(Grab::Mode grabMode);
 
-public:
-    bool m_isAmbilightOn; /* is grab desktop window ON */
-    GrabManager *m_grabManager;
-//    ILedDevice *ledDevice;
 
 private:
+    // Main backlight status for all modes (Grab, MoodLamp, etc.)
+    Backlight::Status m_backlightStatus;
 
+    GrabManager *m_grabManager;
     AboutDialog *m_aboutDialog;
-    SpeedTest *speedTest;   
+    SpeedTest *speedTest;
 
-
-    bool m_isErrorState;
-
-    GrabMode getGrabMode();
+    Grab::Mode getGrabMode();
 
     // Evaluated frequency of the PWM generation
     double pwmFrequency;

@@ -31,6 +31,7 @@
 #include "ApiServerSetColorTask.hpp"
 #include "Settings.hpp"
 #include "TimeEvaluations.hpp"
+#include "version.h"
 
 #include "../../CommonHeaders/LEDS_COUNT.h"
 
@@ -54,12 +55,14 @@
 // setstatus:on - set status (on, off)
 
 // Immediatly after successful connection server sends client ApiVersion
-const char * ApiServer::ApiVersion = "version:1.2\n";
+const char * ApiServer::ApiVersion = "version:"API_VERSION"\n";
+const char * ApiServer::CmdUnknown = "unknown command\n";
 
 const char * ApiServer::CmdGetStatus = "getstatus";
 const char * ApiServer::CmdResultStatus_On = "status:on\n";
 const char * ApiServer::CmdResultStatus_Off = "status:off\n";
-const char * ApiServer::CmdResultStatus_DeviceError = "status:error\n";
+const char * ApiServer::CmdResultStatus_DeviceError = "status:device error\n";
+const char * ApiServer::CmdResultStatus_Unknown = "status:unknown\n";
 
 const char * ApiServer::CmdGetStatusAPI = "getstatusapi";
 const char * ApiServer::CmdResultStatusAPI_Busy = "statusapi:busy\n";
@@ -95,10 +98,15 @@ const char * ApiServer::CmdSetSmooth = "setsmooth:";
 const char * ApiServer::CmdSetProfile = "setprofile:";
 const char * ApiServer::CmdSetStatus = "setstatus:";
 
+const int ApiServer::SignalWaitTimeoutMs = 1000; // 1 second
+
 ApiServer::ApiServer(QObject *parent)
     : QTcpServer(parent)
 {
     m_lockedClient = NULL;
+    m_isRequestBacklightStatusDone = true;
+    m_backlightStatus = Backlight::StatusUnknown;
+
     initApiSetColorTask();
 }
 
@@ -106,6 +114,9 @@ ApiServer::ApiServer(quint16 port, QObject *parent)
     : QTcpServer(parent)
 {
     m_lockedClient = NULL;
+    m_isRequestBacklightStatusDone = true;
+    m_backlightStatus = Backlight::StatusUnknown;
+
     initApiSetColorTask();
 
     bool ok = listen(QHostAddress::Any, port);
@@ -115,28 +126,31 @@ ApiServer::ApiServer(quint16 port, QObject *parent)
     }
 }
 
-void ApiServer::incomingConnection(int socketfd)
+void ApiServer::incomingConnection(int socketDescriptor)
 {
     QTcpSocket *client = new QTcpSocket(this);
-    client->setSocketDescriptor(socketfd);
-    ClientSettings cs;
+    client->setSocketDescriptor(socketDescriptor);
+
+    ClientInfo cs;
+    cs.isAuthorized = false;
     cs.gamma = GAMMA_CORRECTION_DEFAULT_VALUE;
-    cs.smooth = FW_SMOOTH_SLOWDOWN_DEFAULT;
-    cs.auth = false;
-    m_clients.insert(client,cs);
+
+    m_clients.insert(client, cs);
 
     client->write(ApiVersion);
 
-    DEBUG_LOW_LEVEL << "New client from:" << client->peerAddress().toString();
+    DEBUG_LOW_LEVEL << "Incoming connection from:" << client->peerAddress().toString();
 
-    connect(client, SIGNAL(readyRead()), this, SLOT(readyRead()));
-    connect(client, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(client, SIGNAL(readyRead()), this, SLOT(clientReadyRead()));
+    connect(client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
 }
 
-void ApiServer::disconnected()
+void ApiServer::clientDisconnected()
 {
-    QTcpSocket *client = (QTcpSocket*)sender();
+    QTcpSocket *client = dynamic_cast<QTcpSocket*>(sender());
+
     DEBUG_LOW_LEVEL << "Client disconnected:" << client->peerAddress().toString();
+
     if (m_lockedClient == client)
     {
         m_lockedClient = NULL;
@@ -144,60 +158,202 @@ void ApiServer::disconnected()
         // TODO: Send MainWindow unlock signal
     }
     m_clients.remove(client);
+
+    disconnect(client, SIGNAL(readyRead()), this, SLOT(clientReadyRead()));
+    disconnect(client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
+
+    client->deleteLater();
 }
 
-void ApiServer::readyRead()
+void ApiServer::clientReadyRead()
 {
     API_DEBUG_OUT << Q_FUNC_INFO << "ApiServer thread id:" << this->thread()->currentThreadId();
 
-    QTcpSocket *client = (QTcpSocket *)sender();
+    QTcpSocket *client = dynamic_cast<QTcpSocket*>(sender());
 
     while (client->canReadLine())
     {
         QByteArray buffer = client->readLine().trimmed();
+        API_DEBUG_OUT << buffer;
 
-        if (buffer == CmdGetStatusAPI)
+        QString result = CmdUnknown;
+
+        if (buffer == CmdGetStatus)
         {
-            client->write(CmdResultStatusAPI_Idle);
+            API_DEBUG_OUT << CmdGetStatus;
+
+            if (m_isRequestBacklightStatusDone)
+            {
+                m_isRequestBacklightStatusDone = false;
+                m_backlightStatus = Backlight::StatusUnknown;
+
+                emit requestBacklightStatus();
+
+                // Wait signal from SettingsWindow with status of backlight
+                // or if timeout -- result will be unknown
+                m_time.restart();
+                while (m_isRequestBacklightStatusDone == false && m_time.elapsed() < SignalWaitTimeoutMs)
+                {
+                    QApplication::processEvents(QEventLoop::WaitForMoreEvents, SignalWaitTimeoutMs);
+                }
+
+                if (m_isRequestBacklightStatusDone)
+                {
+                    switch (m_backlightStatus)
+                    {
+                    case Backlight::StatusOn:
+                        result = CmdResultStatus_On;
+                        break;
+                    case Backlight::StatusOff:
+                        result = CmdResultStatus_Off;
+                        break;
+                    case Backlight::StatusDeviceError:
+                        result = CmdResultStatus_DeviceError;
+                        break;
+                    default:
+                        result = CmdResultStatus_Unknown;
+                        break;
+                    }
+                } else {
+                    m_isRequestBacklightStatusDone = true;
+                    result = CmdResultStatus_Unknown;
+                    qWarning() << Q_FUNC_INFO << "Timeout waiting resultBacklightStatus() signal from SettingsWindow";
+                }
+            }
+        }
+        else if (buffer == CmdGetStatusAPI)
+        {
+            API_DEBUG_OUT << CmdGetStatusAPI;
+
+            if (m_lockedClient != NULL)
+                result = CmdResultStatusAPI_Busy;
+            else
+                result = CmdResultStatusAPI_Idle;
+        }
+        else if (buffer == CmdGetProfiles)
+        {
+            API_DEBUG_OUT << CmdGetProfiles;
+
+            QStringList profiles = Settings::findAllProfiles();
+
+            result = ApiServer::CmdResultProfiles;
+
+            for (int i = 0; i < profiles.count(); i++)
+                result += profiles[i] + ";";
+            result += "\n";
+        }
+        else if (buffer == CmdGetProfile)
+        {
+            API_DEBUG_OUT << CmdGetProfile;
+
+            result = CmdResultProfile + Settings::getCurrentProfileName() + "\n";
         }
         else if (buffer.startsWith(CmdSetColor))
         {
-            buffer.remove(0, buffer.indexOf(':') + 1);
-            API_DEBUG_OUT << QString(buffer);
+            API_DEBUG_OUT << CmdSetColor;
+            result = CmdSetColor;
 
-            if (m_isTaskSetColorDone)
+            if (m_lockedClient == client)
             {
-                m_isTaskSetColorDone = false;
+                qDebug() << buffer.indexOf(':') << "+++++++++++++++++++++++++++";
+                buffer.remove(0, buffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(buffer);
 
-                emit startTask(buffer);
-            } else {
-                qWarning() << Q_FUNC_INFO << "Task setcolor is not completed (you should increase the delay to not skip commands), skip setcolor.";
+                if (m_isTaskSetColorDone)
+                {
+                    m_isTaskSetColorDone = false;
+                    m_isTaskSetColorParseSuccess = false;
+
+                    // Start task
+                    emit startTask(buffer);
+
+                    // Wait signal from m_apiSetColorTask with success or fail result of parsing buffer.
+                    // After SignalWaitTimeoutMs milliseconds, the cycle of waiting will end and the
+                    // variable m_isTaskSetColorDone will be reset to 'true' state.
+                    // Also in cycle we process requests from over clients, if this request is setcolor when
+                    // it will be ignored because of m_isTaskSetColorDone == false
+
+                    m_time.restart();
+
+                    while (m_isTaskSetColorDone == false && m_time.elapsed() < SignalWaitTimeoutMs)
+                    {
+                        QApplication::processEvents(QEventLoop::WaitForMoreEvents, SignalWaitTimeoutMs);
+                    }
+
+                    if (m_isTaskSetColorDone)
+                    {
+                        if (m_isTaskSetColorParseSuccess)
+                            result += CmdSetResult_Ok;
+                        else
+                            result += CmdSetResult_Error;
+                    } else {
+                        m_isTaskSetColorDone = true; // cmd setcolor is available
+                        result += CmdSetResult_Error;
+                        qWarning() << Q_FUNC_INFO << "Timeout waiting taskIsSuccess() signal from m_apiSetColorTask";
+                    }
+                } else {
+                    qWarning() << Q_FUNC_INFO << "Task setcolor is not completed (you should increase the delay to not skip commands), skip setcolor.";
+                }
+            }
+            else if (m_lockedClient == NULL)
+            {
+                result += CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result += CmdSetResult_Busy;
             }
         }
         else if (buffer == CmdLock)
         {
-            API_DEBUG_OUT << "lock not implemented";
+            API_DEBUG_OUT << CmdLock;
+
+            if (m_lockedClient == NULL)
+            {
+                m_lockedClient = client;
+                result = CmdResultLock_Success;
+            } else {
+                if (m_lockedClient == client)
+                {
+                    result = CmdResultLock_Success;
+                } else {
+                    result = CmdResultLock_Busy;
+                }
+            }
         }
         else if (buffer == CmdUnlock)
         {
-            API_DEBUG_OUT << "unlock not implemented";
+            API_DEBUG_OUT << CmdUnlock;
+
+            if (m_lockedClient == NULL)
+            {
+                result = CmdResultUnlock_NotLocked;
+            } else {
+                if (m_lockedClient == client)
+                    m_lockedClient = NULL;
+                result = CmdResultUnlock_Success;
+            }
         }
         else
         {
-            API_DEBUG_OUT << "error read buffer:" << QString(buffer);
-        }        
+            qWarning() << Q_FUNC_INFO << CmdUnknown;
+        }
+
+        API_DEBUG_OUT << result;
+        client->write(result.toUtf8());
     }
 }
 
-void ApiServer::taskSetColorIsSuccess(bool /*isSuccess*/)
+void ApiServer::taskSetColorIsSuccess(bool isSuccess)
 {
     m_isTaskSetColorDone = true;
+    m_isTaskSetColorParseSuccess = isSuccess;
 }
 
-void ApiServer::answerAppMainStatus(SettingsWindow::AppMainStatus status)
+void ApiServer::resultBacklightStatus(Backlight::Status status)
 {
-    m_appMainStatus = status;
-    m_isAnswerAppMainStatusDone = true;
+    m_isRequestBacklightStatusDone = true;
+    m_backlightStatus = status;
 }
 
 void ApiServer::initApiSetColorTask()
