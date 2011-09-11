@@ -19,3 +19,5 @@ Lightpack-Software-linux-x86-build/
 Lightpack-Software-win32-build/
 Lightpack-build-desktop[^\/]*/
 Lightpack[^-]+-build-desktop[^\/]*/
+.metadata/
+Software/apiexamples/.+\.pyc
