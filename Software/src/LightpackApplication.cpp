@@ -205,7 +205,9 @@ void LightpackApplication::startApiServer()
         connect(m_apiServer, SIGNAL(requestBacklightStatus()), m_settingsWindow, SLOT(requestBacklightStatus()));
         connect(m_settingsWindow, SIGNAL(resultBacklightStatus(Backlight::Status)), m_apiServer, SLOT(resultBacklightStatus(Backlight::Status)));
 
-        connect(m_apiServer, SIGNAL(setProfile(QString)), m_settingsWindow, SLOT(profileSwitch(QString)));
+        connect(m_apiServer, SIGNAL(updateProfile(QString)), m_settingsWindow, SLOT(profileSwitch(QString)));
+        connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)), m_settingsWindow, SLOT(setBacklightStatus(Backlight::Status)));
+
 
 //        m_apiServer->ApiKey = Settings::getApiKey();
 

@@ -14,12 +14,7 @@
 
 #include "debug.h"
 
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
-// x shared-mem extension
-#include <sys/shm.h>
-#include <X11/extensions/XShm.h>
+struct X11GrabberData;
 
 class X11Grabber : public IGrabber
 {
@@ -38,10 +33,8 @@ private:
     bool updateScreenAndAllocateMemory;
     int screen;
     QRect screenres;
-    Display *display;
-    Screen *Xscreen;
-    XImage *image;
-    XShmSegmentInfo shminfo;
+
+    X11GrabberData *d;
 //    int w, h;
 };
 #endif // X11_GRAB_SUPPORT

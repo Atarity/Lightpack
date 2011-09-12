@@ -2,20 +2,34 @@
 
 #ifdef X11_GRAB_SUPPORT
 
-#include<cmath>
-#include<sys/ipc.h>
+#include <X11/Xutil.h>
+// x shared-mem extension
+#include <sys/shm.h>
+#include <X11/extensions/XShm.h>
+#include <cmath>
+#include <sys/ipc.h>
+
+struct X11GrabberData
+{
+    Display *display;
+    Screen *Xscreen;
+    XImage *image;
+    XShmSegmentInfo shminfo;
+};
 
 X11Grabber::X11Grabber()
 {
     this->updateScreenAndAllocateMemory = true;
     this->screen = 0;
-    image = NULL;
-    display = XOpenDisplay(NULL);
+    d = new X11GrabberData();
+    d->image = NULL;
+    d->display = XOpenDisplay(NULL);
 }
 
 X11Grabber::~X11Grabber()
 {
-    XCloseDisplay(display);
+    XCloseDisplay(d->display);
+    delete d;
 }
 
 const char * X11Grabber::getName()
@@ -48,42 +62,42 @@ void X11Grabber::captureScreen()
         updateScreenAndAllocateMemory = false;
 
         // todo test and fix dual monitor configuration
-        Xscreen = DefaultScreenOfDisplay(display);
+        d->Xscreen = DefaultScreenOfDisplay(d->display);
 
-        long width=DisplayWidth(display,screen);
-        long height=DisplayHeight(display,screen);
+        long width=DisplayWidth(d->display, screen);
+        long height=DisplayHeight(d->display, screen);
 	
 	DEBUG_HIGH_LEVEL << "dimensions " << width << "x" << height << screen;
         screenres = QRect(0,0,width,height);
 
-	if (image != NULL) {
-            XShmDetach(display, &shminfo);
-            XDestroyImage(image);
-            shmdt (shminfo.shmaddr);
-            shmctl(shminfo.shmid, IPC_RMID, 0);
+        if (d->image != NULL) {
+            XShmDetach(d->display, &d->shminfo);
+            XDestroyImage(d->image);
+            shmdt (d->shminfo.shmaddr);
+            shmctl(d->shminfo.shmid, IPC_RMID, 0);
         }
-        image = XShmCreateImage(display,   DefaultVisualOfScreen(Xscreen),
-                                        DefaultDepthOfScreen(Xscreen),
-                                        ZPixmap, NULL, &shminfo,
+        d->image = XShmCreateImage(d->display,   DefaultVisualOfScreen(d->Xscreen),
+                                        DefaultDepthOfScreen(d->Xscreen),
+                                        ZPixmap, NULL, &d->shminfo,
                                         screenres.width(), screenres.height() );
         uint imagesize;
-        imagesize = image->bytes_per_line * image->height;
-        shminfo.shmid = shmget(    IPC_PRIVATE,
+        imagesize = d->image->bytes_per_line * d->image->height;
+        d->shminfo.shmid = shmget(    IPC_PRIVATE,
                                    imagesize,
                                    IPC_CREAT|0777
                                    );
 
-        char* mem = (char*)shmat(shminfo.shmid, 0, 0);
-        shminfo.shmaddr = mem;
-        image->data = mem;
-        shminfo.readOnly = False;
+        char* mem = (char*)shmat(d->shminfo.shmid, 0, 0);
+        d->shminfo.shmaddr = mem;
+        d->image->data = mem;
+        d->shminfo.readOnly = False;
 
-        XShmAttach(display, &shminfo);
+        XShmAttach(d->display, &d->shminfo);
     }
     // DEBUG_LOW_LEVEL << "XShmGetImage";
-    XShmGetImage(display,
-                 RootWindow(display, screen),
-                 image,
+    XShmGetImage(d->display,
+                 RootWindow(d->display, screen),
+                 d->image,
                  0,
                  0,
                  0x00FFFFFF
@@ -166,11 +180,11 @@ QRgb X11Grabber::getColor(int x, int y, int width, int height)
     register unsigned r=0,g=0,b=0;
 
     unsigned char *pbPixelsBuff;
-    int bytesPerPixel = image->bits_per_pixel / 8;
-    pbPixelsBuff = (unsigned char *)image->data;
+    int bytesPerPixel = d->image->bits_per_pixel / 8;
+    pbPixelsBuff = (unsigned char *)d->image->data;
     int count = 0; // count the amount of pixels taken into account
     for(int j = 0; j < height; j++) {
-        int index = image->bytes_per_line * (y+j) + x * bytesPerPixel;
+        int index = d->image->bytes_per_line * (y+j) + x * bytesPerPixel;
         for(int i = 0; i < width; i+=4) {
             b += pbPixelsBuff[index]   + pbPixelsBuff[index + 4] + pbPixelsBuff[index + 8 ] + pbPixelsBuff[index + 12];
             g += pbPixelsBuff[index+1] + pbPixelsBuff[index + 5] + pbPixelsBuff[index + 9 ] + pbPixelsBuff[index + 13];

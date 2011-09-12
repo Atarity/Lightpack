@@ -99,7 +99,10 @@ const char * ApiServer::CmdSetColor = "setcolor:";
 const char * ApiServer::CmdSetGamma = "setgamma:";
 const char * ApiServer::CmdSetSmooth = "setsmooth:";
 const char * ApiServer::CmdSetProfile = "setprofile:";
+
 const char * ApiServer::CmdSetStatus = "setstatus:";
+const char * ApiServer::CmdSetStatus_On = "on";
+const char * ApiServer::CmdSetStatus_Off = "off";
 
 const int ApiServer::SignalWaitTimeoutMs = 1000; // 1 second
 
@@ -158,7 +161,7 @@ void ApiServer::clientDisconnected()
     {
         m_lockedClient = NULL;
 
-        // TODO: Send MainWindow unlock signal
+        // TODO: Send SettingsWindow lock signal
     }
     m_clients.remove(client);
 
@@ -259,6 +262,7 @@ void ApiServer::clientProcessCommands()
             {
                 m_lockedClient = client;
                 result = CmdResultLock_Success;
+                // TODO: Send SettingsWindow lock signal
             } else {
                 if (m_lockedClient == client)
                 {
@@ -279,6 +283,7 @@ void ApiServer::clientProcessCommands()
                 if (m_lockedClient == client)
                     m_lockedClient = NULL;
                 result = CmdResultUnlock_Success;
+                // TODO: Send SettingsWindow unlock signal
             }
         }
         else if (buffer.startsWith(CmdSetColor))
@@ -449,11 +454,49 @@ void ApiServer::clientProcessCommands()
                 {
                     API_DEBUG_OUT << CmdSetProfile << "OK:" << setProfileName;
 
-                    emit setProfile(setProfileName);
+                    emit updateProfile(setProfileName);
 
                     result += CmdSetResult_Ok;
                 } else {
                     API_DEBUG_OUT << CmdSetProfile << "Error (profile not found):" << setProfileName;
+                    result += CmdSetResult_Error;
+                }
+            }
+            else if (m_lockedClient == NULL)
+            {
+                result += CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result += CmdSetResult_Busy;
+            }
+        }
+        else if (buffer.startsWith(CmdSetStatus))
+        {
+            API_DEBUG_OUT << CmdSetStatus;
+            result = CmdSetStatus;
+
+            if (m_lockedClient == client)
+            {
+                buffer.remove(0, buffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(buffer);
+
+                Backlight::Status status = Backlight::StatusUnknown;
+
+                if (buffer == CmdSetStatus_On)
+                    status = Backlight::StatusOn;
+                else if (buffer == CmdSetStatus_Off)
+                    status = Backlight::StatusOff;
+
+                if (status != Backlight::StatusUnknown)
+                {
+                    API_DEBUG_OUT << CmdSetStatus << "OK:" << status;
+
+                    emit updateStatus(status);
+
+                    result += CmdSetResult_Ok;
+                } else {
+                    API_DEBUG_OUT << CmdSetStatus << "Error (status not recognized):" << status;
                     result += CmdSetResult_Error;
                 }
             }

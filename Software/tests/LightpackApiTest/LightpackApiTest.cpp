@@ -67,7 +67,6 @@ public:
 
 private Q_SLOTS:
     void initTestCase();
-    void cleanupTestCase();
 
     void testCase_ApiVersion();
 
@@ -101,8 +100,6 @@ private Q_SLOTS:
     void testCase_SetProfile();
     void testCase_SetStatus();
 
-//    void testCase_CmdLock_data();
-
 private:
     QByteArray socketReadLine(QTcpSocket * socket, bool *ok);
     void socketWriteCmd(QTcpSocket * socket, const char * cmd);
@@ -133,6 +130,7 @@ public slots:
     void setLedColors(QList<QRgb> colors);
     void setSmooth(int value);
     void setProfile(QString profile);
+    void setStatus(Backlight::Status status);
 public:
     Backlight::Status m_status;
     bool m_isDone;
@@ -165,6 +163,12 @@ void SettingsWindowLittleVersion::setProfile(QString profile)
     m_isDone = true;
 }
 
+void SettingsWindowLittleVersion::setStatus(Backlight::Status status)
+{
+    m_status = status;
+    m_isDone = true;
+}
+
 LightpackApiTest::LightpackApiTest()
 {
     // Register QMetaType for Qt::QueuedConnection
@@ -190,13 +194,10 @@ void LightpackApiTest::initTestCase()
 
     connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), little, SLOT(setLedColors(QList<QRgb>)), Qt::QueuedConnection);
     connect(m_apiServer, SIGNAL(updateSmooth(int)), little, SLOT(setSmooth(int)), Qt::QueuedConnection);
-    connect(m_apiServer, SIGNAL(setProfile(QString)), little, SLOT(setProfile(QString)), Qt::QueuedConnection);
+    connect(m_apiServer, SIGNAL(updateProfile(QString)), little, SLOT(setProfile(QString)), Qt::QueuedConnection);
+    connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)), little, SLOT(setStatus(Backlight::Status)), Qt::QueuedConnection);
 
     Settings::Initialize(QDir::currentPath(), true);
-}
-
-void LightpackApiTest::cleanupTestCase()
-{
 }
 
 //
@@ -435,7 +436,7 @@ void LightpackApiTest::testCase_SetColor()
     QByteArray setColorCmd = ApiServer::CmdSetColor;
 
     setColorCmd += "1-23,2,65;";
-    int led = 0;
+    int led = 0; // first led index == 0
     QRgb rgb = getGammaCorrectedValue(qRgb(23, 2, 65), GAMMA_CORRECTION_DEFAULT_VALUE);
 
     socketWriteCmd(&sock, setColorCmd);
@@ -908,7 +909,6 @@ void LightpackApiTest::testCase_SetProfile()
      QStringList profiles = Settings::findAllProfiles();
      QVERIFY(profiles.count() > 0);
 
-
      QByteArray setProfileCmd = ApiServer::CmdSetProfile;
      setProfileCmd += profiles.at(0);
 
@@ -930,7 +930,48 @@ void LightpackApiTest::testCase_SetProfile()
 
 void LightpackApiTest::testCase_SetStatus()
 {
-    QVERIFY(false);
+    bool sockReadLineOk = false;
+
+     QTcpSocket sock;
+     sock.connectToHost("127.0.0.1", 3636);
+     socketReadLine(&sock, &sockReadLineOk); // skip version line
+     QVERIFY(sockReadLineOk);
+
+     // Lock
+     socketWriteCmd(&sock, ApiServer::CmdLock);
+     QByteArray result = socketReadLine(&sock, &sockReadLineOk);
+     QVERIFY(sockReadLineOk);
+     QVERIFY(result == ApiServer::CmdResultLock_Success);
+
+     QByteArray setStatusCmd = ApiServer::CmdSetStatus;
+     setStatusCmd += ApiServer::CmdSetStatus_On;
+
+     socketWriteCmd(&sock, setStatusCmd);
+     result = socketReadLine(&sock, &sockReadLineOk);
+     QVERIFY(sockReadLineOk);
+     QVERIFY(result == QByteArray(ApiServer::CmdSetStatus).append(ApiServer::CmdSetResult_Ok));
+
+     processEventsFromLittle();
+
+     QVERIFY(Backlight::StatusOn == little->m_status);
+
+     setStatusCmd = ApiServer::CmdSetStatus;
+     setStatusCmd += ApiServer::CmdSetStatus_Off;
+
+     socketWriteCmd(&sock, setStatusCmd);
+     result = socketReadLine(&sock, &sockReadLineOk);
+     QVERIFY(sockReadLineOk);
+     QVERIFY(result == QByteArray(ApiServer::CmdSetStatus).append(ApiServer::CmdSetResult_Ok));
+
+     processEventsFromLittle();
+
+     QVERIFY(Backlight::StatusOff == little->m_status);
+
+     // Unlock
+     socketWriteCmd(&sock, ApiServer::CmdUnlock);
+     result = socketReadLine(&sock, &sockReadLineOk);
+     QVERIFY(sockReadLineOk);
+     QVERIFY(result == ApiServer::CmdResultUnlock_Success);
 }
 
 QByteArray LightpackApiTest::socketReadLine(QTcpSocket * socket, bool *ok)

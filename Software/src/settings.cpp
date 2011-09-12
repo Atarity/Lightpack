@@ -469,6 +469,8 @@ void Settings::setBrightness(int value)
 
 Grab::Mode Settings::getGrabMode()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     QString strGrabMode = value(KEY_GRAB_MODE).toString().toLower();
 #ifdef WINAPI_GRAB_SUPPORT
     if (strGrabMode == "winapi")
@@ -483,6 +485,8 @@ Grab::Mode Settings::getGrabMode()
 
 void Settings::setGrabMode(Grab::Mode grabMode)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     QString strGrabMode;
     switch (grabMode)
     {

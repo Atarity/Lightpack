@@ -188,8 +188,8 @@ SettingsWindow::~SettingsWindow()
 {    
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    delete m_onAmbilightAction;
-    delete m_offAmbilightAction;
+    delete m_switchOnBacklightAction;
+    delete m_switchOffBacklightAction;
     delete m_settingsAction;
     delete m_aboutAction;
     delete m_quitAction;
@@ -215,8 +215,8 @@ void SettingsWindow::changeEvent(QEvent *e)
     case QEvent::LanguageChange:
 
         ui->retranslateUi(this);
-        m_onAmbilightAction->setText(tr("&Turn on"));
-        m_offAmbilightAction->setText(tr("&Turn off"));
+        m_switchOnBacklightAction->setText(tr("&Turn on"));
+        m_switchOffBacklightAction->setText(tr("&Turn off"));
         m_settingsAction->setText(tr("&Settings"));
         m_aboutAction->setText(tr("&About"));
         m_quitAction->setText(tr("&Quit"));
@@ -306,6 +306,20 @@ void SettingsWindow::backlightOn()
     startBacklight();
 }
 
+void SettingsWindow::setBacklightStatus(Backlight::Status status)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    if (m_backlightStatus != Backlight::StatusDeviceError
+            || status == Backlight::StatusOff)
+    {
+        m_backlightStatus = status;
+    }
+
+    startBacklight();
+}
+
+
 void SettingsWindow::backlightOff()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -357,8 +371,8 @@ void SettingsWindow::updateTrayAndActionStates()
     case Backlight::StatusOn:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
         ui->label_EnableDisableDevice->setText(tr("Switch off Lightpack"));
-        m_onAmbilightAction->setEnabled(false);
-        m_offAmbilightAction->setEnabled(true);
+        m_switchOnBacklightAction->setEnabled(false);
+        m_switchOffBacklightAction->setEnabled(true);
         m_trayIcon->setIcon(QIcon(":/icons/on.png"));
         m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
         break;
@@ -366,8 +380,8 @@ void SettingsWindow::updateTrayAndActionStates()
     case Backlight::StatusOff:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/on.png"));
         ui->label_EnableDisableDevice->setText(tr("Switch on Lightpack"));
-        m_onAmbilightAction->setEnabled(true);
-        m_offAmbilightAction->setEnabled(false);
+        m_switchOnBacklightAction->setEnabled(true);
+        m_switchOffBacklightAction->setEnabled(false);
         m_trayIcon->setIcon(QIcon(":/icons/off.png"));
         m_trayIcon->setToolTip(tr("Disabled"));
         break;
@@ -375,8 +389,8 @@ void SettingsWindow::updateTrayAndActionStates()
     case Backlight::StatusDeviceError:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
         ui->label_EnableDisableDevice->setText(tr("Switch off Lightpack"));
-        m_onAmbilightAction->setEnabled(false);
-        m_offAmbilightAction->setEnabled(true);
+        m_switchOnBacklightAction->setEnabled(false);
+        m_switchOffBacklightAction->setEnabled(true);
         m_trayIcon->setIcon(QIcon(":/icons/error.png"));
         m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
         break;
@@ -949,13 +963,13 @@ void SettingsWindow::createActions()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_onAmbilightAction = new QAction(QIcon(":/icons/on.png"), tr("&Turn on"), this);
-    m_onAmbilightAction->setIconVisibleInMenu(true);
-    connect(m_onAmbilightAction, SIGNAL(triggered()), this, SLOT(backlightOn()));
+    m_switchOnBacklightAction = new QAction(QIcon(":/icons/on.png"), tr("&Turn on"), this);
+    m_switchOnBacklightAction->setIconVisibleInMenu(true);
+    connect(m_switchOnBacklightAction, SIGNAL(triggered()), this, SLOT(backlightOn()));
 
-    m_offAmbilightAction = new QAction(QIcon(":/icons/off.png"), tr("&Turn off"), this);
-    m_offAmbilightAction->setIconVisibleInMenu(true);
-    connect(m_offAmbilightAction, SIGNAL(triggered()), this, SLOT(backlightOff()));
+    m_switchOffBacklightAction = new QAction(QIcon(":/icons/off.png"), tr("&Turn off"), this);
+    m_switchOffBacklightAction->setIconVisibleInMenu(true);
+    connect(m_switchOffBacklightAction, SIGNAL(triggered()), this, SLOT(backlightOff()));
 
 
     profilesMenu = new QMenu(tr("&Profiles"), this);
@@ -979,8 +993,8 @@ void SettingsWindow::createTrayIcon()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     m_trayIconMenu = new QMenu(this);
-    m_trayIconMenu->addAction(m_onAmbilightAction);
-    m_trayIconMenu->addAction(m_offAmbilightAction);
+    m_trayIconMenu->addAction(m_switchOnBacklightAction);
+    m_trayIconMenu->addAction(m_switchOffBacklightAction);
     m_trayIconMenu->addSeparator();
     m_trayIconMenu->addMenu(profilesMenu);
     m_trayIconMenu->addAction(m_settingsAction);

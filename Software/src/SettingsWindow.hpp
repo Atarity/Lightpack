@@ -65,6 +65,8 @@ public slots:
     void ledDeviceCallSuccess(bool isSuccess);
     void ledDeviceGetFirmwareVersion(const QString & fwVersion);
     void refreshAmbilightEvaluated(double updateResultMs);
+
+    void setBacklightStatus(Backlight::Status);
     void backlightOn(); /* using in actions */
     void backlightOff(); /* using in actions */
     void profilesLoadAll();
@@ -72,8 +74,6 @@ public slots:
     void profileSwitchCombobox(QString profile);
     void updateGrabbedColors(const QList<QRgb> & colors);
     void requestBacklightStatus();
-
-
 
 protected:
     virtual void changeEvent(QEvent *e);
@@ -166,8 +166,8 @@ private:
 
     Ui::SettingsWindow *ui;
 
-    QAction *m_onAmbilightAction;
-    QAction *m_offAmbilightAction;
+    QAction *m_switchOnBacklightAction;
+    QAction *m_switchOffBacklightAction;
     QAction *m_settingsAction;
     QAction *m_aboutAction;
     QAction *m_quitAction;

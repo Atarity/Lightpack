@@ -90,7 +90,10 @@ public:
     static const char * CmdSetGamma;
     static const char * CmdSetSmooth;
     static const char * CmdSetProfile;
+
     static const char * CmdSetStatus;
+    static const char * CmdSetStatus_On;
+    static const char * CmdSetStatus_Off;
 
     static const int SignalWaitTimeoutMs;
 
@@ -99,7 +102,8 @@ signals:
     void startTask(QByteArray buffer, double gamma);
     void updateLedsColors(const QList<QRgb> & colors);
     void updateSmooth(int value);
-    void setProfile(QString profileName);
+    void updateProfile(QString profileName);
+    void updateStatus(Backlight::Status status);
 
 protected:
     void incomingConnection(int socketDescriptor);
