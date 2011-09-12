@@ -668,10 +668,10 @@ double Settings::getValidGammaCorrection(double value)
 
 int Settings::getValidGrabSlowdownMs(int value)
 {
-    if (value < 1)
-        value = 1;
-    else if (value > 1000)
-        value = 1000;
+    if (value < SMOOTH_MIN_VALUE)
+        value = SMOOTH_MIN_VALUE;
+    else if (value > SMOOTH_MAX_VALUE)
+        value = SMOOTH_MAX_VALUE;
     return value;
 }
 

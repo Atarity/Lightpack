@@ -96,6 +96,7 @@ public:
 signals:
     void requestBacklightStatus();
     void updateLedsColors(const QList<QRgb> & colors);
+    void updateSmooth(int value);
     void startTask(QByteArray buffer, double gamma);
 
 protected:
@@ -103,7 +104,7 @@ protected:
 
 private slots:
     void clientDisconnected();
-    void clientReadyRead();
+    void clientProcessCommands();
     void resultBacklightStatus(Backlight::Status status);
     void taskSetColorIsSuccess(bool isSuccess);
 

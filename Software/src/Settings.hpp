@@ -92,6 +92,9 @@
 #define GAMMA_MIN_VALUE     0.0
 #define GAMMA_MAX_VALUE     10.0
 
+#define SMOOTH_MIN_VALUE    0
+#define SMOOTH_MAX_VALUE    255
+
 class Settings : public QObject
 {
     Q_OBJECT

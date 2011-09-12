@@ -259,7 +259,7 @@ bool LedDeviceLightpack::tryToReopenDevice()
 
 bool LedDeviceLightpack::readDataFromDeviceWithCheck()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     if(m_hidDevice != NULL){
         if(!readDataFromDevice()){
@@ -269,7 +269,7 @@ bool LedDeviceLightpack::readDataFromDeviceWithCheck()
                 return false;
             }
         }
-        return true;
+        return true;        
     }else{
         if(tryToReopenDevice()){
             return readDataFromDevice();

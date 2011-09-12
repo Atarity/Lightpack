@@ -200,6 +200,7 @@ void LightpackApplication::startApiServer()
         m_apiServerThread = new QThread();
 
         connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDeviceFactory, SLOT(setColorsIfDeviceAvailable(QList<QRgb>)), Qt::QueuedConnection);
+        connect(m_apiServer, SIGNAL(updateSmooth(int)), m_ledDeviceFactory, SIGNAL(setSmoothSlowdown(int)), Qt::QueuedConnection);
 
         connect(m_apiServer, SIGNAL(requestBacklightStatus()), m_settingsWindow, SLOT(requestBacklightStatus()));
         connect(m_settingsWindow, SIGNAL(resultBacklightStatus(Backlight::Status)), m_apiServer, SLOT(resultBacklightStatus(Backlight::Status)));

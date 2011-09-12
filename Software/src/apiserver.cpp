@@ -141,7 +141,7 @@ void ApiServer::incomingConnection(int socketDescriptor)
 
     DEBUG_LOW_LEVEL << "Incoming connection from:" << client->peerAddress().toString();
 
-    connect(client, SIGNAL(readyRead()), this, SLOT(clientReadyRead()));
+    connect(client, SIGNAL(readyRead()), this, SLOT(clientProcessCommands()));
     connect(client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
 }
 
@@ -159,13 +159,13 @@ void ApiServer::clientDisconnected()
     }
     m_clients.remove(client);
 
-    disconnect(client, SIGNAL(readyRead()), this, SLOT(clientReadyRead()));
+    disconnect(client, SIGNAL(readyRead()), this, SLOT(clientProcessCommands()));
     disconnect(client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
 
     client->deleteLater();
 }
 
-void ApiServer::clientReadyRead()
+void ApiServer::clientProcessCommands()
 {
     API_DEBUG_OUT << Q_FUNC_INFO << "ApiServer thread id:" << this->thread()->currentThreadId();
 
@@ -366,6 +366,54 @@ void ApiServer::clientReadyRead()
                         }
                     } else {
                         API_DEBUG_OUT << CmdSetGamma << "Error (convert fail):" << gamma;
+                        result += CmdSetResult_Error;
+                    }
+                }
+            }
+            else if (m_lockedClient == NULL)
+            {
+                result += CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result += CmdSetResult_Busy;
+            }
+        }
+        else if (buffer.startsWith(CmdSetSmooth))
+        {
+            API_DEBUG_OUT << CmdSetSmooth;
+            result = CmdSetSmooth;
+
+            if (m_lockedClient == client)
+            {
+                buffer.remove(0, buffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(buffer);
+
+                // Smooth can contain max three chars (0 -- 255)
+                if (buffer.length() > 3)
+                {
+                    API_DEBUG_OUT << CmdSetSmooth << "Error (smooth max 3 chars)";
+                    result += CmdSetResult_Error;
+                } else {
+                    // Try to convert smooth string to int
+                    bool ok = false;
+                    int smooth = QString(buffer).toInt(&ok);
+
+                    if (ok)
+                    {
+                        if (smooth <= SMOOTH_MAX_VALUE && smooth >= SMOOTH_MIN_VALUE)
+                        {
+                            API_DEBUG_OUT << CmdSetSmooth << "OK:" << smooth;
+
+                            emit updateSmooth(smooth);
+
+                            result += CmdSetResult_Ok;
+                        } else {
+                            API_DEBUG_OUT << CmdSetSmooth << "Error (max min test fail):" << smooth;
+                            result += CmdSetResult_Error;
+                        }
+                    } else {
+                        API_DEBUG_OUT << CmdSetSmooth << "Error (convert fail):" << smooth;
                         result += CmdSetResult_Error;
                     }
                 }
