@@ -89,6 +89,9 @@
 #define LED_COEF_MIN_VALUE  0.1
 #define LED_COEF_MAX_VALUE  3
 
+#define GAMMA_MIN_VALUE     0.0
+#define GAMMA_MAX_VALUE     10.0
+
 class Settings : public QObject
 {
     Q_OBJECT
@@ -173,6 +176,7 @@ public:
     static void setLedEnabled(int ledIndex, bool isEnabled);
 
 private:    
+    static double getValidGammaCorrection(double value);
     static int getValidGrabSlowdownMs(int value);
     static int getValidMoodLampSpeed(int value);
     static void setValidLedCoef(int ledIndex, const QString & keyCoef, double coef);

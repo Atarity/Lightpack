@@ -449,12 +449,12 @@ void Settings::setMinimumLevelOfSensitivity(int value)
 
 double Settings::getGammaCorrection()
 {
-    return value(KEY_GAMMA_CORRECTION).toDouble();
+    return getValidGammaCorrection(value(KEY_GAMMA_CORRECTION).toDouble());
 }
 
 void Settings::setGammaCorrection(double gamma)
 {
-    setValue(KEY_GAMMA_CORRECTION, gamma);
+    setValue(KEY_GAMMA_CORRECTION, getValidGammaCorrection(gamma));
 }
 
 int Settings::getBrightness()
@@ -655,6 +655,15 @@ bool Settings::isLedEnabled(int ledIndex)
 void Settings::setLedEnabled(int ledIndex, bool isEnabled)
 {
     setValue(KEY_LED_PREFIX + QString::number(ledIndex + 1) + "/" + KEY_LED_IS_ENABLED, isEnabled);
+}
+
+double Settings::getValidGammaCorrection(double value)
+{
+    if (value <= GAMMA_MIN_VALUE)
+        value = GAMMA_MIN_VALUE;
+    else if (value >= GAMMA_MAX_VALUE)
+        value = GAMMA_MAX_VALUE;
+    return value;
 }
 
 int Settings::getValidGrabSlowdownMs(int value)

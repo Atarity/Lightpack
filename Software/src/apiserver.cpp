@@ -248,16 +248,45 @@ void ApiServer::clientReadyRead()
 
             result = CmdResultProfile + Settings::getCurrentProfileName() + "\n";
         }
+        else if (buffer == CmdLock)
+        {
+            API_DEBUG_OUT << CmdLock;
+
+            if (m_lockedClient == NULL)
+            {
+                m_lockedClient = client;
+                result = CmdResultLock_Success;
+            } else {
+                if (m_lockedClient == client)
+                {
+                    result = CmdResultLock_Success;
+                } else {
+                    result = CmdResultLock_Busy;
+                }
+            }
+        }
+        else if (buffer == CmdUnlock)
+        {
+            API_DEBUG_OUT << CmdUnlock;
+
+            if (m_lockedClient == NULL)
+            {
+                result = CmdResultUnlock_NotLocked;
+            } else {
+                if (m_lockedClient == client)
+                    m_lockedClient = NULL;
+                result = CmdResultUnlock_Success;
+            }
+        }
         else if (buffer.startsWith(CmdSetColor))
         {
             API_DEBUG_OUT << CmdSetColor;
-            result = CmdSetColor;
+            result = CmdSetColor;            
 
             if (m_lockedClient == client)
             {
-                qDebug() << buffer.indexOf(':') << "+++++++++++++++++++++++++++";
                 buffer.remove(0, buffer.indexOf(':') + 1);
-                API_DEBUG_OUT << QString(buffer);
+                API_DEBUG_OUT << QString(buffer);                               
 
                 if (m_isTaskSetColorDone)
                 {
@@ -265,7 +294,7 @@ void ApiServer::clientReadyRead()
                     m_isTaskSetColorParseSuccess = false;
 
                     // Start task
-                    emit startTask(buffer);
+                    emit startTask(buffer, m_clients.value(client).gamma);
 
                     // Wait signal from m_apiSetColorTask with success or fail result of parsing buffer.
                     // After SignalWaitTimeoutMs milliseconds, the cycle of waiting will end and the
@@ -304,34 +333,50 @@ void ApiServer::clientReadyRead()
                 result += CmdSetResult_Busy;
             }
         }
-        else if (buffer == CmdLock)
+        else if (buffer.startsWith(CmdSetGamma))
         {
-            API_DEBUG_OUT << CmdLock;
+            API_DEBUG_OUT << CmdSetGamma;
+            result = CmdSetGamma;
 
-            if (m_lockedClient == NULL)
+            if (m_lockedClient == client)
             {
-                m_lockedClient = client;
-                result = CmdResultLock_Success;
-            } else {
-                if (m_lockedClient == client)
+                buffer.remove(0, buffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(buffer);
+
+                // Gamma can contain max five chars (0.00 -- 10.00)
+                if (buffer.length() > 5)
                 {
-                    result = CmdResultLock_Success;
+                    API_DEBUG_OUT << CmdSetGamma << "Error (gamma max 5 chars)";
+                    result += CmdSetResult_Error;
                 } else {
-                    result = CmdResultLock_Busy;
+                    // Try to convert gamma string to double
+                    bool ok = false;
+                    double gamma = QString(buffer).toDouble(&ok);
+
+                    if (ok)
+                    {
+                        if (gamma <= GAMMA_MAX_VALUE && gamma >= GAMMA_MIN_VALUE)
+                        {
+                            API_DEBUG_OUT << CmdSetGamma << "OK:" << gamma;
+                            m_clients[client].gamma = gamma;
+                            result += CmdSetResult_Ok;
+                        } else {
+                            API_DEBUG_OUT << CmdSetGamma << "Error (max min test fail):" << gamma;
+                            result += CmdSetResult_Error;
+                        }
+                    } else {
+                        API_DEBUG_OUT << CmdSetGamma << "Error (convert fail):" << gamma;
+                        result += CmdSetResult_Error;
+                    }
                 }
             }
-        }
-        else if (buffer == CmdUnlock)
-        {
-            API_DEBUG_OUT << CmdUnlock;
-
-            if (m_lockedClient == NULL)
+            else if (m_lockedClient == NULL)
             {
-                result = CmdResultUnlock_NotLocked;
-            } else {
-                if (m_lockedClient == client)
-                    m_lockedClient = NULL;
-                result = CmdResultUnlock_Success;
+                result += CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result += CmdSetResult_Busy;
             }
         }
         else
@@ -366,7 +411,7 @@ void ApiServer::initApiSetColorTask()
     connect(m_apiSetColorTask, SIGNAL(taskDone(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)), Qt::QueuedConnection);
 
     connect(m_apiSetColorTask, SIGNAL(taskIsSuccess(bool)), this, SLOT(taskSetColorIsSuccess(bool)), Qt::QueuedConnection);
-    connect(this, SIGNAL(startTask(QByteArray)), m_apiSetColorTask, SLOT(startTask(QByteArray)), Qt::QueuedConnection);
+    connect(this, SIGNAL(startTask(QByteArray,double)), m_apiSetColorTask, SLOT(startTask(QByteArray,double)), Qt::QueuedConnection);
 
     m_apiSetColorTask->moveToThread(m_apiSetColorTaskThread);
     m_apiSetColorTaskThread->start();

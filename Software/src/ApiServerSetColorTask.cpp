@@ -27,15 +27,17 @@
 #include "debug.h"
 #include "ApiServerSetColorTask.hpp"
 #include "../../CommonHeaders/LEDS_COUNT.h"
+#include "Settings.hpp"
+#include <cmath>
 
 ApiServerSetColorTask::ApiServerSetColorTask(QObject *parent) :
     QObject(parent)
 {
     for (int i = 0; i < LEDS_COUNT; i++)
-        colors << 0;
+        m_colors << 0;
 }
 
-void ApiServerSetColorTask::startTask(QByteArray buffer)
+void ApiServerSetColorTask::startTask(QByteArray buffer, double gamma)
 {
     API_DEBUG_OUT << QString(buffer) << "task thread:" << thread()->currentThreadId();
     bool isReadFail = false;
@@ -145,11 +147,16 @@ void ApiServerSetColorTask::startTask(QByteArray buffer)
         // Remove read colors
         buffer.remove(0, indexBuffer);
 
-        // Save colors
-        colors[ledNumber] = qRgb(buffRgb[bRed], buffRgb[bGreen], buffRgb[bBlue]);
+        unsigned r_gamma = 256.0 * pow(buffRgb[bRed] / 256.0, gamma);
+        unsigned g_gamma = 256.0 * pow(buffRgb[bGreen] / 256.0, gamma);
+        unsigned b_gamma = 256.0 * pow(buffRgb[bBlue] / 256.0, gamma);
 
-        API_DEBUG_OUT << "result color-" << buffRgb[bRed] << buffRgb[bGreen] << buffRgb[bBlue]
-                      << "buff-" << QString(buffer);
+        // Save colors
+        m_colors[ledNumber] = qRgb(r_gamma, g_gamma, b_gamma);
+
+        API_DEBUG_OUT << "result color:" << buffRgb[bRed] << buffRgb[bGreen] << buffRgb[bBlue]
+                      << "gamma corrected:" << r_gamma << g_gamma << b_gamma
+                      << "buffer:" << QString(buffer);
 
         if (buffer[0] == ';')
         {
@@ -167,7 +174,7 @@ end:
         emit taskIsSuccess(false);
     } else {
         API_DEBUG_OUT << "read setcolor buffer - ok";
-        emit taskDone(colors);
+        emit taskDone(m_colors);
         emit taskIsSuccess(true);
     }
 }

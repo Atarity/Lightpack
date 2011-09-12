@@ -42,10 +42,10 @@ signals:
     void taskIsSuccess(bool isSuccess);
 
 public slots:
-    void startTask(QByteArray buffer);
+    void startTask(QByteArray buffer, double gamma);
 
 private:
-    QList<QRgb> colors;
+    QList<QRgb> m_colors;
 
     enum BuffRgbIndexes{
         bRed, bGreen, bBlue, bSize

@@ -96,7 +96,7 @@ public:
 signals:
     void requestBacklightStatus();
     void updateLedsColors(const QList<QRgb> & colors);
-    void startTask(QByteArray buffer);
+    void startTask(QByteArray buffer, double gamma);
 
 protected:
     void incomingConnection(int socketDescriptor);

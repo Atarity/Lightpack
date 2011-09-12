@@ -86,7 +86,13 @@ private Q_SLOTS:
     void testCase_SetColorValid2_data();
     void testCase_SetColorInvalid();
     void testCase_SetColorInvalid_data();
+
     void testCase_SetGamma();
+    void testCase_SetGammaValid();
+    void testCase_SetGammaValid_data();
+    void testCase_SetGammaInvalid();
+    void testCase_SetGammaInvalid_data();
+
     void testCase_SetSmooth();
     void testCase_SetProfile();
     void testCase_SetStatus();
@@ -98,6 +104,7 @@ private:
     void socketWriteCmd(QTcpSocket * socket, const char * cmd);
     QString getProfilesResultString();
     void processEventsFromLittle(SettingsWindowLittleVersion * little);
+    QRgb getGammaCorrectedValue(QRgb rgb, double gamma);
 
 private:
     ApiServer *m_apiServer;
@@ -133,8 +140,6 @@ void SettingsWindowLittleVersion::setLedColors(QList<QRgb> colors)
 {
     m_colors = colors;
     m_isDone = true;
-
-    qDebug() << m_colors << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
 }
 
 LightpackApiTest::LightpackApiTest()
@@ -219,8 +224,6 @@ void LightpackApiTest::testCase_GetStatus()
 
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(result == ApiServer::CmdResultStatus_DeviceError);
-
-    little->deleteLater();
 }
 
 void LightpackApiTest::testCase_GetStatusAPI()
@@ -408,14 +411,12 @@ void LightpackApiTest::testCase_SetColor()
 
     setColorCmd += "1-23,2,65;";
     int led = 0;
-    QRgb rgb = qRgb(23, 2, 65);
+    QRgb rgb = getGammaCorrectedValue(qRgb(23, 2, 65), GAMMA_CORRECTION_DEFAULT_VALUE);
 
     socketWriteCmd(&sock, setColorCmd);
 
     QByteArray result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-
-    qDebug() << result << "1111111111111111111111111111111";
 
     QVERIFY(result == QByteArray(ApiServer::CmdSetColor).append(ApiServer::CmdSetResult_NotLocked));
 
@@ -428,7 +429,6 @@ void LightpackApiTest::testCase_SetColor()
     socketWriteCmd(&sock, setColorCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    qDebug() << result << "2222222222222222222222222222";
     QVERIFY(result == QByteArray(ApiServer::CmdSetColor).append(ApiServer::CmdSetResult_Busy));
 
     // Test in SetColor change to unlock state:
@@ -476,7 +476,7 @@ void LightpackApiTest::testCase_SetColorValid()
     QFETCH(int, g);
     QFETCH(int, b);
 
-    QRgb rgb = qRgb(r, g, b);
+    QRgb rgb = getGammaCorrectedValue(qRgb(r, g, b), GAMMA_CORRECTION_DEFAULT_VALUE);
 
     setColorCmd += cmd;
 
@@ -505,6 +505,7 @@ void LightpackApiTest::testCase_SetColorValid_data()
     QTest::addColumn<int>("g");
     QTest::addColumn<int>("b");
 
+    QTest::newRow("0") << "1-1,1,1" << 1 << 1 << 1 << 1; // setcolor without semicolon is valid!
     QTest::newRow("1") << "1-1,1,1;" << 1 << 1 << 1 << 1;
     QTest::newRow("2") << "2-1,1,1;" << 2 << 1 << 1 << 1;
     QTest::newRow("3") << "10-1,1,1;" << 10 << 1 << 1 << 1;
@@ -543,6 +544,9 @@ void LightpackApiTest::testCase_SetColorValid2()
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
     QVERIFY(result == QByteArray(ApiServer::CmdSetColor).append(ApiServer::CmdSetResult_Ok));
+
+    // Just process all pending events from m_apiServer
+    processEventsFromLittle(little);
 
     // Unlock
     socketWriteCmd(&sock, ApiServer::CmdUnlock);
@@ -625,12 +629,148 @@ void LightpackApiTest::testCase_SetColorInvalid_data()
      QTest::newRow("14") << "1-1,100000000000000000000000;";
      QTest::newRow("15") << "1-1,1,1;2-4,5,,;";
      QTest::newRow("16") << "1-1,1,1;2-2,2,2;3-3,3,3;4-4,4,4;5-5,5,5;;6-6,6,6;7-7,7,7;8-8,8,8;9-9,9,9;";
+     QTest::newRow("17") << "1-1,1,1;;";
 }
-
 
 void LightpackApiTest::testCase_SetGamma()
 {
-    QVERIFY(false);
+    bool sockReadLineOk = false;
+
+    QTcpSocket sock;
+    sock.connectToHost("127.0.0.1", 3636);
+    socketReadLine(&sock, &sockReadLineOk); // skip version line
+    QVERIFY(sockReadLineOk);
+
+    // Lock
+    socketWriteCmd(&sock, ApiServer::CmdLock);
+    QByteArray result = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(sockReadLineOk);
+    QVERIFY(result == ApiServer::CmdResultLock_Success);
+
+    // Set gamma to 5.0 value
+    QByteArray setGammaCmd = ApiServer::CmdSetGamma;
+    setGammaCmd += "5.0";
+
+    socketWriteCmd(&sock, setGammaCmd);
+    result = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(sockReadLineOk);
+    QVERIFY(result == QByteArray(ApiServer::CmdSetGamma).append(ApiServer::CmdSetResult_Ok));
+
+    // Test set color works with new gamma
+    QByteArray setColorCmd = ApiServer::CmdSetColor;
+    setColorCmd += "1-23,2,65;";
+    int led = 0;
+    QRgb rgb = getGammaCorrectedValue(qRgb(23, 2, 65), 5.0);
+
+    socketWriteCmd(&sock, setColorCmd);
+    result = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(sockReadLineOk);
+    QVERIFY(result == QByteArray(ApiServer::CmdSetColor).append(ApiServer::CmdSetResult_Ok));
+
+    processEventsFromLittle(little);
+
+    QVERIFY(little->m_colors[led] == rgb);
+
+    // Unlock
+    socketWriteCmd(&sock, ApiServer::CmdUnlock);
+    result = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(sockReadLineOk);
+    QVERIFY(result == ApiServer::CmdResultUnlock_Success);
+}
+
+void LightpackApiTest::testCase_SetGammaValid()
+{
+    bool sockReadLineOk = false;
+
+    QTcpSocket sock;
+    sock.connectToHost("127.0.0.1", 3636);
+    socketReadLine(&sock, &sockReadLineOk); // skip version line
+    QVERIFY(sockReadLineOk);
+
+    // Lock
+    socketWriteCmd(&sock, ApiServer::CmdLock);
+    QByteArray result = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(sockReadLineOk);
+    QVERIFY(result == ApiServer::CmdResultLock_Success);
+
+    QFETCH(QString, gammaStr);
+
+    QByteArray setGammaCmd = ApiServer::CmdSetGamma;
+    setGammaCmd += gammaStr;
+
+    socketWriteCmd(&sock, setGammaCmd);
+    result = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(sockReadLineOk);
+    QVERIFY(result == QByteArray(ApiServer::CmdSetGamma).append(ApiServer::CmdSetResult_Ok));
+
+    // Unlock
+    socketWriteCmd(&sock, ApiServer::CmdUnlock);
+    result = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(sockReadLineOk);
+    QVERIFY(result == ApiServer::CmdResultUnlock_Success);
+}
+
+void LightpackApiTest::testCase_SetGammaValid_data()
+{
+    QTest::addColumn<QString>("gammaStr");
+
+    QTest::newRow("0") << ".01"; // this is valid
+    QTest::newRow("1") << "1.0";
+    QTest::newRow("2") << "2.0";
+    QTest::newRow("3") << "3";
+    QTest::newRow("4") << "10.00";
+    QTest::newRow("5") << "0.00";
+}
+
+void LightpackApiTest::testCase_SetGammaInvalid()
+{
+    bool sockReadLineOk = false;
+
+    QTcpSocket sock;
+    sock.connectToHost("127.0.0.1", 3636);
+    socketReadLine(&sock, &sockReadLineOk); // skip version line
+    QVERIFY(sockReadLineOk);
+
+    // Lock
+    socketWriteCmd(&sock, ApiServer::CmdLock);
+    QByteArray result = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(sockReadLineOk);
+    QVERIFY(result == ApiServer::CmdResultLock_Success);
+
+    QFETCH(QString, gammaStr);
+
+    QByteArray setGammaCmd = ApiServer::CmdSetGamma;
+    setGammaCmd += gammaStr;
+
+    socketWriteCmd(&sock, setGammaCmd);
+    result = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(sockReadLineOk);
+    QVERIFY(result == QByteArray(ApiServer::CmdSetGamma).append(ApiServer::CmdSetResult_Error));
+
+    // Unlock
+    socketWriteCmd(&sock, ApiServer::CmdUnlock);
+    result = socketReadLine(&sock, &sockReadLineOk);
+    QVERIFY(sockReadLineOk);
+    QVERIFY(result == ApiServer::CmdResultUnlock_Success);
+}
+
+void LightpackApiTest::testCase_SetGammaInvalid_data()
+{
+    QTest::addColumn<QString>("gammaStr");
+
+    QTest::newRow("1") << "0.0001";
+    QTest::newRow("2") << "12.0";
+    QTest::newRow("3") << ":12.0";
+    QTest::newRow("4") << "2.0;";
+    QTest::newRow("5") << "1.2.0";
+    QTest::newRow("6") << "-1.2";
+    QTest::newRow("7") << "10.01";
+    QTest::newRow("8") << "4.56857";
+    QTest::newRow("9") << "4.5685787384739473827432423489237985739487593745987349857938475";
+    QTest::newRow("10") << "+100500";
+    QTest::newRow("11") << "Galaxy in Danger!";
+    QTest::newRow("12") << "reinterpret_cast<CodeMonkey*>(m_pSelf);";
+    QTest::newRow("13") << "BSOD are coming soon!";
 }
 
 void LightpackApiTest::testCase_SetSmooth()
@@ -683,6 +823,15 @@ void LightpackApiTest::processEventsFromLittle(SettingsWindowLittleVersion * lit
     {
         QApplication::processEvents(QEventLoop::WaitForMoreEvents, ApiServer::SignalWaitTimeoutMs);
     }
+}
+
+QRgb LightpackApiTest::getGammaCorrectedValue(QRgb rgb, double gamma)
+{
+    unsigned r = 256.0 * pow( qRed(rgb)   / 256.0, gamma );
+    unsigned g = 256.0 * pow( qGreen(rgb) / 256.0, gamma );
+    unsigned b = 256.0 * pow( qBlue(rgb)  / 256.0, gamma );
+
+    return qRgb(r, g, b);
 }
 
 unsigned g_debugLevel = Debug::LowLevel;
