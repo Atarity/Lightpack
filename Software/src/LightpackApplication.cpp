@@ -205,6 +205,8 @@ void LightpackApplication::startApiServer()
         connect(m_apiServer, SIGNAL(requestBacklightStatus()), m_settingsWindow, SLOT(requestBacklightStatus()));
         connect(m_settingsWindow, SIGNAL(resultBacklightStatus(Backlight::Status)), m_apiServer, SLOT(resultBacklightStatus(Backlight::Status)));
 
+        connect(m_apiServer, SIGNAL(setProfile(QString)), m_settingsWindow, SLOT(profileSwitch(QString)));
+
 //        m_apiServer->ApiKey = Settings::getApiKey();
 
         if (!m_apiServer->listen(QHostAddress::Any, port)) {

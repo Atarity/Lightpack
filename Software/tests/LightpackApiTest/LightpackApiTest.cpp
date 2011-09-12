@@ -132,11 +132,13 @@ public slots:
     void requestBacklightStatus();
     void setLedColors(QList<QRgb> colors);
     void setSmooth(int value);
+    void setProfile(QString profile);
 public:
     Backlight::Status m_status;
     bool m_isDone;
     QList<QRgb> m_colors;
     int m_smooth;
+    QString m_profile;
 };
 
 void SettingsWindowLittleVersion::requestBacklightStatus()
@@ -154,6 +156,12 @@ void SettingsWindowLittleVersion::setLedColors(QList<QRgb> colors)
 void SettingsWindowLittleVersion::setSmooth(int value)
 {
     m_smooth = value;
+    m_isDone = true;
+}
+
+void SettingsWindowLittleVersion::setProfile(QString profile)
+{
+    m_profile = profile;
     m_isDone = true;
 }
 
@@ -182,6 +190,7 @@ void LightpackApiTest::initTestCase()
 
     connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), little, SLOT(setLedColors(QList<QRgb>)), Qt::QueuedConnection);
     connect(m_apiServer, SIGNAL(updateSmooth(int)), little, SLOT(setSmooth(int)), Qt::QueuedConnection);
+    connect(m_apiServer, SIGNAL(setProfile(QString)), little, SLOT(setProfile(QString)), Qt::QueuedConnection);
 
     Settings::Initialize(QDir::currentPath(), true);
 }
@@ -883,7 +892,40 @@ void LightpackApiTest::testCase_SetSmoothInvalid_data()
 
 void LightpackApiTest::testCase_SetProfile()
 {
-    QVERIFY(false);
+    bool sockReadLineOk = false;
+
+     QTcpSocket sock;
+     sock.connectToHost("127.0.0.1", 3636);
+     socketReadLine(&sock, &sockReadLineOk); // skip version line
+     QVERIFY(sockReadLineOk);
+
+     // Lock
+     socketWriteCmd(&sock, ApiServer::CmdLock);
+     QByteArray result = socketReadLine(&sock, &sockReadLineOk);
+     QVERIFY(sockReadLineOk);
+     QVERIFY(result == ApiServer::CmdResultLock_Success);
+
+     QStringList profiles = Settings::findAllProfiles();
+     QVERIFY(profiles.count() > 0);
+
+
+     QByteArray setProfileCmd = ApiServer::CmdSetProfile;
+     setProfileCmd += profiles.at(0);
+
+     socketWriteCmd(&sock, setProfileCmd);
+     result = socketReadLine(&sock, &sockReadLineOk);
+     QVERIFY(sockReadLineOk);
+     QVERIFY(result == QByteArray(ApiServer::CmdSetProfile).append(ApiServer::CmdSetResult_Ok));
+
+     processEventsFromLittle();
+
+     QVERIFY(profiles.at(0) == little->m_profile);
+
+     // Unlock
+     socketWriteCmd(&sock, ApiServer::CmdUnlock);
+     result = socketReadLine(&sock, &sockReadLineOk);
+     QVERIFY(sockReadLineOk);
+     QVERIFY(result == ApiServer::CmdResultUnlock_Success);
 }
 
 void LightpackApiTest::testCase_SetStatus()

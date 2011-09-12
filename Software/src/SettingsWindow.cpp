@@ -629,6 +629,17 @@ void SettingsWindow::profileSwitch(const QString & configName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << configName;
 
+    int index = ui->comboBox_Profiles->findText(configName);
+
+    if (index < 0)
+    {
+        qCritical() << Q_FUNC_INFO << "Fail find text:" << configName << "in profiles combobox";
+        return;
+    }
+
+    ui->comboBox_Profiles->setCurrentIndex(index);
+
+
     Settings::loadOrCreateProfile(configName);
 
     this->setFocus(Qt::OtherFocusReason);

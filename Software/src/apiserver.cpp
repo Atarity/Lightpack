@@ -358,7 +358,9 @@ void ApiServer::clientProcessCommands()
                         if (gamma <= GAMMA_MAX_VALUE && gamma >= GAMMA_MIN_VALUE)
                         {
                             API_DEBUG_OUT << CmdSetGamma << "OK:" << gamma;
+
                             m_clients[client].gamma = gamma;
+
                             result += CmdSetResult_Ok;
                         } else {
                             API_DEBUG_OUT << CmdSetGamma << "Error (max min test fail):" << gamma;
@@ -427,9 +429,43 @@ void ApiServer::clientProcessCommands()
                 result += CmdSetResult_Busy;
             }
         }
+        else if (buffer.startsWith(CmdSetProfile))
+        {
+            API_DEBUG_OUT << CmdSetProfile;
+            result = CmdSetProfile;
+
+            if (m_lockedClient == client)
+            {
+                buffer.remove(0, buffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(buffer);
+
+                QString setProfileName = QString(buffer);
+                QStringList profiles = Settings::findAllProfiles();
+
+                if (profiles.contains(setProfileName))
+                {
+                    API_DEBUG_OUT << CmdSetProfile << "OK:" << setProfileName;
+
+                    emit setProfile(setProfileName);
+
+                    result += CmdSetResult_Ok;
+                } else {
+                    API_DEBUG_OUT << CmdSetProfile << "Error (profile not found):" << setProfileName;
+                    result += CmdSetResult_Error;
+                }
+            }
+            else if (m_lockedClient == NULL)
+            {
+                result += CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result += CmdSetResult_Busy;
+            }
+        }
         else
         {
-            qWarning() << Q_FUNC_INFO << CmdUnknown;
+            qWarning() << Q_FUNC_INFO << CmdUnknown << buffer;
         }
 
         API_DEBUG_OUT << result;

@@ -95,9 +95,10 @@ public:
 
 signals:
     void requestBacklightStatus();
+    void startTask(QByteArray buffer, double gamma);
     void updateLedsColors(const QList<QRgb> & colors);
     void updateSmooth(int value);
-    void startTask(QByteArray buffer, double gamma);
+    void setProfile(QString profileName);
 
 protected:
     void incomingConnection(int socketDescriptor);
