@@ -53,10 +53,13 @@
 // setsmooth:100 - set smooth in device
 // setprofile:<name> - set profile
 // setstatus:on - set status (on, off)
+//
+// exit - close connection
 
 // Immediatly after successful connection server sends client ApiVersion
 const char * ApiServer::ApiVersion = "version:"API_VERSION"\n";
 const char * ApiServer::CmdUnknown = "unknown command\n";
+const char * ApiServer::CmdExit = "exit";
 
 const char * ApiServer::CmdGetStatus = "getstatus";
 const char * ApiServer::CmdResultStatus_On = "status:on\n";
@@ -462,6 +465,12 @@ void ApiServer::clientProcessCommands()
             {
                 result += CmdSetResult_Busy;
             }
+        }
+        else if (buffer == CmdExit)
+        {
+            client->write("Goodbye!\n");
+            client->close();
+            return;
         }
         else
         {

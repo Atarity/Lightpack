@@ -54,6 +54,7 @@ public:
 public:
     static const char * ApiVersion;   
     static const char * CmdUnknown;
+    static const char * CmdExit;
 
     static const char * CmdGetStatus;
     static const char * CmdResultStatus_On;
