@@ -66,6 +66,7 @@ public slots:
     void ledDeviceGetFirmwareVersion(const QString & fwVersion);
     void refreshAmbilightEvaluated(double updateResultMs);
 
+    void setDeviceLockViaAPI(Api::DeviceLockStatus status);
     void setBacklightStatus(Backlight::Status);
     void backlightOn(); /* using in actions */
     void backlightOff(); /* using in actions */
@@ -152,6 +153,7 @@ private:
 private:
     // Main backlight status for all modes (Grab, MoodLamp, etc.)
     Backlight::Status m_backlightStatus;
+    Api::DeviceLockStatus m_deviceLockStatus;
 
     GrabManager *m_grabManager;
     AboutDialog *m_aboutDialog;

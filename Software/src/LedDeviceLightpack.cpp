@@ -281,23 +281,28 @@ bool LedDeviceLightpack::readDataFromDeviceWithCheck()
 
 bool LedDeviceLightpack::writeBufferToDeviceWithCheck(int command)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    if(m_hidDevice != NULL){
-        if(!writeBufferToDevice(command)){
-            if(!writeBufferToDevice(command)){
-                if(tryToReopenDevice()){
+    if (m_hidDevice != NULL)
+    {
+        if (!writeBufferToDevice(command))
+        {
+            if (!writeBufferToDevice(command))
+            {
+                if (tryToReopenDevice())
+                {
                     return writeBufferToDevice(command);
-                }else{
+                } else {
                     return false;
                 }
             }
         }
         return true;
-    }else{
-        if(tryToReopenDevice()){
+    } else {
+        if (tryToReopenDevice())
+        {
             return writeBufferToDevice(command);
-        }else{
+        } else {
             return false;
         }
     }

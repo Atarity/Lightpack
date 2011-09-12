@@ -490,11 +490,13 @@ void GrabManager::updateFpsOnMainWindow()
     emit ambilightTimeOfUpdatingColors( fpsMs );
 }
 
-void GrabManager::updateBacklightState(Backlight::Status backlightStatus)
+void GrabManager::updateBacklightState(Backlight::Status backlightStatus, Api::DeviceLockStatus deviceLockStatus)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << backlightStatus;
 
-    m_isGrabOn = (backlightStatus == Backlight::StatusOn);
+
+    m_isGrabOn = (backlightStatus == Backlight::StatusOn)
+            && (deviceLockStatus == Api::DeviceUnlocked);
 
     clearColorsNew();
 

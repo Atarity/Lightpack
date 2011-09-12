@@ -34,7 +34,15 @@ enum Status {
     StatusOn = -1,
     StatusDeviceError = -2,
     // Just for API
-    StatusUnknown = -3
+    StatusUnknown = -93
+};
+}
+
+namespace Api
+{
+enum DeviceLockStatus {
+    DeviceUnlocked,
+    DeviceLocked
 };
 }
 

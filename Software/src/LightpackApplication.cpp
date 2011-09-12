@@ -55,6 +55,7 @@ LightpackApplication::LightpackApplication(int &argc, char **argv)
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
     qRegisterMetaType<Backlight::Status>("Backlight::Status");
+    qRegisterMetaType<Backlight::Status>("Api::DeviceLockStatus");
 
     startLedDeviceFactory();
 
@@ -207,6 +208,7 @@ void LightpackApplication::startApiServer()
 
         connect(m_apiServer, SIGNAL(updateProfile(QString)), m_settingsWindow, SLOT(profileSwitch(QString)));
         connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)), m_settingsWindow, SLOT(setBacklightStatus(Backlight::Status)));
+        connect(m_apiServer, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), m_settingsWindow, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
 
 
 //        m_apiServer->ApiKey = Settings::getApiKey();

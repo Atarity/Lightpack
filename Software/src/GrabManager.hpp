@@ -50,7 +50,7 @@ signals:
 
 
 public slots:
-    void updateBacklightState(Backlight::Status backlightStatus);
+    void updateBacklightState(Backlight::Status backlightStatus, Api::DeviceLockStatus deviceLockStatus);
     void setAmbilightSlowdownMs(int ms);
     void setAmbilightColorDepth(int depth);
     void setVisibleLedWidgets(bool state);

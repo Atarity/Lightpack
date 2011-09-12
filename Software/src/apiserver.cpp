@@ -111,7 +111,7 @@ ApiServer::ApiServer(QObject *parent)
 {
     m_lockedClient = NULL;
     m_isRequestBacklightStatusDone = true;
-    m_backlightStatus = Backlight::StatusUnknown;
+    m_backlightStatusResult = Backlight::StatusUnknown;
 
     initApiSetColorTask();
 }
@@ -121,7 +121,7 @@ ApiServer::ApiServer(quint16 port, QObject *parent)
 {
     m_lockedClient = NULL;
     m_isRequestBacklightStatusDone = true;
-    m_backlightStatus = Backlight::StatusUnknown;
+    m_backlightStatusResult = Backlight::StatusUnknown;
 
     initApiSetColorTask();
 
@@ -161,7 +161,7 @@ void ApiServer::clientDisconnected()
     {
         m_lockedClient = NULL;
 
-        // TODO: Send SettingsWindow lock signal
+        emit updateDeviceLockStatus(Api::DeviceUnlocked);
     }
     m_clients.remove(client);
 
@@ -191,7 +191,7 @@ void ApiServer::clientProcessCommands()
             if (m_isRequestBacklightStatusDone)
             {
                 m_isRequestBacklightStatusDone = false;
-                m_backlightStatus = Backlight::StatusUnknown;
+                m_backlightStatusResult = Backlight::StatusUnknown;
 
                 emit requestBacklightStatus();
 
@@ -205,7 +205,7 @@ void ApiServer::clientProcessCommands()
 
                 if (m_isRequestBacklightStatusDone)
                 {
-                    switch (m_backlightStatus)
+                    switch (m_backlightStatusResult)
                     {
                     case Backlight::StatusOn:
                         result = CmdResultStatus_On;
@@ -261,8 +261,10 @@ void ApiServer::clientProcessCommands()
             if (m_lockedClient == NULL)
             {
                 m_lockedClient = client;
-                result = CmdResultLock_Success;
-                // TODO: Send SettingsWindow lock signal
+
+                emit updateDeviceLockStatus(Api::DeviceLocked);
+
+                result = CmdResultLock_Success;                
             } else {
                 if (m_lockedClient == client)
                 {
@@ -281,9 +283,11 @@ void ApiServer::clientProcessCommands()
                 result = CmdResultUnlock_NotLocked;
             } else {
                 if (m_lockedClient == client)
+                {
                     m_lockedClient = NULL;
-                result = CmdResultUnlock_Success;
-                // TODO: Send SettingsWindow unlock signal
+                    emit updateDeviceLockStatus(Api::DeviceUnlocked);
+                }
+                result = CmdResultUnlock_Success;               
             }
         }
         else if (buffer.startsWith(CmdSetColor))
@@ -534,7 +538,7 @@ void ApiServer::taskSetColorIsSuccess(bool isSuccess)
 void ApiServer::resultBacklightStatus(Backlight::Status status)
 {
     m_isRequestBacklightStatusDone = true;
-    m_backlightStatus = status;
+    m_backlightStatusResult = status;
 }
 
 void ApiServer::initApiSetColorTask()

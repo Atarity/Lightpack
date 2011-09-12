@@ -105,6 +105,8 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
         m_backlightStatus = Backlight::StatusOff;
     }
 
+    m_deviceLockStatus = Api::DeviceUnlocked;
+
     onGrabModeChanged();
 
     this->adjustSize();
@@ -298,11 +300,18 @@ void SettingsWindow::onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled)
 // Backlight On / Off
 // ----------------------------------------------------------------------------
 
-void SettingsWindow::backlightOn()
+void SettingsWindow::setDeviceLockViaAPI(Api::DeviceLockStatus status)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_deviceLockStatus = status;
 
-    m_backlightStatus = Backlight::StatusOn;
+    if (m_grabManager == NULL)
+        qFatal("%s m_grabManager == NULL", Q_FUNC_INFO);
+
+    if (m_deviceLockStatus == Api::DeviceUnlocked)
+        connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
+    else // m_deviceLockStatus == Api::DeviceLocked
+        disconnect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
+
     startBacklight();
 }
 
@@ -319,6 +328,13 @@ void SettingsWindow::setBacklightStatus(Backlight::Status status)
     startBacklight();
 }
 
+void SettingsWindow::backlightOn()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    m_backlightStatus = Backlight::StatusOn;
+    startBacklight();
+}
 
 void SettingsWindow::backlightOff()
 {
@@ -353,11 +369,12 @@ void SettingsWindow::switchBacklightOnOff()
 
 void SettingsWindow::startBacklight()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_backlightStatus;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "m_backlightStatus =" << m_backlightStatus
+                    << "m_deviceLockStatus =" << m_deviceLockStatus;
 
     Settings::setIsBacklightOn(m_backlightStatus != Backlight::StatusOff);
 
-    m_grabManager->updateBacklightState(m_backlightStatus);
+    m_grabManager->updateBacklightState(m_backlightStatus, m_deviceLockStatus);
 
     updateTrayAndActionStates();
 }
@@ -373,8 +390,15 @@ void SettingsWindow::updateTrayAndActionStates()
         ui->label_EnableDisableDevice->setText(tr("Switch off Lightpack"));
         m_switchOnBacklightAction->setEnabled(false);
         m_switchOffBacklightAction->setEnabled(true);
-        m_trayIcon->setIcon(QIcon(":/icons/on.png"));
-        m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+
+        if (m_deviceLockStatus == Api::DeviceLocked)
+        {
+            m_trayIcon->setIcon(QIcon(":/icons/lock.png"));
+            m_trayIcon->setToolTip(tr("Device locked via API"));
+        } else {
+            m_trayIcon->setIcon(QIcon(":/icons/on.png"));
+            m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+        }
         break;
 
     case Backlight::StatusOff:

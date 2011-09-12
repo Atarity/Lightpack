@@ -104,6 +104,7 @@ signals:
     void updateSmooth(int value);
     void updateProfile(QString profileName);
     void updateStatus(Backlight::Status status);
+    void updateDeviceLockStatus(Api::DeviceLockStatus status);
 
 protected:
     void incomingConnection(int socketDescriptor);
@@ -133,5 +134,5 @@ private:
     bool m_isTaskSetColorParseSuccess;
 
     bool m_isRequestBacklightStatusDone;
-    Backlight::Status m_backlightStatus;
+    Backlight::Status m_backlightStatusResult;
 };
