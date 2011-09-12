@@ -16,7 +16,7 @@ public:
     ~WinAPIGrabber();
     virtual const char * getName();
     virtual void updateGrabScreenFromWidget( QWidget * widget );
-    virtual QList<QRgb> grabWidgetsColors(QList<MoveMeWidget *> &widgets);
+    virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
 private:
     void captureScreen();
     QRgb getColor(const QWidget * grabme);

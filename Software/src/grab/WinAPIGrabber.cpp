@@ -26,7 +26,7 @@ void WinAPIGrabber::updateGrabScreenFromWidget(QWidget *widget)
     isBufferNeedsResize = true;
 }
 
-QList<QRgb> WinAPIGrabber::grabWidgetsColors(QList<MoveMeWidget *> &widgets)
+QList<QRgb> WinAPIGrabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
 {
     QList<QRgb> widgetsColors;
     captureScreen();
