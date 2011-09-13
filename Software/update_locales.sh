@@ -28,13 +28,13 @@ echo
 echo "================================================="
 echo "Updating translation files for Lightpack project:"
 echo 
-lupdate Lightpack.pro
+lupdate src/src.pro
 
 echo 
 echo "==========================================================="
 echo "Generating release translation files for Lightpack project:"
 echo 
-lrelease Lightpack.pro
+lrelease src/src.pro
 
 echo
 echo Press enter to exit...

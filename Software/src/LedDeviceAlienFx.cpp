@@ -54,27 +54,27 @@ LedDeviceAlienFx::LedDeviceAlienFx(QObject *parent) :
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    isInitialized = false;
+    m_isInitialized = false;
 
-    hLfxLibrary = LoadLibrary(L"LightFX.dll");
-    if (hLfxLibrary)
+    m_hLfxLibrary = LoadLibrary(L"LightFX.dll");
+    if (m_hLfxLibrary)
     {
-        lfxInitFunction = (LFX2INITIALIZE)GetProcAddress(hLfxLibrary, LFX_DLL_INITIALIZE);
-        lfxReleaseFunction = (LFX2RELEASE)GetProcAddress(hLfxLibrary, LFX_DLL_RELEASE);
-        lfxResetFunction = (LFX2RESET)GetProcAddress(hLfxLibrary, LFX_DLL_RESET);
-        lfxUpdateFunction = (LFX2UPDATE)GetProcAddress(hLfxLibrary, LFX_DLL_UPDATE);
-        lfxGetNumDevicesFunction = (LFX2GETNUMDEVICES)GetProcAddress(hLfxLibrary, LFX_DLL_GETNUMDEVICES);
-        lfxGetDeviceDescriptionFunction = (LFX2GETDEVDESC)GetProcAddress(hLfxLibrary, LFX_DLL_GETDEVDESC);
-        lfxGetNumLightsFunction = (LFX2GETNUMLIGHTS)GetProcAddress(hLfxLibrary, LFX_DLL_GETNUMLIGHTS);
-        lfxSetLightColorFunction = (LFX2SETLIGHTCOL)GetProcAddress(hLfxLibrary, LFX_DLL_SETLIGHTCOL);
-        lfxGetLightColorFunction = (LFX2GETLIGHTCOL)GetProcAddress(hLfxLibrary, LFX_DLL_GETLIGHTCOL);
-        lfxGetLightDescriptionFunction = (LFX2GETLIGHTDESC)GetProcAddress(hLfxLibrary, LFX_DLL_GETLIGHTDESC);
-        lfxLightFunction = (LFX2LIGHT)GetProcAddress(hLfxLibrary, LFX_DLL_LIGHT);
+        lfxInitFunction = (LFX2INITIALIZE)GetProcAddress(m_hLfxLibrary, LFX_DLL_INITIALIZE);
+        lfxReleaseFunction = (LFX2RELEASE)GetProcAddress(m_hLfxLibrary, LFX_DLL_RELEASE);
+        lfxResetFunction = (LFX2RESET)GetProcAddress(m_hLfxLibrary, LFX_DLL_RESET);
+        lfxUpdateFunction = (LFX2UPDATE)GetProcAddress(m_hLfxLibrary, LFX_DLL_UPDATE);
+        lfxGetNumDevicesFunction = (LFX2GETNUMDEVICES)GetProcAddress(m_hLfxLibrary, LFX_DLL_GETNUMDEVICES);
+        lfxGetDeviceDescriptionFunction = (LFX2GETDEVDESC)GetProcAddress(m_hLfxLibrary, LFX_DLL_GETDEVDESC);
+        lfxGetNumLightsFunction = (LFX2GETNUMLIGHTS)GetProcAddress(m_hLfxLibrary, LFX_DLL_GETNUMLIGHTS);
+        lfxSetLightColorFunction = (LFX2SETLIGHTCOL)GetProcAddress(m_hLfxLibrary, LFX_DLL_SETLIGHTCOL);
+        lfxGetLightColorFunction = (LFX2GETLIGHTCOL)GetProcAddress(m_hLfxLibrary, LFX_DLL_GETLIGHTCOL);
+        lfxGetLightDescriptionFunction = (LFX2GETLIGHTDESC)GetProcAddress(m_hLfxLibrary, LFX_DLL_GETLIGHTDESC);
+        lfxLightFunction = (LFX2LIGHT)GetProcAddress(m_hLfxLibrary, LFX_DLL_LIGHT);
 
         LFX_RESULT result = lfxInitFunction();
         if (result == LFX_SUCCESS)
         {
-            isInitialized = true;
+            m_isInitialized = true;
             result = lfxResetFunction();
         } else {
             emit ioDeviceSuccess(false);
@@ -89,18 +89,18 @@ LedDeviceAlienFx::LedDeviceAlienFx(QObject *parent) :
 
 LedDeviceAlienFx::~LedDeviceAlienFx()
 {
-    if (isInitialized)
+    if (m_isInitialized)
         lfxReleaseFunction();
-    if (hLfxLibrary)
-        FreeLibrary(hLfxLibrary);
+    if (m_hLfxLibrary)
+        FreeLibrary(m_hLfxLibrary);
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "destroy LedDeviceAlienFx : ILedDevice complete";
 }
 
-void LedDeviceAlienFx::updateColors(const QList<StructRGB> & colors)
+void LedDeviceAlienFx::setColors(const QList<QRgb> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
-    if (isInitialized)
+    if (m_isInitialized)
     {
         unsigned int numDevs = 0;
         LFX_RESULT result = lfxGetNumDevicesFunction(&numDevs);
@@ -112,9 +112,9 @@ void LedDeviceAlienFx::updateColors(const QList<StructRGB> & colors)
 
             LFX_COLOR lfxColor;
 
-            lfxColor.red   = qRed   ( colors[0].rgb );
-            lfxColor.green = qGreen ( colors[0].rgb );
-            lfxColor.blue  = qBlue  ( colors[0].rgb );
+            lfxColor.red   = qRed   ( colors[0] );
+            lfxColor.green = qGreen ( colors[0] );
+            lfxColor.blue  = qBlue  ( colors[0] );
             lfxColor.brightness = 255;
 
             for(unsigned int lightIndex = 0; lightIndex < numLights; lightIndex++)
@@ -125,7 +125,13 @@ void LedDeviceAlienFx::updateColors(const QList<StructRGB> & colors)
     }
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    return;
+    // Request new colors
+    emit setColorsDone();
+}
+
+void LedDeviceAlienFx::requestFirmwareVersion()
+{
+    emit firmwareVersion("alienfx version unknown");
 }
 
 #endif /* Q_WS_WIN */

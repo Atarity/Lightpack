@@ -1,7 +1,7 @@
 IDI_ICON1               ICON    DISCARDABLE     "icons/Lightpack.ico"
 
 #include <windows.h>
-#include "../inc/version.h"
+#include "../src/version.h"
 
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION     VER_FILEVERSION

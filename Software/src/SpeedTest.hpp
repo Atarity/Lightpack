@@ -1,8 +1,8 @@
 /*
- * ILedDevice.hpp
+ * SpeedTest.hpp
  *
- *  Created on: 17.04.2011
- *      Author: Timur Sattarov && Mike Shatohin
+ *  Created on: 4.04.2011
+ *      Author: Mike Shatohin (brunql)
  *     Project: Lightpack
  *
  *  Lightpack is very simple implementation of the backlight for a laptop
@@ -26,27 +26,35 @@
 
 #pragma once
 
-#include <QtGui>
+#include <QObject>
+#include <QFile>
+#include <QTextStream>
+#include <QTime>
 
-
-class ILedDevice : public QObject
+class SpeedTest : public QObject
 {
     Q_OBJECT
+
 public:
-    ILedDevice(QObject * parent) : QObject(parent) {}
+    SpeedTest();
 
-signals:
-    void openDeviceSuccess(bool isSuccess);
-    void ioDeviceSuccess(bool isSuccess);
-    void firmwareVersion(const QString & fwVersion);
-    void setColorsDone();
+    void start();
 
-public slots:
-    virtual void setColors(const QList<QRgb> & colors) = 0;
-    virtual void offLeds() = 0;
-    virtual void setTimerOptions(int prescallerIndex, int outputCompareRegValue) = 0;
-    virtual void setColorDepth(int value) = 0;
-    virtual void setSmoothSlowdown(int value) = 0;
-//    virtual void setBrightness(int value) = 0;
-    virtual void requestFirmwareVersion() = 0;
+private:
+    void printHeader();
+    void startTests();
+    void testFullScreenGrabSpeed();
+    void testDefaultLedWidgetsGrabSpeed();
+
+private:
+    QFile resultFile;
+    QTextStream resultStream;
+
+    QTime time;
+
+    static const int TestTimes;
+    static const int LedsCount;
+    static const int LedWidth;
+    static const int LedHeight;
 };
+

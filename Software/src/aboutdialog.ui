@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>aboutDialog</class>
- <widget class="QDialog" name="aboutDialog">
+ <class>AboutDialog</class>
+ <widget class="QDialog" name="AboutDialog">
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
@@ -339,7 +339,7 @@ p, li { white-space: pre-wrap; }
   <connection>
    <sender>pushButton</sender>
    <signal>clicked()</signal>
-   <receiver>aboutDialog</receiver>
+   <receiver>AboutDialog</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">

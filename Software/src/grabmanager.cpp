@@ -1,5 +1,5 @@
 /*
- * grabmanager.cpp
+ * GrabManager.cpp
  *
  *  Created on: 26.07.2010
  *      Author: Mike Shatohin (brunql)
@@ -24,9 +24,8 @@
  *
  */
 
-#include "grabmanager.h"
+#include "GrabManager.hpp"
 #include <QtCore/qmath.h>
-
 #include "debug.h"
 
 GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)
@@ -35,7 +34,7 @@ GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)
 
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 
-    timerGrab = new QTimer(this);
+    m_timerGrab = new QTimer(this);
     timeEval = new TimeEvaluations();
 
     fpsMs = 0;
@@ -44,7 +43,7 @@ GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)
 
     m_backlightColor = QColor(255,255,255);
 
-    this->grabber = grabber;
+    m_grabber = grabber;
 
     timerUpdateFPS = new QTimer(this);
     connect(timerUpdateFPS, SIGNAL(timeout()), this, SLOT(updateFpsOnMainWindow()));
@@ -52,14 +51,14 @@ GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)
     timerUpdateFPS->start( 500 );
 
     // TODO: add me to settings
-    this->updateColorsOnlyIfChanges = true; // default value
+    m_updateColorsOnlyIfChanges = true; // default value
 
-    this->isResizeOrMoving = false;
+    m_isResizeOrMoving = false;
 
     initColorLists();
     initLedWidgets();
 
-    connect(timerGrab, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
+    connect(m_timerGrab, SIGNAL(timeout()), this, SLOT(updateLedsColorsIfChanged()));
     connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(scaleLedWidgets(int)));
 
     firstWidgetPositionChanged();
@@ -71,24 +70,25 @@ GrabManager::~GrabManager()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    delete timerGrab;
+    delete m_timerGrab;
     delete timeEval;
-    delete grabber;
+    delete m_grabber;
 
-    for(int i=0; i<ledWidgets.count(); i++){
-        ledWidgets[i]->close();
+    for (int i = 0; i < m_ledWidgets.count(); i++)
+    {
+        m_ledWidgets[i]->close();
     }
-
-    ledWidgets.clear();
+    m_ledWidgets.clear();
 }
 
 void GrabManager::initColorLists()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){       
-        colorsCurrent << StructRGB();
-        colorsNew     << StructRGB();
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
+        colorsCurrent << 0;
+        colorsNew     << 0;
     }
 }
 
@@ -96,9 +96,9 @@ void GrabManager::clearColorsCurrent()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        colorsCurrent[ledIndex].rgb = 0;
-        colorsCurrent[ledIndex].steps = 0;
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
+        colorsCurrent[i] = 0;
     }
 }
 
@@ -106,9 +106,9 @@ void GrabManager::clearColorsNew()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        colorsNew[ledIndex].rgb = 0;
-        colorsNew[ledIndex].steps = 0;
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
+        colorsNew[i] = 0;
     }
 }
 
@@ -116,31 +116,33 @@ void GrabManager::initLedWidgets()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    ledWidgets.clear();
+    m_ledWidgets.clear();
 
-    for(int i=0; i<LEDS_COUNT; i++){
-        ledWidgets << new MoveMeWidget(i, this);
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
+        m_ledWidgets << new GrabWidget(i, this);
     }
 
-    for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        connect(ledWidgets[ledIndex], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(setResizeOrMovingFalse()));
-        connect(ledWidgets[ledIndex], SIGNAL(resizeOrMoveStarted()), this, SLOT(setResizeOrMovingTrue()));
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
+        connect(m_ledWidgets[i], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(setResizeOrMovingFalse()));
+        connect(m_ledWidgets[i], SIGNAL(resizeOrMoveStarted()), this, SLOT(setResizeOrMovingTrue()));
     }
 
 //    firstWidgetPositionChanged();
 
     // First LED widget using to determine grabbing-monitor in WinAPI version of Grab
-    connect(ledWidgets[0], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(firstWidgetPositionChanged()));
+    connect(m_ledWidgets[0], SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(firstWidgetPositionChanged()));
 }
 
 void GrabManager::firstWidgetPositionChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    screenSavedIndex = QApplication::desktop()->screenNumber( ledWidgets[0] );
+    screenSavedIndex = QApplication::desktop()->screenNumber( m_ledWidgets[0] );
     screenSaved = QApplication::desktop()->screenGeometry( screenSavedIndex );
 
-    grabber->updateGrabScreenFromWidget(ledWidgets[0]);
+    m_grabber->updateGrabScreenFromWidget(m_ledWidgets[0]);
 }
 
 
@@ -148,7 +150,7 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenIndexResized:" << screenIndexResized;
 
-    int screenIndexOfFirstLedWidget = QApplication::desktop()->screenNumber( ledWidgets[0] );
+    int screenIndexOfFirstLedWidget = QApplication::desktop()->screenNumber( m_ledWidgets[0] );
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] index of screen:" << screenIndexOfFirstLedWidget;
 
@@ -177,13 +179,13 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
     screenSaved = screen;
     screenSavedIndex = screenIndexOfFirstLedWidget;
 
-    for(int i=0; i<ledWidgets.count(); i++){
+    for(int i=0; i<m_ledWidgets.count(); i++){
 
-        int width  = round( scaleX * ledWidgets[i]->width() );
-        int height = round( scaleY * ledWidgets[i]->height() );
+        int width  = round( scaleX * m_ledWidgets[i]->width() );
+        int height = round( scaleY * m_ledWidgets[i]->height() );
 
-        int x = ledWidgets[i]->x();
-        int y = ledWidgets[i]->y();
+        int x = m_ledWidgets[i]->x();
+        int y = m_ledWidgets[i]->y();
 
         x -= screen.x();
         y -= screen.y();
@@ -197,10 +199,10 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
         x -= deltaX;
         y -= deltaY;
 
-        ledWidgets[i]->move(x,y);
-        ledWidgets[i]->resize(width, height);
+        m_ledWidgets[i]->move(x,y);
+        m_ledWidgets[i]->resize(width, height);
 
-        ledWidgets[i]->saveSizeAndPosition();
+        m_ledWidgets[i]->saveSizeAndPosition();
 
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "new values [" << i << "]" << "x =" << x << "y =" << y << "w =" << width << "h =" << height;
     }
@@ -232,20 +234,20 @@ const QColor GrabManager::colorsMoodLamp[GrabManager::ColorsMoodLampCount] = {
 void GrabManager::updateLedsColorsIfChanged()
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
-    int timer = ambilightDelayMs;
+    int timer = m_grabSmoothSlowdown;
     switch (m_mode)
     {
-    case Grab:
+    case Lightpack::GrabScreenMode:
         ambilight();
         break;
-    case MoodLamp:
+    case Lightpack::MoodLampMode:
        moodlamp();
        timer = speed;
        break;
     }
 
-    if(isAmbilightOn){
-        timerGrab->start( timer );
+    if(m_isGrabOn){
+        m_timerGrab->start( timer );
     }
 }
 
@@ -299,10 +301,10 @@ QColor GrabManager::genNewColor()
 
 void GrabManager::moodlamp()
 {
-      DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-      if (m_moodLampSpeed>0)
-      {
+    if (m_moodLampSpeed>0)
+    {
 
         if ((Red==newRed) && (Green==newGreen) && (Blue==newBlue))
         {
@@ -312,55 +314,40 @@ void GrabManager::moodlamp()
             newGreen = newColor.green();
             newBlue = newColor.blue();
             DEBUG_HIGH_LEVEL << Q_FUNC_INFO << newColor;
-
-//old metod
-//            newRed = random(255);
-//            newGreen =random(255);
-//            newBlue =random(255);
-//            int sw = random(9);
-//            switch (sw)
-//            {
-//                case 0:             newRed=0;            break;
-//                case 1:            newGreen=0;            break;
-//                case 2:            newBlue=0;            break;
-//                case 3:             newBlue=0;            newRed=0;            break;
-//                case 4:            newGreen=0;            newRed=0;            break;
-//                case 5:            newGreen=0;            newBlue=0;            break;
-//            }
         }
 
-               if(newRed!=Red) { if (Red>newRed) --Red; else ++Red;}
-               if(newGreen!=Green)  {if (Green>newGreen) --Green; else ++Green;}
-               if(newBlue!=Blue)  {if (Blue>newBlue) --Blue; else ++Blue;}
+        if(newRed!=Red) { if (Red>newRed) --Red; else ++Red;}
+        if(newGreen!=Green)  {if (Green>newGreen) --Green; else ++Green;}
+        if(newBlue!=Blue)  {if (Blue>newBlue) --Blue; else ++Blue;}
 
-               int coef = 255 -  m_brightness;
-               int prRed=(Red-(qFloor(Red*coef)/ 255.0));
-               int prGreen=(Green-(qFloor(Green*coef)/ 255.0));//brightness
-               int prBlue=(Blue-(qFloor(Blue*coef)/ 255.0));
+        int coef = 255 -  m_brightness;
+        int prRed=(Red-(qFloor(Red*coef)/ 255.0));
+        int prGreen=(Green-(qFloor(Green*coef)/ 255.0));//brightness
+        int prBlue=(Blue-(qFloor(Blue*coef)/ 255.0));
 
-               if(prRed > 0xff) prRed = 0xff;
-               if(prGreen > 0xff) prGreen = 0xff;
-               if(prBlue > 0xff) prBlue = 0xff;
+        if(prRed > 0xff) prRed = 0xff;
+        if(prGreen > 0xff) prGreen = 0xff;
+        if(prBlue > 0xff) prBlue = 0xff;
 
-            for (int i = 0; i < LEDS_COUNT; i++)
-            {
-                if(ledWidgets[i]->isGrabEnabled())
-                    colorsCurrent[i].rgb = qRgb(prRed,prGreen, prBlue);
-                else
-                    colorsCurrent[i].rgb = 0; // off led
-            }
+        for (int i = 0; i < LEDS_COUNT; i++)
+        {
+            if(m_ledWidgets[i]->isGrabEnabled())
+                colorsCurrent[i] = qRgb(prRed,prGreen, prBlue);
+            else
+                colorsCurrent[i] = 0; // off led
         }
-      else
-      {
-                  for (int i = 0; i < LEDS_COUNT; i++)
-                  {
-                      if(ledWidgets[i]->isGrabEnabled())
-                          colorsCurrent[i].rgb = qRgb(m_backlightColor.red(),m_backlightColor.green(),m_backlightColor.blue());
-                      else
-                          colorsCurrent[i].rgb = 0; // off led
-                  }
-      }
-  emit updateLedsColors( colorsCurrent );
+    }
+    else
+    {
+        for (int i = 0; i < LEDS_COUNT; i++)
+        {
+            if(m_ledWidgets[i]->isGrabEnabled())
+                colorsCurrent[i] = qRgb(m_backlightColor.red(),m_backlightColor.green(),m_backlightColor.blue());
+            else
+                colorsCurrent[i] = 0; // off led
+        }
+    }
+    emit updateLedsColors( colorsCurrent );
 }
 
 
@@ -370,8 +357,8 @@ void GrabManager::ambilight()
 
     // Temporary switch off updating colors
     // if one of LED widgets resizing or moving
-    if(isResizeOrMoving){
-        timerGrab->start(50); // check in 50 ms
+    if(m_isResizeOrMoving){
+        m_timerGrab->start(50); // check in 50 ms
         return;
     }
 
@@ -388,21 +375,21 @@ void GrabManager::ambilight()
     QTime t; t.start();
 #endif    
 
-    QList<QRgb> widgetsColors = grabber->grabWidgetsColors(ledWidgets);
+    QList<QRgb> widgetsColors = m_grabber->grabWidgetsColors(m_ledWidgets);
     for(int ledIndex=0; ledIndex<LEDS_COUNT; ledIndex++){
-        if(ledWidgets[ledIndex]->isGrabEnabled()){
+        if(m_ledWidgets[ledIndex]->isGrabEnabled()){
             QRgb rgb = widgetsColors[ledIndex];
 
-            if( avgColorsOnAllLeds ){
+            if( m_avgColorsOnAllLeds ){
                 avgR += qRed(rgb);
                 avgG += qGreen(rgb);
                 avgB += qBlue(rgb);
                 countGrabEnabled++;
             }else{
-                colorsNew[ledIndex].rgb = rgb;
+                colorsNew[ledIndex] = rgb;
             }
         }else{
-            colorsNew[ledIndex].rgb = 0; // off led
+            colorsNew[ledIndex] = 0; // off led
         }
     }
 
@@ -410,7 +397,7 @@ void GrabManager::ambilight()
     qDebug() << "Time spent on grab:" << t.elapsed() << "ms";
 #endif
 
-    if( avgColorsOnAllLeds ){
+    if( m_avgColorsOnAllLeds ){
         if( countGrabEnabled != 0 ){
             avgR /= countGrabEnabled;
             avgG /= countGrabEnabled;
@@ -418,8 +405,8 @@ void GrabManager::ambilight()
         }
         // Set one AVG color to all LEDs
         for(int ledIndex = 0; ledIndex < LEDS_COUNT; ledIndex++){
-            if(ledWidgets[ledIndex]->isGrabEnabled()){
-                colorsNew[ledIndex].rgb = qRgb(avgR, avgG, avgB);
+            if(m_ledWidgets[ledIndex]->isGrabEnabled()){
+                colorsNew[ledIndex] = qRgb(avgR, avgG, avgB);
             }
         }
     }
@@ -435,25 +422,25 @@ void GrabManager::ambilight()
 
     // White balance
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        QRgb rgb = colorsNew[ledIndex].rgb;
+        QRgb rgb = colorsNew[ledIndex];
 
-        unsigned r = qRed(rgb)   * ledWidgets[ledIndex]->getCoefRed();
-        unsigned g = qGreen(rgb) * ledWidgets[ledIndex]->getCoefGreen();
-        unsigned b = qBlue(rgb)  * ledWidgets[ledIndex]->getCoefBlue();
+        unsigned r = qRed(rgb)   * m_ledWidgets[ledIndex]->getCoefRed();
+        unsigned g = qGreen(rgb) * m_ledWidgets[ledIndex]->getCoefGreen();
+        unsigned b = qBlue(rgb)  * m_ledWidgets[ledIndex]->getCoefBlue();
 
         if(r > 0xff) r = 0xff;
         if(g > 0xff) g = 0xff;
         if(b > 0xff) b = 0xff;
 
-        colorsNew[ledIndex].rgb = qRgb(r, g, b);
+        colorsNew[ledIndex] = qRgb(r, g, b);
     }
 
     // Check minimum level of sensivity
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        QRgb rgb = colorsNew[ledIndex].rgb;
+        QRgb rgb = colorsNew[ledIndex];
         int avg = round( (qRed(rgb) + qGreen(rgb) + qBlue(rgb)) / 3.0 );
-        if(avg <= minLevelOfSensivity){
-            colorsNew[ledIndex].rgb = 0;
+        if(avg <= m_minLevelOfSensivity){
+            colorsNew[ledIndex] = 0;
         }
     }
 
@@ -465,28 +452,27 @@ void GrabManager::ambilight()
     // TODO: move this code to capturemath.cpp after merge
     for (int i = 0; i < LEDS_COUNT; i++)
     {
-        QRgb rgb = colorsNew[i].rgb;
+        QRgb rgb = colorsNew[i];
 
         unsigned r = 256.0 * pow( qRed(rgb)   / 256.0, m_gammaCorrection );
         unsigned g = 256.0 * pow( qGreen(rgb) / 256.0, m_gammaCorrection );
         unsigned b = 256.0 * pow( qBlue(rgb)  / 256.0, m_gammaCorrection );
 
-        colorsNew[i].rgb = qRgb(r, g, b);
+        colorsNew[i] = qRgb(r, g, b);
     }
     //--------------------------------------------------------------------------
 
 
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        if( colorsCurrent[ledIndex].rgb != colorsNew[ledIndex].rgb ){
-            colorsCurrent[ledIndex].rgb  = colorsNew[ledIndex].rgb;
+        if( colorsCurrent[ledIndex] != colorsNew[ledIndex] ){
+            colorsCurrent[ledIndex]  = colorsNew[ledIndex];
             needToUpdate = true;
         }
-        colorsCurrent[ledIndex].steps = colorsNew[ledIndex].steps;
     }
 
 
 
-    if((updateColorsOnlyIfChanges == false) || needToUpdate){
+    if((m_updateColorsOnlyIfChanges == false) || needToUpdate){
         // if updateColorsOnlyIfChanges == false, then update colors (not depending on needToUpdate flag)
         emit updateLedsColors( colorsCurrent );
     }
@@ -494,54 +480,6 @@ void GrabManager::ambilight()
     fpsMs = timeEval->howLongItEnd();
     timeEval->howLongItStart();
 
-}
-
-//
-// Update steps for smooth change colors
-// Using for linear interpolation from 'colors' to 'colorsNew'
-//
-void GrabManager::updateSmoothSteps()
-{
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
-
-    double maxDiff = 0, diff = 0;
-
-    // First find MAX diff between old and new colors, and save all diffs in each smooth_step
-    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        QRgb rgbCurrent = colorsCurrent[ledIndex].rgb;
-        QRgb rgbNew = colorsNew[ledIndex].rgb;
-        int stepR, stepG, stepB;
-
-        diff = qRed(rgbCurrent) - qRed(rgbNew);
-        if(diff < 0) diff *= -1;
-        if(diff > maxDiff) maxDiff = diff;
-        stepR = (diff != 0) ? diff : 1;
-
-        diff = qGreen(rgbCurrent) - qGreen(rgbNew);
-        if(diff < 0) diff *= -1;
-        if(diff > maxDiff) maxDiff = diff;
-        stepG = (diff != 0) ? diff : 1;
-
-        diff = qBlue(rgbCurrent) - qBlue(rgbNew);
-        if(diff < 0) diff *= -1;
-        if(diff > maxDiff) maxDiff = diff;
-        stepB = (diff != 0) ? diff : 1;
-
-        colorsNew[ledIndex].steps = qRgb(stepR, stepG, stepB);
-    }
-
-    // To find smooth_step which will be using max_diff divide on each smooth_step
-    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        QRgb steps = colorsNew[ledIndex].steps;
-        int stepR, stepG, stepB;
-        stepR = round( maxDiff / qRed(steps)   );
-        stepG = round( maxDiff / qGreen(steps) );
-        stepB = round( maxDiff / qBlue(steps)  );
-        if(stepR == 0) stepR = 1;
-        if(stepG == 0) stepG = 1;
-        if(stepB == 0) stepB = 1;
-        colorsNew[ledIndex].steps = qRgb(stepR, stepG, stepB);
-    }
 }
 
 // Send each second new grabbing time in ms to main window
@@ -552,25 +490,29 @@ void GrabManager::updateFpsOnMainWindow()
     emit ambilightTimeOfUpdatingColors( fpsMs );
 }
 
-void GrabManager::setAmbilightOn(bool isAmbilightOn, bool isErrorState)
+void GrabManager::updateBacklightState(Backlight::Status backlightStatus, Api::DeviceLockStatus deviceLockStatus)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isAmbilightOn << isErrorState;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << backlightStatus;
 
-    this->isAmbilightOn = isAmbilightOn;
+
+    m_isGrabOn = (backlightStatus == Backlight::StatusOn)
+            && (deviceLockStatus == Api::DeviceUnlocked);
 
     clearColorsNew();
 
-    if( isAmbilightOn ){
-        // Restart ambilight timer
-        timerGrab->start( 0 );
-    }else{
-        // Switch ambilight off
-        timerGrab->stop();
-        updateSmoothSteps();
-        clearColorsCurrent();
+    if (backlightStatus == Backlight::StatusOn)
+    {
+        // Start grabbing colors and sending signals
+        m_timerGrab->start( 0 );
+    } else {
+        // Backlight is off or in an error state and we need to turn off the grab and stop sending signals
+        m_timerGrab->stop();
 
-        if(isErrorState == false){
-            emit updateLedsColors( colorsNew );
+        // Send signal to switch off leds if led device isn't in error state
+        clearColorsCurrent();
+        if (backlightStatus != Backlight::StatusDeviceError)
+        {
+            emit updateLedsColors(colorsCurrent);
         }
     }
 }
@@ -579,31 +521,31 @@ void GrabManager::setResizeOrMovingFalse()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    isResizeOrMoving = false;
+    m_isResizeOrMoving = false;
 }
 
 void GrabManager::setResizeOrMovingTrue()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    isResizeOrMoving = true;
+    m_isResizeOrMoving = true;
 }
 
 void GrabManager::settingsProfileChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    this->avgColorsOnAllLeds = Settings::value("IsAvgColorsOn").toBool();
-    this->minLevelOfSensivity = Settings::value("MinimumLevelOfSensitivity").toInt();
-    this->m_gammaCorrection = Settings::value("GammaCorrection").toDouble();
+    m_avgColorsOnAllLeds = Settings::isAvgColorsOn();
+    m_minLevelOfSensivity = Settings::getMinimumLevelOfSensitivity();
+    m_gammaCorrection = Settings::getGammaCorrection();
 
-    this->ambilightDelayMs = Settings::getGrabSlowdownMs();
-    this->colorDepth = Settings::value("Firmware/ColorDepth").toInt();
+    m_grabSmoothSlowdown = Settings::getGrabSlowdownMs();
+    m_colorDepth = Settings::getFwColorDepth();
 
-    this->m_mode = Settings::getMode();
+    m_mode = Settings::getMode();
 
-    for(int i=0; i<ledWidgets.count(); i++){
-        ledWidgets[i]->settingsProfileChanged();
+    for(int i=0; i<m_ledWidgets.count(); i++){
+        m_ledWidgets[i]->settingsProfileChanged();
     }
 }
 
@@ -612,33 +554,33 @@ void GrabManager::setGrabber(IGrabber * newGrabber)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    if (this->grabber)
-        delete grabber;
-    this->grabber = newGrabber;
+    if (m_grabber)
+        delete m_grabber;
+    m_grabber = newGrabber;
     firstWidgetPositionChanged();
 }
 
 void GrabManager::setMoodLampSpeed(int value)
 {
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-    this->m_moodLampSpeed = value;
+    m_moodLampSpeed = value;
     speed = genNewSpeed(value);
     Settings::setMoodLampSpeed(value);
 }
 
 void GrabManager::setBackLightColor(QColor color)
 {
-     DEBUG_LOW_LEVEL << Q_FUNC_INFO << color;
-    this->m_backlightColor = color;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << color;
+    m_backlightColor = color;
     moodlamp();
     Settings::setMoodLampColor(color);
 }
 
- void GrabManager::switchMode(LightpackMode mode)
+ void GrabManager::switchMode(Lightpack::Mode mode)
  {
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
 
-     this->m_mode = mode;
+     m_mode = mode;
 
      Settings::setMode(mode);
  }
@@ -647,16 +589,16 @@ void GrabManager::setBackLightColor(QColor color)
  {
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-     this->m_brightness = value;
+     m_brightness = value;
 
-     Settings::setValue("Brightness", value);
+     Settings::setBrightness(value);
  }
 
 void GrabManager::setAmbilightSlowdownMs(int ms)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << ms;
 
-    this->ambilightDelayMs = ms;
+    m_grabSmoothSlowdown = ms;
     Settings::setGrabSlowdownMs(ms);
 }
 
@@ -665,18 +607,20 @@ void GrabManager::setAmbilightColorDepth(int depth)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << depth;
 
-    this->colorDepth = depth;
+    m_colorDepth = depth;
 }
 
 void GrabManager::setVisibleLedWidgets(bool state)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
-    for(int i=0; i<ledWidgets.count(); i++){
-        if(state){
-            ledWidgets[i]->show();
-        }else{
-            ledWidgets[i]->hide();
+    for (int i = 0; i < m_ledWidgets.count(); i++)
+    {
+        if (state)
+        {
+            m_ledWidgets[i]->show();
+        } else {
+            m_ledWidgets[i]->hide();
         }
     }
 }
@@ -686,9 +630,9 @@ void GrabManager::setColoredLedWidgets(bool state)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
     if(state){
-        for(int i=0; i<ledWidgets.count(); i++){
+        for(int i=0; i<m_ledWidgets.count(); i++){
             // Fill label with labelColors[i] color
-            ledWidgets[i]->setColors(i);
+            m_ledWidgets[i]->setColors(i);
         }
     }
 }
@@ -698,9 +642,9 @@ void GrabManager::setWhiteLedWidgets(bool state)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
     if(state){
-        for(int i=0; i<ledWidgets.count(); i++){
+        for(int i=0; i<m_ledWidgets.count(); i++){
             // Fill labels white
-            ledWidgets[i]->setColors(MoveMeWidget::ColorIndexWhite);
+            m_ledWidgets[i]->setColors(GrabWidget::ColorIndexWhite);
         }
     }
 }
@@ -710,7 +654,7 @@ void GrabManager::setUpdateColorsOnlyIfChanges(bool state)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
-    this->updateColorsOnlyIfChanges = state;
+    m_updateColorsOnlyIfChanges = state;
 }
 
 
@@ -718,23 +662,20 @@ void GrabManager::setAvgColorsOnAllLeds(bool state)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
-    this->avgColorsOnAllLeds = state;
-    Settings::setValue("IsAvgColorsOn", state);
+    m_avgColorsOnAllLeds = state;
+    Settings::setAvgColorsOn(state);
 }
 
 void GrabManager::setMinLevelOfSensivity(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    this->minLevelOfSensivity = value;
-    Settings::setValue("MinimumLevelOfSensitivity", value);
+    m_minLevelOfSensivity = value;
+    Settings::setMinimumLevelOfSensitivity(value);
 }
 
 void GrabManager::setGrabGammaCorrection(double value)
 {
     m_gammaCorrection = value;
-    Settings::setValue("GammaCorrection", value);
+    Settings::setGammaCorrection(value);
 }
-
-
-

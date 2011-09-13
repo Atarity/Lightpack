@@ -1,8 +1,8 @@
 /*
- * LedDeviceAlienFx.hpp
+ * ApiServerSetColorTask.hpp
  *
- *  Created on: 17.04.2011
- *      Author: Timur Sattarov && Mike Shatohin
+ *  Created on: 07.09.2011
+ *      Author: Mike Shatohin
  *     Project: Lightpack
  *
  *  Lightpack is very simple implementation of the backlight for a laptop
@@ -26,37 +26,30 @@
 
 #pragma once
 
-#include <qglobal.h>
+#include <QObject>
+#include <QRgb>
+#include "debug.h"
+#include "inlinemath.hpp"
 
-#ifdef Q_WS_WIN
-
-#include "ILedDevice.hpp"
-
-class LedDeviceAlienFx : public ILedDevice
+class ApiServerSetColorTask : public QObject
 {
     Q_OBJECT
 public:
-    LedDeviceAlienFx(QObject *parent = 0);
-    ~LedDeviceAlienFx();
+    explicit ApiServerSetColorTask(QObject *parent = 0);
 
 signals:
-    void openDeviceSuccess(bool isSuccess);
-    void ioDeviceSuccess(bool isSuccess);
-    void firmwareVersion(const QString & fwVersion);
-    void setColorsDone();
+    void taskDone(const QList<QRgb> & colors);
+    void taskIsSuccess(bool isSuccess);
 
 public slots:
-    void setColors(const QList<QRgb> & colors);
-    void offLeds() { }
-    void setTimerOptions(int prescallerIndex, int outputCompareRegValue) { }
-    void setColorDepth(int value) { }
-    void setSmoothSlowdown(int value) { }
-//    void setBrightness(int value) { }
-    void requestFirmwareVersion();
+    void startTask(QByteArray buffer, double gamma);
 
 private:
-    HINSTANCE m_hLfxLibrary;
-    bool m_isInitialized;
-};
+    QList<QRgb> m_colors;
 
-#endif /* Q_WS_WIN */
+    enum BuffRgbIndexes{
+        bRed, bGreen, bBlue, bSize
+    };
+    int buffRgb[bSize]; // buffer for store temp red, green and blue values
+
+};
