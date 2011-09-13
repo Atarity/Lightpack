@@ -150,10 +150,7 @@ private:
 
     void updateCbModesPosition();
 
-    void startApi();
-
-    IGrabber * createGrabber(GrabMode grabMode);
-
+    IGrabber * createGrabber(Grab::Mode grabMode);
 
 private:
     // Main backlight status for all modes (Grab, MoodLamp, etc.)

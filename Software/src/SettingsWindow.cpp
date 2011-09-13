@@ -147,8 +147,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetColorDepth(int)));
     connect(ui->spinBox_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareTimerOptionsChange()));
     connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
-    connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
-    connect(ui->spinBox_HW_SetAvgColor, SIGNAL(valueChanged(int)), this, SLOT(setAvgColorOnAllLEDs(int)));
+//    connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
 
     // GrabManager to this
     connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
@@ -455,21 +454,6 @@ void SettingsWindow::updateGrabbedColors(const QList<QRgb> & colors)
 void SettingsWindow::requestBacklightStatus()
 {
     emit resultBacklightStatus(m_backlightStatus);
-}
-
-void SettingsWindow::setAvgColorOnAllLEDs(int value)
-{
-    QList<QRgb> colors;
-
-    for (int i = 0; i < LEDS_COUNT; i++)
-    {
-        colors << qRgb(value, value, value);
-    }
-
-//    ledDevice->updateColors(colors);
-
-    ui->label_HW_SetAvgColor_Value->setText(
-            QString("0b%1").arg(QString::number(value, 2), 8, '0'));
 }
 
 // ----------------------------------------------------------------------------

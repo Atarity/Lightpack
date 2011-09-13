@@ -61,6 +61,8 @@ const char * ApiServer::ApiVersion = "version:"API_VERSION"\n";
 const char * ApiServer::CmdUnknown = "unknown command\n";
 const char * ApiServer::CmdExit = "exit";
 
+const char * ApiServer::CmdApiKey = "apikey:";
+
 const char * ApiServer::CmdGetStatus = "getstatus";
 const char * ApiServer::CmdResultStatus_On = "status:on\n";
 const char * ApiServer::CmdResultStatus_Off = "status:off\n";

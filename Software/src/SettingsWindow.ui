@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>398</width>
-    <height>503</height>
+    <width>349</width>
+    <height>506</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -222,8 +222,6 @@
                   </property>
                  </widget>
                 </item>
-
-
                 <item row="1" column="2">
                  <widget class="QSpinBox" name="spinBox_SlowdownGrab">
                   <property name="minimum">
@@ -1341,126 +1339,6 @@ margin-top: 0px;
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_StartTests">
-          <property name="text">
-           <string>Start tests</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_5">
-          <property name="title">
-           <string>Inverse of brightness (time LEDs OFF)</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_9">
-           <item>
-            <widget class="QSlider" name="horizontalSlider_HW_Brightness">
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="pageStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>10</number>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBox_HW_Brightness">
-             <property name="minimumSize">
-              <size>
-               <width>60</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>60</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="value">
-              <number>10</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_6">
-          <property name="title">
-           <string>Installing average color on all LEDs</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_10">
-           <item>
-            <widget class="QLabel" name="label_HW_SetAvgColor_Value">
-             <property name="text">
-              <string>0b00000000</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSlider" name="horizontalSlider_HW_SetAvgColor">
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="pageStep">
-              <number>5</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBox_HW_SetAvgColor">
-             <property name="minimumSize">
-              <size>
-               <width>60</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>60</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
          <widget class="QGroupBox" name="groupBox_Api">
           <property name="title">
            <string>Enable API</string>
@@ -1473,7 +1351,7 @@ margin-top: 0px;
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_14">
            <item>
-            <layout class="QGridLayout" name="gridLayout_3" rowminimumheight="0,0,0,0" columnminimumwidth="0,0,0">
+            <layout class="QGridLayout" name="gridLayout_3">
              <property name="sizeConstraint">
               <enum>QLayout::SetMinimumSize</enum>
              </property>
@@ -1487,16 +1365,6 @@ margin-top: 0px;
                </property>
                <property name="text">
                 <string>Port</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLineEdit" name="lineEdit_ApiPort">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>27</height>
-                </size>
                </property>
               </widget>
              </item>
@@ -1549,6 +1417,16 @@ margin-top: 0px;
                </property>
               </widget>
              </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="lineEdit_ApiPort">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>27</height>
+                </size>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
           </layout>
@@ -1565,6 +1443,16 @@ margin-top: 0px;
          </widget>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_GrabbedColors"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_StartTests">
+          <property name="text">
+           <string>Start tests</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="verticalSpacer_4">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -1576,9 +1464,6 @@ margin-top: 0px;
            </size>
           </property>
          </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_GrabbedColors"/>
         </item>
        </layout>
       </widget>
@@ -1733,22 +1618,6 @@ margin-top: 0px;
    </hints>
   </connection>
   <connection>
-   <sender>horizontalSlider_HW_Brightness</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox_HW_Brightness</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>135</x>
-     <y>281</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>267</x>
-     <y>281</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>spinBox_HW_SmoothSlowdown</sender>
    <signal>valueChanged(int)</signal>
    <receiver>horizontalSlider_HW_SmoothSlowdown</receiver>
@@ -1761,54 +1630,6 @@ margin-top: 0px;
     <hint type="destinationlabel">
      <x>135</x>
      <y>212</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox_HW_Brightness</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider_HW_Brightness</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>267</x>
-     <y>281</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>135</x>
-     <y>281</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>horizontalSlider_HW_SetAvgColor</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox_HW_SetAvgColor</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>142</x>
-     <y>385</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>281</x>
-     <y>385</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox_HW_SetAvgColor</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider_HW_SetAvgColor</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>281</x>
-     <y>385</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>142</x>
-     <y>385</y>
     </hint>
    </hints>
   </connection>
