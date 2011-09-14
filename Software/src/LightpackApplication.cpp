@@ -49,8 +49,8 @@ LightpackApplication::LightpackApplication(int &argc, char **argv)
 
     checkSystemTrayAvailability();
 
-    m_settingsWindow = new SettingsWindow();   /* Create MainWindow */
-    m_settingsWindow->setVisible(false);   /* And load to tray. */
+    m_settingsWindow = new SettingsWindow();
+    m_settingsWindow->setVisible(false); /* Load to tray */
 
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
@@ -61,7 +61,31 @@ LightpackApplication::LightpackApplication(int &argc, char **argv)
 
     startApiServer();
 
+    connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(backlightStatusChanged(Backlight::Status)));
+
     m_settingsWindow->startBacklight();
+}
+
+void LightpackApplication::backlightStatusChanged(Backlight::Status status)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << status;
+
+    switch (status)
+    {
+    case Backlight::StatusOn:
+    case Backlight::StatusDeviceError:
+        connectApiServerAndLedDeviceSignalsSlots();
+        break;
+
+    case Backlight::StatusOff:
+        disconnectApiServerAndLedDeviceSignalsSlots();
+        emit clearColorBuffers();
+        break;
+
+    default:
+        qWarning() << Q_FUNC_INFO << "status contains crap =" << status;
+        break;
+    }
 }
 
 void LightpackApplication::processCommandLineArguments()
@@ -191,38 +215,38 @@ void LightpackApplication::checkSystemTrayAvailability() const
 
 void LightpackApplication::startApiServer()
 {
-    if (Settings::isEnabledApi())
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Start API server";
+
+    m_isApiServerConnectedToLedDeviceSignalsSlots = false;
+
+    m_apiServer = new ApiServer();
+    m_apiServerThread = new QThread();
+
+    connect(this, SIGNAL(clearColorBuffers()), m_apiServer, SIGNAL(clearColorBuffers()));
+
+    connect(m_settingsWindow, SIGNAL(enableApiServer(bool)), m_apiServer, SLOT(enableApiServer(bool)));
+    connect(m_settingsWindow, SIGNAL(enableApiAuth(bool)), m_apiServer, SLOT(enableApiAuth(bool)));
+    connect(m_settingsWindow, SIGNAL(updateApiKey(QString)), m_apiServer, SLOT(updateApiKey(QString)));
+    connect(m_settingsWindow, SIGNAL(updateApiPort(int)), m_apiServer, SLOT(updateApiPort(int)));
+
+    connect(m_apiServer, SIGNAL(errorOnStartListening(QString)), m_settingsWindow, SLOT(onApiServer_ErrorOnStartListening(QString)));
+
+    connect(m_apiServer, SIGNAL(requestBacklightStatus()), m_settingsWindow, SLOT(requestBacklightStatus()));
+    connect(m_settingsWindow, SIGNAL(resultBacklightStatus(Backlight::Status)), m_apiServer, SLOT(resultBacklightStatus(Backlight::Status)));
+
+    connect(m_apiServer, SIGNAL(updateProfile(QString)), m_settingsWindow, SLOT(profileSwitch(QString)));
+    connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)), m_settingsWindow, SLOT(setBacklightStatus(Backlight::Status)));
+    connect(m_apiServer, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), m_settingsWindow, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
+
+    if (Settings::isBacklightOn())
     {
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Start API server";
-
-        int port = Settings::getApiPort();
-
-        m_apiServer = new ApiServer();
-        m_apiServerThread = new QThread();
-
-        connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDeviceFactory, SLOT(setColorsIfDeviceAvailable(QList<QRgb>)), Qt::QueuedConnection);
-        connect(m_apiServer, SIGNAL(updateSmooth(int)), m_ledDeviceFactory, SIGNAL(setSmoothSlowdown(int)), Qt::QueuedConnection);
-
-        connect(m_apiServer, SIGNAL(requestBacklightStatus()), m_settingsWindow, SLOT(requestBacklightStatus()));
-        connect(m_settingsWindow, SIGNAL(resultBacklightStatus(Backlight::Status)), m_apiServer, SLOT(resultBacklightStatus(Backlight::Status)));
-
-        connect(m_apiServer, SIGNAL(updateProfile(QString)), m_settingsWindow, SLOT(profileSwitch(QString)));
-        connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)), m_settingsWindow, SLOT(setBacklightStatus(Backlight::Status)));
-        connect(m_apiServer, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), m_settingsWindow, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
-
-
-//        m_apiServer->ApiKey = Settings::getApiKey();
-
-        if (!m_apiServer->listen(QHostAddress::Any, port)) {
-            QString errorStr = tr("API server unable to start (port: %1): %2.").arg(port).arg(m_apiServer->errorString());
-
-            QMessageBox::critical(0, tr("API Server"), errorStr);
-            qCritical() << Q_FUNC_INFO << errorStr;
-        }
-
-        m_apiServer->moveToThread(m_apiServerThread);
-        m_apiServerThread->start();
+        connectApiServerAndLedDeviceSignalsSlots();
     }
+
+    m_apiServer->firstStart();
+
+    m_apiServer->moveToThread(m_apiServerThread);
+    m_apiServerThread->start();
 }
 
 void LightpackApplication::startLedDeviceFactory()
@@ -233,6 +257,7 @@ void LightpackApplication::startLedDeviceFactory()
     connect(m_settingsWindow, SIGNAL(recreateLedDevice()), m_ledDeviceFactory, SLOT(recreateLedDevice()), Qt::DirectConnection);
     connect(m_settingsWindow, SIGNAL(updateLedsColors(const QList<QRgb> &)), m_ledDeviceFactory, SLOT(setColorsIfDeviceAvailable(QList<QRgb>)), Qt::QueuedConnection);
 
+    connect(m_settingsWindow, SIGNAL(offLeds()), m_ledDeviceFactory, SIGNAL(offLeds()), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(updateColorDepth(int)), m_ledDeviceFactory, SIGNAL(setColorDepth(int)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(updateSmoothSlowdown(int)), m_ledDeviceFactory, SIGNAL(setSmoothSlowdown(int)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(updateTimerOptions(int,int)), m_ledDeviceFactory, SIGNAL(setTimerOptions(int,int)), Qt::QueuedConnection);
@@ -244,4 +269,24 @@ void LightpackApplication::startLedDeviceFactory()
 
     m_ledDeviceFactory->moveToThread(m_ledDeviceFactoryThread);
     m_ledDeviceFactoryThread->start();
+}
+
+void LightpackApplication::connectApiServerAndLedDeviceSignalsSlots()
+{
+    if (m_isApiServerConnectedToLedDeviceSignalsSlots == false)
+    {
+        connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDeviceFactory, SLOT(setColorsIfDeviceAvailable(QList<QRgb>)), Qt::QueuedConnection);
+        connect(m_apiServer, SIGNAL(updateSmooth(int)), m_ledDeviceFactory, SIGNAL(setSmoothSlowdown(int)), Qt::QueuedConnection);
+        m_isApiServerConnectedToLedDeviceSignalsSlots = true;
+    }
+}
+
+void LightpackApplication::disconnectApiServerAndLedDeviceSignalsSlots()
+{
+    if (m_isApiServerConnectedToLedDeviceSignalsSlots == true)
+    {
+        disconnect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDeviceFactory, SLOT(setColorsIfDeviceAvailable(QList<QRgb>)));
+        disconnect(m_apiServer, SIGNAL(updateSmooth(int)), m_ledDeviceFactory, SIGNAL(setSmoothSlowdown(int)));
+        m_isApiServerConnectedToLedDeviceSignalsSlots = false;
+    }
 }

@@ -46,8 +46,9 @@
 #define KEY_PROFILE_LAST            "ProfileLast"
 #define KEY_LANGUAGE                "Language"
 #define KEY_DEBUG_LEVEL             "DebugLevel"
+#define KEY_API_ENABLED             "ApiEnabled"
 #define KEY_API_PORT                "ApiPort"
-#define KEY_ENABLE_API              "EnableApi"
+#define KEY_API_AUTH_ENABLED        "ApiAuthEnabled"
 #define KEY_API_KEY                 "ApiKey"
 #define KEY_EXPERT_MODE_ENABLED     "ExpertModeEnabled"
 #define KEY_CONNECTED_DEVICE        "ConnectedDevice"
@@ -102,8 +103,9 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(KEY_PROFILE_LAST,          PROFILE_DEFAULT_NAME);
     setNewOptionMain(KEY_LANGUAGE,              LANGUAGE_DEFAULT_NAME);
     setNewOptionMain(KEY_DEBUG_LEVEL,           DEBUG_LEVEL_DEFAULT);
+    setNewOptionMain(KEY_API_ENABLED,           API_ENABLED_DEFAULT);
     setNewOptionMain(KEY_API_PORT,              API_PORT_DEFAULT);
-    setNewOptionMain(KEY_ENABLE_API,            ENABLE_API_DEFAULT);
+    setNewOptionMain(KEY_API_AUTH_ENABLED,      API_AUTH_ENABLED_DEFAULT);
     setNewOptionMain(KEY_API_KEY,               QUuid::createUuid().toString());
     setNewOptionMain(KEY_EXPERT_MODE_ENABLED,   EXPERT_MODE_ENABLED_DEFAULT);
     setNewOptionMain(KEY_CONNECTED_DEVICE,      CONNECTED_DEVICE_DEFAULT);
@@ -324,14 +326,14 @@ void Settings::setDebugLevel(int debugLvl)
     setValueMain(KEY_DEBUG_LEVEL, debugLvl);
 }
 
-bool Settings::isEnabledApi()
+bool Settings::isApiEnabled()
 {
-    return valueMain(KEY_ENABLE_API).toBool();
+    return valueMain(KEY_API_ENABLED).toBool();
 }
 
-void Settings::setEnableApi(bool isEnabled)
+void Settings::setIsApiEnabled(bool isEnabled)
 {
-    setValueMain(KEY_ENABLE_API, isEnabled);
+    setValueMain(KEY_API_ENABLED, isEnabled);
 }
 
 int Settings::getApiPort()
@@ -352,6 +354,16 @@ QString Settings::getApiKey()
 void Settings::setApiKey(const QString & apiKey)
 {
     setValueMain(KEY_API_KEY, apiKey);
+}
+
+bool Settings::isApiAuthEnabled()
+{
+    return valueMain(KEY_API_AUTH_ENABLED).toBool();
+}
+
+void Settings::setIsApiAuthEnabled(bool isEnabled)
+{
+    setValueMain(KEY_API_AUTH_ENABLED, isEnabled);
 }
 
 bool Settings::isExpertModeEnabled()

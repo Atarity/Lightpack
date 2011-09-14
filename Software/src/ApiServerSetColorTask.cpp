@@ -33,8 +33,7 @@
 ApiServerSetColorTask::ApiServerSetColorTask(QObject *parent) :
     QObject(parent)
 {
-    for (int i = 0; i < LEDS_COUNT; i++)
-        m_colors << 0;
+    clearColorBuffers();
 }
 
 void ApiServerSetColorTask::startTask(QByteArray buffer, double gamma)
@@ -177,4 +176,16 @@ end:
         emit taskDone(m_colors);
         emit taskIsSuccess(true);
     }
+}
+
+void ApiServerSetColorTask::clearColorBuffers()
+{
+    m_colors.clear();
+
+    for (int i = 0; i < LEDS_COUNT; i++)
+        m_colors << 0;
+
+    buffRgb[bRed] = 0;
+    buffRgb[bGreen] = 0;
+    buffRgb[bBlue] = 0;
 }

@@ -41,8 +41,9 @@
 #define PROFILE_DEFAULT_NAME            "Lightpack"
 #define LANGUAGE_DEFAULT_NAME           "<System>" /* system lang */
 #define DEBUG_LEVEL_DEFAULT             Debug::LowLevel
-#define ENABLE_API_DEFAULT              true
+#define API_ENABLED_DEFAULT             true
 #define API_PORT_DEFAULT                3636
+#define API_AUTH_ENABLED_DEFAULT        true
 #define EXPERT_MODE_ENABLED_DEFAULT     false
 #define CONNECTED_DEVICE_DEFAULT        "Lightpack"
 #ifdef ALIEN_FX_SUPPORTED
@@ -119,12 +120,14 @@ public:
     static void setLanguage(const QString & language);
     static int getDebugLevel();
     static void setDebugLevel(int debugLvl);
-    static bool isEnabledApi();
-    static void setEnableApi(bool isEnabled);
+    static bool isApiEnabled();
+    static void setIsApiEnabled(bool isEnabled);
     static int getApiPort();
     static void setApiPort(int apiPort);
     static QString getApiKey();
     static void setApiKey(const QString & apiKey);
+    static bool isApiAuthEnabled();
+    static void setIsApiAuthEnabled(bool isEnabled);
     static bool isExpertModeEnabled();
     static void setExpertModeEnabled(bool isEnabled);
     static SupportedDevices::DeviceType getConnectedDevice();

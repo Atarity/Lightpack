@@ -43,6 +43,7 @@ signals:
 
 public slots:
     void startTask(QByteArray buffer, double gamma);
+    void clearColorBuffers();
 
 private:
     QList<QRgb> m_colors;

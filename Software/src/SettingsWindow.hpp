@@ -52,6 +52,7 @@ public:
 
 signals:
     void settingsProfileChanged();
+    void offLeds();
     void updateLedsColors(const QList<QRgb> &);
     void updateTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void updateColorDepth(int value);
@@ -59,7 +60,11 @@ signals:
     void requestFirmwareVersion();
     void recreateLedDevice();
     void resultBacklightStatus(Backlight::Status);
-
+    void backlightStatusChanged(Backlight::Status);
+    void enableApiServer(bool isEnabled);
+    void enableApiAuth(bool isEnabled);
+    void updateApiPort(int port);
+    void updateApiKey(QString key);
 
 public slots:
     void ledDeviceCallSuccess(bool isSuccess);
@@ -75,6 +80,7 @@ public slots:
     void profileSwitchCombobox(QString profile);
     void updateGrabbedColors(const QList<QRgb> & colors);
     void requestBacklightStatus();
+    void onApiServer_ErrorOnStartListening(QString errorMessage);
 
 protected:
     virtual void changeEvent(QEvent *e);
@@ -114,16 +120,13 @@ private slots:
     void onGrabModeChanged();
     void startTestsClick();
 
-    void setAvgColorOnAllLEDs(int value);
-
-    void onMoodLampColorChanged(QColor color);
-    void onExpertModeEnabledChanged(bool isEnabled);
-    void onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled);
-    void onGroupBox_EnableApiToggled(bool isEnabled);
-    void genNewKey();
-    void onApiPort_Changed(QString apiport);
-    void onApiKey_Changed(QString apikey);
-    void onApiAuth_Toggled(bool isEnabled);
+    void onColorButton_MoodLamp_ColorChanged(QColor color);
+    void onCheckBox_ExpertModeEnabled_Toggled(bool isEnabled);
+    void onCheckBox_ConnectVirtualDevice_Toggled(bool isEnabled);
+    void onGroupBox_EnableApi_Toggled(bool isEnabled);
+    void onButton_GenerateNewApiKey_Clicked();
+    void onButton_SetApiPort_Clicked();
+    void onCheckBox_IsApiAuthEnabled_Toggled(bool isEnabled);
 
 private:
     void connectSignalsSlots();
@@ -161,7 +164,7 @@ private:
     AboutDialog *m_aboutDialog;
     SpeedTest *speedTest;
 
-	Grab::Mode getGrabMode();
+    Grab::Mode getGrabMode();
 
     // Evaluated frequency of the PWM generation
     double pwmFrequency;

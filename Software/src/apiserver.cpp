@@ -62,6 +62,9 @@ const char * ApiServer::CmdUnknown = "unknown command\n";
 const char * ApiServer::CmdExit = "exit";
 
 const char * ApiServer::CmdApiKey = "apikey:";
+const char * ApiServer::CmdApiKeyResult_Ok = "ok\n";
+const char * ApiServer::CmdApiKeyResult_Fail = "fail\n";
+const char * ApiServer::CmdApiCheck_AuthRequired = "authorization required\n";
 
 const char * ApiServer::CmdGetStatus = "getstatus";
 const char * ApiServer::CmdResultStatus_On = "status:on\n";
@@ -110,28 +113,70 @@ const int ApiServer::SignalWaitTimeoutMs = 1000; // 1 second
 
 ApiServer::ApiServer(QObject *parent)
     : QTcpServer(parent)
-{
-    m_lockedClient = NULL;
-    m_isRequestBacklightStatusDone = true;
-    m_backlightStatusResult = Backlight::StatusUnknown;
-
+{    
+    initPrivateVariables();
     initApiSetColorTask();
 }
 
 ApiServer::ApiServer(quint16 port, QObject *parent)
     : QTcpServer(parent)
 {
-    m_lockedClient = NULL;
-    m_isRequestBacklightStatusDone = true;
-    m_backlightStatusResult = Backlight::StatusUnknown;
+    // This constructor is for using in ApiTests
 
+    initPrivateVariables();
     initApiSetColorTask();
 
-    bool ok = listen(QHostAddress::Any, port);
+    m_apiPort = port;
+
+    bool ok = listen(QHostAddress::Any, m_apiPort);
     if (!ok)
     {
-        qFatal("%s listen(Any, %d) fail", Q_FUNC_INFO, port);
+        qFatal("%s listen(Any, %d) fail", Q_FUNC_INFO, m_apiPort);
     }
+}
+
+void ApiServer::firstStart()
+{
+    // Call this function after connect all nesessary signals/slots
+
+    if (Settings::isApiEnabled())
+    {
+        startListening();
+    }
+}
+
+void ApiServer::enableApiServer(bool isEnabled)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
+
+    if (isEnabled)
+        startListening();
+    else
+        stopListening();
+}
+
+void ApiServer::enableApiAuth(bool isEnabled)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
+
+    m_isAuthEnabled = isEnabled;
+}
+
+void ApiServer::updateApiPort(int port)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << port;
+
+    m_apiPort = port;
+
+    stopListening();
+    startListening();
+}
+
+void ApiServer::updateApiKey(QString key)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << key;
+
+    m_apiKey = key;
 }
 
 void ApiServer::incomingConnection(int socketDescriptor)
@@ -181,35 +226,49 @@ void ApiServer::clientProcessCommands()
 
     while (client->canReadLine())
     {
-        QByteArray buffer = client->readLine().trimmed();
-        API_DEBUG_OUT << buffer;
+        QByteArray cmdBuffer = client->readLine().trimmed();
+        API_DEBUG_OUT << cmdBuffer;
 
         QString result = CmdUnknown;
 
-        if (buffer == "apikey")
+        if (cmdBuffer.startsWith(CmdApiKey))
         {
-            QString apikey = getArg(line);
-            if (ApiKey == apikey)
+            API_DEBUG_OUT << CmdApiKey;
+            result = CmdApiKey;
+
+            cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+            API_DEBUG_OUT << QString(cmdBuffer);
+
+            if (cmdBuffer == m_apiKey)
             {
-                ClientSettings cs = clients.value(client);
-                cs.auth = true;
-                clients.remove(client);
-                clients.insert(client,cs);
-                client->write(QString("apikey:%1\n").arg("ok").toUtf8());
+                API_DEBUG_OUT << CmdApiKey << "OK";
+
+                m_clients[client].isAuthorized = true;
+
+                result += CmdApiKeyResult_Ok;
+            } else {
+                API_DEBUG_OUT << CmdApiKey << "Api key is not valid:" << QString(cmdBuffer);
+
+                m_clients[client].isAuthorized = false;
+
+                result += CmdApiKeyResult_Fail;
             }
-            else
-                client->write(QString("apikey:%1\n").arg("no").toUtf8());
+
+            API_DEBUG_OUT << result;
+            client->write(result.toUtf8());
             return;
         }
-        ClientSettings cs = clients.value(client);
-        if (!cs.auth)
+
+        if (m_isAuthEnabled && m_clients[client].isAuthorized == false)
         {
-            client->write(QString("error:%1\n").arg("need auth").toUtf8());
+            API_DEBUG_OUT << CmdApiCheck_AuthRequired;
+            client->write(CmdApiCheck_AuthRequired);
             return;
         }
 
+        // We are working only with authorized clients!
 
-        if (buffer == CmdGetStatus)
+        if (cmdBuffer == CmdGetStatus)
         {
             API_DEBUG_OUT << CmdGetStatus;
 
@@ -252,7 +311,7 @@ void ApiServer::clientProcessCommands()
                 }
             }
         }
-        else if (buffer == CmdGetStatusAPI)
+        else if (cmdBuffer == CmdGetStatusAPI)
         {
             API_DEBUG_OUT << CmdGetStatusAPI;
 
@@ -261,7 +320,7 @@ void ApiServer::clientProcessCommands()
             else
                 result = CmdResultStatusAPI_Idle;
         }
-        else if (buffer == CmdGetProfiles)
+        else if (cmdBuffer == CmdGetProfiles)
         {
             API_DEBUG_OUT << CmdGetProfiles;
 
@@ -273,13 +332,13 @@ void ApiServer::clientProcessCommands()
                 result += profiles[i] + ";";
             result += "\n";
         }
-        else if (buffer == CmdGetProfile)
+        else if (cmdBuffer == CmdGetProfile)
         {
             API_DEBUG_OUT << CmdGetProfile;
 
             result = CmdResultProfile + Settings::getCurrentProfileName() + "\n";
         }
-        else if (buffer == CmdLock)
+        else if (cmdBuffer == CmdLock)
         {
             API_DEBUG_OUT << CmdLock;
 
@@ -299,7 +358,7 @@ void ApiServer::clientProcessCommands()
                 }
             }
         }
-        else if (buffer == CmdUnlock)
+        else if (cmdBuffer == CmdUnlock)
         {
             API_DEBUG_OUT << CmdUnlock;
 
@@ -315,15 +374,15 @@ void ApiServer::clientProcessCommands()
                 result = CmdResultUnlock_Success;               
             }
         }
-        else if (buffer.startsWith(CmdSetColor))
+        else if (cmdBuffer.startsWith(CmdSetColor))
         {
             API_DEBUG_OUT << CmdSetColor;
             result = CmdSetColor;            
 
             if (m_lockedClient == client)
             {
-                buffer.remove(0, buffer.indexOf(':') + 1);
-                API_DEBUG_OUT << QString(buffer);                               
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
 
                 if (m_isTaskSetColorDone)
                 {
@@ -331,7 +390,7 @@ void ApiServer::clientProcessCommands()
                     m_isTaskSetColorParseSuccess = false;
 
                     // Start task
-                    emit startTask(buffer, m_clients.value(client).gamma);
+                    emit startTask(cmdBuffer, m_clients.value(client).gamma);
 
                     // Wait signal from m_apiSetColorTask with success or fail result of parsing buffer.
                     // After SignalWaitTimeoutMs milliseconds, the cycle of waiting will end and the
@@ -370,25 +429,25 @@ void ApiServer::clientProcessCommands()
                 result += CmdSetResult_Busy;
             }
         }
-        else if (buffer.startsWith(CmdSetGamma))
+        else if (cmdBuffer.startsWith(CmdSetGamma))
         {
             API_DEBUG_OUT << CmdSetGamma;
             result = CmdSetGamma;
 
             if (m_lockedClient == client)
             {
-                buffer.remove(0, buffer.indexOf(':') + 1);
-                API_DEBUG_OUT << QString(buffer);
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
 
                 // Gamma can contain max five chars (0.00 -- 10.00)
-                if (buffer.length() > 5)
+                if (cmdBuffer.length() > 5)
                 {
                     API_DEBUG_OUT << CmdSetGamma << "Error (gamma max 5 chars)";
                     result += CmdSetResult_Error;
                 } else {
                     // Try to convert gamma string to double
                     bool ok = false;
-                    double gamma = QString(buffer).toDouble(&ok);
+                    double gamma = QString(cmdBuffer).toDouble(&ok);
 
                     if (ok)
                     {
@@ -418,25 +477,25 @@ void ApiServer::clientProcessCommands()
                 result += CmdSetResult_Busy;
             }
         }
-        else if (buffer.startsWith(CmdSetSmooth))
+        else if (cmdBuffer.startsWith(CmdSetSmooth))
         {
             API_DEBUG_OUT << CmdSetSmooth;
             result = CmdSetSmooth;
 
             if (m_lockedClient == client)
             {
-                buffer.remove(0, buffer.indexOf(':') + 1);
-                API_DEBUG_OUT << QString(buffer);
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
 
                 // Smooth can contain max three chars (0 -- 255)
-                if (buffer.length() > 3)
+                if (cmdBuffer.length() > 3)
                 {
                     API_DEBUG_OUT << CmdSetSmooth << "Error (smooth max 3 chars)";
                     result += CmdSetResult_Error;
                 } else {
                     // Try to convert smooth string to int
                     bool ok = false;
-                    int smooth = QString(buffer).toInt(&ok);
+                    int smooth = QString(cmdBuffer).toInt(&ok);
 
                     if (ok)
                     {
@@ -466,17 +525,17 @@ void ApiServer::clientProcessCommands()
                 result += CmdSetResult_Busy;
             }
         }
-        else if (buffer.startsWith(CmdSetProfile))
+        else if (cmdBuffer.startsWith(CmdSetProfile))
         {
             API_DEBUG_OUT << CmdSetProfile;
             result = CmdSetProfile;
 
             if (m_lockedClient == client)
             {
-                buffer.remove(0, buffer.indexOf(':') + 1);
-                API_DEBUG_OUT << QString(buffer);
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
 
-                QString setProfileName = QString(buffer);
+                QString setProfileName = QString(cmdBuffer);
                 QStringList profiles = Settings::findAllProfiles();
 
                 if (profiles.contains(setProfileName))
@@ -500,21 +559,21 @@ void ApiServer::clientProcessCommands()
                 result += CmdSetResult_Busy;
             }
         }
-        else if (buffer.startsWith(CmdSetStatus))
+        else if (cmdBuffer.startsWith(CmdSetStatus))
         {
             API_DEBUG_OUT << CmdSetStatus;
             result = CmdSetStatus;
 
             if (m_lockedClient == client)
             {
-                buffer.remove(0, buffer.indexOf(':') + 1);
-                API_DEBUG_OUT << QString(buffer);
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
 
                 Backlight::Status status = Backlight::StatusUnknown;
 
-                if (buffer == CmdSetStatus_On)
+                if (cmdBuffer == CmdSetStatus_On)
                     status = Backlight::StatusOn;
-                else if (buffer == CmdSetStatus_Off)
+                else if (cmdBuffer == CmdSetStatus_Off)
                     status = Backlight::StatusOff;
 
                 if (status != Backlight::StatusUnknown)
@@ -538,7 +597,7 @@ void ApiServer::clientProcessCommands()
                 result += CmdSetResult_Busy;
             }
         }
-        else if (buffer == CmdExit)
+        else if (cmdBuffer == CmdExit)
         {
             client->write("Goodbye!\n");
             client->close();
@@ -546,7 +605,7 @@ void ApiServer::clientProcessCommands()
         }
         else
         {
-            qWarning() << Q_FUNC_INFO << CmdUnknown << buffer;
+            qWarning() << Q_FUNC_INFO << CmdUnknown << cmdBuffer;
         }
 
         API_DEBUG_OUT << result;
@@ -566,6 +625,17 @@ void ApiServer::resultBacklightStatus(Backlight::Status status)
     m_backlightStatusResult = status;
 }
 
+void ApiServer::initPrivateVariables()
+{
+    m_apiPort = Settings::getApiPort();
+    m_apiKey = Settings::getApiKey();
+    m_isAuthEnabled = Settings::isApiAuthEnabled();
+
+    m_lockedClient = NULL;
+    m_isRequestBacklightStatusDone = true;
+    m_backlightStatusResult = Backlight::StatusUnknown;
+}
+
 void ApiServer::initApiSetColorTask()
 {
     m_isTaskSetColorDone = true;
@@ -578,6 +648,51 @@ void ApiServer::initApiSetColorTask()
     connect(m_apiSetColorTask, SIGNAL(taskIsSuccess(bool)), this, SLOT(taskSetColorIsSuccess(bool)), Qt::QueuedConnection);
     connect(this, SIGNAL(startTask(QByteArray,double)), m_apiSetColorTask, SLOT(startTask(QByteArray,double)), Qt::QueuedConnection);
 
+    connect(this, SIGNAL(clearColorBuffers()), m_apiSetColorTask, SLOT(clearColorBuffers()));
+
     m_apiSetColorTask->moveToThread(m_apiSetColorTaskThread);
     m_apiSetColorTaskThread->start();
+}
+
+void ApiServer::startListening()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_apiPort;
+
+    bool ok = listen(QHostAddress::Any, m_apiPort);
+
+    if (ok == false)
+    {
+        QString errorStr = tr("API server unable to start (port: %1): %2.")
+                .arg(m_apiPort).arg(errorString());
+
+        qCritical() << Q_FUNC_INFO << errorStr;
+
+        emit errorOnStartListening(errorStr);
+    }
+}
+
+void ApiServer::stopListening()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    // Closes the server. The server will no longer listen for incoming connections.
+    close();
+
+    m_lockedClient = NULL;
+
+    emit updateDeviceLockStatus(Api::DeviceUnlocked);
+
+    QMap<QTcpSocket*, ClientInfo>::iterator i;
+    for (i = m_clients.begin(); i != m_clients.end(); ++i)
+    {
+        QTcpSocket * client = dynamic_cast<QTcpSocket*>(i.key());
+
+        disconnect(client, SIGNAL(readyRead()), this, SLOT(clientProcessCommands()));
+        disconnect(client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
+
+        client->abort();
+        client->deleteLater();
+    }
+
+    m_clients.clear();
 }

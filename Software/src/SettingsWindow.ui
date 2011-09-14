@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>349</width>
-    <height>506</height>
+    <width>391</width>
+    <height>593</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,6 +25,12 @@
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="tabPosition">
        <enum>QTabWidget::North</enum>
       </property>
@@ -716,8 +722,8 @@ margin-top: 0px;
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>10</height>
+            <width>50</width>
+            <height>1</height>
            </size>
           </property>
          </spacer>
@@ -1036,10 +1042,13 @@ margin-top: 0px;
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
+          </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>5</height>
+            <height>1</height>
            </size>
           </property>
          </spacer>
@@ -1264,8 +1273,8 @@ margin-top: 0px;
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>50</width>
+            <height>1</height>
            </size>
           </property>
          </spacer>
@@ -1278,27 +1287,118 @@ margin-top: 0px;
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
-         <widget class="QGroupBox" name="groupBox_8">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="title">
-           <string notr="true"/>
+         <widget class="QGroupBox" name="groupBox_DevTabTxt">
+          <property name="checkable">
+           <bool>false</bool>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_12">
+           <property name="leftMargin">
+            <number>9</number>
+           </property>
            <item>
-            <widget class="QLabel" name="label">
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
+            <widget class="QLabel" name="label_DevTabWarning">
              <property name="text">
               <string>This tab is used only by project developers. Any tuning with all these controls provide inevetible plane crash, miscarrige or nuclear disaster. Use it on your own risk.</string>
              </property>
+             <property name="alignment">
+              <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+             </property>
              <property name="wordWrap">
               <bool>true</bool>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_Api">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Enable API</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_ApiPort">
+             <property name="text">
+              <string>Port</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="lineEdit_ApiPort">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>100</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="inputMask">
+              <string>D999; </string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="pushButton_SetApiPort">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Set</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="3">
+            <widget class="QCheckBox" name="checkBox_IsApiAuthEnabled">
+             <property name="text">
+              <string>Enable authorization</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_ApiKey">
+             <property name="text">
+              <string>Key</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="lineEdit_ApiKey">
+             <property name="toolTip">
+              <string>Copy and paste this key into the application using the API, for authorization on the server</string>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QPushButton" name="pushButton_GenerateNewApiKey">
+             <property name="text">
+              <string>Generate</string>
              </property>
             </widget>
            </item>
@@ -1339,100 +1439,6 @@ margin-top: 0px;
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_Api">
-          <property name="title">
-           <string>Enable API</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_14">
-           <item>
-            <layout class="QGridLayout" name="gridLayout_3">
-             <property name="sizeConstraint">
-              <enum>QLayout::SetMinimumSize</enum>
-             </property>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_5">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>27</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Port</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_6">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>27</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>ApiKey</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QLineEdit" name="lineEdit_ApiKey">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>27</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2">
-              <widget class="QPushButton" name="pushButton_NewKey">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>27</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Generate</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0" colspan="3">
-              <widget class="QCheckBox" name="checkBox_ApiAuth">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>27</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Enable authorization</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLineEdit" name="lineEdit_ApiPort">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>27</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
          <widget class="QCheckBox" name="checkBox_ConnectVirtualDevice">
           <property name="toolTip">
            <string>If you haven't real device this option avoid usb errors.</string>
@@ -1457,9 +1463,12 @@ margin-top: 0px;
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
+          </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
+            <width>50</width>
             <height>1</height>
            </size>
           </property>
@@ -1630,6 +1639,70 @@ margin-top: 0px;
     <hint type="destinationlabel">
      <x>135</x>
      <y>212</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEdit_ApiPort</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pushButton_SetApiPort</receiver>
+   <slot>animateClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>160</x>
+     <y>308</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>282</x>
+     <y>302</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_IsApiAuthEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_ApiKey</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>134</x>
+     <y>333</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>59</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_IsApiAuthEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lineEdit_ApiKey</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>134</x>
+     <y>333</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>160</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_IsApiAuthEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_GenerateNewApiKey</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>134</x>
+     <y>333</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>280</x>
+     <y>359</y>
     </hint>
    </hints>
   </connection>

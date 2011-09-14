@@ -105,6 +105,8 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
         m_backlightStatus = Backlight::StatusOff;
     }
 
+    emit backlightStatusChanged(m_backlightStatus);
+
     m_deviceLockStatus = Api::DeviceUnlocked;
 
     onGrabModeChanged();
@@ -163,8 +165,8 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
 
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
-    connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColorChanged(QColor)));
-    connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabledChanged(bool)));
+    connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onColorButton_MoodLamp_ColorChanged(QColor)));
+    connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ExpertModeEnabled_Toggled(bool)));
 
 
     // Dev tab
@@ -179,10 +181,16 @@ void SettingsWindow::connectSignalsSlots()
 #endif
 
     connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SLOT(updateGrabbedColors(QList<QRgb>)));
-    connect(ui->checkBox_ConnectVirtualDevice, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ConnectVirtualDeviceToggled(bool)));
+    connect(ui->checkBox_ConnectVirtualDevice, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ConnectVirtualDevice_Toggled(bool)));
 
     // Connections to signals which will be connected to ILedDevice
     connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
+
+    // Dev tab configure API (port, apikey)
+    connect(ui->groupBox_Api, SIGNAL(toggled(bool)), this, SLOT(onGroupBox_EnableApi_Toggled(bool)));
+    connect(ui->pushButton_SetApiPort, SIGNAL(clicked()), this, SLOT(onButton_SetApiPort_Clicked()));
+    connect(ui->checkBox_IsApiAuthEnabled, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_IsApiAuthEnabled_Toggled(bool)));
+    connect(ui->pushButton_GenerateNewApiKey, SIGNAL(clicked()), this, SLOT(onButton_GenerateNewApiKey_Clicked()));
 }
 
 SettingsWindow::~SettingsWindow()
@@ -260,7 +268,8 @@ void SettingsWindow::closeEvent(QCloseEvent *event)
         event->ignore();
     }
 }
-void SettingsWindow::onExpertModeEnabledChanged(bool isEnabled)
+
+void SettingsWindow::onCheckBox_ExpertModeEnabled_Toggled(bool isEnabled)
 {
     Settings::setExpertModeEnabled(isEnabled);
     updateExpertModeWidgetsVisibility();
@@ -281,7 +290,7 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
     }
 }
 
-void SettingsWindow::onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled)
+void SettingsWindow::onCheckBox_ConnectVirtualDevice_Toggled(bool isEnabled)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
 
@@ -293,6 +302,60 @@ void SettingsWindow::onCheckBox_ConnectVirtualDeviceToggled(bool isEnabled)
     }
 
     emit recreateLedDevice();
+}
+
+void SettingsWindow::onGroupBox_EnableApi_Toggled(bool isEnabled)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
+
+    Settings::setIsApiEnabled(isEnabled);
+
+    emit enableApiServer(isEnabled);
+}
+
+void SettingsWindow::onButton_SetApiPort_Clicked()
+{
+     DEBUG_LOW_LEVEL << Q_FUNC_INFO << ui->lineEdit_ApiPort->text();
+
+     bool ok;
+     int port = ui->lineEdit_ApiPort->text().toInt(&ok);
+
+     if (ok)
+     {
+        Settings::setApiPort(port);
+        emit updateApiPort(port);
+
+        ui->lineEdit_ApiPort->setStyleSheet(this->styleSheet());
+        ui->lineEdit_ApiPort->setToolTip("");
+     } else {
+         QString errorMessage = "Convert to 'int' fail";
+
+         ui->lineEdit_ApiPort->setStyleSheet("background-color:red;");
+         ui->lineEdit_ApiPort->setToolTip(errorMessage);
+
+         qWarning() << Q_FUNC_INFO << errorMessage << "port:" << ui->lineEdit_ApiPort->text();
+     }
+}
+
+void SettingsWindow::onButton_GenerateNewApiKey_Clicked()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    QString generatedApiKey = QUuid::createUuid().toString();
+
+    ui->lineEdit_ApiKey->setText(generatedApiKey);
+
+    Settings::setApiKey(generatedApiKey);
+    emit updateApiKey(generatedApiKey);
+}
+
+void SettingsWindow::onCheckBox_IsApiAuthEnabled_Toggled(bool isEnabled)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
+
+    Settings::setIsApiAuthEnabled(isEnabled);
+
+    emit enableApiAuth(isEnabled);
 }
 
 // ----------------------------------------------------------------------------
@@ -322,7 +385,8 @@ void SettingsWindow::setBacklightStatus(Backlight::Status status)
             || status == Backlight::StatusOff)
     {
         m_backlightStatus = status;
-    }
+        emit backlightStatusChanged(m_backlightStatus);
+    }   
 
     startBacklight();
 }
@@ -332,6 +396,7 @@ void SettingsWindow::backlightOn()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     m_backlightStatus = Backlight::StatusOn;
+    emit backlightStatusChanged(m_backlightStatus);
     startBacklight();
 }
 
@@ -340,6 +405,7 @@ void SettingsWindow::backlightOff()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     m_backlightStatus = Backlight::StatusOff;
+    emit backlightStatusChanged(m_backlightStatus);
     startBacklight();
 }
 
@@ -363,6 +429,8 @@ void SettingsWindow::switchBacklightOnOff()
         break;
     }
 
+    emit backlightStatusChanged(m_backlightStatus);
+
     startBacklight();
 }
 
@@ -371,9 +439,13 @@ void SettingsWindow::startBacklight()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "m_backlightStatus =" << m_backlightStatus
                     << "m_deviceLockStatus =" << m_deviceLockStatus;
 
-    Settings::setIsBacklightOn(m_backlightStatus != Backlight::StatusOff);
+    Settings::setIsBacklightOn(m_backlightStatus == Backlight::StatusOn ||
+                               m_backlightStatus == Backlight::StatusDeviceError);
 
     m_grabManager->updateBacklightState(m_backlightStatus, m_deviceLockStatus);
+
+    if (m_backlightStatus == Backlight::StatusOff)
+        emit offLeds();
 
     updateTrayAndActionStates();
 }
@@ -454,6 +526,12 @@ void SettingsWindow::updateGrabbedColors(const QList<QRgb> & colors)
 void SettingsWindow::requestBacklightStatus()
 {
     emit resultBacklightStatus(m_backlightStatus);
+}
+
+void SettingsWindow::onApiServer_ErrorOnStartListening(QString errorMessage)
+{
+    ui->lineEdit_ApiPort->setStyleSheet("background-color:red;");
+    ui->lineEdit_ApiPort->setToolTip(errorMessage);
 }
 
 // ----------------------------------------------------------------------------
@@ -1095,6 +1173,11 @@ void SettingsWindow::loadSettingsToMainWindow()
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
     ui->checkBox_ConnectVirtualDevice->setChecked       (Settings::getConnectedDevice() == SupportedDevices::VirtualDevice);
 
+    ui->groupBox_Api->setChecked                        (Settings::isApiEnabled());
+    ui->lineEdit_ApiPort->setText                       (QString::number(Settings::getApiPort()));
+    ui->checkBox_IsApiAuthEnabled->setChecked           (Settings::isApiAuthEnabled());
+    ui->lineEdit_ApiKey->setText                        (Settings::getApiKey());
+
     switch (Settings::getGrabMode())
     {
 #ifdef WINAPI_GRAB_SUPPORT
@@ -1168,6 +1251,8 @@ void SettingsWindow::onCbModesChanged(int index)
     }
     m_grabManager->switchMode(index == 0 ? Lightpack::GrabScreenMode : Lightpack::MoodLampMode);
 
+//    this->adjustSize();
+
     // TODO: save mode to settings if need it!!!
     //    Settings::setMode(index == 0 ? Grab : MoodLamp);
 }
@@ -1178,7 +1263,7 @@ void SettingsWindow::on_horizontalSlider_Brightness_valueChanged(int value)
     m_grabManager->setBrightness(value);
 }
 
-void SettingsWindow::onMoodLampColorChanged(QColor color)
+void SettingsWindow::onColorButton_MoodLamp_ColorChanged(QColor color)
 {
     m_grabManager->setBackLightColor(color);
 }

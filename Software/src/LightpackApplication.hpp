@@ -48,9 +48,11 @@ public:
     };
 
 signals:
-
+    void clearColorBuffers();
 public slots:
 
+private slots:
+    void backlightStatusChanged(Backlight::Status);
 private:
     void processCommandLineArguments();
     void printHelpMessage() const;
@@ -58,6 +60,8 @@ private:
     void checkSystemTrayAvailability() const;
     void startApiServer();
     void startLedDeviceFactory();
+    void connectApiServerAndLedDeviceSignalsSlots();
+    void disconnectApiServerAndLedDeviceSignalsSlots();
 
 private:
     SettingsWindow *m_settingsWindow;
@@ -68,4 +72,5 @@ private:
 
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;
+    bool m_isApiServerConnectedToLedDeviceSignalsSlots;
 };

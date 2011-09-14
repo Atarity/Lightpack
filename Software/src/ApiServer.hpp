@@ -51,10 +51,17 @@ public:
     ApiServer(QObject *parent = 0);
     ApiServer(quint16 port, QObject *parent = 0);
 
+    void firstStart();
+
 public:
     static const char * ApiVersion;   
     static const char * CmdUnknown;
     static const char * CmdExit;
+
+    static const char * CmdApiKey;
+    static const char * CmdApiKeyResult_Ok;
+    static const char * CmdApiKeyResult_Fail;
+    static const char * CmdApiCheck_AuthRequired;
 
     static const char * CmdGetStatus;
     static const char * CmdResultStatus_On;
@@ -105,6 +112,14 @@ signals:
     void updateProfile(QString profileName);
     void updateStatus(Backlight::Status status);
     void updateDeviceLockStatus(Api::DeviceLockStatus status);
+    void errorOnStartListening(QString errorMessage);
+    void clearColorBuffers();
+
+public slots:
+    void enableApiServer(bool isEnabled);
+    void enableApiAuth(bool isEnabled);
+    void updateApiPort(int port);
+    void updateApiKey(QString key);
 
 protected:
     void incomingConnection(int socketDescriptor);
@@ -116,11 +131,15 @@ private slots:
     void taskSetColorIsSuccess(bool isSuccess);
 
 private:
+    void initPrivateVariables();
     void initApiSetColorTask();
-    void initColorsNew();
+    void startListening();
+    void stopListening();
 
 private:
+    int m_apiPort;
     QString m_apiKey;
+    bool m_isAuthEnabled;
 
     QTcpSocket *m_lockedClient;
     QMap <QTcpSocket*, ClientInfo> m_clients;
