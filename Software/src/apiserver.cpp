@@ -234,7 +234,6 @@ void ApiServer::clientProcessCommands()
         if (cmdBuffer.startsWith(CmdApiKey))
         {
             API_DEBUG_OUT << CmdApiKey;
-            result = CmdApiKey;
 
             cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
             API_DEBUG_OUT << QString(cmdBuffer);
@@ -245,13 +244,13 @@ void ApiServer::clientProcessCommands()
 
                 m_clients[client].isAuthorized = true;
 
-                result += CmdApiKeyResult_Ok;
+                result = CmdApiKeyResult_Ok;
             } else {
                 API_DEBUG_OUT << CmdApiKey << "Api key is not valid:" << QString(cmdBuffer);
 
                 m_clients[client].isAuthorized = false;
 
-                result += CmdApiKeyResult_Fail;
+                result = CmdApiKeyResult_Fail;
             }
 
             API_DEBUG_OUT << result;
@@ -377,7 +376,6 @@ void ApiServer::clientProcessCommands()
         else if (cmdBuffer.startsWith(CmdSetColor))
         {
             API_DEBUG_OUT << CmdSetColor;
-            result = CmdSetColor;            
 
             if (m_lockedClient == client)
             {
@@ -408,12 +406,12 @@ void ApiServer::clientProcessCommands()
                     if (m_isTaskSetColorDone)
                     {
                         if (m_isTaskSetColorParseSuccess)
-                            result += CmdSetResult_Ok;
+                            result = CmdSetResult_Ok;
                         else
-                            result += CmdSetResult_Error;
+                            result = CmdSetResult_Error;
                     } else {
                         m_isTaskSetColorDone = true; // cmd setcolor is available
-                        result += CmdSetResult_Error;
+                        result = CmdSetResult_Error;
                         qWarning() << Q_FUNC_INFO << "Timeout waiting taskIsSuccess() signal from m_apiSetColorTask";
                     }
                 } else {
@@ -422,17 +420,16 @@ void ApiServer::clientProcessCommands()
             }
             else if (m_lockedClient == NULL)
             {
-                result += CmdSetResult_NotLocked;
+                result = CmdSetResult_NotLocked;
             }
             else // m_lockedClient != client
             {
-                result += CmdSetResult_Busy;
+                result = CmdSetResult_Busy;
             }
         }
         else if (cmdBuffer.startsWith(CmdSetGamma))
         {
             API_DEBUG_OUT << CmdSetGamma;
-            result = CmdSetGamma;
 
             if (m_lockedClient == client)
             {
@@ -443,7 +440,7 @@ void ApiServer::clientProcessCommands()
                 if (cmdBuffer.length() > 5)
                 {
                     API_DEBUG_OUT << CmdSetGamma << "Error (gamma max 5 chars)";
-                    result += CmdSetResult_Error;
+                    result = CmdSetResult_Error;
                 } else {
                     // Try to convert gamma string to double
                     bool ok = false;
@@ -457,30 +454,29 @@ void ApiServer::clientProcessCommands()
 
                             m_clients[client].gamma = gamma;
 
-                            result += CmdSetResult_Ok;
+                            result = CmdSetResult_Ok;
                         } else {
                             API_DEBUG_OUT << CmdSetGamma << "Error (max min test fail):" << gamma;
-                            result += CmdSetResult_Error;
+                            result = CmdSetResult_Error;
                         }
                     } else {
                         API_DEBUG_OUT << CmdSetGamma << "Error (convert fail):" << gamma;
-                        result += CmdSetResult_Error;
+                        result = CmdSetResult_Error;
                     }
                 }
             }
             else if (m_lockedClient == NULL)
             {
-                result += CmdSetResult_NotLocked;
+                result = CmdSetResult_NotLocked;
             }
             else // m_lockedClient != client
             {
-                result += CmdSetResult_Busy;
+                result = CmdSetResult_Busy;
             }
         }
         else if (cmdBuffer.startsWith(CmdSetSmooth))
         {
             API_DEBUG_OUT << CmdSetSmooth;
-            result = CmdSetSmooth;
 
             if (m_lockedClient == client)
             {
@@ -491,7 +487,7 @@ void ApiServer::clientProcessCommands()
                 if (cmdBuffer.length() > 3)
                 {
                     API_DEBUG_OUT << CmdSetSmooth << "Error (smooth max 3 chars)";
-                    result += CmdSetResult_Error;
+                    result = CmdSetResult_Error;
                 } else {
                     // Try to convert smooth string to int
                     bool ok = false;
@@ -505,30 +501,29 @@ void ApiServer::clientProcessCommands()
 
                             emit updateSmooth(smooth);
 
-                            result += CmdSetResult_Ok;
+                            result = CmdSetResult_Ok;
                         } else {
                             API_DEBUG_OUT << CmdSetSmooth << "Error (max min test fail):" << smooth;
-                            result += CmdSetResult_Error;
+                            result = CmdSetResult_Error;
                         }
                     } else {
                         API_DEBUG_OUT << CmdSetSmooth << "Error (convert fail):" << smooth;
-                        result += CmdSetResult_Error;
+                        result = CmdSetResult_Error;
                     }
                 }
             }
             else if (m_lockedClient == NULL)
             {
-                result += CmdSetResult_NotLocked;
+                result = CmdSetResult_NotLocked;
             }
             else // m_lockedClient != client
             {
-                result += CmdSetResult_Busy;
+                result = CmdSetResult_Busy;
             }
         }
         else if (cmdBuffer.startsWith(CmdSetProfile))
         {
             API_DEBUG_OUT << CmdSetProfile;
-            result = CmdSetProfile;
 
             if (m_lockedClient == client)
             {
@@ -544,25 +539,24 @@ void ApiServer::clientProcessCommands()
 
                     emit updateProfile(setProfileName);
 
-                    result += CmdSetResult_Ok;
+                    result = CmdSetResult_Ok;
                 } else {
                     API_DEBUG_OUT << CmdSetProfile << "Error (profile not found):" << setProfileName;
-                    result += CmdSetResult_Error;
+                    result = CmdSetResult_Error;
                 }
             }
             else if (m_lockedClient == NULL)
             {
-                result += CmdSetResult_NotLocked;
+                result = CmdSetResult_NotLocked;
             }
             else // m_lockedClient != client
             {
-                result += CmdSetResult_Busy;
+                result = CmdSetResult_Busy;
             }
         }
         else if (cmdBuffer.startsWith(CmdSetStatus))
         {
             API_DEBUG_OUT << CmdSetStatus;
-            result = CmdSetStatus;
 
             if (m_lockedClient == client)
             {
@@ -582,19 +576,19 @@ void ApiServer::clientProcessCommands()
 
                     emit updateStatus(status);
 
-                    result += CmdSetResult_Ok;
+                    result = CmdSetResult_Ok;
                 } else {
                     API_DEBUG_OUT << CmdSetStatus << "Error (status not recognized):" << status;
-                    result += CmdSetResult_Error;
+                    result = CmdSetResult_Error;
                 }
             }
             else if (m_lockedClient == NULL)
             {
-                result += CmdSetResult_NotLocked;
+                result = CmdSetResult_NotLocked;
             }
             else // m_lockedClient != client
             {
-                result += CmdSetResult_Busy;
+                result = CmdSetResult_Busy;
             }
         }
         else if (cmdBuffer == CmdExit)
@@ -603,7 +597,7 @@ void ApiServer::clientProcessCommands()
             client->close();
             return;
         }
-        else
+        else            
         {
             qWarning() << Q_FUNC_INFO << CmdUnknown << cmdBuffer;
         }

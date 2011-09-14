@@ -479,7 +479,7 @@ void LightpackApiTest::testCase_SetColor()
     QByteArray result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
 
-    QVERIFY(result == QByteArray(ApiServer::CmdSetColor).append(ApiServer::CmdSetResult_NotLocked));
+    QVERIFY(result == ApiServer::CmdSetResult_NotLocked);
 
     // Test in SetColor command is busy state:
     socketWriteCmd(&sockLock, ApiServer::CmdLock);
@@ -490,7 +490,7 @@ void LightpackApiTest::testCase_SetColor()
     socketWriteCmd(&sock, setColorCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetColor).append(ApiServer::CmdSetResult_Busy));
+    QVERIFY(result == ApiServer::CmdSetResult_Busy);
 
     // Test in SetColor change to unlock state:
     socketWriteCmd(&sockLock, ApiServer::CmdUnlock);
@@ -507,7 +507,7 @@ void LightpackApiTest::testCase_SetColor()
     socketWriteCmd(&sock, setColorCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetColor).append(ApiServer::CmdSetResult_Ok));
+    QVERIFY(result == ApiServer::CmdSetResult_Ok);
 
     processEventsFromLittle();
 
@@ -545,7 +545,7 @@ void LightpackApiTest::testCase_SetColorValid()
     socketWriteCmd(&sock, setColorCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetColor).append(ApiServer::CmdSetResult_Ok));
+    QVERIFY(result == ApiServer::CmdSetResult_Ok);
 
     processEventsFromLittle();
 
@@ -604,7 +604,7 @@ void LightpackApiTest::testCase_SetColorValid2()
     socketWriteCmd(&sock, setColorCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetColor).append(ApiServer::CmdSetResult_Ok));
+    QVERIFY(result == ApiServer::CmdSetResult_Ok);
 
     // Just process all pending events from m_apiServer
     processEventsFromLittle();
@@ -661,7 +661,7 @@ void LightpackApiTest::testCase_SetColorInvalid()
     socketWriteCmd(&sock, setColorCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetColor).append(ApiServer::CmdSetResult_Error));
+    QVERIFY(result == ApiServer::CmdSetResult_Error);
 
     // Unlock
     socketWriteCmd(&sock, ApiServer::CmdUnlock);
@@ -715,7 +715,7 @@ void LightpackApiTest::testCase_SetGamma()
     socketWriteCmd(&sock, setGammaCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetGamma).append(ApiServer::CmdSetResult_Ok));
+    QVERIFY(result == ApiServer::CmdSetResult_Ok);
 
     // Test set color works with new gamma
     QByteArray setColorCmd = ApiServer::CmdSetColor;
@@ -726,7 +726,7 @@ void LightpackApiTest::testCase_SetGamma()
     socketWriteCmd(&sock, setColorCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetColor).append(ApiServer::CmdSetResult_Ok));
+    QVERIFY(result == ApiServer::CmdSetResult_Ok);
 
     processEventsFromLittle();
 
@@ -762,7 +762,7 @@ void LightpackApiTest::testCase_SetGammaValid()
     socketWriteCmd(&sock, setGammaCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetGamma).append(ApiServer::CmdSetResult_Ok));
+    QVERIFY(result == ApiServer::CmdSetResult_Ok);
 
     // Unlock
     socketWriteCmd(&sock, ApiServer::CmdUnlock);
@@ -806,7 +806,7 @@ void LightpackApiTest::testCase_SetGammaInvalid()
     socketWriteCmd(&sock, setGammaCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetGamma).append(ApiServer::CmdSetResult_Error));
+    QVERIFY(result == ApiServer::CmdSetResult_Error);
 
     // Unlock
     socketWriteCmd(&sock, ApiServer::CmdUnlock);
@@ -858,7 +858,7 @@ void LightpackApiTest::testCase_SetSmoothValid()
     socketWriteCmd(&sock, setSmoothCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetSmooth).append(ApiServer::CmdSetResult_Ok));
+    QVERIFY(result == ApiServer::CmdSetResult_Ok);
 
     processEventsFromLittle();
 
@@ -904,7 +904,7 @@ void LightpackApiTest::testCase_SetSmoothInvalid()
     socketWriteCmd(&sock, setSmoothCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetSmooth).append(ApiServer::CmdSetResult_Error));
+    QVERIFY(result == ApiServer::CmdSetResult_Error);
 
     // Unlock
     socketWriteCmd(&sock, ApiServer::CmdUnlock);
@@ -950,7 +950,7 @@ void LightpackApiTest::testCase_SetProfile()
     socketWriteCmd(&sock, setProfileCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetProfile).append(ApiServer::CmdSetResult_Ok));
+    QVERIFY(result == ApiServer::CmdSetResult_Ok);
 
     processEventsFromLittle();
 
@@ -984,7 +984,7 @@ void LightpackApiTest::testCase_SetStatus()
     socketWriteCmd(&sock, setStatusCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetStatus).append(ApiServer::CmdSetResult_Ok));
+    QVERIFY(result == ApiServer::CmdSetResult_Ok);
 
     processEventsFromLittle();
 
@@ -996,7 +996,7 @@ void LightpackApiTest::testCase_SetStatus()
     socketWriteCmd(&sock, setStatusCmd);
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdSetStatus).append(ApiServer::CmdSetResult_Ok));
+    QVERIFY(result == ApiServer::CmdSetResult_Ok);
 
     processEventsFromLittle();
 
@@ -1030,7 +1030,7 @@ void LightpackApiTest::testCase_ApiAuthorization()
     socketWriteCmd(&sock, cmdApiKey);
     QByteArray result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdApiKey).append(ApiServer::CmdApiKeyResult_Ok));
+    QVERIFY(result == ApiServer::CmdApiKeyResult_Ok);
 
     // Try lock device after SUCCESS authorization
     socketWriteCmd(&sock, ApiServer::CmdLock);
@@ -1042,7 +1042,7 @@ void LightpackApiTest::testCase_ApiAuthorization()
     socketWriteCmd(&sock, cmdApiKey + "invalid");
     result = socketReadLine(&sock, &sockReadLineOk);
     QVERIFY(sockReadLineOk);
-    QVERIFY(result == QByteArray(ApiServer::CmdApiKey).append(ApiServer::CmdApiKeyResult_Fail));
+    QVERIFY(result == ApiServer::CmdApiKeyResult_Fail);
 
     // Try lock device after FAIL authorization
     socketWriteCmd(&sock, ApiServer::CmdLock);
