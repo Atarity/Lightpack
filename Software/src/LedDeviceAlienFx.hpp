@@ -35,41 +35,28 @@
 class LedDeviceAlienFx : public ILedDevice
 {
     Q_OBJECT
-
 public:
-    LedDeviceAlienFx(QObject *parent);
+    LedDeviceAlienFx(QObject *parent = 0);
     ~LedDeviceAlienFx();
 
-    bool openDevice()
-    {
-        return true;
-    }
-
-    bool deviceOpened()
-    {
-        return true;
-    }
-
-    QString firmwareVersion()
-    {
-        return "unknown";
-    }
-
-public:
-    void offLeds() { }
+signals:
+    void openDeviceSuccess(bool isSuccess);
+    void ioDeviceSuccess(bool isSuccess);
+    void firmwareVersion(const QString & fwVersion);
+    void setColorsDone();
 
 public slots:
-    void updateColors(const QList<StructRGB> & colors);
-
+    void setColors(const QList<QRgb> & colors);
+    void offLeds() { }
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue) { }
     void setColorDepth(int value) { }
     void setSmoothSlowdown(int value) { }
-    void setBrightness(int value) { }
+//    void setBrightness(int value) { }
+    void requestFirmwareVersion();
 
 private:
-    HINSTANCE hLfxLibrary;
-    bool isInitialized;
-
+    HINSTANCE m_hLfxLibrary;
+    bool m_isInitialized;
 };
 
 #endif /* Q_WS_WIN */

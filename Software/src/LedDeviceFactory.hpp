@@ -28,8 +28,46 @@
 
 #include "ILedDevice.hpp"
 
-class LedDeviceFactory
+class LedDeviceFactory : public QObject
 {
+    Q_OBJECT
+
 public:
-    static ILedDevice * create(QObject *parent);
+    explicit LedDeviceFactory(QObject *parent = 0);
+
+signals:
+    void openDeviceSuccess(bool isSuccess);
+    void ioDeviceSuccess(bool isSuccess);
+//    void setColorsDone();
+    void firmwareVersion(const QString & fwVersion);
+
+    // Do not use signal setLedDeviceColors outside of the class!
+    // This signal is directly connected to ILedDevice.
+    // Use instead public slot setColorsIfDeviceAvailable, which is protected from the overflow of queries.
+    void setLedDeviceColors(const QList<QRgb> & colors);
+
+    // This signals is directly connected to ILedDevice.
+    // They are NOT protected from the overflow of queries!
+    void offLeds();
+    void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
+    void setColorDepth(int value);
+    void setSmoothSlowdown(int value);
+//    void setBrightness(int value);
+    void requestFirmwareVersion();
+
+public slots:
+    void recreateLedDevice();
+    void setColorsDone();
+    void setColorsIfDeviceAvailable(const QList<QRgb> & colors);
+
+private:
+    void initLedDevice();
+    ILedDevice * createLedDevice();
+    void connectSignalSlotsLedDevice();
+    void disconnectSignalSlotsLedDevice();
+
+private:
+    bool isSetColorsDone;
+    ILedDevice *m_ledDevice;
+    QThread *m_ledDeviceThread;
 };
