@@ -1300,8 +1300,7 @@ void SettingsWindow::onMoodLampModeChanged(bool checked)
     if(!checked)
     {
         //constant mode
-        ui->pushButton_SelectColor->setEnabled(true);
-        ui->label_MoodLampColor->setEnabled(true);
+        ui->pushButton_SelectColor->setEnabled(true);       
         ui->horizontalSlider_Speed->setEnabled(false);
         ui->label_MoodLampSpeed->setEnabled(false);
         ui->horizontalSlider_Brightness->setEnabled(false);
@@ -1310,7 +1309,6 @@ void SettingsWindow::onMoodLampModeChanged(bool checked)
     } else {
         //liquid mode
         ui->pushButton_SelectColor->setEnabled(false);
-        ui->label_MoodLampColor->setEnabled(false);
         ui->horizontalSlider_Speed->setEnabled(true);
         ui->label_MoodLampSpeed->setEnabled(true);
         ui->horizontalSlider_Brightness->setEnabled(true);

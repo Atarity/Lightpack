@@ -47,26 +47,11 @@
        <attribute name="title">
         <string>Mode</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_12">
-          <property name="leftMargin">
-           <number>12</number>
-          </property>
           <item>
            <widget class="QLabel" name="label_EnableDisableDevice">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>21</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>21</height>
-             </size>
-            </property>
             <property name="font">
              <font>
               <weight>50</weight>
@@ -122,32 +107,28 @@
           </item>
          </layout>
         </item>
-        <item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboBox_Modes">
+          <item>
+           <property name="text">
+            <string>Ambilight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Backlight (MoodLamp)</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="1">
          <widget class="Line" name="line">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
-          <item>
-           <widget class="QComboBox" name="comboBox_Modes">
-            <item>
-             <property name="text">
-              <string>Ambilight</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Backlight (MoodLamp)</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
+        <item row="3" column="1">
          <widget class="QStackedWidget" name="stackedWidget_Modes">
           <property name="currentIndex">
            <number>1</number>
@@ -392,42 +373,19 @@
            </layout>
           </widget>
           <widget class="QWidget" name="page_2">
-           <layout class="QVBoxLayout" name="verticalLayout_8">
-            <item>
-             <widget class="QRadioButton" name="radioButton_ConstantColorMoodLampMode">
-              <property name="text">
-               <string>Constant color</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
+           <layout class="QVBoxLayout" name="verticalLayout">
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_7">
               <item>
-               <spacer name="horizontalSpacer_10">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Preferred</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>10</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_MoodLampColor">
+               <widget class="QRadioButton" name="radioButton_ConstantColorMoodLampMode">
                 <property name="text">
-                 <string>Color</string>
+                 <string>Constant color</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -446,13 +404,10 @@
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Expanding</enum>
-                </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>10</width>
-                  <height>10</height>
+                  <width>40</width>
+                  <height>20</height>
                  </size>
                 </property>
                </spacer>
@@ -569,6 +524,22 @@
            </layout>
           </widget>
          </widget>
+        </item>
+        <item row="3" column="0">
+         <spacer name="horizontalSpacer_14">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Minimum</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>10</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -894,7 +865,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="tabProfiles">
        <attribute name="title">
         <string>Profiles</string>
        </attribute>
@@ -1237,16 +1208,7 @@
           <property name="title">
            <string>Capture source:</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="sizeConstraint">
-            <enum>QLayout::SetDefaultConstraint</enum>
-           </property>
-           <property name="margin">
-            <number>0</number>
-           </property>
+          <layout class="QVBoxLayout" name="_2">
            <item>
             <widget class="QRadioButton" name="radioButton_GrabQt">
              <property name="sizePolicy">
