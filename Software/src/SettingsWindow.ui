@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>351</width>
-    <height>499</height>
+    <height>505</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -124,7 +124,7 @@
         <item row="2" column="0">
          <widget class="QStackedWidget" name="stackedWidget_Modes">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="page">
            <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -358,7 +358,7 @@
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>40</height>
+                <height>1</height>
                </size>
               </property>
              </spacer>
@@ -509,7 +509,7 @@
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>40</height>
+                <height>1</height>
                </size>
               </property>
              </spacer>
@@ -835,7 +835,7 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>5</height>
+            <height>1</height>
            </size>
           </property>
          </spacer>
@@ -1061,7 +1061,7 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>40</height>
+            <height>1</height>
            </size>
           </property>
          </spacer>
