@@ -49,8 +49,9 @@ enum DeviceLockStatus {
 namespace Lightpack
 {
 enum Mode {
-    GrabScreenMode,
-    MoodLampMode
+    AmbilightMode,
+    MoodLampMode,
+    Default = AmbilightMode
 };
 }
 

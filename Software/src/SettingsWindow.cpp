@@ -42,10 +42,14 @@
 // Lightpack settings window
 // ----------------------------------------------------------------------------
 
+// Indexes of supported modes listed in ui->comboBox_Modes and ui->stackedWidget_Modes
+const unsigned SettingsWindow::ModeAmbilightIndex = 0;
+const unsigned SettingsWindow::ModeMoodLampIndex  = 1;
+
 SettingsWindow::SettingsWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::SettingsWindow)
-{
+{   
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 
@@ -116,7 +120,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
                 screen.height() / 2 - this->height() / 2);
     this->resize(this->minimumSize());
 
-    updateCbModesPosition();
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
 
@@ -141,7 +144,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(this, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
 
     // Main options
-    connect(ui->cb_Modes,SIGNAL(activated(int)), this, SLOT(onCbModesChanged(int)));
+    connect(ui->comboBox_Modes,SIGNAL(activated(int)), this, SLOT(onComboBoxModes_Activated(int)));
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
     connect(ui->pushButton_EnableDisableDevice, SIGNAL(clicked()), this, SLOT(switchBacklightOnOff()));
 
@@ -283,10 +286,10 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
     ui->doubleSpinBox_HW_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
     ui->checkBox_USB_SendDataOnlyIfColorsChanges->setVisible(Settings::isExpertModeEnabled());
     if(Settings::isExpertModeEnabled()) {
-        if (ui->tabWidget->indexOf(ui->tabAnotherGUI) < 0)
-            ui->tabWidget->addTab(ui->tabAnotherGUI, tr("Dev tab"));
+        if (ui->tabWidget->indexOf(ui->tabDevTab) < 0)
+            ui->tabWidget->addTab(ui->tabDevTab, tr("Dev tab"));
     } else {
-        ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabAnotherGUI));
+        ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabDevTab));
     }
 }
 
@@ -557,8 +560,8 @@ void SettingsWindow::showSettings()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     Lightpack::Mode mode = Settings::getMode();
-    ui->cb_Modes->setCurrentIndex((mode == Lightpack::GrabScreenMode) ? 0 : 1); // we assume that Lightpack::Mode in same order as cb_Modes
-    m_grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && ui->cb_Modes->currentIndex()==0);
+    ui->comboBox_Modes->setCurrentIndex((mode == Lightpack::AmbilightMode) ? 0 : 1); // we assume that Lightpack::Mode in same order as comboBox_Modes
+    m_grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && ui->comboBox_Modes->currentIndex()==0);
     this->show();
 }
 
@@ -1159,7 +1162,23 @@ void SettingsWindow::loadSettingsToMainWindow()
     ui->spinBox_MinLevelOfSensitivity->setValue         (Settings::getMinimumLevelOfSensitivity());
     ui->doubleSpinBox_HW_GammaCorrection->setValue      (Settings::getGammaCorrection());
     ui->checkBox_AVG_Colors->setChecked                 (Settings::isAvgColorsOn());
-    ui->cb_Modes->setCurrentIndex                       (Settings::getMode() == Lightpack::GrabScreenMode ? 0 : 1); // we assume that Lightpack::Mode in same order as cb_Modes
+
+    Lightpack::Mode mode = Settings::getMode();
+    switch (mode)
+    {
+    case Lightpack::AmbilightMode:
+        ui->comboBox_Modes->setCurrentIndex(ModeAmbilightIndex);
+        qCritical() << "ambi";
+        break;
+    case Lightpack::MoodLampMode:
+        ui->comboBox_Modes->setCurrentIndex(ModeMoodLampIndex);
+        qCritical() << "mood";
+        break;
+    default:
+        qCritical() << "Settings::getMode() returns invalid value! mode =" << mode;
+        break;
+    }
+
     ui->horizontalSlider_Speed->setValue                (Settings::getMoodLampSpeed());
     ui->horizontalSlider_Brightness->setValue           (Settings::getBrightness());
     ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
@@ -1195,7 +1214,7 @@ void SettingsWindow::loadSettingsToMainWindow()
     }
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
-    onCbModesChanged (ui->cb_Modes->currentIndex()); //
+    onComboBoxModes_Activated (ui->comboBox_Modes->currentIndex()); //
     onMoodLampModeChanged(ui->radioButton_LiquidColorMoodLampMode->isChecked());
     updateExpertModeWidgetsVisibility();
     onGrabModeChanged();
@@ -1232,29 +1251,30 @@ void SettingsWindow::quit()
     QApplication::quit();
 }
 
-void SettingsWindow::onCbModesChanged(int index)
+void SettingsWindow::onComboBoxModes_Activated(int index)
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << index;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
 
     switch (index)
     {
-    case 0:
-        ui->frmBacklight->setVisible(false);
-        ui->frmAmbilight->setVisible(true);
+    case ModeAmbilightIndex:
+        m_grabManager->switchMode(Lightpack::AmbilightMode);
+
+        ui->stackedWidget_Modes->setCurrentIndex(ModeAmbilightIndex);
         m_grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && this->isVisible());
+
+        Settings::setMode(Lightpack::AmbilightMode);
         break;
-    case 1:
-        ui->frmBacklight->setVisible(true);
-        ui->frmAmbilight->setVisible(false);
+
+    case ModeMoodLampIndex:
+        m_grabManager->switchMode(Lightpack::MoodLampMode);
+
+        ui->stackedWidget_Modes->setCurrentIndex(ModeMoodLampIndex);
         m_grabManager->setVisibleLedWidgets(false);
+
+        Settings::setMode(Lightpack::MoodLampMode);
         break;
     }
-    m_grabManager->switchMode(index == 0 ? Lightpack::GrabScreenMode : Lightpack::MoodLampMode);
-
-//    this->adjustSize();
-
-    // TODO: save mode to settings if need it!!!
-    //    Settings::setMode(index == 0 ? Grab : MoodLamp);
 }
 
 void SettingsWindow::on_horizontalSlider_Brightness_valueChanged(int value)
@@ -1272,19 +1292,6 @@ void SettingsWindow::on_horizontalSlider_Speed_valueChanged(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO<< value;
     m_grabManager->setMoodLampSpeed(value);
-}
-
-void SettingsWindow::paintEvent(QPaintEvent */*event*/)
-{
-    updateCbModesPosition();
-}
-
-void SettingsWindow::updateCbModesPosition()
-{
-    int newX = ui->groupBox_7->x() + 10;
-    int newY = ui->groupBox_7->y();
-    ui->cb_Modes->move(newX, newY);
-    ui->cb_Modes->raise();
 }
 
 void SettingsWindow::onMoodLampModeChanged(bool checked)

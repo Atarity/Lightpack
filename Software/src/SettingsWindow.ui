@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>391</width>
-    <height>593</height>
+    <width>351</width>
+    <height>499</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -82,19 +82,20 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_EnableDisableDevice">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
-            <property name="minimumSize">
+            <property name="sizeHint" stdset="0">
              <size>
-              <width>50</width>
-              <height>0</height>
+              <width>40</width>
+              <height>20</height>
              </size>
             </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_EnableDisableDevice">
             <property name="focusPolicy">
              <enum>Qt::TabFocus</enum>
             </property>
@@ -122,194 +123,356 @@
          </layout>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_7">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>100</height>
-           </size>
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-          <property name="styleSheet">
-           <string notr="true">#groupBox_7 {margin-top: 10px;padding-top:10px;}</string>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QComboBox" name="comboBox_Modes">
+            <item>
+             <property name="text">
+              <string>Ambilight</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Backlight (MoodLamp)</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QStackedWidget" name="stackedWidget_Modes">
+          <property name="currentIndex">
+           <number>1</number>
           </property>
-          <property name="title">
-           <string/>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_11">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetMinimumSize</enum>
-           </property>
-           <item>
-            <widget class="QFrame" name="frmAmbilight">
-             <property name="styleSheet">
-              <string notr="true">#frmAmbilight {border: 0px;}</string>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_8">
-              <property name="margin">
-               <number>0</number>
+          <widget class="QWidget" name="page">
+           <layout class="QVBoxLayout" name="verticalLayout_12">
+            <item>
+             <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0">
+              <item row="0" column="3">
+               <widget class="QLabel" name="label_GrabFrequency_txt_fps">
+                <property name="text">
+                 <string>fps</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <property name="textInteractionFlags">
+                 <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_SlowdownGrab_txt">
+                <property name="font">
+                 <font>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Slowdown grab:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <property name="margin">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QSpinBox" name="spinBox_SlowdownGrab">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>1000</number>
+                </property>
+                <property name="value">
+                 <number>20</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QSpinBox" name="spinBox_MinLevelOfSensitivity">
+                <property name="minimum">
+                 <number>0</number>
+                </property>
+                <property name="maximum">
+                 <number>20</number>
+                </property>
+                <property name="value">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QLabel" name="label_SlowdownGrab_txt_ms">
+                <property name="text">
+                 <string>ms</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_MinLevelOfSensitivity">
+                <property name="font">
+                 <font>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Minimum level of sensitivity:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>2</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="label_GrabFrequency_value">
+                <property name="text">
+                 <string notr="true">0</string>
+                </property>
+                <property name="margin">
+                 <number>3</number>
+                </property>
+                <property name="textInteractionFlags">
+                 <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_GrabFrequency_txt">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Grab frequency:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_ShowGrabWidgets">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
+              <property name="font">
+               <font>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="title">
+               <string>Show grab widgets</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_13">
+               <item>
+                <widget class="QRadioButton" name="radioButton_Colored">
+                 <property name="text">
+                  <string>Colored</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_11">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButton_White">
+                 <property name="text">
+                  <string>White</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_9">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="checkBox_AVG_Colors">
+              <property name="font">
+               <font>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>AVG color on all LEDs</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_6">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Expanding</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page_2">
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <item>
+             <widget class="QRadioButton" name="radioButton_ConstantColorMoodLampMode">
+              <property name="text">
+               <string>Constant color</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
               <item>
-               <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_GrabFrequency_txt">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Grab frequency:</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="3">
-                 <widget class="QLabel" name="label_GrabFrequency_txt_fps">
-                  <property name="text">
-                   <string>fps</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                  </property>
-                  <property name="textInteractionFlags">
-                   <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_SlowdownGrab_txt">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>17</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>17</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Slowdown grab:</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                  </property>
-                  <property name="margin">
-                   <number>0</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="2">
-                 <widget class="QSpinBox" name="spinBox_SlowdownGrab">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>1000</number>
-                  </property>
-                  <property name="value">
-                   <number>20</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="2">
-                 <widget class="QSpinBox" name="spinBox_MinLevelOfSensitivity">
-                  <property name="minimum">
-                   <number>0</number>
-                  </property>
-                  <property name="maximum">
-                   <number>20</number>
-                  </property>
-                  <property name="value">
-                   <number>0</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="3">
-                 <widget class="QLabel" name="label_SlowdownGrab_txt_ms">
-                  <property name="text">
-                   <string>ms</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_MinLevelOfSensitivity">
-                  <property name="font">
-                   <font>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Minimum level of sensitivity:</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <spacer name="horizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>2</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="0" column="2">
-                 <widget class="QLabel" name="label_GrabFrequency_value">
-                  <property name="text">
-                   <string notr="true">0</string>
-                  </property>
-                  <property name="margin">
-                   <number>3</number>
-                  </property>
-                  <property name="textInteractionFlags">
-                   <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
+               <spacer name="horizontalSpacer_10">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>10</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
               <item>
-               <widget class="QGroupBox" name="groupBox_ShowGrabWidgets">
+               <widget class="QLabel" name="label_MoodLampColor">
+                <property name="text">
+                 <string>Color</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="ColorButton" name="pushButton_SelectColor">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_8">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Expanding</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>10</width>
+                  <height>10</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButton_LiquidColorMoodLampMode">
+              <property name="text">
+               <string>Liquid color</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_MoodLampBrightness">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -319,414 +482,93 @@
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>0</height>
+                  <height>18</height>
                  </size>
                 </property>
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="autoFillBackground">
-                 <bool>false</bool>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QGroupBox{
-border: 0px; 
-padding-left: 10px;
-margin-top: 0px;
-}
-QGroupBox::title {
-subcontrol-position: top left;
-left: +9px;
-}
-
-QRadioButton#radioButton_Colored{
-padding-top: 15px;
-}
-QRadioButton#radioButton_White{
-padding-top: 5px;
-}</string>
-                </property>
-                <property name="title">
-                 <string>Show grab widgets</string>
-                </property>
-                <property name="flat">
-                 <bool>false</bool>
-                </property>
-                <property name="checkable">
-                 <bool>true</bool>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_10">
-                 <property name="leftMargin">
-                  <number>22</number>
-                 </property>
-                 <item>
-                  <widget class="QRadioButton" name="radioButton_Colored">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>28</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Colored</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="radioButton_White">
-                   <property name="text">
-                    <string>White</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBox_AVG_Colors">
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QCheckBox#checkBox_AVG_Colors{
-padding-left: 9px;
-margin-top: 0px;
-
-}</string>
+                <property name="baseSize">
+                 <size>
+                  <width>0</width>
+                  <height>18</height>
+                 </size>
                 </property>
                 <property name="text">
-                 <string>AVG color on all LEDs</string>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
+                 <string>Brightness</string>
                 </property>
                </widget>
               </item>
+              <item row="0" column="2">
+               <widget class="QSlider" name="horizontalSlider_Brightness">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="maximum">
+                 <number>255</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLabel" name="label_MoodLampSpeed">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Speed</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QSlider" name="horizontalSlider_Speed">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <spacer name="horizontalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>10</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
              </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QFrame" name="frmBacklight">
-             <property name="styleSheet">
-              <string notr="true">#frmBacklight {border: 0px}</string>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_9">
-              <property name="margin">
-               <number>0</number>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
               </property>
-              <item>
-               <widget class="QRadioButton" name="radioButton_ConstantColorMoodLampMode">
-                <property name="text">
-                 <string>Constant color</string>
-                </property>
-                <property name="checkable">
-                 <bool>true</bool>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <layout class="QFormLayout" name="formLayout_2">
-                <property name="horizontalSpacing">
-                 <number>10</number>
-                </property>
-                <property name="leftMargin">
-                 <number>20</number>
-                </property>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_MoodLampColor">
-                  <property name="text">
-                   <string>Color</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="ColorButton" name="pushButton_SelectColor">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>22</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>22</height>
-                   </size>
-                  </property>
-                  <property name="baseSize">
-                   <size>
-                    <width>60</width>
-                    <height>22</height>
-                   </size>
-                  </property>
-                  <property name="palette">
-                   <palette>
-                    <active>
-                     <colorrole role="Button">
-                      <brush brushstyle="SolidPattern">
-                       <color alpha="255">
-                        <red>255</red>
-                        <green>0</green>
-                        <blue>255</blue>
-                       </color>
-                      </brush>
-                     </colorrole>
-                    </active>
-                    <inactive>
-                     <colorrole role="Button">
-                      <brush brushstyle="SolidPattern">
-                       <color alpha="255">
-                        <red>255</red>
-                        <green>0</green>
-                        <blue>255</blue>
-                       </color>
-                      </brush>
-                     </colorrole>
-                    </inactive>
-                    <disabled>
-                     <colorrole role="Button">
-                      <brush brushstyle="SolidPattern">
-                       <color alpha="255">
-                        <red>255</red>
-                        <green>0</green>
-                        <blue>255</blue>
-                       </color>
-                      </brush>
-                     </colorrole>
-                    </disabled>
-                   </palette>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true"/>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="flat">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="radioButton_LiquidColorMoodLampMode">
-                <property name="styleSheet">
-                 <string notr="true">margin-top: 6px;</string>
-                </property>
-                <property name="text">
-                 <string>Liquid color</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <layout class="QFormLayout" name="formLayout">
-                <property name="sizeConstraint">
-                 <enum>QLayout::SetFixedSize</enum>
-                </property>
-                <property name="fieldGrowthPolicy">
-                 <enum>QFormLayout::ExpandingFieldsGrow</enum>
-                </property>
-                <property name="labelAlignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                </property>
-                <property name="formAlignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                </property>
-                <property name="horizontalSpacing">
-                 <number>8</number>
-                </property>
-                <property name="verticalSpacing">
-                 <number>7</number>
-                </property>
-                <property name="leftMargin">
-                 <number>20</number>
-                </property>
-                <property name="topMargin">
-                 <number>2</number>
-                </property>
-                <property name="rightMargin">
-                 <number>2</number>
-                </property>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_MoodLampBrightness">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="baseSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Brightness</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QSlider" name="horizontalSlider_Brightness">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="baseSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true"/>
-                  </property>
-                  <property name="maximum">
-                   <number>255</number>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_MoodLampSpeed">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="baseSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Speed</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QSlider" name="horizontalSlider_Speed">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="baseSize">
-                   <size>
-                    <width>0</width>
-                    <height>18</height>
-                   </size>
-                  </property>
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>100</number>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </item>
-          </layout>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
          </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="cb_Modes">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <item>
-           <property name="text">
-            <string>Ambilight</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Backlight (MoodLamp)</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Expanding</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>50</width>
-            <height>1</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
@@ -1042,13 +884,10 @@ margin-top: 0px;
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Expanding</enum>
-          </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>1</height>
+            <height>5</height>
            </size>
           </property>
          </spacer>
@@ -1273,41 +1112,56 @@ margin-top: 0px;
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>50</width>
-            <height>1</height>
+            <width>20</width>
+            <height>40</height>
            </size>
           </property>
          </spacer>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabAnotherGUI">
+      <widget class="QWidget" name="tabDevTab">
        <attribute name="title">
         <string>Dev tab</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
          <widget class="QGroupBox" name="groupBox_DevTabTxt">
-          <property name="checkable">
-           <bool>false</bool>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_12">
-           <property name="leftMargin">
-            <number>9</number>
+          <property name="title">
+           <string notr="true"/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
+           </property>
+           <property name="margin">
+            <number>0</number>
            </property>
            <item>
             <widget class="QLabel" name="label_DevTabWarning">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>This tab is used only by project developers. Any tuning with all these controls provide inevetible plane crash, miscarrige or nuclear disaster. Use it on your own risk.</string>
+             </property>
+             <property name="scaledContents">
+              <bool>false</bool>
              </property>
              <property name="alignment">
               <set>Qt::AlignJustify|Qt::AlignVCenter</set>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
-             </property>
-             <property name="margin">
-              <number>0</number>
              </property>
             </widget>
            </item>
@@ -1411,8 +1265,23 @@ margin-top: 0px;
            <string>Capture source:</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
+           </property>
+           <property name="margin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QRadioButton" name="radioButton_GrabQt">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string notr="true">QtGrabWindow</string>
              </property>
@@ -1423,6 +1292,12 @@ margin-top: 0px;
            </item>
            <item>
             <widget class="QRadioButton" name="radioButton_GrabWinAPI">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string notr="true">WinAPI</string>
              </property>
@@ -1430,12 +1305,25 @@ margin-top: 0px;
            </item>
            <item>
             <widget class="QRadioButton" name="radioButton_GrabX11">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>X11</string>
              </property>
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_StartTests">
+          <property name="text">
+           <string>Start tests</string>
+          </property>
          </widget>
         </item>
         <item>
@@ -1452,23 +1340,13 @@ margin-top: 0px;
          <layout class="QHBoxLayout" name="horizontalLayout_GrabbedColors"/>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_StartTests">
-          <property name="text">
-           <string>Start tests</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <spacer name="verticalSpacer_4">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Expanding</enum>
-          </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>50</width>
+            <width>20</width>
             <height>1</height>
            </size>
           </property>
@@ -1530,8 +1408,6 @@ margin-top: 0px;
  </customwidgets>
  <tabstops>
   <tabstop>tabWidget</tabstop>
-  <tabstop>radioButton_White</tabstop>
-  <tabstop>radioButton_Colored</tabstop>
   <tabstop>pushButton_Close</tabstop>
   <tabstop>horizontalSlider_HW_ColorDepth</tabstop>
   <tabstop>spinBox_HW_ColorDepth</tabstop>

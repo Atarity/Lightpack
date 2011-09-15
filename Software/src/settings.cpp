@@ -55,8 +55,10 @@
 #define KEY_SUPPORTED_DEVICES       "SupportedDevices"
 
 // Profile keys
-#define KEY_GRAB_MODE               "GrabMode"
-#define KEY_MODE                    "Mode"
+#define KEY_GRABMODE               "GrabMode"
+#define KEY_MODE                   "Mode"
+#define VALUE_MODE_AMBILIGHT       "Ambilight"
+#define VALUE_MODE_MOOD_LAMP       "MoodLamp"
 
 #define KEY_GRAB_SLOWDOWN_MS        "GrabSlowdownMs"
 #define KEY_IS_BACKLIGHT_ON         "IsBacklightOn"
@@ -483,7 +485,7 @@ Grab::Mode Settings::getGrabMode()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    QString strGrabMode = value(KEY_GRAB_MODE).toString().toLower();
+    QString strGrabMode = value(KEY_GRABMODE).toString().toLower();
 #ifdef WINAPI_GRAB_SUPPORT
     if (strGrabMode == "winapi")
         return Grab::WinAPIGrabMode;
@@ -515,26 +517,47 @@ void Settings::setGrabMode(Grab::Mode grabMode)
     default:
         strGrabMode = "Qt";
     }
-    setValue(KEY_GRAB_MODE, strGrabMode);
+    setValue(KEY_GRABMODE, strGrabMode);
 }
 
 Lightpack::Mode Settings::getMode()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     QString strMode = value(KEY_MODE).toString();
-    if (strMode == "grab")
-        return Lightpack::GrabScreenMode;
-    else
+    if (strMode == VALUE_MODE_AMBILIGHT)
+    {
+        return Lightpack::AmbilightMode;
+    }
+    else if (strMode == VALUE_MODE_MOOD_LAMP)
+    {
         return Lightpack::MoodLampMode;
+    }
+    else
+    {
+        qWarning() << Q_FUNC_INFO << "Read 'mode' fail, return to default value = " << Lightpack::Default;
+
+        setMode(Lightpack::Default);
+        return Lightpack::Default;
+    }
 }
 
 void Settings::setMode(Lightpack::Mode mode)
 {
-    QString strMode;
-    if(mode == Lightpack::GrabScreenMode)
-        strMode = "Grab";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
+
+    if (mode == Lightpack::AmbilightMode)
+    {
+        setValue(KEY_MODE, VALUE_MODE_AMBILIGHT);
+    }
+    else if (mode == Lightpack::MoodLampMode)
+    {
+        setValue(KEY_MODE, VALUE_MODE_MOOD_LAMP);
+    }
     else
-        strMode = "MoodLamp";
-    setValue(KEY_MODE, strMode);
+    {
+        qCritical() << Q_FUNC_INFO << "Invalid value 'mode' =" << mode;
+    }
 }
 
 bool Settings::isMoodLampLiquidMode()
@@ -748,7 +771,7 @@ void Settings::settingsInit(bool isResetDefault)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isResetDefault;
 
-    setNewOption(KEY_GRAB_MODE,                     GRAB_MODE_DEFAULT,
+    setNewOption(KEY_GRABMODE,                      GRABMODE_DEFAULT,
                  isResetDefault);
     setNewOption(KEY_MODE,                          MODE_DEFAULT,
                  isResetDefault);

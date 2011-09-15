@@ -55,7 +55,7 @@ LightpackApplication::LightpackApplication(int &argc, char **argv)
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
     qRegisterMetaType<Backlight::Status>("Backlight::Status");
-    qRegisterMetaType<Backlight::Status>("Api::DeviceLockStatus");
+    qRegisterMetaType<Api::DeviceLockStatus>("Api::DeviceLockStatus");
 
     startLedDeviceFactory();
 

@@ -237,7 +237,7 @@ void GrabManager::updateLedsColorsIfChanged()
     int timer = m_grabSmoothSlowdown;
     switch (m_mode)
     {
-    case Lightpack::GrabScreenMode:
+    case Lightpack::AmbilightMode:
         ambilight();
         break;
     case Lightpack::MoodLampMode:

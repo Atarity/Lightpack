@@ -14,23 +14,16 @@ public:
     ~ColorButton();
     QColor getColor();
     void setColor(QColor color);
-protected:
-    void updateColorLabelSize();
-    virtual void resizeEvent(QResizeEvent *);
+
+signals:
+    void colorChanged(QColor);
 
 protected slots:
     void click();
     void currentColorChanged(QColor color);
-signals:
-    void colorChanged(QColor);
-
-
-
-//protected slots:
-//    void onQColorButtonClicked();
 
 protected:
-    QLabel * colorLabel;
+    QColor m_color;
 };
 
 #endif //CB_H

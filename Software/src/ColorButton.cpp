@@ -7,47 +7,34 @@
 ColorButton::ColorButton(QWidget * parent) : QPushButton(parent)
 {
     this->setText("");
-    colorLabel = new QLabel(this);
-    colorLabel->setText("");
-    colorLabel->setStyleSheet("background: rgb(127,127,127); border: solid 1px #000000;");
-    updateColorLabelSize();
     connect(this, SIGNAL(clicked()), this, SLOT(click()));
-}
-
-void ColorButton::resizeEvent(QResizeEvent * /*event*/)
-{
-    updateColorLabelSize();
 }
 
 ColorButton::~ColorButton()
 {
-    delete colorLabel;
-}
-
-void ColorButton::updateColorLabelSize()
-{
-#ifdef MAC_OS
-    colorLabel->move(COLOR_LABEL_SPACING*2, COLOR_LABEL_SPACING+3);
-    colorLabel->resize(this->width()-(COLOR_LABEL_SPACING * 4),this->height()-(COLOR_LABEL_SPACING * 2));
-#else
-    colorLabel->move(COLOR_LABEL_SPACING, COLOR_LABEL_SPACING);
-    colorLabel->resize(this->width()-(COLOR_LABEL_SPACING * 2),this->height()-(COLOR_LABEL_SPACING * 2));
-#endif
 }
 
 void ColorButton::setColor(QColor color)
 {
-    colorLabel->setStyleSheet("background: rgb("
-                                           +QString::number(color.red())+ ", "
-                                           +QString::number(color.green())+ ", "
-                                           +QString::number(color.blue())+ ");"
-                              +"border: solid 1px #000000;");
+    QSize size = this->iconSize();
+//    size.setHeight(size.height() * 2.0 / 3.0);
+
+    QImage image(size, QImage::Format_ARGB32);
+    QPainter paint(&image);
+    paint.fillRect(QRect(0, 0, size.width(), size.height()), color);
+//    paint.drawRect(QRect(0, 0, size.width()-1, size.height()-1));
+
+    QIcon icon(QPixmap::fromImage(image));
+    this->setIcon(icon);
+
+    m_color = color;
+
     emit colorChanged(color);
 }
 
 QColor ColorButton::getColor()
 {
-    return colorLabel->palette().color(QPalette::Background);
+    return m_color;
 }
 
 void ColorButton::currentColorChanged(QColor color)
@@ -58,6 +45,11 @@ void ColorButton::currentColorChanged(QColor color)
 void ColorButton::click()
 {
     QColorDialog * dialog = new QColorDialog(this);
+    dialog->setWindowFlags(Qt::Window
+                          | Qt::WindowStaysOnTopHint
+                          | Qt::CustomizeWindowHint
+                          | Qt::WindowCloseButtonHint);
+
     QColor savedColor = getColor();
     connect(dialog, SIGNAL(currentColorChanged(QColor)), this, SLOT(currentColorChanged(QColor)));
     dialog->setCurrentColor(getColor());

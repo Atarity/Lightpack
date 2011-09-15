@@ -85,13 +85,12 @@ public slots:
 protected:
     virtual void changeEvent(QEvent *e);
     virtual void closeEvent(QCloseEvent *event);
-    virtual void paintEvent(QPaintEvent * event);
 
 private slots:
     void on_horizontalSlider_Speed_valueChanged(int value);
     void on_horizontalSlider_Brightness_valueChanged(int value);
     void onMoodLampModeChanged(bool isConstantColor);
-    void onCbModesChanged(int index);
+    void onComboBoxModes_Activated(int index);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void showAbout(); /* using in actions */
     void showSettings(); /* using in actions */
@@ -151,8 +150,6 @@ private:
 
     void initLabelsForGrabbedColors();
 
-    void updateCbModesPosition();
-
     IGrabber * createGrabber(Grab::Mode grabMode);
 
 private:
@@ -184,4 +181,7 @@ private:
     QMenu *profilesMenu;
 
     QTranslator *translator;
+
+    static const unsigned ModeAmbilightIndex;
+    static const unsigned ModeMoodLampIndex;
 };
