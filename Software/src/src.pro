@@ -67,9 +67,6 @@ unix:!macx{
 macx{
     # MacOS version using libusb and hidapi codes
     SOURCES += hidapi/mac/hid.c
-    CONFIG += x86_64
-    LIBS += /usr/local/lib/libusb-1.0.dylib
-    INCLUDEPATH += /usr/local/include/libusb-1.0
     LIBS += -framework IOKit -framework CoreFoundation -framework ApplicationServices -framework OpenGL
     ICON = ../res/icons/Lightpack.icns
 }

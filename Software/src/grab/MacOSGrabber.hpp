@@ -11,7 +11,7 @@ public:
     MacOSGrabber();
     ~MacOSGrabber();
     virtual void updateGrabScreenFromWidget(QWidget *widget);
-    virtual QList<QRgb>grabWidgetsColors(QList<MoveMeWidget *> &widgets);
+    virtual QList<QRgb>grabWidgetsColors(QList<GrabWidget *> &widgets);
     virtual const char * getName();
     CGImageRef openGlGrab();
 private:

@@ -25,7 +25,7 @@ void MacOSGrabber::updateGrabScreenFromWidget(QWidget *widget)
 {
 }
 
-QList<QRgb> MacOSGrabber::grabWidgetsColors(QList<MoveMeWidget *> &widgets)
+QList<QRgb> MacOSGrabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
 {
     CGDisplayCount displayCount;
     CGDirectDisplayID displays[32];
@@ -46,7 +46,7 @@ QList<QRgb> MacOSGrabber::grabWidgetsColors(QList<MoveMeWidget *> &widgets)
 CGImageRef MacOSGrabber::openGlGrab()
 {
     CGDirectDisplayID display = kCGDirectMainDisplay;
-    CGRect srcRect = {0,0,1024,768};
+    CGRect srcRect = {{0, 0}, {1024, 768}};
     CGContextRef bitmap;
     CGImageRef image;
     void * data;
