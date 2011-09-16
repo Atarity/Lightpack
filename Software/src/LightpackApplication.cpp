@@ -33,13 +33,15 @@
 #include <iostream>
 using namespace std;
 
-LightpackApplication::LightpackApplication(int &argc, char **argv)
+LightpackApplication::LightpackApplication(const QString & appDirPath, int &argc, char **argv)
     : QApplication(argc, argv)
 {
     setApplicationName("Lightpack");
     setOrganizationName("Lightpack");
     setApplicationVersion(VERSION_STR);
     setQuitOnLastWindowClosed(false);
+
+    m_applicationDirPath = appDirPath;
 
     processCommandLineArguments();
 
@@ -129,7 +131,11 @@ void LightpackApplication::processCommandLineArguments()
             exit(WrongCommandLineArgument_ErrorCode);
         }
     }
-    qDebug() << "Debug level" << g_debugLevel;
+
+    if (m_isDebugLevelObtainedFromCmdArgs)
+    {
+        qDebug() << "Debug level" << g_debugLevel;
+    }
 }
 
 void LightpackApplication::printHelpMessage() const

@@ -35,7 +35,7 @@ class LightpackApplication : public QApplication
 {
     Q_OBJECT
 public:
-    LightpackApplication(int &argc, char **argv);
+    LightpackApplication(const QString & appDirPath, int &argc, char **argv);
 
     enum ErrorCodes {
         OK_ErrorCode = 0,

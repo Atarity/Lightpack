@@ -68,7 +68,7 @@
 #   define GRABMODE_DEFAULT    "Qt"
 #endif
 
-#define MODE_DEFAULT                        "Grab"
+#define MODE_DEFAULT                        "Ambilight"
 #define SPEED_MOOD_LAMP_DEFAULT_VALUE       50
 #define MOOD_LAMP_MODE_DEFAULT_VALUE        true
 #define MOOD_LAMP_COLOR_DEFAULT_VALUE       "#00FF00"

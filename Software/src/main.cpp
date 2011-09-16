@@ -142,7 +142,7 @@ int main(int argc, char **argv)
 
     qInstallMsgHandler(messageHandler);
 
-    LightpackApplication lightpackApp(argc, argv);
+    LightpackApplication lightpackApp(appDirPath, argc, argv);
 
     Q_INIT_RESOURCE(LightpackResources);
 
