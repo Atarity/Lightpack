@@ -1,0 +1,10 @@
+C:\Users\790\documents\visual studio 2010\Projects\CpuMemMonitor\CpuMemMonitor\bin\Debug\CpuMemMonitor.exe
+C:\Users\790\documents\visual studio 2010\Projects\CpuMemMonitor\CpuMemMonitor\bin\Debug\CpuMemMonitor.pdb
+C:\Users\790\documents\visual studio 2010\Projects\CpuMemMonitor\CpuMemMonitor\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\790\documents\visual studio 2010\Projects\CpuMemMonitor\CpuMemMonitor\obj\x86\Debug\CpuMemMonitor.exe
+C:\Users\790\documents\visual studio 2010\Projects\CpuMemMonitor\CpuMemMonitor\obj\x86\Debug\CpuMemMonitor.pdb
+C:\Users\790\Documents\Visual Studio 2010\Projects\CMM\CpuMemMonitor\CpuMemMonitor\bin\Debug\CpuMemMonitor.exe
+C:\Users\790\Documents\Visual Studio 2010\Projects\CMM\CpuMemMonitor\CpuMemMonitor\bin\Debug\CpuMemMonitor.pdb
+C:\Users\790\Documents\Visual Studio 2010\Projects\CMM\CpuMemMonitor\CpuMemMonitor\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\790\Documents\Visual Studio 2010\Projects\CMM\CpuMemMonitor\CpuMemMonitor\obj\x86\Debug\CpuMemMonitor.exe
+C:\Users\790\Documents\Visual Studio 2010\Projects\CMM\CpuMemMonitor\CpuMemMonitor\obj\x86\Debug\CpuMemMonitor.pdb

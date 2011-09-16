@@ -1,0 +1,10 @@
+C:\Users\790\documents\visual studio 2010\Projects\CpuMonitor\CpuMonitor\bin\Release\CpuMonitor.exe
+C:\Users\790\documents\visual studio 2010\Projects\CpuMonitor\CpuMonitor\bin\Release\CpuMonitor.pdb
+C:\Users\790\documents\visual studio 2010\Projects\CpuMonitor\CpuMonitor\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\790\documents\visual studio 2010\Projects\CpuMonitor\CpuMonitor\obj\x86\Release\CpuMonitor.exe
+C:\Users\790\documents\visual studio 2010\Projects\CpuMonitor\CpuMonitor\obj\x86\Release\CpuMonitor.pdb
+C:\Users\790\Documents\Visual Studio 2010\Projects\CM\CpuMonitor\CpuMonitor\obj\x86\Release\CpuMonitor.exe
+C:\Users\790\Documents\Visual Studio 2010\Projects\CM\CpuMonitor\CpuMonitor\obj\x86\Release\CpuMonitor.pdb
+C:\Users\790\Documents\Visual Studio 2010\Projects\CM\CpuMonitor\CpuMonitor\bin\Release\CpuMonitor.exe
+C:\Users\790\Documents\Visual Studio 2010\Projects\CM\CpuMonitor\CpuMonitor\bin\Release\CpuMonitor.pdb
+C:\Users\790\Documents\Visual Studio 2010\Projects\CM\CpuMonitor\CpuMonitor\obj\x86\Release\ResolveAssemblyReference.cache

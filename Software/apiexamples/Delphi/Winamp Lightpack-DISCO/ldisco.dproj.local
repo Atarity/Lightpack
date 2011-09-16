@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2011.08.16 00:26:28.356.pas,C:\Documents and Settings\ugois01\Рабочий стол\KeybLight\Unit1.pas=C:\Documents and Settings\ugois01\Рабочий стол\KeybLight\vis.pas</Transaction>
+    <Transaction>2011.08.16 00:26:28.356.dfm,C:\Documents and Settings\ugois01\Рабочий стол\KeybLight\Unit1.dfm=C:\Documents and Settings\ugois01\Рабочий стол\KeybLight\vis.dfm</Transaction>
+    <Transaction>2011.08.16 01:37:17.460.pas,C:\Documents and Settings\ugois01\Рабочий стол\KeybLight\Unit2.pas=C:\Documents and Settings\ugois01\Рабочий стол\KeybLight\Settings.pas</Transaction>
+    <Transaction>2011.08.16 01:37:17.460.dfm,C:\Documents and Settings\ugois01\Рабочий стол\KeybLight\Unit2.dfm=C:\Documents and Settings\ugois01\Рабочий стол\KeybLight\Settings.dfm</Transaction>
+    <Transaction>2011.08.25 12:24:29.724.dproj,D:\JOB\delphi_projects\lightpack\KeybLight\KeybLight.dproj=D:\JOB\delphi_projects\lightpack\KeybLight\ldisco.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
