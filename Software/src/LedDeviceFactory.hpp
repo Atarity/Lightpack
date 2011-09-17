@@ -67,7 +67,7 @@ private:
     void disconnectSignalSlotsLedDevice();
 
 private:
-    bool isSetColorsDone;
+    bool m_isSetColorsDone;
     ILedDevice *m_ledDevice;
     QThread *m_ledDeviceThread;
 };

@@ -36,7 +36,7 @@
 LedDeviceFactory::LedDeviceFactory(QObject *parent)
     : QObject(parent)
 {
-    isSetColorsDone = true;
+    m_isSetColorsDone = true;
 
     m_ledDeviceThread = new QThread();
 
@@ -61,15 +61,15 @@ void LedDeviceFactory::recreateLedDevice()
 
 void LedDeviceFactory::setColorsDone()
 {
-    isSetColorsDone = true;
+    m_isSetColorsDone = true;
 }
 
 void LedDeviceFactory::setColorsIfDeviceAvailable(const QList<QRgb> & colors)
 {
-    if (isSetColorsDone)
+    if (m_isSetColorsDone)
     {
         emit setLedDeviceColors(colors);
-        isSetColorsDone = false;
+        m_isSetColorsDone = false;
     } else {
         //qWarning() << Q_FUNC_INFO << "Hey! hey! hey! No so fast!";
     }
@@ -77,13 +77,15 @@ void LedDeviceFactory::setColorsIfDeviceAvailable(const QList<QRgb> & colors)
 
 void LedDeviceFactory::initLedDevice()
 {
+    m_isSetColorsDone = true;
+
     m_ledDevice = createLedDevice();
     connectSignalSlotsLedDevice();
 
     m_ledDevice->moveToThread(m_ledDeviceThread);
     m_ledDeviceThread->start();
 
-    emit offLeds();
+    emit offLeds();    
 }
 
 ILedDevice * LedDeviceFactory::createLedDevice()

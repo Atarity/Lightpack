@@ -584,11 +584,16 @@ void SettingsWindow::ledDeviceCallSuccess(bool isSuccess)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
 
+    // If Backlight::StatusOff then nothings changed
+
     if (isSuccess == false)
     {
         if (m_backlightStatus == Backlight::StatusOn)
             m_backlightStatus = Backlight::StatusDeviceError;
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Backlight::StatusDeviceError";
+    } else {
+        if (m_backlightStatus == Backlight::StatusDeviceError)
+            m_backlightStatus = Backlight::StatusOn;
     }
     updateTrayAndActionStates();
 }
