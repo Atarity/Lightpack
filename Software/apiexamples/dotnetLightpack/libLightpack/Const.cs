@@ -15,6 +15,8 @@ namespace libLightpack
     {
         On,
         Off,
-        Error
+        DeviceError,
+        Unknown,
     }
+
 }

@@ -5,32 +5,55 @@ using System.Text;
 
 namespace libLightpack
 {
-    public class ApiLightpack
+	public class ApiLightpack : IDisposable
     {
 
         private string _version;
 
         public string Host = "127.0.0.1";
         public int Port = 3636;
+        public string ApiKey = "";
 
+	    private bool isAuth = false;
         private bool isLock = false;
+
 
         public string Version
         {
             get { return _version; }
         }
 
-        private readonly TcpClient _client;
+	    public bool IsAuth
+	    {
+            get { return isAuth; }
+	    }
+
+        public bool IsLock
+        {
+            get { return isLock; }
+        }
+
+        private TcpClient _client;
 
         public ApiLightpack()
         {
-            _client = new TcpClient();
+            
+        }
+        
+        public void Dispose()
+        {
+        	Disconnect();
         }
 
         public ApiLightpack(string host, int port)
         {
             Host = host;
             Port = port;
+        }
+
+        public ApiLightpack(string host, int port, string apikey) : this(host, port)
+        {
+            ApiKey = apikey;
         }
 
         private string _readData()
@@ -50,37 +73,60 @@ namespace libLightpack
             _client.Client.Send(bytesSent);
         }
 
-        public bool Connect()
+        public void Connect()
         {
-            try
+            _client = new TcpClient();
+            if (!_client.Connected)
             {
-                _client.Connect(Host, Port);
-                setVersion(_readData());
-                return true;
+                isLock = false;
+                isAuth = false;
+	            _client.Connect(Host, Port);
+	            string[] list = _readData().Split(':');
+		     	if (list.Length > 1)
+		         	_version = list[1];
+                // old version api
+                if (_version == "1.0")
+                    isAuth = true;
+                else
+                    Login();
             }
-            catch (Exception)
-            {
-                return false;
-            }
+        }
 
+        public void Login()
+        {
+            Login(ApiKey);
+        }
+
+        public void Login(string apikey)
+        {
+            if (!_client.Connected) return;
+
+             _sendData(String.Format("apikey:{0}\n", ApiKey));
+             string s = _readData();
+             if (s.IndexOf("ok")!=-1)
+                 isAuth = true;
+        }
+        
+        public bool Connected
+        {
+        	get { return _client.Connected;}
         }
 
         public void Disconnect()
         {
-            _client.Close();
+            if (_client.Connected)
+            {
+                _sendData("exit\n");
+                _client.Close();
+            }
         }
 
         public Status GetStatus()
         {
-            _sendData("getstatus\n");
+            _sendData("getstatus\n");   
             string s = _readData();
             string[] list = s.Split(':');
-            if (list.Length > 1)
-            {
-                if (list[1] == "off") return Status.Off;
-                if (list[1] == "on") return Status.On;
-            }
-            return Status.Error;
+            return (Status)Enum.Parse(typeof(Status),list[1],true);
         }
 
         public void SetStatus(Status status)
@@ -97,12 +143,7 @@ namespace libLightpack
             _sendData("getstatusapi\n");
             string s = _readData();
             string[] list = s.Split(':');
-            if (list.Length > 1)
-            {
-                if (list[1] == "idle") return StatusApi.Idle;
-                if (list[1] == "busy") return StatusApi.Busy;
-            }
-            return StatusApi.Busy;
+            return (StatusApi)Enum.Parse(typeof(StatusApi),list[1],true);
         }
 
         public string GetProfile()
@@ -135,13 +176,6 @@ namespace libLightpack
                 return list;
             }
             return null;
-        }
-
-        private void setVersion(string readData)
-        {
-            string[] list = readData.Split(':');
-            if (list.Length > 1)
-                _version = list[1];
         }
 
         public void Lock()

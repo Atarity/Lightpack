@@ -253,6 +253,12 @@ void ApiServer::clientProcessCommands()
                 result = CmdApiKeyResult_Fail;
             }
 
+            if (!m_isAuthEnabled)
+            {
+                API_DEBUG_OUT << CmdApiKey << "m_isAuthEnabled:"<<m_isAuthEnabled;
+               result = CmdApiKeyResult_Ok;
+            }
+
             API_DEBUG_OUT << result;
             client->write(result.toUtf8());
             return;
