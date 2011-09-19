@@ -56,7 +56,7 @@ win32 {
     LIBS    += -lhid -lusbcamd -lsetupapi
     SOURCES += hidapi/windows/hid.cpp
     # Windows version using WinAPI + GDI for grab colors
-    LIBS    += -lgdi32
+    LIBS    += -lgdi32 -ld3d9
 }
 
 unix:!macx{
@@ -92,7 +92,8 @@ SOURCES += \
     grab/QtGrabber.cpp \
     grab/MacOSGrabber.cpp \
     ApiServer.cpp \
-    ApiServerSetColorTask.cpp
+    ApiServerSetColorTask.cpp \
+    grab/D3D9Grabber.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -127,11 +128,9 @@ HEADERS += \
     ../../CommonHeaders/LIGHTPACK_HW.h \
     ../../CommonHeaders/COMMANDS.h \
     ../../CommonHeaders/LEDS_COUNT.h \
-    ../../CommonHeaders/USB_ID.h
+    ../../CommonHeaders/USB_ID.h \
+    grab/D3D9Grabber.hpp
 
 FORMS += SettingsWindow.ui \
     AboutDialog.ui \
     GrabWidget.ui
-
-
-

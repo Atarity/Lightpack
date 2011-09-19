@@ -34,6 +34,7 @@
 #include "QtGrabber.hpp"
 #include "X11Grabber.hpp"
 #include "MacOSGrabber.hpp"
+#include "D3D9Grabber.hpp"
 #include "debug.h"
 
 #include "../../CommonHeaders/COMMANDS.h"
