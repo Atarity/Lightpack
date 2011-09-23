@@ -135,6 +135,7 @@ private:
     void initApiSetColorTask();
     void startListening();
     void stopListening();
+    void writeData(QTcpSocket* client, const QString & data);
 
 private:
     int m_apiPort;

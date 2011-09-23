@@ -224,7 +224,7 @@ void ApiServer::clientProcessCommands()
 
     QTcpSocket *client = dynamic_cast<QTcpSocket*>(sender());
 
-    while (client->canReadLine())
+    while (m_clients.contains(client) && client->canReadLine())
     {
         QByteArray cmdBuffer = client->readLine().trimmed();
         API_DEBUG_OUT << cmdBuffer;
@@ -235,39 +235,39 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdApiKey;
 
-            cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
-            API_DEBUG_OUT << QString(cmdBuffer);
-
-            if (cmdBuffer == m_apiKey)
+            if (m_isAuthEnabled)
             {
-                API_DEBUG_OUT << CmdApiKey << "OK";
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
 
-                m_clients[client].isAuthorized = true;
+                if (cmdBuffer == m_apiKey)
+                {
+                    API_DEBUG_OUT << CmdApiKey << "OK";
 
+                    m_clients[client].isAuthorized = true;
+
+                    result = CmdApiKeyResult_Ok;
+                } else {
+                    API_DEBUG_OUT << CmdApiKey << "Api key is not valid:" << QString(cmdBuffer);
+
+                    m_clients[client].isAuthorized = false;
+
+                    result = CmdApiKeyResult_Fail;
+                }
+            }
+            else
+            {
+                API_DEBUG_OUT << CmdApiKey << "Authorization is disabled, return ok;";
                 result = CmdApiKeyResult_Ok;
-            } else {
-                API_DEBUG_OUT << CmdApiKey << "Api key is not valid:" << QString(cmdBuffer);
-
-                m_clients[client].isAuthorized = false;
-
-                result = CmdApiKeyResult_Fail;
             }
 
-            if (!m_isAuthEnabled)
-            {
-                API_DEBUG_OUT << CmdApiKey << "m_isAuthEnabled:"<<m_isAuthEnabled;
-               result = CmdApiKeyResult_Ok;
-            }
-
-            API_DEBUG_OUT << result;
-            client->write(result.toUtf8());
+            writeData(client, result);
             return;
         }
 
         if (m_isAuthEnabled && m_clients[client].isAuthorized == false)
         {
-            API_DEBUG_OUT << CmdApiCheck_AuthRequired;
-            client->write(CmdApiCheck_AuthRequired);
+            writeData(client, CmdApiCheck_AuthRequired);
             return;
         }
 
@@ -599,8 +599,9 @@ void ApiServer::clientProcessCommands()
         }
         else if (cmdBuffer == CmdExit)
         {
-            client->write("Goodbye!\n");
-            client->close();
+            writeData(client, "Goodbye!\n");
+            if (m_clients.contains(client))
+                client->close();
             return;
         }
         else            
@@ -608,8 +609,7 @@ void ApiServer::clientProcessCommands()
             qWarning() << Q_FUNC_INFO << CmdUnknown << cmdBuffer;
         }
 
-        API_DEBUG_OUT << result;
-        client->write(result.toUtf8());
+        writeData(client, result);
     }
 }
 
@@ -695,4 +695,16 @@ void ApiServer::stopListening()
     }
 
     m_clients.clear();
+}
+
+void ApiServer::writeData(QTcpSocket* client, const QString & data)
+{
+    if (m_clients.contains(client) == false)
+    {
+        API_DEBUG_OUT << Q_FUNC_INFO << "client disconected, cancel writing buffer = " << data;
+        return;
+    }
+
+    API_DEBUG_OUT << Q_FUNC_INFO << data;
+    client->write(data.toUtf8());
 }
