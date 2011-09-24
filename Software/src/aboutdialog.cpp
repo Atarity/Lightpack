@@ -53,7 +53,7 @@ AboutDialog::~AboutDialog()
 
 void AboutDialog::changeEvent(QEvent *e)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << e->type();
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << e->type();
 
     QDialog::changeEvent(e);
     switch (e->type()) {

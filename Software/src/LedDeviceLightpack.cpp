@@ -158,9 +158,8 @@ void LedDeviceLightpack::open()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    bool ok = openDevice();
-
-    emit openDeviceSuccess(ok);
+    // Open device and emit signal openDeviceSuccess(bool);
+    openDevice();
 }
 
 bool LedDeviceLightpack::openDevice()
@@ -199,6 +198,7 @@ bool LedDeviceLightpack::openDevice()
             {
                 qWarning("Lightpack open fail");
                 hid_free_enumeration(devs);
+                emit openDeviceSuccess(false);
                 return false;
             }
             break; // device founded break search and go to free enumeration and success signal
@@ -210,6 +210,7 @@ bool LedDeviceLightpack::openDevice()
     if (m_hidDevice == NULL)
     {
         qWarning("Lightpack device not found");
+        emit openDeviceSuccess(false);
         return false;
     }
     hid_set_nonblocking(m_hidDevice, 1);
@@ -218,6 +219,7 @@ bool LedDeviceLightpack::openDevice()
 
     updateDeviceSettings();
 
+    emit openDeviceSuccess(true);
     return true;
 }
 
