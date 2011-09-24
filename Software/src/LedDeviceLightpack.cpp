@@ -159,11 +159,6 @@ void LedDeviceLightpack::open()
 
     bool ok = openDevice();
 
-    if (ok)
-    {
-        updateDeviceSettings();
-    }
-
     emit openDeviceSuccess(ok);
 }
 
@@ -219,6 +214,9 @@ bool LedDeviceLightpack::openDevice()
     hid_set_nonblocking(m_hidDevice, 1);
 
     DEBUG_LOW_LEVEL << "Lightpack opened";
+
+    updateDeviceSettings();
+
     return true;
 }
 
