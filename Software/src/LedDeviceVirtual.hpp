@@ -32,7 +32,7 @@ class LedDeviceVirtual : public ILedDevice
 {
     Q_OBJECT
 public:
-    LedDeviceVirtual(QObject * parent = 0) : ILedDevice(parent) {}
+    LedDeviceVirtual(QObject * parent = 0);
 
 public slots:
     void setColors(const QList<QRgb> & /*colors*/);
@@ -42,4 +42,6 @@ public slots:
     void setSmoothSlowdown(int /*value*/);
 //  void setBrightness(int /*value*/);
     void requestFirmwareVersion();
+public:
+    void open();
 };

@@ -60,6 +60,9 @@ public slots:
 //    void setBrightness(int value);
     void requestFirmwareVersion();
 
+public:
+    void open();
+
 private:
     bool openDevice();
     bool readDataFromDevice();

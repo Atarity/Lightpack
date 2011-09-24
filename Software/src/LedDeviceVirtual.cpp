@@ -25,6 +25,12 @@
  */
 
 #include "LedDeviceVirtual.hpp"
+#include "debug.h"
+
+LedDeviceVirtual::LedDeviceVirtual(QObject * parent) : ILedDevice(parent)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+}
 
 void LedDeviceVirtual::setColors(const QList<QRgb> & /*colors*/)
 {
@@ -55,4 +61,10 @@ void LedDeviceVirtual::requestFirmwareVersion()
 {
     emit firmwareVersion("none");
     emit commandCompleted(true);
+}
+
+void LedDeviceVirtual::open()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    emit openDeviceSuccess(true);
 }

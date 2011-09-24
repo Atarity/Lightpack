@@ -580,7 +580,7 @@ void SettingsWindow::hideSettings()
 
 void SettingsWindow::ledDeviceCallSuccess(bool isSuccess)
 {    
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << isSuccess;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << isSuccess << m_backlightStatus;
 #if 0
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
@@ -668,7 +668,7 @@ void SettingsWindow::settingsHardwareSetColorDepth(int value)
 
 void SettingsWindow::settingsHardwareSetSmoothSlowdown(int value)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setFwSmoothSlowdown(value);
     emit updateSmoothSlowdown(value);

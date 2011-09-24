@@ -167,6 +167,8 @@ void LedDeviceFactory::initLedDevice()
     m_ledDevice = createLedDevice();
     connectSignalSlotsLedDevice();
 
+    m_ledDevice->open();
+
     m_ledDevice->moveToThread(m_ledDeviceThread);
     m_ledDeviceThread->start();
 

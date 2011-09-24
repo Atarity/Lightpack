@@ -135,4 +135,10 @@ void LedDeviceAlienFx::requestFirmwareVersion()
     emit commandCompleted(true);
 }
 
+void LedDeviceAlienFx::open()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    emit openDeviceSuccess(true);
+}
+
 #endif /* Q_WS_WIN */

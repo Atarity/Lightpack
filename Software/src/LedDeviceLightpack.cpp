@@ -48,7 +48,7 @@ LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
 
 LedDeviceLightpack::~LedDeviceLightpack()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "hid_close(ambilightDevice);";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "hid_close(...);";
     hid_close(m_hidDevice);
 }
 
@@ -153,6 +153,20 @@ void LedDeviceLightpack::requestFirmwareVersion()
     emit commandCompleted(ok);
 }
 
+void LedDeviceLightpack::open()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    bool ok = openDevice();
+
+    if (ok)
+    {
+        updateDeviceSettings();
+    }
+
+    emit openDeviceSuccess(ok);
+}
+
 bool LedDeviceLightpack::openDevice()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -162,9 +176,12 @@ bool LedDeviceLightpack::openDevice()
     struct hid_device_info *devs, *cur_dev;
 
     DEBUG_LOW_LEVEL << "Start enumeration of all HID devices";
+
     devs = hid_enumerate(0, 0);
     cur_dev = devs;
-    while (cur_dev) {
+
+    while (cur_dev)
+    {
         int vid = cur_dev->vendor_id;
         int pid = cur_dev->product_id;
 
@@ -177,15 +194,15 @@ bool LedDeviceLightpack::openDevice()
                 .arg(product_string)
                 .arg(manufacturer_string).trimmed();
 
-        if(vid == USB_VENDOR_ID && pid == USB_PRODUCT_ID && product_string == USB_PRODUCT_STRING){
+        if (vid == USB_VENDOR_ID && pid == USB_PRODUCT_ID && product_string == USB_PRODUCT_STRING)
+        {
             DEBUG_LOW_LEVEL << "Lightpack found";
             m_hidDevice = hid_open_path(cur_dev->path);
-            if(m_hidDevice == NULL){
+
+            if (m_hidDevice == NULL)
+            {
                 qWarning("Lightpack open fail");
-
                 hid_free_enumeration(devs);
-
-                emit openDeviceSuccess(false);
                 return false;
             }
             break; // device founded break search and go to free enumeration and success signal
@@ -194,19 +211,14 @@ bool LedDeviceLightpack::openDevice()
     }
     hid_free_enumeration(devs);
 
-    if(m_hidDevice == NULL){
+    if (m_hidDevice == NULL)
+    {
         qWarning("Lightpack device not found");
-        emit openDeviceSuccess(false);
         return false;
     }
-
     hid_set_nonblocking(m_hidDevice, 1);
 
-    emit openDeviceSuccess(true);
     DEBUG_LOW_LEVEL << "Lightpack opened";
-
-    updateDeviceSettings();
-
     return true;
 }
 

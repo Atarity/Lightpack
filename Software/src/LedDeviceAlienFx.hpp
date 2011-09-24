@@ -47,6 +47,9 @@ public slots:
     void setSmoothSlowdown(int value) { }
     void requestFirmwareVersion();
 
+public:
+    void open();
+
 private:
     HINSTANCE m_hLfxLibrary;
     bool m_isInitialized;
