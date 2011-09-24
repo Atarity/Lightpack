@@ -279,15 +279,39 @@ static int make_path(IOHIDDeviceRef device, char *buf, size_t len)
 	return res+1;
 }
 
-static void init_hid_manager(void)
+static int init_hid_manager(void)
 {
+	IOReturn res;
+	
 	/* Initialize all the HID Manager Objects */
 	hid_mgr = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
 	IOHIDManagerSetDeviceMatching(hid_mgr, NULL);
 	IOHIDManagerScheduleWithRunLoop(hid_mgr, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-	IOHIDManagerOpen(hid_mgr, kIOHIDOptionsTypeNone);
+	res = IOHIDManagerOpen(hid_mgr, kIOHIDOptionsTypeNone);
+	return (res == kIOReturnSuccess)? 0: -1;
 }
 
+int HID_API_EXPORT hid_init(void)
+{
+	if (!hid_mgr) {
+		if (init_hid_manager() < 0) {
+			hid_exit();
+			return -1;
+		}
+	}
+	return 0;
+}
+
+int HID_API_EXPORT hid_exit(void)
+{
+	if (hid_mgr) {
+		IOHIDManagerClose(hid_mgr, kIOHIDOptionsTypeNone);
+		CFRelease(hid_mgr);
+		hid_mgr = NULL;
+	}
+		
+	return 0;
+}
 
 struct hid_device_info  HID_API_EXPORT *hid_enumerate(unsigned short vendor_id, unsigned short product_id)
 {
@@ -299,8 +323,7 @@ struct hid_device_info  HID_API_EXPORT *hid_enumerate(unsigned short vendor_id, 
 	setlocale(LC_ALL,"");
 
 	/* Set up the HID Manager if it hasn't been done */
-	if (!hid_mgr)
-		init_hid_manager();
+	hid_init();
 	
 	/* Get a list of the Devices */
 	CFSetRef device_set = IOHIDManagerCopyDevices(hid_mgr);
@@ -320,6 +343,9 @@ struct hid_device_info  HID_API_EXPORT *hid_enumerate(unsigned short vendor_id, 
 
 		IOHIDDeviceRef dev = device_array[i];
 
+        if (!dev) {
+            continue;
+        }
 		dev_vid = get_vendor_id(dev);
 		dev_pid = get_product_id(dev);
 
@@ -361,6 +387,12 @@ struct hid_device_info  HID_API_EXPORT *hid_enumerate(unsigned short vendor_id, 
 			/* VID/PID */
 			cur_dev->vendor_id = dev_vid;
 			cur_dev->product_id = dev_pid;
+
+			/* Release Number */
+			cur_dev->release_number = get_int_property(dev, CFSTR(kIOHIDVersionNumberKey));
+
+			/* Interface Number (Unsupported on Mac)*/
+			cur_dev->interface_number = -1;
 		}
 	}
 	
@@ -478,8 +510,7 @@ hid_device * HID_API_EXPORT hid_open_path(const char *path)
 	dev = new_hid_device();
 
 	/* Set up the HID Manager if it hasn't been done */
-	if (!hid_mgr)
-		init_hid_manager();
+	hid_init();
 
 	CFSetRef device_set = IOHIDManagerCopyDevices(hid_mgr);
 	
@@ -594,7 +625,7 @@ static int return_data(hid_device *dev, unsigned char *data, size_t length)
 	return len;
 }
 
-int HID_API_EXPORT hid_read(hid_device *dev, unsigned char *data, size_t length)
+int HID_API_EXPORT hid_read_timeout(hid_device *dev, unsigned char *data, size_t length, int milliseconds)
 {
 	int ret_val = -1;
 
@@ -620,8 +651,9 @@ int HID_API_EXPORT hid_read(hid_device *dev, unsigned char *data, size_t length)
 	/* Move the device's run loop to this thread. */
 	IOHIDDeviceScheduleWithRunLoop(dev->device_handle, CFRunLoopGetCurrent(), dev->run_loop_mode);
 	
-	if (dev->blocking) {
-		/* Run the Run Loop until it stops timing out. In other
+	if (milliseconds < 0) {
+		/* Blocking read:
+		   Run the Run Loop until it stops timing out. In other
 		   words, until something happens. This is necessary because
 		   there is no INFINITE timeout value. */
 		SInt32 code;
@@ -660,7 +692,7 @@ int HID_API_EXPORT hid_read(hid_device *dev, unsigned char *data, size_t length)
 	else {
 		/* Non-blocking. See if the OS has any reports to give. */
 		SInt32 code;
-		code = CFRunLoopRunInMode(dev->run_loop_mode, 0, TRUE);
+		code = CFRunLoopRunInMode(dev->run_loop_mode, milliseconds, TRUE);
 		if (code == kCFRunLoopRunFinished) {
 			/* The run loop is finished, indicating an error
 			   or the device had been disconnected. */
@@ -683,6 +715,11 @@ ret:
 	/* Unlock */
 	pthread_mutex_unlock(&dev->mutex);
 	return ret_val;
+}
+
+int HID_API_EXPORT hid_read(hid_device *dev, unsigned char *data, size_t length)
+{
+	return hid_read_timeout(dev, data, length, (dev->blocking)? -1: 0);
 }
 
 int HID_API_EXPORT hid_set_nonblocking(hid_device *dev, int nonblock)

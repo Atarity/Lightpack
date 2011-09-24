@@ -50,6 +50,7 @@ LedDeviceLightpack::~LedDeviceLightpack()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "hid_close(...);";
     hid_close(m_hidDevice);
+    hid_exit();
 }
 
 void LedDeviceLightpack::setColors(const QList<QRgb> & colors)

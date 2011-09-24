@@ -54,7 +54,7 @@ unix{
 win32 {
     # Windows version using WinAPI for HID
     LIBS    += -lhid -lusbcamd -lsetupapi
-    SOURCES += hidapi/windows/hid.cpp
+    SOURCES += hidapi/windows/hid.c
     # Windows version using WinAPI + GDI for grab colors
     LIBS    += -lgdi32 -ld3d9
 }
