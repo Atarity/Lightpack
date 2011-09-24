@@ -51,12 +51,6 @@ public:
     LedDeviceLightpack(QObject *parent = 0);
     ~LedDeviceLightpack();
 
-signals:
-    void openDeviceSuccess(bool isSuccess);
-    void ioDeviceSuccess(bool isSuccess);
-    void setColorsSuccess(bool isSuccess);
-    void firmwareVersion(const QString & fwVersion);
-
 public slots:
     void setColors(const QList<QRgb> & colors);
     void offLeds();

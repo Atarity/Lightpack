@@ -35,16 +35,11 @@ public:
     LedDeviceVirtual(QObject * parent = 0) : ILedDevice(parent) {}
 
 public slots:
-    void setColors(const QList<QRgb> & /*colors*/) {}
-    void offLeds() {}
-    void setTimerOptions(int /*prescallerIndex*/, int /*outputCompareRegValue*/) {}
-    void setColorDepth(int /*value*/) {}
-    void setSmoothSlowdown(int /*value*/) {}
-//  void setBrightness(int /*value*/) {}
+    void setColors(const QList<QRgb> & /*colors*/);
+    void offLeds();
+    void setTimerOptions(int /*prescallerIndex*/, int /*outputCompareRegValue*/);
+    void setColorDepth(int /*value*/);
+    void setSmoothSlowdown(int /*value*/);
+//  void setBrightness(int /*value*/);
     void requestFirmwareVersion();
-
-signals:
-    void openDeviceSuccess(bool isSuccess);
-    void ioDeviceSuccess(bool isSuccess);
-    void firmwareVersion(const QString & fwVersion);
 };

@@ -26,7 +26,33 @@
 
 #include "LedDeviceVirtual.hpp"
 
+void LedDeviceVirtual::setColors(const QList<QRgb> & /*colors*/)
+{
+    emit commandCompleted(true);
+}
+
+void LedDeviceVirtual::offLeds()
+{
+    emit commandCompleted(true);
+}
+
+void LedDeviceVirtual::setTimerOptions(int /*prescallerIndex*/, int /*outputCompareRegValue*/)
+{
+    emit commandCompleted(true);
+}
+
+void LedDeviceVirtual::setColorDepth(int /*value*/)
+{
+    emit commandCompleted(true);
+}
+
+void LedDeviceVirtual::setSmoothSlowdown(int /*value*/)
+{
+    emit commandCompleted(true);
+}
+
 void LedDeviceVirtual::requestFirmwareVersion()
 {
     emit firmwareVersion("none");
+    emit commandCompleted(true);
 }

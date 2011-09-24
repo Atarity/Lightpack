@@ -39,7 +39,9 @@ signals:
     void openDeviceSuccess(bool isSuccess);
     void ioDeviceSuccess(bool isSuccess);
     void firmwareVersion(const QString & fwVersion);
-    void setColorsDone();
+    // Signal commandCompleted(bool) must be sent at the completion of each command
+    // (setColors, setTimerOptions, setColorDepth, setSmoothSlowdown, etc.)
+    void commandCompleted(bool ok);
 
 public slots:
     virtual void setColors(const QList<QRgb> & colors) = 0;

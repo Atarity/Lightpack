@@ -26,6 +26,7 @@
 
 #pragma once
 
+#include "enums.hpp"
 #include "ILedDevice.hpp"
 
 class LedDeviceFactory : public QObject
@@ -38,36 +39,49 @@ public:
 signals:
     void openDeviceSuccess(bool isSuccess);
     void ioDeviceSuccess(bool isSuccess);
-//    void setColorsDone();
     void firmwareVersion(const QString & fwVersion);
 
-    // Do not use signal setLedDeviceColors outside of the class!
-    // This signal is directly connected to ILedDevice.
-    // Use instead public slot setColorsIfDeviceAvailable, which is protected from the overflow of queries.
-    void setLedDeviceColors(const QList<QRgb> & colors);
+    // This signals are directly connected to ILedDevice. Don't use outside.
+    void ledDeviceSetColors(const QList<QRgb> & colors);
+    void ledDeviceOffLeds();
+    void ledDeviceSetTimerOptions(int prescallerIndex, int outputCompareRegValue);
+    void ledDeviceSetColorDepth(int value);
+    void ledDeviceSetSmoothSlowdown(int value);
+    void ledDeviceRequestFirmwareVersion();
 
-    // This signals is directly connected to ILedDevice.
-    // They are NOT protected from the overflow of queries!
+public slots:
+    void recreateLedDevice();
+
+    // This slots are protected from the overflow of queries
+    void setColors(const QList<QRgb> & colors);
     void offLeds();
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);
-//    void setBrightness(int value);
     void requestFirmwareVersion();
 
-public slots:
-    void recreateLedDevice();
-    void setColorsDone();
-    void setColorsIfDeviceAvailable(const QList<QRgb> & colors);
+private slots:
+    void ledDeviceCommandCompleted(bool ok);
 
 private:
     void initLedDevice();
     ILedDevice * createLedDevice();
     void connectSignalSlotsLedDevice();
     void disconnectSignalSlotsLedDevice();
+    void cmdQueueAppend(LedDeviceCommands::Cmd);
+    void cmdQueueProcessNext();
 
 private:
-    bool m_isSetColorsDone;
+    bool m_isLastCommandCompleted;
+
+    QList<LedDeviceCommands::Cmd> m_cmdQueue;
+
+    QList<QRgb> m_savedColors;
+    int m_savedTimerPrescallerIndex;
+    int m_savedTimerOCR;
+    int m_savedColorDepth;
+    int m_savedSmoothSlowdown;
+
     ILedDevice *m_ledDevice;
     QThread *m_ledDeviceThread;
 };

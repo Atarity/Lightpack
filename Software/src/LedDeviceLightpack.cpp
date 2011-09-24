@@ -24,7 +24,6 @@
  *
  */
 
-
 #include "LedDeviceLightpack.hpp"
 
 #include <unistd.h>
@@ -77,17 +76,18 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
         m_writeBuffer[index++] = 0;
     }
 
-    writeBufferToDeviceWithCheck(CMD_UPDATE_LEDS);
+    bool ok = writeBufferToDeviceWithCheck(CMD_UPDATE_LEDS);
 
     // WARNING: LedDeviceFactory sends data only when the arrival of this signal
-    emit setColorsDone();
+    emit commandCompleted(ok);
 }
 
 void LedDeviceLightpack::offLeds()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    writeBufferToDeviceWithCheck(CMD_OFF_ALL);
+    bool ok = writeBufferToDeviceWithCheck(CMD_OFF_ALL);
+    emit commandCompleted(ok);
 }
 
 void LedDeviceLightpack::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
@@ -97,7 +97,8 @@ void LedDeviceLightpack::setTimerOptions(int prescallerIndex, int outputCompareR
     m_writeBuffer[WRITE_BUFFER_INDEX_DATA_START] = outputCompareRegValue & 0xff;
     m_writeBuffer[WRITE_BUFFER_INDEX_DATA_START+1] = (outputCompareRegValue >> 8);
 
-    writeBufferToDeviceWithCheck(CMD_SET_TIMER_OPTIONS);
+    bool ok = writeBufferToDeviceWithCheck(CMD_SET_TIMER_OPTIONS);
+    emit commandCompleted(ok);
 }
 
 void LedDeviceLightpack::setColorDepth(int value)
@@ -106,7 +107,8 @@ void LedDeviceLightpack::setColorDepth(int value)
 
     m_writeBuffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)value;
 
-    writeBufferToDeviceWithCheck(CMD_SET_PWM_LEVEL_MAX_VALUE);
+    bool ok = writeBufferToDeviceWithCheck(CMD_SET_PWM_LEVEL_MAX_VALUE);
+    emit commandCompleted(ok);
 }
 
 void LedDeviceLightpack::setSmoothSlowdown(int value)
@@ -115,14 +117,16 @@ void LedDeviceLightpack::setSmoothSlowdown(int value)
 
     m_writeBuffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)value;
 
-    writeBufferToDeviceWithCheck(CMD_SET_SMOOTH_SLOWDOWN);
+    bool ok = writeBufferToDeviceWithCheck(CMD_SET_SMOOTH_SLOWDOWN);
+    emit commandCompleted(ok);
 }
 
 //void LedDeviceLightpack::setBrightness(int value)
 //{
 //    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 //    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)value;
-//    writeBufferToDeviceWithCheck(CMD_SET_BRIGHTNESS);
+//    bool ok = writeBufferToDeviceWithCheck(CMD_SET_BRIGHTNESS);
+//    emit commandCompleted(ok);
 //}
 
 void LedDeviceLightpack::requestFirmwareVersion()
@@ -131,8 +135,10 @@ void LedDeviceLightpack::requestFirmwareVersion()
 
     QString fwVersion;
 
+    bool ok = readDataFromDeviceWithCheck();
+
     // TODO: write command CMD_GET_VERSION to device
-    if (readDataFromDeviceWithCheck())
+    if (ok)
     {
         int fw_major = m_readBuffer[INDEX_FW_VER_MAJOR];
         int fw_minor = m_readBuffer[INDEX_FW_VER_MINOR];
@@ -144,6 +150,7 @@ void LedDeviceLightpack::requestFirmwareVersion()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Version:" << fwVersion;
 
     emit firmwareVersion(fwVersion);
+    emit commandCompleted(ok);
 }
 
 bool LedDeviceLightpack::openDevice()

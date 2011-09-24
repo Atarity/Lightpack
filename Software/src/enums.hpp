@@ -78,3 +78,15 @@ enum DeviceType {
     DefaultDevice = LightpackDevice
 };
 }
+
+namespace LedDeviceCommands
+{
+enum Cmd {
+    OffLeds,
+    SetColors,
+    SetTimerOptions,
+    SetColorDepth,
+    SetSmoothSlowdown,
+    RequestFirmwareVersion
+};
+}
