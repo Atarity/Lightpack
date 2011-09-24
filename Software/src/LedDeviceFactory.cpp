@@ -171,8 +171,6 @@ void LedDeviceFactory::initLedDevice()
 
     m_ledDevice->moveToThread(m_ledDeviceThread);
     m_ledDeviceThread->start();
-
-    emit ledDeviceOffLeds();
 }
 
 ILedDevice * LedDeviceFactory::createLedDevice()

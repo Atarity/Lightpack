@@ -131,7 +131,7 @@ void LedDeviceAlienFx::setColors(const QList<QRgb> & colors)
 
 void LedDeviceAlienFx::requestFirmwareVersion()
 {
-    emit firmwareVersion("alienfx version unknown");
+    emit firmwareVersion("unknown (alienfx)");
     emit commandCompleted(true);
 }
 

@@ -59,7 +59,7 @@ void LedDeviceVirtual::setSmoothSlowdown(int /*value*/)
 
 void LedDeviceVirtual::requestFirmwareVersion()
 {
-    emit firmwareVersion("none");
+    emit firmwareVersion("1.0 (virtual device)");
     emit commandCompleted(true);
 }
 
