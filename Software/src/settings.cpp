@@ -490,6 +490,10 @@ Grab::Mode Settings::getGrabMode()
     if (strGrabMode == "winapi")
         return Grab::WinAPIGrabMode;
 #endif
+#ifdef D3D9_GRAB_SUPPORT
+    if (strGrabMode == "d3d9")
+        return Grab::D3D9GrabMode;
+#endif
 #ifdef X11_GRAB_SUPPORT
     if (strGrabMode == "x11")
         return Grab::X11GrabMode;
@@ -507,6 +511,11 @@ void Settings::setGrabMode(Grab::Mode grabMode)
 #ifdef WINAPI_GRAB_SUPPORT
     case Grab::WinAPIGrabMode:
         strGrabMode = "Winapi";
+        break;
+#endif
+#ifdef D3D9_GRAB_SUPPORT
+    case Grab::D3D9GrabMode:
+        strGrabMode = "D3D9";
         break;
 #endif
 #ifdef X11_GRAB_SUPPORT

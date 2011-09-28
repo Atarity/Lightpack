@@ -63,6 +63,9 @@ enum Mode {
 #ifdef WINAPI_GRAB_SUPPORT
     ,WinAPIGrabMode
 #endif
+#ifdef D3D9_GRAB_SUPPORT
+    ,D3D9GrabMode
+#endif
 #ifdef X11_GRAB_SUPPORT
     ,X11GrabMode
 #endif
