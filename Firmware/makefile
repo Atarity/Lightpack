@@ -137,6 +137,7 @@ SRC = $(LUFA_SRC_USB) \
 	  Lightpack.c  \
 	  Descriptors.c \
 	  LedDriver.c \
+	  LedManager.c \
 	  LightpackUSB.c 
 
 # List C++ source files here. (C dependencies are automatically generated.)

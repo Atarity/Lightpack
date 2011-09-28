@@ -30,9 +30,11 @@
 // Firmware version:
 #include "../CommonHeaders/LIGHTPACK_HW.h"
 
-#if(LIGHTPACK_HW == 5)
+#if(LIGHTPACK_HW == 6)
+#define VERSION_OF_FIRMWARE              (0x0600UL)
+#elif (LIGHTPACK_HW == 5)
 #define VERSION_OF_FIRMWARE              (0x0500UL)
-#else
+#elif (LIGHTPACK_HW == 4)
 #define VERSION_OF_FIRMWARE              (0x0403UL)
 #endif
 

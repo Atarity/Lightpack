@@ -26,6 +26,7 @@
 
 #include "Lightpack.h"
 #include "LedDriver.h"
+#include "LedManager.h"
 #include "LightpackUSB.h"
 
 volatile uint8_t g_Flags = 0;
@@ -51,169 +52,12 @@ Settings_t g_Settings =
         .timerOutputCompareRegValue = 100,
 };
 
-static inline void _StartConstantTime(void)
-{
-    TCNT1 = 0;
-}
-
-static inline void _EndConstantTime(const uint8_t time)
-{
-    while(TCNT1 < time * 256UL) { }
-}
-
-void EvalCurrentImage_SmoothlyAlg(void)
-{
-    for (uint8_t i = 0; i < LEDS_COUNT; i++)
-    {
-        if (g_Images.smoothIndex[i] >= g_Settings.smoothSlowdown)
-        {
-            // Smooth change colors complete, rewrite start image
-            g_Images.current[i].r = g_Images.start[i].r = g_Images.end[i].r;
-            g_Images.current[i].g = g_Images.start[i].g = g_Images.end[i].g;
-            g_Images.current[i].b = g_Images.start[i].b = g_Images.end[i].b;
-
-        } else {
-            uint16_t coefEnd = ((uint16_t)g_Images.smoothIndex[i] << 8) / g_Settings.smoothSlowdown;
-            uint16_t coefStart = (1UL << 8) - coefEnd;
-
-            g_Images.current[i].r = (
-                    coefStart * g_Images.start[i].r +
-                    coefEnd   * g_Images.end  [i].r) >> 8;
-
-            g_Images.current[i].g = (
-                    coefStart * g_Images.start[i].g +
-                    coefEnd   * g_Images.end  [i].g) >> 8;
-
-            g_Images.current[i].b = (
-                    coefStart * g_Images.start[i].b +
-                    coefEnd   * g_Images.end  [i].b) >> 8;
-
-            g_Images.smoothIndex[i]++;
-        }
-    }
-}
-
-#if (USE_BAM == 1)
-
-void BAM(void)
-{
-    SET(LEDW);
-
-    static uint8_t s_bitNum = 0;
-
-    s_bitNum++;
-
-    if (s_bitNum == 8)
-        s_bitNum = 0;
-
-    if (s_bitNum == 7)
-    {
-        // Clear counter to restart the timer before the computation
-        TCNT1 = 0x0000;
-
-        if (g_Settings.isSmoothEnabled)
-        {
-            EvalCurrentImage_SmoothlyAlg();
-        }
-    }
-
-    if (g_Settings.isSmoothEnabled)
-    {
-        LedDriver_UpdateBAM(g_Images.current, (1 << (s_bitNum)));
-    } else {
-        LedDriver_UpdateBAM(g_Images.end, (1 << (s_bitNum)));
-    }
-
-    OCR1A = ((g_Settings.timerOutputCompareRegValue) << (s_bitNum));
-
-    if (s_bitNum != 7)
-        TCNT1 = 0x0000;
-
-    CLR(LEDW);
-}
-
-#else
-
-void PWM(void)
-{
-    static uint8_t s_pwmIndex = 0; // index of current PWM level
-
-    if (s_pwmIndex == g_Settings.maxPwmValue)
-    {
-        s_pwmIndex = 0;
-
-        SET(LEDR);
-
-        _StartConstantTime();
-
-        // Switch OFF LEDs on time sets in g_Settings.brightness
-        LedDriver_OffLeds();
-
-        // Also eval current image
-        if (g_Settings.isSmoothEnabled)
-        {
-            EvalCurrentImage_SmoothlyAlg();
-        }
-
-        _EndConstantTime(g_Settings.brightness);
-
-        CLR(LEDR);
-    }
-
-    SET(LEDW);
-
-    if (g_Settings.isSmoothEnabled)
-    {
-        LedDriver_UpdatePWM(g_Images.current, s_pwmIndex);
-    } else {
-        LedDriver_UpdatePWM(g_Images.end, s_pwmIndex);
-    }
-
-    CLR(LEDW);
-
-    s_pwmIndex++;
-
-    // Clear timer counter
-    TCNT1 = 0x0000;
-}
-
-#endif /* (USE_BAM == 1) */
-
-void SetAllLedsColors(const uint8_t red, const uint8_t green, const uint8_t blue)
-{
-    for (uint8_t i = 0; i < LEDS_COUNT; i++)
-    {
-        g_Images.start[i].r = red;
-        g_Images.start[i].g = green;
-        g_Images.start[i].b = blue;
-
-        g_Images.current[i].r = red;
-        g_Images.current[i].g = green;
-        g_Images.current[i].b = blue;
-
-        g_Images.end[i].r = red;
-        g_Images.end[i].g = green;
-        g_Images.end[i].b = blue;
-    }
-}
-
 /*
  *  Interrupts of the timer that generates PWM
  */
 ISR( TIMER1_COMPA_vect )
 {
-#   if (USE_BAM == 1)
-
-    // Set next Bit Angle Modulation states for all channels
-    // Update OCR1A value for next bit
-    BAM();
-
-#   else
-
-    // Set next Pulse Width Modulation states for all channels
-    PWM();
-
-#   endif /* (USE_BAM == 1) */
+	LedManager_UpdateColors();
 
     // Clear timer interrupt flag
     TIFR1 = _BV(OCF1A);
@@ -276,13 +120,12 @@ static inline void SetupHardware(void)
     SET(USBLED);
 }
 
-
 static inline void _ProcessFlags(void)
 {
     /* if (_FlagProcess(Flag_HaveNewColors)) */
 
     if (_FlagProcess(Flag_LedsOffAll))
-        SetAllLedsColors(0, 0, 0);
+        LedManager_FillImages(0, 0, 0);
 
     if (_FlagProcess(Flag_TimerOptionsChanged))
     {
@@ -296,7 +139,6 @@ static inline void _ProcessFlags(void)
         TIMSK1 = _BV(OCIE1A);
     }
 }
-
 
 /*
  *  Main program entry point
@@ -321,5 +163,8 @@ int main(void)
         ProcessUsbTasks();
         _ProcessFlags();
     }
+
+    // Avoid annoying warning
+    return 0;
 }
 

@@ -1,11 +1,8 @@
 /*
- * LedDriver.h
+ * LedManager.h
  *
- *  Created on: 31.01.2011
- *      Author: Mike Shatohin (brunql)
+ *  Created on: 28.09.2011
  *     Project: Lightpack
- *
- *  Lightpack is a content-appropriate ambient lighting system for any computer
  *
  *  Copyright (c) 2011 Mike Shatohin, mikeshatohin [at] gmail.com
  *
@@ -24,21 +21,11 @@
  *
  */
 
-#ifndef LEDDRIVER_H_INCLUDED
-#define LEDDRIVER_H_INCLUDED
+#ifndef LEDMANAGER_H_INCLUDED
+#define LEDMANAGER_H_INCLUDED
 
-#include <stdint.h>
+extern void LedManager_UpdateColors(void);
+extern void LedManager_FillImages(const uint8_t red, const uint8_t green, const uint8_t blue);
 
-#include "datatypes.h"
-#include "../CommonHeaders/LEDS_COUNT.h"
+#endif /* LEDMANAGER_H_INCLUDED */
 
-void LedDriver_Init(void);
-
-#if (LIGHTPACK_HW == 6)
-void LedDriver_Update(const RGB_t imageFrame[LEDS_COUNT]);
-#else
-void LedDriver_UpdatePWM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t pwmIndex);
-#endif
-void LedDriver_OffLeds(void);
-
-#endif /* LEDDRIVER_H_INCLUDED */

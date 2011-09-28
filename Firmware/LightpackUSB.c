@@ -116,7 +116,7 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
     return true;
 }
 
-inline void UpdateUsbLed()
+inline void UpdateUsbLed(void)
 {
     TOGGLE(USBLED);
 }

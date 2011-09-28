@@ -30,21 +30,21 @@
 #/*
 # *  Define Lightpack major hardware version TWO times
 # *  
-# *  Example for hw5.x: 
-# *     1) LIGHTPACK_HW = 4
-# *     2) #define LIGHTPACK_HW  4
+# *  Example for hw5.x:
+# *     1) LIGHTPACK_HW = 5
+# *     2) #define LIGHTPACK_HW  5
 # */
 
 # /* FIRST for firmware make preprocessor */
 # /*
-           LIGHTPACK_HW = 5
+           LIGHTPACK_HW = 6
 # */
 
 #if !defined( LIGHTPACK_HW )
 
 # /* SECOND for C/C++ preprocessor */
 
-#   define LIGHTPACK_HW   5
+#   define LIGHTPACK_HW   6
 
 #endif /* !defined( LIGHTPACK_HW ) */
 
