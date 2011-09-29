@@ -158,9 +158,28 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
             g_Images.start[i].g = g_Images.current[i].g;
             g_Images.start[i].b = g_Images.current[i].b;
 
+
+#           if (LIGHTPACK_HW == 6)
+
+            g_Images.end[i].r = ((uint16_t)ReportData_u8[reportDataIndex++] << 4);
+            g_Images.end[i].g = ((uint16_t)ReportData_u8[reportDataIndex++] << 4);
+            g_Images.end[i].b = ((uint16_t)ReportData_u8[reportDataIndex++] << 4);
+
+            g_Images.end[i].r |= (uint16_t)(ReportData_u8[reportDataIndex++] & 0x0f);
+            g_Images.end[i].g |= (uint16_t)(ReportData_u8[reportDataIndex++] & 0x0f);
+            g_Images.end[i].b |= (uint16_t)(ReportData_u8[reportDataIndex++] & 0x0f);
+
+
+#           else /* (LIGHTPACK_HW == 6) */
+
             g_Images.end[i].r = ReportData_u8[reportDataIndex++];
             g_Images.end[i].g = ReportData_u8[reportDataIndex++];
             g_Images.end[i].b = ReportData_u8[reportDataIndex++];
+
+            reportDataIndex++;
+            reportDataIndex++;
+            reportDataIndex++;
+#endif
 
             // If pixel changed, then restart smooth algorithm
             // for current pixel by clearing smoothIndex
@@ -170,11 +189,6 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
             {
                 g_Images.smoothIndex[i] = 0;
             }
-
-            // TODO: Remove smooth steps from software!
-            reportDataIndex++;
-            reportDataIndex++;
-            reportDataIndex++;
         }
 
         _FlagClear(Flag_ChangingColors);

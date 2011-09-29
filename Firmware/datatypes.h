@@ -30,6 +30,15 @@
 #include <stdint.h>
 #include "../CommonHeaders/LEDS_COUNT.h"
 
+#if (LIGHTPACK_HW == 6)
+typedef struct
+{
+    uint16_t r;
+    uint16_t g;
+    uint16_t b;
+
+} RGB_t;
+#else /*(LIGHTPACK_HW == 6)*/
 typedef struct
 {
     uint8_t r;
@@ -37,6 +46,7 @@ typedef struct
     uint8_t b;
 
 } RGB_t;
+#endif
 
 typedef struct
 {

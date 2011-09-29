@@ -56,20 +56,20 @@ void EvalCurrentImage_SmoothlyAlg(void)
             g_Images.current[i].b = g_Images.start[i].b = g_Images.end[i].b;
 
         } else {
-            uint16_t coefEnd = ((uint16_t)g_Images.smoothIndex[i] << 8) / g_Settings.smoothSlowdown;
-            uint16_t coefStart = (1UL << 8) - coefEnd;
+            uint32_t coefEnd = ((uint32_t)g_Images.smoothIndex[i] << 16) / g_Settings.smoothSlowdown;
+            uint32_t coefStart = (1UL << 16) - coefEnd;
 
             g_Images.current[i].r = (
                     coefStart * g_Images.start[i].r +
-                    coefEnd   * g_Images.end  [i].r) >> 8;
+                    coefEnd   * g_Images.end  [i].r) >> 16;
 
             g_Images.current[i].g = (
                     coefStart * g_Images.start[i].g +
-                    coefEnd   * g_Images.end  [i].g) >> 8;
+                    coefEnd   * g_Images.end  [i].g) >> 16;
 
             g_Images.current[i].b = (
                     coefStart * g_Images.start[i].b +
-                    coefEnd   * g_Images.end  [i].b) >> 8;
+                    coefEnd   * g_Images.end  [i].b) >> 16;
 
             g_Images.smoothIndex[i]++;
         }

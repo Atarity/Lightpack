@@ -43,26 +43,14 @@
 
 static const uint8_t LedsNumberForOneDriver = 5;
 
-static inline void _SPI_Write12(uint8_t byte)
+static inline void _SPI_Write12(uint16_t byte)
 {
     CLR(MOSI_PIN);
-    // 11-bit
-    SET(SCK_PIN);
-    CLR(SCK_PIN);
-    // 10-bit
-    SET(SCK_PIN);
-    CLR(SCK_PIN);
-    // 9-bit
-    SET(SCK_PIN);
-    CLR(SCK_PIN);
-    // 8-bit
-    SET(SCK_PIN);
-    CLR(SCK_PIN);
 
-    // 7-0 bits
-    for (uint8_t i = 0x80; i != 0; i >>= 1)
+    // 12-bits
+    for (uint16_t bit = 0x0800; bit != 0; bit >>= 1)
     {
-        if (byte & i)
+        if (byte & bit)
         {
             SET(MOSI_PIN);
         } else {
