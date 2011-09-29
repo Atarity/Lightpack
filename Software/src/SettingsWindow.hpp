@@ -57,6 +57,7 @@ signals:
     void updateTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void updateColorDepth(int value);
     void updateSmoothSlowdown(int value);
+    void updateGamma(double value);
     void requestFirmwareVersion();
     void recreateLedDevice();
     void resultBacklightStatus(Backlight::Status);
@@ -87,10 +88,12 @@ protected:
     virtual void closeEvent(QCloseEvent *event);
 
 private slots:
-    void on_horizontalSlider_Speed_valueChanged(int value);
-    void on_horizontalSlider_Brightness_valueChanged(int value);
-    void onMoodLampModeChanged(bool isConstantColor);
-    void onComboBoxModes_Activated(int index);
+    void onLightpackModes_Activated(int index);
+    void onGammaCorrection_valueChanged(double value);
+    void onMoodLamp_ColorButton_ColorChanged(QColor color);
+    void onMoodLamp_Speed_valueChanged(int value);
+    void onMoodLamp_Brightness_valueChanged(int value);
+    void onMoodLamp_LiquidMode_Toggled(bool isConstantColor);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void showAbout(); /* using in actions */
     void showSettings(); /* using in actions */
@@ -119,7 +122,6 @@ private slots:
     void onGrabModeChanged();
     void startTestsClick();
 
-    void onColorButton_MoodLamp_ColorChanged(QColor color);
     void onCheckBox_ExpertModeEnabled_Toggled(bool isEnabled);
     void onCheckBox_ConnectVirtualDevice_Toggled(bool isEnabled);
     void onGroupBox_EnableApi_Toggled(bool isEnabled);

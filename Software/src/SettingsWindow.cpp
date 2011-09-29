@@ -141,11 +141,11 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), m_grabManager, SLOT(setAvgColorsOnAllLeds(bool)));
     connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setMinLevelOfSensivity(int)));
     connect(ui->doubleSpinBox_HW_GammaCorrection, SIGNAL(valueChanged(double)), m_grabManager, SLOT(setGrabGammaCorrection(double)));
-    connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLampModeChanged(bool)));
+    connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLamp_LiquidMode_Toggled(bool)));
     connect(this, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
 
     // Main options
-    connect(ui->comboBox_Modes,SIGNAL(activated(int)), this, SLOT(onComboBoxModes_Activated(int)));
+    connect(ui->comboBox_Modes,SIGNAL(activated(int)), this, SLOT(onLightpackModes_Activated(int)));
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
     connect(ui->pushButton_EnableDisableDevice, SIGNAL(clicked()), this, SLOT(switchBacklightOnOff()));
 
@@ -169,7 +169,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
 
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
-    connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onColorButton_MoodLamp_ColorChanged(QColor)));
+    connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLamp_ColorButton_ColorChanged(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ExpertModeEnabled_Toggled(bool)));
 
 
@@ -894,7 +894,6 @@ void SettingsWindow::profileTraySync()
     }
 }
 
-
 // ----------------------------------------------------------------------------
 // Translate GUI
 // ----------------------------------------------------------------------------
@@ -1220,8 +1219,8 @@ void SettingsWindow::loadSettingsToMainWindow()
     }
 
     updatePwmFrequency(); // eval PWM generation frequency and show it in settings
-    onComboBoxModes_Activated (ui->comboBox_Modes->currentIndex()); //
-    onMoodLampModeChanged(ui->radioButton_LiquidColorMoodLampMode->isChecked());
+    onLightpackModes_Activated (ui->comboBox_Modes->currentIndex()); //
+    onMoodLamp_LiquidMode_Toggled(ui->radioButton_LiquidColorMoodLampMode->isChecked());
     updateExpertModeWidgetsVisibility();
     onGrabModeChanged();
 }
@@ -1257,7 +1256,7 @@ void SettingsWindow::quit()
     QApplication::quit();
 }
 
-void SettingsWindow::onComboBoxModes_Activated(int index)
+void SettingsWindow::onLightpackModes_Activated(int index)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
 
@@ -1283,24 +1282,31 @@ void SettingsWindow::onComboBoxModes_Activated(int index)
     }
 }
 
-void SettingsWindow::on_horizontalSlider_Brightness_valueChanged(int value)
+void SettingsWindow::onGammaCorrection_valueChanged(double value)
+{
+    Settings::setGammaCorrection(value);
+    emit updateGamma(value);
+}
+
+void SettingsWindow::onMoodLamp_ColorButton_ColorChanged(QColor color)
+{
+    m_grabManager->setBackLightColor(color);
+}
+
+void SettingsWindow::onMoodLamp_Brightness_valueChanged(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << value;
     m_grabManager->setBrightness(value);
 }
 
-void SettingsWindow::onColorButton_MoodLamp_ColorChanged(QColor color)
-{
-    m_grabManager->setBackLightColor(color);
-}
 
-void SettingsWindow::on_horizontalSlider_Speed_valueChanged(int value)
+void SettingsWindow::onMoodLamp_Speed_valueChanged(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO<< value;
     m_grabManager->setMoodLampSpeed(value);
 }
 
-void SettingsWindow::onMoodLampModeChanged(bool checked)
+void SettingsWindow::onMoodLamp_LiquidMode_Toggled(bool checked)
 {
     Settings::setMoodLampLiquidMode(checked);
     if(!checked)

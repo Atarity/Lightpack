@@ -52,14 +52,12 @@ signals:
 public slots:
     void updateBacklightState(Backlight::Status backlightStatus, Api::DeviceLockStatus deviceLockStatus);
     void setAmbilightSlowdownMs(int ms);
-    void setAmbilightColorDepth(int depth);
     void setVisibleLedWidgets(bool state);
     void setColoredLedWidgets(bool state);
     void setWhiteLedWidgets(bool state);
     void setUpdateColorsOnlyIfChanges(bool state);
     void setAvgColorsOnAllLeds(bool state);
     void setMinLevelOfSensivity(int value);
-    void setGrabGammaCorrection(double value);
 
     void setResizeOrMovingFalse();
     void setResizeOrMovingTrue();
@@ -126,8 +124,4 @@ private: // variables
     static const QColor colorsMoodLamp[ColorsMoodLampCount];
 
     int m_grabSmoothSlowdown;
-    int m_colorDepth;
-
-
-    double m_gammaCorrection;
 };

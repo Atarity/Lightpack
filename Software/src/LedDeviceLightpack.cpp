@@ -60,6 +60,10 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
 
+    // TODO: Gamma correction
+
+    // TODO: Brightness
+
     // First write_buffer[0] == 0x00 - ReportID, i have problems with using it
     // Second byte of usb buffer is command (write_buffer[1] == CMD_UPDATE_LEDS, see below)
     int index = WRITE_BUFFER_INDEX_DATA_START;

@@ -411,15 +411,6 @@ void GrabManager::ambilight()
         }
     }
 
-#if 0
-    // 0 <= color <= ambilight_color_depth
-    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        colorsNew[ledIndex]->r = (int)((double)colorsNew[ledIndex]->r / (256.0 / ambilight_color_depth));
-        colorsNew[ledIndex]->g = (int)((double)colorsNew[ledIndex]->g / (256.0 / ambilight_color_depth));
-        colorsNew[ledIndex]->b = (int)((double)colorsNew[ledIndex]->b / (256.0 / ambilight_color_depth));
-    }
-#endif
-
     // White balance
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         QRgb rgb = colorsNew[ledIndex];
@@ -444,33 +435,12 @@ void GrabManager::ambilight()
         }
     }
 
-//    updateSmoothSteps();
-
-
-    //--------------------------------------------------------------------------
-    // Gamma correction
-    // TODO: move this code to capturemath.cpp after merge
-    for (int i = 0; i < LEDS_COUNT; i++)
-    {
-        QRgb rgb = colorsNew[i];
-
-        unsigned r = 256.0 * pow( qRed(rgb)   / 256.0, m_gammaCorrection );
-        unsigned g = 256.0 * pow( qGreen(rgb) / 256.0, m_gammaCorrection );
-        unsigned b = 256.0 * pow( qBlue(rgb)  / 256.0, m_gammaCorrection );
-
-        colorsNew[i] = qRgb(r, g, b);
-    }
-    //--------------------------------------------------------------------------
-
-
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
         if( colorsCurrent[ledIndex] != colorsNew[ledIndex] ){
             colorsCurrent[ledIndex]  = colorsNew[ledIndex];
             needToUpdate = true;
         }
     }
-
-
 
     if((m_updateColorsOnlyIfChanges == false) || needToUpdate){
         // if updateColorsOnlyIfChanges == false, then update colors (not depending on needToUpdate flag)
@@ -495,8 +465,7 @@ void GrabManager::updateBacklightState(Backlight::Status backlightStatus, Api::D
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << backlightStatus;
 
 
-    m_isGrabOn = (backlightStatus == Backlight::StatusOn)
-            && (deviceLockStatus == Api::DeviceUnlocked);
+    m_isGrabOn = (backlightStatus == Backlight::StatusOn) && (deviceLockStatus == Api::DeviceUnlocked);
 
     clearColorsNew();
 
@@ -537,10 +506,8 @@ void GrabManager::settingsProfileChanged()
 
     m_avgColorsOnAllLeds = Settings::isAvgColorsOn();
     m_minLevelOfSensivity = Settings::getMinimumLevelOfSensitivity();
-    m_gammaCorrection = Settings::getGammaCorrection();
 
     m_grabSmoothSlowdown = Settings::getGrabSlowdownMs();
-    m_colorDepth = Settings::getFwColorDepth();
 
     m_mode = Settings::getMode();
 
@@ -600,14 +567,6 @@ void GrabManager::setAmbilightSlowdownMs(int ms)
 
     m_grabSmoothSlowdown = ms;
     Settings::setGrabSlowdownMs(ms);
-}
-
-// TODO: remove unused colorDepth
-void GrabManager::setAmbilightColorDepth(int depth)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << depth;
-
-    m_colorDepth = depth;
 }
 
 void GrabManager::setVisibleLedWidgets(bool state)
@@ -672,10 +631,4 @@ void GrabManager::setMinLevelOfSensivity(int value)
 
     m_minLevelOfSensivity = value;
     Settings::setMinimumLevelOfSensitivity(value);
-}
-
-void GrabManager::setGrabGammaCorrection(double value)
-{
-    m_gammaCorrection = value;
-    Settings::setGammaCorrection(value);
 }
