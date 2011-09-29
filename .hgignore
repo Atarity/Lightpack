@@ -3,6 +3,7 @@ Hardware/[^.]+\.pro
 Hardware/[^.]+\.epf
 Firmware/obj/
 Firmware/.dep/
+Firmware/.settings
 Firmware/.project
 Firmware/.cproject
 Software/bin/
