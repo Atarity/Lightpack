@@ -40,6 +40,7 @@ public slots:
     void setTimerOptions(int /*prescallerIndex*/, int /*outputCompareRegValue*/);
     void setColorDepth(int /*value*/);
     void setSmoothSlowdown(int /*value*/);
+    void setGamma(double /*value*/);
 //  void setBrightness(int /*value*/);
     void requestFirmwareVersion();
 public:

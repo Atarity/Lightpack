@@ -239,7 +239,6 @@ void LightpackApplication::startApiServer()
     connect(m_apiServer, SIGNAL(errorOnStartListening(QString)), m_settingsWindow, SLOT(onApiServer_ErrorOnStartListening(QString)));
     connect(m_apiServer, SIGNAL(requestBacklightStatus()),       m_settingsWindow, SLOT(requestBacklightStatus()));
 
-
     connect(m_apiServer, SIGNAL(updateProfile(QString)),                        m_settingsWindow, SLOT(profileSwitch(QString)));
     connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)),               m_settingsWindow, SLOT(setBacklightStatus(Backlight::Status)));
     connect(m_apiServer, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), m_settingsWindow, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
@@ -267,6 +266,7 @@ void LightpackApplication::startLedDeviceFactory()
     connect(m_settingsWindow, SIGNAL(updateColorDepth(int)),        m_ledDeviceFactory, SLOT(setColorDepth(int)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(updateSmoothSlowdown(int)),    m_ledDeviceFactory, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(updateTimerOptions(int,int)),  m_ledDeviceFactory, SLOT(setTimerOptions(int,int)), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(updateGamma(double)),          m_ledDeviceFactory, SLOT(setGamma(double)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(requestFirmwareVersion()),     m_ledDeviceFactory, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
 
     connect(m_ledDeviceFactory, SIGNAL(openDeviceSuccess(bool)),    m_settingsWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);

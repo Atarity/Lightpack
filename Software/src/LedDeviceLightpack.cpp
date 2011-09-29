@@ -43,6 +43,11 @@ LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
     memset(m_writeBuffer, 0, sizeof(m_writeBuffer));
     memset(m_readBuffer, 0, sizeof(m_readBuffer));
 
+    for (int i = 0; i < LEDS_COUNT; i++)
+    {
+        m_colorsBuffer << StructRgb();
+    }
+
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
 
@@ -60,25 +65,28 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
 
-    // TODO: Gamma correction
+    LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer);
 
     // TODO: Brightness
 
     // First write_buffer[0] == 0x00 - ReportID, i have problems with using it
     // Second byte of usb buffer is command (write_buffer[1] == CMD_UPDATE_LEDS, see below)
-    int index = WRITE_BUFFER_INDEX_DATA_START;
+    int buffIndex = WRITE_BUFFER_INDEX_DATA_START;
 
-    for (int led = 0; led < LEDS_COUNT; led++)
+    for (int i = 0; i < LEDS_COUNT; i++)
     {
-        // Send colors values
-        m_writeBuffer[index++] = qRed  ( colors[led] );
-        m_writeBuffer[index++] = qGreen( colors[led] );
-        m_writeBuffer[index++] = qBlue ( colors[led] );
+        StructRgb color = m_colorsBuffer[i];
 
-        // Send change colors steps
-        m_writeBuffer[index++] = 0;
-        m_writeBuffer[index++] = 0;
-        m_writeBuffer[index++] = 0;
+        // Send main 8 bits for compability with existing devices
+        m_writeBuffer[buffIndex++] = (color.r & 0x0FF0) >> 4;
+        m_writeBuffer[buffIndex++] = (color.g & 0x0FF0) >> 4;
+        m_writeBuffer[buffIndex++] = (color.b & 0x0FF0) >> 4;
+
+        // Send over 4 bits for devices revision >= 6
+        // All existing devices ignore it
+        m_writeBuffer[buffIndex++] = (color.r & 0x000F);
+        m_writeBuffer[buffIndex++] = (color.g & 0x000F);
+        m_writeBuffer[buffIndex++] = (color.b & 0x000F);
     }
 
     bool ok = writeBufferToDeviceWithCheck(CMD_UPDATE_LEDS);
@@ -124,6 +132,14 @@ void LedDeviceLightpack::setSmoothSlowdown(int value)
 
     bool ok = writeBufferToDeviceWithCheck(CMD_SET_SMOOTH_SLOWDOWN);
     emit commandCompleted(ok);
+}
+
+void LedDeviceLightpack::setGamma(double value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    m_gamma = value;
+    emit commandCompleted(true);
 }
 
 //void LedDeviceLightpack::setBrightness(int value)
@@ -339,9 +355,6 @@ void LedDeviceLightpack::updateDeviceSettings()
     setTimerOptions(Settings::getFwTimerPrescallerIndex(), Settings::getFwTimerOCR());
     setColorDepth(Settings::getFwColorDepth());
     setSmoothSlowdown(Settings::getFwSmoothSlowdown());
+    setGamma(Settings::getGammaCorrection());
     //setBrightness
 }
-
-
-
-

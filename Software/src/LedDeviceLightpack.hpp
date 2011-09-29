@@ -30,6 +30,7 @@
 
 #include "ILedDevice.hpp"
 #include "TimeEvaluations.hpp"
+#include "LightpackMath.hpp"
 
 #include "../../CommonHeaders/USB_ID.h"     /* For device VID, PID, vendor name and product name */
 #include "hidapi.h" /* USB HID API */
@@ -42,7 +43,6 @@
 #define WRITE_BUFFER_INDEX_REPORT_ID    0
 #define WRITE_BUFFER_INDEX_COMMAND      1
 #define WRITE_BUFFER_INDEX_DATA_START   2
-
 
 class LedDeviceLightpack : public ILedDevice
 {
@@ -57,6 +57,7 @@ public slots:
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);
+    void setGamma(double value);
 //    void setBrightness(int value);
     void requestFirmwareVersion();
 
@@ -76,4 +77,8 @@ private:
 
     unsigned char m_readBuffer[65];    /* 0-ReportID, 1..65-data */
     unsigned char m_writeBuffer[65];   /* 0-ReportID, 1..65-data */
+
+    double m_gamma;
+
+     QList<StructRgb> m_colorsBuffer;
 };

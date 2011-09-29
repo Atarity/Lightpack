@@ -47,6 +47,7 @@ signals:
     void ledDeviceSetTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void ledDeviceSetColorDepth(int value);
     void ledDeviceSetSmoothSlowdown(int value);
+    void ledDeviceSetGamma(double value);
     void ledDeviceRequestFirmwareVersion();
 
 public slots:
@@ -58,6 +59,7 @@ public slots:
     void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);
+    void setGamma(double value);
     void requestFirmwareVersion();
 
 private slots:
@@ -81,6 +83,7 @@ private:
     int m_savedTimerOCR;
     int m_savedColorDepth;
     int m_savedSmoothSlowdown;
+    double m_savedGamma;
 
     ILedDevice *m_ledDevice;
     QThread *m_ledDeviceThread;

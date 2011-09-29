@@ -134,13 +134,11 @@ void SettingsWindow::connectSignalsSlots()
     // Connect to GrabManager
     connect(ui->spinBox_SlowdownGrab, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setAmbilightSlowdownMs(int)));
     connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), m_grabManager, SLOT(setVisibleLedWidgets(bool)));
-    connect(ui->spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setAmbilightColorDepth(int)));
     connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), m_grabManager, SLOT(setColoredLedWidgets(bool)));
     connect(ui->radioButton_White, SIGNAL(toggled(bool)), m_grabManager, SLOT(setWhiteLedWidgets(bool)));
     connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), m_grabManager, SLOT(setUpdateColorsOnlyIfChanges(bool)));
     connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), m_grabManager, SLOT(setAvgColorsOnAllLeds(bool)));
     connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setMinLevelOfSensivity(int)));
-    connect(ui->doubleSpinBox_HW_GammaCorrection, SIGNAL(valueChanged(double)), m_grabManager, SLOT(setGrabGammaCorrection(double)));
     connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLamp_LiquidMode_Toggled(bool)));
     connect(this, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
 
@@ -153,6 +151,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetColorDepth(int)));
     connect(ui->spinBox_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareTimerOptionsChange()));
     connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
+    connect(ui->doubleSpinBox_HW_GammaCorrection, SIGNAL(valueChanged(double)), this, SLOT(onGammaCorrection_valueChanged(double)));
 //    connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
 
     // GrabManager to this
@@ -635,14 +634,15 @@ void SettingsWindow::settingsHardwareTimerOptionsChange()
 
     updatePwmFrequency();
 
-    if(pwmFrequency > 1000){
-        qWarning() << "PWM frequency to high! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
-    }else if(pwmFrequency < 10){
-        qWarning() << "PWM frequency to low! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
-    }else{
+//    if(pwmFrequency > 1000){
+//        qWarning() << "PWM frequency to high! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
+//    }else if(pwmFrequency < 10){
+//        qWarning() << "PWM frequency to low! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
+//    }else{
         // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
         emit updateTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
-    }
+//    }
+
 }
 
 // ----------------------------------------------------------------------------
@@ -1285,7 +1285,8 @@ void SettingsWindow::onLightpackModes_Activated(int index)
 void SettingsWindow::onGammaCorrection_valueChanged(double value)
 {
     Settings::setGammaCorrection(value);
-    emit updateGamma(value);
+    // emit valid gamma correction value
+    emit updateGamma(Settings::getGammaCorrection());
 }
 
 void SettingsWindow::onMoodLamp_ColorButton_ColorChanged(QColor color)

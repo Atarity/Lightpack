@@ -34,7 +34,6 @@
 #include <QRgb>
 #include "ApiServerSetColorTask.hpp"
 #include "SettingsWindow.hpp"
-#include "inlinemath.hpp"
 #include "debug.h"
 
 struct ClientInfo

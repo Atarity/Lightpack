@@ -29,6 +29,7 @@
 #include "../../CommonHeaders/LEDS_COUNT.h"
 #include "Settings.hpp"
 #include <cmath>
+#include "LightpackMath.hpp"
 
 ApiServerSetColorTask::ApiServerSetColorTask(QObject *parent) :
     QObject(parent)
@@ -64,8 +65,8 @@ void ApiServerSetColorTask::startTask(QByteArray buffer, double gamma)
         }
 
         // Read led number
-        int ledNumber = getDigit(buffer[0]); // first char of ledNumber
-        int ledNumber2 = getDigit(buffer[1]); // second char of ledNumber
+        int ledNumber = LightpackMath::getDigit(buffer[0]); // first char of ledNumber
+        int ledNumber2 = LightpackMath::getDigit(buffer[1]); // second char of ledNumber
         if (ledNumber > 0)
         {
             if (buffer[1] == '-')
@@ -107,7 +108,7 @@ void ApiServerSetColorTask::startTask(QByteArray buffer, double gamma)
         bool isDigitExpected = true;
         for (indexBuffer = 0; indexBuffer < buffer.length(); indexBuffer++)
         {
-            int d = getDigit(buffer[indexBuffer]);
+            int d = LightpackMath::getDigit(buffer[indexBuffer]);
             if (d < 0)
             {
                 if (buffer[indexBuffer] == ';')

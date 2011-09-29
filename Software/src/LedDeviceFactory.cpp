@@ -129,6 +129,20 @@ void LedDeviceFactory::setSmoothSlowdown(int value)
     }
 }
 
+void LedDeviceFactory::setGamma(double value)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << value << "Is last command completed:" << m_isLastCommandCompleted;
+
+    if (m_isLastCommandCompleted)
+    {
+        m_isLastCommandCompleted = false;
+        emit ledDeviceSetGamma(value);
+    } else {
+        m_savedGamma = value;
+        cmdQueueAppend(LedDeviceCommands::SetGamma);
+    }
+}
+
 void LedDeviceFactory::requestFirmwareVersion()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "Is last command completed:" << m_isLastCommandCompleted;
@@ -232,6 +246,7 @@ void LedDeviceFactory::connectSignalSlotsLedDevice()
     connect(this, SIGNAL(ledDeviceSetTimerOptions(int,int)),    m_ledDevice, SLOT(setTimerOptions(int,int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetColorDepth(int)),          m_ledDevice, SLOT(setColorDepth(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetSmoothSlowdown(int)),      m_ledDevice, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
+    connect(this, SIGNAL(ledDeviceSetGamma(double)),            m_ledDevice, SLOT(setGamma(double)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceRequestFirmwareVersion()),    m_ledDevice, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
 }
 
@@ -295,6 +310,10 @@ void LedDeviceFactory::cmdQueueProcessNext()
 
         case LedDeviceCommands::SetSmoothSlowdown:
             emit ledDeviceSetSmoothSlowdown(m_savedSmoothSlowdown);
+            break;
+
+        case LedDeviceCommands::SetGamma:
+            emit ledDeviceSetGamma(m_savedGamma);
             break;
 
         case LedDeviceCommands::RequestFirmwareVersion:

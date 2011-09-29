@@ -1,13 +1,12 @@
 /*
- * inlinemath.hpp
+ * LightpackMath.hpp
  *
- *  Created on: 07.09.2011
- *      Author: Mike Shatohin
+ *  Created on: 29.09.2011
  *     Project: Lightpack
  *
- *  Lightpack is very simple implementation of the backlight for a laptop
- *
  *  Copyright (c) 2011 Mike Shatohin, mikeshatohin [at] gmail.com
+ *
+ *  Lightpack a USB content-driving ambient lighting system
  *
  *  Lightpack is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,11 +25,23 @@
 
 #pragma once
 
-// Convert ASCII char '5' to 5
-static inline char getDigit(const char d)
+#include <QList>
+#include <QRgb>
+#include <cmath>
+#include "StructRgb.hpp"
+
+class LightpackMath
 {
-    if (isdigit(d))
-        return (d - '0');
-    else
-        return -1;
-}
+public:
+    static void gammaCorrection(double gamma, const QList<QRgb> & colors, QList<StructRgb> & result);
+
+    // Convert ASCII char '5' to 5
+    static inline char getDigit(const char d)
+    {
+        if (isdigit(d))
+            return (d - '0');
+        else
+            return -1;
+    }
+};
+

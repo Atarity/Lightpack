@@ -93,7 +93,8 @@ SOURCES += \
     grab/MacOSGrabber.cpp \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
-    grab/D3D9Grabber.cpp
+    grab/D3D9Grabber.cpp \
+    LightpackMath.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -121,7 +122,6 @@ HEADERS += \
     grab/WinAPIGrabber.hpp \
     defs.h \
     enums.hpp \
-    inlinemath.hpp \
     ApiServer.hpp \
     ApiServerSetColorTask.hpp \
     hidapi/hidapi.h \
@@ -129,8 +129,13 @@ HEADERS += \
     ../../CommonHeaders/COMMANDS.h \
     ../../CommonHeaders/LEDS_COUNT.h \
     ../../CommonHeaders/USB_ID.h \
-    grab/D3D9Grabber.hpp
+    grab/D3D9Grabber.hpp \
+    LightpackMath.hpp \
+    StructRgb.hpp
 
 FORMS += SettingsWindow.ui \
     AboutDialog.ui \
     GrabWidget.ui
+
+
+

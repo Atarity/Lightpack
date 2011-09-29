@@ -1,13 +1,12 @@
 /*
- * ApiServerSetColorTask.hpp
+ * StructRgb.hpp
  *
- *  Created on: 07.09.2011
- *      Author: Mike Shatohin
+ *  Created on: 29.09.2011
  *     Project: Lightpack
  *
- *  Lightpack is very simple implementation of the backlight for a laptop
- *
  *  Copyright (c) 2011 Mike Shatohin, mikeshatohin [at] gmail.com
+ *
+ *  Lightpack a USB content-driving ambient lighting system
  *
  *  Lightpack is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,30 +25,8 @@
 
 #pragma once
 
-#include <QObject>
-#include <QRgb>
-#include "debug.h"
-
-class ApiServerSetColorTask : public QObject
+struct StructRgb
 {
-    Q_OBJECT
-public:
-    explicit ApiServerSetColorTask(QObject *parent = 0);
-
-signals:
-    void taskDone(const QList<QRgb> & colors);
-    void taskIsSuccess(bool isSuccess);
-
-public slots:
-    void startTask(QByteArray buffer, double gamma);
-    void clearColorBuffers();
-
-private:
-    QList<QRgb> m_colors;
-
-    enum BuffRgbIndexes{
-        bRed, bGreen, bBlue, bSize
-    };
-    int buffRgb[bSize]; // buffer for store temp red, green and blue values
-
+    unsigned r, g, b;
+    StructRgb() { r = 0; g = 0; b = 0; }
 };

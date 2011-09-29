@@ -87,6 +87,7 @@ enum Cmd {
     SetTimerOptions,
     SetColorDepth,
     SetSmoothSlowdown,
+    SetGamma,
     RequestFirmwareVersion
 };
 }
