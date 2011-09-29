@@ -52,6 +52,7 @@ void LedDeviceFactory::recreateLedDevice()
 
     if (m_ledDevice != NULL)
     {
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "m_ledDevice->deleteLater();";
         m_ledDevice->deleteLater();
     }
 
@@ -176,6 +177,8 @@ void LedDeviceFactory::ledDeviceCommandCompleted(bool ok)
 
 void LedDeviceFactory::initLedDevice()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     m_isLastCommandCompleted = true;
 
     m_ledDevice = createLedDevice();
