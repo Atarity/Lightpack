@@ -39,6 +39,8 @@
 
 #include "../../CommonHeaders/COMMANDS.h"
 
+using namespace SettingsScope;
+
 // ----------------------------------------------------------------------------
 // Lightpack settings window
 // ----------------------------------------------------------------------------
@@ -132,7 +134,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));
 
     // Connect to GrabManager
-    connect(ui->spinBox_SlowdownGrab, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setAmbilightSlowdownMs(int)));
+    connect(ui->spinBox_SlowdownGrab, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setGrabSlowdownMs(int)));
     connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), m_grabManager, SLOT(setVisibleLedWidgets(bool)));
     connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), m_grabManager, SLOT(setColoredLedWidgets(bool)));
     connect(ui->radioButton_White, SIGNAL(toggled(bool)), m_grabManager, SLOT(setWhiteLedWidgets(bool)));
@@ -143,16 +145,15 @@ void SettingsWindow::connectSignalsSlots()
     connect(this, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
 
     // Main options
-    connect(ui->comboBox_Modes,SIGNAL(activated(int)), this, SLOT(onLightpackModes_Activated(int)));
+    connect(ui->comboBox_LightpackModes, SIGNAL(activated(int)), this, SLOT(onLightpackModes_Activated(int)));
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
     connect(ui->pushButton_EnableDisableDevice, SIGNAL(clicked()), this, SLOT(switchBacklightOnOff()));
 
     // Hardware options
-    connect(ui->spinBox_HW_ColorDepth, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetColorDepth(int)));
-    connect(ui->spinBox_HW_OCR, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareTimerOptionsChange()));
-    connect(ui->spinBox_HW_SmoothSlowdown, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetSmoothSlowdown(int)));
-    connect(ui->doubleSpinBox_HW_GammaCorrection, SIGNAL(valueChanged(double)), this, SLOT(onGammaCorrection_valueChanged(double)));
-//    connect(ui->spinBox_HW_Brightness, SIGNAL(valueChanged(int)), this, SLOT(settingsHardwareSetBrightness(int)));
+    connect(ui->spinBox_DeviceRefreshDelay, SIGNAL(valueChanged(int)), this, SLOT(onDeviceRefreshDelay_valueChanged(int)));
+    connect(ui->spinBox_DeviceSmooth, SIGNAL(valueChanged(int)), this, SLOT(onDeviceSmooth_valueChanged(int)));
+    connect(ui->spinBox_DeviceBrightness, SIGNAL(valueChanged(int)), this, SLOT(onDeviceBrightness_valueChanged(int)));
+    connect(ui->doubleSpinBox_DeviceGamma, SIGNAL(valueChanged(double)), this, SLOT(onDeviceGammaCorrection_valueChanged(double)));
 
     // GrabManager to this
     connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
@@ -280,10 +281,9 @@ void SettingsWindow::onCheckBox_ExpertModeEnabled_Toggled(bool isEnabled)
 
 void SettingsWindow::updateExpertModeWidgetsVisibility()
 {
-    ui->groupBox_pwmColorDepth->setVisible(Settings::isExpertModeEnabled());
-    ui->groupBox_pwmTimerDelay->setVisible(Settings::isExpertModeEnabled());
+    ui->groupBox_DeviceRefreshDelay->setVisible(Settings::isExpertModeEnabled());
     ui->label_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
-    ui->doubleSpinBox_HW_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
+    ui->doubleSpinBox_DeviceGamma->setVisible(Settings::isExpertModeEnabled());
     ui->checkBox_USB_SendDataOnlyIfColorsChanges->setVisible(Settings::isExpertModeEnabled());
     if(Settings::isExpertModeEnabled()) {
         if (ui->tabWidget->indexOf(ui->tabDevTab) < 0)
@@ -559,9 +559,9 @@ void SettingsWindow::showSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    Lightpack::Mode mode = Settings::getMode();
-    ui->comboBox_Modes->setCurrentIndex((mode == Lightpack::AmbilightMode) ? 0 : 1); // we assume that Lightpack::Mode in same order as comboBox_Modes
-    m_grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && ui->comboBox_Modes->currentIndex()==0);
+    Lightpack::Mode mode = Settings::getLightpackMode();
+    ui->comboBox_LightpackModes->setCurrentIndex((mode == Lightpack::AmbilightMode) ? 0 : 1); // we assume that Lightpack::Mode in same order as comboBox_Modes
+    m_grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && ui->comboBox_LightpackModes->currentIndex()==0);
     this->show();
 }
 
@@ -620,68 +620,36 @@ void SettingsWindow::refreshAmbilightEvaluated(double updateResultMs)
     ui->label_GrabFrequency_value->setText(QString::number(hz,'f', 2) /* ms to hz */);
 }
 
-// ----------------------------------------------------------------------------
-// Send timer options to device
-// ----------------------------------------------------------------------------
-void SettingsWindow::settingsHardwareTimerOptionsChange()
+void SettingsWindow::onDeviceRefreshDelay_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    int timerPrescallerIndex = Settings::getFwTimerPrescallerIndex();
-    int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
-
-    Settings::setFwTimerOCR(timerOutputCompareRegValue);
-
-    updatePwmFrequency();
-
-//    if(pwmFrequency > 1000){
-//        qWarning() << "PWM frequency to high! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
-//    }else if(pwmFrequency < 10){
-//        qWarning() << "PWM frequency to low! setTimerOptions canceled. pwmFrequency =" << pwmFrequency << "Hz";
-//    }else{
-        // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
-        emit updateTimerOptions(timerPrescallerIndex, timerOutputCompareRegValue);
-//    }
-
+    Settings::setDeviceRefreshDelay(value);
+    emit updateTimerOptions(0, Settings::getDeviceRefreshDelay());
 }
 
-// ----------------------------------------------------------------------------
-// Send color depth to device
-// ----------------------------------------------------------------------------
-void SettingsWindow::settingsHardwareSetColorDepth(int value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    Settings::setFwColorDepth(value);
-
-    updatePwmFrequency();
-
-    if(pwmFrequency > 1000){
-        qWarning() << "PWM frequency to high! setColorDepth canceled. pwmFrequency =" << pwmFrequency << "Hz";
-    }else if(pwmFrequency < 10){
-        qWarning() << "PWM frequency to low! setColorDepth canceled. pwmFrequency =" << pwmFrequency << "Hz";
-    }else{
-        // Set timer for PWM generation options. 10Hz <= pwmFrequency <= 1000Hz
-        emit updateColorDepth(value);
-    }
-}
-
-void SettingsWindow::settingsHardwareSetSmoothSlowdown(int value)
+void SettingsWindow::onDeviceSmooth_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    Settings::setFwSmoothSlowdown(value);
-    emit updateSmoothSlowdown(value);
+    Settings::setDeviceSmooth(value);
+    emit updateSmoothSlowdown(Settings::getDeviceSmooth());
 }
 
-void SettingsWindow::settingsHardwareSetBrightness(int /*value*/)
+void SettingsWindow::onDeviceBrightness_valueChanged(int percent)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;    
+
+    Settings::setDeviceBrightness(percent);
+    emit updateBrightness(Settings::getDeviceBrightness());
+}
+
+void SettingsWindow::onDeviceGammaCorrection_valueChanged(double value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    qWarning() << Q_FUNC_INFO << "not implemented";
-    // TODO: settings
-//    Settings::setValue("Firmware/Brightness", value);
-//    ledDevice->setBrightness(value);
+    Settings::setDeviceGamma(value);
+    emit updateGamma(Settings::getDeviceGamma());
 }
 
 // ----------------------------------------------------------------------------
@@ -730,7 +698,7 @@ void SettingsWindow::profileRename()
 
     this->setFocus(Qt::OtherFocusReason);
 
-    loadSettingsToMainWindow();
+    updateUiFromSettings();
     emit settingsProfileChanged();
 }
 
@@ -754,7 +722,7 @@ void SettingsWindow::profileSwitch(const QString & configName)
     this->setFocus(Qt::OtherFocusReason);
 
     // Update settings
-    loadSettingsToMainWindow();
+    updateUiFromSettings();
     emit settingsProfileChanged();
 }
 
@@ -813,7 +781,7 @@ void SettingsWindow::profileResetToDefaultCurrent()
 
     Settings::resetDefaults();
     // Update settings
-    loadSettingsToMainWindow();
+    updateUiFromSettings();
     emit settingsProfileChanged();
 }
 
@@ -852,7 +820,7 @@ void SettingsWindow::profileLoadLast()
     ui->comboBox_Profiles->setCurrentIndex(ui->comboBox_Profiles->findText(Settings::getLastProfileName()));
 
     // Update settings
-    loadSettingsToMainWindow();
+    updateUiFromSettings();
     emit settingsProfileChanged();
 }
 
@@ -935,16 +903,16 @@ void SettingsWindow::loadTranslation(const QString & language)
     // locale - name of translation binary file form resources: %locale%.qm
     if(ui->comboBox_Language->currentIndex() == 0 /* System */){
         qDebug() << "System locale" << locale;
-        Settings::setLanguage(LANGUAGE_DEFAULT_NAME);
+        Settings::setLanguage(SettingsScope::Main::LanguageDefault);
     }
     else if (language == "English") locale = "en_EN"; // :/translations/en_EN.qm
     else if (language == "Russian") locale = "ru_RU"; // :/translations/ru_RU.qm
     // append line for new language/locale here
     else {
-        qWarning() << "Language" << language << "not found. Set to default" << LANGUAGE_DEFAULT_NAME;
+        qWarning() << "Language" << language << "not found. Set to default" << SettingsScope::Main::LanguageDefault;
         qDebug() << "System locale" << locale;
 
-        Settings::setLanguage(LANGUAGE_DEFAULT_NAME);
+        Settings::setLanguage(SettingsScope::Main::LanguageDefault);
     }
 
     QString pathToLocale = QString(":/translations/") + locale;
@@ -968,45 +936,6 @@ void SettingsWindow::loadTranslation(const QString & language)
         qWarning() << "Fail load translation for locale" << locale << "pathToLocale" << pathToLocale;
     }
 }
-
-// ----------------------------------------------------------------------------
-
-
-void SettingsWindow::updatePwmFrequency()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    int timerPrescallerIndex = Settings::getFwTimerPrescallerIndex();
-    int timerOutputCompareRegValue = ui->spinBox_HW_OCR->value();
-    int colorDepth = ui->horizontalSlider_HW_ColorDepth->value();
-
-    if(colorDepth == 0) {
-        qWarning() << "void MainWindow::settingsHardwareOptionsChange() Magic! colorDepth == 0";
-        return;
-    }
-
-    // Eval with oscilloscope
-    const double timeSetAllLeds_secs = 30.0 / 1000 / 1000;
-    const double timeSmoothlyUpdateLeds_secs = 483.0 / 1000 / 1000;
-
-    double timeBetweenPwm_secs = timerOutputCompareRegValue / 16000000.0;
-
-    switch(timerPrescallerIndex){
-    case CMD_SET_PRESCALLER_1:      break;
-    case CMD_SET_PRESCALLER_8:      timeBetweenPwm_secs *= 8; break;
-    case CMD_SET_PRESCALLER_64:     timeBetweenPwm_secs *= 64; break;
-    case CMD_SET_PRESCALLER_256:    timeBetweenPwm_secs *= 256; break;
-    case CMD_SET_PRESCALLER_1024:   timeBetweenPwm_secs *= 1024; break;
-    default: qWarning() << "bad value of 'timerPrescallerIndex' =" << timerPrescallerIndex; break;
-    }
-
-    double timePwm_secs = (timeBetweenPwm_secs + timeSetAllLeds_secs) * colorDepth + timeSmoothlyUpdateLeds_secs;
-
-    pwmFrequency = 1 / timePwm_secs;
-
-    ui->label_PWM_Freq->setText(QString::number(pwmFrequency,'f',2));
-}
-
 
 void SettingsWindow::onGrabModeChanged()
 {
@@ -1155,52 +1084,45 @@ void SettingsWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-// ----------------------------------------------------------------------------
-// Read current profile to main settings window
-// ----------------------------------------------------------------------------
-
-void SettingsWindow::loadSettingsToMainWindow()
+void SettingsWindow::updateUiFromSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    ui->spinBox_SlowdownGrab->setValue                  (Settings::getGrabSlowdownMs());
-    ui->spinBox_MinLevelOfSensitivity->setValue         (Settings::getMinimumLevelOfSensitivity());
-    ui->doubleSpinBox_HW_GammaCorrection->setValue      (Settings::getGammaCorrection());
-    ui->checkBox_AVG_Colors->setChecked                 (Settings::isAvgColorsOn());
-
-    Lightpack::Mode mode = Settings::getMode();
+    Lightpack::Mode mode = Settings::getLightpackMode();
     switch (mode)
     {
     case Lightpack::AmbilightMode:
-        ui->comboBox_Modes->setCurrentIndex(ModeAmbilightIndex);
-        qCritical() << "ambi";
+        ui->comboBox_LightpackModes->setCurrentIndex(ModeAmbilightIndex);
         break;
     case Lightpack::MoodLampMode:
-        ui->comboBox_Modes->setCurrentIndex(ModeMoodLampIndex);
-        qCritical() << "mood";
+        ui->comboBox_LightpackModes->setCurrentIndex(ModeMoodLampIndex);
         break;
     default:
-        qCritical() << "Settings::getMode() returns invalid value! mode =" << mode;
+        qCritical() << "Invalid value! mode =" << mode;
         break;
     }
-
-    ui->horizontalSlider_Speed->setValue                (Settings::getMoodLampSpeed());
-    ui->horizontalSlider_Brightness->setValue           (Settings::getBrightness());
-    ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
-    ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());
-    ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
-
-    ui->horizontalSlider_HW_OCR->setValue               (Settings::getFwTimerOCR());
-    ui->horizontalSlider_HW_ColorDepth->setValue        (Settings::getFwColorDepth());
-    ui->spinBox_HW_SmoothSlowdown->setValue             (Settings::getFwSmoothSlowdown());
 
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
     ui->checkBox_ConnectVirtualDevice->setChecked       (Settings::getConnectedDevice() == SupportedDevices::VirtualDevice);
 
+    ui->checkBox_AVG_Colors->setChecked                 (Settings::isGrabAvgColorsOn());
+    ui->spinBox_SlowdownGrab->setValue                  (Settings::getGrabSlowdown());
+    ui->spinBox_MinLevelOfSensitivity->setValue         (Settings::getGrabMinimumLevelOfSensitivity());
+
+    ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());
+    ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
+    ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
+    ui->horizontalSlider_Speed->setValue                (Settings::getMoodLampSpeed());
+
+    ui->horizontalSlider_DeviceRefreshDelay->setValue   (Settings::getDeviceRefreshDelay());
+    ui->horizontalSlider_DeviceBrightness->setValue     (Settings::getDeviceBrightness());
+    ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());
+    ui->doubleSpinBox_DeviceGamma->setValue             (Settings::getDeviceGamma());
+
     ui->groupBox_Api->setChecked                        (Settings::isApiEnabled());
     ui->lineEdit_ApiPort->setText                       (QString::number(Settings::getApiPort()));
     ui->checkBox_IsApiAuthEnabled->setChecked           (Settings::isApiAuthEnabled());
-    ui->lineEdit_ApiKey->setText                        (Settings::getApiKey());
+    ui->lineEdit_ApiKey->setText                        (Settings::getApiAuthKey());
 
     switch (Settings::getGrabMode())
     {
@@ -1218,8 +1140,7 @@ void SettingsWindow::loadSettingsToMainWindow()
         ui->radioButton_GrabQt->setChecked(true);
     }
 
-    updatePwmFrequency(); // eval PWM generation frequency and show it in settings
-    onLightpackModes_Activated (ui->comboBox_Modes->currentIndex()); //
+    onLightpackModes_Activated(ui->comboBox_LightpackModes->currentIndex());
     onMoodLamp_LiquidMode_Toggled(ui->radioButton_LiquidColorMoodLampMode->isChecked());
     updateExpertModeWidgetsVisibility();
     onGrabModeChanged();
@@ -1265,41 +1186,27 @@ void SettingsWindow::onLightpackModes_Activated(int index)
     case ModeAmbilightIndex:
         m_grabManager->switchMode(Lightpack::AmbilightMode);
 
-        ui->stackedWidget_Modes->setCurrentIndex(ModeAmbilightIndex);
+        ui->stackedWidget_LightpackModes->setCurrentIndex(ModeAmbilightIndex);
         m_grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && this->isVisible());
 
-        Settings::setMode(Lightpack::AmbilightMode);
+        Settings::setLightpackMode(Lightpack::AmbilightMode);
         break;
 
     case ModeMoodLampIndex:
         m_grabManager->switchMode(Lightpack::MoodLampMode);
 
-        ui->stackedWidget_Modes->setCurrentIndex(ModeMoodLampIndex);
+        ui->stackedWidget_LightpackModes->setCurrentIndex(ModeMoodLampIndex);
         m_grabManager->setVisibleLedWidgets(false);
 
-        Settings::setMode(Lightpack::MoodLampMode);
+        Settings::setLightpackMode(Lightpack::MoodLampMode);
         break;
     }
-}
-
-void SettingsWindow::onGammaCorrection_valueChanged(double value)
-{
-    Settings::setGammaCorrection(value);
-    // emit valid gamma correction value
-    emit updateGamma(Settings::getGammaCorrection());
 }
 
 void SettingsWindow::onMoodLamp_ColorButton_ColorChanged(QColor color)
 {
     m_grabManager->setBackLightColor(color);
 }
-
-void SettingsWindow::onMoodLamp_Brightness_valueChanged(int value)
-{
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << value;
-    m_grabManager->setBrightness(value);
-}
-
 
 void SettingsWindow::onMoodLamp_Speed_valueChanged(int value)
 {
@@ -1316,15 +1223,11 @@ void SettingsWindow::onMoodLamp_LiquidMode_Toggled(bool checked)
         ui->pushButton_SelectColor->setEnabled(true);       
         ui->horizontalSlider_Speed->setEnabled(false);
         ui->label_MoodLampSpeed->setEnabled(false);
-        ui->horizontalSlider_Brightness->setEnabled(false);
-        ui->label_MoodLampBrightness->setEnabled(false);
         m_grabManager->setMoodLampSpeed(0);
     } else {
         //liquid mode
         ui->pushButton_SelectColor->setEnabled(false);
         ui->horizontalSlider_Speed->setEnabled(true);
         ui->label_MoodLampSpeed->setEnabled(true);
-        ui->horizontalSlider_Brightness->setEnabled(true);
-        ui->label_MoodLampBrightness->setEnabled(true);
     }
 }

@@ -108,7 +108,7 @@
          </layout>
         </item>
         <item row="1" column="0">
-         <widget class="QComboBox" name="comboBox_Modes">
+         <widget class="QComboBox" name="comboBox_LightpackModes">
           <item>
            <property name="text">
             <string>Ambilight</string>
@@ -122,7 +122,7 @@
          </widget>
         </item>
         <item row="2" column="0">
-         <widget class="QStackedWidget" name="stackedWidget_Modes">
+         <widget class="QStackedWidget" name="stackedWidget_LightpackModes">
           <property name="currentIndex">
            <number>0</number>
           </property>
@@ -416,47 +416,6 @@
             </item>
             <item>
              <layout class="QGridLayout" name="gridLayout_4">
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_MoodLampBrightness">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>18</height>
-                 </size>
-                </property>
-                <property name="baseSize">
-                 <size>
-                  <width>0</width>
-                  <height>18</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Brightness</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QSlider" name="horizontalSlider_Brightness">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="maximum">
-                 <number>255</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="1">
                <widget class="QLabel" name="label_MoodLampSpeed">
                 <property name="enabled">
@@ -483,7 +442,7 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="0">
+              <item row="1" column="0">
                <spacer name="horizontalSpacer_12">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -526,70 +485,13 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>Refresh rate</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_PWM_Freq">
-            <property name="text">
-             <string notr="true">###</string>
-            </property>
-            <property name="textInteractionFlags">
-             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Hz</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_6">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>5</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_pwmTimerDelay">
+         <widget class="QGroupBox" name="groupBox_DeviceRefreshDelay">
           <property name="title">
            <string>Refresh delay</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
-            <widget class="QSlider" name="horizontalSlider_HW_OCR">
+            <widget class="QSlider" name="horizontalSlider_DeviceRefreshDelay">
              <property name="minimum">
               <number>10</number>
              </property>
@@ -608,7 +510,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="spinBox_HW_OCR">
+            <widget class="QSpinBox" name="spinBox_DeviceRefreshDelay">
              <property name="minimumSize">
               <size>
                <width>60</width>
@@ -636,32 +538,41 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_pwmColorDepth">
+         <widget class="QGroupBox" name="groupBox_Brightness">
           <property name="title">
-           <string>Color depth</string>
+           <string>Brightness</string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_5">
-           <item>
-            <widget class="QSlider" name="horizontalSlider_HW_ColorDepth">
+          <layout class="QGridLayout" name="gridLayout_6" rowstretch="0,0" columnstretch="0,0,0">
+           <property name="verticalSpacing">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>9</number>
+           </property>
+           <property name="bottomMargin">
+            <number>9</number>
+           </property>
+           <item row="0" column="0" rowspan="2">
+            <widget class="QSlider" name="horizontalSlider_DeviceBrightness">
              <property name="minimum">
-              <number>2</number>
+              <number>0</number>
              </property>
              <property name="maximum">
-              <number>255</number>
+              <number>100</number>
              </property>
              <property name="pageStep">
-              <number>3</number>
+              <number>1</number>
              </property>
              <property name="value">
-              <number>64</number>
+              <number>100</number>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QSpinBox" name="spinBox_HW_ColorDepth">
+           <item row="0" column="2" rowspan="2">
+            <widget class="QSpinBox" name="spinBox_DeviceBrightness">
              <property name="minimumSize">
               <size>
                <width>60</width>
@@ -675,16 +586,13 @@
               </size>
              </property>
              <property name="minimum">
-              <number>2</number>
+              <number>0</number>
              </property>
              <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
+              <number>100</number>
              </property>
              <property name="value">
-              <number>64</number>
+              <number>100</number>
              </property>
             </widget>
            </item>
@@ -707,7 +615,7 @@
             <number>9</number>
            </property>
            <item row="0" column="0" rowspan="2">
-            <widget class="QSlider" name="horizontalSlider_HW_SmoothSlowdown">
+            <widget class="QSlider" name="horizontalSlider_DeviceSmooth">
              <property name="minimum">
               <number>0</number>
              </property>
@@ -726,7 +634,7 @@
             </widget>
            </item>
            <item row="0" column="2" rowspan="2">
-            <widget class="QSpinBox" name="spinBox_HW_SmoothSlowdown">
+            <widget class="QSpinBox" name="spinBox_DeviceSmooth">
              <property name="minimumSize">
               <size>
                <width>60</width>
@@ -751,7 +659,7 @@
             </widget>
            </item>
            <item row="2" column="0">
-            <widget class="QLabel" name="label_3">
+            <widget class="QLabel" name="label_DeviceSmooth_Off">
              <property name="styleSheet">
               <string notr="true"/>
              </property>
@@ -764,7 +672,7 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_gammaCorection">
+         <layout class="QHBoxLayout" name="horizontalLayout_DeviceGamma">
           <property name="leftMargin">
            <number>9</number>
           </property>
@@ -788,7 +696,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_HW_GammaCorrection">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_DeviceGamma">
             <property name="minimumSize">
              <size>
               <width>60</width>
@@ -1328,8 +1236,6 @@
  <tabstops>
   <tabstop>tabWidget</tabstop>
   <tabstop>pushButton_Close</tabstop>
-  <tabstop>horizontalSlider_HW_ColorDepth</tabstop>
-  <tabstop>spinBox_HW_ColorDepth</tabstop>
   <tabstop>checkBox_USB_SendDataOnlyIfColorsChanges</tabstop>
   <tabstop>comboBox_Profiles</tabstop>
   <tabstop>pushButton_ProfileNew</tabstop>
@@ -1342,9 +1248,9 @@
  </resources>
  <connections>
   <connection>
-   <sender>horizontalSlider_HW_OCR</sender>
+   <sender>horizontalSlider_DeviceRefreshDelay</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>spinBox_HW_OCR</receiver>
+   <receiver>spinBox_DeviceRefreshDelay</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1358,9 +1264,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>spinBox_HW_OCR</sender>
+   <sender>spinBox_DeviceRefreshDelay</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider_HW_OCR</receiver>
+   <receiver>horizontalSlider_DeviceRefreshDelay</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1374,41 +1280,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>horizontalSlider_HW_ColorDepth</sender>
+   <sender>horizontalSlider_DeviceSmooth</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>spinBox_HW_ColorDepth</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>177</x>
-     <y>264</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox_HW_ColorDepth</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider_HW_ColorDepth</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>253</x>
-     <y>237</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>177</x>
-     <y>264</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>horizontalSlider_HW_SmoothSlowdown</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox_HW_SmoothSlowdown</receiver>
+   <receiver>spinBox_DeviceSmooth</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1422,9 +1296,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>spinBox_HW_SmoothSlowdown</sender>
+   <sender>spinBox_DeviceSmooth</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider_HW_SmoothSlowdown</receiver>
+   <receiver>horizontalSlider_DeviceSmooth</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">

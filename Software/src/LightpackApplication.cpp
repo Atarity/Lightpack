@@ -31,7 +31,9 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
+
 using namespace std;
+using namespace SettingsScope;
 
 LightpackApplication::LightpackApplication(const QString & appDirPath, int &argc, char **argv)
     : QApplication(argc, argv)
@@ -92,7 +94,7 @@ void LightpackApplication::backlightStatusChanged(Backlight::Status status)
 
 void LightpackApplication::processCommandLineArguments()
 {
-    g_debugLevel = DEBUG_LEVEL_DEFAULT;
+    g_debugLevel = SettingsScope::Main::DebugLevelDefault;
 
     m_isDebugLevelObtainedFromCmdArgs = false;
 

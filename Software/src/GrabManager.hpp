@@ -51,7 +51,7 @@ signals:
 
 public slots:
     void updateBacklightState(Backlight::Status backlightStatus, Api::DeviceLockStatus deviceLockStatus);
-    void setAmbilightSlowdownMs(int ms);
+    void setGrabSlowdownMs(int ms);
     void setVisibleLedWidgets(bool state);
     void setColoredLedWidgets(bool state);
     void setWhiteLedWidgets(bool state);
@@ -67,7 +67,6 @@ public slots:
     void setGrabber(IGrabber * newGrabber);
     void switchMode(Lightpack::Mode mode);
     void setMoodLampSpeed(int value);
-    void setBrightness(int value);
     void setBackLightColor(QColor color);
 
 private slots:
@@ -114,7 +113,7 @@ private: // variables
     double fpsMs;
 
     // Settings:
-    Lightpack::Mode m_mode;
+    Lightpack::Mode m_lightpackMode;
     int m_moodLampSpeed;
     int m_brightness;
     QColor m_backlightColor;
@@ -123,5 +122,5 @@ private: // variables
     static int checkColors[ColorsMoodLampCount];
     static const QColor colorsMoodLamp[ColorsMoodLampCount];
 
-    int m_grabSmoothSlowdown;
+    int m_grabSlowdown;
 };

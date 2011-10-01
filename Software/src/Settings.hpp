@@ -30,71 +30,13 @@
 #include <QVariant>
 #include <QMutex>
 
+#include "SettingsDefaults.hpp"
 #include "enums.hpp"
 #include "defs.h"
 #include "debug.h"
 
-// Default values:
-
-// LightpackMain.conf
-// [General]
-#define PROFILE_DEFAULT_NAME            "Lightpack"
-#define LANGUAGE_DEFAULT_NAME           "<System>" /* system lang */
-#define DEBUG_LEVEL_DEFAULT             Debug::LowLevel
-#define API_ENABLED_DEFAULT             true
-#define API_PORT_DEFAULT                3636
-#define API_AUTH_ENABLED_DEFAULT        true
-#define EXPERT_MODE_ENABLED_DEFAULT     false
-#define CONNECTED_DEVICE_DEFAULT        "Lightpack"
-#ifdef ALIEN_FX_SUPPORTED
-#   define SUPPORTED_DEVICES            "Lightpack,AlienFx,Virtual"
-#else
-#   define SUPPORTED_DEVICES            "Lightpack,Virtual"
-#endif
-
-// ProfileName.ini
-// [General]
-#define GRAB_SLOWDOWN_MS_DEFAULT_VALUE          50
-#define IS_BACKLIGHT_ON_DEFAULT_VALUE           true
-#define IS_AVG_COLORS_ON_DEFAULT_VALUE          false
-#define MINIMUM_LEVEL_OF_SENSITIVITY_DEFAULT    3
-#define GAMMA_CORRECTION_DEFAULT_VALUE          2.0
-
-#ifdef WINAPI_GRAB_SUPPORT
-#   define GRABMODE_DEFAULT    "Winapi"
-#elif defined(X11_GRAB_SUPPORT)
-#   define GRABMODE_DEFAULT    "X11"
-#else
-#   define GRABMODE_DEFAULT    "Qt"
-#endif
-
-#define MODE_DEFAULT                        "Ambilight"
-#define SPEED_MOOD_LAMP_DEFAULT_VALUE       50
-#define MOOD_LAMP_MODE_DEFAULT_VALUE        true
-#define MOOD_LAMP_COLOR_DEFAULT_VALUE       "#00FF00"
-#define BRIGHTNESS_DEFAULT_VALUE            200
-
-// [Firmware]
-#define FW_TIMER_PRESCALLER_INDEX_DEFAULT_VALUE     0 /* prescaller == 1 */
-#define FW_TIMER_OCR_DEFAULT_VALUE                  100
-#define FW_COLOR_DEPTH_DEFAULT_VALUE                128
-#define FW_SMOOTH_SLOWDOWN_DEFAULT                  100
-
-// [LED_i]
-#define LED_FIELD_WIDTH_DEFAULT_VALUE       150
-#define LED_FIELD_HEIGHT_DEFAULT_VALUE      150
-#define LED_FIELD_SIZE_DEFAULT_VALUE        QSize(LED_FIELD_WIDTH_DEFAULT_VALUE, LED_FIELD_HEIGHT_DEFAULT_VALUE)
-#define LED_COEF_RGB_DEFAULT_VALUE          1
-#define LED_IS_ENABLED_DEFAULT_VALUE        true
-
-#define LED_COEF_MIN_VALUE  0.1
-#define LED_COEF_MAX_VALUE  3
-
-#define GAMMA_MIN_VALUE     0.0
-#define GAMMA_MAX_VALUE     10.0
-
-#define SMOOTH_MIN_VALUE    0
-#define SMOOTH_MAX_VALUE    255
+namespace SettingsScope
+{
 
 class Settings : public QObject
 {
@@ -124,7 +66,7 @@ public:
     static void setIsApiEnabled(bool isEnabled);
     static int getApiPort();
     static void setApiPort(int apiPort);
-    static QString getApiKey();
+    static QString getApiAuthKey();
     static void setApiKey(const QString & apiKey);
     static bool isApiAuthEnabled();
     static void setIsApiAuthEnabled(bool isEnabled);
@@ -134,37 +76,34 @@ public:
     static void setConnectedDevice(SupportedDevices::DeviceType device);
 
     // Profile
-    static int getGrabSlowdownMs();
-    static void setGrabSlowdownMs(int value);
+    static int getGrabSlowdown();
+    static void setGrabSlowdown(int value);
     static bool isBacklightOn();
     static void setIsBacklightOn(bool isEnabled);
-    static bool isAvgColorsOn();
+    static bool isGrabAvgColorsOn();
     static void setAvgColorsOn(bool isEnabled);
-    static int getMinimumLevelOfSensitivity();
+    static int getGrabMinimumLevelOfSensitivity();
     static void setMinimumLevelOfSensitivity(int value);
-    static double getGammaCorrection();
-    static void setGammaCorrection(double gamma);
-    static int getBrightness();
-    static void setBrightness(int value);
+    // [Device]
+    static int getDeviceRefreshDelay();
+    static void setDeviceRefreshDelay(int value);
+    static int getDeviceBrightness();
+    static void setDeviceBrightness(int value);
+    static int getDeviceSmooth();
+    static void setDeviceSmooth(int value);
+    static double getDeviceGamma();
+    static void setDeviceGamma(double gamma);
 
     static Grab::Mode getGrabMode();
     static void setGrabMode(Grab::Mode grabMode);
-    static Lightpack::Mode getMode();
-    static void setMode(Lightpack::Mode mode);
+    static Lightpack::Mode getLightpackMode();
+    static void setLightpackMode(Lightpack::Mode mode);
     static bool isMoodLampLiquidMode();
     static void setMoodLampLiquidMode(bool isLiquidMode);
     static QColor getMoodLampColor();
     static void setMoodLampColor(QColor color);
     static int getMoodLampSpeed();
     static void setMoodLampSpeed(int value);
-    static int getFwTimerPrescallerIndex();
-    static void setFwTimerPrescallerIndex(int value);
-    static int getFwTimerOCR();
-    static void setFwTimerOCR(int value);
-    static int getFwColorDepth();
-    static void setFwColorDepth(int value);
-    static int getFwSmoothSlowdown();
-    static void setFwSmoothSlowdown(int value);
 
     static double getLedCoefRed(int ledIndex);
     static double getLedCoefGreen(int ledIndex);
@@ -183,7 +122,7 @@ public:
 
 private:    
     static double getValidGammaCorrection(double value);
-    static int getValidGrabSlowdownMs(int value);
+    static int getValidGrabSlowdown(int value);
     static int getValidMoodLampSpeed(int value);
     static void setValidLedCoef(int ledIndex, const QString & keyCoef, double coef);
     static double getValidLedCoef(int ledIndex, const QString & keyCoef);
@@ -208,3 +147,4 @@ private:
     static QSettings * m_mainConfig;     // store last used profile name, locale and so on
     static QString m_applicationDirPath; // path to store app generated stuff
 };
+} /*SettingsScope*/

@@ -131,11 +131,13 @@ HEADERS += \
     ../../CommonHeaders/USB_ID.h \
     grab/D3D9Grabber.hpp \
     LightpackMath.hpp \
-    StructRgb.hpp
+    StructRgb.hpp \
+    SettingsDefaults.hpp
 
 FORMS += SettingsWindow.ui \
     AboutDialog.ui \
     GrabWidget.ui
+
 
 
 

@@ -32,6 +32,7 @@
 #include "LedDeviceVirtual.hpp"
 #include "Settings.hpp"
 
+using namespace SettingsScope;
 
 LedDeviceFactory::LedDeviceFactory(QObject *parent)
     : QObject(parent)

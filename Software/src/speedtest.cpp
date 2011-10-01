@@ -34,6 +34,7 @@ using namespace std;
 #include "Settings.hpp"
 #include "version.h"
 
+using namespace SettingsScope;
 
 // Hacks for create aligned string from variable X with specified LENGHT
 #define ALIGN_RIGHT( LENGHT, X ) QVariant( X ).toString().prepend(QString(LENGHT - QVariant( X ).toString().length(), ' '))

@@ -32,6 +32,8 @@
 #include "debug.h"
 #include "Settings.hpp"
 
+using namespace SettingsScope;
+
 LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
         ILedDevice(parent)
 {
@@ -352,9 +354,8 @@ void LedDeviceLightpack::updateDeviceSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    setTimerOptions(Settings::getFwTimerPrescallerIndex(), Settings::getFwTimerOCR());
-    setColorDepth(Settings::getFwColorDepth());
-    setSmoothSlowdown(Settings::getFwSmoothSlowdown());
-    setGamma(Settings::getGammaCorrection());
-    //setBrightness
+    setTimerOptions(0, Settings::getDeviceRefreshDelay());
+    setSmoothSlowdown(Settings::getDeviceSmooth());
+    setGamma(Settings::getDeviceGamma());
+//    setBrightness(Settings::getDeviceBrightness());
 }

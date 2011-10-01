@@ -35,9 +35,10 @@
 #include "enums.hpp"
 
 #include <stdlib.h>
-
 #include <iostream>
+
 using namespace std;
+using namespace SettingsScope;
 
 #define VERSION_API_TESTS   "1.2"
 
@@ -472,7 +473,7 @@ void LightpackApiTest::testCase_SetColor()
 
     setColorCmd += "1-23,2,65;";
     int led = 0; // first led index == 0
-    QRgb rgb = getGammaCorrectedValue(qRgb(23, 2, 65), GAMMA_CORRECTION_DEFAULT_VALUE);
+    QRgb rgb = getGammaCorrectedValue(qRgb(23, 2, 65), Profile::Device::GammaDefault);
 
     socketWriteCmd(&sock, setColorCmd);
 
@@ -537,7 +538,7 @@ void LightpackApiTest::testCase_SetColorValid()
     QFETCH(int, g);
     QFETCH(int, b);
 
-    QRgb rgb = getGammaCorrectedValue(qRgb(r, g, b), GAMMA_CORRECTION_DEFAULT_VALUE);
+    QRgb rgb = getGammaCorrectedValue(qRgb(r, g, b), Profile::Device::GammaDefault);
 
     setColorCmd += cmd;
 
@@ -779,8 +780,7 @@ void LightpackApiTest::testCase_SetGammaValid_data()
     QTest::newRow("1") << "1.0";
     QTest::newRow("2") << "2.0";
     QTest::newRow("3") << "3";
-    QTest::newRow("4") << "10.00";
-    QTest::newRow("5") << "0.00";
+    QTest::newRow("4") << "10.00";    
 }
 
 void LightpackApiTest::testCase_SetGammaInvalid()
@@ -819,6 +819,7 @@ void LightpackApiTest::testCase_SetGammaInvalid_data()
 {
     QTest::addColumn<QString>("gammaStr");
 
+    QTest::newRow("0") << "0.00";
     QTest::newRow("1") << "0.0001";
     QTest::newRow("2") << "12.0";
     QTest::newRow("3") << ":12.0";

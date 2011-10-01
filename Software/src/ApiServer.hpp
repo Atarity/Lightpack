@@ -138,7 +138,7 @@ private:
 
 private:
     int m_apiPort;
-    QString m_apiKey;
+    QString m_apiAuthKey;
     bool m_isAuthEnabled;
 
     QTcpSocket *m_lockedClient;

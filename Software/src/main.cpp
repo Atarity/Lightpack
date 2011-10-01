@@ -37,7 +37,7 @@
 
 using namespace std;
 
-unsigned g_debugLevel = DEBUG_LEVEL_DEFAULT;
+unsigned g_debugLevel = SettingsScope::Main::DebugLevelDefault;
 QTextStream m_logStream;
 QMutex m_mutex;
 

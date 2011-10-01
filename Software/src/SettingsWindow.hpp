@@ -58,6 +58,7 @@ signals:
     void updateColorDepth(int value);
     void updateSmoothSlowdown(int value);
     void updateGamma(double value);
+    void updateBrightness(int percent);
     void requestFirmwareVersion();
     void recreateLedDevice();
     void resultBacklightStatus(Backlight::Status);
@@ -89,10 +90,8 @@ protected:
 
 private slots:
     void onLightpackModes_Activated(int index);
-    void onGammaCorrection_valueChanged(double value);
     void onMoodLamp_ColorButton_ColorChanged(QColor color);
     void onMoodLamp_Speed_valueChanged(int value);
-    void onMoodLamp_Brightness_valueChanged(int value);
     void onMoodLamp_LiquidMode_Toggled(bool isConstantColor);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void showAbout(); /* using in actions */
@@ -103,10 +102,10 @@ private slots:
 
     void switchBacklightOnOff();
 
-    void settingsHardwareTimerOptionsChange();
-    void settingsHardwareSetColorDepth(int value);
-    void settingsHardwareSetSmoothSlowdown(int value);
-    void settingsHardwareSetBrightness(int value);
+    void onDeviceRefreshDelay_valueChanged(int value);
+    void onDeviceSmooth_valueChanged(int value);
+    void onDeviceBrightness_valueChanged(int value);
+    void onDeviceGammaCorrection_valueChanged(double value);
 
     void openCurrentProfile();
 
@@ -137,7 +136,7 @@ private:
 
     void createTrayIcon();
     void createActions();
-    void loadSettingsToMainWindow();
+    void updateUiFromSettings();
 
     void grabSwitchQtWinAPI();
 
@@ -147,8 +146,6 @@ private:
     void initLanguages();
 
     void openFile(const QString &filePath);
-
-    void updatePwmFrequency();
 
     void initLabelsForGrabbedColors();
 
@@ -164,9 +161,6 @@ private:
     SpeedTest *speedTest;
 
     Grab::Mode getGrabMode();
-
-    // Evaluated frequency of the PWM generation
-    double pwmFrequency;
 
     QList<QLabel *> labelsGrabbedColors;
 

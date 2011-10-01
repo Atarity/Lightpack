@@ -59,13 +59,10 @@ namespace Grab
 {
 
 enum Mode {
-    QtGrabMode
-#ifdef WINAPI_GRAB_SUPPORT
-    ,WinAPIGrabMode
-#endif
-#ifdef X11_GRAB_SUPPORT
-    ,X11GrabMode
-#endif
+    QtGrabMode,
+    X11GrabMode,
+    WinAPIGrabMode,
+    D3D9GrabMode
 };
 }
 

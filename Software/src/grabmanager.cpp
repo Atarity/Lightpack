@@ -28,6 +28,8 @@
 #include <QtCore/qmath.h>
 #include "debug.h"
 
+using namespace SettingsScope;
+
 GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -234,8 +236,8 @@ const QColor GrabManager::colorsMoodLamp[GrabManager::ColorsMoodLampCount] = {
 void GrabManager::updateLedsColorsIfChanged()
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
-    int timer = m_grabSmoothSlowdown;
-    switch (m_mode)
+    int timer = m_grabSlowdown;
+    switch (m_lightpackMode)
     {
     case Lightpack::AmbilightMode:
         ambilight();
@@ -504,12 +506,10 @@ void GrabManager::settingsProfileChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_avgColorsOnAllLeds = Settings::isAvgColorsOn();
-    m_minLevelOfSensivity = Settings::getMinimumLevelOfSensitivity();
-
-    m_grabSmoothSlowdown = Settings::getGrabSlowdownMs();
-
-    m_mode = Settings::getMode();
+    m_avgColorsOnAllLeds = Settings::isGrabAvgColorsOn();
+    m_minLevelOfSensivity = Settings::getGrabMinimumLevelOfSensitivity();
+    m_grabSlowdown = Settings::getGrabSlowdown();
+    m_lightpackMode = Settings::getLightpackMode();
 
     for(int i=0; i<m_ledWidgets.count(); i++){
         m_ledWidgets[i]->settingsProfileChanged();
@@ -547,26 +547,17 @@ void GrabManager::setBackLightColor(QColor color)
  {
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
 
-     m_mode = mode;
+     m_lightpackMode = mode;
 
-     Settings::setMode(mode);
+     Settings::setLightpackMode(mode);
  }
 
- void GrabManager::setBrightness(int value)
- {
-     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-     m_brightness = value;
-
-     Settings::setBrightness(value);
- }
-
-void GrabManager::setAmbilightSlowdownMs(int ms)
+void GrabManager::setGrabSlowdownMs(int ms)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << ms;
 
-    m_grabSmoothSlowdown = ms;
-    Settings::setGrabSlowdownMs(ms);
+    m_grabSlowdown = ms;
+    Settings::setGrabSlowdown(ms);
 }
 
 void GrabManager::setVisibleLedWidgets(bool state)

@@ -31,6 +31,8 @@
 #include "Settings.hpp"
 #include "debug.h"
 
+using namespace SettingsScope;
+
 // Colors changes when middle button clicked
 const QColor GrabWidget::colors[GrabWidget::ColorsCount][2] = {
     { Qt::red,         Qt::black }, /* LED1 */

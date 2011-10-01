@@ -35,6 +35,8 @@
 
 #include "../../CommonHeaders/LEDS_COUNT.h"
 
+using namespace SettingsScope;
+
 // get
 // getstatus - on off
 // getstatusapi - busy idle
@@ -176,7 +178,7 @@ void ApiServer::updateApiKey(QString key)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << key;
 
-    m_apiKey = key;
+    m_apiAuthKey = key;
 }
 
 void ApiServer::incomingConnection(int socketDescriptor)
@@ -186,7 +188,7 @@ void ApiServer::incomingConnection(int socketDescriptor)
 
     ClientInfo cs;
     cs.isAuthorized = false;
-    cs.gamma = GAMMA_CORRECTION_DEFAULT_VALUE;
+    cs.gamma = SettingsScope::Profile::Device::GammaDefault;
 
     m_clients.insert(client, cs);
 
@@ -240,7 +242,7 @@ void ApiServer::clientProcessCommands()
                 cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
                 API_DEBUG_OUT << QString(cmdBuffer);
 
-                if (cmdBuffer == m_apiKey)
+                if (cmdBuffer == m_apiAuthKey)
                 {
                     API_DEBUG_OUT << CmdApiKey << "OK";
 
@@ -454,7 +456,7 @@ void ApiServer::clientProcessCommands()
 
                     if (ok)
                     {
-                        if (gamma <= GAMMA_MAX_VALUE && gamma >= GAMMA_MIN_VALUE)
+                        if (gamma >= Profile::Device::GammaMin && gamma <= Profile::Device::GammaMax)
                         {
                             API_DEBUG_OUT << CmdSetGamma << "OK:" << gamma;
 
@@ -501,7 +503,7 @@ void ApiServer::clientProcessCommands()
 
                     if (ok)
                     {
-                        if (smooth <= SMOOTH_MAX_VALUE && smooth >= SMOOTH_MIN_VALUE)
+                        if (smooth >= Profile::Device::SmoothMin && smooth <= Profile::Device::SmoothMax)
                         {
                             API_DEBUG_OUT << CmdSetSmooth << "OK:" << smooth;
 
@@ -628,7 +630,7 @@ void ApiServer::resultBacklightStatus(Backlight::Status status)
 void ApiServer::initPrivateVariables()
 {
     m_apiPort = Settings::getApiPort();
-    m_apiKey = Settings::getApiKey();
+    m_apiAuthKey = Settings::getApiAuthKey();
     m_isAuthEnabled = Settings::isApiAuthEnabled();
 
     m_lockedClient = NULL;
