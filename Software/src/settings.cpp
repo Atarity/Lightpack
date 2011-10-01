@@ -126,6 +126,7 @@ static const QString Qt = "Qt";
 static const QString WinAPI = "WinAPI";
 static const QString X11 = "X11";
 static const QString D3D9 = "D3D9";
+static const QString MacCoreGraphics = "MacCoreGraphics";
 } /*LightpackMode*/
 
 } /*Value*/
@@ -577,6 +578,11 @@ Grab::Mode Settings::getGrabMode()
         return Grab::X11GrabMode;
 #endif
 
+#ifdef MAC_OS_CG_GRAB_SUPPORT
+    if (strGrabMode == Profile::Value::GrabMode::MacCoreGraphics)
+        return Grab::MacCoreGraphicsGrabMode;
+#endif
+
     qWarning() << Q_FUNC_INFO << "GrabMode contains invalid value, reset it to default.";
     setGrabMode(Profile::Grab::ModeDefault);
 
@@ -609,6 +615,12 @@ void Settings::setGrabMode(Grab::Mode grabMode)
 #ifdef X11_GRAB_SUPPORT
     case Grab::X11GrabMode:
         strGrabMode = Profile::Value::GrabMode::X11;
+        break;
+#endif
+
+#ifdef MAC_OS_CG_GRAB_SUPPORT
+    case Grab::MacCoreGraphicsGrabMode:
+        strGrabMode = Profile::Value::GrabMode::MacCoreGraphics;
         break;
 #endif
 

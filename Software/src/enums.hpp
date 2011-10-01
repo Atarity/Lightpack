@@ -62,7 +62,8 @@ enum Mode {
     QtGrabMode,
     X11GrabMode,
     WinAPIGrabMode,
-    D3D9GrabMode
+    D3D9GrabMode,
+    MacCoreGraphicsGrabMode
 };
 }
 

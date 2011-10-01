@@ -38,7 +38,7 @@
 
 #if defined(Q_OS_DARWIN) || defined(Q_OS_DARWIN64) || defined(Q_OS_MAC) || defined(Q_OS_MACX) || defined(Q_OS_MAC64)
 #   define MAC_OS
-#   define MAC_OS_GRAB_SUPPORT
+#   define MAC_OS_CG_GRAB_SUPPORT
 #   undef X11_GRAB_SUPPORT
 #endif
 

@@ -91,6 +91,9 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 #ifndef X11_GRAB_SUPPORT
     ui->radioButton_GrabX11->setVisible(false);
 #endif
+#ifndef MAC_OS_CG_GRAB_SUPPORT
+    ui->radioButton_GrabMacCoreGraphics->setVisible(false);
+#endif
 #ifndef QT_GRAB_SUPPORT
     ui->radioButton_GrabQt->setVisible(false);
 #else
@@ -965,6 +968,12 @@ IGrabber * SettingsWindow::createGrabber(Grab::Mode grabMode)
     case Grab::D3D9GrabMode:
         return new D3D9Grabber();
 #endif
+
+#ifdef MAC_OS
+    case Grab::MacCoreGraphicsGrabMode:
+        return new MacOSGrabber();
+#endif
+
     default:
         return new QtGrabber();
     }

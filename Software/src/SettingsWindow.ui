@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>351</width>
-    <height>505</height>
+    <height>533</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1153,6 +1153,19 @@
              </property>
              <property name="text">
               <string>X11</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_GrabMacCoreGraphics">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Mac Core Graphics</string>
              </property>
             </widget>
            </item>
