@@ -85,6 +85,9 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 #ifndef WINAPI_GRAB_SUPPORT
     ui->radioButton_GrabWinAPI->setVisible(false);
 #endif
+#ifndef D3D9_GRAB_SUPPORT
+    ui->radioButton_GrabD3D9->setVisible(false);
+#endif
 #ifndef X11_GRAB_SUPPORT
     ui->radioButton_GrabX11->setVisible(false);
 #endif
@@ -179,6 +182,9 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
 #ifdef WINAPI_GRAB_SUPPORT
     connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
+#endif
+#ifdef D3D9_GRAB_SUPPORT
+    connect(ui->radioButton_GrabD3D9, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
 #endif
 #ifdef X11_GRAB_SUPPORT
     connect(ui->radioButton_GrabX11, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
@@ -955,6 +961,9 @@ IGrabber * SettingsWindow::createGrabber(Grab::Mode grabMode)
 #ifdef Q_WS_WIN
     case Grab::WinAPIGrabMode:
         return new WinAPIGrabber();
+
+    case Grab::D3D9GrabMode:
+        return new D3D9Grabber();
 #endif
     default:
         return new QtGrabber();
@@ -1130,6 +1139,11 @@ void SettingsWindow::updateUiFromSettings()
         ui->radioButton_GrabWinAPI->setChecked(true);
         break;
 #endif
+#ifdef D3D9_GRAB_SUPPORT
+    case Grab::D3D9GrabMode:
+        ui->radioButton_GrabD3D9->setChecked(true);
+        break;
+#endif
 #ifdef X11_GRAB_SUPPORT
     case Grab::X11GrabMode:
         ui->radioButton_GrabX11->setChecked(true);
@@ -1155,6 +1169,11 @@ Grab::Mode SettingsWindow::getGrabMode()
 #ifdef WINAPI_GRAB_SUPPORT
     if (ui->radioButton_GrabWinAPI->isChecked()) {
         return Grab::WinAPIGrabMode;
+    }
+#endif
+#ifdef D3D9_GRAB_SUPPORT
+    if (ui->radioButton_GrabD3D9->isChecked()) {
+        return Grab::D3D9GrabMode;
     }
 #endif
 

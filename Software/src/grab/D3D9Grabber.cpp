@@ -35,6 +35,8 @@
 
 D3D9Grabber::D3D9Grabber() : m_d3D(NULL), m_d3Device(NULL), m_surface(NULL)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
     if ((m_d3D = Direct3DCreate9(D3D_SDK_VERSION)) == NULL)
     {
         DEBUG_LOW_LEVEL << "Cannot create Direct3D9 interface (Direct3DCreate9)";
@@ -48,6 +50,8 @@ D3D9Grabber::D3D9Grabber() : m_d3D(NULL), m_d3Device(NULL), m_surface(NULL)
     }
 
     HWND hWnd = GetDesktopWindow(); // todo
+
+    m_bufLength = 0;
 
     ZeroMemory(&m_presentParams, sizeof(D3DPRESENT_PARAMETERS));
     m_presentParams.Windowed = true;
@@ -88,6 +92,7 @@ D3D9Grabber::D3D9Grabber() : m_d3D(NULL), m_d3Device(NULL), m_surface(NULL)
 // todo move body to clear method
 D3D9Grabber::~D3D9Grabber()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     if (m_surface != NULL)
     {
         m_surface->Release();
@@ -104,6 +109,11 @@ D3D9Grabber::~D3D9Grabber()
     {
         m_d3D->Release();
         m_d3D = NULL;
+    }
+
+    if (m_buf != NULL)
+    {
+        free(m_buf);
     }
 }
 
@@ -129,10 +139,11 @@ QList<QRgb> D3D9Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
         m_buf = (BYTE *)malloc(bufLengthNeeded);
         m_bufLength = bufLengthNeeded;
     }
+    getImageData(m_buf, m_rect);
     for(int i = 0; i < widgets.size(); i++)
     {
-        QRect rect = widgets[i]->rect();
-        result.append(getColor(rect.left(), rect.top(), rect.width(), rect.height()));
+        GrabWidget * widget = widgets[i];
+        result.append(getColor(widget->x(), widget->y(), widget->width(), widget->height()));
     }
     return result;
 }
@@ -142,19 +153,21 @@ RECT D3D9Grabber::getEffectiveRect(QList<GrabWidget *> &widgets)
     RECT result = {0,0,0,0};
     if (widgets.size() > 0)
     {
-        result.left   = widgets[0]->rect().left();
-        result.right  = widgets[0]->rect().right();
-        result.top    = widgets[0]->rect().top();
-        result.bottom = widgets[0]->rect().bottom();
+        GrabWidget * widget = widgets[0];
+        result.left   = widget->x();
+        result.right  = widget->x() + widget->width();
+        result.top    = widget->y();
+        result.bottom = widget->y() + widget->height();
         for(int i = 1; i < widgets.size(); i++) {
-            if (result.left > widgets[i]->rect().left())
-                result.left = widgets[i]->rect().left();
-            if (result.right < widgets[i]->rect().right())
-                result.right = widgets[i]->rect().right();
-            if (result.top > widgets[i]->rect().top())
-                result.top = widgets[i]->rect().top();
-            if (result.bottom < widgets[i]->rect().bottom())
-                result.bottom = widgets[i]->rect().bottom();
+            widget = widgets[i];
+            if (result.left > widget->x())
+                result.left = widget->x();
+            if (result.right < widget->x() + widget->width())
+                result.right = widget->x() + widget->width();
+            if (result.top > widget->y())
+                result.top = widget->y();
+            if (result.bottom < widget->y() + widget->height())
+                result.bottom = widget->y() + widget->height();
         }
     }
     return result;
