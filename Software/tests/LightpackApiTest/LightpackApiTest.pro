@@ -32,10 +32,8 @@ SOURCES += \
     ../../src/ApiServer.cpp \
     ../../src/Settings.cpp
 HEADERS += \
-    ../../src/inlinemath.hpp \
     ../../src/ApiServerSetColorTask.hpp \
     ../../src/ApiServer.hpp \
-    ../../src/apidebug.h \
     ../../src/debug.h \
     ../../src/Settings.hpp
 

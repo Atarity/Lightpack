@@ -129,6 +129,36 @@ void LedDeviceAlienFx::setColors(const QList<QRgb> & colors)
     emit commandCompleted(true);
 }
 
+void LedDeviceAlienFx::offLeds()
+{
+    emit commandCompleted(true);
+}
+
+void LedDeviceAlienFx::setTimerOptions(int /*prescallerIndex*/, int /*outputCompareRegValue*/)
+{
+    emit commandCompleted(true);
+}
+
+void LedDeviceAlienFx::setColorDepth(int /*value*/)
+{
+    emit commandCompleted(true);
+}
+
+void LedDeviceAlienFx::setSmoothSlowdown(int /*value*/)
+{
+    emit commandCompleted(true);
+}
+
+void LedDeviceAlienFx::setGamma(double /*value*/)
+{
+    emit commandCompleted(true);
+}
+
+void LedDeviceAlienFx::setBrightness(int /*value*/)
+{
+    emit commandCompleted(true);
+}
+
 void LedDeviceAlienFx::requestFirmwareVersion()
 {
     emit firmwareVersion("unknown (alienfx)");
