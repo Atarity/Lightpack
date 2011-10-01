@@ -25,9 +25,10 @@
 
 #pragma once
 
-#ifdef MAC_OS_GRAB_SUPPORT
-
 #include "defs.h"
+
+#ifdef MAC_OS_CG_GRAB_SUPPORT
+
 #include "IGrabber.hpp"
 
 class MacOSGrabber : public IGrabber

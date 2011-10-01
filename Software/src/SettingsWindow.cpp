@@ -192,6 +192,9 @@ void SettingsWindow::connectSignalsSlots()
 #ifdef X11_GRAB_SUPPORT
     connect(ui->radioButton_GrabX11, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
 #endif
+#ifdef MAC_OS_CG_GRAB_SUPPORT
+    connect(ui->radioButton_GrabMacCoreGraphics, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
+#endif
 
     connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SLOT(updateGrabbedColors(QList<QRgb>)));
     connect(ui->checkBox_ConnectVirtualDevice, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ConnectVirtualDevice_Toggled(bool)));
@@ -1158,6 +1161,11 @@ void SettingsWindow::updateUiFromSettings()
         ui->radioButton_GrabX11->setChecked(true);
         break;
 #endif
+#ifdef MAC_OS_CG_GRAB_SUPPORT
+    case Grab::MacCoreGraphicsGrabMode:
+        ui->radioButton_GrabMacCoreGraphics->setChecked(true);
+        break;
+#endif
     default:
         ui->radioButton_GrabQt->setChecked(true);
     }
@@ -1183,6 +1191,11 @@ Grab::Mode SettingsWindow::getGrabMode()
 #ifdef D3D9_GRAB_SUPPORT
     if (ui->radioButton_GrabD3D9->isChecked()) {
         return Grab::D3D9GrabMode;
+    }
+#endif
+#ifdef MAC_OS_CG_GRAB_SUPPORT
+    if (ui->radioButton_GrabMacCoreGraphics->isChecked()) {
+        return Grab::MacCoreGraphicsGrabMode;
     }
 #endif
 

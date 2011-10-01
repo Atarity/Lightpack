@@ -25,9 +25,10 @@
 
 #include"MacOSGrabber.hpp"
 
-#ifdef MAC_OS_GRAB_SUPPORT
+#ifdef MAC_OS_CG_GRAB_SUPPORT
 
 #include <CoreFoundation/CoreFoundation.h>
+#include <ApplicationServices/ApplicationServices.h>
 #include "debug.h"
 
 MacOSGrabber::MacOSGrabber()
