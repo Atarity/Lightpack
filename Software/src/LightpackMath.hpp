@@ -34,6 +34,7 @@ class LightpackMath
 {
 public:
     static void gammaCorrection(double gamma, const QList<QRgb> & colors, QList<StructRgb> & result);
+    static void brightnessCorrection(int brightness, QList<StructRgb> & result);
 
     // Convert ASCII char '5' to 5
     static inline char getDigit(const char d)

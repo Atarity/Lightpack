@@ -58,7 +58,7 @@ public slots:
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);
     void setGamma(double value);
-//    void setBrightness(int value);
+    void setBrightness(int percent);
     void requestFirmwareVersion();
 
 public:
@@ -79,6 +79,8 @@ private:
     unsigned char m_writeBuffer[65];   /* 0-ReportID, 1..65-data */
 
     double m_gamma;
+    int m_brightness;
 
-     QList<StructRgb> m_colorsBuffer;
+    QList<QRgb> m_colorsSaved;
+    QList<StructRgb> m_colorsBuffer;
 };

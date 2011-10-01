@@ -145,6 +145,20 @@ void LedDeviceFactory::setGamma(double value)
     }
 }
 
+void LedDeviceFactory::setBrightness(int value)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << value << "Is last command completed:" << m_isLastCommandCompleted;
+
+    if (m_isLastCommandCompleted)
+    {
+        m_isLastCommandCompleted = false;
+        emit ledDeviceSetBrightness(value);
+    } else {
+        m_savedBrightness = value;
+        cmdQueueAppend(LedDeviceCommands::SetBrightness);
+    }
+}
+
 void LedDeviceFactory::requestFirmwareVersion()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "Is last command completed:" << m_isLastCommandCompleted;
@@ -251,6 +265,7 @@ void LedDeviceFactory::connectSignalSlotsLedDevice()
     connect(this, SIGNAL(ledDeviceSetColorDepth(int)),          m_ledDevice, SLOT(setColorDepth(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetSmoothSlowdown(int)),      m_ledDevice, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetGamma(double)),            m_ledDevice, SLOT(setGamma(double)), Qt::QueuedConnection);
+    connect(this, SIGNAL(ledDeviceSetBrightness(int)),          m_ledDevice, SLOT(setBrightness(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceRequestFirmwareVersion()),    m_ledDevice, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
 }
 
@@ -273,6 +288,8 @@ void LedDeviceFactory::disconnectSignalSlotsLedDevice()
     disconnect(this, SIGNAL(ledDeviceSetTimerOptions(int,int)), m_ledDevice, SLOT(setTimerOptions(int,int)));
     disconnect(this, SIGNAL(ledDeviceSetColorDepth(int)),       m_ledDevice, SLOT(setColorDepth(int)));
     disconnect(this, SIGNAL(ledDeviceSetSmoothSlowdown(int)),   m_ledDevice, SLOT(setSmoothSlowdown(int)));
+    disconnect(this, SIGNAL(ledDeviceSetGamma(double)),         m_ledDevice, SLOT(setGamma(double)));
+    disconnect(this, SIGNAL(ledDeviceSetBrightness(int)),       m_ledDevice, SLOT(setBrightness(int)));
     disconnect(this, SIGNAL(ledDeviceRequestFirmwareVersion()), m_ledDevice, SLOT(requestFirmwareVersion()));
 }
 
@@ -318,6 +335,10 @@ void LedDeviceFactory::cmdQueueProcessNext()
 
         case LedDeviceCommands::SetGamma:
             emit ledDeviceSetGamma(m_savedGamma);
+            break;
+
+        case LedDeviceCommands::SetBrightness:
+            emit ledDeviceSetBrightness(m_savedBrightness);
             break;
 
         case LedDeviceCommands::RequestFirmwareVersion:

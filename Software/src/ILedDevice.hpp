@@ -50,7 +50,7 @@ public slots:
     virtual void setColorDepth(int value) = 0;
     virtual void setSmoothSlowdown(int value) = 0;
     virtual void setGamma(double value) = 0;
-//    virtual void setBrightness(int value) = 0;
+    virtual void setBrightness(int value) = 0;
     virtual void requestFirmwareVersion() = 0;
 
 public:

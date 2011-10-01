@@ -41,7 +41,7 @@ public slots:
     void setColorDepth(int /*value*/);
     void setSmoothSlowdown(int /*value*/);
     void setGamma(double /*value*/);
-//  void setBrightness(int /*value*/);
+    void setBrightness(int /*value*/);
     void requestFirmwareVersion();
 public:
     void open();

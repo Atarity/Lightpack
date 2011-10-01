@@ -48,6 +48,7 @@ signals:
     void ledDeviceSetColorDepth(int value);
     void ledDeviceSetSmoothSlowdown(int value);
     void ledDeviceSetGamma(double value);
+    void ledDeviceSetBrightness(int value);
     void ledDeviceRequestFirmwareVersion();
 
 public slots:
@@ -60,6 +61,7 @@ public slots:
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);
     void setGamma(double value);
+    void setBrightness(int value);
     void requestFirmwareVersion();
 
 private slots:
@@ -84,6 +86,7 @@ private:
     int m_savedColorDepth;
     int m_savedSmoothSlowdown;
     double m_savedGamma;
+    int m_savedBrightness;
 
     ILedDevice *m_ledDevice;
     QThread *m_ledDeviceThread;

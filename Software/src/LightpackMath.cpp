@@ -49,3 +49,17 @@ void LightpackMath::gammaCorrection(double gamma, const QList<QRgb> & colors, QL
         result[i] = rgbResult;
     }
 }
+
+void LightpackMath::brightnessCorrection(int brightness, QList<StructRgb> & result)
+{
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << brightness;
+
+    // brightness -- must be in percentage (0..100%)
+
+    for (int i = 0; i < result.count(); i++)
+    {
+        result[i].r = (brightness / 100.0) * result[i].r;
+        result[i].g = (brightness / 100.0) * result[i].g;
+        result[i].b = (brightness / 100.0) * result[i].b;
+    }
+}

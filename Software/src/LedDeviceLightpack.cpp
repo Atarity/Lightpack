@@ -67,9 +67,11 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
 
-    LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer);
+    // Save colors for showing changes of the brightness
+    m_colorsSaved = colors;
 
-    // TODO: Brightness
+    LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer);
+    LightpackMath::brightnessCorrection(m_brightness, m_colorsBuffer);
 
     // First write_buffer[0] == 0x00 - ReportID, i have problems with using it
     // Second byte of usb buffer is command (write_buffer[1] == CMD_UPDATE_LEDS, see below)
@@ -144,13 +146,14 @@ void LedDeviceLightpack::setGamma(double value)
     emit commandCompleted(true);
 }
 
-//void LedDeviceLightpack::setBrightness(int value)
-//{
-//    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-//    write_buffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)value;
-//    bool ok = writeBufferToDeviceWithCheck(CMD_SET_BRIGHTNESS);
-//    emit commandCompleted(ok);
-//}
+void LedDeviceLightpack::setBrightness(int percent)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << percent;
+
+    m_brightness = percent;
+    setColors(m_colorsSaved);
+    // commandCompleted() signal already emited by setColors() slot
+}
 
 void LedDeviceLightpack::requestFirmwareVersion()
 {
@@ -357,5 +360,5 @@ void LedDeviceLightpack::updateDeviceSettings()
     setTimerOptions(0, Settings::getDeviceRefreshDelay());
     setSmoothSlowdown(Settings::getDeviceSmooth());
     setGamma(Settings::getDeviceGamma());
-//    setBrightness(Settings::getDeviceBrightness());
+    setBrightness(Settings::getDeviceBrightness());
 }

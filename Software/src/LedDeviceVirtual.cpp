@@ -62,6 +62,11 @@ void LedDeviceVirtual::setGamma(double /*value*/)
     emit commandCompleted(true);
 }
 
+void LedDeviceVirtual::setBrightness(int /*value*/)
+{
+    emit commandCompleted(true);
+}
+
 void LedDeviceVirtual::requestFirmwareVersion()
 {
     emit firmwareVersion("1.0 (virtual device)");

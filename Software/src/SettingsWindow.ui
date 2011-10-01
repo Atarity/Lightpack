@@ -163,7 +163,7 @@
                </widget>
               </item>
               <item row="1" column="2">
-               <widget class="QSpinBox" name="spinBox_SlowdownGrab">
+               <widget class="QSpinBox" name="spinBox_GrabSlowdown">
                 <property name="minimum">
                  <number>1</number>
                 </property>
@@ -176,7 +176,7 @@
                </widget>
               </item>
               <item row="2" column="2">
-               <widget class="QSpinBox" name="spinBox_MinLevelOfSensitivity">
+               <widget class="QSpinBox" name="spinBox_GrabMinLevelOfSensitivity">
                 <property name="minimum">
                  <number>0</number>
                 </property>
@@ -265,7 +265,7 @@
              </layout>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_ShowGrabWidgets">
+             <widget class="QGroupBox" name="groupBox_GrabShowGrabWidgets">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                 <horstretch>0</horstretch>
@@ -332,7 +332,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="checkBox_AVG_Colors">
+             <widget class="QCheckBox" name="checkBox_GrabIsAvgColors">
               <property name="font">
                <font>
                 <weight>50</weight>
@@ -1372,6 +1372,38 @@
     <hint type="destinationlabel">
      <x>280</x>
      <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_DeviceBrightness</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSlider_DeviceBrightness</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>291</x>
+     <y>156</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>146</x>
+     <y>156</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_DeviceBrightness</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_DeviceBrightness</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>146</x>
+     <y>156</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>291</x>
+     <y>156</y>
     </hint>
    </hints>
   </connection>

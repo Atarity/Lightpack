@@ -134,13 +134,13 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));
 
     // Connect to GrabManager
-    connect(ui->spinBox_SlowdownGrab, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setGrabSlowdownMs(int)));
-    connect(ui->groupBox_ShowGrabWidgets, SIGNAL(toggled(bool)), m_grabManager, SLOT(setVisibleLedWidgets(bool)));
+    connect(ui->spinBox_GrabSlowdown, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setGrabSlowdownMs(int)));
+    connect(ui->checkBox_GrabIsAvgColors, SIGNAL(toggled(bool)), m_grabManager, SLOT(setAvgColorsOnAllLeds(bool)));
+    connect(ui->spinBox_GrabMinLevelOfSensitivity, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setMinLevelOfSensivity(int)));
+    connect(ui->groupBox_GrabShowGrabWidgets, SIGNAL(toggled(bool)), m_grabManager, SLOT(setVisibleLedWidgets(bool)));
     connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), m_grabManager, SLOT(setColoredLedWidgets(bool)));
     connect(ui->radioButton_White, SIGNAL(toggled(bool)), m_grabManager, SLOT(setWhiteLedWidgets(bool)));
     connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), m_grabManager, SLOT(setUpdateColorsOnlyIfChanges(bool)));
-    connect(ui->checkBox_AVG_Colors, SIGNAL(toggled(bool)), m_grabManager, SLOT(setAvgColorsOnAllLeds(bool)));
-    connect(ui->spinBox_MinLevelOfSensitivity, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setMinLevelOfSensivity(int)));
     connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLamp_LiquidMode_Toggled(bool)));
     connect(this, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
 
@@ -561,7 +561,7 @@ void SettingsWindow::showSettings()
 
     Lightpack::Mode mode = Settings::getLightpackMode();
     ui->comboBox_LightpackModes->setCurrentIndex((mode == Lightpack::AmbilightMode) ? 0 : 1); // we assume that Lightpack::Mode in same order as comboBox_Modes
-    m_grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && ui->comboBox_LightpackModes->currentIndex()==0);
+    m_grabManager->setVisibleLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && ui->comboBox_LightpackModes->currentIndex()==0);
     this->show();
 }
 
@@ -638,7 +638,7 @@ void SettingsWindow::onDeviceSmooth_valueChanged(int value)
 
 void SettingsWindow::onDeviceBrightness_valueChanged(int percent)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;    
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << percent;
 
     Settings::setDeviceBrightness(percent);
     emit updateBrightness(Settings::getDeviceBrightness());
@@ -653,7 +653,6 @@ void SettingsWindow::onDeviceGammaCorrection_valueChanged(double value)
 }
 
 // ----------------------------------------------------------------------------
-
 
 void SettingsWindow::openFile(const QString &filePath)
 {
@@ -1105,9 +1104,9 @@ void SettingsWindow::updateUiFromSettings()
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
     ui->checkBox_ConnectVirtualDevice->setChecked       (Settings::getConnectedDevice() == SupportedDevices::VirtualDevice);
 
-    ui->checkBox_AVG_Colors->setChecked                 (Settings::isGrabAvgColorsOn());
-    ui->spinBox_SlowdownGrab->setValue                  (Settings::getGrabSlowdown());
-    ui->spinBox_MinLevelOfSensitivity->setValue         (Settings::getGrabMinimumLevelOfSensitivity());
+    ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsOn());
+    ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
+    ui->spinBox_GrabMinLevelOfSensitivity->setValue     (Settings::getGrabMinimumLevelOfSensitivity());
 
     ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());
     ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
@@ -1187,7 +1186,7 @@ void SettingsWindow::onLightpackModes_Activated(int index)
         m_grabManager->switchMode(Lightpack::AmbilightMode);
 
         ui->stackedWidget_LightpackModes->setCurrentIndex(ModeAmbilightIndex);
-        m_grabManager->setVisibleLedWidgets(ui->groupBox_ShowGrabWidgets->isChecked() && this->isVisible());
+        m_grabManager->setVisibleLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && this->isVisible());
 
         Settings::setLightpackMode(Lightpack::AmbilightMode);
         break;

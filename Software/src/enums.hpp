@@ -85,6 +85,7 @@ enum Cmd {
     SetColorDepth,
     SetSmoothSlowdown,
     SetGamma,
+    SetBrightness,
     RequestFirmwareVersion
 };
 }
