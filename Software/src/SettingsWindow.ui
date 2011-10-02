@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>351</width>
-    <height>533</height>
+    <height>561</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,7 +38,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -427,7 +427,7 @@
                </widget>
               </item>
               <item row="1" column="2">
-               <widget class="QSlider" name="horizontalSlider_Speed">
+               <widget class="QSlider" name="horizontalSlider_MoodLampSpeed">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>

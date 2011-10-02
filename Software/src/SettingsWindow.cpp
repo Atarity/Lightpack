@@ -147,15 +147,17 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), m_grabManager, SLOT(setColoredLedWidgets(bool)));
     connect(ui->radioButton_White, SIGNAL(toggled(bool)), m_grabManager, SLOT(setWhiteLedWidgets(bool)));
     connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), m_grabManager, SLOT(setUpdateColorsOnlyIfChanges(bool)));
-    connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLamp_LiquidMode_Toggled(bool)));
     connect(this, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
+
+    connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLamp_LiquidMode_Toggled(bool)));
+    connect(ui->horizontalSlider_MoodLampSpeed, SIGNAL(valueChanged(int)), this, SLOT(onMoodLamp_Speed_valueChanged(int)));
 
     // Main options
     connect(ui->comboBox_LightpackModes, SIGNAL(activated(int)), this, SLOT(onLightpackModes_Activated(int)));
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
     connect(ui->pushButton_EnableDisableDevice, SIGNAL(clicked()), this, SLOT(switchBacklightOnOff()));
 
-    // Hardware options
+    // Device options
     connect(ui->spinBox_DeviceRefreshDelay, SIGNAL(valueChanged(int)), this, SLOT(onDeviceRefreshDelay_valueChanged(int)));
     connect(ui->spinBox_DeviceSmooth, SIGNAL(valueChanged(int)), this, SLOT(onDeviceSmooth_valueChanged(int)));
     connect(ui->spinBox_DeviceBrightness, SIGNAL(valueChanged(int)), this, SLOT(onDeviceBrightness_valueChanged(int)));
@@ -1132,7 +1134,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());
     ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
     ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
-    ui->horizontalSlider_Speed->setValue                (Settings::getMoodLampSpeed());
+    ui->horizontalSlider_MoodLampSpeed->setValue        (Settings::getMoodLampSpeed());
 
     ui->horizontalSlider_DeviceRefreshDelay->setValue   (Settings::getDeviceRefreshDelay());
     ui->horizontalSlider_DeviceBrightness->setValue     (Settings::getDeviceBrightness());
@@ -1250,24 +1252,29 @@ void SettingsWindow::onMoodLamp_ColorButton_ColorChanged(QColor color)
 
 void SettingsWindow::onMoodLamp_Speed_valueChanged(int value)
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO<< value;
-    m_grabManager->setMoodLampSpeed(value);
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+    Settings::setMoodLampSpeed(value);
+
+    m_grabManager->setMoodLampSpeed(Settings::getMoodLampSpeed());
 }
 
 void SettingsWindow::onMoodLamp_LiquidMode_Toggled(bool checked)
 {
-    Settings::setMoodLampLiquidMode(checked);
+    Settings::setMoodLampLiquidMode(checked);    
     if(!checked)
     {
         //constant mode
         ui->pushButton_SelectColor->setEnabled(true);       
-        ui->horizontalSlider_Speed->setEnabled(false);
+        ui->horizontalSlider_MoodLampSpeed->setEnabled(false);
         ui->label_MoodLampSpeed->setEnabled(false);
-        m_grabManager->setMoodLampSpeed(0);
+
+        m_grabManager->setMoodLampLiquidMode(false);
     } else {
         //liquid mode
         ui->pushButton_SelectColor->setEnabled(false);
-        ui->horizontalSlider_Speed->setEnabled(true);
+        ui->horizontalSlider_MoodLampSpeed->setEnabled(true);
         ui->label_MoodLampSpeed->setEnabled(true);
+
+        m_grabManager->setMoodLampLiquidMode(true);
     }
 }

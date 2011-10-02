@@ -41,13 +41,16 @@ class GrabManager : public QWidget
     Q_OBJECT
 
 public:
-    GrabManager(IGrabber *m_grabber, QWidget *parent = 0);
+    GrabManager(IGrabber *grabber, QWidget *parent = 0);
     ~GrabManager();
 
 signals:
-    void updateLedsColors(const QList<QRgb> & colorsNew);
+    void updateLedsColors(const QList<QRgb> & m_colorsNew);
     void ambilightTimeOfUpdatingColors(double ms);
 
+
+public:
+    void setMoodLampLiquidMode(bool state);
 
 public slots:
     void updateBacklightState(Backlight::Status backlightStatus, Api::DeviceLockStatus deviceLockStatus);
@@ -92,16 +95,16 @@ private:
 private: // variables
     IGrabber * m_grabber;
     QTimer *m_timerGrab;
-    QTimer *timerUpdateFPS;
+    QTimer *m_timerUpdateFPS;
     QList<GrabWidget *> m_ledWidgets;
-    const static QColor backgroundAndTextColors[LEDS_COUNT][2];
-    TimeEvaluations *timeEval;
+    const static QColor m_backgroundAndTextColors[LEDS_COUNT][2];
+    TimeEvaluations *m_timeEval;
 
-    QList<QRgb> colorsCurrent;
-    QList<QRgb> colorsNew;
+    QList<QRgb> m_colorsCurrent;
+    QList<QRgb> m_colorsNew;
 
-    QRect screenSaved;
-    int screenSavedIndex;
+    QRect m_screenSavedRect;
+    int m_screenSavedIndex;
 
     bool m_isGrabOn;
     bool m_isResizeOrMoving;
@@ -110,7 +113,7 @@ private: // variables
     int m_minLevelOfSensivity;
 
     // Store last grabbing time in milliseconds
-    double fpsMs;
+    double m_fpsMs;
 
     // Settings:
     Lightpack::Mode m_lightpackMode;
@@ -118,9 +121,11 @@ private: // variables
     int m_brightness;
     QColor m_backlightColor;
 
+    bool m_isMoodLampLiquidMode;
+
     static const int ColorsMoodLampCount = 15;
-    static int checkColors[ColorsMoodLampCount];
-    static const QColor colorsMoodLamp[ColorsMoodLampCount];
+    static int m_checkColors[ColorsMoodLampCount];
+    static const QColor m_colorsMoodLamp[ColorsMoodLampCount];
 
     int m_grabSlowdown;
 };
