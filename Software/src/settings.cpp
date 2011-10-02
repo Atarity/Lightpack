@@ -516,42 +516,42 @@ void Settings::setMinimumLevelOfSensitivity(int value)
 
 int Settings::getDeviceRefreshDelay()
 {
-    return value(Profile::Key::Device::RefreshDelay).toInt();
+    return getValidDeviceRefreshDelay(value(Profile::Key::Device::RefreshDelay).toInt());
 }
 
 void Settings::setDeviceRefreshDelay(int value)
 {
-    setValue(Profile::Key::Device::RefreshDelay, value);
+    setValue(Profile::Key::Device::RefreshDelay, getValidDeviceRefreshDelay(value));
 }
 
 int Settings::getDeviceBrightness()
 {
-    return value(Profile::Key::Device::Brightness).toInt();
+    return getValidDeviceBrightness(value(Profile::Key::Device::Brightness).toInt());
 }
 
 void Settings::setDeviceBrightness(int value)
 {
-    setValue(Profile::Key::Device::Brightness, value);
+    setValue(Profile::Key::Device::Brightness, getValidDeviceBrightness(value));
 }
 
 int Settings::getDeviceSmooth()
 {
-    return value(Profile::Key::Device::Smooth).toInt();
+    return getValidDeviceSmooth(value(Profile::Key::Device::Smooth).toInt());
 }
 
 void Settings::setDeviceSmooth(int value)
 {
-    setValue(Profile::Key::Device::Smooth, value);
+    setValue(Profile::Key::Device::Smooth, getValidDeviceSmooth(value));
 }
 
 double Settings::getDeviceGamma()
 {
-    return getValidGammaCorrection(value(Profile::Key::Device::Gamma).toDouble());
+    return getValidDeviceGamma(value(Profile::Key::Device::Gamma).toDouble());
 }
 
 void Settings::setDeviceGamma(double gamma)
 {
-    setValue(Profile::Key::Device::Gamma, getValidGammaCorrection(gamma));
+    setValue(Profile::Key::Device::Gamma, getValidDeviceGamma(gamma));
 }
 
 Grab::Mode Settings::getGrabMode()
@@ -768,7 +768,34 @@ void Settings::setLedEnabled(int ledIndex, bool isEnabled)
     setValue(Profile::Key::Led::Prefix + QString::number(ledIndex + 1) + "/" + Profile::Key::Led::IsEnabled, isEnabled);
 }
 
-double Settings::getValidGammaCorrection(double value)
+int Settings::getValidDeviceRefreshDelay(int value)
+{
+    if (value <= Profile::Device::RefreshDelayMin)
+        value = Profile::Device::RefreshDelayMin;
+    else if (value >= Profile::Device::RefreshDelayMax)
+        value = Profile::Device::RefreshDelayMax;
+    return value;
+}
+
+int Settings::getValidDeviceBrightness(int value)
+{
+    if (value <= Profile::Device::BrightnessMin)
+        value = Profile::Device::BrightnessMin;
+    else if (value >= Profile::Device::BrightnessMax)
+        value = Profile::Device::BrightnessMax;
+    return value;
+}
+
+int Settings::getValidDeviceSmooth(int value)
+{
+    if (value <= Profile::Device::SmoothMin)
+        value = Profile::Device::SmoothMin;
+    else if (value >= Profile::Device::SmoothMax)
+        value = Profile::Device::SmoothMax;
+    return value;
+}
+
+double Settings::getValidDeviceGamma(double value)
 {
     if (value <= Profile::Device::GammaMin)
         value = Profile::Device::GammaMin;
@@ -779,10 +806,10 @@ double Settings::getValidGammaCorrection(double value)
 
 int Settings::getValidGrabSlowdown(int value)
 {
-    if (value < Profile::Device::SmoothMin)
-        value = Profile::Device::SmoothMin;
-    else if (value > Profile::Device::SmoothMax)
-        value = Profile::Device::SmoothMax;
+    if (value < Profile::Grab::SlowdownMin)
+        value = Profile::Grab::SlowdownMin;
+    else if (value > Profile::Grab::SlowdownMax)
+        value = Profile::Grab::SlowdownMax;
     return value;
 }
 
@@ -856,6 +883,7 @@ void Settings::settingsInit(bool isResetDefault)
     setNewOption(Profile::Key::MoodLamp::Color,         Profile::MoodLamp::ColorDefault, isResetDefault);
     setNewOption(Profile::Key::MoodLamp::Speed,         Profile::MoodLamp::SpeedDefault, isResetDefault);
     // [Device]
+    setNewOption(Profile::Key::Device::RefreshDelay,Profile::Device::RefreshDelayDefault, isResetDefault);
     setNewOption(Profile::Key::Device::Brightness,  Profile::Device::BrightnessDefault, isResetDefault);
     setNewOption(Profile::Key::Device::Smooth,      Profile::Device::SmoothDefault, isResetDefault);
     setNewOption(Profile::Key::Device::Gamma,       Profile::Device::GammaDefault, isResetDefault);

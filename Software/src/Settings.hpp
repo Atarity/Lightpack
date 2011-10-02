@@ -120,8 +120,11 @@ public:
     static bool isLedEnabled(int ledIndex);
     static void setLedEnabled(int ledIndex, bool isEnabled);
 
-private:    
-    static double getValidGammaCorrection(double value);
+private:        
+    static int getValidDeviceRefreshDelay(int value);
+    static int getValidDeviceBrightness(int value);
+    static int getValidDeviceSmooth(int value);
+    static double getValidDeviceGamma(double value);
     static int getValidGrabSlowdown(int value);
     static int getValidMoodLampSpeed(int value);
     static void setValidLedCoef(int ledIndex, const QString & keyCoef, double coef);
