@@ -72,6 +72,7 @@ namespace SupportedDevices
 enum DeviceType {
     LightpackDevice,
     AlienFxDevice,
+    AdalightDevice,
     VirtualDevice,
     DefaultDevice = LightpackDevice
 };

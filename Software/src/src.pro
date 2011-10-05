@@ -54,6 +54,9 @@ unix{
 win32 {
     # Windows version using WinAPI for HID
     LIBS    += -lhid -lusbcamd -lsetupapi
+    # For QSerialDevice
+    LIBS    += -luuid -ladvapi32
+
     SOURCES += hidapi/windows/hid.c
     # Windows version using WinAPI + GDI for grab colors
     LIBS    += -lgdi32 -ld3d9
@@ -62,6 +65,8 @@ win32 {
 unix:!macx{
     # Linux version using libusb and hidapi codes
     SOURCES += hidapi/linux/hid-libusb.c
+    # For QSerialDevice
+    LIBS += -ludev
 }
 
 macx{
@@ -85,6 +90,7 @@ SOURCES += \
     LedDeviceFactory.cpp \
     LedDeviceLightpack.cpp \
     LedDeviceAlienFx.cpp \
+    LedDeviceAdalight.cpp \
     LedDeviceVirtual.cpp \
     ColorButton.cpp \
     grab/X11Grabber.cpp \
@@ -113,6 +119,7 @@ HEADERS += \
     ILedDevice.hpp \    
     LedDeviceLightpack.hpp \
     LedDeviceAlienFx.hpp \
+    LedDeviceAdalight.hpp \
     LedDeviceVirtual.hpp \
     ColorButton.hpp \
     grab/IGrabber.hpp \
@@ -138,6 +145,9 @@ FORMS += SettingsWindow.ui \
     AboutDialog.ui \
     GrabWidget.ui
 
-
-
-
+#
+#   QSerialDevice
+#
+include(qserialdevice/qserialdevice/qserialdevice.pri)
+include(qserialdevice/qserialdeviceenumerator/qserialdeviceenumerator.pri)
+unix:include(qserialdevice/unix/ttylocker.pri)

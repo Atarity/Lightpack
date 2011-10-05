@@ -65,7 +65,24 @@ static const QString Port = "API/Port";
 static const QString IsAuthEnabled = "API/IsAuthEnabled";
 static const QString AuthKey = "API/AuthKey";
 }
+// [Adalight]
+namespace Adalight
+{
+static const QString Port = "Adalight/Port";
+static const QString BaudRate = "Adalight/BaudRate";
+}
 } /*Key*/
+
+namespace Value
+{
+namespace ConnectedDevice
+{
+static const QString LightpackDevice = "Lightpack";
+static const QString AlienFxDevice = "AlienFx";
+static const QString AdalightDevice = "Adalight";
+static const QString VirtualDevice = "Virtual";
+}
+} /*Value*/
 } /*Main*/
 
 namespace Profile
@@ -118,7 +135,7 @@ namespace LightpackMode
 {
 static const QString Ambilight = "Ambilight";
 static const QString MoodLamp = "MoodLamp";
-} /*LightpackMode*/
+}
 
 namespace GrabMode
 {
@@ -127,7 +144,7 @@ static const QString WinAPI = "WinAPI";
 static const QString X11 = "X11";
 static const QString D3D9 = "D3D9";
 static const QString MacCoreGraphics = "MacCoreGraphics";
-} /*LightpackMode*/
+}
 
 } /*Value*/
 } /*Profile*/
@@ -165,6 +182,10 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::Api::IsAuthEnabled,     Main::Api::IsAuthEnabledDefault);
     // Generation AuthKey as new UUID
     setNewOptionMain(Main::Key::Api::AuthKey,           QUuid::createUuid().toString());
+
+    // Adalight serial device configuration
+    setNewOptionMain(Main::Key::Adalight::Port,         Main::Adalight::PortDefault);
+    setNewOptionMain(Main::Key::Adalight::BaudRate,     Main::Adalight::BaudRateDefault);
 
     if (isDebugLevelObtainedFromCmdArgs == false)
     {
@@ -435,13 +456,20 @@ SupportedDevices::DeviceType Settings::getConnectedDevice()
 {
     QString deviceName = valueMain(Main::Key::ConnectedDevice).toString();
 
-    if (deviceName == "Lightpack")
-        return SupportedDevices::LightpackDevice;
-    else if (deviceName == "AlienFx")
+    if (deviceName == Main::Value::ConnectedDevice::LightpackDevice)
+        return  SupportedDevices::LightpackDevice;
+
+    else if (deviceName == Main::Value::ConnectedDevice::AlienFxDevice)
         return SupportedDevices::AlienFxDevice;
-    else if (deviceName == "Virtual")
+
+    else if (deviceName == Main::Value::ConnectedDevice::AdalightDevice)
+        return SupportedDevices::AdalightDevice;
+
+    else if (deviceName == Main::Value::ConnectedDevice::VirtualDevice)
         return SupportedDevices::VirtualDevice;
-    else {
+
+    else
+    {
         qWarning() << Q_FUNC_INFO << "ConnectedDevice in lightpack main config file contains crap. Reset to default.";
 
         setConnectedDevice(SupportedDevices::DefaultDevice);
@@ -455,13 +483,16 @@ void Settings::setConnectedDevice(SupportedDevices::DeviceType device)
 
     switch (device){
     case SupportedDevices::LightpackDevice:
-        deviceName = "Lightpack";
+        deviceName = Main::Value::ConnectedDevice::LightpackDevice;
         break;
     case SupportedDevices::AlienFxDevice:
-        deviceName = "AlienFx";
+        deviceName = Main::Value::ConnectedDevice::AlienFxDevice;
+        break;
+    case SupportedDevices::AdalightDevice:
+        deviceName = Main::Value::ConnectedDevice::AdalightDevice;
         break;
     case SupportedDevices::VirtualDevice:
-        deviceName = "Virtual";
+        deviceName = Main::Value::ConnectedDevice::VirtualDevice;
         break;
     default:
         qWarning() << Q_FUNC_INFO << "'device' not found in SupportedDevices. Reset to default.";
@@ -471,6 +502,28 @@ void Settings::setConnectedDevice(SupportedDevices::DeviceType device)
 
     setValueMain(Main::Key::ConnectedDevice, deviceName);
 }
+
+QString Settings::getAdalightPort()
+{
+    return valueMain(Main::Key::Adalight::Port).toString();
+}
+
+void Settings::setAdalightPort(const QString & port)
+{
+    setValueMain(Main::Key::Adalight::Port, port);
+}
+
+int Settings::getAdalightBaudRate()
+{
+    // TODO: validate baudrate reading from settings file
+    return valueMain(Main::Key::Adalight::BaudRate).toInt();
+}
+
+void Settings::setAdalightBaudRate(int baud)
+{
+    setValueMain(Main::Key::Adalight::BaudRate, baud);
+}
+
 
 int Settings::getGrabSlowdown()
 {

@@ -32,9 +32,9 @@
 #include "enums.hpp"
 
 #ifdef ALIEN_FX_SUPPORTED
-#   define SUPPORTED_DEVICES            "Lightpack,AlienFx,Virtual"
+#   define SUPPORTED_DEVICES            "Lightpack,AlienFx,Adalight,Virtual"
 #else
-#   define SUPPORTED_DEVICES            "Lightpack,Virtual"
+#   define SUPPORTED_DEVICES            "Lightpack,Adalight,Virtual"
 #endif
 
 #ifdef WINAPI_GRAB_SUPPORT
@@ -49,6 +49,12 @@
 #else
 #   define GRABMODE_DEFAULT         ::Grab::QtGrabMode
 #   define GRABMODE_DEFAULT_STR     "Qt"
+#endif
+
+#ifdef Q_OS_UNIX
+#   define ADALIGHT_PORT_DEFAULT    "/dev/ttyUSB0" /* For UART over USB on FT232RL */
+#elif Q_OS_WIN
+#   define ADALIGHT_PORT_DEFAULT    "COM1"
 #endif
 
 namespace SettingsScope
@@ -71,6 +77,12 @@ static const bool IsEnabledDefault = true;
 static const int PortDefault = 3636;
 static const bool IsAuthEnabledDefault = true;
 // See ApiKey generation in Settings initialization
+}
+// [Adalight]
+namespace Adalight
+{
+static const QString PortDefault = ADALIGHT_PORT_DEFAULT;
+static const int BaudRateDefault = 115200;
 }
 }
 

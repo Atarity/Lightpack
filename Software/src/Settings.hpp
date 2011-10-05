@@ -74,6 +74,12 @@ public:
     static void setExpertModeEnabled(bool isEnabled);
     static SupportedDevices::DeviceType getConnectedDevice();
     static void setConnectedDevice(SupportedDevices::DeviceType device);
+    // [Adalight]
+    static QString getAdalightPort();
+    static void setAdalightPort(const QString & port);
+    static int getAdalightBaudRate();
+    static void setAdalightBaudRate(int baud);
+
 
     // Profile
     static int getGrabSlowdown();
