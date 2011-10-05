@@ -648,10 +648,7 @@ static void *read_thread(void *param)
 	   reports into the hid_report_callback(). */
 	SInt32 code;
 	while (!dev->shutdown_thread && !dev->disconnected) {
-		code = CFRunLoopRunInMode(dev->run_loop_mode, 5.0001/*sec*/, TRUE);
-#if 0
-		// TODO: Figure out what to do here
-		
+		code = CFRunLoopRunInMode(dev->run_loop_mode, 1000/*sec*/, FALSE);
 		/* Return if the device has been disconnected */
 		if (code == kCFRunLoopRunFinished) {
 			dev->disconnected = 1;
@@ -661,11 +658,14 @@ static void *read_thread(void *param)
 
 		/* Break if The Run Loop returns Finished or Stopped. */
 		if (code != kCFRunLoopRunTimedOut &&
-		    code != kCFRunLoopRunHandledSource)
-			break; // TODO HANDLE ERROR
-#endif
+		    code != kCFRunLoopRunHandledSource) {
+			/* There was some kind of error. Setting
+			   shutdown seems to make sense, but
+			   there may be something else more appropriate */
+			dev->shutdown_thread = 1;
+			break;
+		}
 	}
-
 
 	/* Close the OS handle to the device, but only if it's not
 	   been unplugged. If it's been unplugged, then calling
@@ -859,14 +859,15 @@ int HID_API_EXPORT hid_read_timeout(hid_device *dev, unsigned char *data, size_t
 	}
 
 	/* Return if the device has been disconnected. */
-   	if (dev->disconnected) {
-   		bytes_read = -1;
-   		goto ret;
+	if (dev->disconnected) {
+		bytes_read = -1;
+		goto ret;
 	}
 	
 	if (dev->shutdown_thread) {
-		/* This means the device has been disconnected.
-		   An error code of -1 should be returned. */
+		/* This means the device has been closed (or there
+		   has been an error. An error code of -1 should
+		   be returned. */
 		bytes_read = -1;
 		goto ret;
 	}
@@ -952,10 +953,6 @@ void HID_API_EXPORT hid_close(hid_device *dev)
 	if (!dev)
 		return;
 
-	printf("close called\n");
-	
-#if 1
-	// TODO: Figure out if we need this.
 	/* Disconnect the report callback before close. */
 	IOHIDDeviceRegisterInputReportCallback(
 		dev->device_handle, dev->input_report_buf, dev->max_input_report_len,
@@ -963,16 +960,13 @@ void HID_API_EXPORT hid_close(hid_device *dev)
 	IOHIDManagerRegisterDeviceRemovalCallback(hid_mgr, NULL, dev);
 	IOHIDDeviceUnscheduleFromRunLoop(dev->device_handle, dev->run_loop, dev->run_loop_mode);
 	IOHIDDeviceScheduleWithRunLoop(dev->device_handle, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
-#endif
 
 	/* Cause read_thread() to stop. */
 	dev->shutdown_thread = 1;
 	
 	/* Wake up the run thread's event loop so that the thread can exit. */
 	CFRunLoopSourceSignal(dev->source);
-	printf("WakeUp\n");
 	CFRunLoopWakeUp(dev->run_loop);
-	printf("WakeUpDone\n");
 	
 	/* Notify the read thread that it can shut down now. */
 	pthread_barrier_wait(&dev->shutdown_barrier);
