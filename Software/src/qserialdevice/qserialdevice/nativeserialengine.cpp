@@ -221,93 +221,93 @@ void NativeSerialEngine::setReadNotificationEnabled(bool enable, bool onClose)
 {
     Q_D(NativeSerialEngine);
 
-    if (onClose)
-        enable = false;
+//    if (onClose)
+//        enable = false;
 
-    if (!d->notifier && enable && QAbstractEventDispatcher::instance(thread()))
-            d->notifier = AbstractSerialNotifier::createSerialNotifier(this);
+//    if (!d->notifier && enable && QAbstractEventDispatcher::instance(thread()))
+//            d->notifier = AbstractSerialNotifier::createSerialNotifier(this);
 
-    if (d->notifier)
-        d->notifier->setReadNotificationEnabled(enable);
-    if (onClose && d->notifier)
-        this->clearNotification();
+//    if (d->notifier)
+//        d->notifier->setReadNotificationEnabled(enable);
+//    if (onClose && d->notifier)
+//        this->clearNotification();
 }
 
 bool NativeSerialEngine::isWriteNotificationEnabled() const
 {
     Q_D(const NativeSerialEngine);
-    return (d->notifier
-            && d->notifier->isWriteNotificationEnabled());
+//    return (d->notifier
+//            && d->notifier->isWriteNotificationEnabled());
 }
 
 void NativeSerialEngine::setWriteNotificationEnabled(bool enable, bool onClose)
 {
     Q_D(NativeSerialEngine);
 
-    if (onClose)
-        enable = false;
+//    if (onClose)
+//        enable = false;
 
-    if (!d->notifier && enable && QAbstractEventDispatcher::instance(thread()))
-            d->notifier = AbstractSerialNotifier::createSerialNotifier(this);
+//    if (!d->notifier && enable && QAbstractEventDispatcher::instance(thread()))
+//            d->notifier = AbstractSerialNotifier::createSerialNotifier(this);
 
-    if (d->notifier)
-        d->notifier->setWriteNotificationEnabled(enable);
-    if (onClose && d->notifier)
-        this->clearNotification();
+//    if (d->notifier)
+//        d->notifier->setWriteNotificationEnabled(enable);
+//    if (onClose && d->notifier)
+//        this->clearNotification();
 }
 
 bool NativeSerialEngine::isExceptionNotificationEnabled() const
 {
     Q_D(const NativeSerialEngine);
-    return (d->notifier
-            && d->notifier->isExceptionNotificationEnabled());
+//    return (d->notifier
+//            && d->notifier->isExceptionNotificationEnabled());
 }
 
 void NativeSerialEngine::setExceptionNotificationEnabled(bool enable, bool onClose)
 {
     Q_D(NativeSerialEngine);
 
-    if (onClose)
-        enable = false;
+//    if (onClose)
+//        enable = false;
 
-    if (!d->notifier && enable && QAbstractEventDispatcher::instance(thread()))
-            d->notifier = AbstractSerialNotifier::createSerialNotifier(this);
+//    if (!d->notifier && enable && QAbstractEventDispatcher::instance(thread()))
+//            d->notifier = AbstractSerialNotifier::createSerialNotifier(this);
 
-    if (d->notifier)
-        d->notifier->setExceptionNotificationEnabled(enable);
-    if (onClose && d->notifier)
-        this->clearNotification();
+//    if (d->notifier)
+//        d->notifier->setExceptionNotificationEnabled(enable);
+//    if (onClose && d->notifier)
+//        this->clearNotification();
 }
 
 bool NativeSerialEngine::isLineNotificationEnabled() const
 {
     Q_D(const NativeSerialEngine);
-    return (d->notifier
-            && d->notifier->isLineNotificationEnabled());
+//    return (d->notifier
+//            && d->notifier->isLineNotificationEnabled());
 }
 
 void NativeSerialEngine::setLineNotificationEnabled(bool enable, bool onClose)
 {
     Q_D(NativeSerialEngine);
 
-    if (onClose)
-        enable = false;
+//    if (onClose)
+//        enable = false;
 
-    if (!d->notifier && enable && QAbstractEventDispatcher::instance(thread()))
-            d->notifier = AbstractSerialNotifier::createSerialNotifier(this);
+//    if (!d->notifier && enable && QAbstractEventDispatcher::instance(thread()))
+//            d->notifier = AbstractSerialNotifier::createSerialNotifier(this);
 
-    if (d->notifier)
-        d->notifier->setLineNotificationEnabled(enable);
-    if (onClose && d->notifier)
-        this->clearNotification();
+//    if (d->notifier)
+//        d->notifier->setLineNotificationEnabled(enable);
+//    if (onClose && d->notifier)
+//        this->clearNotification();
 }
 
 void NativeSerialEngine::clearNotification()
 {
     Q_D(NativeSerialEngine);
 
-    AbstractSerialNotifier::deleteSerialNotifier(d->notifier);
-    d->notifier = 0;
+//    AbstractSerialNotifier::deleteSerialNotifier(d->notifier);
+//    d->notifier = 0;
 }
 
 //add 05.11.2009  (while is not used, reserved)

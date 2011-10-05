@@ -174,12 +174,17 @@ void LedDeviceAdalight::open()
         ok = m_AdalightDevice->setBaudRate(baudrate);
         if (ok)
         {
-            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Baud rate  :" << m_AdalightDevice->baudRate();
-            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Data bits  :" << m_AdalightDevice->dataBits();
-            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Parity     :" << m_AdalightDevice->parity();
-            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Stop bits  :" << m_AdalightDevice->stopBits();
-            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Flow       :" << m_AdalightDevice->flowControl();
-
+            ok = m_AdalightDevice->setDataBits(AbstractSerial::DataBits8);
+            if (ok)
+            {
+                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Baud rate  :" << m_AdalightDevice->baudRate();
+                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Data bits  :" << m_AdalightDevice->dataBits();
+                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Parity     :" << m_AdalightDevice->parity();
+                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Stop bits  :" << m_AdalightDevice->stopBits();
+                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Flow       :" << m_AdalightDevice->flowControl();
+            } else {
+                qWarning() << Q_FUNC_INFO << "Set data bits 8 fail";
+            }
         } else {
             qWarning() << Q_FUNC_INFO << "Set baud rate" << Settings::getAdalightBaudRate() << "fail";
         }
@@ -193,14 +198,15 @@ void LedDeviceAdalight::open()
 
 bool LedDeviceAdalight::writeBuffer(const QByteArray & buff)
 {
-    printf("\n");
+#if 1
+    printf("write buffer: ");
     for (int i = 0; i < buff.count(); i++)
     {
         printf("0x%02x ", buff.at(i) & 0xff);
     }
     printf("\n");
     fflush(stdout);
-
+#endif
 
     if (m_AdalightDevice->isOpen() == false)
         return false;

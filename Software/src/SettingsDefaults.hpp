@@ -53,7 +53,7 @@
 
 #ifdef Q_OS_UNIX
 #   define ADALIGHT_PORT_DEFAULT    "/dev/ttyUSB0" /* For UART over USB on FT232RL */
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
 #   define ADALIGHT_PORT_DEFAULT    "COM1"
 #endif
 
