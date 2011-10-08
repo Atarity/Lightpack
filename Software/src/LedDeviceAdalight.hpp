@@ -1,5 +1,5 @@
 /*
- * LedDeviceAdalight.cpp
+ * LedDeviceAdalight.hpp
  *
  *  Created on: 17.04.2011
  *      Author: Timur Sattarov && Mike Shatohin
