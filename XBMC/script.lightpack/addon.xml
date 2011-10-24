@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.lightpack" name="Lightpack"
+       version="1.0.4" date="24.10.2011"
+       provider-name="Eraser">
+  <requires>
+    <import addon="xbmc.python" version="1.0"/>
+  </requires>
+  <extension point="xbmc.python.script" library="default.py"/>
+  <extension point="xbmc.service" library="service.py" /> 
+  <extension point="xbmc.addon.repository" name="Lightpack XBMC Add-ons">
+	  <info compressed="true">http://lightpack.googlecode.com/hg/XBMC/addons.xml</info> 
+	  <checksum>http://lightpack.googlecode.com/hg/XBMC/addons.xml.md5</checksum> 
+	  <datadir zip="true">http://lightpack.googlecode.com/hg/XBMC/</datadir> 
+  </extension>
+
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Lightpack manager</summary>
+    <description lang="en">Lightpack project - http://code.google.com/p/lightpack/</description>
+    <license>GPL</license>
+    <platform>all</platform>
+  </extension>
+</addon>
