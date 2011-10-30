@@ -97,9 +97,7 @@ static inline void Timer_Init(void)
 
 static inline void SetupHardware(void)
 {
-    /* Disable watchdog if enabled by bootloader/fuses */
-    MCUSR &= ~(1 << WDRF);
-    wdt_disable();
+    wdt_enable(WDTO_250MS);
 
     /* Disable clock division */
     clock_prescale_set(clock_div_1);
@@ -140,12 +138,22 @@ static inline void _ProcessFlags(void)
     }
 }
 
+static inline void _BlinkUsbLed(void)
+{
+    SET(USBLED);
+    _delay_ms(10);
+    CLR(USBLED);
+    _delay_ms(10);
+}
+
 /*
  *  Main program entry point
  */
 int main(void)
 {
     SetupHardware();
+
+    _BlinkUsbLed();
 
     // Led driver ports initialization
     LedDriver_Init();
@@ -160,6 +168,8 @@ int main(void)
 
     for (;;)
     {
+        wdt_reset();
+
         ProcessUsbTasks();
         _ProcessFlags();
     }
