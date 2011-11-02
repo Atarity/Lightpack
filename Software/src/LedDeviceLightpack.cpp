@@ -192,46 +192,11 @@ void LedDeviceLightpack::openDevice()
 
     m_hidDevice = NULL;
 
-    struct hid_device_info *devs, *cur_dev;
-
-    DEBUG_LOW_LEVEL << QString("Start enumeration HID: 0x%1 0x%2")
+    DEBUG_LOW_LEVEL << QString("hid_open(0x%1, 0x%2)")
                        .arg(USB_VENDOR_ID, 4, 16, QChar('0'))
                        .arg(USB_PRODUCT_ID, 4, 16, QChar('0'));
 
-    devs = hid_enumerate(USB_VENDOR_ID, USB_PRODUCT_ID);
-    cur_dev = devs;
-
-    while (cur_dev)
-    {
-        int vid = cur_dev->vendor_id;
-        int pid = cur_dev->product_id;
-
-        QString manufacturer_string = QString::fromWCharArray(cur_dev->manufacturer_string);
-        QString product_string = QString::fromWCharArray(cur_dev->product_string);
-
-        DEBUG_LOW_LEVEL << QString("Found HID: 0x%1 0x%2 %3 %4")
-                .arg(pid, 4, 16, QChar('0'))
-                .arg(vid, 4, 16, QChar('0'))
-                .arg(product_string)
-                .arg(manufacturer_string).trimmed();
-
-        if (vid == USB_VENDOR_ID && pid == USB_PRODUCT_ID && product_string == USB_PRODUCT_STRING)
-        {
-            DEBUG_LOW_LEVEL << "Lightpack found";
-            m_hidDevice = hid_open_path(cur_dev->path);
-
-            if (m_hidDevice == NULL)
-            {
-                qWarning("Lightpack open fail");
-                hid_free_enumeration(devs);
-                emit openDeviceSuccess(false);
-                return;
-            }
-            break; // device founded break search and go to free enumeration and success signal
-        }
-        cur_dev = cur_dev->next;
-    }
-    hid_free_enumeration(devs);
+    m_hidDevice = hid_open(USB_VENDOR_ID, USB_PRODUCT_ID, NULL);
 
     if (m_hidDevice == NULL)
     {
@@ -240,6 +205,7 @@ void LedDeviceLightpack::openDevice()
         return;
     }
 
+    // Immediately return from hid_read() if no data available
     hid_set_nonblocking(m_hidDevice, 1);
 
     DEBUG_LOW_LEVEL << "Lightpack opened";
@@ -293,7 +259,7 @@ bool LedDeviceLightpack::tryToReopenDevice()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    qWarning() << "Reopen device";
+    qWarning() << "Try to reopen device";
 
     hid_close(m_hidDevice);
 
