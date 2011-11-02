@@ -140,8 +140,6 @@ static inline void _PulseWidthModulation(void)
     {
         s_pwmIndex = 0;
 
-        SET(LEDR);
-
         _StartConstantTime();
 
         // Switch OFF LEDs on time sets in g_Settings.brightness
@@ -154,11 +152,8 @@ static inline void _PulseWidthModulation(void)
         }
 
         _EndConstantTime(g_Settings.brightness);
-
-        CLR(LEDR);
     }
 
-    SET(LEDW);
 
     if (g_Settings.isSmoothEnabled)
     {
@@ -166,8 +161,6 @@ static inline void _PulseWidthModulation(void)
     } else {
         LedDriver_UpdatePWM(g_Images.end, s_pwmIndex);
     }
-
-    CLR(LEDW);
 
     s_pwmIndex++;
 

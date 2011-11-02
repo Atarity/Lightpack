@@ -59,13 +59,11 @@ void ProcessUsbTasks(void)
 /** Event handler for the library USB Connection event. */
 void EVENT_USB_Device_Connect(void)
 {
-    SET(LEDR);
 }
 
 /** Event handler for the library USB Disconnection event. */
 void EVENT_USB_Device_Disconnect(void)
 {
-    CLR(LEDR);
 }
 
 /** Event handler for the library USB Configuration Changed event. */
@@ -146,7 +144,6 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 
     case CMD_UPDATE_LEDS:
     {
-        SET(LEDR);
 
         _FlagSet(Flag_ChangingColors);
 
@@ -193,8 +190,6 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 
         _FlagClear(Flag_ChangingColors);
         _FlagSet(Flag_HaveNewColors);
-
-        CLR(LEDR);
 
         break;
     }

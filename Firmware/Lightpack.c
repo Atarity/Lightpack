@@ -73,6 +73,12 @@ ISR ( TIMER0_OVF_vect )
     }
 }
 
+// Watchdog interrupt
+ISR ( WDT_vect )
+{
+    _BlinkUsbLed(10, 20);
+}
+
 static inline void Timer_Init(void)
 {
     TCCR1A = 0x00;
@@ -84,8 +90,8 @@ static inline void Timer_Init(void)
     // Setup default value
     OCR1A = g_Settings.timerOutputCompareRegValue;
 
-    TIMSK1 = _BV(OCIE1A);
-    TIMSK0 = _BV(TOIE0);
+    TIMSK1 = _BV(OCIE1A); // Main timer
+    TIMSK0 = _BV(TOIE0); // Usb led timer
 
     // Start timer
     TCCR1B = _BV(CS10); // div1
@@ -97,7 +103,10 @@ static inline void Timer_Init(void)
 
 static inline void SetupHardware(void)
 {
+    // Watchdog configuration: interrupt after 250ms and reset after 500ms;
     wdt_enable(WDTO_250MS);
+    // Enable watchdog interrupt
+    WDTCSR |= _BV(WDIE);
 
     /* Disable clock division */
     clock_prescale_set(clock_div_1);
@@ -112,8 +121,6 @@ static inline void SetupHardware(void)
     PORTD = 0x00;
     DDRD = 0x00;
 
-    OUTPUT(LEDR);
-    OUTPUT(LEDW);
     OUTPUT(USBLED);
     SET(USBLED);
 }
@@ -138,14 +145,6 @@ static inline void _ProcessFlags(void)
     }
 }
 
-static inline void _BlinkUsbLed(void)
-{
-    SET(USBLED);
-    _delay_ms(10);
-    CLR(USBLED);
-    _delay_ms(10);
-}
-
 /*
  *  Main program entry point
  */
@@ -153,10 +152,10 @@ int main(void)
 {
     SetupHardware();
 
-    _BlinkUsbLed();
-
     // Led driver ports initialization
     LedDriver_Init();
+
+    _SmoothSwitchOnUsbLed(0x40);
 
     // Initialize timer for update LedDriver-s
     Timer_Init();
