@@ -65,7 +65,7 @@ public:
     void open();
 
 private:
-    bool openDevice();
+    void openDevice();
     bool readDataFromDevice();
     bool writeBufferToDevice(int command);
     bool tryToReopenDevice();

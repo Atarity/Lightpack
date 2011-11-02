@@ -186,7 +186,7 @@ void LedDeviceLightpack::open()
     openDevice();
 }
 
-bool LedDeviceLightpack::openDevice()
+void LedDeviceLightpack::openDevice()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -194,9 +194,11 @@ bool LedDeviceLightpack::openDevice()
 
     struct hid_device_info *devs, *cur_dev;
 
-    DEBUG_LOW_LEVEL << "Start enumeration of all HID devices";
+    DEBUG_LOW_LEVEL << QString("Start enumeration HID: 0x%1 0x%2")
+                       .arg(USB_VENDOR_ID, 4, 16, QChar('0'))
+                       .arg(USB_PRODUCT_ID, 4, 16, QChar('0'));
 
-    devs = hid_enumerate(0, 0);
+    devs = hid_enumerate(USB_VENDOR_ID, USB_PRODUCT_ID);
     cur_dev = devs;
 
     while (cur_dev)
@@ -223,7 +225,7 @@ bool LedDeviceLightpack::openDevice()
                 qWarning("Lightpack open fail");
                 hid_free_enumeration(devs);
                 emit openDeviceSuccess(false);
-                return false;
+                return;
             }
             break; // device founded break search and go to free enumeration and success signal
         }
@@ -235,8 +237,9 @@ bool LedDeviceLightpack::openDevice()
     {
         qWarning("Lightpack device not found");
         emit openDeviceSuccess(false);
-        return false;
+        return;
     }
+
     hid_set_nonblocking(m_hidDevice, 1);
 
     DEBUG_LOW_LEVEL << "Lightpack opened";
@@ -244,7 +247,6 @@ bool LedDeviceLightpack::openDevice()
     updateDeviceSettings();
 
     emit openDeviceSuccess(true);
-    return true;
 }
 
 bool LedDeviceLightpack::readDataFromDevice()
@@ -254,7 +256,7 @@ bool LedDeviceLightpack::readDataFromDevice()
     int bytes_read = hid_read(m_hidDevice, m_readBuffer, sizeof(m_readBuffer));
 
     if(bytes_read < 0){
-        qWarning() << "error reading data:" << bytes_read;
+        qWarning() << "Error reading data:" << bytes_read;
         emit ioDeviceSuccess(false);
         return false;
     }
@@ -278,7 +280,7 @@ bool LedDeviceLightpack::writeBufferToDevice(int command)
         // Trying to repeat sending data:
         error = hid_write(m_hidDevice, m_writeBuffer, sizeof(m_writeBuffer));
         if(error < 0){
-            qWarning() << "error writing data:" << error;
+            qWarning() << "Error writing data:" << error;
             emit ioDeviceSuccess(false);
             return false;
         }
@@ -291,14 +293,17 @@ bool LedDeviceLightpack::tryToReopenDevice()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    qWarning() << "Reopen device";
+
     hid_close(m_hidDevice);
-    qWarning() << "try to reopen device";
-    if(openDevice()){
-        qWarning() << "reopen success";
-        return true;
-    }else{
+
+    openDevice();
+
+    if (m_hidDevice == NULL)
         return false;
-    }
+
+    qWarning() << "Reopen success";
+    return true;
 }
 
 bool LedDeviceLightpack::readDataFromDeviceWithCheck()
