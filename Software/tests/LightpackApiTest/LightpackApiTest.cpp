@@ -278,7 +278,7 @@ void LightpackApiTest::testCase_GetProfiles()
 
     // Test UTF-8 in profile name
 
-    QString utf8Check = "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430"; // Russian word "Proverka"
+    QString utf8Check = trUtf8("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430"); // Russian word "Proverka"
 
     Settings::loadOrCreateProfile("ApiTestProfile");
     Settings::loadOrCreateProfile("ApiTestProfile-UTF-8-" + utf8Check);
@@ -296,7 +296,7 @@ void LightpackApiTest::testCase_GetProfiles()
 void LightpackApiTest::testCase_GetProfile()
 {
     QString cmdProfileCheckResult = ApiServer::CmdResultProfile +
-            Settings::getCurrentProfileName() + "\n";
+            Settings::getCurrentProfileName().toUtf8() + "\n";
 
     // Test GetProfile command:
 
@@ -304,6 +304,12 @@ void LightpackApiTest::testCase_GetProfile()
 
     QByteArray result = readResult(m_socket);
     QVERIFY(m_sockReadLineOk);
+
+    if (result != cmdProfileCheckResult)
+    {
+        qDebug() << "result =" << result;
+        qDebug() << "cmdProfileCheckResult =" << cmdProfileCheckResult;
+    }
 
     QVERIFY(result == cmdProfileCheckResult);
 }
@@ -736,7 +742,7 @@ QString LightpackApiTest::getProfilesResultString()
 
     QString cmdProfilesCheckResult = ApiServer::CmdResultProfiles;
     for (int i = 0; i < profiles.count(); i++)
-        cmdProfilesCheckResult += profiles[i] + ";";
+        cmdProfilesCheckResult += profiles[i].toUtf8() + ";";
     cmdProfilesCheckResult += "\n";
 
     return cmdProfilesCheckResult;
