@@ -129,10 +129,12 @@ private slots:
     void onCheckBox_IsApiAuthEnabled_Toggled(bool isEnabled);
 
 private:
-    void connectSignalsSlots();
+    void connectSignalsSlots();   
 
     void updateTrayAndActionStates();
     void updateExpertModeWidgetsVisibility();
+
+    void syncLedDeviceWithSettingsWindow();
 
     void createTrayIcon();
     void createActions();

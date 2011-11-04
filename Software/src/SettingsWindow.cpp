@@ -307,6 +307,13 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
     }
 }
 
+void SettingsWindow::syncLedDeviceWithSettingsWindow()
+{
+    emit updateBrightness(Settings::getDeviceBrightness());
+    emit updateSmoothSlowdown(Settings::getDeviceSmooth());
+    emit updateGamma(Settings::getDeviceGamma());
+}
+
 void SettingsWindow::onCheckBox_ConnectVirtualDevice_Toggled(bool isEnabled)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
@@ -387,9 +394,13 @@ void SettingsWindow::setDeviceLockViaAPI(Api::DeviceLockStatus status)
         qFatal("%s m_grabManager == NULL", Q_FUNC_INFO);
 
     if (m_deviceLockStatus == Api::DeviceUnlocked)
+    {
         connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
-    else // m_deviceLockStatus == Api::DeviceLocked
+        syncLedDeviceWithSettingsWindow();
+
+    } else { // m_deviceLockStatus == Api::DeviceLocked
         disconnect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
+    }
 
     startBacklight();
 }
