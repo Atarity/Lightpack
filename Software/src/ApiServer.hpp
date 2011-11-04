@@ -96,6 +96,7 @@ public:
 
     static const char * CmdSetColor;
     static const char * CmdSetGamma;
+    static const char * CmdSetBrightness;
     static const char * CmdSetSmooth;
     static const char * CmdSetProfile;
 
@@ -109,6 +110,8 @@ signals:
     void requestBacklightStatus();
     void startParseSetColorTask(QByteArray buffer);
     void updateLedsColors(const QList<QRgb> & colors);
+    void updateGamma(double value);
+    void updateBrightness(int value);
     void updateSmooth(int value);
     void updateProfile(QString profileName);
     void updateStatus(Backlight::Status status);

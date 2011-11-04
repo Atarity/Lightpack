@@ -95,6 +95,11 @@ private Q_SLOTS:
     void testCase_SetGammaInvalid();
     void testCase_SetGammaInvalid_data();
 
+    void testCase_SetBrightnessValid();
+    void testCase_SetBrightnessValid_data();
+    void testCase_SetBrightnessInvalid();
+    void testCase_SetBrightnessInvalid_data();
+
     void testCase_SetSmoothValid();
     void testCase_SetSmoothValid_data();
     void testCase_SetSmoothInvalid();
@@ -160,6 +165,8 @@ void LightpackApiTest::initTestCase()
     connect(m_little, SIGNAL(resultBacklightStatus(Backlight::Status)), m_apiServer, SLOT(resultBacklightStatus(Backlight::Status)), Qt::QueuedConnection);
 
     connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_little, SLOT(setLedColors(QList<QRgb>)), Qt::QueuedConnection);
+    connect(m_apiServer, SIGNAL(updateGamma(double)), m_little, SLOT(setGamma(double)), Qt::QueuedConnection);
+    connect(m_apiServer, SIGNAL(updateBrightness(int)), m_little, SLOT(setBrightness(int)), Qt::QueuedConnection);
     connect(m_apiServer, SIGNAL(updateSmooth(int)), m_little, SLOT(setSmooth(int)), Qt::QueuedConnection);
     connect(m_apiServer, SIGNAL(updateProfile(QString)), m_little, SLOT(setProfile(QString)), Qt::QueuedConnection);
     connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)), m_little, SLOT(setStatus(Backlight::Status)), Qt::QueuedConnection);
@@ -589,6 +596,70 @@ void LightpackApiTest::testCase_SetGammaInvalid_data()
     QTest::newRow("11") << "Galaxy in Danger!";
     QTest::newRow("12") << "reinterpret_cast<CodeMonkey*>(m_pSelf);";
     QTest::newRow("13") << "BSOD are coming soon!";
+}
+
+void LightpackApiTest::testCase_SetBrightnessValid()
+{
+    QVERIFY(lock(m_socket));
+
+    QFETCH(QString, brightnessStr);
+    QFETCH(int, brightnessValue);
+
+    QByteArray setBrightnessCmd = ApiServer::CmdSetBrightness;
+    setBrightnessCmd += brightnessStr;
+
+    QVERIFY(writeCommandWithCheck(m_socket, setBrightnessCmd, ApiServer::CmdSetResult_Ok));
+
+    processEventsFromLittle();
+
+    if (m_little->m_brightness != brightnessValue)
+    {
+        qDebug() << "m_little->m_brightness =" << m_little->m_brightness << "brightnessValue =" << brightnessValue;
+    }
+
+    QVERIFY(m_little->m_brightness == brightnessValue);
+
+    QVERIFY(unlock(m_socket));
+}
+
+void LightpackApiTest::testCase_SetBrightnessValid_data()
+{
+    QTest::addColumn<QString>("brightnessStr");
+    QTest::addColumn<int>("brightnessValue");
+
+    // Valid
+    QTest::newRow("0") << "0"   << 0;
+    QTest::newRow("1") << "1"   << 1;
+    QTest::newRow("2") << "55"  << 55;
+    QTest::newRow("3") << "100" << 100;
+}
+
+void LightpackApiTest::testCase_SetBrightnessInvalid()
+{
+    QVERIFY(lock(m_socket));
+
+    QFETCH(QString, brightnessStr);
+
+    QByteArray setBrightnessCmd = ApiServer::CmdSetBrightness;
+    setBrightnessCmd += brightnessStr;
+
+    QVERIFY(writeCommandWithCheck(m_socket, setBrightnessCmd, ApiServer::CmdSetResult_Error));
+
+    QVERIFY(unlock(m_socket));
+}
+
+void LightpackApiTest::testCase_SetBrightnessInvalid_data()
+{
+    QTest::addColumn<QString>("brightnessStr");
+
+    QTest::newRow("0") << "0.0";
+    QTest::newRow("1") << "0.0001";
+    QTest::newRow("2") << "-12";
+    QTest::newRow("3") << ":12.0";
+    QTest::newRow("4") << "2.;";
+    QTest::newRow("5") << ".2.";
+    QTest::newRow("5") << "120";
+    QTest::newRow("5") << "100500";
 }
 
 void LightpackApiTest::testCase_SetSmoothValid()

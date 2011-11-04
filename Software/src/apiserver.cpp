@@ -104,6 +104,7 @@ const char * ApiServer::CmdSetResult_NotLocked = "not locked\n";
 // Set-commands contains at end semicolon!!!
 const char * ApiServer::CmdSetColor = "setcolor:";
 const char * ApiServer::CmdSetGamma = "setgamma:";
+const char * ApiServer::CmdSetBrightness = "setbrightness:";
 const char * ApiServer::CmdSetSmooth = "setsmooth:";
 const char * ApiServer::CmdSetProfile = "setprofile:";
 
@@ -459,9 +460,7 @@ void ApiServer::clientProcessCommands()
                         {
                             API_DEBUG_OUT << CmdSetGamma << "OK:" << gamma;
 
-
-                            qWarning() << "CmdSetGammma: Not implemented";
-
+                            emit updateGamma(gamma);
 
                             result = CmdSetResult_Ok;
                         } else {
@@ -470,6 +469,53 @@ void ApiServer::clientProcessCommands()
                         }
                     } else {
                         API_DEBUG_OUT << CmdSetGamma << "Error (convert fail):" << gamma;
+                        result = CmdSetResult_Error;
+                    }
+                }
+            }
+            else if (m_lockedClient == NULL)
+            {
+                result = CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result = CmdSetResult_Busy;
+            }
+        }
+        else if (cmdBuffer.startsWith(CmdSetBrightness))
+        {
+            API_DEBUG_OUT << CmdSetBrightness;
+
+            if (m_lockedClient == client)
+            {
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
+
+                // Brightness can contain max three chars (0 -- 100)
+                if (cmdBuffer.length() > 3)
+                {
+                    API_DEBUG_OUT << CmdSetBrightness << "Error (smooth max 3 chars)";
+                    result = CmdSetResult_Error;
+                } else {
+                    // Try to convert smooth string to int
+                    bool ok = false;
+                    int brightness = QString(cmdBuffer).toInt(&ok);
+
+                    if (ok)
+                    {
+                        if (brightness >= Profile::Device::BrightnessMin && brightness <= Profile::Device::BrightnessMax)
+                        {
+                            API_DEBUG_OUT << CmdSetBrightness << "OK:" << brightness;
+
+                            emit updateBrightness(brightness);
+
+                            result = CmdSetResult_Ok;
+                        } else {
+                            API_DEBUG_OUT << CmdSetBrightness << "Error (max min test fail):" << brightness;
+                            result = CmdSetResult_Error;
+                        }
+                    } else {
+                        API_DEBUG_OUT << CmdSetBrightness << "Error (convert fail):" << brightness;
                         result = CmdSetResult_Error;
                     }
                 }
