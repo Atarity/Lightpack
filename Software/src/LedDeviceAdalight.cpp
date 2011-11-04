@@ -120,7 +120,7 @@ void LedDeviceAdalight::setGamma(double value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     m_gamma = value;
-    emit commandCompleted(true);
+    setColors(m_colorsSaved);
 }
 
 void LedDeviceAdalight::setBrightness(int percent)

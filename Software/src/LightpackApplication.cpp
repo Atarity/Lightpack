@@ -285,6 +285,8 @@ void LightpackApplication::connectApiServerAndLedDeviceSignalsSlots()
     if (m_isApiServerConnectedToLedDeviceSignalsSlots == false)
     {
         connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
+        connect(m_apiServer, SIGNAL(updateGamma(double)),           m_ledDeviceFactory, SLOT(setGamma(double)), Qt::QueuedConnection);
+        connect(m_apiServer, SIGNAL(updateBrightness(int)),         m_ledDeviceFactory, SLOT(setBrightness(int)), Qt::QueuedConnection);
         connect(m_apiServer, SIGNAL(updateSmooth(int)),             m_ledDeviceFactory, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
         m_isApiServerConnectedToLedDeviceSignalsSlots = true;
     }
@@ -295,6 +297,8 @@ void LightpackApplication::disconnectApiServerAndLedDeviceSignalsSlots()
     if (m_isApiServerConnectedToLedDeviceSignalsSlots == true)
     {
         disconnect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)),  m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)));
+        disconnect(m_apiServer, SIGNAL(updateGamma(double)),            m_ledDeviceFactory, SLOT(setGamma(double)));
+        disconnect(m_apiServer, SIGNAL(updateBrightness(int)),          m_ledDeviceFactory, SLOT(setBrightness(int)));
         disconnect(m_apiServer, SIGNAL(updateSmooth(int)),              m_ledDeviceFactory, SLOT(setSmoothSlowdown(int)));
         m_isApiServerConnectedToLedDeviceSignalsSlots = false;
     }

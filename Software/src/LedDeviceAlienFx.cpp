@@ -151,11 +151,13 @@ void LedDeviceAlienFx::setSmoothSlowdown(int /*value*/)
 
 void LedDeviceAlienFx::setGamma(double /*value*/)
 {
+    // TODO
     emit commandCompleted(true);
 }
 
 void LedDeviceAlienFx::setBrightness(int /*value*/)
 {
+    // TODO
     emit commandCompleted(true);
 }
 

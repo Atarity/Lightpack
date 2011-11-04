@@ -142,7 +142,8 @@ void LedDeviceLightpack::setGamma(double value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     m_gamma = value;
-    emit commandCompleted(true);
+    setColors(m_colorsSaved);
+    // commandCompleted() signal already emited by setColors() slot
 }
 
 void LedDeviceLightpack::setBrightness(int percent)
