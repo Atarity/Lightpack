@@ -54,7 +54,7 @@ public:
 public slots:
     void setColors(const QList<QRgb> & colors);
     void offLeds();
-    void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
+    void setRefreshDelay(int value);
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);
     void setGamma(double value);

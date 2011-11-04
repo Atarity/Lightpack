@@ -44,7 +44,7 @@ signals:
     // This signals are directly connected to ILedDevice. Don't use outside.
     void ledDeviceSetColors(const QList<QRgb> & colors);
     void ledDeviceOffLeds();
-    void ledDeviceSetTimerOptions(int prescallerIndex, int outputCompareRegValue);
+    void ledDeviceSetRefreshDelay(int value);
     void ledDeviceSetColorDepth(int value);
     void ledDeviceSetSmoothSlowdown(int value);
     void ledDeviceSetGamma(double value);
@@ -57,7 +57,7 @@ public slots:
     // This slots are protected from the overflow of queries
     void setColors(const QList<QRgb> & colors);
     void offLeds();
-    void setTimerOptions(int prescallerIndex, int outputCompareRegValue);
+    void setRefreshDelay(int value);
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);
     void setGamma(double value);
@@ -81,8 +81,7 @@ private:
     QList<LedDeviceCommands::Cmd> m_cmdQueue;
 
     QList<QRgb> m_savedColors;
-    int m_savedTimerPrescallerIndex;
-    int m_savedTimerOCR;
+    int m_savedRefreshDelay;
     int m_savedColorDepth;
     int m_savedSmoothSlowdown;
     double m_savedGamma;

@@ -100,7 +100,7 @@ void LedDeviceAdalight::offLeds()
     setColors(m_colorsSaved);
 }
 
-void LedDeviceAdalight::setTimerOptions(int /*prescallerIndex*/, int /*outputCompareRegValue*/)
+void LedDeviceAdalight::setRefreshDelay(int /*value*/)
 {
     emit commandCompleted(true);
 }

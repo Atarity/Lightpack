@@ -134,7 +134,7 @@ void LedDeviceAlienFx::offLeds()
     emit commandCompleted(true);
 }
 
-void LedDeviceAlienFx::setTimerOptions(int /*prescallerIndex*/, int /*outputCompareRegValue*/)
+void LedDeviceAlienFx::setRefreshDelay(int /*value*/)
 {
     emit commandCompleted(true);
 }

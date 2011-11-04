@@ -54,7 +54,7 @@ signals:
     void settingsProfileChanged();
     void offLeds();
     void updateLedsColors(const QList<QRgb> &);
-    void updateTimerOptions(int prescallerIndex, int outputCompareRegValue);
+    void updateRefreshDelay(int value);
     void updateColorDepth(int value);
     void updateSmoothSlowdown(int value);
     void updateGamma(double value);

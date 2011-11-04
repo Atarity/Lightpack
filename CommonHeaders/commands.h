@@ -31,9 +31,9 @@
 // Commands to device, sends it in first byte of data[]
 enum COMMANDS{
     CMD_UPDATE_LEDS = 1,
-    CMD_OFF_ALL,                     /* switch off all leds */
-    CMD_SET_TIMER_OPTIONS,           /* timer settings */
-    CMD_SET_PWM_LEVEL_MAX_VALUE,     /* each color max value */
+    CMD_OFF_ALL,
+    CMD_SET_TIMER_OPTIONS,
+    CMD_SET_PWM_LEVEL_MAX_VALUE, /* deprecated */
     CMD_SET_SMOOTH_SLOWDOWN,
     CMD_SET_BRIGHTNESS,
 

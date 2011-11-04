@@ -83,7 +83,7 @@ namespace LedDeviceCommands
 enum Cmd {
     OffLeds,
     SetColors,
-    SetTimerOptions,
+    SetRefreshDelay,
     SetColorDepth,
     SetSmoothSlowdown,
     SetGamma,

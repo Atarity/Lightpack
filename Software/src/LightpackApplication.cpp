@@ -267,7 +267,7 @@ void LightpackApplication::startLedDeviceFactory()
     connect(m_settingsWindow, SIGNAL(offLeds()),                    m_ledDeviceFactory, SLOT(offLeds()), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(updateColorDepth(int)),        m_ledDeviceFactory, SLOT(setColorDepth(int)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(updateSmoothSlowdown(int)),    m_ledDeviceFactory, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
-    connect(m_settingsWindow, SIGNAL(updateTimerOptions(int,int)),  m_ledDeviceFactory, SLOT(setTimerOptions(int,int)), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(updateRefreshDelay(int)),      m_ledDeviceFactory, SLOT(setRefreshDelay(int)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(updateGamma(double)),          m_ledDeviceFactory, SLOT(setGamma(double)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(updateBrightness(int)),        m_ledDeviceFactory, SLOT(setBrightness(int)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(requestFirmwareVersion()),     m_ledDeviceFactory, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);

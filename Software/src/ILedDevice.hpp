@@ -46,12 +46,14 @@ signals:
 public slots:
     virtual void setColors(const QList<QRgb> & colors) = 0;
     virtual void offLeds() = 0;
-    virtual void setTimerOptions(int prescallerIndex, int outputCompareRegValue) = 0;
-    virtual void setColorDepth(int value) = 0;
+    virtual void setRefreshDelay(int value) = 0;
     virtual void setSmoothSlowdown(int value) = 0;
     virtual void setGamma(double value) = 0;
     virtual void setBrightness(int value) = 0;
     virtual void requestFirmwareVersion() = 0;
+
+    // deprecated, but may be usable for lightpack hw <= 5.5
+    virtual void setColorDepth(int value) = 0;
 
 public:
     virtual void open() = 0;

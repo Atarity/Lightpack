@@ -88,19 +88,18 @@ void LedDeviceFactory::offLeds()
     }
 }
 
-void LedDeviceFactory::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
+void LedDeviceFactory::setRefreshDelay(int value)
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << prescallerIndex << outputCompareRegValue
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << value
                     << "Is last command completed:" << m_isLastCommandCompleted;
 
     if (m_isLastCommandCompleted)
     {
         m_isLastCommandCompleted = false;
-        emit ledDeviceSetTimerOptions(prescallerIndex, outputCompareRegValue);
+        emit ledDeviceSetRefreshDelay(value);
     } else {
-        m_savedTimerPrescallerIndex = prescallerIndex;
-        m_savedTimerOCR = outputCompareRegValue;
-        cmdQueueAppend(LedDeviceCommands::SetTimerOptions);
+        m_savedRefreshDelay = value;
+        cmdQueueAppend(LedDeviceCommands::SetRefreshDelay);
     }
 }
 
@@ -266,7 +265,7 @@ void LedDeviceFactory::connectSignalSlotsLedDevice()
 
     connect(this, SIGNAL(ledDeviceSetColors(QList<QRgb>)),      m_ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceOffLeds()),                   m_ledDevice, SLOT(offLeds()), Qt::QueuedConnection);
-    connect(this, SIGNAL(ledDeviceSetTimerOptions(int,int)),    m_ledDevice, SLOT(setTimerOptions(int,int)), Qt::QueuedConnection);
+    connect(this, SIGNAL(ledDeviceSetRefreshDelay(int)),        m_ledDevice, SLOT(setRefreshDelay(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetColorDepth(int)),          m_ledDevice, SLOT(setColorDepth(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetSmoothSlowdown(int)),      m_ledDevice, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetGamma(double)),            m_ledDevice, SLOT(setGamma(double)), Qt::QueuedConnection);
@@ -290,7 +289,7 @@ void LedDeviceFactory::disconnectSignalSlotsLedDevice()
 
     disconnect(this, SIGNAL(ledDeviceSetColors(QList<QRgb>)),   m_ledDevice, SLOT(setColors(QList<QRgb>)));
     disconnect(this, SIGNAL(ledDeviceOffLeds()),                m_ledDevice, SLOT(offLeds()));
-    disconnect(this, SIGNAL(ledDeviceSetTimerOptions(int,int)), m_ledDevice, SLOT(setTimerOptions(int,int)));
+    disconnect(this, SIGNAL(ledDeviceSetRefreshDelay(int)),     m_ledDevice, SLOT(setRefreshDelay(int)));
     disconnect(this, SIGNAL(ledDeviceSetColorDepth(int)),       m_ledDevice, SLOT(setColorDepth(int)));
     disconnect(this, SIGNAL(ledDeviceSetSmoothSlowdown(int)),   m_ledDevice, SLOT(setSmoothSlowdown(int)));
     disconnect(this, SIGNAL(ledDeviceSetGamma(double)),         m_ledDevice, SLOT(setGamma(double)));
@@ -326,8 +325,8 @@ void LedDeviceFactory::cmdQueueProcessNext()
             emit ledDeviceSetColors(m_savedColors);
             break;
 
-        case LedDeviceCommands::SetTimerOptions:
-            emit ledDeviceSetTimerOptions(m_savedTimerPrescallerIndex, m_savedTimerOCR);
+        case LedDeviceCommands::SetRefreshDelay:
+            emit ledDeviceSetRefreshDelay(m_savedRefreshDelay);
             break;
 
         case LedDeviceCommands::SetColorDepth:

@@ -106,12 +106,12 @@ void LedDeviceLightpack::offLeds()
     emit commandCompleted(ok);
 }
 
-void LedDeviceLightpack::setTimerOptions(int prescallerIndex, int outputCompareRegValue)
+void LedDeviceLightpack::setRefreshDelay(int value)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << prescallerIndex << outputCompareRegValue;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    m_writeBuffer[WRITE_BUFFER_INDEX_DATA_START] = outputCompareRegValue & 0xff;
-    m_writeBuffer[WRITE_BUFFER_INDEX_DATA_START+1] = (outputCompareRegValue >> 8);
+    m_writeBuffer[WRITE_BUFFER_INDEX_DATA_START] = value & 0xff;
+    m_writeBuffer[WRITE_BUFFER_INDEX_DATA_START+1] = (value >> 8);
 
     bool ok = writeBufferToDeviceWithCheck(CMD_SET_TIMER_OPTIONS);
     emit commandCompleted(ok);
@@ -328,7 +328,7 @@ void LedDeviceLightpack::updateDeviceSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    setTimerOptions(0, Settings::getDeviceRefreshDelay());
+    setRefreshDelay(Settings::getDeviceRefreshDelay());
     setSmoothSlowdown(Settings::getDeviceSmooth());
     setGamma(Settings::getDeviceGamma());
     setBrightness(Settings::getDeviceBrightness());

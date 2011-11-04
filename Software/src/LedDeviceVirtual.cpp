@@ -42,7 +42,7 @@ void LedDeviceVirtual::offLeds()
     emit commandCompleted(true);
 }
 
-void LedDeviceVirtual::setTimerOptions(int /*prescallerIndex*/, int /*outputCompareRegValue*/)
+void LedDeviceVirtual::setRefreshDelay(int /*value*/)
 {
     emit commandCompleted(true);
 }

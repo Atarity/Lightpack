@@ -650,7 +650,7 @@ void SettingsWindow::onDeviceRefreshDelay_valueChanged(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     Settings::setDeviceRefreshDelay(value);
-    emit updateTimerOptions(0, Settings::getDeviceRefreshDelay());
+    emit updateRefreshDelay(Settings::getDeviceRefreshDelay());
 }
 
 void SettingsWindow::onDeviceSmooth_valueChanged(int value)
