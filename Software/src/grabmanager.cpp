@@ -465,14 +465,13 @@ void GrabManager::setMoodLampLiquidMode(bool state)
 
 void GrabManager::updateBacklightState(Backlight::Status backlightStatus, Api::DeviceLockStatus deviceLockStatus)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << backlightStatus;
-
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << backlightStatus << deviceLockStatus;
 
     m_isGrabOn = (backlightStatus == Backlight::StatusOn) && (deviceLockStatus == Api::DeviceUnlocked);
 
     clearColorsNew();
 
-    if (backlightStatus == Backlight::StatusOn)
+    if (m_isGrabOn)
     {
         // Start grabbing colors and sending signals
         m_timerGrab->start( 0 );
@@ -480,11 +479,14 @@ void GrabManager::updateBacklightState(Backlight::Status backlightStatus, Api::D
         // Backlight is off or in an error state and we need to turn off the grab and stop sending signals
         m_timerGrab->stop();
 
-        // Send signal to switch off leds if led device isn't in error state
-        clearColorsCurrent();
-        if (backlightStatus != Backlight::StatusDeviceError)
+        if (backlightStatus == Backlight::StatusOff)
         {
-            emit updateLedsColors(m_colorsCurrent);
+            // Send signal to switch off leds if led device isn't in error state
+            clearColorsCurrent();
+            if (backlightStatus != Backlight::StatusDeviceError)
+            {
+                emit updateLedsColors(m_colorsCurrent);
+            }
         }
     }
 }
