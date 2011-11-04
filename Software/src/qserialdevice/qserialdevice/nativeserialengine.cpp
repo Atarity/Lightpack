@@ -217,9 +217,9 @@ bool NativeSerialEngine::isReadNotificationEnabled() const
             && d->notifier->isReadNotificationEnabled());
 }
 
-void NativeSerialEngine::setReadNotificationEnabled(bool enable, bool onClose)
+void NativeSerialEngine::setReadNotificationEnabled(bool /*enable*/, bool /*onClose*/)
 {
-    Q_D(NativeSerialEngine);
+//    Q_D(NativeSerialEngine);
 
 //    if (onClose)
 //        enable = false;
@@ -235,14 +235,15 @@ void NativeSerialEngine::setReadNotificationEnabled(bool enable, bool onClose)
 
 bool NativeSerialEngine::isWriteNotificationEnabled() const
 {
-    Q_D(const NativeSerialEngine);
+    return false;
+//    Q_D(const NativeSerialEngine);
 //    return (d->notifier
 //            && d->notifier->isWriteNotificationEnabled());
 }
 
-void NativeSerialEngine::setWriteNotificationEnabled(bool enable, bool onClose)
+void NativeSerialEngine::setWriteNotificationEnabled(bool /*enable*/, bool /*onClose*/)
 {
-    Q_D(NativeSerialEngine);
+//    Q_D(NativeSerialEngine);
 
 //    if (onClose)
 //        enable = false;
@@ -258,14 +259,15 @@ void NativeSerialEngine::setWriteNotificationEnabled(bool enable, bool onClose)
 
 bool NativeSerialEngine::isExceptionNotificationEnabled() const
 {
-    Q_D(const NativeSerialEngine);
+    return false;
+//    Q_D(const NativeSerialEngine);
 //    return (d->notifier
 //            && d->notifier->isExceptionNotificationEnabled());
 }
 
-void NativeSerialEngine::setExceptionNotificationEnabled(bool enable, bool onClose)
+void NativeSerialEngine::setExceptionNotificationEnabled(bool /*enable*/, bool /*onClose*/)
 {
-    Q_D(NativeSerialEngine);
+//    Q_D(NativeSerialEngine);
 
 //    if (onClose)
 //        enable = false;
@@ -281,14 +283,15 @@ void NativeSerialEngine::setExceptionNotificationEnabled(bool enable, bool onClo
 
 bool NativeSerialEngine::isLineNotificationEnabled() const
 {
-    Q_D(const NativeSerialEngine);
+    return false;
+//    Q_D(const NativeSerialEngine);
 //    return (d->notifier
 //            && d->notifier->isLineNotificationEnabled());
 }
 
-void NativeSerialEngine::setLineNotificationEnabled(bool enable, bool onClose)
+void NativeSerialEngine::setLineNotificationEnabled(bool /*enable*/, bool /*onClose*/)
 {
-    Q_D(NativeSerialEngine);
+//    Q_D(NativeSerialEngine);
 
 //    if (onClose)
 //        enable = false;
@@ -303,9 +306,8 @@ void NativeSerialEngine::setLineNotificationEnabled(bool enable, bool onClose)
 }
 
 void NativeSerialEngine::clearNotification()
-{
-    Q_D(NativeSerialEngine);
-
+{    
+//    Q_D(NativeSerialEngine);
 //    AbstractSerialNotifier::deleteSerialNotifier(d->notifier);
 //    d->notifier = 0;
 }
