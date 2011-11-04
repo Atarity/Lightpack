@@ -195,7 +195,6 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
     }
     case CMD_OFF_ALL:
 
-        // TODO: Test me!
         _FlagSet(Flag_LedsOffAll);
 
         break;
