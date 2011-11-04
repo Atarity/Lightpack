@@ -45,3 +45,6 @@
 #ifdef Q_WS_WIN
 #   define ALIEN_FX_SUPPORTED
 #endif
+
+#define DEBUG_OUT_RGB( RGB_VALUE ) \
+    qDebug() << #RGB_VALUE << "=" << qRed(RGB_VALUE) << qGreen(RGB_VALUE) << qBlue(RGB_VALUE)

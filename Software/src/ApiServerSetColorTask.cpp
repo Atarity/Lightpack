@@ -37,7 +37,7 @@ ApiServerSetColorTask::ApiServerSetColorTask(QObject *parent) :
     clearColorBuffers();
 }
 
-void ApiServerSetColorTask::startTask(QByteArray buffer, double gamma)
+void ApiServerSetColorTask::startParseSetColorTask(QByteArray buffer)
 {
     API_DEBUG_OUT << QString(buffer) << "task thread:" << thread()->currentThreadId();
     bool isReadFail = false;
@@ -147,15 +147,10 @@ void ApiServerSetColorTask::startTask(QByteArray buffer, double gamma)
         // Remove read colors
         buffer.remove(0, indexBuffer);
 
-        unsigned r_gamma = 256.0 * pow(buffRgb[bRed] / 256.0, gamma);
-        unsigned g_gamma = 256.0 * pow(buffRgb[bGreen] / 256.0, gamma);
-        unsigned b_gamma = 256.0 * pow(buffRgb[bBlue] / 256.0, gamma);
-
         // Save colors
-        m_colors[ledNumber] = qRgb(r_gamma, g_gamma, b_gamma);
+        m_colors[ledNumber] = qRgb(buffRgb[bRed], buffRgb[bGreen], buffRgb[bBlue]);
 
         API_DEBUG_OUT << "result color:" << buffRgb[bRed] << buffRgb[bGreen] << buffRgb[bBlue]
-                      << "gamma corrected:" << r_gamma << g_gamma << b_gamma
                       << "buffer:" << QString(buffer);
 
         if (buffer[0] == ';')
@@ -171,11 +166,11 @@ end:
     if (isReadFail)
     {
         API_DEBUG_OUT << "errors while reading buffer";
-        emit taskIsSuccess(false);
+        emit taskParseSetColorIsSuccess(false);
     } else {
         API_DEBUG_OUT << "read setcolor buffer - ok";
-        emit taskDone(m_colors);
-        emit taskIsSuccess(true);
+        emit taskParseSetColorDone(m_colors);
+        emit taskParseSetColorIsSuccess(true);
     }
 }
 

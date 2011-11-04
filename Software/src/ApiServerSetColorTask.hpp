@@ -37,11 +37,11 @@ public:
     explicit ApiServerSetColorTask(QObject *parent = 0);
 
 signals:
-    void taskDone(const QList<QRgb> & colors);
-    void taskIsSuccess(bool isSuccess);
+    void taskParseSetColorDone(const QList<QRgb> & colors);
+    void taskParseSetColorIsSuccess(bool isSuccess);
 
 public slots:
-    void startTask(QByteArray buffer, double gamma);
+    void startParseSetColorTask(QByteArray buffer);
     void clearColorBuffers();
 
 private:

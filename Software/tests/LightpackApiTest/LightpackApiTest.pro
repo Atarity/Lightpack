@@ -30,11 +30,12 @@ SOURCES += \
     LightpackApiTest.cpp \
     ../../src/ApiServerSetColorTask.cpp \
     ../../src/ApiServer.cpp \
-    ../../src/Settings.cpp
+    ../../src/Settings.cpp \
+    SettingsWindowLittleVersion.cpp
 HEADERS += \
     ../../src/ApiServerSetColorTask.hpp \
     ../../src/ApiServer.hpp \
     ../../src/debug.h \
-    ../../src/Settings.hpp
-
+    ../../src/Settings.hpp \
+    SettingsWindowLittleVersion.hpp
 

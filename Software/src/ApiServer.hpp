@@ -39,7 +39,9 @@
 struct ClientInfo
 {
     bool isAuthorized;
-    double gamma;
+    // Think about it. May be we need to save gamma,
+    // smooth and brightness and after success lock send
+    // this values to device?
 };
 
 class ApiServer : public QTcpServer
@@ -105,7 +107,7 @@ public:
 
 signals:
     void requestBacklightStatus();
-    void startTask(QByteArray buffer, double gamma);
+    void startParseSetColorTask(QByteArray buffer);
     void updateLedsColors(const QList<QRgb> & colors);
     void updateSmooth(int value);
     void updateProfile(QString profileName);

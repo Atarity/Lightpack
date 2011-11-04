@@ -188,7 +188,6 @@ void ApiServer::incomingConnection(int socketDescriptor)
 
     ClientInfo cs;
     cs.isAuthorized = false;
-    cs.gamma = SettingsScope::Profile::Device::GammaDefault;
 
     m_clients.insert(client, cs);
 
@@ -396,7 +395,7 @@ void ApiServer::clientProcessCommands()
                     m_isTaskSetColorParseSuccess = false;
 
                     // Start task
-                    emit startTask(cmdBuffer, m_clients.value(client).gamma);
+                    emit startParseSetColorTask(cmdBuffer);
 
                     // Wait signal from m_apiSetColorTask with success or fail result of parsing buffer.
                     // After SignalWaitTimeoutMs milliseconds, the cycle of waiting will end and the
@@ -460,7 +459,9 @@ void ApiServer::clientProcessCommands()
                         {
                             API_DEBUG_OUT << CmdSetGamma << "OK:" << gamma;
 
-                            m_clients[client].gamma = gamma;
+
+                            qWarning() << "CmdSetGammma: Not implemented";
+
 
                             result = CmdSetResult_Ok;
                         } else {
@@ -645,10 +646,10 @@ void ApiServer::initApiSetColorTask()
     m_apiSetColorTaskThread = new QThread();
     m_apiSetColorTask = new ApiServerSetColorTask();
 
-    connect(m_apiSetColorTask, SIGNAL(taskDone(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)), Qt::QueuedConnection);
+    connect(m_apiSetColorTask, SIGNAL(taskParseSetColorDone(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)), Qt::QueuedConnection);
 
-    connect(m_apiSetColorTask, SIGNAL(taskIsSuccess(bool)), this, SLOT(taskSetColorIsSuccess(bool)), Qt::QueuedConnection);
-    connect(this, SIGNAL(startTask(QByteArray,double)), m_apiSetColorTask, SLOT(startTask(QByteArray,double)), Qt::QueuedConnection);
+    connect(m_apiSetColorTask, SIGNAL(taskParseSetColorIsSuccess(bool)), this, SLOT(taskSetColorIsSuccess(bool)), Qt::QueuedConnection);
+    connect(this, SIGNAL(startParseSetColorTask(QByteArray)), m_apiSetColorTask, SLOT(startParseSetColorTask(QByteArray)), Qt::QueuedConnection);
 
     connect(this, SIGNAL(clearColorBuffers()), m_apiSetColorTask, SLOT(clearColorBuffers()));
 
