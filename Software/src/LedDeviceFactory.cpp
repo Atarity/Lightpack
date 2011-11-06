@@ -188,6 +188,8 @@ void LedDeviceFactory::ledDeviceCommandCompleted(bool ok)
         m_cmdQueue.clear();
         m_isLastCommandCompleted = true;
     }
+
+    emit ioDeviceSuccess(ok);
 }
 
 void LedDeviceFactory::initLedDevice()
