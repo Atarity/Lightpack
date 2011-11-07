@@ -735,6 +735,9 @@
           </item>
           <item>
            <widget class="QSpinBox" name="spinBox_NumberOfLeds">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimumSize">
              <size>
               <width>143</width>
