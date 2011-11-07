@@ -105,6 +105,10 @@ private slots:
     void onDeviceRefreshDelay_valueChanged(int value);
     void onDeviceSmooth_valueChanged(int value);
     void onDeviceBrightness_valueChanged(int value);
+    void onDeviceConnectedDevice_currentIndexChanged(QString value);
+    void onDeviceNumberOfLeds_valueChanged(int value);
+    void onDeviceSerialPort_editingFinished();
+    void onDeviceSerialPortBaudRate_valueChanged(QString value);
     void onDeviceGammaCorrection_valueChanged(double value);
 
     void openCurrentProfile();
@@ -133,6 +137,7 @@ private:
 
     void updateTrayAndActionStates();
     void updateExpertModeWidgetsVisibility();
+    void setDeviceTabWidgetsVisibility(DeviceTab::Options options);
 
     void syncLedDeviceWithSettingsWindow();
 
@@ -150,6 +155,8 @@ private:
     void openFile(const QString &filePath);
 
     void initLabelsForGrabbedColors();
+    void initConnectedDeviceComboBox();
+    void initSerialPortBaudRateComboBox();
 
     IGrabber * createGrabber(Grab::Mode grabMode);
 
@@ -160,11 +167,11 @@ private:
 
     GrabManager *m_grabManager;
     AboutDialog *m_aboutDialog;
-    SpeedTest *speedTest;
+    SpeedTest *m_speedTest;
 
     Grab::Mode getGrabMode();
 
-    QList<QLabel *> labelsGrabbedColors;
+    QList<QLabel *> m_labelsGrabbedColors;
 
     Ui::SettingsWindow *ui;
 
@@ -176,9 +183,9 @@ private:
 
     QSystemTrayIcon *m_trayIcon;
     QMenu *m_trayIconMenu;
-    QMenu *profilesMenu;
+    QMenu *m_profilesMenu;
 
-    QTranslator *translator;
+    QTranslator *m_translator;
 
     static const unsigned ModeAmbilightIndex;
     static const unsigned ModeMoodLampIndex;

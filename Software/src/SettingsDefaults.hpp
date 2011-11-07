@@ -52,9 +52,9 @@
 #endif
 
 #ifdef Q_OS_UNIX
-#   define ADALIGHT_PORT_DEFAULT    "/dev/ttyUSB0" /* For UART over USB on FT232RL */
+#   define SERIAL_PORT_DEFAULT    "/dev/ttyUSB0" /* For UART over USB on FT232RL */
 #elif defined(Q_OS_WIN)
-#   define ADALIGHT_PORT_DEFAULT    "COM1"
+#   define SERIAL_PORT_DEFAULT    "COM1"
 #endif
 
 namespace SettingsScope
@@ -69,7 +69,7 @@ static const QString LanguageDefault = "<System>";
 static const Debug::DebugLevels DebugLevelDefault = Debug::LowLevel;
 static const bool IsExpertModeEnabledDefault = false;
 static const QString ConnectedDeviceDefault = "Lightpack";
-static const QString SupportedDevices = SUPPORTED_DEVICES;
+static const QString SupportedDevices = SUPPORTED_DEVICES; /* comma separated values! */
 // [API]
 namespace Api
 {
@@ -78,11 +78,11 @@ static const int PortDefault = 3636;
 static const bool IsAuthEnabledDefault = true;
 // See ApiKey generation in Settings initialization
 }
-// [Adalight]
-namespace Adalight
+// [SerialPort]
+namespace SerialPort
 {
-static const QString PortDefault = ADALIGHT_PORT_DEFAULT;
-static const int BaudRateDefault = 115200;
+static const QString PortDefault = SERIAL_PORT_DEFAULT;
+static const QString BaudRateDefault = "115200";
 }
 }
 

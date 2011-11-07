@@ -41,6 +41,8 @@
 
 using namespace SettingsScope;
 
+#define MAIN_CONFIG_FILE_VERSION    "1.0"
+
 //
 // This strings keys and values must be accessible only in current file
 //
@@ -51,6 +53,7 @@ namespace Main
 namespace Key
 {
 // [General]
+static const QString MainConfigVersion = "MainConfigVersion";
 static const QString ProfileLast = "ProfileLast";
 static const QString Language = "Language";
 static const QString DebugLevel = "DebugLevel";
@@ -65,16 +68,18 @@ static const QString Port = "API/Port";
 static const QString IsAuthEnabled = "API/IsAuthEnabled";
 static const QString AuthKey = "API/AuthKey";
 }
-// [Adalight]
-namespace Adalight
+// [SerialPort]
+namespace SerialPort
 {
-static const QString Port = "Adalight/Port";
-static const QString BaudRate = "Adalight/BaudRate";
+static const QString Port = "SerialPort/Port";
+static const QString BaudRate = "SerialPort/BaudRate";
 }
 } /*Key*/
 
 namespace Value
 {
+static const QString MainConfigVersion = MAIN_CONFIG_FILE_VERSION;
+
 namespace ConnectedDevice
 {
 static const QString LightpackDevice = "Lightpack";
@@ -157,6 +162,8 @@ QSettings * Settings::m_mainConfig; // LightpackMain.conf contains last profile
 // Path to directory there store application generated stuff
 QString Settings::m_applicationDirPath = "";
 
+QMap<SupportedDevices::DeviceType, QString> Settings::m_devicesMap;
+
 // Desktop should be initialized before call Settings::Initialize()
 void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevelObtainedFromCmdArgs)
 {
@@ -171,6 +178,8 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     m_mainConfig = new QSettings(m_applicationDirPath + "LightpackMain.conf", QSettings::IniFormat);
     m_mainConfig->setIniCodec("UTF-8");
 
+    // TODO: if version < Main::Value::MainConfigVersion then clear lightpack main config file
+    setNewOptionMain(Main::Key::MainConfigVersion,      Main::Value::MainConfigVersion, true /* rewrite */);
     setNewOptionMain(Main::Key::ProfileLast,            Main::ProfileNameDefault);
     setNewOptionMain(Main::Key::Language,               Main::LanguageDefault);
     setNewOptionMain(Main::Key::DebugLevel,             Main::DebugLevelDefault);
@@ -183,9 +192,9 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     // Generation AuthKey as new UUID
     setNewOptionMain(Main::Key::Api::AuthKey,           QUuid::createUuid().toString());
 
-    // Adalight serial device configuration
-    setNewOptionMain(Main::Key::Adalight::Port,         Main::Adalight::PortDefault);
-    setNewOptionMain(Main::Key::Adalight::BaudRate,     Main::Adalight::BaudRateDefault);
+    // Serial device configuration
+    setNewOptionMain(Main::Key::SerialPort::Port,         Main::SerialPort::PortDefault);
+    setNewOptionMain(Main::Key::SerialPort::BaudRate,     Main::SerialPort::BaudRateDefault);
 
     if (isDebugLevelObtainedFromCmdArgs == false)
     {
@@ -211,7 +220,11 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
 
     qDebug() << "Settings file:" << m_currentProfile->fileName();
 
-    settingsInit(false);
+    // Initialize m_devicesMap for mapping DeviceType on DeviceName
+    initDevicesMap();
+
+    // Initialize profile with default values without reset exists values
+    initCurrentProfile(false);
 }
 
 //
@@ -221,7 +234,7 @@ void Settings::resetDefaults()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    settingsInit(true /* = reset to default values */);
+    initCurrentProfile(true /* = reset to default values */);
 }
 
 QStringList Settings::findAllProfiles()
@@ -263,7 +276,7 @@ void Settings::loadOrCreateProfile(const QString & profileName)
     m_currentProfile->setIniCodec("UTF-8");
 
     locker.unlock();
-    settingsInit(false);
+    initCurrentProfile(false);
     locker.relock();
 
     qDebug() << "Settings file:" << m_currentProfile->fileName();
@@ -456,74 +469,93 @@ SupportedDevices::DeviceType Settings::getConnectedDevice()
 {
     QString deviceName = valueMain(Main::Key::ConnectedDevice).toString();
 
-    if (deviceName == Main::Value::ConnectedDevice::LightpackDevice)
-        return  SupportedDevices::LightpackDevice;
-
-    else if (deviceName == Main::Value::ConnectedDevice::AlienFxDevice)
-        return SupportedDevices::AlienFxDevice;
-
-    else if (deviceName == Main::Value::ConnectedDevice::AdalightDevice)
-        return SupportedDevices::AdalightDevice;
-
-    else if (deviceName == Main::Value::ConnectedDevice::VirtualDevice)
-        return SupportedDevices::VirtualDevice;
-
-    else
+    if (m_devicesMap.values().contains(deviceName) == false)
     {
-        qWarning() << Q_FUNC_INFO << "ConnectedDevice in lightpack main config file contains crap. Reset to default.";
+        qWarning() << Q_FUNC_INFO << Main::Key::ConnectedDevice << "in main config contains crap or unsupported device,"
+                   << "reset it to default value:" << Main::ConnectedDeviceDefault;
 
         setConnectedDevice(SupportedDevices::DefaultDevice);
-        return SupportedDevices::DefaultDevice;
+        deviceName = Main::ConnectedDeviceDefault;
     }
+
+    return m_devicesMap.key(deviceName, SupportedDevices::DefaultDevice);
 }
 
 void Settings::setConnectedDevice(SupportedDevices::DeviceType device)
 {
-    QString deviceName;
+    QString deviceName = m_devicesMap.value(device, Main::ConnectedDeviceDefault);
 
-    switch (device){
-    case SupportedDevices::LightpackDevice:
-        deviceName = Main::Value::ConnectedDevice::LightpackDevice;
-        break;
-    case SupportedDevices::AlienFxDevice:
-        deviceName = Main::Value::ConnectedDevice::AlienFxDevice;
-        break;
-    case SupportedDevices::AdalightDevice:
-        deviceName = Main::Value::ConnectedDevice::AdalightDevice;
-        break;
-    case SupportedDevices::VirtualDevice:
-        deviceName = Main::Value::ConnectedDevice::VirtualDevice;
-        break;
-    default:
-        qWarning() << Q_FUNC_INFO << "'device' not found in SupportedDevices. Reset to default.";
-        deviceName = Main::ConnectedDeviceDefault;
+    setValueMain(Main::Key::ConnectedDevice, deviceName);
+}
+
+QString Settings::getConnectedDeviceName()
+{
+    return m_devicesMap.value(getConnectedDevice(), Main::ConnectedDeviceDefault);
+}
+
+void Settings::setConnectedDeviceName(const QString & deviceName)
+{
+    if (deviceName == "")
+        return; // silent return
+
+    if (m_devicesMap.values().contains(deviceName) == false)
+    {
+        qCritical() << Q_FUNC_INFO << "Failure during check the device name" << deviceName << "in m_devicesMap. The main config has not changed.";
         return;
     }
 
     setValueMain(Main::Key::ConnectedDevice, deviceName);
 }
 
-QString Settings::getAdalightPort()
+QStringList Settings::getSupportedDevices()
 {
-    return valueMain(Main::Key::Adalight::Port).toString();
+    return Main::SupportedDevices.split(',');
 }
 
-void Settings::setAdalightPort(const QString & port)
+QString Settings::getSerialPortName()
 {
-    setValueMain(Main::Key::Adalight::Port, port);
+    return valueMain(Main::Key::SerialPort::Port).toString();
 }
 
-int Settings::getAdalightBaudRate()
+void Settings::setSerialPortName(const QString & port)
+{
+    setValueMain(Main::Key::SerialPort::Port, port);
+}
+
+QString Settings::getSerialPortBaudRate()
 {
     // TODO: validate baudrate reading from settings file
-    return valueMain(Main::Key::Adalight::BaudRate).toInt();
+    return valueMain(Main::Key::SerialPort::BaudRate).toString();
 }
 
-void Settings::setAdalightBaudRate(int baud)
+void Settings::setSerialPortBaudRate(const QString & baud)
 {
-    setValueMain(Main::Key::Adalight::BaudRate, baud);
+    // TODO: validator
+    setValueMain(Main::Key::SerialPort::BaudRate, baud);
 }
 
+QStringList Settings::getSupportedSerialPortBaudRates()
+{
+    QStringList list;
+
+    // TODO: Add more baud rates if need it
+    list.append("115200");
+    list.append("57600");
+    list.append("9600");
+    return list;
+}
+
+bool Settings::isConnectedDeviceUsesSerialPort()
+{
+    switch (getConnectedDevice())
+    {
+    // TODO: case SupportedDevices::ArdulightDevice:
+    case SupportedDevices::AdalightDevice:
+        return true;
+    default:
+        return false;
+    }
+}
 
 int Settings::getGrabSlowdown()
 {
@@ -919,7 +951,7 @@ double Settings::getValidLedCoef(int ledIndex, const QString & keyCoef)
 //
 //  Check and/or initialize settings
 //
-void Settings::settingsInit(bool isResetDefault)
+void Settings::initCurrentProfile(bool isResetDefault)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isResetDefault;
 
@@ -1022,4 +1054,17 @@ QVariant Settings::value( const QString & key)
 
     QMutexLocker locker(&m_mutex);
     return m_currentProfile->value(key);
+}
+
+void Settings::initDevicesMap()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    m_devicesMap[SupportedDevices::AdalightDevice]  = Main::Value::ConnectedDevice::AdalightDevice;
+    m_devicesMap[SupportedDevices::LightpackDevice] = Main::Value::ConnectedDevice::LightpackDevice;
+    m_devicesMap[SupportedDevices::VirtualDevice]   = Main::Value::ConnectedDevice::VirtualDevice;
+
+#ifdef ALIEN_FX_SUPPORTED
+    m_devicesMap[SupportedDevices::AlienFxDevice]   = Main::Value::ConnectedDevice::AlienFxDevice;
+#endif
 }

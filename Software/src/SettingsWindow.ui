@@ -38,7 +38,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -479,17 +479,61 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabHardwareOptions">
+      <widget class="QWidget" name="tabDeviceOptions">
        <attribute name="title">
         <string>Device</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_ConnectedDevice">
+          <property name="leftMargin">
+           <number>9</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>9</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_ConnectedDevice">
+            <property name="text">
+             <string>Connected device:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_ConnectedDevice">
+            <property name="minimumSize">
+             <size>
+              <width>143</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>143</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <item>
+             <property name="text">
+              <string notr="true">Lightpack</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
         <item>
          <widget class="QGroupBox" name="groupBox_DeviceRefreshDelay">
           <property name="title">
            <string>Refresh delay</string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
             <widget class="QSlider" name="horizontalSlider_DeviceRefreshDelay">
              <property name="minimum">
@@ -538,7 +582,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_Brightness">
+         <widget class="QGroupBox" name="groupBox_DeviceBrightness">
           <property name="title">
            <string>Brightness</string>
           </property>
@@ -600,7 +644,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_smoothSteps">
+         <widget class="QGroupBox" name="groupBox_DeviceSmoothSlowdown">
           <property name="title">
            <string>Smooth slowdown</string>
           </property>
@@ -672,6 +716,141 @@
          </widget>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_NumberOfLeds">
+          <property name="leftMargin">
+           <number>9</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>9</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_NumberOfLeds">
+            <property name="text">
+             <string>Number of LEDs:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spinBox_NumberOfLeds">
+            <property name="minimumSize">
+             <size>
+              <width>143</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>143</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>50</number>
+            </property>
+            <property name="value">
+             <number>10</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_DeviceSerialPort">
+          <property name="leftMargin">
+           <number>9</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>9</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_SerialPort">
+            <property name="text">
+             <string>Serial port:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_SerialPort">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>143</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>143</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Example for Windows: COM1, COM2 .. COMn, for Linux: /dev/ttyS0, /dev/ttyS1, /dev/ttyUSB0 etc.</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="placeholderText">
+             <string>/dev/null</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_DeviceSerialPortBaudRate">
+          <property name="leftMargin">
+           <number>9</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>9</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_SerialPortBaudRate">
+            <property name="text">
+             <string>Baud rate:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_SerialPortBaudRate">
+            <property name="minimumSize">
+             <size>
+              <width>143</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>143</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="currentIndex">
+             <number>-1</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_DeviceGamma">
           <property name="leftMargin">
            <number>9</number>
@@ -684,12 +863,6 @@
           </property>
           <item>
            <widget class="QLabel" name="label_GammaCorrection">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="text">
              <string>Gamma correction:</string>
             </property>
@@ -699,13 +872,13 @@
            <widget class="QDoubleSpinBox" name="doubleSpinBox_DeviceGamma">
             <property name="minimumSize">
              <size>
-              <width>60</width>
+              <width>143</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>60</width>
+              <width>143</width>
               <height>16777215</height>
              </size>
             </property>
@@ -739,6 +912,9 @@
          <spacer name="verticalSpacer_2">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -1174,6 +1350,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_StartTests">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Start tests</string>
           </property>
@@ -1262,7 +1441,6 @@
  <tabstops>
   <tabstop>tabWidget</tabstop>
   <tabstop>pushButton_Close</tabstop>
-  <tabstop>checkBox_USB_SendDataOnlyIfColorsChanges</tabstop>
   <tabstop>comboBox_Profiles</tabstop>
   <tabstop>pushButton_ProfileNew</tabstop>
   <tabstop>pushButton_ProfileResetToDefault</tabstop>

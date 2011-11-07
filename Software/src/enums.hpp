@@ -78,6 +78,30 @@ enum DeviceType {
 };
 }
 
+// Configure SettingsWindow Device tab for suitable device options
+namespace DeviceTab
+{
+enum Options
+{
+    NumberOfLeds    = (1 << 0),
+    Brightness      = (1 << 1),
+    Gamma           = (1 << 2),
+
+    RefreshDelay    = (1 << 3),
+    SmoothSlowdown  = (1 << 4),
+    SerialPort      = (1 << 5), /* serial port name and baud rate */
+    VirtualLeds     = (1 << 6),
+
+    Default         = NumberOfLeds | Brightness | Gamma,
+
+    Adalight        = Default | SerialPort,
+    AlienFx         = Default,
+    Lightpack       = Default | RefreshDelay | SmoothSlowdown,
+    Virtual         = Default | VirtualLeds
+};
+}
+
+// Using in commands queue of LedDeviceFactory
 namespace LedDeviceCommands
 {
 enum Cmd {

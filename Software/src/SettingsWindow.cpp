@@ -80,7 +80,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     m_aboutDialog = new AboutDialog(this);
 
-    speedTest = new SpeedTest();
+    m_speedTest = new SpeedTest();
 
 #ifndef WINAPI_GRAB_SUPPORT
     ui->radioButton_GrabWinAPI->setVisible(false);
@@ -161,6 +161,10 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->spinBox_DeviceRefreshDelay, SIGNAL(valueChanged(int)), this, SLOT(onDeviceRefreshDelay_valueChanged(int)));
     connect(ui->spinBox_DeviceSmooth, SIGNAL(valueChanged(int)), this, SLOT(onDeviceSmooth_valueChanged(int)));
     connect(ui->spinBox_DeviceBrightness, SIGNAL(valueChanged(int)), this, SLOT(onDeviceBrightness_valueChanged(int)));
+    connect(ui->comboBox_ConnectedDevice, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceConnectedDevice_currentIndexChanged(QString)));
+    connect(ui->spinBox_NumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onDeviceNumberOfLeds_valueChanged(int)));
+    connect(ui->lineEdit_SerialPort, SIGNAL(editingFinished()), this, SLOT(onDeviceSerialPort_editingFinished()));
+    connect(ui->comboBox_SerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceSerialPortBaudRate_valueChanged(QString)));
     connect(ui->doubleSpinBox_DeviceGamma, SIGNAL(valueChanged(double)), this, SLOT(onDeviceGammaCorrection_valueChanged(double)));
 
     // GrabManager to this
@@ -248,7 +252,7 @@ void SettingsWindow::changeEvent(QEvent *e)
         m_aboutAction->setText(tr("&About"));
         m_quitAction->setText(tr("&Quit"));
 
-        profilesMenu->setTitle(tr("&Profiles"));
+        m_profilesMenu->setTitle(tr("&Profiles"));
 
         switch (m_backlightStatus)
         {
@@ -294,7 +298,7 @@ void SettingsWindow::onCheckBox_ExpertModeEnabled_Toggled(bool isEnabled)
 }
 
 void SettingsWindow::updateExpertModeWidgetsVisibility()
-{
+{    
     ui->groupBox_DeviceRefreshDelay->setVisible(Settings::isExpertModeEnabled());
     ui->label_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
     ui->doubleSpinBox_DeviceGamma->setVisible(Settings::isExpertModeEnabled());
@@ -305,6 +309,29 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
     } else {
         ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabDevTab));
     }
+}
+
+void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
+{
+    ui->groupBox_DeviceBrightness->setVisible(options & DeviceTab::Brightness);
+    ui->groupBox_DeviceRefreshDelay->setVisible((options & DeviceTab::RefreshDelay) && Settings::isExpertModeEnabled());
+    ui->groupBox_DeviceSmoothSlowdown->setVisible(options & DeviceTab::SmoothSlowdown);
+
+    // NumberOfLeds
+    ui->label_NumberOfLeds->setVisible(options & DeviceTab::NumberOfLeds);
+    ui->spinBox_NumberOfLeds->setVisible(options & DeviceTab::NumberOfLeds);
+
+    // SerialPort
+    ui->label_SerialPort->setVisible(options & DeviceTab::SerialPort);
+    ui->lineEdit_SerialPort->setVisible(options & DeviceTab::SerialPort);
+
+    // SerialPortBaudRate
+    ui->label_SerialPortBaudRate->setVisible(options & DeviceTab::SerialPort);
+    ui->comboBox_SerialPortBaudRate->setVisible(options & DeviceTab::SerialPort);
+
+    // Gamma
+    ui->label_GammaCorrection->setVisible((options & DeviceTab::Gamma) && Settings::isExpertModeEnabled());
+    ui->doubleSpinBox_DeviceGamma->setVisible((options & DeviceTab::Gamma) && Settings::isExpertModeEnabled());
 }
 
 void SettingsWindow::syncLedDeviceWithSettingsWindow()
@@ -534,7 +561,7 @@ void SettingsWindow::initLabelsForGrabbedColors()
         label->setText(QString::number(ledIndex+1));
         label->setAutoFillBackground(true);
 
-        labelsGrabbedColors.append(label);
+        m_labelsGrabbedColors.append(label);
         ui->horizontalLayout_GrabbedColors->addWidget(label);
     }
 }
@@ -542,7 +569,7 @@ void SettingsWindow::initLabelsForGrabbedColors()
 void SettingsWindow::updateGrabbedColors(const QList<QRgb> & colors)
 {
     for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        QLabel *label = labelsGrabbedColors[ ledIndex ];
+        QLabel *label = m_labelsGrabbedColors[ ledIndex ];
         QColor color(colors[ ledIndex ]);
 
         QPalette pal = label->palette();
@@ -647,7 +674,7 @@ void SettingsWindow::refreshAmbilightEvaluated(double updateResultMs)
 
 void SettingsWindow::onDeviceRefreshDelay_valueChanged(int value)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setDeviceRefreshDelay(value);
     emit updateRefreshDelay(Settings::getDeviceRefreshDelay());
@@ -667,6 +694,62 @@ void SettingsWindow::onDeviceBrightness_valueChanged(int percent)
 
     Settings::setDeviceBrightness(percent);
     emit updateBrightness(Settings::getDeviceBrightness());
+}
+
+void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    Settings::setConnectedDeviceName(value);
+
+    switch (Settings::getConnectedDevice())
+    {
+    case SupportedDevices::AdalightDevice:
+        setDeviceTabWidgetsVisibility(DeviceTab::Adalight);
+        break;
+
+    case SupportedDevices::AlienFxDevice:
+        setDeviceTabWidgetsVisibility(DeviceTab::AlienFx);
+        break;
+
+    case SupportedDevices::LightpackDevice:
+        setDeviceTabWidgetsVisibility(DeviceTab::Lightpack);
+        break;
+
+    case SupportedDevices::VirtualDevice:
+        setDeviceTabWidgetsVisibility(DeviceTab::Virtual);
+        break;
+    }
+
+    emit recreateLedDevice();
+}
+
+void SettingsWindow::onDeviceNumberOfLeds_valueChanged(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    qCritical() << "Not implemented!";
+}
+
+void SettingsWindow::onDeviceSerialPort_editingFinished()
+{
+    QString serialPort = ui->lineEdit_SerialPort->text();
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << serialPort;
+
+    Settings::setSerialPortName(serialPort);
+
+    if (Settings::isConnectedDeviceUsesSerialPort())
+        emit recreateLedDevice();
+}
+
+void SettingsWindow::onDeviceSerialPortBaudRate_valueChanged(QString value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    Settings::setSerialPortBaudRate(value);
+
+    if (Settings::isConnectedDeviceUsesSerialPort())
+        emit recreateLedDevice();
 }
 
 void SettingsWindow::onDeviceGammaCorrection_valueChanged(double value)
@@ -755,8 +838,8 @@ void SettingsWindow::profileTraySwitch()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    for(int i=0; i < profilesMenu->actions().count(); i++){
-        QAction * action = profilesMenu->actions().at(i);
+    for(int i=0; i < m_profilesMenu->actions().count(); i++){
+        QAction * action = m_profilesMenu->actions().at(i);
         if(action->isChecked()){
             if(action->text() != ui->comboBox_Profiles->currentText()){
                 DEBUG_LOW_LEVEL << Q_FUNC_INFO << "switch to" << action->text();
@@ -873,7 +956,7 @@ void SettingsWindow::profileTraySync()
 
     QAction *profileAction;
 
-    profilesMenu->clear();
+    m_profilesMenu->clear();
 
     for(int i=0; i < ui->comboBox_Profiles->count(); i++){
         profileAction = new QAction(ui->comboBox_Profiles->itemText(i), this);
@@ -881,7 +964,7 @@ void SettingsWindow::profileTraySync()
         if(i == ui->comboBox_Profiles->currentIndex()){
             profileAction->setChecked(true);
         }
-        profilesMenu->addAction(profileAction);
+        m_profilesMenu->addAction(profileAction);
         connect(profileAction, SIGNAL(triggered()), this, SLOT(profileTraySwitch()));
     }
 }
@@ -906,7 +989,7 @@ void SettingsWindow::initLanguages()
     }
     ui->comboBox_Language->setCurrentIndex(langIndex);
 
-    translator = NULL;
+    m_translator = NULL;
 }
 
 void SettingsWindow::loadTranslation(const QString & language)
@@ -941,10 +1024,10 @@ void SettingsWindow::loadTranslation(const QString & language)
 
     QString pathToLocale = QString(":/translations/") + locale;
 
-    if(translator != NULL){
-        qApp->removeTranslator(translator);
-        delete translator;
-        translator = NULL;
+    if(m_translator != NULL){
+        qApp->removeTranslator(m_translator);
+        delete m_translator;
+        m_translator = NULL;
     }
 
     if(locale == "en_EN" /* default no need to translate */){
@@ -952,10 +1035,10 @@ void SettingsWindow::loadTranslation(const QString & language)
         return;
     }
 
-    translator = new QTranslator();
-    if(translator->load(pathToLocale)){
+    m_translator = new QTranslator();
+    if(m_translator->load(pathToLocale)){
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Load translation for locale" << locale;
-        qApp->installTranslator(translator);
+        qApp->installTranslator(m_translator);
     }else{
         qWarning() << "Fail load translation for locale" << locale << "pathToLocale" << pathToLocale;
     }
@@ -1006,7 +1089,7 @@ void SettingsWindow::startTestsClick()
     ui->pushButton_StartTests->repaint(); // update right now
 
     // While testing this function freezes GUI
-    speedTest->start();
+    m_speedTest->start();
 
     ui->pushButton_StartTests->setText(saveText);
 }
@@ -1028,9 +1111,9 @@ void SettingsWindow::createActions()
     connect(m_switchOffBacklightAction, SIGNAL(triggered()), this, SLOT(backlightOff()));
 
 
-    profilesMenu = new QMenu(tr("&Profiles"), this);
-    profilesMenu->setIcon(QIcon(":/icons/profiles.png"));
-    profilesMenu->clear();
+    m_profilesMenu = new QMenu(tr("&Profiles"), this);
+    m_profilesMenu->setIcon(QIcon(":/icons/profiles.png"));
+    m_profilesMenu->clear();
 
     m_settingsAction = new QAction(QIcon(":/icons/settings.png"), tr("&Settings"), this);
     m_settingsAction->setIconVisibleInMenu(true);
@@ -1052,7 +1135,7 @@ void SettingsWindow::createTrayIcon()
     m_trayIconMenu->addAction(m_switchOnBacklightAction);
     m_trayIconMenu->addAction(m_switchOffBacklightAction);
     m_trayIconMenu->addSeparator();
-    m_trayIconMenu->addMenu(profilesMenu);
+    m_trayIconMenu->addMenu(m_profilesMenu);
     m_trayIconMenu->addAction(m_settingsAction);
     m_trayIconMenu->addAction(m_aboutAction);
     m_trayIconMenu->addSeparator();
@@ -1151,6 +1234,10 @@ void SettingsWindow::updateUiFromSettings()
     ui->horizontalSlider_DeviceBrightness->setValue     (Settings::getDeviceBrightness());
     ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());
     ui->doubleSpinBox_DeviceGamma->setValue             (Settings::getDeviceGamma());
+    ui->lineEdit_SerialPort->setText                    (Settings::getSerialPortName());
+
+    initConnectedDeviceComboBox();
+    initSerialPortBaudRateComboBox();
 
     ui->groupBox_Api->setChecked                        (Settings::isApiEnabled());
     ui->lineEdit_ApiPort->setText                       (QString::number(Settings::getApiPort()));
@@ -1288,4 +1375,42 @@ void SettingsWindow::onMoodLamp_LiquidMode_Toggled(bool checked)
 
         m_grabManager->setMoodLampLiquidMode(true);
     }
+}
+
+void SettingsWindow::initConnectedDeviceComboBox()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    ui->comboBox_ConnectedDevice->clear();
+    ui->comboBox_ConnectedDevice->addItems(Settings::getSupportedDevices());
+
+    QString deviceName = Settings::getConnectedDeviceName();
+    int index = ui->comboBox_ConnectedDevice->findText(deviceName);
+
+    if (index < 0)
+    {
+        qCritical() << Q_FUNC_INFO << "Just fail. Supported devices"
+                    << Settings::getSupportedDevices() << "doesn't contains connected device:" << deviceName;
+        index = 0;
+    }
+    ui->comboBox_ConnectedDevice->setCurrentIndex( index );
+}
+
+void SettingsWindow::initSerialPortBaudRateComboBox()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    ui->comboBox_SerialPortBaudRate->clear();
+    ui->comboBox_SerialPortBaudRate->addItems(Settings::getSupportedSerialPortBaudRates());
+
+    QString baudrate = Settings::getSerialPortBaudRate();
+    int index = ui->comboBox_SerialPortBaudRate->findText(baudrate);
+
+    if (index < 0)
+    {
+        qCritical() << Q_FUNC_INFO << "Just another fail. Serial port supported baud rates"
+                    << Settings::getSupportedSerialPortBaudRates() << "doesn't contains baud rate:" << baudrate;
+        index = 0;
+    }
+    ui->comboBox_SerialPortBaudRate->setCurrentIndex( index );
 }

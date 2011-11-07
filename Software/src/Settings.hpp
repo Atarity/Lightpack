@@ -74,11 +74,16 @@ public:
     static void setExpertModeEnabled(bool isEnabled);
     static SupportedDevices::DeviceType getConnectedDevice();
     static void setConnectedDevice(SupportedDevices::DeviceType device);
-    // [Adalight]
-    static QString getAdalightPort();
-    static void setAdalightPort(const QString & port);
-    static int getAdalightBaudRate();
-    static void setAdalightBaudRate(int baud);
+    static QString getConnectedDeviceName();
+    static void setConnectedDeviceName(const QString & deviceName);
+    static QStringList getSupportedDevices();
+    // [SerialPort]
+    static QString getSerialPortName();
+    static void setSerialPortName(const QString & port);
+    static QString getSerialPortBaudRate();
+    static void setSerialPortBaudRate(const QString & baud);
+    static QStringList getSupportedSerialPortBaudRates();
+    static bool isConnectedDeviceUsesSerialPort();
 
 
     // Profile
@@ -136,7 +141,7 @@ private:
     static void setValidLedCoef(int ledIndex, const QString & keyCoef, double coef);
     static double getValidLedCoef(int ledIndex, const QString & keyCoef);
 
-    static void settingsInit(bool isResetDefault);
+    static void initCurrentProfile(bool isResetDefault);
     static void setNewOption(const QString & name, const QVariant & value,
                             bool isForceSetOption = false, QSettings * settings = m_currentProfile);
     static void setNewOptionMain(const QString & name, const QVariant & value,
@@ -148,6 +153,8 @@ private:
     static void setValue(const QString & key, const QVariant & value);
     static QVariant value(const QString & key);
 
+    static void initDevicesMap();
+
 
 
 private:
@@ -155,5 +162,6 @@ private:
     static QSettings * m_currentProfile; // using profile
     static QSettings * m_mainConfig;     // store last used profile name, locale and so on
     static QString m_applicationDirPath; // path to store app generated stuff
+    static QMap<SupportedDevices::DeviceType, QString> m_devicesMap;
 };
 } /*SettingsScope*/
