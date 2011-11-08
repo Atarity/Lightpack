@@ -56,6 +56,8 @@ private:
     RECT getEffectiveRect(QList<GrabWidget *> &widgets);
     int getBufLength(const RECT &rect);
     QRgb getColor(int x, int y, int width, int height);
+    void clipRect(RECT *rect, D3DSURFACE_DESC *surfaceDesc);
+
 
 };
 #endif

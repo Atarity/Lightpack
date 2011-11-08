@@ -129,8 +129,11 @@ int D3D9Grabber::getBufLength(const RECT &rect)
 
 QList<QRgb> D3D9Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
 {
+    D3DSURFACE_DESC surfaceDesc;
     QList<QRgb> result;
     m_rect = getEffectiveRect(widgets);
+    m_surface->GetDesc(&surfaceDesc);
+    clipRect(&m_rect, &surfaceDesc);
     int bufLengthNeeded = getBufLength(m_rect);
     if (bufLengthNeeded > m_bufLength)
     {
@@ -146,6 +149,22 @@ QList<QRgb> D3D9Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
         result.append(getColor(widget->x(), widget->y(), widget->width(), widget->height()));
     }
     return result;
+}
+
+void D3D9Grabber::clipRect(RECT *rect, D3DSURFACE_DESC *surfaceDesc) {
+    if (rect->left < 0) {
+        rect->left = 0;
+    }
+    if (rect->right > surfaceDesc->Width) {
+        rect->right = surfaceDesc->Width;
+    }
+    if (rect->top < 0) {
+        rect->top = 0;
+    }
+
+    if (rect->bottom > surfaceDesc->Height) {
+        rect->bottom = surfaceDesc->Height;
+    }
 }
 
 RECT D3D9Grabber::getEffectiveRect(QList<GrabWidget *> &widgets)
@@ -176,10 +195,18 @@ RECT D3D9Grabber::getEffectiveRect(QList<GrabWidget *> &widgets)
 BYTE * D3D9Grabber::getImageData(BYTE * buf, RECT &rect)
 {
     D3DLOCKED_RECT blockedRect;
+    D3DSURFACE_DESC surfaceDesc;
+    HRESULT result;
 
     m_d3Device->GetFrontBufferData(0, m_surface);
-    m_surface->LockRect(&blockedRect, &rect, D3DLOCK_READONLY);
+    result = m_surface->LockRect(&blockedRect, &rect, D3DLOCK_READONLY);
+    if (result != D3D_OK) {
+        DEBUG_LOW_LEVEL << "Result not OK";
+    }
+    m_surface->GetDesc(&surfaceDesc);
+//    kopiowanie UpdateSurface
     CopyMemory(buf, blockedRect.pBits, getBufLength(rect));
+
     m_surface->UnlockRect();
     return buf;
 }
