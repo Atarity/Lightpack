@@ -708,6 +708,10 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
         setDeviceTabWidgetsVisibility(DeviceTab::Adalight);
         break;
 
+    case SupportedDevices::ArdulightDevice:
+        setDeviceTabWidgetsVisibility(DeviceTab::Ardulight);
+        break;
+
     case SupportedDevices::AlienFxDevice:
         setDeviceTabWidgetsVisibility(DeviceTab::AlienFx);
         break;
@@ -1414,3 +1418,4 @@ void SettingsWindow::initSerialPortBaudRateComboBox()
     }
     ui->comboBox_SerialPortBaudRate->setCurrentIndex( index );
 }
+

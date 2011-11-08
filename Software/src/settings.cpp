@@ -85,6 +85,7 @@ namespace ConnectedDevice
 static const QString LightpackDevice = "Lightpack";
 static const QString AlienFxDevice = "AlienFx";
 static const QString AdalightDevice = "Adalight";
+static const QString ArdulightDevice = "Ardulight";
 static const QString VirtualDevice = "Virtual";
 }
 } /*Value*/
@@ -549,8 +550,9 @@ bool Settings::isConnectedDeviceUsesSerialPort()
 {
     switch (getConnectedDevice())
     {
-    // TODO: case SupportedDevices::ArdulightDevice:
     case SupportedDevices::AdalightDevice:
+        return true;
+    case SupportedDevices::ArdulightDevice:
         return true;
     default:
         return false;
@@ -1061,6 +1063,7 @@ void Settings::initDevicesMap()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     m_devicesMap[SupportedDevices::AdalightDevice]  = Main::Value::ConnectedDevice::AdalightDevice;
+    m_devicesMap[SupportedDevices::ArdulightDevice]  = Main::Value::ConnectedDevice::ArdulightDevice;
     m_devicesMap[SupportedDevices::LightpackDevice] = Main::Value::ConnectedDevice::LightpackDevice;
     m_devicesMap[SupportedDevices::VirtualDevice]   = Main::Value::ConnectedDevice::VirtualDevice;
 

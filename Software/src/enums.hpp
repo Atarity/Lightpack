@@ -74,6 +74,7 @@ enum DeviceType {
     AlienFxDevice,
     AdalightDevice,
     VirtualDevice,
+    ArdulightDevice,
     DefaultDevice = LightpackDevice
 };
 }
@@ -95,6 +96,7 @@ enum Options
     Default         = NumberOfLeds | Brightness | Gamma,
 
     Adalight        = Default | SerialPort,
+    Ardulight        = Default | SerialPort,
     AlienFx         = Default,
     Lightpack       = Default | RefreshDelay | SmoothSlowdown,
     Virtual         = Default | VirtualLeds

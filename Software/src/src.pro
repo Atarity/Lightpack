@@ -100,7 +100,8 @@ SOURCES += \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
     grab/D3D9Grabber.cpp \
-    LightpackMath.cpp
+    LightpackMath.cpp \
+    LedDeviceArdulight.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -139,7 +140,8 @@ HEADERS += \
     grab/D3D9Grabber.hpp \
     LightpackMath.hpp \
     StructRgb.hpp \
-    SettingsDefaults.hpp
+    SettingsDefaults.hpp \
+    LedDeviceArdulight.hpp
 
 FORMS += SettingsWindow.ui \
     AboutDialog.ui \

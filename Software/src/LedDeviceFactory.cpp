@@ -30,6 +30,7 @@
 #include "LedDeviceLightpack.hpp"
 #include "LedDeviceAlienFx.hpp"
 #include "LedDeviceAdalight.hpp"
+#include "LedDeviceArdulight.hpp"
 #include "LedDeviceVirtual.hpp"
 #include "Settings.hpp"
 
@@ -238,6 +239,10 @@ ILedDevice * LedDeviceFactory::createLedDevice()
     case SupportedDevices::AdalightDevice:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::AdalightDevice";
         return (ILedDevice *)new LedDeviceAdalight();
+
+    case SupportedDevices::ArdulightDevice:
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::ArdulightDevice";
+        return (ILedDevice *)new LedDeviceArdulight();
 
     case SupportedDevices::VirtualDevice:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::VirtualDevice";

@@ -32,9 +32,9 @@
 #include "enums.hpp"
 
 #ifdef ALIEN_FX_SUPPORTED
-#   define SUPPORTED_DEVICES            "Lightpack,AlienFx,Adalight,Virtual"
+#   define SUPPORTED_DEVICES            "Lightpack,AlienFx,Adalight,Ardulight,Virtual"
 #else
-#   define SUPPORTED_DEVICES            "Lightpack,Adalight,Virtual"
+#   define SUPPORTED_DEVICES            "Lightpack,Adalight,Ardulight,Virtual"
 #endif
 
 #ifdef WINAPI_GRAB_SUPPORT
