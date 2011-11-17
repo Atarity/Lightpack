@@ -118,9 +118,7 @@ void GrabWidget::setColors(int index)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << index;
 
-    if(index < ColorsCount){
-        colorIndex = index;
-    }
+    colorIndex = index % ColorsCount;
 
     if(ui->checkBox_SelfId->isChecked()){
         this->setBackgroundColor(colors[colorIndex][0]);

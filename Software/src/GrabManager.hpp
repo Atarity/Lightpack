@@ -27,7 +27,6 @@
 #pragma once
 
 #include <QtGui>
-#include "../../CommonHeaders/LEDS_COUNT.h"
 #include "grab/IGrabber.hpp"
 #include "Settings.hpp"
 #include "SettingsWindow.hpp"
@@ -51,6 +50,7 @@ signals:
 
 public:
     void setMoodLampLiquidMode(bool state);
+    void setNumberOfLeds(int numberOfLeds);
 
 public slots:
     void updateBacklightState(Backlight::Status backlightStatus, Api::DeviceLockStatus deviceLockStatus);
@@ -82,10 +82,10 @@ private:
     void updateSmoothSteps(); /* works with colorsNew */
 
 private:
-    void initColorLists();
+    void initColorLists(int numberOfLeds);
     void clearColorsNew();
     void clearColorsCurrent();
-    void initLedWidgets();
+    void initLedWidgets(int numberOfLeds);
     void ambilight();
     void moodlamp();
     int genNewSpeed(int value);
@@ -97,7 +97,7 @@ private: // variables
     QTimer *m_timerGrab;
     QTimer *m_timerUpdateFPS;
     QList<GrabWidget *> m_ledWidgets;
-    const static QColor m_backgroundAndTextColors[LEDS_COUNT][2];
+    const static QColor m_backgroundAndTextColors[10][2];
     TimeEvaluations *m_timeEval;
 
     QList<QRgb> m_colorsCurrent;
@@ -128,4 +128,6 @@ private: // variables
     static const QColor m_colorsMoodLamp[ColorsMoodLampCount];
 
     int m_grabSlowdown;
+
+    bool m_isGrabWidgetsVisible;
 };

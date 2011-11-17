@@ -36,7 +36,6 @@
 #include "hidapi.h" /* USB HID API */
 
 #include "../../CommonHeaders/COMMANDS.h"   /* CMD defines */
-#include "../../CommonHeaders/LEDS_COUNT.h"
 
 // This defines using in all data transfers to determine indexes in write_buffer[]
 // In device COMMAND have index 0, data 1 and so on, report id isn't using
@@ -64,14 +63,14 @@ public slots:
 public:
     void open();
 
-private:
-    void openDevice();
+private: 
     bool readDataFromDevice();
     bool writeBufferToDevice(int command);
     bool tryToReopenDevice();
     bool readDataFromDeviceWithCheck();
     bool writeBufferToDeviceWithCheck(int command);    
     void updateDeviceSettings();
+    void resizeColorsBuffer(int buffSize);
 
     hid_device *m_hidDevice;
 
@@ -79,8 +78,10 @@ private:
     unsigned char m_writeBuffer[65];   /* 0-ReportID, 1..65-data */
 
     double m_gamma;
-    int m_brightness;
+    int m_brightness;    
 
     QList<QRgb> m_colorsSaved;
     QList<StructRgb> m_colorsBuffer;
+
+    static const int MaximumLedsCount;
 };

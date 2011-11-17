@@ -34,6 +34,8 @@
 
 using namespace SettingsScope;
 
+const int LedDeviceLightpack::MaximumLedsCount = MaximumNumberOfLeds::Lightpack6;
+
 LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
         ILedDevice(parent)
 {
@@ -44,11 +46,6 @@ LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
 
     memset(m_writeBuffer, 0, sizeof(m_writeBuffer));
     memset(m_readBuffer, 0, sizeof(m_readBuffer));
-
-    for (int i = 0; i < LEDS_COUNT; i++)
-    {
-        m_colorsBuffer << StructRgb();
-    }
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
@@ -66,17 +63,19 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
 
+    resizeColorsBuffer(colors.count());
+
     // Save colors for showing changes of the brightness
     m_colorsSaved = colors;
 
-    LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer);
+    LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer, 4096 /* 12-bit result */);
     LightpackMath::brightnessCorrection(m_brightness, m_colorsBuffer);
 
     // First write_buffer[0] == 0x00 - ReportID, i have problems with using it
     // Second byte of usb buffer is command (write_buffer[1] == CMD_UPDATE_LEDS, see below)
     int buffIndex = WRITE_BUFFER_INDEX_DATA_START;
 
-    for (int i = 0; i < LEDS_COUNT; i++)
+    for (int i = 0; i < m_colorsBuffer.count(); i++)
     {
         StructRgb color = m_colorsBuffer[i];
 
@@ -183,14 +182,6 @@ void LedDeviceLightpack::open()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    // Open device and emit signal openDeviceSuccess(bool);
-    openDevice();
-}
-
-void LedDeviceLightpack::openDevice()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
     m_hidDevice = NULL;
 
     DEBUG_LOW_LEVEL << QString("hid_open(0x%1, 0x%2)")
@@ -264,7 +255,7 @@ bool LedDeviceLightpack::tryToReopenDevice()
 
     hid_close(m_hidDevice);
 
-    openDevice();
+    open();
 
     if (m_hidDevice == NULL)
         return false;
@@ -332,4 +323,26 @@ void LedDeviceLightpack::updateDeviceSettings()
     setSmoothSlowdown(Settings::getDeviceSmooth());
     setGamma(Settings::getDeviceGamma());
     setBrightness(Settings::getDeviceBrightness());
+
+    requestFirmwareVersion();
+}
+
+void LedDeviceLightpack::resizeColorsBuffer(int buffSize)
+{
+    if (m_colorsBuffer.count() == buffSize)
+        return;
+
+    m_colorsBuffer.clear();
+
+    if (buffSize > MaximumLedsCount)
+    {
+        qCritical() << Q_FUNC_INFO << "buffSize > MaximumLedsCount" << buffSize << ">" << MaximumLedsCount;
+
+        buffSize = MaximumLedsCount;
+    }
+
+    for (int i = 0; i < buffSize; i++)
+    {
+        m_colorsBuffer << StructRgb();
+    }
 }

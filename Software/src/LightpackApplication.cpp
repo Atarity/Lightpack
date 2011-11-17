@@ -275,6 +275,7 @@ void LightpackApplication::startLedDeviceFactory()
     connect(m_ledDeviceFactory, SIGNAL(openDeviceSuccess(bool)),    m_settingsWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
     connect(m_ledDeviceFactory, SIGNAL(ioDeviceSuccess(bool)),      m_settingsWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
     connect(m_ledDeviceFactory, SIGNAL(firmwareVersion(QString)),   m_settingsWindow, SLOT(ledDeviceGetFirmwareVersion(QString)), Qt::QueuedConnection);
+    connect(m_ledDeviceFactory, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), m_settingsWindow, SLOT(updateVirtualLedsColors(QList<QRgb>)), Qt::QueuedConnection);
 
     m_ledDeviceFactory->moveToThread(m_ledDeviceFactoryThread);
     m_ledDeviceFactoryThread->start();

@@ -51,6 +51,7 @@ public:
 
 private:
     bool writeBuffer(const QByteArray & buff);
+    void resizeColorsBuffer(int buffSize);
 
 private:
     AbstractSerial *m_ArdulightDevice;

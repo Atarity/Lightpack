@@ -79,6 +79,23 @@ enum DeviceType {
 };
 }
 
+namespace MaximumNumberOfLeds
+{
+enum Devices
+{
+    Adalight    = 50,
+    Ardulight   = 50,
+    AlienFx     = 1,
+    Virtual     = 50,
+
+    Lightpack4  = 8,
+    Lightpack5  = 10,
+    Lightpack6  = 10,
+
+    Default     = 10
+};
+}
+
 // Configure SettingsWindow Device tab for suitable device options
 namespace DeviceTab
 {
@@ -96,7 +113,7 @@ enum Options
     Default         = NumberOfLeds | Brightness | Gamma,
 
     Adalight        = Default | SerialPort,
-    Ardulight        = Default | SerialPort,
+    Ardulight       = Default | SerialPort,
     AlienFx         = Default,
     Lightpack       = Default | RefreshDelay | SmoothSlowdown,
     Virtual         = Default | VirtualLeds

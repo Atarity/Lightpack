@@ -25,21 +25,50 @@
  */
 
 #include "LedDeviceVirtual.hpp"
+#include "LightpackMath.hpp"
+#include "Settings.hpp"
+#include "enums.hpp"
 #include "debug.h"
+
+using namespace SettingsScope;
 
 LedDeviceVirtual::LedDeviceVirtual(QObject * parent) : ILedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    m_gamma = Settings::getDeviceGamma();
+    m_brightness = Settings::getDeviceBrightness();
 }
 
-void LedDeviceVirtual::setColors(const QList<QRgb> & /*colors*/)
+void LedDeviceVirtual::setColors(const QList<QRgb> & colors)
 {
+    m_colorsSaved = colors;
+
+    QList<QRgb> callbackColors;
+
+    resizeColorsBuffer(colors.count());
+
+    LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer);
+    LightpackMath::brightnessCorrection(m_brightness, m_colorsBuffer);
+
+    for (int i = 0; i < m_colorsBuffer.count(); i++)
+    {
+        callbackColors.append(qRgb(m_colorsBuffer[i].r, m_colorsBuffer[i].g, m_colorsBuffer[i].b));
+    }
+
+    emit setColors_VirtualDeviceCallback(callbackColors);
     emit commandCompleted(true);
 }
 
 void LedDeviceVirtual::offLeds()
 {
-    emit commandCompleted(true);
+    int count = m_colorsSaved.count();
+    m_colorsSaved.clear();
+
+    for (int i = 0; i < count; i++)
+        m_colorsSaved << 0;
+
+    setColors(m_colorsSaved);
 }
 
 void LedDeviceVirtual::setRefreshDelay(int /*value*/)
@@ -57,14 +86,20 @@ void LedDeviceVirtual::setSmoothSlowdown(int /*value*/)
     emit commandCompleted(true);
 }
 
-void LedDeviceVirtual::setGamma(double /*value*/)
+void LedDeviceVirtual::setGamma(double value)
 {
-    emit commandCompleted(true);
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    m_gamma = value;
+    setColors(m_colorsSaved);
 }
 
-void LedDeviceVirtual::setBrightness(int /*value*/)
+void LedDeviceVirtual::setBrightness(int percent)
 {
-    emit commandCompleted(true);
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << percent;
+
+    m_brightness = percent;
+    setColors(m_colorsSaved);
 }
 
 void LedDeviceVirtual::requestFirmwareVersion()
@@ -78,3 +113,24 @@ void LedDeviceVirtual::open()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     emit openDeviceSuccess(true);
 }
+
+void LedDeviceVirtual::resizeColorsBuffer(int buffSize)
+{
+    if (m_colorsBuffer.count() == buffSize)
+        return;
+
+    m_colorsBuffer.clear();
+
+    if (buffSize > MaximumNumberOfLeds::Virtual)
+    {
+        qCritical() << Q_FUNC_INFO << "buffSize > MaximumNumberOfLeds::Virtual" << buffSize << ">" << MaximumNumberOfLeds::Virtual;
+
+        buffSize = MaximumNumberOfLeds::Virtual;
+    }
+
+    for (int i = 0; i < buffSize; i++)
+    {
+        m_colorsBuffer << StructRgb();
+    }
+}
+

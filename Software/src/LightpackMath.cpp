@@ -26,25 +26,26 @@
 #include "LightpackMath.hpp"
 #include "debug.h"
 
-void LightpackMath::gammaCorrection(double gamma, const QList<QRgb> & colors, QList<StructRgb> & result)
+void LightpackMath::gammaCorrection(double gamma, const QList<QRgb> &colors, QList<StructRgb> &result, int colorDepth /* = 256 */)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << gamma;
 
     //
-    // Convert 8-bit 'colors' to 12-bit 'result' with gamma correction
+    // If colorDepth == 4096 then this function, after gamma correction,
+    // converts 8-bit 'colors' to 12-bit 'result'
     //
+    // 256  == 2^8 : This is default color depth
+    // 4096 == 2^12: This is color depth for lightpack hw6
+
     for (int i = 0; i < colors.count(); i++)
     {
         StructRgb rgbResult;
 
         QRgb rgb = colors[i]; // color depth -- 8-bit
 
-        // 256  == 2^8 : This is color depth of 'colors'
-        // 4096 == 2^12: This is color depth of 'result'
-
-        rgbResult.r = 4096.0 * pow(qRed(rgb) / 256.0, gamma);
-        rgbResult.g = 4096.0 * pow(qGreen(rgb) / 256.0, gamma);
-        rgbResult.b = 4096.0 * pow(qBlue(rgb) / 256.0, gamma);
+        rgbResult.r = colorDepth * pow(qRed(rgb) / 256.0, gamma);
+        rgbResult.g = colorDepth * pow(qGreen(rgb) / 256.0, gamma);
+        rgbResult.b = colorDepth * pow(qBlue(rgb) / 256.0, gamma);
 
         result[i] = rgbResult;
     }

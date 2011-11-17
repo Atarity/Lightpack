@@ -373,7 +373,7 @@ QPoint Settings::getDefaultPosition(int ledIndex)
 
     QRect screen = QApplication::desktop()->screenGeometry();
 
-    int ledsCountDiv2 = LEDS_COUNT / 2;
+    int ledsCountDiv2 = MaximumNumberOfLeds::Default / 2;
 
     if (ledIndex < ledsCountDiv2)
     {
@@ -847,7 +847,11 @@ void Settings::setLedPosition(int ledIndex, QPoint position)
 
 bool Settings::isLedEnabled(int ledIndex)
 {
-    return value(Profile::Key::Led::Prefix + QString::number(ledIndex + 1) + "/" + Profile::Key::Led::IsEnabled).toBool();
+    QVariant result = value(Profile::Key::Led::Prefix + QString::number(ledIndex + 1) + "/" + Profile::Key::Led::IsEnabled);
+    if (result.isNull())
+        return Profile::Led::IsEnabledDefault;
+    else
+        return result.toBool();
 }
 
 void Settings::setLedEnabled(int ledIndex, bool isEnabled)
@@ -977,7 +981,7 @@ void Settings::initCurrentProfile(bool isResetDefault)
 
     QPoint ledPosition;
 
-    for (int i = 0; i < LEDS_COUNT; i++)
+    for (int i = 0; i < MaximumNumberOfLeds::Default; i++)
     {
         ledPosition = getDefaultPosition(i);
 
@@ -1063,7 +1067,7 @@ void Settings::initDevicesMap()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     m_devicesMap[SupportedDevices::AdalightDevice]  = Main::Value::ConnectedDevice::AdalightDevice;
-    m_devicesMap[SupportedDevices::ArdulightDevice]  = Main::Value::ConnectedDevice::ArdulightDevice;
+    m_devicesMap[SupportedDevices::ArdulightDevice] = Main::Value::ConnectedDevice::ArdulightDevice;
     m_devicesMap[SupportedDevices::LightpackDevice] = Main::Value::ConnectedDevice::LightpackDevice;
     m_devicesMap[SupportedDevices::VirtualDevice]   = Main::Value::ConnectedDevice::VirtualDevice;
 

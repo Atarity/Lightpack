@@ -42,6 +42,7 @@ signals:
     // Signal commandCompleted(bool) must be sent at the completion of each command
     // (setColors, setTimerOptions, setColorDepth, setSmoothSlowdown, etc.)
     void commandCompleted(bool ok);
+    void setColors_VirtualDeviceCallback(QList<QRgb> colors);
 
 public slots:
     virtual void setColors(const QList<QRgb> & colors) = 0;

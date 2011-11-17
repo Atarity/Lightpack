@@ -33,7 +33,7 @@
 class LightpackMath
 {
 public:
-    static void gammaCorrection(double gamma, const QList<QRgb> & colors, QList<StructRgb> & result);
+    static void gammaCorrection(double gamma, const QList<QRgb> & colors, QList<StructRgb> & result, int colorDepth = 256);
     static void brightnessCorrection(int brightness, QList<StructRgb> & result);
 
     // Convert ASCII char '5' to 5

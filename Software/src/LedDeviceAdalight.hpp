@@ -51,6 +51,8 @@ public:
 
 private:
     bool writeBuffer(const QByteArray & buff);
+    void resizeColorsBuffer(int buffSize);
+    void reinitBufferHeader(int ledsCount);
 
 private:
     AbstractSerial *m_AdalightDevice;

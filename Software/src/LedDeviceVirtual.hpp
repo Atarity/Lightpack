@@ -27,6 +27,7 @@
 #pragma once
 
 #include "ILedDevice.hpp"
+#include "StructRgb.hpp"
 
 class LedDeviceVirtual : public ILedDevice
 {
@@ -35,14 +36,22 @@ public:
     LedDeviceVirtual(QObject * parent = 0);
 
 public slots:
-    void setColors(const QList<QRgb> & /*colors*/);
+    void setColors(const QList<QRgb> & colors);
     void offLeds();
     void setRefreshDelay(int /*value*/);
     void setColorDepth(int /*value*/);
     void setSmoothSlowdown(int /*value*/);
-    void setGamma(double /*value*/);
-    void setBrightness(int /*value*/);
+    void setGamma(double value);
+    void setBrightness(int value);
     void requestFirmwareVersion();
 public:
     void open();
+    void resizeColorsBuffer(int buffSize);
+
+private:
+    double m_gamma;
+    int m_brightness;
+
+    QList<QRgb> m_colorsSaved;
+    QList<StructRgb> m_colorsBuffer;
 };

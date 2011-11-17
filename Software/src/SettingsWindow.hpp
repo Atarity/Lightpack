@@ -80,7 +80,7 @@ public slots:
     void profilesLoadAll();
     void profileSwitch(const QString & configName);
     void profileSwitchCombobox(QString profile);
-    void updateGrabbedColors(const QList<QRgb> & colors);
+    void updateVirtualLedsColors(const QList<QRgb> & colors);
     void requestBacklightStatus();
     void onApiServer_ErrorOnStartListening(QString errorMessage);
 
@@ -109,7 +109,7 @@ private slots:
     void onDeviceNumberOfLeds_valueChanged(int value);
     void onDeviceSerialPort_editingFinished();
     void onDeviceSerialPortBaudRate_valueChanged(QString value);
-    void onDeviceGammaCorrection_valueChanged(double value);
+    void onDeviceGammaCorrection_valueChanged(double value);    
 
     void openCurrentProfile();
 
@@ -131,15 +131,18 @@ private slots:
     void onButton_GenerateNewApiKey_Clicked();
     void onButton_SetApiPort_Clicked();
     void onCheckBox_IsApiAuthEnabled_Toggled(bool isEnabled);
+    void onLoggingLevel_valueChanged(int value);
 
 private:
     void connectSignalsSlots();   
 
     void updateTrayAndActionStates();
     void updateExpertModeWidgetsVisibility();
+    void updateDeviceTabWidgetsVisibility();
     void setDeviceTabWidgetsVisibility(DeviceTab::Options options);
-
     void syncLedDeviceWithSettingsWindow();
+    void setMaximumNumberOfLeds(MaximumNumberOfLeds::Devices maximumNumberOfLeds);
+    MaximumNumberOfLeds::Devices getLightpackMaximumNumberOfLeds();
 
     void createTrayIcon();
     void createActions();
@@ -154,7 +157,7 @@ private:
 
     void openFile(const QString &filePath);
 
-    void initLabelsForGrabbedColors();
+    void initVirtualLeds();
     void initConnectedDeviceComboBox();
     void initSerialPortBaudRateComboBox();
 
@@ -186,6 +189,9 @@ private:
     QMenu *m_profilesMenu;
 
     QTranslator *m_translator;
+
+    QString m_deviceFirmwareVersion;
+    static const QString DeviceFirmvareVersionUndef;
 
     static const unsigned ModeAmbilightIndex;
     static const unsigned ModeMoodLampIndex;

@@ -45,6 +45,8 @@ using namespace SettingsScope;
 // Lightpack settings window
 // ----------------------------------------------------------------------------
 
+const QString SettingsWindow::DeviceFirmvareVersionUndef = "undef";
+
 // Indexes of supported modes listed in ui->comboBox_Modes and ui->stackedWidget_Modes
 const unsigned SettingsWindow::ModeAmbilightIndex = 0;
 const unsigned SettingsWindow::ModeMoodLampIndex  = 1;
@@ -62,6 +64,8 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     createActions();
     createTrayIcon();
+
+    m_deviceFirmwareVersion = DeviceFirmvareVersionUndef;
 
     QRect screen = QApplication::desktop()->screenGeometry(this);
 
@@ -103,7 +107,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     initLanguages();
 
-    initLabelsForGrabbedColors();
+    initVirtualLeds();
 
     connectSignalsSlots();
 
@@ -202,9 +206,6 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->radioButton_GrabMacCoreGraphics, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
 #endif
 
-    connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SLOT(updateGrabbedColors(QList<QRgb>)));
-    connect(ui->checkBox_ConnectVirtualDevice, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ConnectVirtualDevice_Toggled(bool)));
-
     // Connections to signals which will be connected to ILedDevice
     connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
 
@@ -213,6 +214,8 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->pushButton_SetApiPort, SIGNAL(clicked()), this, SLOT(onButton_SetApiPort_Clicked()));
     connect(ui->checkBox_IsApiAuthEnabled, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_IsApiAuthEnabled_Toggled(bool)));
     connect(ui->pushButton_GenerateNewApiKey, SIGNAL(clicked()), this, SLOT(onButton_GenerateNewApiKey_Clicked()));
+
+    connect(ui->spinBox_LoggingLevel, SIGNAL(valueChanged(int)), this, SLOT(onLoggingLevel_valueChanged(int)));
 }
 
 SettingsWindow::~SettingsWindow()
@@ -299,20 +302,66 @@ void SettingsWindow::onCheckBox_ExpertModeEnabled_Toggled(bool isEnabled)
 
 void SettingsWindow::updateExpertModeWidgetsVisibility()
 {    
-    ui->groupBox_DeviceRefreshDelay->setVisible(Settings::isExpertModeEnabled());
-    ui->label_GammaCorrection->setVisible(Settings::isExpertModeEnabled());
-    ui->doubleSpinBox_DeviceGamma->setVisible(Settings::isExpertModeEnabled());
-    ui->checkBox_USB_SendDataOnlyIfColorsChanges->setVisible(Settings::isExpertModeEnabled());
     if(Settings::isExpertModeEnabled()) {
         if (ui->tabWidget->indexOf(ui->tabDevTab) < 0)
             ui->tabWidget->addTab(ui->tabDevTab, tr("Dev tab"));
     } else {
         ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabDevTab));
     }
+
+    // Minimum level of sensitivity for ambilight mode
+    ui->label_MinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
+    ui->spinBox_GrabMinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
+
+    // Update device tab widgets depending on the connected device
+    updateDeviceTabWidgetsVisibility();
+}
+
+void SettingsWindow::updateDeviceTabWidgetsVisibility()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    SupportedDevices::DeviceType connectedDevice = Settings::getConnectedDevice();
+
+    switch (connectedDevice)
+    {
+    case SupportedDevices::AdalightDevice:
+        setDeviceTabWidgetsVisibility(DeviceTab::Adalight);
+        setMaximumNumberOfLeds(MaximumNumberOfLeds::Adalight);
+        break;
+
+    case SupportedDevices::ArdulightDevice:
+        setDeviceTabWidgetsVisibility(DeviceTab::Ardulight);
+        setMaximumNumberOfLeds(MaximumNumberOfLeds::Ardulight);
+        break;
+
+    case SupportedDevices::AlienFxDevice:
+        setDeviceTabWidgetsVisibility(DeviceTab::AlienFx);
+        setMaximumNumberOfLeds(MaximumNumberOfLeds::AlienFx);
+        break;
+
+    case SupportedDevices::LightpackDevice:
+        setDeviceTabWidgetsVisibility(DeviceTab::Lightpack);
+        setMaximumNumberOfLeds(getLightpackMaximumNumberOfLeds());
+        break;
+
+    case SupportedDevices::VirtualDevice:
+        setDeviceTabWidgetsVisibility(DeviceTab::Virtual);
+        setMaximumNumberOfLeds(MaximumNumberOfLeds::Virtual);
+        // Sync Virtual Leds count with NumberOfLeds field
+        initVirtualLeds();
+        break;
+
+    default:
+        qCritical() << Q_FUNC_INFO << "Fail. Unknown connectedDevice ==" << connectedDevice;
+        break;
+    }
 }
 
 void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << options;
+
     ui->groupBox_DeviceBrightness->setVisible(options & DeviceTab::Brightness);
     ui->groupBox_DeviceRefreshDelay->setVisible((options & DeviceTab::RefreshDelay) && Settings::isExpertModeEnabled());
     ui->groupBox_DeviceSmoothSlowdown->setVisible(options & DeviceTab::SmoothSlowdown);
@@ -332,6 +381,9 @@ void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
     // Gamma
     ui->label_GammaCorrection->setVisible((options & DeviceTab::Gamma) && Settings::isExpertModeEnabled());
     ui->doubleSpinBox_DeviceGamma->setVisible((options & DeviceTab::Gamma) && Settings::isExpertModeEnabled());
+
+    // Virtual leds
+    ui->frame_VirtualLeds->setVisible(options & DeviceTab::VirtualLeds);   
 }
 
 void SettingsWindow::syncLedDeviceWithSettingsWindow()
@@ -339,6 +391,51 @@ void SettingsWindow::syncLedDeviceWithSettingsWindow()
     emit updateBrightness(Settings::getDeviceBrightness());
     emit updateSmoothSlowdown(Settings::getDeviceSmooth());
     emit updateGamma(Settings::getDeviceGamma());
+}
+
+void SettingsWindow::setMaximumNumberOfLeds(MaximumNumberOfLeds::Devices maximumNumberOfLeds)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << maximumNumberOfLeds;
+
+    ui->spinBox_NumberOfLeds->setMaximum(maximumNumberOfLeds);
+}
+
+MaximumNumberOfLeds::Devices SettingsWindow::getLightpackMaximumNumberOfLeds()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
+    {
+        if (m_deviceFirmwareVersion == DeviceFirmvareVersionUndef)
+        {
+            qWarning() << Q_FUNC_INFO << "Device firmware version =" << m_deviceFirmwareVersion;
+            return MaximumNumberOfLeds::Default;
+        }
+
+        bool ok = false;
+        double version = m_deviceFirmwareVersion.toDouble(&ok);
+
+        if (!ok)
+        {
+            qCritical() << Q_FUNC_INFO << "Convert to double fail. Device firmware version =" << m_deviceFirmwareVersion;
+            return MaximumNumberOfLeds::Default;
+        }
+
+        int majorVersion = (int)version;
+
+        if (majorVersion == 4)
+            return MaximumNumberOfLeds::Lightpack4;
+        else if (majorVersion == 5)
+            return MaximumNumberOfLeds::Lightpack5;
+        else if (majorVersion == 6)
+            return MaximumNumberOfLeds::Lightpack6;
+        else {
+            qWarning() << Q_FUNC_INFO << "Device firmware version =" << m_deviceFirmwareVersion;
+            return MaximumNumberOfLeds::Default;
+        }
+    }
+
+    return MaximumNumberOfLeds::Default;
 }
 
 void SettingsWindow::onCheckBox_ConnectVirtualDevice_Toggled(bool isEnabled)
@@ -407,6 +504,16 @@ void SettingsWindow::onCheckBox_IsApiAuthEnabled_Toggled(bool isEnabled)
     Settings::setIsApiAuthEnabled(isEnabled);
 
     emit enableApiAuth(isEnabled);
+}
+
+void SettingsWindow::onLoggingLevel_valueChanged(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    // WARNING: Multithreading bug here with g_debugLevel
+    g_debugLevel = value;
+
+    Settings::setDebugLevel(value);
 }
 
 // ----------------------------------------------------------------------------
@@ -554,23 +661,54 @@ void SettingsWindow::updateTrayAndActionStates()
 // Show grabbed colors in another GUI
 // ----------------------------------------------------------------------------
 
-void SettingsWindow::initLabelsForGrabbedColors()
+void SettingsWindow::initVirtualLeds()
 {
-    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
+    int virtualLedsCount = ui->spinBox_NumberOfLeds->value();
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << virtualLedsCount;
+
+    // Remove all virtual leds from grid layout
+    for (int i = 0; i < m_labelsGrabbedColors.count(); i++)
+    {
+        ui->gridLayout_VirtualLeds->removeWidget(m_labelsGrabbedColors[i]);
+        m_labelsGrabbedColors[i]->deleteLater();
+    }
+
+    m_labelsGrabbedColors.clear();
+
+    for (int i = 0; i < virtualLedsCount; i++)
+    {
         QLabel *label = new QLabel(this);
-        label->setText(QString::number(ledIndex+1));
+        label->setText(QString::number(i + 1));
+        label->setAlignment(Qt::AlignCenter);
         label->setAutoFillBackground(true);
 
         m_labelsGrabbedColors.append(label);
-        ui->horizontalLayout_GrabbedColors->addWidget(label);
+
+        int row = i / 10;
+        int col = i % 10;
+
+        ui->gridLayout_VirtualLeds->addWidget(label, row, col);
     }
+
+    ui->frame_VirtualLeds->update();
 }
 
-void SettingsWindow::updateGrabbedColors(const QList<QRgb> & colors)
+void SettingsWindow::updateVirtualLedsColors(const QList<QRgb> & colors)
 {
-    for(int ledIndex=0; ledIndex < LEDS_COUNT; ledIndex++){
-        QLabel *label = m_labelsGrabbedColors[ ledIndex ];
-        QColor color(colors[ ledIndex ]);
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
+    if (colors.count() != m_labelsGrabbedColors.count())
+    {
+        qCritical() << Q_FUNC_INFO << "Fail: colors.count()" << colors.count() << "!=" << "m_labelsGrabbedColors.count()" << m_labelsGrabbedColors.count() << "."
+                    << "Cancel updating virtual colors.";
+        return;
+    }
+
+    for(int i = 0; i < colors.count(); i++)
+    {
+        QLabel *label = m_labelsGrabbedColors[i];
+        QColor color(colors[i]);
 
         QPalette pal = label->palette();
         pal.setBrush(QPalette::Window, QBrush(color));
@@ -652,10 +790,17 @@ void SettingsWindow::ledDeviceCallSuccess(bool isSuccess)
 
 void SettingsWindow::ledDeviceGetFirmwareVersion(const QString & fwVersion)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << fwVersion;
+
     if (m_aboutDialog != NULL)
     {
         m_aboutDialog->setFirmwareVersion(fwVersion);
     }
+
+    m_deviceFirmwareVersion = fwVersion;
+
+    if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
+        setMaximumNumberOfLeds(getLightpackMaximumNumberOfLeds());
 }
 
 void SettingsWindow::refreshAmbilightEvaluated(double updateResultMs)
@@ -702,28 +847,8 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
 
     Settings::setConnectedDeviceName(value);
 
-    switch (Settings::getConnectedDevice())
-    {
-    case SupportedDevices::AdalightDevice:
-        setDeviceTabWidgetsVisibility(DeviceTab::Adalight);
-        break;
-
-    case SupportedDevices::ArdulightDevice:
-        setDeviceTabWidgetsVisibility(DeviceTab::Ardulight);
-        break;
-
-    case SupportedDevices::AlienFxDevice:
-        setDeviceTabWidgetsVisibility(DeviceTab::AlienFx);
-        break;
-
-    case SupportedDevices::LightpackDevice:
-        setDeviceTabWidgetsVisibility(DeviceTab::Lightpack);
-        break;
-
-    case SupportedDevices::VirtualDevice:
-        setDeviceTabWidgetsVisibility(DeviceTab::Virtual);
-        break;
-    }
+    // Sync connected device and widgets visibility on device tab
+    updateDeviceTabWidgetsVisibility();
 
     emit recreateLedDevice();
 }
@@ -732,7 +857,12 @@ void SettingsWindow::onDeviceNumberOfLeds_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    qCritical() << "Not implemented!";
+    m_grabManager->setNumberOfLeds(value);
+
+    if (Settings::getConnectedDevice() == SupportedDevices::VirtualDevice)
+        initVirtualLeds();
+
+    // TODO: save to settings
 }
 
 void SettingsWindow::onDeviceSerialPort_editingFinished()
@@ -1223,7 +1353,6 @@ void SettingsWindow::updateUiFromSettings()
     }
 
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
-    ui->checkBox_ConnectVirtualDevice->setChecked       (Settings::getConnectedDevice() == SupportedDevices::VirtualDevice);
 
     ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsOn());
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
@@ -1247,6 +1376,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->lineEdit_ApiPort->setText                       (QString::number(Settings::getApiPort()));
     ui->checkBox_IsApiAuthEnabled->setChecked           (Settings::isApiAuthEnabled());
     ui->lineEdit_ApiKey->setText                        (Settings::getApiAuthKey());
+    ui->spinBox_LoggingLevel->setValue                  (g_debugLevel);
 
     switch (Settings::getGrabMode())
     {
@@ -1385,10 +1515,13 @@ void SettingsWindow::initConnectedDeviceComboBox()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    QString deviceName = Settings::getConnectedDeviceName();
+
     ui->comboBox_ConnectedDevice->clear();
+
+    // NOTE: This line emit's signal currentIndex_Changed()
     ui->comboBox_ConnectedDevice->addItems(Settings::getSupportedDevices());
 
-    QString deviceName = Settings::getConnectedDeviceName();
     int index = ui->comboBox_ConnectedDevice->findText(deviceName);
 
     if (index < 0)
@@ -1404,10 +1537,13 @@ void SettingsWindow::initSerialPortBaudRateComboBox()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    QString baudrate = Settings::getSerialPortBaudRate();
+
     ui->comboBox_SerialPortBaudRate->clear();
+
+    // NOTE: This line emit's signal currentIndex_Changed()
     ui->comboBox_SerialPortBaudRate->addItems(Settings::getSupportedSerialPortBaudRates());
 
-    QString baudrate = Settings::getSerialPortBaudRate();
     int index = ui->comboBox_SerialPortBaudRate->findText(baudrate);
 
     if (index < 0)

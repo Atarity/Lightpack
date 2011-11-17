@@ -27,7 +27,6 @@
 #include "LedDeviceAdalight.hpp"
 #include "LightpackMath.hpp"
 #include "Settings.hpp"
-#include "../../CommonHeaders/LEDS_COUNT.h"
 #include "debug.h"
 #include "stdio.h"
 
@@ -37,22 +36,10 @@ LedDeviceAdalight::LedDeviceAdalight(QObject * parent) : ILedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    for (int i = 0; i < LEDS_COUNT; i++)
-    {
-        m_colorsSaved << 0;
-        m_colorsBuffer << StructRgb();
-    }
+    m_gamma = Settings::getDeviceGamma();
+    m_brightness = Settings::getDeviceBrightness();
 
-    // Initialize buffer header
-    int ledsCountHi = ((LEDS_COUNT - 1) >> 8) & 0xff;
-    int ledsCountLo = (LEDS_COUNT - 1) & 0xff;
-
-    m_writeBufferHeader.append((char)'A');
-    m_writeBufferHeader.append((char)'d');
-    m_writeBufferHeader.append((char)'a');
-    m_writeBufferHeader.append((char)ledsCountHi);
-    m_writeBufferHeader.append((char)ledsCountLo);
-    m_writeBufferHeader.append((char)(ledsCountHi ^ ledsCountLo ^ 0x55));
+    // TODO: think about init m_savedColors in all ILedDevices
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
@@ -70,6 +57,8 @@ void LedDeviceAdalight::setColors(const QList<QRgb> & colors)
     // Save colors for showing changes of the brightness
     m_colorsSaved = colors;
 
+    resizeColorsBuffer(colors.count());
+
     LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer);
     LightpackMath::brightnessCorrection(m_brightness, m_colorsBuffer);
 
@@ -80,9 +69,9 @@ void LedDeviceAdalight::setColors(const QList<QRgb> & colors)
     {
         StructRgb color = m_colorsBuffer[i];
 
-        m_writeBuffer.append((color.r & 0x0FF0) >> 4);
-        m_writeBuffer.append((color.g & 0x0FF0) >> 4);
-        m_writeBuffer.append((color.b & 0x0FF0) >> 4);
+        m_writeBuffer.append(color.r);
+        m_writeBuffer.append(color.g);
+        m_writeBuffer.append(color.b);
     }
 
     bool ok = writeBuffer(m_writeBuffer);
@@ -92,9 +81,10 @@ void LedDeviceAdalight::setColors(const QList<QRgb> & colors)
 
 void LedDeviceAdalight::offLeds()
 {
+    int count = m_colorsSaved.count();
     m_colorsSaved.clear();
 
-    for (int i = 0; i < LEDS_COUNT; i++)
+    for (int i = 0; i < count; i++)
         m_colorsSaved << 0;
 
     setColors(m_colorsSaved);
@@ -210,4 +200,42 @@ bool LedDeviceAdalight::writeBuffer(const QByteArray & buff)
     }
 
     return true;
+}
+
+void LedDeviceAdalight::resizeColorsBuffer(int buffSize)
+{
+    if (m_colorsBuffer.count() == buffSize)
+        return;
+
+    m_colorsBuffer.clear();
+
+    if (buffSize > MaximumNumberOfLeds::Adalight)
+    {
+        qCritical() << Q_FUNC_INFO << "buffSize > MaximumNumberOfLeds::Adalight" << buffSize << ">" << MaximumNumberOfLeds::Adalight;
+
+        buffSize = MaximumNumberOfLeds::Adalight;
+    }
+
+    for (int i = 0; i < buffSize; i++)
+    {
+        m_colorsBuffer << StructRgb();
+    }
+
+    reinitBufferHeader(buffSize);
+}
+
+void LedDeviceAdalight::reinitBufferHeader(int ledsCount)
+{
+    m_writeBufferHeader.clear();
+
+    // Initialize buffer header
+    int ledsCountHi = ((ledsCount - 1) >> 8) & 0xff;
+    int ledsCountLo = (ledsCount  - 1) & 0xff;
+
+    m_writeBufferHeader.append((char)'A');
+    m_writeBufferHeader.append((char)'d');
+    m_writeBufferHeader.append((char)'a');
+    m_writeBufferHeader.append((char)ledsCountHi);
+    m_writeBufferHeader.append((char)ledsCountLo);
+    m_writeBufferHeader.append((char)(ledsCountHi ^ ledsCountLo ^ 0x55));
 }

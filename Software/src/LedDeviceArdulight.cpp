@@ -27,7 +27,6 @@
 #include "LedDeviceArdulight.hpp"
 #include "LightpackMath.hpp"
 #include "Settings.hpp"
-#include "../../CommonHeaders/LEDS_COUNT.h"
 #include "debug.h"
 #include "stdio.h"
 
@@ -37,11 +36,8 @@ LedDeviceArdulight::LedDeviceArdulight(QObject * parent) : ILedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    for (int i = 0; i < LEDS_COUNT; i++)
-    {
-        m_colorsSaved << 0;
-        m_colorsBuffer << StructRgb();
-    }
+    m_gamma = Settings::getDeviceGamma();
+    m_brightness = Settings::getDeviceBrightness();
 
     m_writeBufferHeader.append((char)255);
 
@@ -61,6 +57,8 @@ void LedDeviceArdulight::setColors(const QList<QRgb> & colors)
     // Save colors for showing changes of the brightness
     m_colorsSaved = colors;
 
+    resizeColorsBuffer(colors.count());
+
     LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer);
     LightpackMath::brightnessCorrection(m_brightness, m_colorsBuffer);
 
@@ -71,9 +69,9 @@ void LedDeviceArdulight::setColors(const QList<QRgb> & colors)
     {
         StructRgb color = m_colorsBuffer[i];
 
-        m_writeBuffer.append((color.r & 0x0FF0) >> 4);
-        m_writeBuffer.append((color.g & 0x0FF0) >> 4);
-        m_writeBuffer.append((color.b & 0x0FF0) >> 4);
+        m_writeBuffer.append(color.r);
+        m_writeBuffer.append(color.g);
+        m_writeBuffer.append(color.b);
     }
 
     bool ok = writeBuffer(m_writeBuffer);
@@ -83,9 +81,10 @@ void LedDeviceArdulight::setColors(const QList<QRgb> & colors)
 
 void LedDeviceArdulight::offLeds()
 {
+    int count = m_colorsSaved.count();
     m_colorsSaved.clear();
 
-    for (int i = 0; i < LEDS_COUNT; i++)
+    for (int i = 0; i < count; i++)
         m_colorsSaved << 0;
 
     setColors(m_colorsSaved);
@@ -201,5 +200,25 @@ bool LedDeviceArdulight::writeBuffer(const QByteArray & buff)
     }
 
     return true;
+}
+
+void LedDeviceArdulight::resizeColorsBuffer(int buffSize)
+{
+    if (m_colorsBuffer.count() == buffSize)
+        return;
+
+    m_colorsBuffer.clear();
+
+    if (buffSize > MaximumNumberOfLeds::Ardulight)
+    {
+        qCritical() << Q_FUNC_INFO << "buffSize > MaximumNumberOfLeds::Ardulight" << buffSize << ">" << MaximumNumberOfLeds::Ardulight;
+
+        buffSize = MaximumNumberOfLeds::Ardulight;
+    }
+
+    for (int i = 0; i < buffSize; i++)
+    {
+        m_colorsBuffer << StructRgb();
+    }
 }
 
