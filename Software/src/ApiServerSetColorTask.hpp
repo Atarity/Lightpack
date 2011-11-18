@@ -42,10 +42,12 @@ signals:
 
 public slots:
     void startParseSetColorTask(QByteArray buffer);
-    void clearColorBuffers();
+    void reinitColorBuffers();
+    void setApiDeviceNumberOfLeds(int value);
 
 private:
     QList<QRgb> m_colors;
+    int m_numberOfLeds;
 
     enum BuffRgbIndexes{
         bRed, bGreen, bBlue, bSize

@@ -67,6 +67,7 @@ signals:
     void enableApiAuth(bool isEnabled);
     void updateApiPort(int port);
     void updateApiKey(QString key);
+    void updateApiDeviceNumberOfLeds(int value);
 
 public slots:
     void ledDeviceCallSuccess(bool isSuccess);

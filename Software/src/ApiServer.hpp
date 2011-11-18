@@ -118,6 +118,7 @@ signals:
     void updateDeviceLockStatus(Api::DeviceLockStatus status);
     void errorOnStartListening(QString errorMessage);
     void clearColorBuffers();
+    void updateApiDeviceNumberOfLeds(int value);
 
 public slots:
     void enableApiServer(bool isEnabled);

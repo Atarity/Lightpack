@@ -33,8 +33,6 @@
 #include "TimeEvaluations.hpp"
 #include "version.h"
 
-#include "../../CommonHeaders/LEDS_COUNT.h"
-
 using namespace SettingsScope;
 
 // get
@@ -695,9 +693,10 @@ void ApiServer::initApiSetColorTask()
     connect(m_apiSetColorTask, SIGNAL(taskParseSetColorDone(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)), Qt::QueuedConnection);
 
     connect(m_apiSetColorTask, SIGNAL(taskParseSetColorIsSuccess(bool)), this, SLOT(taskSetColorIsSuccess(bool)), Qt::QueuedConnection);
-    connect(this, SIGNAL(startParseSetColorTask(QByteArray)), m_apiSetColorTask, SLOT(startParseSetColorTask(QByteArray)), Qt::QueuedConnection);
 
-    connect(this, SIGNAL(clearColorBuffers()), m_apiSetColorTask, SLOT(clearColorBuffers()));
+    connect(this, SIGNAL(startParseSetColorTask(QByteArray)), m_apiSetColorTask, SLOT(startParseSetColorTask(QByteArray)), Qt::QueuedConnection);
+    connect(this, SIGNAL(updateApiDeviceNumberOfLeds(int)),   m_apiSetColorTask, SLOT(setApiDeviceNumberOfLeds(int)), Qt::QueuedConnection);
+    connect(this, SIGNAL(clearColorBuffers()),                m_apiSetColorTask, SLOT(reinitColorBuffers()));
 
     m_apiSetColorTask->moveToThread(m_apiSetColorTaskThread);
     m_apiSetColorTaskThread->start();

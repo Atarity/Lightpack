@@ -862,7 +862,9 @@ void SettingsWindow::onDeviceNumberOfLeds_valueChanged(int value)
     if (Settings::getConnectedDevice() == SupportedDevices::VirtualDevice)
         initVirtualLeds();
 
-    // TODO: save to settings
+    emit updateApiDeviceNumberOfLeds(value);
+
+    // TODO: Settings::setNumberOfLeds(Settings::getConnectedDevice(), value);
 }
 
 void SettingsWindow::onDeviceSerialPort_editingFinished()

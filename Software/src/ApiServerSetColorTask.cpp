@@ -26,7 +26,6 @@
 #include <QThread>
 #include "debug.h"
 #include "ApiServerSetColorTask.hpp"
-#include "../../CommonHeaders/LEDS_COUNT.h"
 #include "Settings.hpp"
 #include <cmath>
 #include "LightpackMath.hpp"
@@ -34,16 +33,15 @@
 ApiServerSetColorTask::ApiServerSetColorTask(QObject *parent) :
     QObject(parent)
 {
-    clearColorBuffers();
+    m_numberOfLeds = MaximumNumberOfLeds::Default;
+
+    reinitColorBuffers();
 }
 
 void ApiServerSetColorTask::startParseSetColorTask(QByteArray buffer)
 {
     API_DEBUG_OUT << QString(buffer) << "task thread:" << thread()->currentThreadId();
     bool isReadFail = false;
-
-
-    isReadFail = false;
 
     // buffer can contains only something like this:
     // 1-34,9,125
@@ -90,7 +88,7 @@ void ApiServerSetColorTask::startParseSetColorTask(QByteArray buffer)
 
         API_DEBUG_OUT << "lednumber-" << ledNumber << "buff-" << QString(buffer);
 
-        if (ledNumber <= 0 || ledNumber > LEDS_COUNT)
+        if (ledNumber <= 0 || ledNumber > m_numberOfLeds)
         {
             API_DEBUG_OUT << "ledNumber is out of bounds:" << ledNumber;
             isReadFail = true;
@@ -174,14 +172,21 @@ end:
     }
 }
 
-void ApiServerSetColorTask::clearColorBuffers()
+void ApiServerSetColorTask::reinitColorBuffers()
 {
     m_colors.clear();
 
-    for (int i = 0; i < LEDS_COUNT; i++)
+    for (int i = 0; i < m_numberOfLeds; i++)
         m_colors << 0;
 
     buffRgb[bRed] = 0;
     buffRgb[bGreen] = 0;
     buffRgb[bBlue] = 0;
+}
+
+void ApiServerSetColorTask::setApiDeviceNumberOfLeds(int value)
+{
+    m_numberOfLeds = value;
+
+    reinitColorBuffers();
 }
