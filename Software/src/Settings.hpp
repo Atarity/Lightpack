@@ -84,6 +84,9 @@ public:
     static void setSerialPortBaudRate(const QString & baud);
     static QStringList getSupportedSerialPortBaudRates();
     static bool isConnectedDeviceUsesSerialPort();
+    // [Adalight | Ardulight | Lightpack | ... | Virtual]
+    static void setNumberOfLeds(SupportedDevices::DeviceType device, int numberOfLeds);
+    static int getNumberOfLeds(SupportedDevices::DeviceType device);
 
 
     // Profile
@@ -162,6 +165,7 @@ private:
     static QSettings * m_currentProfile; // using profile
     static QSettings * m_mainConfig;     // store last used profile name, locale and so on
     static QString m_applicationDirPath; // path to store app generated stuff
-    static QMap<SupportedDevices::DeviceType, QString> m_devicesMap;
+    static QMap<SupportedDevices::DeviceType, QString> m_devicesTypeToNameMap;
+    static QMap<SupportedDevices::DeviceType, QString> m_devicesTypeToKeyNumberOfLedsMap;
 };
 } /*SettingsScope*/

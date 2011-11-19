@@ -35,8 +35,6 @@
 #include <QDir>
 #include <QUuid>
 
-#include "../../CommonHeaders/LEDS_COUNT.h"
-
 #include "debug.h"
 
 using namespace SettingsScope;
@@ -73,6 +71,26 @@ namespace SerialPort
 {
 static const QString Port = "SerialPort/Port";
 static const QString BaudRate = "SerialPort/BaudRate";
+}
+namespace Adalight
+{
+static const QString NumberOfLeds = "Adalight/NumberOfLeds";
+}
+namespace Ardulight
+{
+static const QString NumberOfLeds = "Ardulight/NumberOfLeds";
+}
+namespace AlienFx
+{
+static const QString NumberOfLeds = "AlienFx/NumberOfLeds";
+}
+namespace Lightpack
+{
+static const QString NumberOfLeds = "Lightpack/NumberOfLeds";
+}
+namespace Virtual
+{
+static const QString NumberOfLeds = "Virtual/NumberOfLeds";
 }
 } /*Key*/
 
@@ -163,7 +181,8 @@ QSettings * Settings::m_mainConfig; // LightpackMain.conf contains last profile
 // Path to directory there store application generated stuff
 QString Settings::m_applicationDirPath = "";
 
-QMap<SupportedDevices::DeviceType, QString> Settings::m_devicesMap;
+QMap<SupportedDevices::DeviceType, QString> Settings::m_devicesTypeToNameMap;
+QMap<SupportedDevices::DeviceType, QString> Settings::m_devicesTypeToKeyNumberOfLedsMap;
 
 // Desktop should be initialized before call Settings::Initialize()
 void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevelObtainedFromCmdArgs)
@@ -194,8 +213,15 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::Api::AuthKey,           QUuid::createUuid().toString());
 
     // Serial device configuration
-    setNewOptionMain(Main::Key::SerialPort::Port,         Main::SerialPort::PortDefault);
-    setNewOptionMain(Main::Key::SerialPort::BaudRate,     Main::SerialPort::BaudRateDefault);
+    setNewOptionMain(Main::Key::SerialPort::Port,       Main::SerialPort::PortDefault);
+    setNewOptionMain(Main::Key::SerialPort::BaudRate,   Main::SerialPort::BaudRateDefault);
+
+    // Init number of leds for each supported device
+    setNewOptionMain(Main::Key::Adalight::NumberOfLeds,     Main::Adalight::NumberOfLedsDefault);
+    setNewOptionMain(Main::Key::Ardulight::NumberOfLeds,    Main::Ardulight::NumberOfLedsDefault);
+    setNewOptionMain(Main::Key::AlienFx::NumberOfLeds,      Main::AlienFx::NumberOfLedsDefault);
+    setNewOptionMain(Main::Key::Lightpack::NumberOfLeds,    Main::Lightpack::NumberOfLedsDefault);
+    setNewOptionMain(Main::Key::Virtual::NumberOfLeds,      Main::Virtual::NumberOfLedsDefault);
 
     if (isDebugLevelObtainedFromCmdArgs == false)
     {
@@ -371,6 +397,12 @@ QPoint Settings::getDefaultPosition(int ledIndex)
 {
     QPoint result;
 
+    if (ledIndex > (MaximumNumberOfLeds::Default - 1))
+    {
+        int x = (ledIndex - MaximumNumberOfLeds::Default) * 10 /* px */;
+        return QPoint(x, 0);
+    }
+
     QRect screen = QApplication::desktop()->screenGeometry();
 
     int ledsCountDiv2 = MaximumNumberOfLeds::Default / 2;
@@ -470,7 +502,7 @@ SupportedDevices::DeviceType Settings::getConnectedDevice()
 {
     QString deviceName = valueMain(Main::Key::ConnectedDevice).toString();
 
-    if (m_devicesMap.values().contains(deviceName) == false)
+    if (m_devicesTypeToNameMap.values().contains(deviceName) == false)
     {
         qWarning() << Q_FUNC_INFO << Main::Key::ConnectedDevice << "in main config contains crap or unsupported device,"
                    << "reset it to default value:" << Main::ConnectedDeviceDefault;
@@ -479,19 +511,19 @@ SupportedDevices::DeviceType Settings::getConnectedDevice()
         deviceName = Main::ConnectedDeviceDefault;
     }
 
-    return m_devicesMap.key(deviceName, SupportedDevices::DefaultDevice);
+    return m_devicesTypeToNameMap.key(deviceName, SupportedDevices::DefaultDevice);
 }
 
 void Settings::setConnectedDevice(SupportedDevices::DeviceType device)
 {
-    QString deviceName = m_devicesMap.value(device, Main::ConnectedDeviceDefault);
+    QString deviceName = m_devicesTypeToNameMap.value(device, Main::ConnectedDeviceDefault);
 
     setValueMain(Main::Key::ConnectedDevice, deviceName);
 }
 
 QString Settings::getConnectedDeviceName()
 {
-    return m_devicesMap.value(getConnectedDevice(), Main::ConnectedDeviceDefault);
+    return m_devicesTypeToNameMap.value(getConnectedDevice(), Main::ConnectedDeviceDefault);
 }
 
 void Settings::setConnectedDeviceName(const QString & deviceName)
@@ -499,7 +531,7 @@ void Settings::setConnectedDeviceName(const QString & deviceName)
     if (deviceName == "")
         return; // silent return
 
-    if (m_devicesMap.values().contains(deviceName) == false)
+    if (m_devicesTypeToNameMap.values().contains(deviceName) == false)
     {
         qCritical() << Q_FUNC_INFO << "Failure during check the device name" << deviceName << "in m_devicesMap. The main config has not changed.";
         return;
@@ -557,6 +589,33 @@ bool Settings::isConnectedDeviceUsesSerialPort()
     default:
         return false;
     }
+}
+
+void Settings::setNumberOfLeds(SupportedDevices::DeviceType device, int numberOfLeds)
+{
+    QString key = m_devicesTypeToKeyNumberOfLedsMap.value(device);
+
+    if (key == "")
+    {
+        qCritical() << Q_FUNC_INFO << "Device type not recognized, device ==" << device << "numberOfLeds ==" << numberOfLeds;
+        return;
+    }
+
+    setValueMain(key, numberOfLeds);
+}
+
+int Settings::getNumberOfLeds(SupportedDevices::DeviceType device)
+{
+    QString key = m_devicesTypeToKeyNumberOfLedsMap.value(device);
+
+    if (key == "")
+    {
+        qCritical() << Q_FUNC_INFO << "Device type not recognized, device ==" << device;
+        return MaximumNumberOfLeds::Default;
+    }
+
+    // TODO: validator on maximum number of leds for current 'device'
+    return valueMain(key).toInt();
 }
 
 int Settings::getGrabSlowdown()
@@ -981,7 +1040,7 @@ void Settings::initCurrentProfile(bool isResetDefault)
 
     QPoint ledPosition;
 
-    for (int i = 0; i < MaximumNumberOfLeds::Default; i++)
+    for (int i = 0; i < MaximumNumberOfLeds::AbsoluteMaximum; i++)
     {
         ledPosition = getDefaultPosition(i);
 
@@ -1066,12 +1125,18 @@ void Settings::initDevicesMap()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_devicesMap[SupportedDevices::AdalightDevice]  = Main::Value::ConnectedDevice::AdalightDevice;
-    m_devicesMap[SupportedDevices::ArdulightDevice] = Main::Value::ConnectedDevice::ArdulightDevice;
-    m_devicesMap[SupportedDevices::LightpackDevice] = Main::Value::ConnectedDevice::LightpackDevice;
-    m_devicesMap[SupportedDevices::VirtualDevice]   = Main::Value::ConnectedDevice::VirtualDevice;
+    m_devicesTypeToNameMap[SupportedDevices::AdalightDevice]  = Main::Value::ConnectedDevice::AdalightDevice;
+    m_devicesTypeToNameMap[SupportedDevices::ArdulightDevice] = Main::Value::ConnectedDevice::ArdulightDevice;
+    m_devicesTypeToNameMap[SupportedDevices::LightpackDevice] = Main::Value::ConnectedDevice::LightpackDevice;
+    m_devicesTypeToNameMap[SupportedDevices::VirtualDevice]   = Main::Value::ConnectedDevice::VirtualDevice;
+
+    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::AdalightDevice]  = Main::Key::Adalight::NumberOfLeds;
+    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::ArdulightDevice] = Main::Key::Ardulight::NumberOfLeds;
+    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::LightpackDevice] = Main::Key::Lightpack::NumberOfLeds;
+    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::VirtualDevice]   = Main::Key::Virtual::NumberOfLeds;
 
 #ifdef ALIEN_FX_SUPPORTED
     m_devicesMap[SupportedDevices::AlienFxDevice]   = Main::Value::ConnectedDevice::AlienFxDevice;
+    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::AlienFxDevice]   = Main::Key::AlienFx::NumberOfLeds;
 #endif
 }

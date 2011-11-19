@@ -83,6 +83,8 @@ namespace MaximumNumberOfLeds
 {
 enum Devices
 {
+    AbsoluteMaximum = 50,
+
     Adalight    = 50,
     Ardulight   = 50,
     AlienFx     = 1,

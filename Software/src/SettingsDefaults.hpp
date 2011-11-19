@@ -84,6 +84,26 @@ namespace SerialPort
 static const QString PortDefault = SERIAL_PORT_DEFAULT;
 static const QString BaudRateDefault = "115200";
 }
+namespace Adalight
+{
+static const int NumberOfLedsDefault = 25;
+}
+namespace Ardulight
+{
+static const int NumberOfLedsDefault = 10;
+}
+namespace AlienFx
+{
+static const int NumberOfLedsDefault = 1;
+}
+namespace Lightpack
+{
+static const int NumberOfLedsDefault = 10;
+}
+namespace Virtual
+{
+static const int NumberOfLedsDefault = 10;
+}
 }
 
 // ProfileName.ini

@@ -408,7 +408,6 @@ MaximumNumberOfLeds::Devices SettingsWindow::getLightpackMaximumNumberOfLeds()
     {
         if (m_deviceFirmwareVersion == DeviceFirmvareVersionUndef)
         {
-            qWarning() << Q_FUNC_INFO << "Device firmware version =" << m_deviceFirmwareVersion;
             return MaximumNumberOfLeds::Default;
         }
 
@@ -850,6 +849,9 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
     // Sync connected device and widgets visibility on device tab
     updateDeviceTabWidgetsVisibility();
 
+    // Update number of leds for current selected device
+    ui->spinBox_NumberOfLeds->setValue(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
+
     emit recreateLedDevice();
 }
 
@@ -864,7 +866,7 @@ void SettingsWindow::onDeviceNumberOfLeds_valueChanged(int value)
 
     emit updateApiDeviceNumberOfLeds(value);
 
-    // TODO: Settings::setNumberOfLeds(Settings::getConnectedDevice(), value);
+    Settings::setNumberOfLeds(Settings::getConnectedDevice(), value);
 }
 
 void SettingsWindow::onDeviceSerialPort_editingFinished()
@@ -1365,6 +1367,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
     ui->horizontalSlider_MoodLampSpeed->setValue        (Settings::getMoodLampSpeed());
 
+    ui->spinBox_NumberOfLeds->setValue                  (Settings::getNumberOfLeds(Settings::getConnectedDevice()));
     ui->horizontalSlider_DeviceRefreshDelay->setValue   (Settings::getDeviceRefreshDelay());
     ui->horizontalSlider_DeviceBrightness->setValue     (Settings::getDeviceBrightness());
     ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());
