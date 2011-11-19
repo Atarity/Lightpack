@@ -35,31 +35,11 @@
 
 using namespace SettingsScope;
 
-// get
-// getstatus - on off
-// getstatusapi - busy idle
-// getprofiles - list name profiles
-// getprofile - current name profile
-
-// commands
-// lock - begin work with api (disable capture, backlight)
-// unlock - end work with api (enable capture, backlight)
-//
-// setcolor:1-r,g,b;5-r,g,b;   numbering starts with 1
-// setcolor:2-0,255,0
-// setcolor:2-0,255,0;3-0,255,0;6-0,255,0;
-//
-// setgamma:2.00 - set gamma for setcolor
-// setsmooth:100 - set smooth in device
-// setprofile:<name> - set profile
-// setstatus:on - set status (on, off)
-//
-// exit - close connection
-
-// Immediatly after successful connection server sends client ApiVersion
+// Immediatly after successful connection server sends to client -- ApiVersion
 const char * ApiServer::ApiVersion = "version:"API_VERSION"\n";
 const char * ApiServer::CmdUnknown = "unknown command\n";
 const char * ApiServer::CmdExit = "exit";
+const char * ApiServer::CmdHelp = "help";
 
 const char * ApiServer::CmdApiKey = "apikey:";
 const char * ApiServer::CmdApiKeyResult_Ok = "ok\n";
@@ -117,6 +97,7 @@ ApiServer::ApiServer(QObject *parent)
 {    
     initPrivateVariables();
     initApiSetColorTask();
+    initHelpMessage();
 }
 
 ApiServer::ApiServer(quint16 port, QObject *parent)
@@ -126,6 +107,7 @@ ApiServer::ApiServer(quint16 port, QObject *parent)
 
     initPrivateVariables();
     initApiSetColorTask();
+    initHelpMessage();
 
     m_apiPort = port;
 
@@ -651,6 +633,11 @@ void ApiServer::clientProcessCommands()
                 client->close();
             return;
         }
+        else if (cmdBuffer == CmdHelp)
+        {
+            writeData(client, m_helpMessage);
+            result = "";
+        }
         else            
         {
             qWarning() << Q_FUNC_INFO << CmdUnknown << cmdBuffer;
@@ -755,4 +742,146 @@ void ApiServer::writeData(QTcpSocket* client, const QString & data)
 
     API_DEBUG_OUT << Q_FUNC_INFO << data;
     client->write(data.toUtf8());
+}
+
+QString ApiServer::formatHelp(const QString & cmd)
+{
+    return QString("\t\t \"%1\" \n").arg(cmd.trimmed());
+}
+
+QString ApiServer::formatHelp(const QString & cmd, const QString & description)
+{
+    return QString(
+                QString(80,'.') + "\n"
+                "%1 \n"             // Command
+                "\t %2 \n"          // Description
+                ).arg(cmd).arg(description);
+}
+
+QString ApiServer::formatHelp(const QString & cmd, const QString & description, const QString & results)
+{
+    return QString(
+                formatHelp(cmd, description) +
+                "\t Results: \n"    // Return values
+                "%1"
+                ).arg(results);
+}
+
+QString ApiServer::formatHelp(const QString & cmd, const QString & description, const QString & examples, const QString & results)
+{
+    return QString(
+                formatHelp(cmd, description) +
+                "\t Examples: \n"
+                "%1"
+                "\t Results: \n"    // Return values
+                "%2"
+                ).arg(examples).arg(results);
+}
+
+void ApiServer::initHelpMessage()
+{
+    m_helpMessage += "\n";
+    m_helpMessage += "Lightpack " VERSION_STR ". API Server " API_VERSION "\n";
+    m_helpMessage += "\n";
+
+    m_helpMessage += formatHelp(
+                CmdApiKey,
+                "Command for enter an authorization key (see key in GUI)",
+                formatHelp(CmdApiKey + QString("{1ccf5dca-119d-45a0-a683-7d90a00c418f}")) +
+                formatHelp(CmdApiKey + QString("IDDQD")),
+                formatHelp(CmdApiKeyResult_Ok) +
+                formatHelp(CmdApiKeyResult_Fail)
+                );
+
+    m_helpMessage += formatHelp(
+                CmdLock,
+                "Opens access to set-commands, If success - suspends capture and blocking access for other clients to set-commands.",
+                formatHelp(CmdResultLock_Success) +
+                formatHelp(CmdResultLock_Busy)
+                );
+
+    m_helpMessage += formatHelp(
+                CmdUnlock,
+                "Closes access to set-commands. Restores device settings from the current profile, and continues the normal execution of the application.",
+                formatHelp(CmdResultUnlock_Success) +
+                formatHelp(CmdResultUnlock_NotLocked)
+                );
+
+    // Get-commands
+    m_helpMessage += formatHelp(
+                CmdGetStatus,
+                "Get status of the backlight",
+                formatHelp(CmdResultStatus_On) +
+                formatHelp(CmdResultStatus_Off) +
+                formatHelp(CmdResultStatus_DeviceError) +
+                formatHelp(CmdResultStatus_Unknown)
+                );
+    m_helpMessage += formatHelp(
+                CmdGetStatusAPI,
+                "Get status of the lightpack API",
+                formatHelp(CmdResultStatusAPI_Busy) +
+                formatHelp(CmdResultStatusAPI_Idle)
+                );
+    m_helpMessage += formatHelp(
+                CmdGetProfile,
+                "Get the name of the current profile",
+                formatHelp(CmdResultProfile + QString("SampleProfileName"))
+                );
+    m_helpMessage += formatHelp(
+                CmdGetProfiles,
+                "Get names of the all available profiles",
+                formatHelp(CmdResultProfiles + QString("Lightpack;New profile 1;New profile 2;"))
+                );
+
+    // Set-commands
+
+    QString helpCmdSetResults =
+            formatHelp(CmdSetResult_Ok) +
+            formatHelp(CmdSetResult_Error) +
+            formatHelp(CmdSetResult_Busy) +
+            formatHelp(CmdSetResult_NotLocked);
+
+    m_helpMessage += formatHelp(
+                CmdSetColor,
+                "Set colors on several LEDs. Format: \"N-R,G,B;\", where N - number of led, R, G, B - red, green and blue color components. Works only on locking time (see lock).",
+                formatHelp(CmdSetColor + QString("1-255,255,30;")) +
+                formatHelp(CmdSetColor + QString("1-255,255,30;2-12,12,12;3-1,2,3;")),
+                helpCmdSetResults);
+
+    m_helpMessage += formatHelp(
+                CmdSetGamma,
+                QString("Set device gamma correction value [%1 - %2]. Works only on locking time (see lock).")
+                .arg(SettingsScope::Profile::Device::GammaMin)
+                .arg(SettingsScope::Profile::Device::GammaMax),
+                formatHelp(CmdSetGamma + QString("2.5")),
+                helpCmdSetResults);
+
+    m_helpMessage += formatHelp(
+                CmdSetBrightness,
+                QString("Set device brightness value [%1 - %2]. Works only on locking time (see lock).")
+                .arg(SettingsScope::Profile::Device::BrightnessMin)
+                .arg(SettingsScope::Profile::Device::BrightnessMax),
+                formatHelp(CmdSetBrightness + QString("0")) +
+                formatHelp(CmdSetBrightness + QString("93")),
+                helpCmdSetResults);
+
+    m_helpMessage += formatHelp(
+                CmdSetSmooth,
+                QString("Set device smooth value [%1 - %2]. Works only on locking time (see lock).")
+                .arg(SettingsScope::Profile::Device::SmoothMin)
+                .arg(SettingsScope::Profile::Device::SmoothMax),
+                formatHelp(CmdSetSmooth + QString("10")) +
+                formatHelp(CmdSetSmooth + QString("128")),
+                helpCmdSetResults);
+
+    m_helpMessage += formatHelp(
+                CmdSetStatus,
+                QString("Set backlight status. Works only on locking time (see lock)."),
+                formatHelp(CmdSetStatus + QString(CmdSetStatus_On)) +
+                formatHelp(CmdSetStatus + QString(CmdSetStatus_Off)),
+                helpCmdSetResults);
+
+    m_helpMessage += formatHelp(CmdExit, "Closes connection");
+
+    m_helpMessage += "\n";
 }

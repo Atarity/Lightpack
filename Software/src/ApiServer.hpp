@@ -58,6 +58,7 @@ public:
     static const char * ApiVersion;   
     static const char * CmdUnknown;
     static const char * CmdExit;
+    static const char * CmdHelp;
 
     static const char * CmdApiKey;
     static const char * CmdApiKeyResult_Ok;
@@ -141,6 +142,11 @@ private:
     void startListening();
     void stopListening();
     void writeData(QTcpSocket* client, const QString & data);
+    QString formatHelp(const QString & cmd);
+    QString formatHelp(const QString & cmd, const QString & description);
+    QString formatHelp(const QString & cmd, const QString & description, const QString & results);
+    QString formatHelp(const QString & cmd, const QString & description, const QString & examples, const QString & results);
+    void initHelpMessage();
 
 private:
     int m_apiPort;
@@ -160,4 +166,6 @@ private:
 
     bool m_isRequestBacklightStatusDone;
     Backlight::Status m_backlightStatusResult;
+
+    QString m_helpMessage;
 };
