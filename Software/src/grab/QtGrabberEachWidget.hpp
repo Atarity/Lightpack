@@ -1,7 +1,7 @@
 /*
- * QtGrabber.hpp
+ * QtGrabberEachWidget.hpp
  *
- *  Created on: 25.07.11
+ *  Created on: 22.11.11
  *     Project: Lightpack
  *
  *  Copyright (c) 2011 Timur Sattarov, Mike Shatohin
@@ -29,21 +29,17 @@
 
 #ifdef QT_GRAB_SUPPORT
 
-class QtGrabber : public IGrabber
+class QtGrabberEachWidget : public IGrabber
 {
 public:
-    QtGrabber();
-    ~QtGrabber();
+    QtGrabberEachWidget();
+    ~QtGrabberEachWidget();
     virtual const char * getName();
     virtual void updateGrabScreenFromWidget( QWidget * widget );
     virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
 
 private:
-    QRgb getColor(QPixmap pixmap, const QWidget * grabme);
-    QRgb getColor(QPixmap pixmap, int x, int y, int width, int height);
-
-    QRect screenres;
-    int screen;
+    QRgb getColor(const QWidget * w);
 };
 
 #endif // QT_GRAB_SUPPORT

@@ -1,10 +1,10 @@
 /*
- * X11Grabber.hpp
+ * WinAPIGrabberEachWidget.hpp
  *
- *  Created on: 25.06.11
+ *  Created on: 22.11.11
  *     Project: Lightpack
  *
- *  Copyright (c) 2011 Andrey Isupov, Timur Sattarov, Mike Shatohin
+ *  Copyright (c) 2011 Timur Sattarov, Mike Shatohin
  *
  *  Lightpack a USB content-driving ambient lighting system
  *
@@ -27,38 +27,42 @@
 
 #include "IGrabber.hpp"
 
-#ifdef X11_GRAB_SUPPORT
+#ifdef WINAPI_GRAB_SUPPORT
 
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QPixmap>
-#include <QImage>
+#define WINVER 0x0500 /* Windows2000 for MonitorFromWindow(..) func */
+#include <windows.h>
 
-#include <qtextstream.h>
-
-#include "debug.h"
-
-struct X11GrabberData;
-
-class X11Grabber : public IGrabber
+class WinAPIGrabberEachWidget : public IGrabber
 {
 public:
-    X11Grabber();
-    ~X11Grabber();
+    WinAPIGrabberEachWidget();
+    ~WinAPIGrabberEachWidget();
     virtual const char * getName();
     virtual void updateGrabScreenFromWidget( QWidget * widget );
     virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
 
 private:
-    void captureScreen();
+    void captureWidget(const QWidget * w);
     QRgb getColor(const QWidget * grabme);
     QRgb getColor(int x, int y, int width, int height);
 
 private:
-    bool updateScreenAndAllocateMemory;
-    int screen;
-    QRect screenres;
+    HMONITOR hMonitor;
+    bool isBufferNeedsResize;
+    MONITORINFO monitorInfo;
 
-    X11GrabberData *d;
+    // Size of screen in pixels, initialize in captureScreen() using in getColor()
+    unsigned screenWidth;
+    unsigned screenHeight;
+
+    // Captured screen buffer, contains actual RGB data in reversed order
+    BYTE * pbPixelsBuff;
+    unsigned pixelsBuffSize;
+    unsigned bytesPerPixel;
+
+    HDC hScreenDC;
+    HDC hMemDC;
+    HBITMAP hBitmap;
+
 };
-#endif // X11_GRAB_SUPPORT
+#endif // WINAPI_GRAB_SUPPORT

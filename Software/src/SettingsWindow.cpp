@@ -31,7 +31,9 @@
 #include <QDesktopWidget>
 #include <QPlainTextEdit>
 #include "WinAPIGrabber.hpp"
+#include "WinAPIGrabberEachWidget.hpp"
 #include "QtGrabber.hpp"
+#include "QtGrabberEachWidget.hpp"
 #include "X11Grabber.hpp"
 #include "MacOSGrabber.hpp"
 #include "D3D9Grabber.hpp"
@@ -193,8 +195,10 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
 
     connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
+    connect(ui->radioButton_GrabQt_EachWidget, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
 #ifdef WINAPI_GRAB_SUPPORT
     connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
+    connect(ui->radioButton_GrabWinAPI_EachWidget, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
 #endif
 #ifdef D3D9_GRAB_SUPPORT
     connect(ui->radioButton_GrabD3D9, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
@@ -1202,6 +1206,9 @@ IGrabber * SettingsWindow::createGrabber(Grab::Mode grabMode)
     case Grab::WinAPIGrabMode:
         return new WinAPIGrabber();
 
+    case Grab::WinAPIEachWidgetGrabMode:
+        return new WinAPIGrabberEachWidget();
+
     case Grab::D3D9GrabMode:
         return new D3D9Grabber();
 #endif
@@ -1210,6 +1217,9 @@ IGrabber * SettingsWindow::createGrabber(Grab::Mode grabMode)
     case Grab::MacCoreGraphicsGrabMode:
         return new MacOSGrabber();
 #endif
+
+    case Grab::QtEachWidgetGrabMode:
+        return new QtGrabberEachWidget();
 
     default:
         return new QtGrabber();
@@ -1426,6 +1436,9 @@ Grab::Mode SettingsWindow::getGrabMode()
     if (ui->radioButton_GrabWinAPI->isChecked()) {
         return Grab::WinAPIGrabMode;
     }
+    if (ui->radioButton_GrabWinAPI_EachWidget->isChecked()) {
+        return Grab::WinAPIEachWidgetGrabMode;
+    }
 #endif
 #ifdef D3D9_GRAB_SUPPORT
     if (ui->radioButton_GrabD3D9->isChecked()) {
@@ -1437,6 +1450,10 @@ Grab::Mode SettingsWindow::getGrabMode()
         return Grab::MacCoreGraphicsGrabMode;
     }
 #endif
+
+    if (ui->radioButton_GrabQt_EachWidget->isChecked()) {
+        return Grab::QtEachWidgetGrabMode;
+    }
 
     return Grab::QtGrabMode;
 }

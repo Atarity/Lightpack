@@ -91,22 +91,25 @@ SOURCES += \
     LedDeviceLightpack.cpp \
     LedDeviceAlienFx.cpp \
     LedDeviceAdalight.cpp \
+    LedDeviceArdulight.cpp \
     LedDeviceVirtual.cpp \
     ColorButton.cpp \
     grab/X11Grabber.cpp \
     grab/WinAPIGrabber.cpp \
+    grab/WinAPIGrabberEachWidget.cpp \
     grab/QtGrabber.cpp \
+    grab/QtGrabberEachWidget.cpp \
     grab/MacOSGrabber.cpp \
+    grab/D3D9Grabber.cpp \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
-    grab/D3D9Grabber.cpp \
-    LightpackMath.cpp \
-    LedDeviceArdulight.cpp
+    LightpackMath.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
     SettingsWindow.hpp \
     Settings.hpp \
+    SettingsDefaults.hpp \
     version.h \
     AboutDialog.hpp \
     TimeEvaluations.hpp \
@@ -121,13 +124,16 @@ HEADERS += \
     LedDeviceLightpack.hpp \
     LedDeviceAlienFx.hpp \
     LedDeviceAdalight.hpp \
+    LedDeviceArdulight.hpp \
     LedDeviceVirtual.hpp \
     ColorButton.hpp \
     grab/IGrabber.hpp \
     grab/QtGrabber.hpp \
+    grab/QtGrabberEachWidget.hpp \
     grab/X11Grabber.hpp \
     grab/MacOSGrabber.hpp \
     grab/WinAPIGrabber.hpp \
+    grab/WinAPIGrabberEachWidget.hpp \
     defs.h \
     enums.hpp \
     ApiServer.hpp \
@@ -135,13 +141,10 @@ HEADERS += \
     hidapi/hidapi.h \
     ../../CommonHeaders/LIGHTPACK_HW.h \
     ../../CommonHeaders/COMMANDS.h \
-    ../../CommonHeaders/LEDS_COUNT.h \
     ../../CommonHeaders/USB_ID.h \
     grab/D3D9Grabber.hpp \
     LightpackMath.hpp \
-    StructRgb.hpp \
-    SettingsDefaults.hpp \
-    LedDeviceArdulight.hpp
+    StructRgb.hpp
 
 FORMS += SettingsWindow.ui \
     AboutDialog.ui \

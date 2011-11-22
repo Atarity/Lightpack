@@ -1,7 +1,7 @@
 /*
- * WinAPIGrabber.cpp
+ * WinAPIGrabberEachWidget.hpp
  *
- *  Created on: 25.07.11
+ *  Created on: 22.11.11
  *     Project: Lightpack
  *
  *  Copyright (c) 2011 Timur Sattarov, Mike Shatohin
@@ -23,44 +23,44 @@
  *
  */
 
-#include"WinAPIGrabber.hpp"
-#ifdef WINAPI_GRAB_SUPPORT
-#include"debug.h"
-#include<cmath>
+#include "WinAPIGrabberEachWidget.hpp"
 
-WinAPIGrabber::WinAPIGrabber()
+#ifdef WINAPI_GRAB_SUPPORT
+#include "debug.h"
+#include <cmath>
+
+WinAPIGrabberEachWidget::WinAPIGrabberEachWidget()
 {
     pbPixelsBuff = NULL;
     isBufferNeedsResize = true;
 }
 
-WinAPIGrabber::~WinAPIGrabber()
+WinAPIGrabberEachWidget::~WinAPIGrabberEachWidget()
 {
     delete pbPixelsBuff;
 }
 
-const char * WinAPIGrabber::getName()
+const char * WinAPIGrabberEachWidget::getName()
 {
-    return "WinAPIGrabber";
+    return "WinAPIGrabberEachWidget";
 }
 
-void WinAPIGrabber::updateGrabScreenFromWidget(QWidget *widget)
+void WinAPIGrabberEachWidget::updateGrabScreenFromWidget(QWidget *widget)
 {
     hMonitor = MonitorFromWindow( widget->winId(), MONITOR_DEFAULTTONEAREST );
     isBufferNeedsResize = true;
 }
 
-QList<QRgb> WinAPIGrabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
+QList<QRgb> WinAPIGrabberEachWidget::grabWidgetsColors(QList<GrabWidget *> &widgets)
 {
     QList<QRgb> widgetsColors;
-    captureScreen();
     for(int i = 0; i < widgets.size(); i++) {
         widgetsColors.append(getColor(widgets[i]));
     }
     return widgetsColors;
 }
 
-void WinAPIGrabber::captureScreen()
+void WinAPIGrabberEachWidget::captureWidget(const QWidget * w)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
@@ -92,8 +92,8 @@ void WinAPIGrabber::captureScreen()
     }
 
     // Copy screen
-    BitBlt( hMemDC, 0, 0, screenWidth, screenHeight, hScreenDC,
-            monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.top, SRCCOPY );
+    BitBlt( hMemDC, w->x(), w->y(), w->width(), w->height(), hScreenDC,
+            w->x(), w->y(), SRCCOPY );
 
     if( isBufferNeedsResize ){
 
@@ -135,9 +135,11 @@ void WinAPIGrabber::captureScreen()
     GetBitmapBits( hBitmap, pixelsBuffSize, pbPixelsBuff );
 }
 
-QRgb WinAPIGrabber::getColor(const QWidget * grabme)
+QRgb WinAPIGrabberEachWidget::getColor(const QWidget * grabme)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+
+    captureWidget(grabme);
 
     return getColor(grabme->x(),
                     grabme->y(),
@@ -145,7 +147,7 @@ QRgb WinAPIGrabber::getColor(const QWidget * grabme)
                     grabme->height());
 }
 
-QRgb WinAPIGrabber::getColor(int x, int y, int width, int height)
+QRgb WinAPIGrabberEachWidget::getColor(int x, int y, int width, int height)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO
                      << "x y w h:" << x << y << width << height;
@@ -212,22 +214,20 @@ QRgb WinAPIGrabber::getColor(int x, int y, int width, int height)
     }
 
 #if 0
-    if (screenWidth < 1920 && (r > 120 || g > 120 || b > 120)) {
-        int monitorWidth = screenWidth;
-        int monitorHeight = screenHeight;
-        const int BytesPerPixel = 4;
-        // Save image of screen:
-        QImage * im = new QImage( monitorWidth, monitorHeight, QImage::Format_RGB32 );
-        for(int i=0; i<monitorWidth; i++){
-            for(int j=0; j<monitorHeight; j++){
-                index = (BytesPerPixel * j * monitorWidth) + (BytesPerPixel * i);
-                QRgb rgb = pbPixelsBuff[index+2] << 16 | pbPixelsBuff[index+1] << 8 | pbPixelsBuff[index];
-                im->setPixel(i, j, rgb);
-            }
-        }
-        im->save("screen.jpg");
-        delete im;
-    }
+	int monitorWidth = screenWidth;
+	int monitorHeight = screenHeight;
+	const int BytesPerPixel = 4;
+	// Save image of screen:
+	QImage * im = new QImage( monitorWidth, monitorHeight, QImage::Format_RGB32 );
+	for(int i=0; i<monitorWidth; i++){
+		for(int j=0; j<monitorHeight; j++){
+			index = (BytesPerPixel * j * monitorWidth) + (BytesPerPixel * i);
+			QRgb rgb = pbPixelsBuff[index+2] << 16 | pbPixelsBuff[index+1] << 8 | pbPixelsBuff[index];
+			im->setPixel(i, j, rgb);
+		}
+	}
+	im->save(QString("screen%1x%2.jpg").arg(x).arg(y));
+	delete im;
 #endif
 
     QRgb result = qRgb(r, g, b);

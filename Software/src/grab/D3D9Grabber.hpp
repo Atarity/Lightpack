@@ -23,14 +23,13 @@
  *
  */
 
-
 #pragma once
 
-#include<IGrabber.hpp>
+#include <IGrabber.hpp>
 
 #ifdef D3D9_GRAB_SUPPORT
 
-#include<d3d9.h>
+#include <d3d9.h>
 
 class D3D9Grabber : public IGrabber
 {
@@ -58,4 +57,5 @@ private:
     QRgb getColor(int x, int y, int width, int height);
 
 };
-#endif
+
+#endif // D3D9_GRAB_SUPPORT

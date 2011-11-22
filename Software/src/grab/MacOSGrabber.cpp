@@ -98,4 +98,4 @@ QRgb MacOSGrabber::getColor(QPixmap pixmap, int x, int y, int width, int height)
 
     return result;
 }
-#endif
+#endif // MAC_OS_CG_GRAB_SUPPORT

@@ -44,4 +44,5 @@ private:
     QRgb getColor(QPixmap pixmap, const QWidget * grabme);
     QRgb getColor(QPixmap pixmap, int x, int y, int width, int height);
 };
-#endif
+
+#endif // MAC_OS_CG_GRAB_SUPPORT

@@ -60,8 +60,10 @@ namespace Grab
 
 enum Mode {
     QtGrabMode,
+    QtEachWidgetGrabMode,
     X11GrabMode,
     WinAPIGrabMode,
+    WinAPIEachWidgetGrabMode,
     D3D9GrabMode,
     MacCoreGraphicsGrabMode
 };

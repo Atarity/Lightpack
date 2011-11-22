@@ -23,13 +23,11 @@
  *
  */
 
-
 #include "D3D9Grabber.hpp"
-
 
 #ifdef D3D9_GRAB_SUPPORT
 
-#include "../debug.h"
+#include "debug.h"
 #include "cmath"
 #define BYTES_PER_PIXEL 4
 
@@ -246,4 +244,5 @@ QRgb D3D9Grabber::getColor(int x, int y, int width, int height)
 
     return result;
 }
-#endif
+
+#endif // D3D9_GRAB_SUPPORT

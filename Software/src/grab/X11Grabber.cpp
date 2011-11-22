@@ -1,10 +1,10 @@
 /*
- * X11Grabber.hpp
+ * X11Grabber.cpp
  *
- *  Created on:
+ *  Created on: 25.06.11
  *     Project: Lightpack
  *
- *  Copyright (c) 2011 Andrey Isupov, Mike Shatohin, Timur Sattarov
+ *  Copyright (c) 2011 Andrey Isupov, Timur Sattarov, Mike Shatohin
  *
  *  Lightpack a USB content-driving ambient lighting system
  *
@@ -23,7 +23,7 @@
  *
  */
 
-#include"X11Grabber.hpp"
+#include "X11Grabber.hpp"
 
 #ifdef X11_GRAB_SUPPORT
 
@@ -232,4 +232,4 @@ QRgb X11Grabber::getColor(int x, int y, int width, int height)
 
     return result;
 }
-#endif
+#endif // X11_GRAB_SUPPORT

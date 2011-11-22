@@ -164,7 +164,9 @@ static const QString MoodLamp = "MoodLamp";
 namespace GrabMode
 {
 static const QString Qt = "Qt";
+static const QString QtEachWidget = "QtEachWidget";
 static const QString WinAPI = "WinAPI";
+static const QString WinAPIEachWidget = "WinAPIEachWidget";
 static const QString X11 = "X11";
 static const QString D3D9 = "D3D9";
 static const QString MacCoreGraphics = "MacCoreGraphics";
@@ -708,10 +710,14 @@ Grab::Mode Settings::getGrabMode()
 
     if (strGrabMode == Profile::Value::GrabMode::Qt)
         return Grab::QtGrabMode;
+    if (strGrabMode == Profile::Value::GrabMode::QtEachWidget)
+        return Grab::QtEachWidgetGrabMode;
 
 #ifdef WINAPI_GRAB_SUPPORT
     if (strGrabMode == Profile::Value::GrabMode::WinAPI)
         return Grab::WinAPIGrabMode;
+    if (strGrabMode == Profile::Value::GrabMode::WinAPIEachWidget)
+        return Grab::WinAPIEachWidgetGrabMode;
 #endif
 
 #ifdef D3D9_GRAB_SUPPORT

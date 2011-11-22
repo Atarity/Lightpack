@@ -1278,14 +1278,8 @@
           <layout class="QVBoxLayout" name="_2">
            <item>
             <widget class="QRadioButton" name="radioButton_GrabQt">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
              <property name="text">
-              <string notr="true">QtGrabWindow</string>
+              <string notr="true">Qt (Full screen)</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -1293,54 +1287,47 @@
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButton_GrabWinAPI">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
+            <widget class="QRadioButton" name="radioButton_GrabQt_EachWidget">
              <property name="text">
-              <string notr="true">WinAPI</string>
+              <string notr="true">Qt (Each widget)</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_GrabWinAPI">
+             <property name="text">
+              <string notr="true">WinAPI (Full screen)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_GrabWinAPI_EachWidget">
+             <property name="text">
+              <string notr="true">WinAPI (Each widget)</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QRadioButton" name="radioButton_GrabD3D9">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
              <property name="text">
-              <string notr="true">D3D9</string>
+              <string notr="true">D3D9 (Full screen)</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QRadioButton" name="radioButton_GrabX11">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
              <property name="text">
-              <string>X11</string>
+              <string>X11 (Full screen)</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QRadioButton" name="radioButton_GrabMacCoreGraphics">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
              <property name="text">
-              <string>Mac Core Graphics</string>
+              <string>Mac Core Graphics (Full screen)</string>
              </property>
             </widget>
            </item>
