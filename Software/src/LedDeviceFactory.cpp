@@ -53,11 +53,8 @@ void LedDeviceFactory::recreateLedDevice()
     disconnectSignalSlotsLedDevice();
     m_ledDeviceThread->quit();
 
-    if (m_ledDevice != NULL)
-    {
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "m_ledDevice->deleteLater();";
-        m_ledDevice->deleteLater();
-    }
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "delete m_ledDevice;";
+    delete m_ledDevice;
 
     initLedDevice();
 }
