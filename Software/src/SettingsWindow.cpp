@@ -90,6 +90,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
 #ifndef WINAPI_GRAB_SUPPORT
     ui->radioButton_GrabWinAPI->setVisible(false);
+    ui->radioButton_GrabWinAPI_EachWidget->setVisible(false);
 #endif
 #ifndef D3D9_GRAB_SUPPORT
     ui->radioButton_GrabD3D9->setVisible(false);
