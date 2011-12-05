@@ -119,6 +119,7 @@ namespace Grab
 static const ::Grab::Mode ModeDefault = GRABMODE_DEFAULT;
 static const QString ModeDefaultString = GRABMODE_DEFAULT_STR;
 static const bool IsAvgColorsOnDefault = false;
+static const bool IsUSB_SendDataOnlyIfColorsChangesDefault = true;
 static const int SlowdownMin = 1;
 static const int SlowdownDefault = 50;
 static const int SlowdownMax = 1000;

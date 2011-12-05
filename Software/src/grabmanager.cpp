@@ -660,6 +660,7 @@ void GrabManager::setUpdateColorsOnlyIfChanges(bool state)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
     m_updateColorsOnlyIfChanges = state;
+    Settings::setUSB_SendDataOnlyIfColorsChanges(state);
 }
 
 

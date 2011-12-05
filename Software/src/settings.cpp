@@ -121,6 +121,7 @@ namespace Grab
 {
 static const QString Mode = "Grab/Mode";
 static const QString IsAvgColorsOn = "Grab/IsAvgColorsOn";
+static const QString IsUSB_SendDataOnlyIfColorsChanges = "Grab/IsUSBSendDataOnlyIfColorsChanges";
 static const QString Slowdown = "Grab/Slowdown";
 static const QString MinimumLevelOfSensitivity = "Grab/MinimumLevelOfSensitivity";
 }
@@ -652,6 +653,16 @@ void Settings::setAvgColorsOn(bool isEnabled)
     setValue(Profile::Key::Grab::IsAvgColorsOn, isEnabled);
 }
 
+bool Settings::isUSB_SendDataOnlyIfColorsChanges()
+{
+    return value(Profile::Key::Grab::IsUSB_SendDataOnlyIfColorsChanges).toBool();
+}
+
+void Settings::setUSB_SendDataOnlyIfColorsChanges(bool isEnabled)
+{
+    setValue(Profile::Key::Grab::IsUSB_SendDataOnlyIfColorsChanges, isEnabled);
+}
+
 int Settings::getGrabMinimumLevelOfSensitivity()
 {
     return value(Profile::Key::Grab::MinimumLevelOfSensitivity).toInt();
@@ -1032,6 +1043,7 @@ void Settings::initCurrentProfile(bool isResetDefault)
     // [Grab]
     setNewOption(Profile::Key::Grab::Mode,          Profile::Grab::ModeDefaultString, isResetDefault);
     setNewOption(Profile::Key::Grab::IsAvgColorsOn, Profile::Grab::IsAvgColorsOnDefault, isResetDefault);
+    setNewOption(Profile::Key::Grab::IsUSB_SendDataOnlyIfColorsChanges, Profile::Grab::IsUSB_SendDataOnlyIfColorsChangesDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::Slowdown,      Profile::Grab::SlowdownDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::MinimumLevelOfSensitivity, Profile::Grab::MinimumLevelOfSensitivityDefault, isResetDefault);
     // [MoodLamp]

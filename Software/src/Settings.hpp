@@ -96,6 +96,8 @@ public:
     static void setIsBacklightOn(bool isEnabled);
     static bool isGrabAvgColorsOn();
     static void setAvgColorsOn(bool isEnabled);
+    static bool isUSB_SendDataOnlyIfColorsChanges();
+    static void setUSB_SendDataOnlyIfColorsChanges(bool isEnabled);
     static int getGrabMinimumLevelOfSensitivity();
     static void setMinimumLevelOfSensitivity(int value);
     // [Device]

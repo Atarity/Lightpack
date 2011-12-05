@@ -123,7 +123,7 @@ void LedDeviceArdulight::setBrightness(int percent)
 
 void LedDeviceArdulight::requestFirmwareVersion()
 {
-    emit firmwareVersion("unknown (adalight device)");
+    emit firmwareVersion("unknown (ardulight device)");
     emit commandCompleted(true);
 }
 

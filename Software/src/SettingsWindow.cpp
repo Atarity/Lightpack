@@ -1369,6 +1369,9 @@ void SettingsWindow::updateUiFromSettings()
 
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
 
+    ui->checkBox_USB_SendDataOnlyIfColorsChanges->setChecked            (Settings::isUSB_SendDataOnlyIfColorsChanges());
+
+
     ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsOn());
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
     ui->spinBox_GrabMinLevelOfSensitivity->setValue     (Settings::getGrabMinimumLevelOfSensitivity());

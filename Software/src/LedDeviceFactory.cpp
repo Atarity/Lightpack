@@ -48,6 +48,9 @@ LedDeviceFactory::LedDeviceFactory(QObject *parent)
 
 void LedDeviceFactory::recreateLedDevice()
 {
+    SupportedDevices::DeviceType connectedDevice  =  Settings::getConnectedDevice();
+    if (m_connectedDevice == connectedDevice) return;
+
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     disconnectSignalSlotsLedDevice();
@@ -207,18 +210,18 @@ void LedDeviceFactory::initLedDevice()
 
 ILedDevice * LedDeviceFactory::createLedDevice()
 {
-    SupportedDevices::DeviceType connectedDevice = Settings::getConnectedDevice();
+    m_connectedDevice = Settings::getConnectedDevice();
 
-    if (connectedDevice == SupportedDevices::AlienFxDevice){
+    if (m_connectedDevice == SupportedDevices::AlienFxDevice){
 #       if !defined(Q_WS_WIN)
         qWarning() << Q_FUNC_INFO << "AlienFx not supported on current platform";
 
         Settings::setConnectedDevice(SupportedDevices::DefaultDevice);
-        connectedDevice = Settings::getConnectedDevice();
+        m_connectedDevice = Settings::getConnectedDevice();
 #       endif /* Q_WS_WIN */
     }
 
-    switch (connectedDevice){
+    switch (m_connectedDevice){
 
     case SupportedDevices::LightpackDevice:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::LightpackDevice";
@@ -247,7 +250,7 @@ ILedDevice * LedDeviceFactory::createLedDevice()
     }
 
     qFatal("%s %s%d%s", Q_FUNC_INFO,
-           "Create LedDevice fail. connectedDevice = '", connectedDevice,
+           "Create LedDevice fail. connectedDevice = '", m_connectedDevice,
            "'. Application exit.");
 
     return NULL; // Avoid compiler warning

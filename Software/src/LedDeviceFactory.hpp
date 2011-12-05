@@ -69,6 +69,7 @@ private slots:
     void ledDeviceCommandCompleted(bool ok);
 
 private:
+    SupportedDevices::DeviceType m_connectedDevice;
     void initLedDevice();
     ILedDevice * createLedDevice();
     void connectSignalSlotsLedDevice();
