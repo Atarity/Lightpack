@@ -594,7 +594,8 @@ void GrabManager::setBackLightColor(QColor color)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << color;
     m_backlightColor = color;
-    moodlamp();
+    if (m_isGrabOn)
+        moodlamp();
     Settings::setMoodLampColor(color);
 }
 
