@@ -190,6 +190,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
     connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLamp_ColorButton_ColorChanged(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_ExpertModeEnabled_Toggled(bool)));
+    connect(ui->checkBox_SwitchOffAtClosing, SIGNAL(toggled(bool)), this, SLOT(onCheckBox_SwitchOffAtClosing_Toggled(bool)));
 
 
     // Dev tab
@@ -297,6 +298,11 @@ void SettingsWindow::closeEvent(QCloseEvent *event)
         hideSettings();
         event->ignore();
     }
+}
+
+void SettingsWindow::onCheckBox_SwitchOffAtClosing_Toggled(bool isEnabled)
+{
+    Settings::setSwitchOffAtClosing(isEnabled);
 }
 
 void SettingsWindow::onCheckBox_ExpertModeEnabled_Toggled(bool isEnabled)
@@ -1369,6 +1375,8 @@ void SettingsWindow::updateUiFromSettings()
 
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
 
+    ui->checkBox_SwitchOffAtClosing->setChecked         (Settings::isSwitchOffAtClosing());
+
     ui->checkBox_USB_SendDataOnlyIfColorsChanges->setChecked            (Settings::isUSB_SendDataOnlyIfColorsChanges());
 
 
@@ -1468,6 +1476,12 @@ Grab::Mode SettingsWindow::getGrabMode()
 
 void SettingsWindow::quit()
 {
+    if (ui->checkBox_SwitchOffAtClosing->isChecked())
+    {
+        emit offLeds();
+       Sleep(1000); // wait end queue
+    }
+
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "trayIcon->hide();";
 
     m_trayIcon->hide();

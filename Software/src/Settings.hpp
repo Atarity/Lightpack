@@ -72,6 +72,8 @@ public:
     static void setIsApiAuthEnabled(bool isEnabled);
     static bool isExpertModeEnabled();
     static void setExpertModeEnabled(bool isEnabled);
+    static bool isSwitchOffAtClosing();
+    static void setSwitchOffAtClosing(bool isEnabled);
     static SupportedDevices::DeviceType getConnectedDevice();
     static void setConnectedDevice(SupportedDevices::DeviceType device);
     static QString getConnectedDeviceName();

@@ -56,6 +56,7 @@ static const QString ProfileLast = "ProfileLast";
 static const QString Language = "Language";
 static const QString DebugLevel = "DebugLevel";
 static const QString IsExpertModeEnabled = "IsExpertModeEnabled";
+static const QString IsSwitchOffAtClosing = "IsSwitchOffAtClosing";
 static const QString ConnectedDevice = "ConnectedDevice";
 static const QString SupportedDevices = "SupportedDevices";
 // [API]
@@ -207,6 +208,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::Language,               Main::LanguageDefault);
     setNewOptionMain(Main::Key::DebugLevel,             Main::DebugLevelDefault);
     setNewOptionMain(Main::Key::IsExpertModeEnabled,    Main::IsExpertModeEnabledDefault);
+    setNewOptionMain(Main::Key::IsSwitchOffAtClosing,    Main::IsSwitchOffAtClosingDefault);
     setNewOptionMain(Main::Key::ConnectedDevice,        Main::ConnectedDeviceDefault);
     setNewOptionMain(Main::Key::SupportedDevices,       Main::SupportedDevices, true /* always rewrite this information to main config */);
     setNewOptionMain(Main::Key::Api::IsEnabled,         Main::Api::IsEnabledDefault);
@@ -499,6 +501,16 @@ bool Settings::isExpertModeEnabled()
 void Settings::setExpertModeEnabled(bool isEnabled)
 {
     setValueMain(Main::Key::IsExpertModeEnabled, isEnabled);
+}
+
+bool Settings::isSwitchOffAtClosing()
+{
+    return valueMain(Main::Key::IsSwitchOffAtClosing).toBool();
+}
+
+void Settings::setSwitchOffAtClosing(bool isEnabled)
+{
+    setValueMain(Main::Key::IsSwitchOffAtClosing, isEnabled);
 }
 
 SupportedDevices::DeviceType Settings::getConnectedDevice()

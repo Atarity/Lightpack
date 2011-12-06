@@ -127,6 +127,7 @@ private slots:
     void startTestsClick();
 
     void onCheckBox_ExpertModeEnabled_Toggled(bool isEnabled);
+    void onCheckBox_SwitchOffAtClosing_Toggled(bool isEnabled);
     void onCheckBox_ConnectVirtualDevice_Toggled(bool isEnabled);
     void onGroupBox_EnableApi_Toggled(bool isEnabled);
     void onButton_GenerateNewApiKey_Clicked();

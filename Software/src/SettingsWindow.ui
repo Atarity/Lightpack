@@ -1373,6 +1373,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QCheckBox" name="checkBox_SwitchOffAtClosing">
+          <property name="text">
+           <string>Switch off light at closing</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="verticalSpacer_4">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
