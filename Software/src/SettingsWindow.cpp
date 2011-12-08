@@ -1473,13 +1473,20 @@ Grab::Mode SettingsWindow::getGrabMode()
 // ----------------------------------------------------------------------------
 // Quit application
 // ----------------------------------------------------------------------------
+#include <QWaitCondition>
+void Sleep(int ms)
+{
+    QWaitCondition sleep;
+    QMutex mutex;
+    sleep.wait(&mutex, ms);
+}
 
 void SettingsWindow::quit()
 {
     if (ui->checkBox_SwitchOffAtClosing->isChecked())
     {
         emit offLeds();
-       Sleep(1000); // wait end queue
+        Sleep(1000); // wait end queue
     }
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "trayIcon->hide();";
