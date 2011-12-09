@@ -123,8 +123,9 @@ void messageHandler(QtMsgType type, const char *msg)
         m_logStream << "Fatal: " << msg << endl;
         m_logStream.flush();
 
-        exit(LightpackApplication::QFatalMessageHandler_ErrorCode);
+        QApplication::exit(LightpackApplication::QFatalMessageHandler_ErrorCode);
     }
+
     m_logStream << out << endl;
     m_logStream.flush();
     cerr.flush();
