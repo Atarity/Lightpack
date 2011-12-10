@@ -122,7 +122,7 @@ namespace Grab
 {
 static const QString Mode = "Grab/Mode";
 static const QString IsAvgColorsOn = "Grab/IsAvgColorsOn";
-static const QString IsUSB_SendDataOnlyIfColorsChanges = "Grab/IsUSBSendDataOnlyIfColorsChanges";
+static const QString IsSendDataOnlyIfColorsChanges = "Grab/IsSendDataOnlyIfColorsChanges";
 static const QString Slowdown = "Grab/Slowdown";
 static const QString MinimumLevelOfSensitivity = "Grab/MinimumLevelOfSensitivity";
 }
@@ -139,6 +139,7 @@ namespace Device
 static const QString RefreshDelay = "Device/RefreshDelay";
 static const QString Smooth = "Device/Smooth";
 static const QString Brightness = "Device/Brightness";
+static const QString ColorDepth = "Device/ColorDepth";
 static const QString Gamma = "Device/Gamma";
 }
 // [LED_i]
@@ -208,7 +209,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::Language,               Main::LanguageDefault);
     setNewOptionMain(Main::Key::DebugLevel,             Main::DebugLevelDefault);
     setNewOptionMain(Main::Key::IsExpertModeEnabled,    Main::IsExpertModeEnabledDefault);
-    setNewOptionMain(Main::Key::IsSwitchOffAtClosing,    Main::IsSwitchOffAtClosingDefault);
+    setNewOptionMain(Main::Key::IsSwitchOffAtClosing,   Main::IsSwitchOffAtClosingDefault);
     setNewOptionMain(Main::Key::ConnectedDevice,        Main::ConnectedDeviceDefault);
     setNewOptionMain(Main::Key::SupportedDevices,       Main::SupportedDevices, true /* always rewrite this information to main config */);
     setNewOptionMain(Main::Key::Api::IsEnabled,         Main::Api::IsEnabledDefault);
@@ -665,14 +666,14 @@ void Settings::setAvgColorsOn(bool isEnabled)
     setValue(Profile::Key::Grab::IsAvgColorsOn, isEnabled);
 }
 
-bool Settings::isUSB_SendDataOnlyIfColorsChanges()
+bool Settings::isSendDataOnlyIfColorsChanges()
 {
-    return value(Profile::Key::Grab::IsUSB_SendDataOnlyIfColorsChanges).toBool();
+    return value(Profile::Key::Grab::IsSendDataOnlyIfColorsChanges).toBool();
 }
 
-void Settings::setUSB_SendDataOnlyIfColorsChanges(bool isEnabled)
+void Settings::setSendDataOnlyIfColorsChanges(bool isEnabled)
 {
-    setValue(Profile::Key::Grab::IsUSB_SendDataOnlyIfColorsChanges, isEnabled);
+    setValue(Profile::Key::Grab::IsSendDataOnlyIfColorsChanges, isEnabled);
 }
 
 int Settings::getGrabMinimumLevelOfSensitivity()
@@ -713,6 +714,16 @@ int Settings::getDeviceSmooth()
 void Settings::setDeviceSmooth(int value)
 {
     setValue(Profile::Key::Device::Smooth, getValidDeviceSmooth(value));
+}
+
+int Settings::getDeviceColorDepth()
+{
+    return getValidDeviceColorDepth(value(Profile::Key::Device::ColorDepth).toInt());
+}
+
+void Settings::setDeviceColorDepth(int value)
+{
+    setValue(Profile::Key::Device::ColorDepth, getValidDeviceColorDepth(value));
 }
 
 double Settings::getDeviceGamma()
@@ -974,6 +985,15 @@ int Settings::getValidDeviceSmooth(int value)
     return value;
 }
 
+int Settings::getValidDeviceColorDepth(int value)
+{
+    if (value <= Profile::Device::ColorDepthMin)
+        value = Profile::Device::ColorDepthMin;
+    else if (value >= Profile::Device::ColorDepthMax)
+        value = Profile::Device::ColorDepthMax;
+    return value;
+}
+
 double Settings::getValidDeviceGamma(double value)
 {
     if (value <= Profile::Device::GammaMin)
@@ -1055,7 +1075,7 @@ void Settings::initCurrentProfile(bool isResetDefault)
     // [Grab]
     setNewOption(Profile::Key::Grab::Mode,          Profile::Grab::ModeDefaultString, isResetDefault);
     setNewOption(Profile::Key::Grab::IsAvgColorsOn, Profile::Grab::IsAvgColorsOnDefault, isResetDefault);
-    setNewOption(Profile::Key::Grab::IsUSB_SendDataOnlyIfColorsChanges, Profile::Grab::IsUSB_SendDataOnlyIfColorsChangesDefault, isResetDefault);
+    setNewOption(Profile::Key::Grab::IsSendDataOnlyIfColorsChanges, Profile::Grab::IsUSB_SendDataOnlyIfColorsChangesDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::Slowdown,      Profile::Grab::SlowdownDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::MinimumLevelOfSensitivity, Profile::Grab::MinimumLevelOfSensitivityDefault, isResetDefault);
     // [MoodLamp]

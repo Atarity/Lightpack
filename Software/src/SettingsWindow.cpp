@@ -153,7 +153,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->groupBox_GrabShowGrabWidgets, SIGNAL(toggled(bool)), m_grabManager, SLOT(setVisibleLedWidgets(bool)));
     connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), m_grabManager, SLOT(setColoredLedWidgets(bool)));
     connect(ui->radioButton_White, SIGNAL(toggled(bool)), m_grabManager, SLOT(setWhiteLedWidgets(bool)));
-    connect(ui->checkBox_USB_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), m_grabManager, SLOT(setUpdateColorsOnlyIfChanges(bool)));
+    connect(ui->checkBox_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), m_grabManager, SLOT(setUpdateColorsOnlyIfChanges(bool)));
     connect(this, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
 
     connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLamp_LiquidMode_Toggled(bool)));
@@ -168,6 +168,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->spinBox_DeviceRefreshDelay, SIGNAL(valueChanged(int)), this, SLOT(onDeviceRefreshDelay_valueChanged(int)));
     connect(ui->spinBox_DeviceSmooth, SIGNAL(valueChanged(int)), this, SLOT(onDeviceSmooth_valueChanged(int)));
     connect(ui->spinBox_DeviceBrightness, SIGNAL(valueChanged(int)), this, SLOT(onDeviceBrightness_valueChanged(int)));
+    connect(ui->spinBox_DeviceColorDepth, SIGNAL(valueChanged(int)), this, SLOT(onDeviceColorDepth_valueChanged(int)));
     connect(ui->comboBox_ConnectedDevice, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceConnectedDevice_currentIndexChanged(QString)));
     connect(ui->spinBox_NumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onDeviceNumberOfLeds_valueChanged(int)));
     connect(ui->lineEdit_SerialPort, SIGNAL(editingFinished()), this, SLOT(onDeviceSerialPort_editingFinished()));
@@ -374,8 +375,17 @@ void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << options;
 
     ui->groupBox_DeviceBrightness->setVisible(options & DeviceTab::Brightness);
-    ui->groupBox_DeviceRefreshDelay->setVisible((options & DeviceTab::RefreshDelay) && Settings::isExpertModeEnabled());
     ui->groupBox_DeviceSmoothSlowdown->setVisible(options & DeviceTab::SmoothSlowdown);
+    ui->groupBox_DeviceRefreshDelay->setVisible((options & DeviceTab::RefreshDelay) && Settings::isExpertModeEnabled());
+
+    int majorVersion = getLigtpackFirmwareVersionMajor();
+    if (majorVersion == 4 || majorVersion == 5)
+    {
+        // Show color depth only if lightpack hw4.x or hw5.x
+        ui->groupBox_DeviceColorDepth->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
+    } else {
+        ui->groupBox_DeviceColorDepth->setVisible(false);
+    }
 
     // NumberOfLeds
     ui->label_NumberOfLeds->setVisible(options & DeviceTab::NumberOfLeds);
@@ -411,40 +421,49 @@ void SettingsWindow::setMaximumNumberOfLeds(MaximumNumberOfLeds::Devices maximum
     ui->spinBox_NumberOfLeds->setMaximum(maximumNumberOfLeds);
 }
 
+int SettingsWindow::getLigtpackFirmwareVersionMajor()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    if (Settings::getConnectedDevice() != SupportedDevices::LightpackDevice)
+        return -1;
+
+    if (m_deviceFirmwareVersion == DeviceFirmvareVersionUndef)
+        return -1;
+
+    bool ok = false;
+    double version = m_deviceFirmwareVersion.toDouble(&ok);
+
+    if (!ok)
+    {
+        qCritical() << Q_FUNC_INFO << "Convert to double fail. Device firmware version =" << m_deviceFirmwareVersion;
+        return -1;
+    }
+
+    int majorVersion = (int)version;
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Lightpack major version:" << majorVersion;
+
+    return majorVersion;
+}
+
 MaximumNumberOfLeds::Devices SettingsWindow::getLightpackMaximumNumberOfLeds()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
-    {
-        if (m_deviceFirmwareVersion == DeviceFirmvareVersionUndef)
-        {
-            return MaximumNumberOfLeds::Default;
-        }
+    int majorVersion = getLigtpackFirmwareVersionMajor();
 
-        bool ok = false;
-        double version = m_deviceFirmwareVersion.toDouble(&ok);
+    if (majorVersion < 0)
+        return MaximumNumberOfLeds::Default;
 
-        if (!ok)
-        {
-            qCritical() << Q_FUNC_INFO << "Convert to double fail. Device firmware version =" << m_deviceFirmwareVersion;
-            return MaximumNumberOfLeds::Default;
-        }
+    if (majorVersion == 4)
+        return MaximumNumberOfLeds::Lightpack4;
+    else if (majorVersion == 5)
+        return MaximumNumberOfLeds::Lightpack5;
+    else if (majorVersion == 6)
+        return MaximumNumberOfLeds::Lightpack6;
 
-        int majorVersion = (int)version;
-
-        if (majorVersion == 4)
-            return MaximumNumberOfLeds::Lightpack4;
-        else if (majorVersion == 5)
-            return MaximumNumberOfLeds::Lightpack5;
-        else if (majorVersion == 6)
-            return MaximumNumberOfLeds::Lightpack6;
-        else {
-            qWarning() << Q_FUNC_INFO << "Device firmware version =" << m_deviceFirmwareVersion;
-            return MaximumNumberOfLeds::Default;
-        }
-    }
-
+    qWarning() << Q_FUNC_INFO << "Unknown device firmware version. m_deviceFirmwareVersion =" << m_deviceFirmwareVersion << "majorVersion =" << majorVersion;
     return MaximumNumberOfLeds::Default;
 }
 
@@ -809,8 +828,7 @@ void SettingsWindow::ledDeviceGetFirmwareVersion(const QString & fwVersion)
 
     m_deviceFirmwareVersion = fwVersion;
 
-    if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
-        setMaximumNumberOfLeds(getLightpackMaximumNumberOfLeds());
+    updateDeviceTabWidgetsVisibility();
 }
 
 void SettingsWindow::refreshAmbilightEvaluated(double updateResultMs)
@@ -849,6 +867,14 @@ void SettingsWindow::onDeviceBrightness_valueChanged(int percent)
 
     Settings::setDeviceBrightness(percent);
     emit updateBrightness(Settings::getDeviceBrightness());
+}
+
+void SettingsWindow::onDeviceColorDepth_valueChanged(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    Settings::setDeviceColorDepth(value);
+    emit updateColorDepth(Settings::getDeviceColorDepth());
 }
 
 void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
@@ -1375,10 +1401,8 @@ void SettingsWindow::updateUiFromSettings()
 
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
 
+    ui->checkBox_SendDataOnlyIfColorsChanges->setChecked(Settings::isSendDataOnlyIfColorsChanges());
     ui->checkBox_SwitchOffAtClosing->setChecked         (Settings::isSwitchOffAtClosing());
-
-    ui->checkBox_USB_SendDataOnlyIfColorsChanges->setChecked            (Settings::isUSB_SendDataOnlyIfColorsChanges());
-
 
     ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsOn());
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
@@ -1393,6 +1417,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->horizontalSlider_DeviceRefreshDelay->setValue   (Settings::getDeviceRefreshDelay());
     ui->horizontalSlider_DeviceBrightness->setValue     (Settings::getDeviceBrightness());
     ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());
+    ui->horizontalSlider_DeviceColorDepth->setValue     (Settings::getDeviceColorDepth());
     ui->doubleSpinBox_DeviceGamma->setValue             (Settings::getDeviceGamma());
     ui->lineEdit_SerialPort->setText                    (Settings::getSerialPortName());
 

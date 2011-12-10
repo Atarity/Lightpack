@@ -76,7 +76,7 @@ GrabWidget::GrabWidget(int id, QWidget *parent) :
 
 GrabWidget::~GrabWidget()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_selfId;
 
     delete ui;
 }

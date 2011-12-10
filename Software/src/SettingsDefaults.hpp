@@ -152,6 +152,10 @@ static const int SmoothMin = 0;
 static const int SmoothDefault = 100;
 static const int SmoothMax = 255;
 
+static const int ColorDepthMin = 2;
+static const int ColorDepthDefault = 128;
+static const int ColorDepthMax = 255;
+
 static const double GammaMin = 0.01;
 static const double GammaDefault = 2.0;
 static const double GammaMax = 10.0;

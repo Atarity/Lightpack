@@ -106,6 +106,7 @@ private slots:
     void onDeviceRefreshDelay_valueChanged(int value);
     void onDeviceSmooth_valueChanged(int value);
     void onDeviceBrightness_valueChanged(int value);
+    void onDeviceColorDepth_valueChanged(int value);
     void onDeviceConnectedDevice_currentIndexChanged(QString value);
     void onDeviceNumberOfLeds_valueChanged(int value);
     void onDeviceSerialPort_editingFinished();
@@ -145,6 +146,7 @@ private:
     void syncLedDeviceWithSettingsWindow();
     void setMaximumNumberOfLeds(MaximumNumberOfLeds::Devices maximumNumberOfLeds);
     MaximumNumberOfLeds::Devices getLightpackMaximumNumberOfLeds();
+    int getLigtpackFirmwareVersionMajor();
 
     void createTrayIcon();
     void createActions();

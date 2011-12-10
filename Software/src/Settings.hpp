@@ -98,8 +98,8 @@ public:
     static void setIsBacklightOn(bool isEnabled);
     static bool isGrabAvgColorsOn();
     static void setAvgColorsOn(bool isEnabled);
-    static bool isUSB_SendDataOnlyIfColorsChanges();
-    static void setUSB_SendDataOnlyIfColorsChanges(bool isEnabled);
+    static bool isSendDataOnlyIfColorsChanges();
+    static void setSendDataOnlyIfColorsChanges(bool isEnabled);
     static int getGrabMinimumLevelOfSensitivity();
     static void setMinimumLevelOfSensitivity(int value);
     // [Device]
@@ -109,6 +109,8 @@ public:
     static void setDeviceBrightness(int value);
     static int getDeviceSmooth();
     static void setDeviceSmooth(int value);
+    static int getDeviceColorDepth();
+    static void setDeviceColorDepth(int value);
     static double getDeviceGamma();
     static void setDeviceGamma(double gamma);
 
@@ -142,6 +144,7 @@ private:
     static int getValidDeviceRefreshDelay(int value);
     static int getValidDeviceBrightness(int value);
     static int getValidDeviceSmooth(int value);
+    static int getValidDeviceColorDepth(int value);
     static double getValidDeviceGamma(double value);
     static int getValidGrabSlowdown(int value);
     static int getValidMoodLampSpeed(int value);

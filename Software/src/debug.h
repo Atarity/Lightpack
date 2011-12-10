@@ -42,8 +42,8 @@ namespace Debug
     enum DebugLevels
     {
         HighLevel = 3,
-        MidLevel = 2,
-        LowLevel = 1,
+        MidLevel  = 2,
+        LowLevel  = 1,
         ZeroLevel = 0
     };
 }
