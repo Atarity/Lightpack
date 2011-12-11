@@ -44,5 +44,10 @@ public:
         else
             return -1;
     }
+
+    static inline int rand(int val)
+    {
+        return qrand() % val;
+    }
 };
 

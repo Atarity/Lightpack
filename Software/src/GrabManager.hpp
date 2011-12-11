@@ -2,12 +2,11 @@
  * GrabManager.hpp
  *
  *  Created on: 26.07.2010
- *      Author: Mike Shatohin (brunql)
  *     Project: Lightpack
  *
- *  Lightpack is very simple implementation of the backlight for a laptop
- *
  *  Copyright (c) 2010, 2011 Mike Shatohin, mikeshatohin [at] gmail.com
+ *
+ *  Lightpack a USB content-driving ambient lighting system
  *
  *  Lightpack is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -50,56 +49,45 @@ public:
     ~GrabManager();
 
 signals:
-    void updateLedsColors(const QList<QRgb> & m_colorsNew);
+    void updateLedsColors(const QList<QRgb> & colors);
     void ambilightTimeOfUpdatingColors(double ms);
 
-
 public:
-    void setMoodLampLiquidMode(bool state);
+    void start(bool isGrabEnabled);
+
+    // Grab options
+    void setGrabber(Grab::GrabberType grabber);
+    void setSlowdownTime(int ms);
+    void setMinLevelOfSensivity(int value);
+    void setAvgColorsOnAllLeds(bool state);
+
+    // Common options
+    void setSendDataOnlyIfColorsChanged(bool state);
     void setNumberOfLeds(int numberOfLeds);
 
 public slots:
-    void updateBacklightState(Backlight::Status backlightStatus, Api::DeviceLockStatus deviceLockStatus);
-    void setGrabSlowdownMs(int ms);
+    void settingsProfileChanged();
     void setVisibleLedWidgets(bool state);
     void setColoredLedWidgets(bool state);
     void setWhiteLedWidgets(bool state);
-    void setUpdateColorsOnlyIfChanges(bool state);
-    void setAvgColorsOnAllLeds(bool state);
-    void setMinLevelOfSensivity(int value);
-
-    void setResizeOrMovingFalse();
-    void setResizeOrMovingTrue();
-
-    void settingsProfileChanged();
-
-    void setGrabMode(Grab::Mode grabMode);
-    void switchMode(Lightpack::Mode mode);
-    void setMoodLampSpeed(int value);
-    void setBackLightColor(QColor color);
 
 private slots:
-    void scaleLedWidgets(int screenIndexResized);
+    void timeoutUpdateColors();
+    void timeoutUpdateFPS();
+    void pauseWhileResizeOrMoving();
+    void resumeAfterResizeOrMoving();
     void firstWidgetPositionChanged();
-    void updateLedsColorsIfChanged();
-    void updateFpsOnMainWindow();
+    void scaleLedWidgets(int screenIndexResized);
 
 private:
-    void updateSmoothSteps(); /* works with colorsNew */
-
-private:
-    IGrabber *createGrabber(Grab::Mode grabMode);
+    IGrabber *createGrabber(Grab::GrabberType grabber);
     void initColorLists(int numberOfLeds);
     void clearColorsNew();
     void clearColorsCurrent();
     void initLedWidgets(int numberOfLeds);
-    void ambilight();
-    void moodlamp();
-    int genNewSpeed(int value);
-    QColor genNewColor();
 
 private:
-    IGrabber * m_grabber;
+    IGrabber *m_grabber;
     QTimer *m_timerGrab;
     QTimer *m_timerUpdateFPS;
     QWidget *m_parentWidget;
@@ -113,27 +101,15 @@ private:
     QRect m_screenSavedRect;
     int m_screenSavedIndex;
 
-    bool m_isGrabOn;
-    bool m_isResizeOrMoving;
-    bool m_updateColorsOnlyIfChanges;
+    bool m_isGrabEnabled;
+    bool m_isPauseGrabWhileResizeOrMoving;
+    bool m_isSendDataOnlyIfColorsChanged;
     bool m_avgColorsOnAllLeds;
     int m_minLevelOfSensivity;
 
     // Store last grabbing time in milliseconds
     double m_fpsMs;
 
-    // Settings:
-    Lightpack::Mode m_lightpackMode;
-    int m_moodLampSpeed;
-    int m_brightness;
-    QColor m_backlightColor;
-
-    bool m_isMoodLampLiquidMode;
-
-    static const int ColorsMoodLampCount = 15;
-    static int m_checkColors[ColorsMoodLampCount];
-    static const QColor m_colorsMoodLamp[ColorsMoodLampCount];
-
-    int m_grabSlowdown;
+    int m_slowdownTime;
     bool m_isGrabWidgetsVisible;
 };

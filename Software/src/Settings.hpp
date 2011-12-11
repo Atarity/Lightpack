@@ -94,14 +94,14 @@ public:
     // Profile
     static int getGrabSlowdown();
     static void setGrabSlowdown(int value);
-    static bool isBacklightOn();
-    static void setIsBacklightOn(bool isEnabled);
-    static bool isGrabAvgColorsOn();
-    static void setAvgColorsOn(bool isEnabled);
+    static bool isBacklightEnabled();
+    static void setIsBacklightEnabled(bool isEnabled);
+    static bool isGrabAvgColorsEnabled();
+    static void setGrabAvgColorsEnabled(bool isEnabled);
     static bool isSendDataOnlyIfColorsChanges();
     static void setSendDataOnlyIfColorsChanges(bool isEnabled);
     static int getGrabMinimumLevelOfSensitivity();
-    static void setMinimumLevelOfSensitivity(int value);
+    static void setGrabMinimumLevelOfSensitivity(int value);
     // [Device]
     static int getDeviceRefreshDelay();
     static void setDeviceRefreshDelay(int value);
@@ -114,8 +114,8 @@ public:
     static double getDeviceGamma();
     static void setDeviceGamma(double gamma);
 
-    static Grab::Mode getGrabMode();
-    static void setGrabMode(Grab::Mode grabMode);
+    static Grab::GrabberType getGrabberType();
+    static void setGrabberType(Grab::GrabberType grabMode);
     static Lightpack::Mode getLightpackMode();
     static void setLightpackMode(Lightpack::Mode mode);
     static bool isMoodLampLiquidMode();

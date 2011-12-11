@@ -38,16 +38,16 @@
 #endif
 
 #ifdef WINAPI_GRAB_SUPPORT
-#   define GRABMODE_DEFAULT         ::Grab::WinAPIGrabMode
+#   define GRABMODE_DEFAULT         ::Grab::WinAPIGrabber
 #   define GRABMODE_DEFAULT_STR     "WinAPI"
 #elif defined(X11_GRAB_SUPPORT)
-#   define GRABMODE_DEFAULT         ::Grab::X11GrabMode
+#   define GRABMODE_DEFAULT         ::Grab::X11Grabber
 #   define GRABMODE_DEFAULT_STR     "X11"
 #elif defined(MAC_OS_CG_GRAB_SUPPORT)
-#   define GRABMODE_DEFAULT         ::Grab::MacCoreGraphicsGrabMode
+#   define GRABMODE_DEFAULT         ::Grab::MacCoreGraphicsGrabber
 #   define GRABMODE_DEFAULT_STR     "MacCoreGraphics"
 #else
-#   define GRABMODE_DEFAULT         ::Grab::QtGrabMode
+#   define GRABMODE_DEFAULT         ::Grab::QtGrabber
 #   define GRABMODE_DEFAULT_STR     "Qt"
 #endif
 
@@ -111,16 +111,16 @@ static const int NumberOfLedsDefault = 10;
 namespace Profile
 {
 // [General]
-static const bool IsBacklightOnDefault = true;
+static const bool IsBacklightEnabledDefault = true;
 static const QString LightpackModeDefault = "Ambilight";
 
 // [Grab]
 namespace Grab
 {
-static const ::Grab::Mode ModeDefault = GRABMODE_DEFAULT;
+static const ::Grab::GrabberType GrabberDefault = GRABMODE_DEFAULT;
 static const QString ModeDefaultString = GRABMODE_DEFAULT_STR;
-static const bool IsAvgColorsOnDefault = false;
-static const bool IsUSB_SendDataOnlyIfColorsChangesDefault = true;
+static const bool IsAvgColorsEnabledDefault = false;
+static const bool IsSendDataOnlyIfColorsChangesDefault = true;
 static const int SlowdownMin = 1;
 static const int SlowdownDefault = 50;
 static const int SlowdownMax = 1000;

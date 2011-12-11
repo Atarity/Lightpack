@@ -34,7 +34,7 @@
 using namespace SettingsScope;
 
 // Colors changes when middle button clicked
-const QColor GrabWidget::colors[GrabWidget::ColorsCount][2] = {
+const QColor GrabWidget::m_colors[GrabWidget::ColorsCount][2] = {
     { Qt::red,         Qt::black }, /* LED1 */
     { Qt::green,       Qt::black }, /* LED2 */
     { Qt::blue,        Qt::white }, /* LED3 */
@@ -69,7 +69,7 @@ GrabWidget::GrabWidget(int id, QWidget *parent) :
 
     this->resize(100, 100);
 
-    setColors( m_selfId );
+    fillBackgroundColored();
 
     connect(ui->checkBox_SelfId, SIGNAL(toggled(bool)), this, SLOT(checkBoxSelfId_Toggled(bool)));
 }
@@ -88,7 +88,6 @@ void GrabWidget::closeEvent(QCloseEvent *event)
     event->ignore();
 }
 
-
 void GrabWidget::saveSizeAndPosition()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -101,9 +100,9 @@ void GrabWidget::settingsProfileChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_selfId;
 
-    coefRed = Settings::getLedCoefRed(m_selfId);
-    coefGreen = Settings::getLedCoefGreen(m_selfId);
-    coefBlue = Settings::getLedCoefBlue(m_selfId);
+    m_coefRed = Settings::getLedCoefRed(m_selfId);
+    m_coefGreen = Settings::getLedCoefGreen(m_selfId);
+    m_coefBlue = Settings::getLedCoefBlue(m_selfId);
 
     this->move(Settings::getLedPosition(m_selfId));
     this->resize(Settings::getLedSize(m_selfId));
@@ -113,42 +112,6 @@ void GrabWidget::settingsProfileChanged()
     ui->checkBox_SelfId->setChecked(Settings::isLedEnabled(m_selfId));
 }
 
-
-void GrabWidget::setColors(int index)
-{
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << index;
-
-    colorIndex = index % ColorsCount;
-
-    if(ui->checkBox_SelfId->isChecked()){
-        this->setBackgroundColor(colors[colorIndex][0]);
-        this->setTextColor(colors[colorIndex][1]);
-    }else{
-        this->setBackgroundColor(Qt::gray);
-        this->setTextColor(Qt::darkGray);
-    }
-}
-
-void GrabWidget::setBackgroundColor(QColor color)
-{
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << hex << color.rgb();
-
-    QPalette pal = this->palette();
-    pal.setBrush(this->backgroundRole(), QBrush(color));
-    this->setPalette(pal);
-}
-
-void GrabWidget::setTextColor(QColor color)
-{
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << hex << color.rgb();
-
-    QPalette pal = this->palette();
-    pal.setBrush(QPalette::WindowText, QBrush(color));
-    ui->checkBox_SelfId->setPalette(pal);
-    ui->labelWidthHeight->setPalette(pal);
-}
-
-// private
 void GrabWidget::setCursorOnAll(Qt::CursorShape cursor)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << cursor;
@@ -157,9 +120,6 @@ void GrabWidget::setCursorOnAll(Qt::CursorShape cursor)
     ui->labelWidthHeight->setCursor(cursor);
     this->setCursor(cursor);
 }
-
-
-
 
 void GrabWidget::mousePressEvent(QMouseEvent *pe)
 {
@@ -399,15 +359,15 @@ void GrabWidget::wheelEvent(QWheelEvent *pe)
         return;
     }
 
-    if(pe->delta() > 0) colorIndex++;
-    if(pe->delta() < 0) colorIndex--;
+    if(pe->delta() > 0) m_colorIndex++;
+    if(pe->delta() < 0) m_colorIndex--;
 
-    if(colorIndex >= ColorsCount){
-        colorIndex = 0;
-    }else if(colorIndex < 0) {
-        colorIndex = ColorsCount - 1;
+    if(m_colorIndex >= ColorsCount){
+        m_colorIndex = 0;
+    }else if(m_colorIndex < 0) {
+        m_colorIndex = ColorsCount - 1;
     }
-    setColors(colorIndex);
+    fillBackground(m_colorIndex);
 }
 
 void GrabWidget::resizeEvent(QResizeEvent *)
@@ -431,21 +391,21 @@ double GrabWidget::getCoefRed()
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    return coefRed;
+    return m_coefRed;
 }
 
 double GrabWidget::getCoefGreen()
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    return coefGreen;
+    return m_coefGreen;
 }
 
 double GrabWidget::getCoefBlue()
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    return coefBlue;
+    return m_coefBlue;
 }
 
 bool GrabWidget::isGrabEnabled()
@@ -455,6 +415,30 @@ bool GrabWidget::isGrabEnabled()
     return ui->checkBox_SelfId->isChecked();
 }
 
+void GrabWidget::fillBackgroundWhite()
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << m_selfId;
+
+    setBackgroundColor(Qt::white);
+    setTextColor(Qt::white);
+}
+
+void GrabWidget::fillBackgroundColored()
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << m_selfId;
+
+    fillBackground(m_selfId);
+}
+
+void GrabWidget::fillBackground(int index)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << index;
+
+    m_colorIndex = index % ColorsCount;
+
+    setBackgroundColor(m_colors[m_colorIndex][0]);
+    setTextColor(m_colors[m_colorIndex][1]);
+}
 
 void GrabWidget::checkAndSetCursors(QMouseEvent *pe)
 {
@@ -489,7 +473,40 @@ void GrabWidget::checkBoxSelfId_Toggled(bool state)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
-    setColors(colorIndex); // just update color
+    fillBackgroundColored();
 
     Settings::setLedEnabled(m_selfId, state);
+}
+
+void GrabWidget::setBackgroundColor(QColor color)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << hex << color.rgb();
+
+    QPalette pal = this->palette();
+
+    if (ui->checkBox_SelfId->isChecked())
+    {
+        pal.setBrush(this->backgroundRole(), QBrush(color));
+    } else {
+        // Disabled widget
+        pal.setBrush(this->backgroundRole(), QBrush(Qt::gray));
+    }
+    this->setPalette(pal);
+}
+
+void GrabWidget::setTextColor(QColor color)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << hex << color.rgb();
+
+    QPalette pal = this->palette();
+
+    if (ui->checkBox_SelfId->isChecked())
+    {
+        pal.setBrush(QPalette::WindowText, QBrush(color));
+    } else {
+        // Disabled widget
+        pal.setBrush(QPalette::WindowText, QBrush(Qt::gray));
+    }
+    ui->checkBox_SelfId->setPalette(pal);
+    ui->labelWidthHeight->setPalette(pal);
 }

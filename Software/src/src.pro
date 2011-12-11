@@ -103,7 +103,8 @@ SOURCES += \
     grab/D3D9Grabber.cpp \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
-    LightpackMath.cpp
+    LightpackMath.cpp \
+    MoodLampManager.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -144,7 +145,8 @@ HEADERS += \
     ../../CommonHeaders/USB_ID.h \
     grab/D3D9Grabber.hpp \
     LightpackMath.hpp \
-    StructRgb.hpp
+    StructRgb.hpp \
+    MoodLampManager.hpp
 
 FORMS += SettingsWindow.ui \
     AboutDialog.ui \
@@ -156,3 +158,5 @@ FORMS += SettingsWindow.ui \
 include(qserialdevice/qserialdevice/qserialdevice.pri)
 include(qserialdevice/qserialdeviceenumerator/qserialdeviceenumerator.pri)
 unix:include(qserialdevice/unix/ttylocker.pri)
+
+

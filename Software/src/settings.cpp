@@ -116,12 +116,12 @@ namespace Key
 {
 // [General]
 static const QString LightpackMode = "LightpackMode";
-static const QString IsBacklightOn = "IsBacklightOn";
+static const QString IsBacklightEnabled = "IsBacklightEnabled";
 // [Grab]
 namespace Grab
 {
-static const QString Mode = "Grab/Mode";
-static const QString IsAvgColorsOn = "Grab/IsAvgColorsOn";
+static const QString Grabber = "Grab/Grabber";
+static const QString IsAvgColorsEnabled = "Grab/IsAvgColorsEnabled";
 static const QString IsSendDataOnlyIfColorsChanges = "Grab/IsSendDataOnlyIfColorsChanges";
 static const QString Slowdown = "Grab/Slowdown";
 static const QString MinimumLevelOfSensitivity = "Grab/MinimumLevelOfSensitivity";
@@ -164,7 +164,7 @@ static const QString Ambilight = "Ambilight";
 static const QString MoodLamp = "MoodLamp";
 }
 
-namespace GrabMode
+namespace GrabberType
 {
 static const QString Qt = "Qt";
 static const QString QtEachWidget = "QtEachWidget";
@@ -646,24 +646,24 @@ void Settings::setGrabSlowdown(int value)
     setValue(Profile::Key::Grab::Slowdown, getValidGrabSlowdown(value));
 }
 
-bool Settings::isBacklightOn()
+bool Settings::isBacklightEnabled()
 {
-    return value(Profile::Key::IsBacklightOn).toBool();
+    return value(Profile::Key::IsBacklightEnabled).toBool();
 }
 
-void Settings::setIsBacklightOn(bool isEnabled)
+void Settings::setIsBacklightEnabled(bool isEnabled)
 {
-    setValue(Profile::Key::IsBacklightOn, isEnabled);
+    setValue(Profile::Key::IsBacklightEnabled, isEnabled);
 }
 
-bool Settings::isGrabAvgColorsOn()
+bool Settings::isGrabAvgColorsEnabled()
 {
-    return value(Profile::Key::Grab::IsAvgColorsOn).toBool();
+    return value(Profile::Key::Grab::IsAvgColorsEnabled).toBool();
 }
 
-void Settings::setAvgColorsOn(bool isEnabled)
+void Settings::setGrabAvgColorsEnabled(bool isEnabled)
 {
-    setValue(Profile::Key::Grab::IsAvgColorsOn, isEnabled);
+    setValue(Profile::Key::Grab::IsAvgColorsEnabled, isEnabled);
 }
 
 bool Settings::isSendDataOnlyIfColorsChanges()
@@ -681,7 +681,7 @@ int Settings::getGrabMinimumLevelOfSensitivity()
     return value(Profile::Key::Grab::MinimumLevelOfSensitivity).toInt();
 }
 
-void Settings::setMinimumLevelOfSensitivity(int value)
+void Settings::setGrabMinimumLevelOfSensitivity(int value)
 {
     setValue(Profile::Key::Grab::MinimumLevelOfSensitivity, value);
 }
@@ -736,92 +736,92 @@ void Settings::setDeviceGamma(double gamma)
     setValue(Profile::Key::Device::Gamma, getValidDeviceGamma(gamma));
 }
 
-Grab::Mode Settings::getGrabMode()
+Grab::GrabberType Settings::getGrabberType()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    QString strGrabMode = value(Profile::Key::Grab::Mode).toString();
+    QString strGrabbber = value(Profile::Key::Grab::Grabber).toString();
 
-    if (strGrabMode == Profile::Value::GrabMode::Qt)
-        return Grab::QtGrabMode;
-    if (strGrabMode == Profile::Value::GrabMode::QtEachWidget)
-        return Grab::QtEachWidgetGrabMode;
+    if (strGrabbber == Profile::Value::GrabberType::Qt)
+        return Grab::QtGrabber;
+    if (strGrabbber == Profile::Value::GrabberType::QtEachWidget)
+        return Grab::QtEachWidgetGrabber;
 
 #ifdef WINAPI_GRAB_SUPPORT
-    if (strGrabMode == Profile::Value::GrabMode::WinAPI)
-        return Grab::WinAPIGrabMode;
-    if (strGrabMode == Profile::Value::GrabMode::WinAPIEachWidget)
-        return Grab::WinAPIEachWidgetGrabMode;
+    if (strGrabbber == Profile::Value::GrabberType::WinAPI)
+        return Grab::WinAPIGrabber;
+    if (strGrabbber == Profile::Value::GrabberType::WinAPIEachWidget)
+        return Grab::WinAPIEachWidgetGrabber;
 #endif
 
 #ifdef D3D9_GRAB_SUPPORT
-    if (strGrabMode == Profile::Value::GrabMode::D3D9)
-        return Grab::D3D9GrabMode;
+    if (strGrabbber == Profile::Value::GrabberType::D3D9)
+        return Grab::D3D9Grabber;
 #endif
 
 #ifdef X11_GRAB_SUPPORT
-    if (strGrabMode == Profile::Value::GrabMode::X11)
-        return Grab::X11GrabMode;
+    if (strGrabbber == Profile::Value::GrabberType::X11)
+        return Grab::X11Grabber;
 #endif
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
-    if (strGrabMode == Profile::Value::GrabMode::MacCoreGraphics)
-        return Grab::MacCoreGraphicsGrabMode;
+    if (strGrabbber == Profile::Value::GrabberType::MacCoreGraphics)
+        return Grab::MacCoreGraphicsGrabber;
 #endif
 
-    qWarning() << Q_FUNC_INFO << "GrabMode contains invalid value, reset it to default.";
-    setGrabMode(Profile::Grab::ModeDefault);
+    qWarning() << Q_FUNC_INFO << Profile::Key::Grab::Grabber << "contains invalid value:" << strGrabbber << ", reset it to default:" << Profile::Grab::GrabberDefault;
+    setGrabberType(Profile::Grab::GrabberDefault);
 
-    return Profile::Grab::ModeDefault;
+    return Profile::Grab::GrabberDefault;
 }
 
-void Settings::setGrabMode(Grab::Mode grabMode)
+void Settings::setGrabberType(Grab::GrabberType grabberType)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << grabMode;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << grabberType;
 
-    QString strGrabMode;
-    switch (grabMode)
+    QString strGrabber;
+    switch (grabberType)
     {
-    case Grab::QtGrabMode:
-        strGrabMode = Profile::Value::GrabMode::Qt;
+    case Grab::QtGrabber:
+        strGrabber = Profile::Value::GrabberType::Qt;
         break;
 
-    case Grab::QtEachWidgetGrabMode:
-        strGrabMode = Profile::Value::GrabMode::QtEachWidget;
+    case Grab::QtEachWidgetGrabber:
+        strGrabber = Profile::Value::GrabberType::QtEachWidget;
         break;
 
 #ifdef WINAPI_GRAB_SUPPORT
-    case Grab::WinAPIGrabMode:
-        strGrabMode = Profile::Value::GrabMode::WinAPI;
+    case Grab::WinAPIGrabber:
+        strGrabber = Profile::Value::GrabberType::WinAPI;
         break;
-    case Grab::WinAPIEachWidgetGrabMode:
-        strGrabMode = Profile::Value::GrabMode::WinAPIEachWidget;
+    case Grab::WinAPIEachWidgetGrabber:
+        strGrabber = Profile::Value::GrabberType::WinAPIEachWidget;
         break;
 #endif
 
 #ifdef D3D9_GRAB_SUPPORT
-    case Grab::D3D9GrabMode:
-        strGrabMode = Profile::Value::GrabMode::D3D9;
+    case Grab::D3D9Grabber:
+        strGrabber = Profile::Value::GrabberType::D3D9;
         break;
 #endif
 
 #ifdef X11_GRAB_SUPPORT
-    case Grab::X11GrabMode:
-        strGrabMode = Profile::Value::GrabMode::X11;
+    case Grab::X11Grabber:
+        strGrabber = Profile::Value::GrabberType::X11;
         break;
 #endif
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
-    case Grab::MacCoreGraphicsGrabMode:
-        strGrabMode = Profile::Value::GrabMode::MacCoreGraphics;
+    case Grab::MacCoreGraphicsGrabber:
+        strGrabber = Profile::Value::GrabberType::MacCoreGraphics;
         break;
 #endif
 
     default:
-        qWarning() << Q_FUNC_INFO << "Switch on GrabMode =" << grabMode << "failed. Reset to default value.";
-        strGrabMode = Profile::Grab::ModeDefault;
+        qWarning() << Q_FUNC_INFO << "Switch on grabberType =" << grabberType << "failed. Reset to default value.";
+        strGrabber = Profile::Grab::GrabberDefault;
     }
-    setValue(Profile::Key::Grab::Mode, strGrabMode);
+    setValue(Profile::Key::Grab::Grabber, strGrabber);
 }
 
 Lightpack::Mode Settings::getLightpackMode()
@@ -1078,11 +1078,11 @@ void Settings::initCurrentProfile(bool isResetDefault)
 
     // [General]
     setNewOption(Profile::Key::LightpackMode, Profile::LightpackModeDefault, isResetDefault);
-    setNewOption(Profile::Key::IsBacklightOn, Profile::IsBacklightOnDefault, isResetDefault);
+    setNewOption(Profile::Key::IsBacklightEnabled, Profile::IsBacklightEnabledDefault, isResetDefault);
     // [Grab]
-    setNewOption(Profile::Key::Grab::Mode,          Profile::Grab::ModeDefaultString, isResetDefault);
-    setNewOption(Profile::Key::Grab::IsAvgColorsOn, Profile::Grab::IsAvgColorsOnDefault, isResetDefault);
-    setNewOption(Profile::Key::Grab::IsSendDataOnlyIfColorsChanges, Profile::Grab::IsUSB_SendDataOnlyIfColorsChangesDefault, isResetDefault);
+    setNewOption(Profile::Key::Grab::Grabber,       Profile::Grab::GrabberDefault, isResetDefault);
+    setNewOption(Profile::Key::Grab::IsAvgColorsEnabled, Profile::Grab::IsAvgColorsEnabledDefault, isResetDefault);
+    setNewOption(Profile::Key::Grab::IsSendDataOnlyIfColorsChanges, Profile::Grab::IsSendDataOnlyIfColorsChangesDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::Slowdown,      Profile::Grab::SlowdownDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::MinimumLevelOfSensitivity, Profile::Grab::MinimumLevelOfSensitivityDefault, isResetDefault);
     // [MoodLamp]

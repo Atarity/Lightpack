@@ -43,8 +43,8 @@ using namespace SettingsScope;
 const QString SettingsWindow::DeviceFirmvareVersionUndef = "undef";
 
 // Indexes of supported modes listed in ui->comboBox_Modes and ui->stackedWidget_Modes
-const unsigned SettingsWindow::ModeAmbilightIndex = 0;
-const unsigned SettingsWindow::ModeMoodLampIndex  = 1;
+const unsigned SettingsWindow::AmbilightModeIndex = 0;
+const unsigned SettingsWindow::MoodLampModeIndex  = 1;
 
 SettingsWindow::SettingsWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -72,6 +72,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     ui->comboBox_Profiles->lineEdit()->setValidator(validator);
 
     m_grabManager = new GrabManager(this);
+    m_moodlampManager = new MoodLampManager(this);
     m_aboutDialog = new AboutDialog(this);
     m_speedTest = new SpeedTest();
 
@@ -89,7 +90,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     loadTranslation(Settings::getLanguage());
 
-    if (Settings::isBacklightOn())
+    if (Settings::isBacklightEnabled())
     {
         m_backlightStatus = Backlight::StatusOn;
     } else {
@@ -99,8 +100,9 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     emit backlightStatusChanged(m_backlightStatus);
 
     m_deviceLockStatus = Api::DeviceUnlocked;
+    m_lightpackMode = Settings::getLightpackMode();
 
-    onGrabModeChanged();
+    onGrabberChanged();
 
     adjustSizeAndMoveCenter();
 
@@ -130,20 +132,25 @@ void SettingsWindow::connectSignalsSlots()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-    connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));    
+
+    connect(ui->spinBox_GrabSlowdown, SIGNAL(valueChanged(int)), this, SLOT(onGrabSlowdown_valueChanged(int)));
+    connect(ui->spinBox_GrabMinLevelOfSensitivity, SIGNAL(valueChanged(int)), this, SLOT(onGrabMinLevelOfSensivity_valueChanged(int)));
+    connect(ui->checkBox_GrabIsAvgColors, SIGNAL(toggled(bool)), this, SLOT(onGrabIsAvgColors_toggled(bool)));
 
     // Connect to GrabManager
-    connect(ui->spinBox_GrabSlowdown, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setGrabSlowdownMs(int)));
-    connect(ui->checkBox_GrabIsAvgColors, SIGNAL(toggled(bool)), m_grabManager, SLOT(setAvgColorsOnAllLeds(bool)));
-    connect(ui->spinBox_GrabMinLevelOfSensitivity, SIGNAL(valueChanged(int)), m_grabManager, SLOT(setMinLevelOfSensivity(int)));
+    connect(this, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
     connect(ui->groupBox_GrabShowGrabWidgets, SIGNAL(toggled(bool)), m_grabManager, SLOT(setVisibleLedWidgets(bool)));
     connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), m_grabManager, SLOT(setColoredLedWidgets(bool)));
     connect(ui->radioButton_White, SIGNAL(toggled(bool)), m_grabManager, SLOT(setWhiteLedWidgets(bool)));
-    connect(ui->checkBox_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), m_grabManager, SLOT(setUpdateColorsOnlyIfChanges(bool)));
-    connect(this, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
+    // GrabManager to this
+    connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
 
-    connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLamp_LiquidMode_Toggled(bool)));
-    connect(ui->horizontalSlider_MoodLampSpeed, SIGNAL(valueChanged(int)), this, SLOT(onMoodLamp_Speed_valueChanged(int)));
+    // Connect to MoodLampManager
+    connect(this, SIGNAL(settingsProfileChanged()), m_moodlampManager, SLOT(settingsProfileChanged()));
+
+    connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLampLiquidMode_Toggled(bool)));
+    connect(ui->horizontalSlider_MoodLampSpeed, SIGNAL(valueChanged(int)), this, SLOT(onMoodLampSpeed_valueChanged(int)));
 
     // Main options
     connect(ui->comboBox_LightpackModes, SIGNAL(activated(int)), this, SLOT(onLightpackModes_Activated(int)));
@@ -160,9 +167,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->lineEdit_SerialPort, SIGNAL(editingFinished()), this, SLOT(onDeviceSerialPort_editingFinished()));
     connect(ui->comboBox_SerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceSerialPortBaudRate_valueChanged(QString)));
     connect(ui->doubleSpinBox_DeviceGamma, SIGNAL(valueChanged(double)), this, SLOT(onDeviceGammaCorrection_valueChanged(double)));
-
-    // GrabManager to this
-    connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
+    connect(ui->checkBox_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), this, SLOT(onDeviceSendDataOnlyIfColorsChanged_toggled(bool)));
 
     // Open Settings file
     connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openCurrentProfile()));
@@ -175,16 +180,15 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
 
     connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
-    connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLamp_ColorButton_ColorChanged(QColor)));
+    connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColor_changed(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabled_Toggled(bool)));
-    connect(ui->checkBox_SwitchOffAtClosing, SIGNAL(toggled(bool)), this, SLOT(onSwitchOffAtClosing_Toggled(bool)));
-
+    connect(ui->checkBox_SwitchOffAtClosing, SIGNAL(toggled(bool)), this, SLOT(onSwitchOffAtClosing_Toggled(bool)));    
 
     // Dev tab
     connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
 
-    connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
-    connect(ui->radioButton_GrabQt_EachWidget, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
+    connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
+    connect(ui->radioButton_GrabQt_EachWidget, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
 #ifdef WINAPI_GRAB_SUPPORT
     connect(ui->radioButton_GrabWinAPI, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
     connect(ui->radioButton_GrabWinAPI_EachWidget, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
@@ -193,7 +197,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->radioButton_GrabD3D9, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
 #endif
 #ifdef X11_GRAB_SUPPORT
-    connect(ui->radioButton_GrabX11, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
+    connect(ui->radioButton_GrabX11, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
 #endif
 #ifdef MAC_OS_CG_GRAB_SUPPORT
     connect(ui->radioButton_GrabMacCoreGraphics, SIGNAL(toggled(bool)), this, SLOT(onGrabModeChanged()));
@@ -201,6 +205,7 @@ void SettingsWindow::connectSignalsSlots()
 
     // Connections to signals which will be connected to ILedDevice
     connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
+    connect(m_moodlampManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
 
     // Dev tab configure API (port, apikey)
     connect(ui->groupBox_Api, SIGNAL(toggled(bool)), this, SLOT(onEnableApi_Toggled(bool)));
@@ -526,11 +531,19 @@ void SettingsWindow::setDeviceLockViaAPI(Api::DeviceLockStatus status)
 
     if (m_deviceLockStatus == Api::DeviceUnlocked)
     {
-        connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
         syncLedDeviceWithSettingsWindow();
 
-    } else { // m_deviceLockStatus == Api::DeviceLocked
-        disconnect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
+        if (m_lightpackMode == Lightpack::MoodLampMode && ui->radioButton_LiquidColorMoodLampMode->isChecked())
+        {
+            // Switch off smooth if moodlamp liquid mode
+            emit updateSmoothSlowdown(0);
+        }
+    } else {
+        if (m_lightpackMode == Lightpack::MoodLampMode && ui->radioButton_LiquidColorMoodLampMode->isChecked())
+        {
+            // Restore smooth slowdown value before change control to API
+            emit updateSmoothSlowdown(Settings::getDeviceSmooth());
+        }
     }
 
     startBacklight();
@@ -598,10 +611,23 @@ void SettingsWindow::startBacklight()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "m_backlightStatus =" << m_backlightStatus
                     << "m_deviceLockStatus =" << m_deviceLockStatus;
 
-    Settings::setIsBacklightOn(m_backlightStatus == Backlight::StatusOn ||
-                               m_backlightStatus == Backlight::StatusDeviceError);
+    bool isBacklightEnabled = (m_backlightStatus == Backlight::StatusOn || m_backlightStatus == Backlight::StatusDeviceError);
+    bool isCanStart = (isBacklightEnabled && m_deviceLockStatus == Api::DeviceUnlocked);
 
-    m_grabManager->updateBacklightState(m_backlightStatus, m_deviceLockStatus);
+    Settings::setIsBacklightEnabled(isBacklightEnabled);
+
+    switch (m_lightpackMode)
+    {
+    case Lightpack::AmbilightMode:
+        m_grabManager->start(isCanStart);
+        m_moodlampManager->start(false);
+        break;
+
+    case Lightpack::MoodLampMode:
+        m_grabManager->start(false);
+        m_moodlampManager->start(isCanStart);
+        break;
+    }
 
     if (m_backlightStatus == Backlight::StatusOff)
         emit offLeds();
@@ -704,7 +730,7 @@ void SettingsWindow::initVirtualLeds()
 
         if (m_backlightStatus == Backlight::StatusOff)
         {
-            // Fill labels black:
+            // If status off fill labels black:
             QPalette pal = label->palette();
             pal.setBrush(QPalette::Window, QBrush(Qt::black));
             label->setPalette(pal);
@@ -732,7 +758,7 @@ void SettingsWindow::updateVirtualLedsColors(const QList<QRgb> & colors)
         return;
     }
 
-    for(int i = 0; i < colors.count(); i++)
+    for (int i = 0; i < colors.count(); i++)
     {
         QLabel *label = m_labelsGrabbedColors[i];
         QColor color(colors[i]);
@@ -843,6 +869,40 @@ void SettingsWindow::refreshAmbilightEvaluated(double updateResultMs)
     ui->label_GrabFrequency_value->setText(QString::number(hz,'f', 2) /* ms to hz */);
 }
 
+void SettingsWindow::onGrabberChanged()
+{
+    Grab::GrabberType grabberType = getSelectedGrabberType();
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "GrabberType:" << grabberType;
+
+    Settings::setGrabberType(grabberType);
+    m_grabManager->setGrabber(Settings::getGrabberType());
+}
+
+void SettingsWindow::onGrabSlowdown_valueChanged(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    Settings::setGrabSlowdown(value);
+    m_grabManager->setSlowdownTime(Settings::getGrabSlowdown());
+}
+
+void SettingsWindow::onGrabMinLevelOfSensivity_valueChanged(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    Settings::setGrabMinimumLevelOfSensitivity(value);
+    m_grabManager->setMinLevelOfSensivity(Settings::getGrabMinimumLevelOfSensitivity());
+}
+
+void SettingsWindow::onGrabIsAvgColors_toggled(bool state)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
+
+    Settings::setGrabAvgColorsEnabled(state);
+    m_grabManager->setAvgColorsOnAllLeds(Settings::isGrabAvgColorsEnabled());
+}
+
 void SettingsWindow::onDeviceRefreshDelay_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
@@ -894,14 +954,17 @@ void SettingsWindow::onDeviceNumberOfLeds_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    m_grabManager->setNumberOfLeds(value);
+    Settings::setNumberOfLeds(Settings::getConnectedDevice(), value);
+
+    int numOfLeds = Settings::getNumberOfLeds(Settings::getConnectedDevice());
+
+    m_grabManager->setNumberOfLeds(numOfLeds);
+    m_moodlampManager->setNumberOfLeds(numOfLeds);
 
     if (Settings::getConnectedDevice() == SupportedDevices::VirtualDevice)
         initVirtualLeds();
 
-    emit updateApiDeviceNumberOfLeds(value);
-
-    Settings::setNumberOfLeds(Settings::getConnectedDevice(), value);
+    emit updateApiDeviceNumberOfLeds(numOfLeds);
 }
 
 void SettingsWindow::onDeviceSerialPort_editingFinished()
@@ -927,10 +990,18 @@ void SettingsWindow::onDeviceSerialPortBaudRate_valueChanged(QString value)
 
 void SettingsWindow::onDeviceGammaCorrection_valueChanged(double value)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setDeviceGamma(value);
     emit updateGamma(Settings::getDeviceGamma());
+}
+
+void SettingsWindow::onDeviceSendDataOnlyIfColorsChanged_toggled(bool state)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
+
+    Settings::setSendDataOnlyIfColorsChanges(state);
+    m_grabManager->setSendDataOnlyIfColorsChanged(Settings::isSendDataOnlyIfColorsChanges());
 }
 
 // ----------------------------------------------------------------------------
@@ -1217,16 +1288,6 @@ void SettingsWindow::loadTranslation(const QString & language)
     }
 }
 
-void SettingsWindow::onGrabModeChanged()
-{
-    Grab::Mode grabMode = getGrabMode();
-
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "GrabMode" << grabMode;
-
-    Settings::setGrabMode(grabMode);
-    m_grabManager->setGrabMode(grabMode);
-}
-
 // ----------------------------------------------------------------------------
 // Start grab speed tests
 // ----------------------------------------------------------------------------
@@ -1357,10 +1418,10 @@ void SettingsWindow::updateUiFromSettings()
     switch (mode)
     {
     case Lightpack::AmbilightMode:
-        ui->comboBox_LightpackModes->setCurrentIndex(ModeAmbilightIndex);
+        ui->comboBox_LightpackModes->setCurrentIndex(AmbilightModeIndex);
         break;
     case Lightpack::MoodLampMode:
-        ui->comboBox_LightpackModes->setCurrentIndex(ModeMoodLampIndex);
+        ui->comboBox_LightpackModes->setCurrentIndex(MoodLampModeIndex);
         break;
     default:
         qCritical() << "Invalid value! mode =" << mode;
@@ -1372,7 +1433,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->checkBox_SendDataOnlyIfColorsChanges->setChecked(Settings::isSendDataOnlyIfColorsChanges());
     ui->checkBox_SwitchOffAtClosing->setChecked         (Settings::isSwitchOffAtClosing());
 
-    ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsOn());
+    ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsEnabled());
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
     ui->spinBox_GrabMinLevelOfSensitivity->setValue     (Settings::getGrabMinimumLevelOfSensitivity());
 
@@ -1397,7 +1458,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->lineEdit_ApiKey->setText                        (Settings::getApiAuthKey());
     ui->spinBox_LoggingLevel->setValue                  (g_debugLevel);
 
-    switch (Settings::getGrabMode())
+    switch (Settings::getGrabberType())
     {
 #ifdef WINAPI_GRAB_SUPPORT
     case Grab::WinAPIGrabMode:
@@ -1410,7 +1471,7 @@ void SettingsWindow::updateUiFromSettings()
         break;
 #endif
 #ifdef X11_GRAB_SUPPORT
-    case Grab::X11GrabMode:
+    case Grab::X11Grabber:
         ui->radioButton_GrabX11->setChecked(true);
         break;
 #endif
@@ -1424,16 +1485,16 @@ void SettingsWindow::updateUiFromSettings()
     }
 
     onLightpackModes_Activated(ui->comboBox_LightpackModes->currentIndex());
-    onMoodLamp_LiquidMode_Toggled(ui->radioButton_LiquidColorMoodLampMode->isChecked());
+    onMoodLampLiquidMode_Toggled(ui->radioButton_LiquidColorMoodLampMode->isChecked());
     updateExpertModeWidgetsVisibility();
-    onGrabModeChanged();
+    onGrabberChanged();
 }
 
-Grab::Mode SettingsWindow::getGrabMode()
+Grab::GrabberType SettingsWindow::getSelectedGrabberType()
 {
 #ifdef X11_GRAB_SUPPORT
     if (ui->radioButton_GrabX11->isChecked()) {
-        return Grab::X11GrabMode;
+        return Grab::X11Grabber;
     }
 #endif
 #ifdef WINAPI_GRAB_SUPPORT
@@ -1456,10 +1517,10 @@ Grab::Mode SettingsWindow::getGrabMode()
 #endif
 
     if (ui->radioButton_GrabQt_EachWidget->isChecked()) {
-        return Grab::QtEachWidgetGrabMode;
+        return Grab::QtEachWidgetGrabber;
     }
 
-    return Grab::QtGrabMode;
+    return Grab::QtGrabber;
 }
 
 // ----------------------------------------------------------------------------
@@ -1487,59 +1548,85 @@ void SettingsWindow::onLightpackModes_Activated(int index)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
 
+    bool isBacklightEnabled = (m_backlightStatus == Backlight::StatusOn || m_backlightStatus == Backlight::StatusDeviceError);
+    bool isCanStart = (isBacklightEnabled && m_deviceLockStatus == Api::DeviceUnlocked);
+
     switch (index)
     {
-    case ModeAmbilightIndex:
-        m_grabManager->switchMode(Lightpack::AmbilightMode);
+    case AmbilightModeIndex:
+        Settings::setLightpackMode(Lightpack::AmbilightMode);
+        ui->stackedWidget_LightpackModes->setCurrentIndex(AmbilightModeIndex);
 
-        ui->stackedWidget_LightpackModes->setCurrentIndex(ModeAmbilightIndex);
+        m_grabManager->start(isCanStart);
         m_grabManager->setVisibleLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && this->isVisible());
 
-        Settings::setLightpackMode(Lightpack::AmbilightMode);
+        m_moodlampManager->start(false);
+
+        if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
+        {
+            // Restore smooth slowdown value
+            emit updateSmoothSlowdown(Settings::getDeviceSmooth());
+        }
         break;
 
-    case ModeMoodLampIndex:
-        m_grabManager->switchMode(Lightpack::MoodLampMode);
+    case MoodLampModeIndex:
+        Settings::setLightpackMode(Lightpack::MoodLampMode);
+        ui->stackedWidget_LightpackModes->setCurrentIndex(MoodLampModeIndex);
 
-        ui->stackedWidget_LightpackModes->setCurrentIndex(ModeMoodLampIndex);
+        m_grabManager->start(false);
         m_grabManager->setVisibleLedWidgets(false);
 
-        Settings::setLightpackMode(Lightpack::MoodLampMode);
+        m_moodlampManager->start(isCanStart);
+
+        if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
+        {
+            // Switch off smooth if moodlamp liquid mode
+            emit updateSmoothSlowdown(0);
+        }
         break;
     }
+
+    m_lightpackMode = Settings::getLightpackMode();
 }
 
-void SettingsWindow::onMoodLamp_ColorButton_ColorChanged(QColor color)
+void SettingsWindow::onMoodLampColor_changed(QColor color)
 {
-    m_grabManager->setBackLightColor(color);
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << color;
+    m_moodlampManager->setCurrentColor(color);
+    // TODO: should i save current color to settings profile?
 }
 
-void SettingsWindow::onMoodLamp_Speed_valueChanged(int value)
+void SettingsWindow::onMoodLampSpeed_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
     Settings::setMoodLampSpeed(value);
-
-    m_grabManager->setMoodLampSpeed(Settings::getMoodLampSpeed());
+    m_moodlampManager->setLiquidModeSpeed(Settings::getMoodLampSpeed());
 }
 
-void SettingsWindow::onMoodLamp_LiquidMode_Toggled(bool checked)
+void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
 {
     Settings::setMoodLampLiquidMode(checked);    
-    if(!checked)
+    if (Settings::isMoodLampLiquidMode())
     {
-        //constant mode
-        ui->pushButton_SelectColor->setEnabled(true);       
-        ui->horizontalSlider_MoodLampSpeed->setEnabled(false);
-        ui->label_MoodLampSpeed->setEnabled(false);
-
-        m_grabManager->setMoodLampLiquidMode(false);
-    } else {
-        //liquid mode
+        // Liquid color mode
         ui->pushButton_SelectColor->setEnabled(false);
         ui->horizontalSlider_MoodLampSpeed->setEnabled(true);
         ui->label_MoodLampSpeed->setEnabled(true);
 
-        m_grabManager->setMoodLampLiquidMode(true);
+        m_moodlampManager->setLiquidMode(true);
+
+        // Switch off smooth if liquid mode enabled
+        // this helps normal work liquid mode on hw5 and hw4 lightpacks
+        emit updateSmoothSlowdown(0);
+    } else {
+        // Constant color mode
+        ui->pushButton_SelectColor->setEnabled(true);
+        ui->horizontalSlider_MoodLampSpeed->setEnabled(false);
+        ui->label_MoodLampSpeed->setEnabled(false);
+
+        m_moodlampManager->setLiquidMode(false);
+
+        emit updateSmoothSlowdown(Settings::getDeviceSmooth());
     }
 }
 

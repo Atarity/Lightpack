@@ -31,6 +31,7 @@
 #include "AboutDialog.hpp"
 #include "Settings.hpp"
 #include "GrabManager.hpp"
+#include "MoodLampManager.hpp"
 #include "SpeedTest.hpp"
 #include "ColorButton.hpp"
 #include "enums.hpp"
@@ -91,9 +92,9 @@ protected:
 
 private slots:
     void onLightpackModes_Activated(int index);
-    void onMoodLamp_ColorButton_ColorChanged(QColor color);
-    void onMoodLamp_Speed_valueChanged(int value);
-    void onMoodLamp_LiquidMode_Toggled(bool isConstantColor);
+    void onMoodLampColor_changed(QColor color);
+    void onMoodLampSpeed_valueChanged(int value);
+    void onMoodLampLiquidMode_Toggled(bool isConstantColor);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void showAbout(); /* using in actions */
     void showSettings(); /* using in actions */
@@ -103,6 +104,11 @@ private slots:
 
     void switchBacklightOnOff();
 
+    void onGrabberChanged();
+    void onGrabSlowdown_valueChanged(int value);
+    void onGrabMinLevelOfSensivity_valueChanged(int value);
+    void onGrabIsAvgColors_toggled(bool state);
+
     void onDeviceRefreshDelay_valueChanged(int value);
     void onDeviceSmooth_valueChanged(int value);
     void onDeviceBrightness_valueChanged(int value);
@@ -111,7 +117,8 @@ private slots:
     void onDeviceNumberOfLeds_valueChanged(int value);
     void onDeviceSerialPort_editingFinished();
     void onDeviceSerialPortBaudRate_valueChanged(QString value);
-    void onDeviceGammaCorrection_valueChanged(double value);    
+    void onDeviceGammaCorrection_valueChanged(double value);
+    void onDeviceSendDataOnlyIfColorsChanged_toggled(bool state);
 
     void openCurrentProfile();
 
@@ -124,7 +131,6 @@ private slots:
 
     void loadTranslation(const QString & language);
 
-    void onGrabModeChanged();
     void startTestsClick();
 
     void onExpertModeEnabled_Toggled(bool isEnabled);
@@ -170,12 +176,14 @@ private:
     // Main backlight status for all modes (Grab, MoodLamp, etc.)
     Backlight::Status m_backlightStatus;
     Api::DeviceLockStatus m_deviceLockStatus;
+    Lightpack::Mode m_lightpackMode;
 
     GrabManager *m_grabManager;
+    MoodLampManager *m_moodlampManager;
     AboutDialog *m_aboutDialog;
     SpeedTest *m_speedTest;
 
-    Grab::Mode getGrabMode();
+    Grab::GrabberType getSelectedGrabberType();
 
     QList<QLabel *> m_labelsGrabbedColors;
 
@@ -196,6 +204,6 @@ private:
     QString m_deviceFirmwareVersion;
     static const QString DeviceFirmvareVersionUndef;
 
-    static const unsigned ModeAmbilightIndex;
-    static const unsigned ModeMoodLampIndex;
+    static const unsigned AmbilightModeIndex;
+    static const unsigned MoodLampModeIndex;
 };

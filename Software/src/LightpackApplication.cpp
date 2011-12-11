@@ -176,7 +176,7 @@ void LightpackApplication::printVersionsSoftwareQtOS() const
 {
     if (g_debugLevel > 0)
     {
-        qDebug() << "Lightpack:" << VERSION_STR;
+        qDebug() << "Lightpack:" << VERSION_STR << HG_REVISION;
         qDebug() << "Build with Qt verison:" << QT_VERSION_STR;
         qDebug() << "Qt version currently in use:" << qVersion();
 
@@ -247,7 +247,7 @@ void LightpackApplication::startApiServer()
     connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)),               m_settingsWindow, SLOT(setBacklightStatus(Backlight::Status)));
     connect(m_apiServer, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), m_settingsWindow, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
 
-    if (Settings::isBacklightOn())
+    if (Settings::isBacklightEnabled())
     {
         connectApiServerAndLedDeviceSignalsSlots();
     }

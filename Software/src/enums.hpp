@@ -57,15 +57,14 @@ enum Mode {
 
 namespace Grab
 {
-
-enum Mode {
-    QtGrabMode,
-    QtEachWidgetGrabMode,
-    X11GrabMode,
-    WinAPIGrabMode,
-    WinAPIEachWidgetGrabMode,
-    D3D9GrabMode,
-    MacCoreGraphicsGrabMode
+enum GrabberType {
+    QtGrabber,
+    QtEachWidgetGrabber,
+    X11Grabber,
+    WinAPIGrabber,
+    WinAPIEachWidgetGrabber,
+    D3D9Grabber,
+    MacCoreGraphicsGrabber
 };
 }
 

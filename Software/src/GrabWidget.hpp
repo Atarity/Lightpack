@@ -41,13 +41,15 @@ public:
 
     void saveSizeAndPosition();
 
-    void setColors(int index);
-    void setBackgroundColor(QColor color);
-    void setTextColor(QColor color);
     double getCoefRed();
     double getCoefGreen();
     double getCoefBlue();
-    bool isGrabEnabled();
+    bool isGrabEnabled();    
+    void fillBackgroundWhite();
+    void fillBackgroundColored();
+
+private:
+    void fillBackground(int index);
 
 signals:
     void resizeOrMoveStarted();
@@ -65,6 +67,8 @@ private:
     virtual void closeEvent(QCloseEvent *event);
     void setCursorOnAll(Qt::CursorShape cursor);
     void checkAndSetCursors(QMouseEvent *pe);
+    void setBackgroundColor(QColor color);
+    void setTextColor(QColor color);
 
 public:
     static const int ColorIndexWhite = 11;
@@ -94,14 +98,14 @@ private:
 
     static const int ColorsCount = 12;
 
-    static const QColor colors[ColorsCount][2]; // background and text colors
-    int colorIndex; // index of color which using now
+    static const QColor m_colors[ColorsCount][2]; // background and text colors
+    int m_colorIndex; // index of color which using now
 
     int m_selfId; // ID of this object
 
-    double coefRed;
-    double coefGreen;
-    double coefBlue;
+    double m_coefRed;
+    double m_coefGreen;
+    double m_coefBlue;
 
     Ui::GrabWidget *ui;
 
