@@ -190,7 +190,7 @@ void LedDeviceLightpack::open()
 
     if (m_hidDevice == NULL)
     {
-        qWarning("Lightpack device not found");
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Lightpack device not found";
         emit openDeviceSuccess(false);
         return;
     }
@@ -198,7 +198,7 @@ void LedDeviceLightpack::open()
     // Immediately return from hid_read() if no data available
     hid_set_nonblocking(m_hidDevice, 1);
 
-    DEBUG_LOW_LEVEL << "Lightpack opened";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Lightpack opened";
 
     updateDeviceSettings();
 
@@ -249,8 +249,6 @@ bool LedDeviceLightpack::tryToReopenDevice()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    qWarning() << "Try to reopen device";
-
     hid_close(m_hidDevice);
 
     open();
@@ -258,7 +256,7 @@ bool LedDeviceLightpack::tryToReopenDevice()
     if (m_hidDevice == NULL)
         return false;
 
-    qWarning() << "Reopen success";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Reopen success";
     return true;
 }
 
