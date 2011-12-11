@@ -1461,12 +1461,12 @@ void SettingsWindow::updateUiFromSettings()
     switch (Settings::getGrabberType())
     {
 #ifdef WINAPI_GRAB_SUPPORT
-    case Grab::WinAPIGrabMode:
+    case Grab::WinAPIGrabber:
         ui->radioButton_GrabWinAPI->setChecked(true);
         break;
 #endif
 #ifdef D3D9_GRAB_SUPPORT
-    case Grab::D3D9GrabMode:
+    case Grab::D3D9Grabber:
         ui->radioButton_GrabD3D9->setChecked(true);
         break;
 #endif
@@ -1476,7 +1476,7 @@ void SettingsWindow::updateUiFromSettings()
         break;
 #endif
 #ifdef MAC_OS_CG_GRAB_SUPPORT
-    case Grab::MacCoreGraphicsGrabMode:
+    case Grab::MacCoreGraphicsGrabber:
         ui->radioButton_GrabMacCoreGraphics->setChecked(true);
         break;
 #endif
@@ -1499,20 +1499,20 @@ Grab::GrabberType SettingsWindow::getSelectedGrabberType()
 #endif
 #ifdef WINAPI_GRAB_SUPPORT
     if (ui->radioButton_GrabWinAPI->isChecked()) {
-        return Grab::WinAPIGrabMode;
+        return Grab::WinAPIGrabber;
     }
     if (ui->radioButton_GrabWinAPI_EachWidget->isChecked()) {
-        return Grab::WinAPIEachWidgetGrabMode;
+        return Grab::WinAPIEachWidgetGrabber;
     }
 #endif
 #ifdef D3D9_GRAB_SUPPORT
     if (ui->radioButton_GrabD3D9->isChecked()) {
-        return Grab::D3D9GrabMode;
+        return Grab::D3D9Grabber;
     }
 #endif
 #ifdef MAC_OS_CG_GRAB_SUPPORT
     if (ui->radioButton_GrabMacCoreGraphics->isChecked()) {
-        return Grab::MacCoreGraphicsGrabMode;
+        return Grab::MacCoreGraphicsGrabber;
     }
 #endif
 
