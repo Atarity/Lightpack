@@ -786,9 +786,16 @@ void Settings::setGrabMode(Grab::Mode grabMode)
         strGrabMode = Profile::Value::GrabMode::Qt;
         break;
 
+    case Grab::QtEachWidgetGrabMode:
+        strGrabMode = Profile::Value::GrabMode::QtEachWidget;
+        break;
+
 #ifdef WINAPI_GRAB_SUPPORT
     case Grab::WinAPIGrabMode:
         strGrabMode = Profile::Value::GrabMode::WinAPI;
+        break;
+    case Grab::WinAPIEachWidgetGrabMode:
+        strGrabMode = Profile::Value::GrabMode::WinAPIEachWidget;
         break;
 #endif
 
@@ -811,7 +818,7 @@ void Settings::setGrabMode(Grab::Mode grabMode)
 #endif
 
     default:
-        qWarning() << "Switch on GrabMode =" << grabMode << "failed. Reset to default value.";
+        qWarning() << Q_FUNC_INFO << "Switch on GrabMode =" << grabMode << "failed. Reset to default value.";
         strGrabMode = Profile::Grab::ModeDefault;
     }
     setValue(Profile::Key::Grab::Mode, strGrabMode);

@@ -27,20 +27,26 @@
 #pragma once
 
 #include <QtGui>
-#include "grab/IGrabber.hpp"
 #include "Settings.hpp"
 #include "SettingsWindow.hpp"
 #include "TimeEvaluations.hpp"
 #include "GrabWidget.hpp"
+#include "WinAPIGrabber.hpp"
+#include "WinAPIGrabberEachWidget.hpp"
+#include "QtGrabber.hpp"
+#include "QtGrabberEachWidget.hpp"
+#include "X11Grabber.hpp"
+#include "MacOSGrabber.hpp"
+#include "D3D9Grabber.hpp"
 
 #include "enums.hpp"
 
-class GrabManager : public QWidget
+class GrabManager : public QObject
 {
     Q_OBJECT
 
 public:
-    GrabManager(IGrabber *grabber, QWidget *parent = 0);
+    GrabManager(QWidget *parent = 0);
     ~GrabManager();
 
 signals:
@@ -67,7 +73,7 @@ public slots:
 
     void settingsProfileChanged();
 
-    void setGrabber(IGrabber * newGrabber);
+    void setGrabMode(Grab::Mode grabMode);
     void switchMode(Lightpack::Mode mode);
     void setMoodLampSpeed(int value);
     void setBackLightColor(QColor color);
@@ -82,6 +88,7 @@ private:
     void updateSmoothSteps(); /* works with colorsNew */
 
 private:
+    IGrabber *createGrabber(Grab::Mode grabMode);
     void initColorLists(int numberOfLeds);
     void clearColorsNew();
     void clearColorsCurrent();
@@ -91,11 +98,11 @@ private:
     int genNewSpeed(int value);
     QColor genNewColor();
 
-
-private: // variables
+private:
     IGrabber * m_grabber;
     QTimer *m_timerGrab;
     QTimer *m_timerUpdateFPS;
+    QWidget *m_parentWidget;
     QList<GrabWidget *> m_ledWidgets;
     const static QColor m_backgroundAndTextColors[10][2];
     TimeEvaluations *m_timeEval;
@@ -128,6 +135,5 @@ private: // variables
     static const QColor m_colorsMoodLamp[ColorsMoodLampCount];
 
     int m_grabSlowdown;
-
     bool m_isGrabWidgetsVisible;
 };

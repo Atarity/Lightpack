@@ -180,11 +180,9 @@ void LedDeviceLightpack::requestFirmwareVersion()
 
 void LedDeviceLightpack::open()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
     m_hidDevice = NULL;
 
-    DEBUG_LOW_LEVEL << QString("hid_open(0x%1, 0x%2)")
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << QString("hid_open(0x%1, 0x%2)")
                        .arg(USB_VENDOR_ID, 4, 16, QChar('0'))
                        .arg(USB_PRODUCT_ID, 4, 16, QChar('0'));
 

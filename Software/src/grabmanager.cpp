@@ -30,11 +30,13 @@
 
 using namespace SettingsScope;
 
-GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)
+GrabManager::GrabManager(QWidget *parent) : QObject(0)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+    m_parentWidget = parent;
+
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));    
 
     m_timerGrab = new QTimer(this);
     m_timeEval = new TimeEvaluations();
@@ -44,19 +46,16 @@ GrabManager::GrabManager(IGrabber *grabber, QWidget *parent) : QWidget(parent)
     m_isMoodLampLiquidMode = Settings::isMoodLampLiquidMode();
     m_moodLampSpeed = Settings::getMoodLampSpeed();
     m_backlightColor = Settings::getMoodLampColor();
+    m_updateColorsOnlyIfChanges = Settings::isSendDataOnlyIfColorsChanges();
 
-    m_grabber = grabber;
+    m_grabber = createGrabber(Settings::getGrabMode());
 
     m_timerUpdateFPS = new QTimer(this);
     connect(m_timerUpdateFPS, SIGNAL(timeout()), this, SLOT(updateFpsOnMainWindow()));
-    m_timerUpdateFPS->setSingleShot( false );
-    m_timerUpdateFPS->start( 500 );
-
-    // TODO: add me to settings
-    m_updateColorsOnlyIfChanges = true; // default value
+    m_timerUpdateFPS->setSingleShot(false);
+    m_timerUpdateFPS->start(500);
 
     m_isResizeOrMoving = false;
-
     m_isGrabWidgetsVisible = false;
 
     initColorLists(MaximumNumberOfLeds::Default);
@@ -83,6 +82,38 @@ GrabManager::~GrabManager()
         m_ledWidgets[i]->close();
     }
     m_ledWidgets.clear();
+}
+
+IGrabber * GrabManager::createGrabber(Grab::Mode grabMode)
+{
+    switch (grabMode)
+    {
+#ifdef Q_WS_X11
+    case Grab::X11GrabMode:
+        return new X11Grabber();
+#endif
+#ifdef Q_WS_WIN
+    case Grab::WinAPIGrabMode:
+        return new WinAPIGrabber();
+
+    case Grab::WinAPIEachWidgetGrabMode:
+        return new WinAPIGrabberEachWidget();
+
+    case Grab::D3D9GrabMode:
+        return new D3D9Grabber();
+#endif
+
+#ifdef MAC_OS
+    case Grab::MacCoreGraphicsGrabMode:
+        return new MacOSGrabber();
+#endif
+
+    case Grab::QtEachWidgetGrabMode:
+        return new QtGrabberEachWidget();
+
+    default:
+        return new QtGrabber();
+    }
 }
 
 void GrabManager::initColorLists(int numberOfLeds)
@@ -127,7 +158,7 @@ void GrabManager::initLedWidgets(int numberOfLeds)
     {
         DEBUG_LOW_LEVEL << "First widget initialization";
 
-        GrabWidget * ledWidget = new GrabWidget(m_ledWidgets.count(), this);
+        GrabWidget * ledWidget = new GrabWidget(m_ledWidgets.count(), m_parentWidget);
 
         // First LED widget using to determine grabbing-monitor in WinAPI version of Grab
         connect(ledWidget, SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(firstWidgetPositionChanged()));
@@ -146,7 +177,7 @@ void GrabManager::initLedWidgets(int numberOfLeds)
 
         for (int i = 0; i < diff; i++)
         {
-            GrabWidget * ledWidget = new GrabWidget(m_ledWidgets.count(), this);
+            GrabWidget * ledWidget = new GrabWidget(m_ledWidgets.count(), m_parentWidget);
 
             connect(ledWidget, SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(setResizeOrMovingFalse()));
             connect(ledWidget, SIGNAL(resizeOrMoveStarted()), this, SLOT(setResizeOrMovingTrue()));
@@ -172,8 +203,8 @@ void GrabManager::firstWidgetPositionChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_screenSavedIndex = QApplication::desktop()->screenNumber( m_ledWidgets[0] );
-    m_screenSavedRect = QApplication::desktop()->screenGeometry( m_screenSavedIndex );
+    m_screenSavedIndex = QApplication::desktop()->screenNumber(m_ledWidgets[0]);
+    m_screenSavedRect = QApplication::desktop()->screenGeometry(m_screenSavedIndex);
 
     m_grabber->updateGrabScreenFromWidget(m_ledWidgets[0]);
 }
@@ -183,18 +214,18 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenIndexResized:" << screenIndexResized;
 
-    int screenIndexOfFirstLedWidget = QApplication::desktop()->screenNumber( m_ledWidgets[0] );
+    int screenIndexOfFirstLedWidget = QApplication::desktop()->screenNumber(m_ledWidgets[0]);
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] index of screen:" << screenIndexOfFirstLedWidget;
 
-    QRect screen = QApplication::desktop()->screenGeometry( m_screenSavedIndex );
+    QRect screen = QApplication::desktop()->screenGeometry(m_screenSavedIndex);
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screen:" << screen;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screenSaved:" << m_screenSavedRect;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screenSavedIndex:" << m_screenSavedIndex;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screenIndexOfFirstLedWidget:" << screenIndexOfFirstLedWidget;
 
-    if(screenIndexResized != -1 && screenIndexOfFirstLedWidget != -1 && screenIndexResized != screenIndexOfFirstLedWidget ) {
+    if(screenIndexResized != -1 && screenIndexOfFirstLedWidget != -1 && screenIndexResized != screenIndexOfFirstLedWidget) {
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "not interesting monitor has been resized";
         return;
     }
@@ -214,8 +245,8 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
 
     for(int i=0; i<m_ledWidgets.count(); i++){
 
-        int width  = round( scaleX * m_ledWidgets[i]->width() );
-        int height = round( scaleY * m_ledWidgets[i]->height() );
+        int width  = round(scaleX * m_ledWidgets[i]->width());
+        int height = round(scaleY * m_ledWidgets[i]->height());
 
         int x = m_ledWidgets[i]->x();
         int y = m_ledWidgets[i]->y();
@@ -223,8 +254,8 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
         x -= screen.x();
         y -= screen.y();
 
-        x = round( scaleX * x );
-        y = round( scaleY * y );
+        x = round(scaleX * x);
+        y = round(scaleY * y);
 
         x += screen.x();
         y += screen.y();
@@ -284,7 +315,7 @@ void GrabManager::updateLedsColorsIfChanged()
     }
 
     if(m_isGrabOn){
-        m_timerGrab->start( timer );
+        m_timerGrab->start(timer);
     }
 }
 
@@ -295,8 +326,8 @@ int random(int val)
 
 int GrabManager::genNewSpeed(int value)
 {
-    //speed = 1000 /  ( random(m_SpeedMoodLamp)+1);
-    return  speed = 1000 /  ( value+random(25)+1);
+    //speed = 1000 /  (random(m_SpeedMoodLamp)+1);
+    return  speed = 1000 /  (value+random(25)+1);
 }
 
 QColor GrabManager::genNewColor()
@@ -305,7 +336,7 @@ QColor GrabManager::genNewColor()
 #if 0
     // not repeat previous color
     do {
-        newColor = colorsMoodLamp[random( ColorsMoodLampCount)];
+        newColor = colorsMoodLamp[random(ColorsMoodLampCount)];
     } while (newColor == prevColor);
      prevColor = newColor;
 #endif
@@ -313,7 +344,7 @@ QColor GrabManager::genNewColor()
      // once per cycle
      bool fl=false;
      do {
-         int ind = random( ColorsMoodLampCount);
+         int ind = random(ColorsMoodLampCount);
          newColor =  m_colorsMoodLamp[ind];
          fl=false;
          if (checkInd<ColorsMoodLampCount)
@@ -375,7 +406,7 @@ void GrabManager::moodlamp()
                 m_colorsCurrent[i] = 0; // off led
         }
     }
-    emit updateLedsColors( m_colorsCurrent );
+    emit updateLedsColors(m_colorsCurrent);
 }
 
 
@@ -429,8 +460,8 @@ void GrabManager::ambilight()
     qDebug() << "Time spent on grab:" << t.elapsed() << "ms";
 #endif
 
-    if( m_avgColorsOnAllLeds ){
-        if( countGrabEnabled != 0 ){
+    if(m_avgColorsOnAllLeds){
+        if(countGrabEnabled != 0){
             avgR /= countGrabEnabled;
             avgG /= countGrabEnabled;
             avgB /= countGrabEnabled;
@@ -461,14 +492,14 @@ void GrabManager::ambilight()
     // Check minimum level of sensivity
     for(int ledIndex=0; ledIndex < m_ledWidgets.count(); ledIndex++){
         QRgb rgb = m_colorsNew[ledIndex];
-        int avg = round( (qRed(rgb) + qGreen(rgb) + qBlue(rgb)) / 3.0 );
+        int avg = round((qRed(rgb) + qGreen(rgb) + qBlue(rgb)) / 3.0);
         if(avg <= m_minLevelOfSensivity){
             m_colorsNew[ledIndex] = 0;
         }
     }
 
     for(int ledIndex=0; ledIndex < m_ledWidgets.count(); ledIndex++){
-        if( m_colorsCurrent[ledIndex] != m_colorsNew[ledIndex] ){
+        if(m_colorsCurrent[ledIndex] != m_colorsNew[ledIndex]){
             m_colorsCurrent[ledIndex]  = m_colorsNew[ledIndex];
             needToUpdate = true;
         }
@@ -476,7 +507,7 @@ void GrabManager::ambilight()
 
     if((m_updateColorsOnlyIfChanges == false) || needToUpdate){
         // if updateColorsOnlyIfChanges == false, then update colors (not depending on needToUpdate flag)
-        emit updateLedsColors( m_colorsCurrent );
+        emit updateLedsColors(m_colorsCurrent);
     }
 
     m_fpsMs = m_timeEval->howLongItEnd();
@@ -489,7 +520,7 @@ void GrabManager::updateFpsOnMainWindow()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    emit ambilightTimeOfUpdatingColors( m_fpsMs );
+    emit ambilightTimeOfUpdatingColors(m_fpsMs);
 }
 
 void GrabManager::setMoodLampLiquidMode(bool state)
@@ -523,7 +554,7 @@ void GrabManager::updateBacklightState(Backlight::Status backlightStatus, Api::D
     if (m_isGrabOn)
     {
         // Start grabbing colors and sending signals
-        m_timerGrab->start( 0 );
+        m_timerGrab->start(0);
     } else {
         // Backlight is off or in an error state and we need to turn off the grab and stop sending signals
         m_timerGrab->stop();
@@ -567,19 +598,21 @@ void GrabManager::settingsProfileChanged()
     m_moodLampSpeed = Settings::getMoodLampSpeed();
     m_backlightColor = Settings::getMoodLampColor();
 
-    for(int i=0; i<m_ledWidgets.count(); i++){
+    for (int i = 0; i < m_ledWidgets.count(); i++)
+    {
         m_ledWidgets[i]->settingsProfileChanged();
     }
 }
 
 
-void GrabManager::setGrabber(IGrabber * newGrabber)
+void GrabManager::setGrabMode(Grab::Mode grabMode)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << grabMode;
 
     if (m_grabber)
         delete m_grabber;
-    m_grabber = newGrabber;
+    m_grabber = createGrabber(grabMode);
+
     firstWidgetPositionChanged();
 }
 
