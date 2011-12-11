@@ -178,24 +178,16 @@ void LedDeviceAdalight::open()
 
 bool LedDeviceAdalight::writeBuffer(const QByteArray & buff)
 {
-#if 1
-    printf("write buffer: ");
-    for (int i = 0; i < buff.count(); i++)
-    {
-        printf("0x%02x ", buff.at(i) & 0xff);
-    }
-    printf("\n");
-    fflush(stdout);
-#endif
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << "Hex:" << buff.toHex();
 
     if (m_AdalightDevice->isOpen() == false)
         return false;
 
-    int bytes = m_AdalightDevice->write(buff);
+    int bytesWritten = m_AdalightDevice->write(buff);
 
-    if (bytes != buff.count())
+    if (bytesWritten != buff.count())
     {
-        qWarning() << Q_FUNC_INFO << "bytes != buff.count()";
+        qWarning() << Q_FUNC_INFO << "bytesWritten != buff.count():" << bytesWritten << buff.count();
         return false;
     }
 

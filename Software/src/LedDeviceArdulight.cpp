@@ -54,6 +54,8 @@ LedDeviceArdulight::~LedDeviceArdulight()
 
 void LedDeviceArdulight::setColors(const QList<QRgb> & colors)
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << colors;
+
     // Save colors for showing changes of the brightness
     m_colorsSaved = colors;
 
@@ -178,24 +180,16 @@ void LedDeviceArdulight::open()
 
 bool LedDeviceArdulight::writeBuffer(const QByteArray & buff)
 {
-#if 1
-    printf("write buffer: ");
-    for (int i = 0; i < buff.count(); i++)
-    {
-        printf("0x%02x ", buff.at(i) & 0xff);
-    }
-    printf("\n");
-    fflush(stdout);
-#endif
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << "Hex:" << buff.toHex();
 
     if (m_ArdulightDevice->isOpen() == false)
         return false;
 
-    int bytes = m_ArdulightDevice->write(buff);
+    int bytesWritten = m_ArdulightDevice->write(buff);
 
-    if (bytes != buff.count())
+    if (bytesWritten != buff.count())
     {
-        qWarning() << Q_FUNC_INFO << "bytes != buff.count()";
+        qWarning() << Q_FUNC_INFO << "bytesWritten != buff.count():" << bytesWritten << buff.count();
         return false;
     }
 
