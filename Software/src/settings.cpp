@@ -769,7 +769,7 @@ Grab::GrabberType Settings::getGrabberType()
         return Grab::MacCoreGraphicsGrabber;
 #endif
 
-    qWarning() << Q_FUNC_INFO << Profile::Key::Grab::Grabber << "contains invalid value:" << strGrabbber << ", reset it to default:" << Profile::Grab::GrabberDefault;
+    qWarning() << Q_FUNC_INFO << Profile::Key::Grab::Grabber << "contains invalid value:" << strGrabbber << ", reset it to default:" << Profile::Grab::GrabberDefaultString;
     setGrabberType(Profile::Grab::GrabberDefault);
 
     return Profile::Grab::GrabberDefault;
@@ -819,7 +819,7 @@ void Settings::setGrabberType(Grab::GrabberType grabberType)
 
     default:
         qWarning() << Q_FUNC_INFO << "Switch on grabberType =" << grabberType << "failed. Reset to default value.";
-        strGrabber = Profile::Grab::GrabberDefault;
+        strGrabber = Profile::Grab::GrabberDefaultString;
     }
     setValue(Profile::Key::Grab::Grabber, strGrabber);
 }
@@ -1080,7 +1080,7 @@ void Settings::initCurrentProfile(bool isResetDefault)
     setNewOption(Profile::Key::LightpackMode, Profile::LightpackModeDefault, isResetDefault);
     setNewOption(Profile::Key::IsBacklightEnabled, Profile::IsBacklightEnabledDefault, isResetDefault);
     // [Grab]
-    setNewOption(Profile::Key::Grab::Grabber,       Profile::Grab::GrabberDefault, isResetDefault);
+    setNewOption(Profile::Key::Grab::Grabber,       Profile::Grab::GrabberDefaultString, isResetDefault);
     setNewOption(Profile::Key::Grab::IsAvgColorsEnabled, Profile::Grab::IsAvgColorsEnabledDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::IsSendDataOnlyIfColorsChanges, Profile::Grab::IsSendDataOnlyIfColorsChangesDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::Slowdown,      Profile::Grab::SlowdownDefault, isResetDefault);
@@ -1094,6 +1094,7 @@ void Settings::initCurrentProfile(bool isResetDefault)
     setNewOption(Profile::Key::Device::Brightness,  Profile::Device::BrightnessDefault, isResetDefault);
     setNewOption(Profile::Key::Device::Smooth,      Profile::Device::SmoothDefault, isResetDefault);
     setNewOption(Profile::Key::Device::Gamma,       Profile::Device::GammaDefault, isResetDefault);
+    setNewOption(Profile::Key::Device::ColorDepth,  Profile::Device::ColorDepthDefault, isResetDefault);
 
     QPoint ledPosition;
 

@@ -103,6 +103,7 @@ void GrabManager::setGrabber(Grab::GrabberType grabberType)
 
     if (m_grabber)
         delete m_grabber;
+
     m_grabber = createGrabber(grabberType);
 
     firstWidgetPositionChanged();
@@ -484,7 +485,7 @@ void GrabManager::initLedWidgets(int numberOfLeds)
 
     if (m_ledWidgets.size() == 0)
     {
-        DEBUG_LOW_LEVEL << "First widget initialization";
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "First widget initialization";
 
         GrabWidget * ledWidget = new GrabWidget(m_ledWidgets.size(), m_parentWidget);
 
@@ -504,7 +505,7 @@ void GrabManager::initLedWidgets(int numberOfLeds)
 
     if (diff > 0)
     {
-        DEBUG_LOW_LEVEL << "Append" << diff << "grab widgets";
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Append" << diff << "grab widgets";
 
         for (int i = 0; i < diff; i++)
         {
@@ -517,7 +518,7 @@ void GrabManager::initLedWidgets(int numberOfLeds)
         }
     } else {
         diff *= -1;
-        DEBUG_LOW_LEVEL << "Remove last" << diff << "grab widgets";
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Remove last" << diff << "grab widgets";
 
         while (diff --> 0)
         {
@@ -527,5 +528,5 @@ void GrabManager::initLedWidgets(int numberOfLeds)
     }
 
     if (m_ledWidgets.size() != numberOfLeds)
-        qCritical() << "Fail: m_ledWidgets.size()" << m_ledWidgets.size() << " != numberOfLeds" << numberOfLeds;
+        qCritical() << Q_FUNC_INFO << "Fail: m_ledWidgets.size()" << m_ledWidgets.size() << " != numberOfLeds" << numberOfLeds;
 }
