@@ -37,7 +37,7 @@ WinAPIGrabberEachWidget::WinAPIGrabberEachWidget()
 
 WinAPIGrabberEachWidget::~WinAPIGrabberEachWidget()
 {
-    delete pbPixelsBuff;
+    delete[] pbPixelsBuff;
 }
 
 const char * WinAPIGrabberEachWidget::getName()
@@ -113,7 +113,7 @@ void WinAPIGrabberEachWidget::captureWidget(const QWidget * w)
             pixelsBuffSize = pixelsBuffSizeNew;
 
             // ReAllocate memory for new buffer size
-            if( pbPixelsBuff ) delete pbPixelsBuff;
+            if( pbPixelsBuff ) delete[] pbPixelsBuff;
 
             // Allocate
             pbPixelsBuff = new BYTE[ pixelsBuffSize ];
@@ -151,6 +151,12 @@ QRgb WinAPIGrabberEachWidget::getColor(int x, int y, int width, int height)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO
                      << "x y w h:" << x << y << width << height;
+
+    if (pbPixelsBuff == NULL)
+    {
+        qCritical() << Q_FUNC_INFO << "pbPixelsBuff == NULL";
+        return 0;
+    }
 
     // Checking for the 'grabme' widget position inside the monitor that is used to capture color
     if(     x + width  < monitorInfo.rcMonitor.left   ||

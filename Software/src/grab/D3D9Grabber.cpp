@@ -187,6 +187,12 @@ QRgb D3D9Grabber::getColor(int x, int y, int width, int height)
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO
                      << "x y w h:" << x << y << width << height;
 
+    if (m_buf == NULL)
+    {
+        qCritical() << Q_FUNC_INFO << "m_buf == NULL";
+        return 0;
+    }
+
     // Convert coordinates from "Main" desktop coord-system to capture-monitor coord-system
     x -= m_rect.left;
     y -= m_rect.top;

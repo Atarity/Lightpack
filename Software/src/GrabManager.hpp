@@ -87,6 +87,7 @@ private:
     void initLedWidgets(int numberOfLeds);
 
 private:
+    QList<IGrabber*> m_grabbers;
     IGrabber *m_grabber;
     QTimer *m_timerGrab;
     QTimer *m_timerUpdateFPS;
@@ -96,7 +97,7 @@ private:
     TimeEvaluations *m_timeEval;
 
     QList<QRgb> m_colorsCurrent;
-    QList<QRgb> m_colorsNew;
+    QList<QRgb> m_colorsNew;       
 
     QRect m_screenSavedRect;
     int m_screenSavedIndex;

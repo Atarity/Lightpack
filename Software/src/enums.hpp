@@ -64,7 +64,9 @@ enum GrabberType {
     WinAPIGrabber,
     WinAPIEachWidgetGrabber,
     D3D9Grabber,
-    MacCoreGraphicsGrabber
+    MacCoreGraphicsGrabber,
+
+    GrabbersCount
 };
 }
 

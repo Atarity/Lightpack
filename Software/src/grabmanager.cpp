@@ -36,6 +36,9 @@ GrabManager::GrabManager(QWidget *parent) : QObject(parent)
 
     m_parentWidget = parent;
 
+    for (int i = 0; i < Grab::GrabbersCount; i++)
+        m_grabbers.append(NULL);
+
     m_timerGrab = new QTimer(this);
     m_timeEval = new TimeEvaluations();
 
@@ -75,9 +78,12 @@ GrabManager::~GrabManager()
 
     for (int i = 0; i < m_ledWidgets.size(); i++)
     {
-        m_ledWidgets[i]->close();
+        m_ledWidgets[i]->deleteLater();
     }
     m_ledWidgets.clear();
+
+    for (int i = 0; i < Grab::GrabbersCount; i++)
+        delete m_grabbers[i];
 }
 
 void GrabManager::start(bool isGrabEnabled)
@@ -101,10 +107,12 @@ void GrabManager::setGrabber(Grab::GrabberType grabberType)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << grabberType;
 
-    if (m_grabber)
-        delete m_grabber;
+    if (m_grabbers[grabberType] == NULL)
+    {
+        m_grabbers[grabberType] = createGrabber(grabberType);
+    }
 
-    m_grabber = createGrabber(grabberType);
+    m_grabber = m_grabbers[grabberType];
 
     firstWidgetPositionChanged();
 }
@@ -442,7 +450,7 @@ IGrabber * GrabManager::createGrabber(Grab::GrabberType grabberType)
 
     default:
         return new QtGrabber();
-    }
+    }   
 }
 
 void GrabManager::initColorLists(int numberOfLeds)
