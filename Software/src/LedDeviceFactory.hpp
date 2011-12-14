@@ -68,10 +68,9 @@ public slots:
 private slots:
     void ledDeviceCommandCompleted(bool ok);
 
-private:
-    SupportedDevices::DeviceType m_connectedDevice;
+private:    
     void initLedDevice();
-    ILedDevice * createLedDevice();
+    ILedDevice * createLedDevice(SupportedDevices::DeviceType deviceType);
     void connectSignalSlotsLedDevice();
     void disconnectSignalSlotsLedDevice();
     void cmdQueueAppend(LedDeviceCommands::Cmd);
@@ -89,6 +88,7 @@ private:
     double m_savedGamma;
     int m_savedBrightness;
 
+    QList<ILedDevice *> m_ledDevices;
     ILedDevice *m_ledDevice;
     QThread *m_ledDeviceThread;
 };

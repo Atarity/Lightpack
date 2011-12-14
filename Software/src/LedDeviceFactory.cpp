@@ -43,21 +43,17 @@ LedDeviceFactory::LedDeviceFactory(QObject *parent)
 
     m_ledDeviceThread = new QThread();
 
+    for (int i = 0; i < SupportedDevices::DevicesCount; i++)
+        m_ledDevices.append(NULL);
+
     initLedDevice();
 }
 
 void LedDeviceFactory::recreateLedDevice()
 {
-    SupportedDevices::DeviceType connectedDevice  =  Settings::getConnectedDevice();
-    if (m_connectedDevice == connectedDevice) return;
-
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     disconnectSignalSlotsLedDevice();
-    m_ledDeviceThread->quit();
-
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "delete m_ledDevice;";
-    delete m_ledDevice;
 
     initLedDevice();
 }
@@ -199,7 +195,12 @@ void LedDeviceFactory::initLedDevice()
 
     m_isLastCommandCompleted = true;
 
-    m_ledDevice = createLedDevice();
+    SupportedDevices::DeviceType connectedDevice = Settings::getConnectedDevice();
+
+    if (m_ledDevices[connectedDevice] == NULL)
+        m_ledDevices[connectedDevice] = createLedDevice(connectedDevice);
+
+    m_ledDevice = m_ledDevices[connectedDevice];
     connectSignalSlotsLedDevice();
 
     m_ledDevice->open();
@@ -208,11 +209,10 @@ void LedDeviceFactory::initLedDevice()
     m_ledDeviceThread->start();
 }
 
-ILedDevice * LedDeviceFactory::createLedDevice()
-{
-    m_connectedDevice = Settings::getConnectedDevice();
+ILedDevice * LedDeviceFactory::createLedDevice(SupportedDevices::DeviceType deviceType)
+{    
 
-    if (m_connectedDevice == SupportedDevices::AlienFxDevice){
+    if (deviceType == SupportedDevices::AlienFxDevice){
 #       if !defined(Q_WS_WIN)
         qWarning() << Q_FUNC_INFO << "AlienFx not supported on current platform";
 
@@ -221,7 +221,7 @@ ILedDevice * LedDeviceFactory::createLedDevice()
 #       endif /* Q_WS_WIN */
     }
 
-    switch (m_connectedDevice){
+    switch (deviceType){
 
     case SupportedDevices::LightpackDevice:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::LightpackDevice";
@@ -247,10 +247,13 @@ ILedDevice * LedDeviceFactory::createLedDevice()
     case SupportedDevices::VirtualDevice:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::VirtualDevice";
         return (ILedDevice *)new LedDeviceVirtual();
+
+    default:
+        break;
     }
 
     qFatal("%s %s%d%s", Q_FUNC_INFO,
-           "Create LedDevice fail. connectedDevice = '", m_connectedDevice,
+           "Create LedDevice fail. deviceType = '", deviceType,
            "'. Application exit.");
 
     return NULL; // Avoid compiler warning

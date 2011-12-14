@@ -78,6 +78,8 @@ enum DeviceType {
     AdalightDevice,
     VirtualDevice,
     ArdulightDevice,
+
+    DevicesCount,
     DefaultDevice = LightpackDevice
 };
 }
