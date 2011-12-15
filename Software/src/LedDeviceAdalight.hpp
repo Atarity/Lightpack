@@ -38,6 +38,7 @@ public:
     ~LedDeviceAdalight();
 
 public slots:
+    void open();
     void setColors(const QList<QRgb> & /*colors*/);
     void offLeds();
     void setRefreshDelay(int /*value*/);
@@ -45,9 +46,7 @@ public slots:
     void setSmoothSlowdown(int /*value*/);
     void setGamma(double /*value*/);
     void setBrightness(int /*value*/);
-    void requestFirmwareVersion();
-public:
-    void open();
+    void requestFirmwareVersion();    
 
 private:
     bool writeBuffer(const QByteArray & buff);

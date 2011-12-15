@@ -51,6 +51,7 @@ public:
     ~LedDeviceLightpack();
 
 public slots:
+    void open();
     void setColors(const QList<QRgb> & colors);
     void offLeds();
     void setRefreshDelay(int value);
@@ -59,9 +60,6 @@ public slots:
     void setGamma(double value);
     void setBrightness(int percent);
     void requestFirmwareVersion();
-
-public:
-    void open();
 
 private: 
     bool readDataFromDevice();

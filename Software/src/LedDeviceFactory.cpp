@@ -198,15 +198,22 @@ void LedDeviceFactory::initLedDevice()
     SupportedDevices::DeviceType connectedDevice = Settings::getConnectedDevice();
 
     if (m_ledDevices[connectedDevice] == NULL)
-        m_ledDevices[connectedDevice] = createLedDevice(connectedDevice);
+    {
+        m_ledDevice = m_ledDevices[connectedDevice] = createLedDevice(connectedDevice);
 
-    m_ledDevice = m_ledDevices[connectedDevice];
-    connectSignalSlotsLedDevice();
+        connectSignalSlotsLedDevice();
 
-    m_ledDevice->open();
+        m_ledDevice->moveToThread(m_ledDeviceThread);
+        m_ledDeviceThread->start();
+    } else {
+        disconnectSignalSlotsLedDevice();
 
-    m_ledDevice->moveToThread(m_ledDeviceThread);
-    m_ledDeviceThread->start();
+        m_ledDevice = m_ledDevices[connectedDevice];
+
+        connectSignalSlotsLedDevice();
+    }
+
+    emit ledDeviceOpen();
 }
 
 ILedDevice * LedDeviceFactory::createLedDevice(SupportedDevices::DeviceType deviceType)
@@ -217,7 +224,7 @@ ILedDevice * LedDeviceFactory::createLedDevice(SupportedDevices::DeviceType devi
         qWarning() << Q_FUNC_INFO << "AlienFx not supported on current platform";
 
         Settings::setConnectedDevice(SupportedDevices::DefaultDevice);
-        m_connectedDevice = Settings::getConnectedDevice();
+        deviceType = Settings::getConnectedDevice();
 #       endif /* Q_WS_WIN */
     }
 
@@ -274,6 +281,7 @@ void LedDeviceFactory::connectSignalSlotsLedDevice()
     connect(m_ledDevice, SIGNAL(openDeviceSuccess(bool)),       this, SIGNAL(openDeviceSuccess(bool)), Qt::QueuedConnection);
     connect(m_ledDevice, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), this, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), Qt::QueuedConnection);
 
+    connect(this, SIGNAL(ledDeviceOpen()),                      m_ledDevice, SLOT(open()), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetColors(QList<QRgb>)),      m_ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceOffLeds()),                   m_ledDevice, SLOT(offLeds()), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetRefreshDelay(int)),        m_ledDevice, SLOT(setRefreshDelay(int)), Qt::QueuedConnection);
@@ -298,6 +306,7 @@ void LedDeviceFactory::disconnectSignalSlotsLedDevice()
     disconnect(m_ledDevice, SIGNAL(ioDeviceSuccess(bool)),      this, SIGNAL(ioDeviceSuccess(bool)));
     disconnect(m_ledDevice, SIGNAL(openDeviceSuccess(bool)),    this, SIGNAL(openDeviceSuccess(bool)));
 
+    disconnect(this, SIGNAL(ledDeviceOpen()),                   m_ledDevice, SLOT(open()));
     disconnect(this, SIGNAL(ledDeviceSetColors(QList<QRgb>)),   m_ledDevice, SLOT(setColors(QList<QRgb>)));
     disconnect(this, SIGNAL(ledDeviceOffLeds()),                m_ledDevice, SLOT(offLeds()));
     disconnect(this, SIGNAL(ledDeviceSetRefreshDelay(int)),     m_ledDevice, SLOT(setRefreshDelay(int)));

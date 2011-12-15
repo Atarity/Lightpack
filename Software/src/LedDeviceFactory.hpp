@@ -43,6 +43,7 @@ signals:
     void setColors_VirtualDeviceCallback(const QList<QRgb> & colors);
 
     // This signals are directly connected to ILedDevice. Don't use outside.
+    void ledDeviceOpen();
     void ledDeviceSetColors(const QList<QRgb> & colors);
     void ledDeviceOffLeds();
     void ledDeviceSetRefreshDelay(int value);

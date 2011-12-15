@@ -45,6 +45,7 @@ signals:
     void setColors_VirtualDeviceCallback(QList<QRgb> colors);
 
 public slots:
+    virtual void open() = 0;
     virtual void setColors(const QList<QRgb> & colors) = 0;
     virtual void offLeds() = 0;
     virtual void setRefreshDelay(int value) = 0;
@@ -55,7 +56,4 @@ public slots:
 
     // deprecated, but may be usable for lightpack hw <= 5.5
     virtual void setColorDepth(int value) = 0;
-
-public:
-    virtual void open() = 0;
 };
