@@ -80,8 +80,11 @@ void MoodLampManager::setCurrentColor(QColor color)
 
     m_currentColor = color;
 
-    fillColors(color.rgb());
-    emit updateLedsColors(m_colors);
+    if (m_isMoodLampEnabled && (m_isLiquidMode == false))
+    {
+        fillColors(color.rgb());
+        emit updateLedsColors(m_colors);
+    }
 }
 
 void MoodLampManager::setLiquidMode(bool state)
@@ -110,6 +113,11 @@ void MoodLampManager::setNumberOfLeds(int numberOfLeds)
     initColors(numberOfLeds);
 }
 
+void MoodLampManager::reset()
+{
+    m_rgbSaved = 0;
+}
+
 void MoodLampManager::settingsProfileChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -125,7 +133,7 @@ void MoodLampManager::settingsProfileChanged()
 
 void MoodLampManager::updateColors()
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << m_liquidModeSpeed;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << m_isLiquidMode << m_liquidModeSpeed;
 
     QRgb rgb;
 

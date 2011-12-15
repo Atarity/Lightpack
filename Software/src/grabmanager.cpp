@@ -143,7 +143,7 @@ void GrabManager::setSendDataOnlyIfColorsChanged(bool state)
 
 void GrabManager::setNumberOfLeds(int numberOfLeds)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << numberOfLeds;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << numberOfLeds;    
 
     initColorLists(numberOfLeds);
     initLedWidgets(numberOfLeds);
@@ -153,6 +153,11 @@ void GrabManager::setNumberOfLeds(int numberOfLeds)
         m_ledWidgets[i]->settingsProfileChanged();
         m_ledWidgets[i]->setVisible(m_isGrabWidgetsVisible);
     }
+}
+
+void GrabManager::reset()
+{
+    clearColorsCurrent();
 }
 
 void GrabManager::settingsProfileChanged()
@@ -215,13 +220,19 @@ void GrabManager::timeoutUpdateColors()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
+    if (m_grabber == NULL)
+    {
+        qCritical() << Q_FUNC_INFO << "m_grabber == NULL";
+        return;
+    }
+
     // Temporary switch off updating colors
     // if one of LED widgets resizing or moving
     if (m_isPauseGrabWhileResizeOrMoving)
     {
         m_timerGrab->start(50); // check in 50 ms
         return;
-    }
+    }    
 
     bool isColorsChanged = false;
 
@@ -353,6 +364,12 @@ void GrabManager::firstWidgetPositionChanged()
     m_screenSavedIndex = QApplication::desktop()->screenNumber(m_ledWidgets[0]);
     m_screenSavedRect = QApplication::desktop()->screenGeometry(m_screenSavedIndex);
 
+    if (m_grabber == NULL)
+    {
+        qCritical() << Q_FUNC_INFO << "m_grabber == NULL";
+        return;
+    }
+
     m_grabber->updateGrabScreenFromWidget(m_ledWidgets[0]);
 }
 
@@ -389,7 +406,7 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
     m_screenSavedRect = screen;
     m_screenSavedIndex = screenIndexOfFirstLedWidget;
 
-    for(int i=0; i<m_ledWidgets.size(); i++){
+    for(int i=0; i < m_ledWidgets.size(); i++){
 
         int width  = round(scaleX * m_ledWidgets[i]->width());
         int height = round(scaleY * m_ledWidgets[i]->height());

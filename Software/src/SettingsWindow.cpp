@@ -440,20 +440,6 @@ MaximumNumberOfLeds::Devices SettingsWindow::getLightpackMaximumNumberOfLeds()
     return MaximumNumberOfLeds::Default;
 }
 
-void SettingsWindow::onConnectVirtualDevice_Toggled(bool isEnabled)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
-
-    if (isEnabled){
-        Settings::setConnectedDevice(SupportedDevices::VirtualDevice);
-    } else {
-        // TODO: think about saving last connected device to main config
-        Settings::setConnectedDevice(SupportedDevices::DefaultDevice);
-    }
-
-    emit recreateLedDevice();
-}
-
 void SettingsWindow::onEnableApi_Toggled(bool isEnabled)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
@@ -820,6 +806,19 @@ void SettingsWindow::hideSettings()
 // Public slots
 // ----------------------------------------------------------------------------
 
+void SettingsWindow::ledDeviceOpenSuccess(bool isSuccess)
+{
+    if (isSuccess)
+    {
+        // Device just connected and for updating colors
+        // we should reset previous saved states
+        m_grabManager->reset();
+        m_moodlampManager->reset();
+    }
+
+    ledDeviceCallSuccess(isSuccess);
+}
+
 void SettingsWindow::ledDeviceCallSuccess(bool isSuccess)
 {    
     DEBUG_MID_LEVEL << Q_FUNC_INFO << isSuccess << m_backlightStatus;
@@ -1131,6 +1130,10 @@ void SettingsWindow::profileResetToDefaultCurrent()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     Settings::resetDefaults();
+
+    // By default backlight is enabled, but make it same as current backlight status for usability purposes
+    Settings::setIsBacklightEnabled(m_backlightStatus != Backlight::StatusOff);
+
     // Update settings
     updateUiFromSettings();
     emit settingsProfileChanged();

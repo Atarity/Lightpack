@@ -49,6 +49,7 @@ public:
     // Common options
     void setSendDataOnlyIfColorsChanged(bool state);
     void setNumberOfLeds(int value);
+    void reset();
 
 public slots:
     void settingsProfileChanged();

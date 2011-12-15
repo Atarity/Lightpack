@@ -58,7 +58,7 @@ LedDeviceLightpack::~LedDeviceLightpack()
 
 void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << hex << (colors.isEmpty() ? -1 : colors.first());
 #if 0
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
@@ -141,8 +141,11 @@ void LedDeviceLightpack::setGamma(double value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     m_gamma = value;
-    setColors(m_colorsSaved);
-    // commandCompleted() signal already emited by setColors() slot
+
+    if (Settings::isBacklightEnabled())
+        setColors(m_colorsSaved);
+    else
+        commandCompleted(true);
 }
 
 void LedDeviceLightpack::setBrightness(int percent)
@@ -150,8 +153,11 @@ void LedDeviceLightpack::setBrightness(int percent)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << percent;
 
     m_brightness = percent;
-    setColors(m_colorsSaved);
-    // commandCompleted() signal already emited by setColors() slot
+
+    if (Settings::isBacklightEnabled())
+        setColors(m_colorsSaved);
+    else
+        commandCompleted(true);
 }
 
 void LedDeviceLightpack::requestFirmwareVersion()
