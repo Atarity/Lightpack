@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>351</width>
-    <height>672</height>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1441,6 +1441,13 @@
          <widget class="QCheckBox" name="checkBox_SwitchOffAtClosing">
           <property name="text">
            <string>Switch off light at closing</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_PingDeviceEverySecond">
+          <property name="text">
+           <string>Ping lightpack device every second</string>
           </property>
          </widget>
         </item>

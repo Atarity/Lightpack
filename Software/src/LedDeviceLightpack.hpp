@@ -69,7 +69,13 @@ private:
     bool writeBufferToDeviceWithCheck(int command);    
     void updateDeviceSettings();
     void resizeColorsBuffer(int buffSize);
+    void closeDevice();
 
+private slots:
+    void restartPingDevice(bool isSuccess);
+    void timerPingDeviceTimeout();
+
+private:
     hid_device *m_hidDevice;
 
     unsigned char m_readBuffer[65];    /* 0-ReportID, 1..65-data */
@@ -81,5 +87,8 @@ private:
     QList<QRgb> m_colorsSaved;
     QList<StructRgb> m_colorsBuffer;
 
+    QTimer m_timerPingDevice;
+
+    static const int PingDeviceInterval;
     static const int MaximumLedsCount;
 };

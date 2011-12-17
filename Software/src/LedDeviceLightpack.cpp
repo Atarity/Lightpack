@@ -34,10 +34,11 @@
 
 using namespace SettingsScope;
 
+const int LedDeviceLightpack::PingDeviceInterval = 1000;
 const int LedDeviceLightpack::MaximumLedsCount = MaximumNumberOfLeds::Lightpack6;
 
 LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
-        ILedDevice(parent)
+    ILedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
@@ -47,13 +48,17 @@ LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
     memset(m_writeBuffer, 0, sizeof(m_writeBuffer));
     memset(m_readBuffer, 0, sizeof(m_readBuffer));
 
+    connect(&m_timerPingDevice, SIGNAL(timeout()), this, SLOT(timerPingDeviceTimeout()));
+    connect(this, SIGNAL(ioDeviceSuccess(bool)), this, SLOT(restartPingDevice(bool)));
+    connect(this, SIGNAL(openDeviceSuccess(bool)), this, SLOT(restartPingDevice(bool)));
+
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
 
 LedDeviceLightpack::~LedDeviceLightpack()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "hid_close(...);";
-    hid_close(m_hidDevice);
+    closeDevice();
 }
 
 void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
@@ -103,6 +108,9 @@ void LedDeviceLightpack::offLeds()
 
     bool ok = writeBufferToDeviceWithCheck(CMD_OFF_ALL);
     emit commandCompleted(ok);
+
+    // Stop ping device if offLeds() signal comes
+    m_timerPingDevice.stop();
 }
 
 void LedDeviceLightpack::setRefreshDelay(int value)
@@ -188,8 +196,7 @@ void LedDeviceLightpack::open()
 {
     if (m_hidDevice != NULL)
     {
-        hid_close(m_hidDevice);
-        m_hidDevice = NULL;
+        closeDevice();
     }
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << QString("hid_open(0x%1, 0x%2)")
@@ -257,14 +264,12 @@ bool LedDeviceLightpack::writeBufferToDevice(int command)
 
 bool LedDeviceLightpack::tryToReopenDevice()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    hid_close(m_hidDevice);
-
     open();
 
     if (m_hidDevice == NULL)
+    {
         return false;
+    }
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Reopen success";
     return true;
@@ -274,21 +279,21 @@ bool LedDeviceLightpack::readDataFromDeviceWithCheck()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    if(m_hidDevice != NULL){
-        if(!readDataFromDevice()){
-            if(tryToReopenDevice()){
+    if (m_hidDevice != NULL)
+    {
+        if (!readDataFromDevice())
+        {
+            if (tryToReopenDevice())
                 return readDataFromDevice();
-            }else{
+            else
                 return false;
-            }
         }
-        return true;        
-    }else{
-        if(tryToReopenDevice()){
+        return true;
+    } else {
+        if (tryToReopenDevice())
             return readDataFromDevice();
-        }else{
+        else
             return false;
-        }
     }
 }
 
@@ -303,21 +308,17 @@ bool LedDeviceLightpack::writeBufferToDeviceWithCheck(int command)
             if (!writeBufferToDevice(command))
             {
                 if (tryToReopenDevice())
-                {
                     return writeBufferToDevice(command);
-                } else {
+                else
                     return false;
-                }
             }
         }
         return true;
     } else {
         if (tryToReopenDevice())
-        {
             return writeBufferToDevice(command);
-        } else {
+        else
             return false;
-        }
     }
 }
 
@@ -351,4 +352,61 @@ void LedDeviceLightpack::resizeColorsBuffer(int buffSize)
     {
         m_colorsBuffer << StructRgb();
     }
+}
+
+void LedDeviceLightpack::closeDevice()
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
+    hid_close(m_hidDevice);
+    m_hidDevice = NULL;
+}
+
+void LedDeviceLightpack::restartPingDevice(bool isSuccess)
+{
+    Q_UNUSED(isSuccess);
+
+    if (Settings::isPingDeviceEverySecond())
+    {
+        // Start ping device with PingDeviceInterval ms after last data transfer complete
+        m_timerPingDevice.start(PingDeviceInterval);
+    } else {
+        m_timerPingDevice.stop();
+    }
+}
+
+void LedDeviceLightpack::timerPingDeviceTimeout()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    if (m_hidDevice == NULL)
+    {
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "open";
+        m_hidDevice = hid_open(USB_VENDOR_ID, USB_PRODUCT_ID, NULL);
+
+        if (m_hidDevice == NULL)
+        {
+            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "open false";
+            emit openDeviceSuccess(false);
+            return;
+        }
+
+        emit openDeviceSuccess(true);
+        return;
+    }
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "write";
+
+    m_writeBuffer[WRITE_BUFFER_INDEX_REPORT_ID] = 0x00;
+    m_writeBuffer[WRITE_BUFFER_INDEX_COMMAND] = CMD_NOP;
+    int bytes = hid_write(m_hidDevice, m_writeBuffer, sizeof(m_writeBuffer));
+
+    if (bytes < 0)
+    {
+        closeDevice();
+        emit ioDeviceSuccess(false);
+        return;
+    }
+
+    emit ioDeviceSuccess(true);
 }

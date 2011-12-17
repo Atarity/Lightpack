@@ -214,6 +214,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->pushButton_GenerateNewApiKey, SIGNAL(clicked()), this, SLOT(onGenerateNewApiKey_Clicked()));
 
     connect(ui->spinBox_LoggingLevel, SIGNAL(valueChanged(int)), this, SLOT(onLoggingLevel_valueChanged(int)));
+    connect(ui->checkBox_PingDeviceEverySecond, SIGNAL(toggled(bool)), this, SLOT(onPingDeviceEverySecond_Toggled(bool)));
 }
 
 // ----------------------------------------------------------------------------
@@ -766,6 +767,17 @@ void SettingsWindow::onApiServer_ErrorOnStartListening(QString errorMessage)
     ui->lineEdit_ApiPort->setToolTip(errorMessage);
 }
 
+void SettingsWindow::onPingDeviceEverySecond_Toggled(bool state)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
+
+    Settings::setPingDeviceEverySecond(state);
+
+    // Force update colors on device for start ping device
+    m_grabManager->reset();
+    m_moodlampManager->reset();
+}
+
 // ----------------------------------------------------------------------------
 // Show / Hide settings and about windows
 // ----------------------------------------------------------------------------
@@ -808,6 +820,8 @@ void SettingsWindow::hideSettings()
 
 void SettingsWindow::ledDeviceOpenSuccess(bool isSuccess)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isSuccess;
+
     if (isSuccess)
     {
         // Device just connected and for updating colors
@@ -1001,6 +1015,7 @@ void SettingsWindow::onDeviceSendDataOnlyIfColorsChanged_toggled(bool state)
 
     Settings::setSendDataOnlyIfColorsChanges(state);
     m_grabManager->setSendDataOnlyIfColorsChanged(Settings::isSendDataOnlyIfColorsChanges());
+    m_moodlampManager->setSendDataOnlyIfColorsChanged(Settings::isSendDataOnlyIfColorsChanges());
 }
 
 // ----------------------------------------------------------------------------
@@ -1435,6 +1450,7 @@ void SettingsWindow::updateUiFromSettings()
 
     ui->checkBox_SendDataOnlyIfColorsChanges->setChecked(Settings::isSendDataOnlyIfColorsChanges());
     ui->checkBox_SwitchOffAtClosing->setChecked         (Settings::isSwitchOffAtClosing());
+    ui->checkBox_PingDeviceEverySecond->setChecked      (Settings::isPingDeviceEverySecond());
 
     ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsEnabled());
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());

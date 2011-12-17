@@ -86,6 +86,7 @@ public slots:
     void updateVirtualLedsColors(const QList<QRgb> & colors);
     void requestBacklightStatus();
     void onApiServer_ErrorOnStartListening(QString errorMessage);
+    void onPingDeviceEverySecond_Toggled(bool state);
 
 protected:
     virtual void changeEvent(QEvent *e);

@@ -170,13 +170,16 @@ void MoodLampManager::updateColors()
         rgb = m_currentColor.rgb();
     }
 
-    fillColors(rgb);
-
     if (m_rgbSaved != rgb || m_isSendDataOnlyIfColorsChanged == false)
+    {
+        fillColors(rgb);
         emit updateLedsColors(m_colors);
+    }
 
     if (m_isMoodLampEnabled)
+    {
         m_timer.start(m_delay);
+    }
 
     m_rgbSaved = rgb;
 }
