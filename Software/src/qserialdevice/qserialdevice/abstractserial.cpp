@@ -457,85 +457,85 @@ bool AbstractSerialPrivate::canLineNotification()
 void AbstractSerialPrivate::initialiseMap()
 {
     //filling m_baudRateMap
-    this->m_baudRateMap[AbstractSerial::BaudRateUndefined] = QObject::tr("Undefined baud");
+    this->m_baudRateMap[AbstractSerial::BaudRateUndefined] = QString("Undefined baud");
 #ifndef Q_OS_WIN
-    this->m_baudRateMap[AbstractSerial::BaudRate50] = QObject::tr("50 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate75] = QObject::tr("75 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate50] = QString("50 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate75] = QString("75 baud");
 #endif
-    this->m_baudRateMap[AbstractSerial::BaudRate110] = QObject::tr("110 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate110] = QString("110 baud");
 #ifndef Q_OS_WIN
-    this->m_baudRateMap[AbstractSerial::BaudRate134] = QObject::tr("134 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate150] = QObject::tr("150 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate200] = QObject::tr("200 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate134] = QString("134 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate150] = QString("150 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate200] = QString("200 baud");
 #endif
-    this->m_baudRateMap[AbstractSerial::BaudRate300] = QObject::tr("300 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate600] = QObject::tr("600 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate1200] = QObject::tr("1200 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate300] = QString("300 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate600] = QString("600 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate1200] = QString("1200 baud");
 #ifndef Q_OS_WIN
-    this->m_baudRateMap[AbstractSerial::BaudRate1800] = QObject::tr("1800 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate1800] = QString("1800 baud");
 #endif
-    this->m_baudRateMap[AbstractSerial::BaudRate2400] = QObject::tr("2400 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate4800] = QObject::tr("4800 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate9600] = QObject::tr("9600 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate2400] = QString("2400 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate4800] = QString("4800 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate9600] = QString("9600 baud");
 #ifdef Q_OS_WIN
-    this->m_baudRateMap[AbstractSerial::BaudRate14400] = QObject::tr("14400 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate14400] = QString("14400 baud");
 #endif
-    this->m_baudRateMap[AbstractSerial::BaudRate19200] = QObject::tr("19200 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate38400] = QObject::tr("38400 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate19200] = QString("19200 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate38400] = QString("38400 baud");
 #ifdef Q_OS_WIN
-    this->m_baudRateMap[AbstractSerial::BaudRate56000] = QObject::tr("56000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate56000] = QString("56000 baud");
 #endif
-    this->m_baudRateMap[AbstractSerial::BaudRate57600] = QObject::tr("57600 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate57600] = QString("57600 baud");
 #ifdef Q_OS_WIN
-    this->m_baudRateMap[AbstractSerial::BaudRate76800]=QObject::tr("76800 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate76800] = QString("76800 baud");
 #endif
-    this->m_baudRateMap[AbstractSerial::BaudRate115200] = QObject::tr("115200 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate115200] = QString("115200 baud");
 #ifdef Q_OS_WIN
-    this->m_baudRateMap[AbstractSerial::BaudRate128000] = QObject::tr("128000 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate256000] = QObject::tr("256000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate128000] = QString("128000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate256000] = QString("256000 baud");
 #endif
 
     //experimental speeds
-    this->m_baudRateMap[AbstractSerial::BaudRate230400] = QObject::tr("230400 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate460800] = QObject::tr("460800 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate500000] = QObject::tr("500000 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate576000] = QObject::tr("576000 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate921600] = QObject::tr("921600 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate1000000] = QObject::tr("1000000 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate1152000] = QObject::tr("1152000 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate1500000] = QObject::tr("1500000 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate2000000] = QObject::tr("2000000 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate2500000] = QObject::tr("2500000 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate3000000] = QObject::tr("3000000 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate3500000] = QObject::tr("3500000 baud");
-    this->m_baudRateMap[AbstractSerial::BaudRate4000000] = QObject::tr("4000000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate230400] = QString("230400 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate460800] = QString("460800 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate500000] = QString("500000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate576000] = QString("576000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate921600] = QString("921600 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate1000000] = QString("1000000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate1152000] = QString("1152000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate1500000] = QString("1500000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate2000000] = QString("2000000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate2500000] = QString("2500000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate3000000] = QString("3000000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate3500000] = QString("3500000 baud");
+    this->m_baudRateMap[AbstractSerial::BaudRate4000000] = QString("4000000 baud");
 
     //filling m_dataBitsMap
-    this->m_dataBitsMap[AbstractSerial::DataBitsUndefined] = QObject::tr("Undefined data bits");
-    this->m_dataBitsMap[AbstractSerial::DataBits5] = QObject::tr("5 bit");
-    this->m_dataBitsMap[AbstractSerial::DataBits6] = QObject::tr("6 bit");
-    this->m_dataBitsMap[AbstractSerial::DataBits7] = QObject::tr("7 bit");
-    this->m_dataBitsMap[AbstractSerial::DataBits8] = QObject::tr("8 bit");
+    this->m_dataBitsMap[AbstractSerial::DataBitsUndefined] = QString("Undefined data bits");
+    this->m_dataBitsMap[AbstractSerial::DataBits5] = QString("5 bit");
+    this->m_dataBitsMap[AbstractSerial::DataBits6] = QString("6 bit");
+    this->m_dataBitsMap[AbstractSerial::DataBits7] = QString("7 bit");
+    this->m_dataBitsMap[AbstractSerial::DataBits8] = QString("8 bit");
 
     //filling m_parityMap
-    this->m_parityMap[AbstractSerial::ParityUndefined] = QObject::tr("Undefined parity");
-    this->m_parityMap[AbstractSerial::ParityNone] = QObject::tr("None");
-    this->m_parityMap[AbstractSerial::ParityOdd] = QObject::tr("Odd");
-    this->m_parityMap[AbstractSerial::ParityEven] = QObject::tr("Even");
-    this->m_parityMap[AbstractSerial::ParityMark] = QObject::tr("Mark");
-    this->m_parityMap[AbstractSerial::ParitySpace] = QObject::tr("Space");
+    this->m_parityMap[AbstractSerial::ParityUndefined] = QString("Undefined parity");
+    this->m_parityMap[AbstractSerial::ParityNone] = QString("None");
+    this->m_parityMap[AbstractSerial::ParityOdd] = QString("Odd");
+    this->m_parityMap[AbstractSerial::ParityEven] = QString("Even");
+    this->m_parityMap[AbstractSerial::ParityMark] = QString("Mark");
+    this->m_parityMap[AbstractSerial::ParitySpace] = QString("Space");
 
     //filling m_stopBitsMap
-    this->m_stopBitsMap[AbstractSerial::StopBitsUndefined] = QObject::tr("Undefined stop bits");
-    this->m_stopBitsMap[AbstractSerial::StopBits1] = QObject::tr("1");
-    this->m_stopBitsMap[AbstractSerial::StopBits1_5] = QObject::tr("1.5");
-    this->m_stopBitsMap[AbstractSerial::StopBits2] = QObject::tr("2");
+    this->m_stopBitsMap[AbstractSerial::StopBitsUndefined] = QString("Undefined stop bits");
+    this->m_stopBitsMap[AbstractSerial::StopBits1] = QString("1");
+    this->m_stopBitsMap[AbstractSerial::StopBits1_5] = QString("1.5");
+    this->m_stopBitsMap[AbstractSerial::StopBits2] = QString("2");
 
     //filling m_flowMap
-    this->m_flowMap[AbstractSerial::FlowControlUndefined] = QObject::tr("Undefined flow");
-    this->m_flowMap[AbstractSerial::FlowControlOff] = QObject::tr("Disable");
-    this->m_flowMap[AbstractSerial::FlowControlHardware] = QObject::tr("Hardware");
-    this->m_flowMap[AbstractSerial::FlowControlXonXoff] = QObject::tr("Xon/Xoff");
+    this->m_flowMap[AbstractSerial::FlowControlUndefined] = QString("Undefined flow");
+    this->m_flowMap[AbstractSerial::FlowControlOff] = QString("Disable");
+    this->m_flowMap[AbstractSerial::FlowControlHardware] = QString("Hardware");
+    this->m_flowMap[AbstractSerial::FlowControlXonXoff] = QString("Xon/Xoff");
 }
 
 /*! Converted from status value to string
@@ -546,67 +546,67 @@ QString AbstractSerialPrivate::statusToString(AbstractSerial::Status val) const
     /* group of "SUCESS STATES" */
 
     //all
-    case AbstractSerial::ENone: return QObject::tr("No errors.");
-    case AbstractSerial::ENoneOpen: return QObject::tr("Opened::Device is successfully opened. OK!");
-    case AbstractSerial::ENoneClose: return QObject::tr("Closed::Device is successfully closed. OK!");
-    case AbstractSerial::ENoneSetBaudRate: return QObject::tr("Controls::Baud rate is successfully set. OK!");
-    case AbstractSerial::ENoneSetParity: return QObject::tr("Controls::Parity is successfully set. OK!");
-    case AbstractSerial::ENoneSetDataBits: return QObject::tr("Controls::Data bits is successfully set. OK!");
-    case AbstractSerial::ENoneSetStopBits: return QObject::tr("Controls::Stop bits is successfully set. OK!");
-    case AbstractSerial::ENoneSetFlow: return QObject::tr("Controls::Flow is successfully set. OK!");
-    case AbstractSerial::ENoneSetCharTimeout: return QObject::tr("Controls::Char timeout is successfully set. OK!");
-    case AbstractSerial::ENoneSetDtr: return QObject::tr("Controls::DTR is successfully changed. OK!");
-    case AbstractSerial::ENoneSetRts: return QObject::tr("Controls::RTS is successfully changed. OK!");
-    case AbstractSerial::ENoneLineStatus: return QObject::tr("Controls::Status lines successfully get. OK!");
-    case AbstractSerial::ENoneSendBreak: return QObject::tr("Controls::Send break successfully. OK!");
-    case AbstractSerial::ENoneSetBreak: return QObject::tr("Controls::Set break successfully. OK!");
-    case AbstractSerial::ENoneFlush: return QObject::tr("Controls::Flush successfully. OK!");
-    case AbstractSerial::ENoneReset: return QObject::tr("Controls::Reset successfully. OK!");
+    case AbstractSerial::ENone: return QString("No errors.");
+    case AbstractSerial::ENoneOpen: return QString("Opened::Device is successfully opened. OK!");
+    case AbstractSerial::ENoneClose: return QString("Closed::Device is successfully closed. OK!");
+    case AbstractSerial::ENoneSetBaudRate: return QString("Controls::Baud rate is successfully set. OK!");
+    case AbstractSerial::ENoneSetParity: return QString("Controls::Parity is successfully set. OK!");
+    case AbstractSerial::ENoneSetDataBits: return QString("Controls::Data bits is successfully set. OK!");
+    case AbstractSerial::ENoneSetStopBits: return QString("Controls::Stop bits is successfully set. OK!");
+    case AbstractSerial::ENoneSetFlow: return QString("Controls::Flow is successfully set. OK!");
+    case AbstractSerial::ENoneSetCharTimeout: return QString("Controls::Char timeout is successfully set. OK!");
+    case AbstractSerial::ENoneSetDtr: return QString("Controls::DTR is successfully changed. OK!");
+    case AbstractSerial::ENoneSetRts: return QString("Controls::RTS is successfully changed. OK!");
+    case AbstractSerial::ENoneLineStatus: return QString("Controls::Status lines successfully get. OK!");
+    case AbstractSerial::ENoneSendBreak: return QString("Controls::Send break successfully. OK!");
+    case AbstractSerial::ENoneSetBreak: return QString("Controls::Set break successfully. OK!");
+    case AbstractSerial::ENoneFlush: return QString("Controls::Flush successfully. OK!");
+    case AbstractSerial::ENoneReset: return QString("Controls::Reset successfully. OK!");
 
     /* Groups of "ERROR STATES" */
 
     //group of "OPEN"
-    case AbstractSerial::EOpen: return QObject::tr("Error opening. Error!");
-    case AbstractSerial::EDeviceIsNotOpen: return QObject::tr("Device is not open. Error!");
-    case AbstractSerial::EOpenModeUnsupported: return QObject::tr("Opened::Opened mode unsupported. Error!");
-    case AbstractSerial::EOpenModeUndefined: return QObject::tr("Opened::Opened mode undefined. Error!");
-    case AbstractSerial::EOpenInvalidFD: return QObject::tr("Opened::Invalid device descriptor. Error!");
-    case AbstractSerial::EOpenOldSettingsNotSaved: return QObject::tr("Opened::Fail saved old settings. Error!");
-    case AbstractSerial::EOpenGetCurrentSettings: return QObject::tr("Opened::Fail get current settings. Error!");
-    case AbstractSerial::EOpenSetDefaultSettings: return QObject::tr("Opened::Fail set default settings. Error!");
-    case AbstractSerial::EDeviceIsOpen: return QObject::tr("Device is already open. Error!");
+    case AbstractSerial::EOpen: return QString("Error opening. Error!");
+    case AbstractSerial::EDeviceIsNotOpen: return QString("Device is not open. Error!");
+    case AbstractSerial::EOpenModeUnsupported: return QString("Opened::Opened mode unsupported. Error!");
+    case AbstractSerial::EOpenModeUndefined: return QString("Opened::Opened mode undefined. Error!");
+    case AbstractSerial::EOpenInvalidFD: return QString("Opened::Invalid device descriptor. Error!");
+    case AbstractSerial::EOpenOldSettingsNotSaved: return QString("Opened::Fail saved old settings. Error!");
+    case AbstractSerial::EOpenGetCurrentSettings: return QString("Opened::Fail get current settings. Error!");
+    case AbstractSerial::EOpenSetDefaultSettings: return QString("Opened::Fail set default settings. Error!");
+    case AbstractSerial::EDeviceIsOpen: return QString("Device is already open. Error!");
 
     //group of "CLOSE"
-    case AbstractSerial::ECloseSetOldSettings: return QObject::tr("Closed::Fail set old settings. Error!");
-    case AbstractSerial::ECloseFD: return QObject::tr("Closed::Fail close device descriptor. Error!");
-    case AbstractSerial::EClose: return QObject::tr("Closed::Fail close device. Error!");
+    case AbstractSerial::ECloseSetOldSettings: return QString("Closed::Fail set old settings. Error!");
+    case AbstractSerial::ECloseFD: return QString("Closed::Fail close device descriptor. Error!");
+    case AbstractSerial::EClose: return QString("Closed::Fail close device. Error!");
 
     //group of "SETTINGS"
-    case AbstractSerial::ESetBaudRate: return QObject::tr("Parameters::Set baud rate fail. Error!");
-    case AbstractSerial::ESetDataBits: return QObject::tr("Parameters::Set data bits fail. Error!");
-    case AbstractSerial::ESetParity: return QObject::tr("Parameters::Set parity fail. Error!");
-    case AbstractSerial::ESetStopBits: return QObject::tr("Parameters::Set stop bits fail. Error!");
-    case AbstractSerial::ESetFlowControl: return QObject::tr("Parameters::Set flow control fail. Error!");
-    case AbstractSerial::ESetCharIntervalTimeout: return QObject::tr("Parameters::Set char interval timeout. Error!");
-    case AbstractSerial::ESetReadTotalTimeout: return QObject::tr("Parameters::Set total read interval timeout. Error!");
+    case AbstractSerial::ESetBaudRate: return QString("Parameters::Set baud rate fail. Error!");
+    case AbstractSerial::ESetDataBits: return QString("Parameters::Set data bits fail. Error!");
+    case AbstractSerial::ESetParity: return QString("Parameters::Set parity fail. Error!");
+    case AbstractSerial::ESetStopBits: return QString("Parameters::Set stop bits fail. Error!");
+    case AbstractSerial::ESetFlowControl: return QString("Parameters::Set flow control fail. Error!");
+    case AbstractSerial::ESetCharIntervalTimeout: return QString("Parameters::Set char interval timeout. Error!");
+    case AbstractSerial::ESetReadTotalTimeout: return QString("Parameters::Set total read interval timeout. Error!");
 
     //group of "CONTROL"
-    case AbstractSerial::EBytesAvailable: return QObject::tr("Controls::Get bytes available fail. Error!");
-    case AbstractSerial::ESetDtr: return QObject::tr("Controls::Set DTR fail. Error!");
-    case AbstractSerial::ESetRts: return QObject::tr("Controls::Set RTS fail. Error!");
-    case AbstractSerial::ELineStatus: return QObject::tr("Controls::Get lines status fail. Error!");
-    case AbstractSerial::EWaitReadyReadIO: return QObject::tr("Controls::Wait for ready read from device - i/o problem. Error!");
-    case AbstractSerial::EWaitReadyReadTimeout: return QObject::tr("Controls::Wait for ready read timeout. Error!");
-    case AbstractSerial::EWaitReadyWriteIO: return QObject::tr("Controls::Wait for bytes writtten to device - i/o problem. Error!");
-    case AbstractSerial::EWaitReadyWriteTimeout: return QObject::tr("Controls::Wait for bytes writtten timeout. Error!");
-    case AbstractSerial::EReadDataIO: return QObject::tr("Controls::Read data from device - i/o problem. Error!");
-    case AbstractSerial::EWriteDataIO: return QObject::tr("Controls::Write data to device - i/o problem. Error!");
-    case AbstractSerial::EFlush: return QObject::tr("Controls::Flush fail. Error!");
-    case AbstractSerial::ESendBreak: return QObject::tr("Controls::Send break fail. Error!");
-    case AbstractSerial::ESetBreak: return QObject::tr("Controls::Set break fail. Error!");
-    case AbstractSerial::EReset: return QObject::tr("Controls::Reset fail. Error!");
+    case AbstractSerial::EBytesAvailable: return QString("Controls::Get bytes available fail. Error!");
+    case AbstractSerial::ESetDtr: return QString("Controls::Set DTR fail. Error!");
+    case AbstractSerial::ESetRts: return QString("Controls::Set RTS fail. Error!");
+    case AbstractSerial::ELineStatus: return QString("Controls::Get lines status fail. Error!");
+    case AbstractSerial::EWaitReadyReadIO: return QString("Controls::Wait for ready read from device - i/o problem. Error!");
+    case AbstractSerial::EWaitReadyReadTimeout: return QString("Controls::Wait for ready read timeout. Error!");
+    case AbstractSerial::EWaitReadyWriteIO: return QString("Controls::Wait for bytes writtten to device - i/o problem. Error!");
+    case AbstractSerial::EWaitReadyWriteTimeout: return QString("Controls::Wait for bytes writtten timeout. Error!");
+    case AbstractSerial::EReadDataIO: return QString("Controls::Read data from device - i/o problem. Error!");
+    case AbstractSerial::EWriteDataIO: return QString("Controls::Write data to device - i/o problem. Error!");
+    case AbstractSerial::EFlush: return QString("Controls::Flush fail. Error!");
+    case AbstractSerial::ESendBreak: return QString("Controls::Send break fail. Error!");
+    case AbstractSerial::ESetBreak: return QString("Controls::Set break fail. Error!");
+    case AbstractSerial::EReset: return QString("Controls::Reset fail. Error!");
 
-    default: return QObject::tr("AbstractSerial::statusToString(Status val) -> Status mode: %1 undefined. Error!").arg(val);
+    default: return QString("AbstractSerial::statusToString(Status val) -> Status mode: %1 undefined. Error!").arg(val);
     }
 }
 
@@ -940,7 +940,7 @@ QString AbstractSerial::baudRate(BaudRateDirection baudDir) const
     if (d->serialEngine) {
         qint32 value = d->serialEngine->baudRate(baudDir);
         if (value > 0)
-            result = QString(tr("%1 baud")).arg(value);
+            result = QString("%1 baud").arg(value);
     }
     return result;
 }

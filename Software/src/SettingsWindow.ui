@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>407</width>
-    <height>658</height>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,7 +38,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -706,7 +706,7 @@
         <item>
          <widget class="QGroupBox" name="groupBox_DeviceColorDepth">
           <property name="toolTip">
-           <string>Only for hardware 4.x and 5.x revisions.</string>
+           <string>Only for hardware 4.x and 5.x revisions</string>
           </property>
           <property name="title">
            <string>Color depth</string>
@@ -855,13 +855,13 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>Example for Windows: COM1, COM2 .. COMn, for Linux: /dev/ttyS0, /dev/ttyS1, /dev/ttyUSB0 etc.</string>
+             <string>Example for Windows: COM1, COM2 .. COMn, for Linux: /dev/ttyS0, /dev/ttyS1, /dev/ttyUSB0</string>
             </property>
             <property name="text">
              <string notr="true"/>
             </property>
             <property name="placeholderText">
-             <string>/dev/null</string>
+             <string notr="true">/dev/null</string>
             </property>
            </widget>
           </item>
@@ -1275,7 +1275,7 @@
               </sizepolicy>
              </property>
              <property name="inputMask">
-              <string>D999; </string>
+              <string notr="true">D999; </string>
              </property>
             </widget>
            </item>
@@ -1335,7 +1335,7 @@
         <item>
          <widget class="QGroupBox" name="groupBox">
           <property name="title">
-           <string>Capture source:</string>
+           <string>Capture source</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
@@ -1370,14 +1370,14 @@
              <item>
               <widget class="QRadioButton" name="radioButton_GrabX11">
                <property name="text">
-                <string>X11 (Full screen)</string>
+                <string notr="true">X11 (Full screen)</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_GrabMacCoreGraphics">
                <property name="text">
-                <string>Mac CG (Full screen)</string>
+                <string notr="true">Mac CG (Full screen)</string>
                </property>
               </widget>
              </item>

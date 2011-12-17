@@ -79,10 +79,10 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     profilesLoadAll();
 
     initGrabbersRadioButtonsVisibility();
-
     initLanguages();
-
     initVirtualLeds();
+    initConnectedDeviceComboBox();
+    initSerialPortBaudRateComboBox();
 
     connectSignalsSlots();
 
@@ -952,6 +952,14 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
+    int currentIndex = ui->comboBox_ConnectedDevice->currentIndex();
+    int virtualDeviceIndex = ui->comboBox_ConnectedDevice->count() - 1;
+
+    if (currentIndex == virtualDeviceIndex)
+    {
+        value = "Virtual";
+    }
+
     Settings::setConnectedDeviceName(value);
 
     // Sync connected device and widgets visibility on device tab
@@ -1468,9 +1476,6 @@ void SettingsWindow::updateUiFromSettings()
     ui->doubleSpinBox_DeviceGamma->setValue             (Settings::getDeviceGamma());
     ui->lineEdit_SerialPort->setText                    (Settings::getSerialPortName());
 
-    initConnectedDeviceComboBox();
-    initSerialPortBaudRateComboBox();
-
     ui->groupBox_Api->setChecked                        (Settings::isApiEnabled());
     ui->lineEdit_ApiPort->setText                       (QString::number(Settings::getApiPort()));
     ui->checkBox_IsApiAuthEnabled->setChecked           (Settings::isApiAuthEnabled());
@@ -1654,21 +1659,32 @@ void SettingsWindow::initConnectedDeviceComboBox()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     QString deviceName = Settings::getConnectedDeviceName();
+    QStringList devices = Settings::getSupportedDevices();
 
-    ui->comboBox_ConnectedDevice->clear();
+    // Remove virtual device because it already in combobox
+    devices.removeOne("Virtual");
+    devices.append("Virtual (debug)");
 
     // NOTE: This line emit's signal currentIndex_Changed()
-    ui->comboBox_ConnectedDevice->addItems(Settings::getSupportedDevices());
+    ui->comboBox_ConnectedDevice->insertItems(0, devices);
 
-    int index = ui->comboBox_ConnectedDevice->findText(deviceName);
+    int currentIndex = 0;
 
-    if (index < 0)
+    if (deviceName == "Virtual")
+    {
+        // Virtual device is last in combobox
+        currentIndex = ui->comboBox_ConnectedDevice->count() - 1;
+    } else {
+        currentIndex = ui->comboBox_ConnectedDevice->findText(deviceName);
+    }
+
+    if (currentIndex < 0)
     {
         qCritical() << Q_FUNC_INFO << "Just fail. Supported devices"
                     << Settings::getSupportedDevices() << "doesn't contains connected device:" << deviceName;
-        index = 0;
+        currentIndex = 0;
     }
-    ui->comboBox_ConnectedDevice->setCurrentIndex(index);
+    ui->comboBox_ConnectedDevice->setCurrentIndex(currentIndex);
 }
 
 void SettingsWindow::initSerialPortBaudRateComboBox()
