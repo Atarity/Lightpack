@@ -48,7 +48,9 @@ LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
     memset(m_writeBuffer, 0, sizeof(m_writeBuffer));
     memset(m_readBuffer, 0, sizeof(m_readBuffer));
 
-    connect(&m_timerPingDevice, SIGNAL(timeout()), this, SLOT(timerPingDeviceTimeout()));
+    m_timerPingDevice = new QTimer(this);
+
+    connect(m_timerPingDevice, SIGNAL(timeout()), this, SLOT(timerPingDeviceTimeout()));
     connect(this, SIGNAL(ioDeviceSuccess(bool)), this, SLOT(restartPingDevice(bool)));
     connect(this, SIGNAL(openDeviceSuccess(bool)), this, SLOT(restartPingDevice(bool)));
 
@@ -110,7 +112,7 @@ void LedDeviceLightpack::offLeds()
     emit commandCompleted(ok);
 
     // Stop ping device if offLeds() signal comes
-    m_timerPingDevice.stop();
+    m_timerPingDevice->stop();
 }
 
 void LedDeviceLightpack::setRefreshDelay(int value)
@@ -369,9 +371,9 @@ void LedDeviceLightpack::restartPingDevice(bool isSuccess)
     if (Settings::isBacklightEnabled() && Settings::isPingDeviceEverySecond())
     {
         // Start ping device with PingDeviceInterval ms after last data transfer complete
-        m_timerPingDevice.start(PingDeviceInterval);
+        m_timerPingDevice->start(PingDeviceInterval);
     } else {
-        m_timerPingDevice.stop();
+        m_timerPingDevice->stop();
     }
 }
 

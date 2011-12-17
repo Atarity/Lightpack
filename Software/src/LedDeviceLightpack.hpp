@@ -87,7 +87,7 @@ private:
     QList<QRgb> m_colorsSaved;
     QList<StructRgb> m_colorsBuffer;
 
-    QTimer m_timerPingDevice;
+    QTimer *m_timerPingDevice;
 
     static const int PingDeviceInterval;
     static const int MaximumLedsCount;
