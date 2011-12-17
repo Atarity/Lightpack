@@ -366,7 +366,7 @@ void LedDeviceLightpack::restartPingDevice(bool isSuccess)
 {
     Q_UNUSED(isSuccess);
 
-    if (Settings::isPingDeviceEverySecond())
+    if (Settings::isBacklightEnabled() && Settings::isPingDeviceEverySecond())
     {
         // Start ping device with PingDeviceInterval ms after last data transfer complete
         m_timerPingDevice.start(PingDeviceInterval);
@@ -377,25 +377,26 @@ void LedDeviceLightpack::restartPingDevice(bool isSuccess)
 
 void LedDeviceLightpack::timerPingDeviceTimeout()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     if (m_hidDevice == NULL)
     {
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "open";
+        DEBUG_MID_LEVEL << Q_FUNC_INFO << "hid_open";
         m_hidDevice = hid_open(USB_VENDOR_ID, USB_PRODUCT_ID, NULL);
 
         if (m_hidDevice == NULL)
         {
-            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "open false";
+            DEBUG_MID_LEVEL << Q_FUNC_INFO << "hid_open fail";
             emit openDeviceSuccess(false);
             return;
         }
+        DEBUG_MID_LEVEL << Q_FUNC_INFO << "hid_open ok";
 
         emit openDeviceSuccess(true);
         return;
     }
 
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "write";
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << "hid_write";
 
     m_writeBuffer[WRITE_BUFFER_INDEX_REPORT_ID] = 0x00;
     m_writeBuffer[WRITE_BUFFER_INDEX_COMMAND] = CMD_NOP;
@@ -403,10 +404,13 @@ void LedDeviceLightpack::timerPingDeviceTimeout()
 
     if (bytes < 0)
     {
+        DEBUG_MID_LEVEL << Q_FUNC_INFO << "hid_write fail";
         closeDevice();
         emit ioDeviceSuccess(false);
         return;
     }
+
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << "hid_write ok";
 
     emit ioDeviceSuccess(true);
 }

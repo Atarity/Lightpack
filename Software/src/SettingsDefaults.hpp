@@ -69,7 +69,7 @@ static const QString LanguageDefault = "<System>";
 static const Debug::DebugLevels DebugLevelDefault = Debug::LowLevel;
 static const bool IsExpertModeEnabledDefault = false;
 static const bool IsSwitchOffAtClosingDefault = true;
-static const bool IsPingDeviceEverySecond = false;
+static const bool IsPingDeviceEverySecond = true;
 static const QString ConnectedDeviceDefault = "Lightpack";
 static const QString SupportedDevices = SUPPORTED_DEVICES; /* comma separated values! */
 // [API]
