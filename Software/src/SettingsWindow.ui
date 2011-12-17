@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>351</width>
-    <height>700</height>
+    <width>407</width>
+    <height>658</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -347,12 +347,9 @@
              </widget>
             </item>
             <item>
-             <spacer name="verticalSpacer_6">
+             <spacer name="verticalSpacer_5">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Expanding</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -460,7 +457,7 @@
              </layout>
             </item>
             <item>
-             <spacer name="verticalSpacer_5">
+             <spacer name="verticalSpacer_7">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -973,6 +970,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QCheckBox" name="checkBox_SwitchOffAtClosing">
+          <property name="text">
+           <string>Switch off light at closing</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="verticalSpacer_2">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -1238,13 +1242,6 @@
          </widget>
         </item>
         <item>
-         <widget class="Line" name="line">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QGroupBox" name="groupBox_Api">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1340,61 +1337,95 @@
           <property name="title">
            <string>Capture source:</string>
           </property>
-          <layout class="QVBoxLayout" name="_2">
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
-            <widget class="QRadioButton" name="radioButton_GrabQt">
-             <property name="text">
-              <string notr="true">Qt (Full screen)</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
+            <layout class="QVBoxLayout" name="verticalLayout_9">
+             <item>
+              <widget class="QRadioButton" name="radioButton_GrabQt">
+               <property name="text">
+                <string notr="true">Qt (Full screen)</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_GrabQt_EachWidget">
+               <property name="text">
+                <string notr="true">Qt (Each widget)</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_GrabD3D9">
+               <property name="text">
+                <string notr="true">D3D9 (Full screen)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_GrabX11">
+               <property name="text">
+                <string>X11 (Full screen)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_GrabMacCoreGraphics">
+               <property name="text">
+                <string>Mac CG (Full screen)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_6">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>1</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButton_GrabQt_EachWidget">
-             <property name="text">
-              <string notr="true">Qt (Each widget)</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_GrabWinAPI">
-             <property name="text">
-              <string notr="true">WinAPI (Full screen)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_GrabWinAPI_EachWidget">
-             <property name="text">
-              <string notr="true">WinAPI (Each widget)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_GrabD3D9">
-             <property name="text">
-              <string notr="true">D3D9 (Full screen)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_GrabX11">
-             <property name="text">
-              <string>X11 (Full screen)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_GrabMacCoreGraphics">
-             <property name="text">
-              <string>Mac Core Graphics (Full screen)</string>
-             </property>
-            </widget>
+            <layout class="QVBoxLayout" name="verticalLayout_10">
+             <item>
+              <widget class="QRadioButton" name="radioButton_GrabWinAPI">
+               <property name="text">
+                <string notr="true">WinAPI (Full screen)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_GrabWinAPI_EachWidget">
+               <property name="text">
+                <string notr="true">WinAPI (Each widget)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>1</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
@@ -1428,26 +1459,19 @@
          </layout>
         </item>
         <item>
+         <widget class="QCheckBox" name="checkBox_PingDeviceEverySecond">
+          <property name="text">
+           <string>Ping lightpack device every second</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QCheckBox" name="checkBox_SendDataOnlyIfColorsChanges">
           <property name="text">
            <string>Send data only if colors changes</string>
           </property>
           <property name="checked">
            <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBox_SwitchOffAtClosing">
-          <property name="text">
-           <string>Switch off light at closing</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBox_PingDeviceEverySecond">
-          <property name="text">
-           <string>Ping lightpack device every second</string>
           </property>
          </widget>
         </item>
@@ -1520,12 +1544,57 @@
  </customwidgets>
  <tabstops>
   <tabstop>tabWidget</tabstop>
-  <tabstop>pushButton_Close</tabstop>
+  <tabstop>pushButton_EnableDisableDevice</tabstop>
+  <tabstop>comboBox_LightpackModes</tabstop>
+  <tabstop>spinBox_GrabSlowdown</tabstop>
+  <tabstop>spinBox_GrabMinLevelOfSensitivity</tabstop>
+  <tabstop>groupBox_GrabShowGrabWidgets</tabstop>
+  <tabstop>radioButton_Colored</tabstop>
+  <tabstop>radioButton_White</tabstop>
+  <tabstop>checkBox_GrabIsAvgColors</tabstop>
+  <tabstop>radioButton_ConstantColorMoodLampMode</tabstop>
+  <tabstop>pushButton_SelectColor</tabstop>
+  <tabstop>radioButton_LiquidColorMoodLampMode</tabstop>
+  <tabstop>horizontalSlider_MoodLampSpeed</tabstop>
+  <tabstop>comboBox_ConnectedDevice</tabstop>
+  <tabstop>horizontalSlider_DeviceBrightness</tabstop>
+  <tabstop>spinBox_DeviceBrightness</tabstop>
+  <tabstop>horizontalSlider_DeviceSmooth</tabstop>
+  <tabstop>spinBox_DeviceSmooth</tabstop>
+  <tabstop>horizontalSlider_DeviceRefreshDelay</tabstop>
+  <tabstop>spinBox_DeviceRefreshDelay</tabstop>
+  <tabstop>horizontalSlider_DeviceColorDepth</tabstop>
+  <tabstop>spinBox_DeviceColorDepth</tabstop>
+  <tabstop>spinBox_NumberOfLeds</tabstop>
+  <tabstop>lineEdit_SerialPort</tabstop>
+  <tabstop>comboBox_SerialPortBaudRate</tabstop>
+  <tabstop>doubleSpinBox_DeviceGamma</tabstop>
+  <tabstop>checkBox_SwitchOffAtClosing</tabstop>
   <tabstop>comboBox_Profiles</tabstop>
   <tabstop>pushButton_ProfileNew</tabstop>
   <tabstop>pushButton_ProfileResetToDefault</tabstop>
   <tabstop>pushButton_DeleteProfile</tabstop>
   <tabstop>commandLinkButton_OpenSettings</tabstop>
+  <tabstop>comboBox_Language</tabstop>
+  <tabstop>checkBox_ExpertModeEnabled</tabstop>
+  <tabstop>groupBox_Api</tabstop>
+  <tabstop>lineEdit_ApiPort</tabstop>
+  <tabstop>pushButton_SetApiPort</tabstop>
+  <tabstop>checkBox_IsApiAuthEnabled</tabstop>
+  <tabstop>lineEdit_ApiKey</tabstop>
+  <tabstop>pushButton_GenerateNewApiKey</tabstop>
+  <tabstop>radioButton_GrabQt</tabstop>
+  <tabstop>radioButton_GrabQt_EachWidget</tabstop>
+  <tabstop>radioButton_GrabD3D9</tabstop>
+  <tabstop>radioButton_GrabX11</tabstop>
+  <tabstop>radioButton_GrabMacCoreGraphics</tabstop>
+  <tabstop>radioButton_GrabWinAPI</tabstop>
+  <tabstop>radioButton_GrabWinAPI_EachWidget</tabstop>
+  <tabstop>pushButton_StartTests</tabstop>
+  <tabstop>spinBox_LoggingLevel</tabstop>
+  <tabstop>checkBox_PingDeviceEverySecond</tabstop>
+  <tabstop>checkBox_SendDataOnlyIfColorsChanges</tabstop>
+  <tabstop>pushButton_Close</tabstop>
  </tabstops>
  <resources>
   <include location="../res/LightpackResources.qrc"/>
