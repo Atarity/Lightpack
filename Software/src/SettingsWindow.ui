@@ -50,6 +50,12 @@
        <layout class="QGridLayout" name="gridLayout_5">
         <item row="0" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <property name="topMargin">
+           <number>5</number>
+          </property>
+          <property name="bottomMargin">
+           <number>10</number>
+          </property>
           <item>
            <spacer name="horizontalSpacer_7">
             <property name="orientation">

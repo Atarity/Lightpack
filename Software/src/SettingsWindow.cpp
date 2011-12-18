@@ -637,7 +637,7 @@ void SettingsWindow::updateTrayAndActionStates()
     {
     case Backlight::StatusOn:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
-        ui->pushButton_EnableDisableDevice->setText(tr("Turn lights OFF"));
+        ui->pushButton_EnableDisableDevice->setText("  " + tr("Turn lights OFF"));
         m_switchOnBacklightAction->setEnabled(false);
         m_switchOffBacklightAction->setEnabled(true);
 
@@ -653,7 +653,7 @@ void SettingsWindow::updateTrayAndActionStates()
 
     case Backlight::StatusOff:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/on.png"));
-        ui->pushButton_EnableDisableDevice->setText(tr("Turn lights ON"));
+        ui->pushButton_EnableDisableDevice->setText("  " + tr("Turn lights ON"));
         m_switchOnBacklightAction->setEnabled(true);
         m_switchOffBacklightAction->setEnabled(false);
         m_trayIcon->setIcon(QIcon(":/icons/off.png"));
@@ -662,7 +662,7 @@ void SettingsWindow::updateTrayAndActionStates()
 
     case Backlight::StatusDeviceError:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
-        ui->pushButton_EnableDisableDevice->setText(tr("Turn lights OFF"));
+        ui->pushButton_EnableDisableDevice->setText("  " + tr("Turn lights OFF"));
         m_switchOnBacklightAction->setEnabled(false);
         m_switchOffBacklightAction->setEnabled(true);
         m_trayIcon->setIcon(QIcon(":/icons/error.png"));
