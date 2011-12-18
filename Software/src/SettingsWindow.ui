@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>407</width>
-    <height>650</height>
+    <height>654</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -967,11 +967,24 @@
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_SwitchOffAtClosing">
-          <property name="text">
-           <string>Switch off light at closing</string>
+         <layout class="QHBoxLayout" name="horizontalLayout_DeviceGamma_2">
+          <property name="leftMargin">
+           <number>9</number>
           </property>
-         </widget>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>9</number>
+          </property>
+          <item>
+           <widget class="QCheckBox" name="checkBox_SwitchOffAtClosing">
+            <property name="text">
+             <string>Switch off light at closing</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <spacer name="verticalSpacer_2">
@@ -1566,7 +1579,6 @@
   <tabstop>lineEdit_SerialPort</tabstop>
   <tabstop>comboBox_SerialPortBaudRate</tabstop>
   <tabstop>doubleSpinBox_DeviceGamma</tabstop>
-  <tabstop>checkBox_SwitchOffAtClosing</tabstop>
   <tabstop>comboBox_Profiles</tabstop>
   <tabstop>pushButton_ProfileNew</tabstop>
   <tabstop>pushButton_ProfileResetToDefault</tabstop>
