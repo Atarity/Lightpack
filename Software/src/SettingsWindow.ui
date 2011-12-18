@@ -59,7 +59,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Switch off Lightpack</string>
+             <string notr="true">Switch off lights</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

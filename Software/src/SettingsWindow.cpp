@@ -263,6 +263,8 @@ void SettingsWindow::changeEvent(QEvent *e)
 
         ui->comboBox_Language->setItemText(0, tr("System default"));
 
+        updateTrayAndActionStates();
+
         break;
     default:
         break;
@@ -635,7 +637,7 @@ void SettingsWindow::updateTrayAndActionStates()
     {
     case Backlight::StatusOn:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
-        ui->label_EnableDisableDevice->setText(tr("Switch off Lightpack"));
+        ui->label_EnableDisableDevice->setText(tr("Switch off lights"));
         m_switchOnBacklightAction->setEnabled(false);
         m_switchOffBacklightAction->setEnabled(true);
 
@@ -651,7 +653,7 @@ void SettingsWindow::updateTrayAndActionStates()
 
     case Backlight::StatusOff:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/on.png"));
-        ui->label_EnableDisableDevice->setText(tr("Switch on Lightpack"));
+        ui->label_EnableDisableDevice->setText(tr("Switch on lights"));
         m_switchOnBacklightAction->setEnabled(true);
         m_switchOffBacklightAction->setEnabled(false);
         m_trayIcon->setIcon(QIcon(":/icons/off.png"));
@@ -660,7 +662,7 @@ void SettingsWindow::updateTrayAndActionStates()
 
     case Backlight::StatusDeviceError:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
-        ui->label_EnableDisableDevice->setText(tr("Switch off Lightpack"));
+        ui->label_EnableDisableDevice->setText(tr("Switch off lights"));
         m_switchOnBacklightAction->setEnabled(false);
         m_switchOffBacklightAction->setEnabled(true);
         m_trayIcon->setIcon(QIcon(":/icons/error.png"));
