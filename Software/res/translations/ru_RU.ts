@@ -76,263 +76,263 @@ p, li { white-space: pre-wrap; }
         <translation>Режимы</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="244"/>
+        <location filename="../../src/SettingsWindow.ui" line="253"/>
         <source>Grab frequency:</source>
         <translation>Частота захвата:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="136"/>
+        <location filename="../../src/SettingsWindow.ui" line="145"/>
         <source>fps</source>
         <translation>к/с</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="161"/>
+        <location filename="../../src/SettingsWindow.ui" line="170"/>
         <source>Slowdown grab:</source>
         <translation>Задержка захвата:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="187"/>
+        <location filename="../../src/SettingsWindow.ui" line="196"/>
         <source>ms</source>
         <translation>мс</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="209"/>
+        <location filename="../../src/SettingsWindow.ui" line="218"/>
         <source>Minimum level of sensitivity:</source>
         <translation>Порог чувствительности:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="281"/>
+        <location filename="../../src/SettingsWindow.ui" line="290"/>
         <source>Show grab widgets</source>
         <translation>Показать области захвата</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="290"/>
+        <location filename="../../src/SettingsWindow.ui" line="299"/>
         <source>Colored</source>
         <translation>Разноцветные</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="313"/>
+        <location filename="../../src/SettingsWindow.ui" line="322"/>
         <source>White</source>
         <translation>Белые</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="342"/>
+        <location filename="../../src/SettingsWindow.ui" line="351"/>
         <source>AVG color on all LEDs</source>
         <translation>Средний цвет на все светодиоды</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="371"/>
+        <location filename="../../src/SettingsWindow.ui" line="380"/>
         <source>Constant color</source>
         <translation>Однотонная</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="409"/>
+        <location filename="../../src/SettingsWindow.ui" line="418"/>
         <source>Liquid color</source>
         <translation>Переливающаяся</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="522"/>
+        <location filename="../../src/SettingsWindow.ui" line="531"/>
         <source>Brightness</source>
         <translation>Яркость</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="421"/>
+        <location filename="../../src/SettingsWindow.ui" line="430"/>
         <source>Speed</source>
         <translation>Скорость</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="114"/>
+        <location filename="../../src/SettingsWindow.ui" line="123"/>
         <source>Ambilight</source>
         <translation>Захват картинки</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="119"/>
+        <location filename="../../src/SettingsWindow.ui" line="128"/>
         <source>Backlight (MoodLamp)</source>
         <translation>Фоновая подсветка</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="480"/>
+        <location filename="../../src/SettingsWindow.ui" line="489"/>
         <source>Device</source>
         <translation>Устройство</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="656"/>
+        <location filename="../../src/SettingsWindow.ui" line="665"/>
         <source>Refresh delay</source>
         <translation>Задержка обновления</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="712"/>
+        <location filename="../../src/SettingsWindow.ui" line="721"/>
         <source>Color depth</source>
         <translation>Глубина цвета</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="584"/>
+        <location filename="../../src/SettingsWindow.ui" line="593"/>
         <source>Smooth slowdown</source>
         <translation>Плавная смена цвета</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="497"/>
+        <location filename="../../src/SettingsWindow.ui" line="506"/>
         <source>Connected device:</source>
         <translation>Устройство:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="646"/>
+        <location filename="../../src/SettingsWindow.ui" line="655"/>
         <source>off</source>
         <translation>выкл.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="709"/>
+        <location filename="../../src/SettingsWindow.ui" line="718"/>
         <source>Only for hardware 4.x and 5.x revisions</source>
         <translation>Только для устройств 4.х и 5.х ревизий</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="785"/>
+        <location filename="../../src/SettingsWindow.ui" line="794"/>
         <source>Number of LEDs:</source>
         <translation>Количество зон:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="833"/>
+        <location filename="../../src/SettingsWindow.ui" line="842"/>
         <source>Serial port:</source>
         <translation type="unfinished">COM порт:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="858"/>
+        <location filename="../../src/SettingsWindow.ui" line="867"/>
         <source>Example for Windows: COM1, COM2 .. COMn, for Linux: /dev/ttyS0, /dev/ttyS1, /dev/ttyUSB0</source>
         <translation>Например для Windows: COM1,COM2 .. COMn, для Linux: /dev/ttyS0, /dev/ttyS1, /dev/ttyUSB0</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="881"/>
+        <location filename="../../src/SettingsWindow.ui" line="890"/>
         <source>Baud rate:</source>
         <translation>Скорость:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="920"/>
+        <location filename="../../src/SettingsWindow.ui" line="929"/>
         <source>Gamma correction:</source>
         <translation>Гамма-коррекция:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="983"/>
+        <location filename="../../src/SettingsWindow.ui" line="992"/>
         <source>Switch off light at closing</source>
         <translation type="unfinished">Выключить подсветку при закрытии</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1009"/>
+        <location filename="../../src/SettingsWindow.ui" line="1018"/>
         <source>Profiles</source>
         <translation>Профили</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1015"/>
+        <location filename="../../src/SettingsWindow.ui" line="1024"/>
         <source>Profile</source>
         <translation>Профиль</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1042"/>
+        <location filename="../../src/SettingsWindow.ui" line="1051"/>
         <source>Add new profile</source>
         <translation>Добавить новый профиль</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1068"/>
+        <location filename="../../src/SettingsWindow.ui" line="1077"/>
         <source>Reset current profile to defaults</source>
         <translation>Сбросить настройки текущего профиля</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1094"/>
+        <location filename="../../src/SettingsWindow.ui" line="1103"/>
         <source>Delete profile</source>
         <translation>Удалить профиль</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1113"/>
+        <location filename="../../src/SettingsWindow.ui" line="1122"/>
         <source>Open in text editor</source>
         <translation>Открыть в текстовом редакторе</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1138"/>
+        <location filename="../../src/SettingsWindow.ui" line="1147"/>
         <source>User interface</source>
         <translation>Интерфейс пользователя</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1155"/>
+        <location filename="../../src/SettingsWindow.ui" line="1164"/>
         <source>Language:</source>
         <translation>Язык:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1211"/>
+        <location filename="../../src/SettingsWindow.ui" line="1220"/>
         <source>Expert mode</source>
         <translation>Показывать дополнительные настройки</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1235"/>
+        <location filename="../../src/SettingsWindow.ui" line="1244"/>
         <location filename="../../src/SettingsWindow.cpp" line="300"/>
         <source>Dev tab</source>
         <translation type="unfinished">Отладка</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1241"/>
+        <location filename="../../src/SettingsWindow.ui" line="1250"/>
         <source>This tab is used only by project developers. Any tuning with all these controls provide inevetible plane crash, miscarrige or nuclear disaster. Use it on your own risk.</source>
         <translation>Эта вкладка используется разработчиками. Все настройки на ней профилируются и вы меняете их на свой страх и риск.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1263"/>
+        <location filename="../../src/SettingsWindow.ui" line="1272"/>
         <source>Enable API</source>
         <translation>Включить API</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1275"/>
+        <location filename="../../src/SettingsWindow.ui" line="1284"/>
         <source>Port</source>
         <translation>Порт</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1301"/>
+        <location filename="../../src/SettingsWindow.ui" line="1310"/>
         <source>Set</source>
         <translation type="unfinished">Установить</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1308"/>
+        <location filename="../../src/SettingsWindow.ui" line="1317"/>
         <source>Enable authorization</source>
         <translation>Включить авторизацию</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1321"/>
+        <location filename="../../src/SettingsWindow.ui" line="1330"/>
         <source>Key</source>
         <translation>Ключ</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1328"/>
+        <location filename="../../src/SettingsWindow.ui" line="1337"/>
         <source>Copy and paste this key into the application using the API, for authorization on the server</source>
         <translation type="unfinished">Скопируйте и вставьте этот ключ в приложение использующее API, дла авторизации на сервере</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1338"/>
+        <location filename="../../src/SettingsWindow.ui" line="1347"/>
         <source>Generate</source>
         <translation type="unfinished">Сгенерировать</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1348"/>
+        <location filename="../../src/SettingsWindow.ui" line="1357"/>
         <source>Capture source</source>
         <translation>Источник захвата</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1458"/>
+        <location filename="../../src/SettingsWindow.ui" line="1467"/>
         <source>Logging level</source>
         <translation type="unfinished">Детализация лога</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1481"/>
+        <location filename="../../src/SettingsWindow.ui" line="1490"/>
         <source>Send data only if colors changes</source>
         <translation type="unfinished">Посылать данные только при изменении</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1449"/>
+        <location filename="../../src/SettingsWindow.ui" line="1458"/>
         <source>Start tests</source>
         <translation type="unfinished">Запустить тесты</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1474"/>
+        <location filename="../../src/SettingsWindow.ui" line="1483"/>
         <source>Ping lightpack device every second</source>
         <translation type="unfinished">Проверять каждую секунду состояние устройства</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1523"/>
+        <location filename="../../src/SettingsWindow.ui" line="1532"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
@@ -404,20 +404,20 @@ p, li { white-space: pre-wrap; }
         <translation>По умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="647"/>
-        <source>Device locked via API</source>
-        <translation>Устройство заблокировано через API</translation>
+        <location filename="../../src/SettingsWindow.cpp" line="640"/>
+        <location filename="../../src/SettingsWindow.cpp" line="665"/>
+        <source>Turn lights OFF</source>
+        <translation>Выключить подсветку</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="656"/>
-        <source>Switch on lights</source>
+        <source>Turn lights ON</source>
         <translation>Включить подсветку</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="640"/>
-        <location filename="../../src/SettingsWindow.cpp" line="665"/>
-        <source>Switch off lights</source>
-        <translation>Выключить подсветку</translation>
+        <location filename="../../src/SettingsWindow.cpp" line="647"/>
+        <source>Device locked via API</source>
+        <translation>Устройство заблокировано через API</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="878"/>
