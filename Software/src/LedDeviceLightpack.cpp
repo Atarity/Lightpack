@@ -196,6 +196,8 @@ void LedDeviceLightpack::requestFirmwareVersion()
 
 void LedDeviceLightpack::open()
 {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
     if (m_hidDevice != NULL)
     {
         closeDevice();
@@ -395,6 +397,7 @@ void LedDeviceLightpack::timerPingDeviceTimeout()
         DEBUG_MID_LEVEL << Q_FUNC_INFO << "hid_open ok";
 
         emit openDeviceSuccess(true);
+        closeDevice(); // device should be opened by open() function
         return;
     }
 
