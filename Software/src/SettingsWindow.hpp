@@ -73,7 +73,7 @@ signals:
 public slots:
     void ledDeviceOpenSuccess(bool isSuccess);
     void ledDeviceCallSuccess(bool isSuccess);
-    void ledDeviceGetFirmwareVersion(const QString & fwVersion);
+    void ledDeviceFirmwareVersionResult(const QString & fwVersion);
     void refreshAmbilightEvaluated(double updateResultMs);
 
     void setDeviceLockViaAPI(Api::DeviceLockStatus status);
@@ -97,7 +97,8 @@ private slots:
     void onMoodLampColor_changed(QColor color);
     void onMoodLampSpeed_valueChanged(int value);
     void onMoodLampLiquidMode_Toggled(bool isConstantColor);
-    void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    void onTrayIcon_Activated(QSystemTrayIcon::ActivationReason reason);
+    void onTrayIcon_MessageClicked();
     void showAbout(); /* using in actions */
     void showSettings(); /* using in actions */
     void hideSettings(); /* using in iconActivated(..) */
@@ -204,7 +205,7 @@ private:
 
     QString m_deviceFirmwareVersion;
     static const QString DeviceFirmvareVersionUndef;
-
+    static const QString LightpackDownloadsPageUrl;
     static const unsigned AmbilightModeIndex;
-    static const unsigned MoodLampModeIndex;
+    static const unsigned MoodLampModeIndex;    
 };

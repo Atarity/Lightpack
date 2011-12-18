@@ -58,6 +58,7 @@ static const QString DebugLevel = "DebugLevel";
 static const QString IsExpertModeEnabled = "IsExpertModeEnabled";
 static const QString IsSwitchOffAtClosing = "IsSwitchOffAtClosing";
 static const QString IsPingDeviceEverySecond = "IsPingDeviceEverySecond";
+static const QString IsUpdateFirmwareMessageShown = "IsUpdateFirmwareMessageShown";
 static const QString ConnectedDevice = "ConnectedDevice";
 static const QString SupportedDevices = "SupportedDevices";
 // [API]
@@ -212,6 +213,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::IsExpertModeEnabled,    Main::IsExpertModeEnabledDefault);
     setNewOptionMain(Main::Key::IsSwitchOffAtClosing,   Main::IsSwitchOffAtClosingDefault);
     setNewOptionMain(Main::Key::IsPingDeviceEverySecond,Main::IsPingDeviceEverySecond);
+    setNewOptionMain(Main::Key::IsUpdateFirmwareMessageShown, Main::IsUpdateFirmwareMessageShown);
     setNewOptionMain(Main::Key::ConnectedDevice,        Main::ConnectedDeviceDefault);
     setNewOptionMain(Main::Key::SupportedDevices,       Main::SupportedDevices, true /* always rewrite this information to main config */);
     setNewOptionMain(Main::Key::Api::IsEnabled,         Main::Api::IsEnabledDefault);
@@ -524,6 +526,16 @@ bool Settings::isPingDeviceEverySecond()
 void Settings::setPingDeviceEverySecond(bool isEnabled)
 {
     setValueMain(Main::Key::IsPingDeviceEverySecond, isEnabled);
+}
+
+bool Settings::isUpdateFirmwareMessageShown()
+{
+    return valueMain(Main::Key::IsUpdateFirmwareMessageShown).toBool();
+}
+
+void Settings::setUpdateFirmwareMessageShown(bool isShown)
+{
+    setValueMain(Main::Key::IsUpdateFirmwareMessageShown, isShown);
 }
 
 SupportedDevices::DeviceType Settings::getConnectedDevice()

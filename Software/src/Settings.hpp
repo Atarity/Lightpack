@@ -76,6 +76,8 @@ public:
     static void setSwitchOffAtClosing(bool isEnabled);
     static bool isPingDeviceEverySecond();
     static void setPingDeviceEverySecond(bool isEnabled);
+    static bool isUpdateFirmwareMessageShown();
+    static void setUpdateFirmwareMessageShown(bool isShown);
     static SupportedDevices::DeviceType getConnectedDevice();
     static void setConnectedDevice(SupportedDevices::DeviceType device);
     static QString getConnectedDeviceName();

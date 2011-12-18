@@ -41,6 +41,7 @@ using namespace SettingsScope;
 // ----------------------------------------------------------------------------
 
 const QString SettingsWindow::DeviceFirmvareVersionUndef = "undef";
+const QString SettingsWindow::LightpackDownloadsPageUrl = "http://code.google.com/p/lightpack/downloads/list";
 
 // Indexes of supported modes listed in ui->comboBox_Modes and ui->stackedWidget_Modes
 const unsigned SettingsWindow::AmbilightModeIndex = 0;
@@ -75,6 +76,9 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     m_moodlampManager = new MoodLampManager(this);
     m_aboutDialog = new AboutDialog(this);
     m_speedTest = new SpeedTest();
+
+    // Request firmware version of the device to show message about update the firmware
+    QTimer::singleShot(1000, this, SIGNAL(requestFirmwareVersion()));
 
     profilesLoadAll();
 
@@ -131,7 +135,8 @@ void SettingsWindow::connectSignalsSlots()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayIcon_Activated(QSystemTrayIcon::ActivationReason)));
+    connect(m_trayIcon, SIGNAL(messageClicked()), this, SLOT(onTrayIcon_MessageClicked()));
     connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));    
 
     connect(ui->spinBox_GrabSlowdown, SIGNAL(valueChanged(int)), this, SLOT(onGrabSlowdown_valueChanged(int)));
@@ -854,13 +859,32 @@ void SettingsWindow::ledDeviceCallSuccess(bool isSuccess)
     updateTrayAndActionStates();
 }
 
-void SettingsWindow::ledDeviceGetFirmwareVersion(const QString & fwVersion)
+void SettingsWindow::ledDeviceFirmwareVersionResult(const QString & fwVersion)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << fwVersion;
 
+    QString aboutDialogFirmwareString = fwVersion;
+
+    if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
+    {
+        if (m_deviceFirmwareVersion == "5.0" || m_deviceFirmwareVersion == "4.3")
+        {
+            aboutDialogFirmwareString += QString(" ") +
+                    "(<a href=\"" + LightpackDownloadsPageUrl + "\">" +
+                    tr("update firmware") +
+                    "</a>)";
+
+            if (Settings::isUpdateFirmwareMessageShown() == false)
+            {
+                m_trayIcon->showMessage(tr("Lightpack firmware update"), tr("Click on this message to open lightpack downloads page"));
+                Settings::setUpdateFirmwareMessageShown(true);
+            }
+        }
+    }
+
     if (m_aboutDialog != NULL)
     {
-        m_aboutDialog->setFirmwareVersion(fwVersion);
+        m_aboutDialog->setFirmwareVersion(aboutDialogFirmwareString);
     }
 
     m_deviceFirmwareVersion = fwVersion;
@@ -1387,7 +1411,7 @@ void SettingsWindow::createTrayIcon()
 // Process icon click event
 // ----------------------------------------------------------------------------
 
-void SettingsWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+void SettingsWindow::onTrayIcon_Activated(QSystemTrayIcon::ActivationReason reason)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -1418,7 +1442,6 @@ void SettingsWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
         }
         break;
 
-
 #   ifdef Q_WS_WIN
     case QSystemTrayIcon::Context:
         // Hide the tray after losing focus
@@ -1433,6 +1456,15 @@ void SettingsWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
     default:
         ;
+    }
+}
+
+void SettingsWindow::onTrayIcon_MessageClicked()
+{
+    if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
+    {
+        // Open lightpack downloads page
+        QDesktopServices::openUrl(QUrl(LightpackDownloadsPageUrl, QUrl::TolerantMode));
     }
 }
 
