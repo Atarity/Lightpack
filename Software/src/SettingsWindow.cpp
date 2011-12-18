@@ -863,7 +863,9 @@ void SettingsWindow::ledDeviceFirmwareVersionResult(const QString & fwVersion)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << fwVersion;
 
-    QString aboutDialogFirmwareString = fwVersion;
+    m_deviceFirmwareVersion = fwVersion;
+
+    QString aboutDialogFirmwareString = m_deviceFirmwareVersion;
 
     if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
     {
@@ -886,8 +888,6 @@ void SettingsWindow::ledDeviceFirmwareVersionResult(const QString & fwVersion)
     {
         m_aboutDialog->setFirmwareVersion(aboutDialogFirmwareString);
     }
-
-    m_deviceFirmwareVersion = fwVersion;
 
     updateDeviceTabWidgetsVisibility();
 }
