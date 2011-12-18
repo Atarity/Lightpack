@@ -397,7 +397,7 @@ void SettingsWindow::setMaximumNumberOfLeds(MaximumNumberOfLeds::Devices maximum
 
 int SettingsWindow::getLigtpackFirmwareVersionMajor()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     if (Settings::getConnectedDevice() != SupportedDevices::LightpackDevice)
         return -1;
@@ -410,7 +410,7 @@ int SettingsWindow::getLigtpackFirmwareVersionMajor()
 
     if (!ok)
     {
-        qCritical() << Q_FUNC_INFO << "Convert to double fail. Device firmware version =" << m_deviceFirmwareVersion;
+        DEBUG_MID_LEVEL << Q_FUNC_INFO << "Convert to double fail. Device firmware version =" << m_deviceFirmwareVersion;
         return -1;
     }
 
@@ -1279,7 +1279,7 @@ void SettingsWindow::loadTranslation(const QString & language)
     // and only when all this done - append new line
     // locale - name of translation binary file form resources: %locale%.qm
     if(ui->comboBox_Language->currentIndex() == 0 /* System */){
-        qDebug() << "System locale" << locale;
+        DEBUG_LOW_LEVEL << "System locale" << locale;
         Settings::setLanguage(SettingsScope::Main::LanguageDefault);
     }
     else if (language == "English") locale = "en_EN"; // :/translations/en_EN.qm
@@ -1287,7 +1287,7 @@ void SettingsWindow::loadTranslation(const QString & language)
     // append line for new language/locale here
     else {
         qWarning() << "Language" << language << "not found. Set to default" << SettingsScope::Main::LanguageDefault;
-        qDebug() << "System locale" << locale;
+        DEBUG_LOW_LEVEL << "System locale" << locale;
 
         Settings::setLanguage(SettingsScope::Main::LanguageDefault);
     }
@@ -1301,7 +1301,7 @@ void SettingsWindow::loadTranslation(const QString & language)
     }
 
     if(locale == "en_EN" /* default no need to translate */){
-        qDebug() << "Translation removed, using default locale" << locale;
+        DEBUG_LOW_LEVEL << "Translation removed, using default locale" << locale;
         return;
     }
 

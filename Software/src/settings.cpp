@@ -253,7 +253,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     m_currentProfile = new QSettings(m_applicationDirPath + "Profiles/" + profileLast + ".ini", QSettings::IniFormat);
     m_currentProfile->setIniCodec("UTF-8");
 
-    qDebug() << "Settings file:" << m_currentProfile->fileName();
+    DEBUG_LOW_LEVEL << "Settings file:" << m_currentProfile->fileName();
 
     // Initialize m_devicesMap for mapping DeviceType on DeviceName
     initDevicesMap();
@@ -314,7 +314,7 @@ void Settings::loadOrCreateProfile(const QString & profileName)
     initCurrentProfile(false);
     locker.relock();
 
-    qDebug() << "Settings file:" << m_currentProfile->fileName();
+    DEBUG_LOW_LEVEL << "Settings file:" << m_currentProfile->fileName();
 
     m_mainConfig->setValue(Main::Key::ProfileLast, profileName);
 }
@@ -345,7 +345,7 @@ void Settings::renameCurrentProfile(const QString & profileName)
         m_currentProfile = new QSettings(m_applicationDirPath + "Profiles/" + profileName + ".ini", QSettings::IniFormat );
         m_currentProfile->setIniCodec("UTF-8");
 
-        qDebug() << "Settings file renamed:" << m_currentProfile->fileName();
+        DEBUG_LOW_LEVEL << "Settings file renamed:" << m_currentProfile->fileName();
 
         m_mainConfig->setValue(Main::Key::ProfileLast, profileName);
     }
@@ -1145,7 +1145,7 @@ void Settings::setNewOption(const QString & name, const QVariant & value,
     } else {
         if (settings->contains(name) == false)
         {
-            qDebug() << "Settings:"<< name << "not found."
+            DEBUG_LOW_LEVEL << "Settings:"<< name << "not found."
                     << "Set it to default value: " << value.toString();
 
             settings->setValue(name, value);

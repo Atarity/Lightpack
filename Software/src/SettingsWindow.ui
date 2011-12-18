@@ -38,7 +38,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -1452,7 +1452,7 @@
           <item>
            <widget class="QSpinBox" name="spinBox_LoggingLevel">
             <property name="maximum">
-             <number>4</number>
+             <number>3</number>
             </property>
            </widget>
           </item>
