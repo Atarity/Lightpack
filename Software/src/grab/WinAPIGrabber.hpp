@@ -42,12 +42,12 @@ public:
     virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
 private:
     void captureScreen();
+    void freeDCs();
     QRgb getColor(const QWidget * grabme);
     QRgb getColor(int x, int y, int width, int height);
 
 private:
     HMONITOR hMonitor;
-    bool isBufferNeedsResize;
     MONITORINFO monitorInfo;
 
     // Size of screen in pixels, initialize in captureScreen() using in getColor()
