@@ -139,7 +139,7 @@
         <item row="2" column="0">
          <widget class="QStackedWidget" name="stackedWidget_LightpackModes">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="page">
            <layout class="QVBoxLayout" name="verticalLayout_12">
