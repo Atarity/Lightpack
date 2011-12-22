@@ -9,6 +9,7 @@ namespace libLightpack
     {
 
         private string _version;
+	    private int _countLeds;
 
         public string Host = "127.0.0.1";
         public int Port = 3636;
@@ -21,6 +22,14 @@ namespace libLightpack
         public string Version
         {
             get { return _version; }
+        }
+
+        public int CountLeds
+        {
+            get
+            {
+                return _countLeds;
+            }
         }
 
 	    public bool IsAuth
@@ -58,14 +67,28 @@ namespace libLightpack
 
         private string _readData()
         {
+            return _readData(true);
+        }
+
+	    private string _readData(bool clear)
+        {
             Byte[] bytesReceived = new Byte[256];
             string data = null;
+            int bytes = 0;
+            
+            do
+            {
+                bytes = _client.Client.Receive(bytesReceived, bytesReceived.Length, 0);
+                data = data + Encoding.UTF8.GetString(bytesReceived, 0, bytes);
+            }
+            while (_client.Available > 0);
 
-            int bytes = _client.Client.Receive(bytesReceived, bytesReceived.Length, 0);
-            data = data + Encoding.UTF8.GetString(bytesReceived, 0, bytes);
-
-            data = data.Replace("\n", string.Empty);
-            return data;
+            if (clear)
+            {
+                data = data.Replace("\n", string.Empty);
+                data = data.Replace("\r", string.Empty);
+            }
+	        return data;
         }
         private void _sendData(string data)
         {
@@ -89,6 +112,8 @@ namespace libLightpack
                     isAuth = true;
                 else
                     Login();
+
+                GetCountLeds();
             }
         }
 
@@ -158,6 +183,19 @@ namespace libLightpack
             return "";
         }
 
+        public int GetCountLeds()
+        {
+            _countLeds = 0;
+            _sendData("getcountleds\n");
+            string s = _readData();
+            string[] list = s.Split(':');
+            if (list.Length > 1)
+            {
+                _countLeds = Convert.ToInt32(list[1]);
+            }
+            return _countLeds;
+        }
+
         public void SetProfile(string profile)
         {
             if (!isLock) return;
@@ -206,7 +244,7 @@ namespace libLightpack
         public void SetAllColor(Color color)
         {
             string com = "setcolor:";
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < _countLeds; i++)
             {
                 com += String.Format("{0}-{1},{2},{3};", i+1,color.R,color.G,color.B);
             }
@@ -240,6 +278,12 @@ namespace libLightpack
                 _sendData(String.Format("setgamma:{0}\n", value));
                 _readData();
             }
+        }
+
+        public string Help()
+        {
+            _sendData("help\n");
+            return _readData(false);
         }
     }
 }

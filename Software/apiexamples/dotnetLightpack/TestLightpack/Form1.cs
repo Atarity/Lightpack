@@ -74,6 +74,8 @@ namespace TestLightpack
 
                 label1.Text += " Auth:" + api.IsAuth.ToString();
 
+                label1.Text += " Count leds:" + api.CountLeds.ToString();
+
                 button3.Text = "Lock";
 
                 button2.Enabled = api.IsLock;
@@ -81,11 +83,13 @@ namespace TestLightpack
                 button5.Enabled = api.IsLock;
                     
 
+
                 if (api.IsAuth)
                 {
                     label6.Text = " Status:" + api.GetStatus().ToString();
 
                     button3.Enabled = true;
+                    button6.Enabled = true;
                     string[] list = api.GetProfiles();
                     listBox1.Items.Clear();
                     foreach (string s in list)
@@ -97,6 +101,7 @@ namespace TestLightpack
                 else
                 {
                     button3.Enabled = false;
+                    button6.Enabled = false;
                     listBox1.Enabled = false;
                 }
             }
@@ -111,6 +116,7 @@ namespace TestLightpack
                 button4.Enabled = false;
                 button3.Enabled = false;
                 button5.Enabled = false;
+                button6.Enabled = false;
                     
                 listBox1.Enabled = false;
                 listBox1.Items.Clear();
@@ -146,7 +152,7 @@ namespace TestLightpack
         private void button4_Click(object sender, EventArgs e)
         {
             api.SetAllColor(Color.Black);
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < api.CountLeds; i++)
             {
                 Thread.Sleep(200);
                 api.SetColor(i+1,Color.Red);
@@ -172,6 +178,13 @@ namespace TestLightpack
             else
                 api.SetStatus(Status.On);
             label6.Text = " Status:" + api.GetStatus().ToString();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            HelpForm hf = new HelpForm();
+            hf.richTextBox1.Text = api.Help();
+            hf.ShowDialog();
         }
         
         
