@@ -36,25 +36,25 @@
 using namespace SettingsScope;
 
 // Immediatly after successful connection server sends to client -- ApiVersion
-const char * ApiServer::ApiVersion = "version:"API_VERSION"\n";
-const char * ApiServer::CmdUnknown = "unknown command\n";
+const char * ApiServer::ApiVersion = "version:"API_VERSION"\n\r";
+const char * ApiServer::CmdUnknown = "unknown command\n\r";
 const char * ApiServer::CmdExit = "exit";
 const char * ApiServer::CmdHelp = "help";
 
 const char * ApiServer::CmdApiKey = "apikey:";
-const char * ApiServer::CmdApiKeyResult_Ok = "ok\n";
-const char * ApiServer::CmdApiKeyResult_Fail = "fail\n";
-const char * ApiServer::CmdApiCheck_AuthRequired = "authorization required\n";
+const char * ApiServer::CmdApiKeyResult_Ok = "ok\n\r";
+const char * ApiServer::CmdApiKeyResult_Fail = "fail\n\r";
+const char * ApiServer::CmdApiCheck_AuthRequired = "authorization required\n\r";
 
 const char * ApiServer::CmdGetStatus = "getstatus";
-const char * ApiServer::CmdResultStatus_On = "status:on\n";
-const char * ApiServer::CmdResultStatus_Off = "status:off\n";
-const char * ApiServer::CmdResultStatus_DeviceError = "status:device error\n";
-const char * ApiServer::CmdResultStatus_Unknown = "status:unknown\n";
+const char * ApiServer::CmdResultStatus_On = "status:on\n\r";
+const char * ApiServer::CmdResultStatus_Off = "status:off\n\r";
+const char * ApiServer::CmdResultStatus_DeviceError = "status:device error\n\r";
+const char * ApiServer::CmdResultStatus_Unknown = "status:unknown\n\r";
 
 const char * ApiServer::CmdGetStatusAPI = "getstatusapi";
-const char * ApiServer::CmdResultStatusAPI_Busy = "statusapi:busy\n";
-const char * ApiServer::CmdResultStatusAPI_Idle = "statusapi:idle\n";
+const char * ApiServer::CmdResultStatusAPI_Busy = "statusapi:busy\n\r";
+const char * ApiServer::CmdResultStatusAPI_Idle = "statusapi:idle\n\r";
 
 const char * ApiServer::CmdGetProfiles = "getprofiles";
 // Necessary to add a new line after filling results!
@@ -64,20 +64,24 @@ const char * ApiServer::CmdGetProfile = "getprofile";
 // Necessary to add a new line after filling results!
 const char * ApiServer::CmdResultProfile = "profile:";
 
+const char * ApiServer::CmdGetCountLeds = "getcountleds";
+// Necessary to add a new line after filling results!
+const char * ApiServer::CmdResultCountLeds = "getcountleds:";
+
 const char * ApiServer::CmdLock = "lock";
-const char * ApiServer::CmdResultLock_Success = "lock:success\n";
-const char * ApiServer::CmdResultLock_Busy = "lock:busy\n";
+const char * ApiServer::CmdResultLock_Success = "lock:success\n\r";
+const char * ApiServer::CmdResultLock_Busy = "lock:busy\n\r";
 
 const char * ApiServer::CmdUnlock = "unlock";
-const char * ApiServer::CmdResultUnlock_Success = "unlock:success\n";
-const char * ApiServer::CmdResultUnlock_NotLocked = "unlock:not locked\n";
+const char * ApiServer::CmdResultUnlock_Success = "unlock:success\n\r";
+const char * ApiServer::CmdResultUnlock_NotLocked = "unlock:not locked\n\r";
 
 // Set-commands works only after success lock
 // Set-commands can return, after self-name, only this results:
-const char * ApiServer::CmdSetResult_Ok = "ok\n";
-const char * ApiServer::CmdSetResult_Error = "error\n";
-const char * ApiServer::CmdSetResult_Busy = "busy\n";
-const char * ApiServer::CmdSetResult_NotLocked = "not locked\n";
+const char * ApiServer::CmdSetResult_Ok = "ok\n\r";
+const char * ApiServer::CmdSetResult_Error = "error\n\r";
+const char * ApiServer::CmdSetResult_Busy = "busy\n\r";
+const char * ApiServer::CmdSetResult_NotLocked = "not locked\n\r";
 
 // Set-commands contains at end semicolon!!!
 const char * ApiServer::CmdSetColor = "setcolor:";
@@ -317,13 +321,19 @@ void ApiServer::clientProcessCommands()
 
             for (int i = 0; i < profiles.count(); i++)
                 result += profiles[i] + ";";
-            result += "\n";
+            result += "\n\r";
         }
         else if (cmdBuffer == CmdGetProfile)
         {
             API_DEBUG_OUT << CmdGetProfile;
 
-            result = CmdResultProfile + Settings::getCurrentProfileName() + "\n";
+            result = CmdResultProfile + Settings::getCurrentProfileName() + "\n\r";
+        }
+        else if (cmdBuffer == CmdGetCountLeds)
+        {
+            API_DEBUG_OUT << CmdGetCountLeds;
+
+            result = QString("%1%2\n\r").arg(CmdResultCountLeds).arg(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
         }
         else if (cmdBuffer == CmdLock)
         {
@@ -746,15 +756,15 @@ void ApiServer::writeData(QTcpSocket* client, const QString & data)
 
 QString ApiServer::formatHelp(const QString & cmd)
 {
-    return QString("\t\t \"%1\" \n").arg(cmd.trimmed());
+    return QString("\t\t \"%1\" \n\r").arg(cmd.trimmed());
 }
 
 QString ApiServer::formatHelp(const QString & cmd, const QString & description)
 {
     return QString(
-                QString(80,'.') + "\n"
-                "%1 \n"             // Command
-                "\t %2 \n"          // Description
+                QString(80,'.') + "\n\r"
+                "%1 \n\r"             // Command
+                "\t %2 \n\r"          // Description
                 ).arg(cmd).arg(description);
 }
 
@@ -762,7 +772,7 @@ QString ApiServer::formatHelp(const QString & cmd, const QString & description, 
 {
     return QString(
                 formatHelp(cmd, description) +
-                "\t Results: \n"    // Return values
+                "\t Results: \n\r"    // Return values
                 "%1"
                 ).arg(results);
 }
@@ -771,18 +781,18 @@ QString ApiServer::formatHelp(const QString & cmd, const QString & description, 
 {
     return QString(
                 formatHelp(cmd, description) +
-                "\t Examples: \n"
+                "\t Examples: \n\r"
                 "%1"
-                "\t Results: \n"    // Return values
+                "\t Results: \n\r"    // Return values
                 "%2"
                 ).arg(examples).arg(results);
 }
 
 void ApiServer::initHelpMessage()
 {
-    m_helpMessage += "\n";
-    m_helpMessage += "Lightpack " VERSION_STR ". API Server " API_VERSION "\n";
-    m_helpMessage += "\n";
+    m_helpMessage += "\n\r";
+    m_helpMessage += "Lightpack " VERSION_STR ". API Server " API_VERSION "\n\r";
+    m_helpMessage += "\n\r";
 
     m_helpMessage += formatHelp(
                 CmdApiKey,
@@ -831,6 +841,11 @@ void ApiServer::initHelpMessage()
                 CmdGetProfiles,
                 "Get names of the all available profiles",
                 formatHelp(CmdResultProfiles + QString("Lightpack;New profile 1;New profile 2;"))
+                );
+    m_helpMessage += formatHelp(
+                CmdGetCountLeds,
+                "Get count leds of the current profile",
+                formatHelp(CmdResultCountLeds + QString("10"))
                 );
 
     // Set-commands

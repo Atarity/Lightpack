@@ -45,4 +45,4 @@
 
 
 // Lightpack API version
-#define API_VERSION     "1.2"
+#define API_VERSION     "1.3"

@@ -81,6 +81,9 @@ public:
     static const char * CmdGetProfile;
     static const char * CmdResultProfile;
 
+    static const char * CmdGetCountLeds;
+    static const char * CmdResultCountLeds;
+
     static const char * CmdLock;
     static const char * CmdResultLock_Success;
     static const char * CmdResultLock_Busy;
