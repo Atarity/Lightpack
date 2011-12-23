@@ -1176,14 +1176,26 @@ void Settings::setValueMain(const QString & key, const QVariant & value)
     DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
 
     QMutexLocker locker(&m_mutex);
+
+    if (m_mainConfig == NULL)
+    {
+        qWarning() << Q_FUNC_INFO << "m_mainConfig == NULL";
+        return;
+    }
     m_mainConfig->setValue(key, value);
 }
 
-QVariant Settings::valueMain( const QString & key)
+QVariant Settings::valueMain(const QString & key)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
 
     QMutexLocker locker(&m_mutex);
+
+    if (m_mainConfig == NULL)
+    {
+        qWarning() << Q_FUNC_INFO << "m_mainConfig == NULL";
+        return QVariant();
+    }
     return m_mainConfig->value(key);
 }
 
@@ -1191,15 +1203,27 @@ void Settings::setValue(const QString & key, const QVariant & value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
 
-     QMutexLocker locker(&m_mutex);
-     m_currentProfile->setValue(key, value);
+    QMutexLocker locker(&m_mutex);
+
+    if (m_currentProfile == NULL)
+    {
+        qWarning() << Q_FUNC_INFO << "m_currentProfile == NULL";
+        return;
+    }
+    m_currentProfile->setValue(key, value);
 }
 
-QVariant Settings::value( const QString & key)
+QVariant Settings::value(const QString & key)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
 
     QMutexLocker locker(&m_mutex);
+
+    if (m_currentProfile == NULL)
+    {
+        qWarning() << Q_FUNC_INFO << "m_currentProfile == NULL";
+        return QVariant();
+    }
     return m_currentProfile->value(key);
 }
 
