@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Lightpack
+Comment=Lightpack
+Exec=lightpack
+Icon=Lightpack.png
+Terminal=0
+Type=Application
+Categories=Video;
+Name[ru_RU]=Lightpack

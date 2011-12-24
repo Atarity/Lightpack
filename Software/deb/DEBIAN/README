@@ -1,0 +1,23 @@
+The Debian Package lightpack
+----------------------------
+
+Lightpack is a very simple implementation of the backlight for any computer (lightpack.googlecode.com). 
+A couple of simple printed circuit boards, controller, led drivers, a few LEDs and lightpack is ready! 
+
+Configuration program lives in the tray, without interfering with habitual work and watching movies.   
+
+Main features:
+
+	* Open software and hardware
+	* Simple to build (DIY)
+	* Cross-platform software (Qt)
+	* Supports multiple devices
+	* Native screen grabbers
+	* API over TCP/IP
+
+Please let us know if you find mistakes, bugs or errors.
+
+Post new issue : http://code.google.com/p/lightpack/issues/list
+Ask questions  : https://groups.google.com/group/lightpack
+
+ -- Mike Shatohin <brunql@gmail.com>  Sat, 24 Dec 2011 23:00:00 +0400

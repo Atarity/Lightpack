@@ -22,3 +22,6 @@ Lightpack-build-desktop[^\/]*/
 Lightpack[^-]+-build-desktop[^\/]*/
 .metadata/
 Software/apiexamples/.+\.pyc
+Software/deb/DEBIAN/md5sums
+Software/deb/usr/bin/lightpack
+Software/[^/\\]+\.deb
