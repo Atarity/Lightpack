@@ -46,6 +46,7 @@ const char * MacOSGrabber::getName()
 
 void MacOSGrabber::updateGrabScreenFromWidget(QWidget *widget)
 {
+    Q_UNUSED(widget);
 }
 
 QList<QRgb> MacOSGrabber::grabWidgetsColors(QList<GrabWidget *> &widgets)

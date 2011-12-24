@@ -102,12 +102,12 @@ void AboutDialog::versionsUpdate()
             QApplication::applicationVersion(),
             "unknown",
             fimwareVersion );
-    versionsTemplate.remove(QRegExp(" [(].+[)]"));
+    versionsTemplate.remove(QRegExp(" \\([^()]+unknown[^()]+\\)"));
 #endif
 
     ui->labelVersions->setText( versionsTemplate );
 
-    adjustSize();
+    adjustSize();   
 
     setFixedSize( sizeHint() );
 }

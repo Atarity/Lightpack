@@ -176,7 +176,12 @@ void LightpackApplication::printVersionsSoftwareQtOS() const
 {
     if (g_debugLevel > 0)
     {
+#       ifdef HG_REVISION
         qDebug() << "Lightpack:" << VERSION_STR << "rev." << HG_REVISION;
+#       else
+        qDebug() << "Lightpack:" << VERSION_STR;
+#       endif
+
         qDebug() << "Build with Qt verison:" << QT_VERSION_STR;
         qDebug() << "Qt version currently in use:" << qVersion();
 
