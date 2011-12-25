@@ -159,4 +159,8 @@ include(qserialdevice/qserialdevice/qserialdevice.pri)
 include(qserialdevice/qserialdeviceenumerator/qserialdeviceenumerator.pri)
 unix:include(qserialdevice/unix/ttylocker.pri)
 
-
+#
+# Hotkeys based on PSI and QKeySequenceWidget
+#
+include(hotkeys/globalshortcut/globalshortcut.pri)
+include(hotkeys/qkeysequencewidget/qkeysequencewidget.pri)

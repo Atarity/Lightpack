@@ -33,6 +33,7 @@
 #include "debug.h"
 
 #include "../../CommonHeaders/COMMANDS.h"
+#include "hotkeys/globalshortcut/globalshortcutmanager.h"
 
 using namespace SettingsScope;
 
@@ -88,6 +89,11 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     initConnectedDeviceComboBox();
     initSerialPortBaudRateComboBox();
 
+    /***************************************/    
+    m_KeySequenceWidget = new QKeySequenceWidget(QString("Undefined key"), QString("On-Off light:"), this);
+    ui->groupBox_HotKeys->layout()->addWidget(m_KeySequenceWidget);
+    /***************************************/
+
     connectSignalsSlots();
 
     profileLoadLast();
@@ -108,9 +114,19 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     onGrabberChanged();
 
-    adjustSizeAndMoveCenter();
+    adjustSizeAndMoveCenter();   
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
+}
+
+void SettingsWindow::setOnOffHotKey(QKeySequence keySequence)
+{
+    GlobalShortcutManager::instance()->connect(keySequence, this, SLOT(switchBacklightOnOff()));
+}
+
+void SettingsWindow::clearOnOffHotKey()
+{
+    GlobalShortcutManager::instance()->clear();
 }
 
 SettingsWindow::~SettingsWindow()
@@ -220,6 +236,10 @@ void SettingsWindow::connectSignalsSlots()
 
     connect(ui->spinBox_LoggingLevel, SIGNAL(valueChanged(int)), this, SLOT(onLoggingLevel_valueChanged(int)));
     connect(ui->checkBox_PingDeviceEverySecond, SIGNAL(toggled(bool)), this, SLOT(onPingDeviceEverySecond_Toggled(bool)));
+
+    // HotKeys
+    connect(m_KeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(setOnOffHotKey(QKeySequence)));
+    connect(m_KeySequenceWidget, SIGNAL(keySequenceCleared()), this, SLOT(clearOnOffHotKey()));
 }
 
 // ----------------------------------------------------------------------------

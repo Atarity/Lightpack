@@ -36,6 +36,8 @@
 #include "ColorButton.hpp"
 #include "enums.hpp"
 
+#include "hotkeys/qkeysequencewidget/src/qkeysequencewidget.h"
+
 namespace Ui {
     class SettingsWindow;
 }
@@ -144,6 +146,9 @@ private slots:
     void onIsApiAuthEnabled_Toggled(bool isEnabled);
     void onLoggingLevel_valueChanged(int value);
 
+    void setOnOffHotKey(QKeySequence);
+    void clearOnOffHotKey();
+
 private:
     void connectSignalsSlots();
 
@@ -207,5 +212,7 @@ private:
     static const QString DeviceFirmvareVersionUndef;
     static const QString LightpackDownloadsPageUrl;
     static const unsigned AmbilightModeIndex;
-    static const unsigned MoodLampModeIndex;    
+    static const unsigned MoodLampModeIndex;
+
+    QKeySequenceWidget *m_KeySequenceWidget;
 };
