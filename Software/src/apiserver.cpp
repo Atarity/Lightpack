@@ -66,7 +66,7 @@ const char * ApiServer::CmdResultProfile = "profile:";
 
 const char * ApiServer::CmdGetCountLeds = "getcountleds";
 // Necessary to add a new line after filling results!
-const char * ApiServer::CmdResultCountLeds = "getcountleds:";
+const char * ApiServer::CmdResultCountLeds = "countleds:";
 
 const char * ApiServer::CmdLock = "lock";
 const char * ApiServer::CmdResultLock_Success = "lock:success\n\r";
