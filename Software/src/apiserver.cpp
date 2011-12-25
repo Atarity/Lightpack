@@ -890,6 +890,13 @@ void ApiServer::initHelpMessage()
                 helpCmdSetResults);
 
     m_helpMessage += formatHelp(
+                CmdSetProfile,
+                QString("Set current profile. Works only on locking time (see lock)."),
+                formatHelp(CmdSetProfile + QString("Lightpack")) +
+                formatHelp(CmdSetProfile + QString("16x9")),
+                helpCmdSetResults);
+
+    m_helpMessage += formatHelp(
                 CmdSetStatus,
                 QString("Set backlight status. Works only on locking time (see lock)."),
                 formatHelp(CmdSetStatus + QString(CmdSetStatus_On)) +
