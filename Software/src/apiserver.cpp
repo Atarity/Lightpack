@@ -66,7 +66,7 @@ const char * ApiServer::CmdResultProfile = "profile:";
 
 const char * ApiServer::CmdGetCountLeds = "getcountleds";
 // Necessary to add a new line after filling results!
-const char * ApiServer::CmdResultCountLeds = "getcountleds:";
+const char * ApiServer::CmdResultCountLeds = "countleds:";
 
 const char * ApiServer::CmdLock = "lock";
 const char * ApiServer::CmdResultLock_Success = "lock:success\n\r";
@@ -887,6 +887,13 @@ void ApiServer::initHelpMessage()
                 .arg(SettingsScope::Profile::Device::SmoothMax),
                 formatHelp(CmdSetSmooth + QString("10")) +
                 formatHelp(CmdSetSmooth + QString("128")),
+                helpCmdSetResults);
+
+    m_helpMessage += formatHelp(
+                CmdSetProfile,
+                QString("Set current profile. Works only on locking time (see lock)."),
+                formatHelp(CmdSetProfile + QString("Lightpack")) +
+                formatHelp(CmdSetProfile + QString("16x9")),
                 helpCmdSetResults);
 
     m_helpMessage += formatHelp(
