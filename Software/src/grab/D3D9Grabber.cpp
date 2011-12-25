@@ -24,6 +24,8 @@
  */
 
 #include "D3D9Grabber.hpp"
+#include <QApplication>
+#include <qdesktopwidget.h>
 
 #ifdef D3D9_GRAB_SUPPORT
 
@@ -129,6 +131,10 @@ QList<QRgb> D3D9Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
 {
     QList<QRgb> result;
     m_rect = getEffectiveRect(widgets);
+    if(m_rect.bottom > QApplication::desktop()->height())
+        m_rect.bottom = QApplication::desktop()->height();
+    if(m_rect.right > QApplication::desktop()->width())
+        m_rect.right = QApplication::desktop()->width();
     int bufLengthNeeded = getBufLength(m_rect);
     if (bufLengthNeeded > m_bufLength)
     {
