@@ -533,6 +533,13 @@ void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
         d->cancelRecording();
         return;
     }
+
+    // Under Windows we can't use F12 key.
+#ifdef Q_WS_WIN
+    if(keyQt == Qt::Key_F12) {
+        return;
+    }
+#endif
 // Qt sometimes returns garbage keycodes, I observed -1,
 // if it doesn't know a key.
 // We cannot do anything useful with those (several keys have -1,
