@@ -162,8 +162,6 @@ void QKeySequenceWidget::setKeySequence(const QKeySequence& key)
         d_ptr->oldSequence = d_ptr->currentSequence;
     }
 
-    d_ptr->doneRecording();
-
     d_ptr->currentSequence = key;
     d_ptr->doneRecording();
 }

@@ -179,6 +179,8 @@ private:
 
     void adjustSizeAndMoveCenter();
 
+    void setupHotkeys();
+
 private:
     // Main backlight status for all modes (Grab, MoodLamp, etc.)
     Backlight::Status m_backlightStatus;

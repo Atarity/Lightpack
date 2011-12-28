@@ -61,6 +61,13 @@ static const QString IsPingDeviceEverySecond = "IsPingDeviceEverySecond";
 static const QString IsUpdateFirmwareMessageShown = "IsUpdateFirmwareMessageShown";
 static const QString ConnectedDevice = "ConnectedDevice";
 static const QString SupportedDevices = "SupportedDevices";
+
+// [Hotkeys]
+namespace Hotkeys
+{
+static const QString OnOffDeviceKey = "HotKeys/OnOffDeviceKey";
+}
+
 // [API]
 namespace Api
 {
@@ -108,6 +115,11 @@ static const QString AlienFxDevice = "AlienFx";
 static const QString AdalightDevice = "Adalight";
 static const QString ArdulightDevice = "Ardulight";
 static const QString VirtualDevice = "Virtual";
+}
+
+namespace HotKeys
+{
+static const QString OnOffDeviceKeyDefault = "Undefined";
 }
 } /*Value*/
 } /*Main*/
@@ -216,6 +228,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::IsUpdateFirmwareMessageShown, Main::IsUpdateFirmwareMessageShown);
     setNewOptionMain(Main::Key::ConnectedDevice,        Main::ConnectedDeviceDefault);
     setNewOptionMain(Main::Key::SupportedDevices,       Main::SupportedDevices, true /* always rewrite this information to main config */);
+    setNewOptionMain(Main::Key::Hotkeys::OnOffDeviceKey,Main::Value::HotKeys::OnOffDeviceKeyDefault);
     setNewOptionMain(Main::Key::Api::IsEnabled,         Main::Api::IsEnabledDefault);
     setNewOptionMain(Main::Key::Api::Port,              Main::Api::PortDefault);
     setNewOptionMain(Main::Key::Api::IsAuthEnabled,     Main::Api::IsAuthEnabledDefault);
@@ -583,6 +596,24 @@ void Settings::setConnectedDeviceName(const QString & deviceName)
 QStringList Settings::getSupportedDevices()
 {
     return Main::SupportedDevices.split(',');
+}
+
+QKeySequence Settings::getOnOffDeviceKey()
+{
+    if( valueMain(Main::Key::Hotkeys::OnOffDeviceKey) == "Undefined") {
+        return QKeySequence();
+    }
+    QKeySequence returnSequence = QKeySequence( valueMain(Main::Key::Hotkeys::OnOffDeviceKey).toString() );
+    return returnSequence;
+}
+
+void Settings::setOnOffDeviceKey(const QKeySequence &keySequence)
+{
+    if( keySequence.isEmpty() ) {
+        setValueMain(Main::Key::Hotkeys::OnOffDeviceKey, Main::Value::HotKeys::OnOffDeviceKeyDefault);
+    } else {
+        setValueMain(Main::Key::Hotkeys::OnOffDeviceKey, keySequence.toString());
+    }
 }
 
 QString Settings::getSerialPortName()

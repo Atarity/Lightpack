@@ -92,6 +92,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     /***************************************/    
     m_KeySequenceWidget = new QKeySequenceWidget(QString("Undefined key"), QString("On-Off light:"), this);
     ui->groupBox_HotKeys->layout()->addWidget(m_KeySequenceWidget);
+    setupHotkeys();
     /***************************************/
 
     connectSignalsSlots();
@@ -117,16 +118,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     adjustSizeAndMoveCenter();   
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
-}
-
-void SettingsWindow::setOnOffHotKey(QKeySequence keySequence)
-{
-    GlobalShortcutManager::instance()->connect(keySequence, this, SLOT(switchBacklightOnOff()));
-}
-
-void SettingsWindow::clearOnOffHotKey()
-{
-    GlobalShortcutManager::instance()->clear();
 }
 
 SettingsWindow::~SettingsWindow()
@@ -1599,6 +1590,29 @@ Grab::GrabberType SettingsWindow::getSelectedGrabberType()
     }
 
     return Grab::QtGrabber;
+}
+
+// ----------------------------------------------------------------------------
+// Hotkeys slots and functions.
+// ----------------------------------------------------------------------------
+
+void SettingsWindow::setOnOffHotKey(QKeySequence keySequence)
+{
+    GlobalShortcutManager::instance()->clear();
+    GlobalShortcutManager::instance()->connect(keySequence, this, SLOT(switchBacklightOnOff()));
+    Settings::setOnOffDeviceKey(keySequence);
+}
+
+void SettingsWindow::clearOnOffHotKey()
+{
+    GlobalShortcutManager::instance()->clear();
+    Settings::setOnOffDeviceKey(QKeySequence());
+}
+
+void SettingsWindow::setupHotkeys()
+{
+    m_KeySequenceWidget->setKeySequence(Settings::getOnOffDeviceKey());
+    GlobalShortcutManager::instance()->connect(Settings::getOnOffDeviceKey(), this, SLOT(switchBacklightOnOff()));
 }
 
 // ----------------------------------------------------------------------------
