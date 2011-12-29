@@ -40,7 +40,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/AboutDialog.ui" line="296"/>
         <source>&lt;small&gt;THIS PROGRAM IS DISTRIBUTED &quot;AS IS&quot;. NO WARRANTY OF ANY KIND IS EXPRESSED OR IMPLIED. YOU USE AT YOUR OWN RISK. THE AUTHOR WILL NOT BE LIABLE FOR DATA LOSS, DAMAGES, LOSS OF PROFITS OR ANY OTHER KIND OF LOSS WHILE USING OR MISUSING THIS SOFTWARE.&lt;/small&gt;</source>
-        <translation>Программное обеспечение распространяется под открытой лицензией GPLv3 и поставляется &quot;как есть&quot;. Никаких гарантий не прилагается и не предусматривается. Вы используете это программное обеспечение на свой риск. Авторы не несут ответственности за потерю, или порчу данных, а так же упущенную вами в процессе использования этого ПО выгоду.</translation>
+        <translation>Программное обеспечение распространяется под открытой лицензией GPLv3 и поставляется &quot;как есть&quot;. Никаких гарантий не прилагается и не предусматривается. Вы используете это программное обеспечение на свой риск. Авторы не несут ответственности за потерю или порчу данных, а так же упущенную вами в процессе использования этого ПО выгоду.</translation>
     </message>
     <message>
         <location filename="../../src/AboutDialog.ui" line="327"/>
