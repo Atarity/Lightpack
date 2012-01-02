@@ -785,6 +785,14 @@ void SettingsWindow::onPingDeviceEverySecond_Toggled(bool state)
     m_moodlampManager->reset();
 }
 
+void SettingsWindow::processMessage(const QString &message)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << message;
+
+    m_trayMessage = Tray_AnotherInstanceMessage;
+    m_trayIcon->showMessage(tr("Lightpack"), message);
+}
+
 // ----------------------------------------------------------------------------
 // Show / Hide settings and about windows
 // ----------------------------------------------------------------------------
@@ -880,6 +888,7 @@ void SettingsWindow::ledDeviceFirmwareVersionResult(const QString & fwVersion)
 
             if (Settings::isUpdateFirmwareMessageShown() == false)
             {
+                m_trayMessage = Tray_UpdateFirmwareMessage;
                 m_trayIcon->showMessage(tr("Lightpack firmware update"), tr("Click on this message to open lightpack downloads page"));
                 Settings::setUpdateFirmwareMessageShown(true);
             }
@@ -1463,10 +1472,21 @@ void SettingsWindow::onTrayIcon_Activated(QSystemTrayIcon::ActivationReason reas
 
 void SettingsWindow::onTrayIcon_MessageClicked()
 {
-    if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_trayMessage;
+
+    switch(m_trayMessage)
     {
-        // Open lightpack downloads page
-        QDesktopServices::openUrl(QUrl(LightpackDownloadsPageUrl, QUrl::TolerantMode));
+    case Tray_UpdateFirmwareMessage:
+        if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
+        {
+            // Open lightpack downloads page
+            QDesktopServices::openUrl(QUrl(LightpackDownloadsPageUrl, QUrl::TolerantMode));
+        }
+        break;
+
+    case Tray_AnotherInstanceMessage:
+    default:
+        break;
     }
 }
 

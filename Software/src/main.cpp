@@ -41,7 +41,7 @@ unsigned g_debugLevel = SettingsScope::Main::DebugLevelDefault;
 QTextStream m_logStream;
 QMutex m_mutex;
 
-QString createApplicationDirectory(const char * firstCmdArgument)
+QString getApplicationDirectoryPath(const char * firstCmdArgument)
 {
     QString appDirPath = QString(firstCmdArgument);
 
@@ -137,16 +137,23 @@ int main(int argc, char **argv)
     // Using locale codec for console output in messageHandler(..) function ( cout << qstring.toStdString() )
     QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
 
-    QString appDirPath = createApplicationDirectory(argv[0]);
+    QString appDirPath = getApplicationDirectoryPath(argv[0]);
 
     openLogsFile(appDirPath);
 
     qInstallMsgHandler(messageHandler);
 
-    LightpackApplication lightpackApp(appDirPath, argc, argv);
-    if(lightpackApp.isRunning()) {
-        return 0;
+    LightpackApplication lightpackApp(argc, argv);
+
+    if (lightpackApp.isRunning())
+    {        
+        lightpackApp.sendMessage(QApplication::tr("Application already running"));
+
+        qWarning() << "Application already running";
+        exit(0);
     }
+
+    lightpackApp.initializeAll(appDirPath);
 
     Q_INIT_RESOURCE(LightpackResources);
 

@@ -35,7 +35,9 @@ class LightpackApplication : public QtSingleApplication
 {
     Q_OBJECT
 public:
-    LightpackApplication(const QString & appDirPath, int &argc, char **argv);
+    LightpackApplication(int &argc, char **argv);
+
+    void initializeAll(const QString & appDirPath);
 
     enum ErrorCodes {
         OK_ErrorCode = 0,

@@ -35,8 +35,13 @@
 using namespace std;
 using namespace SettingsScope;
 
-LightpackApplication::LightpackApplication(const QString & appDirPath, int &argc, char **argv)
+LightpackApplication::LightpackApplication(int &argc, char **argv)
     : QtSingleApplication(argc, argv)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+}
+
+void LightpackApplication::initializeAll(const QString & appDirPath)
 {
     setApplicationName("Lightpack");
     setOrganizationName("Lightpack");
@@ -55,6 +60,9 @@ LightpackApplication::LightpackApplication(const QString & appDirPath, int &argc
 
     m_settingsWindow = new SettingsWindow();
     m_settingsWindow->setVisible(false); /* Load to tray */
+
+    // Process messages from another instances in SettingsWindow
+    connect(this, SIGNAL(messageReceived(QString)), m_settingsWindow, SLOT(processMessage(QString)));
 
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");

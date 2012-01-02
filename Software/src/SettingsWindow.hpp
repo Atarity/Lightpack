@@ -49,7 +49,7 @@ public:
     ~SettingsWindow();
 
 public:
-    void startBacklight();
+    void startBacklight();    
 
 signals:
     void settingsProfileChanged();
@@ -87,6 +87,7 @@ public slots:
     void requestBacklightStatus();
     void onApiServer_ErrorOnStartListening(QString errorMessage);
     void onPingDeviceEverySecond_Toggled(bool state);
+    void processMessage(const QString &message);
 
 protected:
     virtual void changeEvent(QEvent *e);
@@ -200,6 +201,12 @@ private:
     QSystemTrayIcon *m_trayIcon;
     QMenu *m_trayIconMenu;
     QMenu *m_profilesMenu;
+
+    enum TrayMessages
+    {
+        Tray_UpdateFirmwareMessage,
+        Tray_AnotherInstanceMessage
+    } m_trayMessage;
 
     QTranslator *m_translator;
 
