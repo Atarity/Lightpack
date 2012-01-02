@@ -26,12 +26,12 @@
 
 #pragma once
 
-#include <QApplication>
+#include <QtSingleApplication>
 #include "SettingsWindow.hpp"
 #include "ApiServer.hpp"
 #include "LedDeviceFactory.hpp"
 
-class LightpackApplication : public QApplication
+class LightpackApplication : public QtSingleApplication
 {
     Q_OBJECT
 public:

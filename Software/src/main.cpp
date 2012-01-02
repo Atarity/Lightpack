@@ -144,6 +144,9 @@ int main(int argc, char **argv)
     qInstallMsgHandler(messageHandler);
 
     LightpackApplication lightpackApp(appDirPath, argc, argv);
+    if(lightpackApp.isRunning()) {
+        return 0;
+    }
 
     Q_INIT_RESOURCE(LightpackResources);
 

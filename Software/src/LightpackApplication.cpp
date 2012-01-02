@@ -36,7 +36,7 @@ using namespace std;
 using namespace SettingsScope;
 
 LightpackApplication::LightpackApplication(const QString & appDirPath, int &argc, char **argv)
-    : QApplication(argc, argv)
+    : QtSingleApplication(argc, argv)
 {
     setApplicationName("Lightpack");
     setOrganizationName("Lightpack");
