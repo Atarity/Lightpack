@@ -24,6 +24,7 @@
 #include <QWidget>
 
 #include <windows.h>
+#include <winuser.h>
 
 class GlobalShortcutManager::KeyTrigger::Impl : public QWidget
 {
@@ -37,7 +38,7 @@ public:
 	{
         UINT mod = 0, key = 0;
 		if (convertKeySequence(ks, &mod, &key))
-			if (RegisterHotKey(winId(), nextId, mod, key))
+            if (RegisterHotKey(winId(), nextId, mod, key))
 				id_ = nextId++;
 	}
 
@@ -89,8 +90,98 @@ private:
 		if (code & Qt::ALT)
 			mod |= MOD_ALT;
 
+        code &= ~Qt::KeyboardModifierMask;
+
 		UINT key = 0;
-		code &= ~Qt::KeyboardModifierMask;
+        /* This one fix bug with incorrect detection of some keys.*/
+        // Multiply key.
+        if( code == 42 ) {
+            key = VK_MULTIPLY;
+
+            if (mod)
+                *mod_ = mod;
+            if (key)
+                *key_ = key;
+
+            return true;
+        }
+
+        // Plus key.
+        if( code == 43 ) {
+            key = VK_ADD;
+
+            if (mod)
+                *mod_ = mod;
+            if (key)
+                *key_ = key;
+
+            return true;
+        }
+
+        // Comma key.
+        if( code == 44 ) {
+            // TODO: Fix this one compile issue 188 == VK_OEM_COMMA
+            key = 188;
+
+            if (mod)
+                *mod_ = mod;
+            if (key)
+                *key_ = key;
+
+            return true;
+        }
+
+        // Minus key.
+        if( code == 45 ) {
+            key = VK_SUBTRACT;
+
+            if (mod)
+                *mod_ = mod;
+            if (key)
+                *key_ = key;
+
+            return true;
+        }
+
+        // Dot key.
+        if( code == 46 ) {
+            // TODO: Fix this one compile issue 190 == VK_OEM_PERIOD
+            key = 190;
+
+            if (mod)
+                *mod_ = mod;
+            if (key)
+                *key_ = key;
+
+            return true;
+        }
+
+        // Divide key.
+        if( code == 47 ) {
+            key = VK_DIVIDE;
+
+            if (mod)
+                *mod_ = mod;
+            if (key)
+                *key_ = key;
+
+            return true;
+        }
+
+        // ` and ~ key.
+        // 96 - for "`" key, and 126 for "~" key
+        if( (code == 96) || (code == 126) ) {
+            // TODO: Fix this one compile issue 192 == VK_OEM_3
+            key = 192;
+
+            if (mod)
+                *mod_ = mod;
+            if (key)
+                *key_ = key;
+
+            return true;
+        }
+
 		if (code >= 0x20 && code <= 0x7f)
 			key = code;
 		else {
@@ -184,7 +275,7 @@ GlobalShortcutManager::KeyTrigger::Impl::qt_vk_table[] = {
 	{ Qt::Key_Hyper_R,     0 },
 	{ Qt::Key_Help,        0 },
 	{ Qt::Key_Direction_L, 0 },
-	{ Qt::Key_Direction_R, 0 },
+    { Qt::Key_Direction_R, 0 },
 
 	{ Qt::Key_unknown,     0 },
 };

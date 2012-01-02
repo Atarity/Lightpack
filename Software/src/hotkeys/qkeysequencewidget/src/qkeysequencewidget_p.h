@@ -61,7 +61,7 @@ public:
     void startRecording();
     void doneRecording();
     inline void cancelRecording();
-    inline void controlModifierlessTimout();
+    inline void controlModifierlessTimeout();
     inline void keyNotSupported();
 
     void updateDisplayShortcut();
