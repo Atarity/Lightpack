@@ -450,9 +450,19 @@ inline void QKeySequenceWidgetPrivate::keyNotSupported()
 
 void QKeySequenceWidgetPrivate::updateDisplayShortcut()
 {
+    // Fix bug with sequence Ctrl+ScrollLock
+    int code = currentSequence;
+    code &= ~Qt::KeyboardModifierMask;
+    if( code == 16908289) {
+        //QString fixedSequence;
+        //code = currentSequence;
+        currentSequence = QKeySequence(QString("Ctrl+ScrollLock"));
+    }
+
     // empty string if no non-modifier was pressed
-    QString str = currentSequence.toString(QKeySequence::NativeText);
-  //  str.replace('&', QLatin1String("&&"));  // TODO -- check it
+    QString str = currentSequence.toString(QKeySequence::NativeText);    
+
+    //  str.replace('&', QLatin1String("&&"));  // TODO -- check it
 
     /*if (isRecording == true)
     {        

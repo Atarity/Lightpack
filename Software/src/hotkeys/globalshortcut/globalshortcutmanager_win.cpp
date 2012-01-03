@@ -78,9 +78,9 @@ private:
 
 	static bool convertKeySequence(const QKeySequence& ks, UINT* mod_, UINT* key_)
 	{
-		int code = ks;
+        int code = ks;
 
-		UINT mod = 0;
+        UINT mod = 0;
 		if (code & Qt::META)
 			mod |= MOD_WIN;
 		if (code & Qt::SHIFT)
@@ -92,97 +92,10 @@ private:
 
         code &= ~Qt::KeyboardModifierMask;
 
-		UINT key = 0;
-        /* This one fix bug with incorrect detection of some keys.*/
-        // Multiply key.
-        if( code == 42 ) {
-            key = VK_MULTIPLY;
 
-            if (mod)
-                *mod_ = mod;
-            if (key)
-                *key_ = key;
+		UINT key = 0;        
 
-            return true;
-        }
-
-        // Plus key.
-        if( code == 43 ) {
-            key = VK_ADD;
-
-            if (mod)
-                *mod_ = mod;
-            if (key)
-                *key_ = key;
-
-            return true;
-        }
-
-        // Comma key.
-        if( code == 44 ) {
-            // TODO: Fix this one compile issue 188 == VK_OEM_COMMA
-            key = 188;
-
-            if (mod)
-                *mod_ = mod;
-            if (key)
-                *key_ = key;
-
-            return true;
-        }
-
-        // Minus key.
-        if( code == 45 ) {
-            key = VK_SUBTRACT;
-
-            if (mod)
-                *mod_ = mod;
-            if (key)
-                *key_ = key;
-
-            return true;
-        }
-
-        // Dot key.
-        if( code == 46 ) {
-            // TODO: Fix this one compile issue 190 == VK_OEM_PERIOD
-            key = 190;
-
-            if (mod)
-                *mod_ = mod;
-            if (key)
-                *key_ = key;
-
-            return true;
-        }
-
-        // Divide key.
-        if( code == 47 ) {
-            key = VK_DIVIDE;
-
-            if (mod)
-                *mod_ = mod;
-            if (key)
-                *key_ = key;
-
-            return true;
-        }
-
-        // ` and ~ key.
-        // 96 - for "`" key, and 126 for "~" key
-        if( (code == 96) || (code == 126) ) {
-            // TODO: Fix this one compile issue 192 == VK_OEM_3
-            key = 192;
-
-            if (mod)
-                *mod_ = mod;
-            if (key)
-                *key_ = key;
-
-            return true;
-        }
-
-		if (code >= 0x20 && code <= 0x7f)
+        if (code >= 0x20 && code <= 0x7f && !isBugKeyCode(&code))
 			key = code;
 		else {
 			for (int n = 0; qt_vk_table[n].key != Qt::Key_unknown; ++n) {
@@ -202,6 +115,88 @@ private:
 
 		return true;
 	}
+
+    // Function check current key code value and if it's one of known bug keys, replace original key code with new one.
+    // return true if keo code converted.
+    // return false if key code normal or not supported.
+    static bool isBugKeyCode(int *code)
+    {
+        switch (*code)
+        {
+            // Multiply key.
+            case 42:
+                *code = Qt::Key_multiply;
+                return true;
+            break;
+
+            // Plus key
+            case 43:
+               *code = Qt::Key_Plus;
+                return true;
+            break;
+
+            // Comma key
+            case 44:
+                *code = Qt::Key_Comma;
+                return true;
+            break;
+
+            // Subtract key
+            case 45:
+                *code = Qt::Key_Minus;
+                return true;
+            break;
+
+            // Dot key
+            case 46:
+                *code = Qt::Key_Period;
+                return true;
+            break;
+
+            // Divide key
+            case 47:
+                *code = Qt::Key_division;
+                return true;
+            break;
+
+            // ` and ~ keys
+            case 96:
+            case 126:
+                *code = Qt::Key_AsciiTilde;
+                return true;
+            break;
+
+            // \ key
+            case 92:
+            // |key
+            case 124:
+                *code = Qt::Key_brokenbar;
+                return true;
+            break;
+
+            // [ key
+            case 91:
+            // { key
+            case 123:
+                *code = Qt::Key_BracketLeft;
+                return true;
+            break;
+
+            // ] key
+            case 93:
+            // } key
+            case 125:
+                *code = Qt::Key_BracketRight;
+                return true;
+            break;
+
+
+            //case 16908289:
+            //break;
+
+        }
+        return false;
+    }
 };
 
 GlobalShortcutManager::KeyTrigger::Impl::Qt_VK_Keymap
@@ -276,6 +271,16 @@ GlobalShortcutManager::KeyTrigger::Impl::qt_vk_table[] = {
 	{ Qt::Key_Help,        0 },
 	{ Qt::Key_Direction_L, 0 },
     { Qt::Key_Direction_R, 0 },
+    { Qt::Key_multiply,    VK_MULTIPLY },
+    { Qt::Key_Comma,       188 }, // VK_OEM_COMMA
+    { Qt::Key_Plus,        VK_ADD },
+    { Qt::Key_Minus,       VK_SUBTRACT },
+    { Qt::Key_Period,      190 },   // VK_OEM_PERIOD
+    { Qt::Key_division,    VK_DIVIDE },
+    { Qt::Key_AsciiTilde,  192 },   // VK_OEM_3
+    { Qt::Key_BracketLeft, 219 },   // VK_OEM_4
+    { Qt::Key_BracketRight,221 },   // VK_OEM_6
+    { Qt::Key_brokenbar,   220 },   // VK_OEM_5
 
 	{ Qt::Key_unknown,     0 },
 };
