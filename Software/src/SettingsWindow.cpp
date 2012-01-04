@@ -1670,8 +1670,8 @@ void SettingsWindow::onLightpackModes_Activated(int index)
 void SettingsWindow::onMoodLampColor_changed(QColor color)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << color;
+    Settings::setMoodLampColor(color);
     m_moodlampManager->setCurrentColor(color);
-    // TODO: should i save current color to settings profile?
 }
 
 void SettingsWindow::onMoodLampSpeed_valueChanged(int value)
