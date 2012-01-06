@@ -65,6 +65,8 @@ private:
     void connectApiServerAndLedDeviceSignalsSlots();
     void disconnectApiServerAndLedDeviceSignalsSlots();
 
+    virtual void commitData(QSessionManager &sessionManager);
+
 private:
     SettingsWindow *m_settingsWindow;
     ApiServer *m_apiServer;

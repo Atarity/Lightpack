@@ -319,3 +319,15 @@ void LightpackApplication::disconnectApiServerAndLedDeviceSignalsSlots()
         m_isApiServerConnectedToLedDeviceSignalsSlots = false;
     }
 }
+
+void LightpackApplication::commitData(QSessionManager &sessionManager)
+{
+    Q_UNUSED(sessionManager);
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Off leds before quit";
+
+    if (m_ledDeviceFactory != NULL)
+    {
+        m_ledDeviceFactory->offLeds();
+    }
+}
