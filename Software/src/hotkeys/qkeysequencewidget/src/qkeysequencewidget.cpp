@@ -243,6 +243,7 @@ void QKeySequenceWidget::_connectingSlots()
     // connect signals to slots
     connect(d_ptr->clearButton, SIGNAL(clicked()), this,SLOT(clearKeySequence()));
     connect(&d_ptr->modifierlessTimeout, SIGNAL(timeout()), this, SLOT(doneRecording()));
+    connect(&d_ptr->inputTimeout, SIGNAL(timeout()), this, SLOT(doneRecording()));
     connect(d_func()->shortcutButton, SIGNAL(clicked()), this, SLOT(captureKeySequence()));
 
 }
@@ -393,6 +394,9 @@ void QKeySequenceWidgetPrivate::startRecording()
 
     shortcutButton->grabKeyboard();
 
+    inputTimeout.stop();
+    inputTimeout.start(3000);   // Give three seconds penality to input.
+
     if (!QWidget::keyboardGrabber())
     {
         qWarning() << "Failed to grab the keyboard! Most likely qt's nograb option is active";
@@ -408,7 +412,7 @@ void QKeySequenceWidgetPrivate::doneRecording()
         modifierlessTimeout.stop();
         startRecording();
     } else {
-        modifierlessTimeout.stop();
+        modifierlessTimeout.stop();        
 
         isRecording = false;
         shortcutButton->releaseKeyboard();
@@ -535,6 +539,7 @@ bool QShortcutButton::event(QEvent *e)
 void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
 {    
     qDebug() << "key pressed";
+    d->inputTimeout.stop();
     int keyQt =  keyEvent->key();
 
     // The user press Ecape key - just return previous value

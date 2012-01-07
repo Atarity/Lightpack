@@ -72,6 +72,7 @@ public:
     QString noneSequenceText;
 
     QTimer modifierlessTimeout;
+    QTimer inputTimeout;   // Fires then start capturing and need to avoi infinity waiting;
 
     quint32 numKey;
     quint32 modifierKeys;
