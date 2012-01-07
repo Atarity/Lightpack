@@ -108,8 +108,16 @@ void LedDeviceLightpack::offLeds()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    bool ok = writeBufferToDeviceWithCheck(CMD_OFF_ALL);
-    emit commandCompleted(ok);
+    if (m_colorsSaved.count() == 0)
+    {
+        for (int i = 0; i < MaximumLedsCount; i++)
+            m_colorsSaved << 0;
+    } else {
+        for (int i = 0; i < m_colorsSaved.count(); i++)
+            m_colorsSaved[i] = 0;
+    }
+
+    setColors(m_colorsSaved);
 
     // Stop ping device if offLeds() signal comes
     m_timerPingDevice->stop();
