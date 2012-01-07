@@ -329,5 +329,6 @@ void LightpackApplication::commitData(QSessionManager &sessionManager)
     if (m_ledDeviceFactory != NULL)
     {
         m_ledDeviceFactory->offLeds();
+        QApplication::processEvents(QEventLoop::AllEvents, 1000);
     }
 }
