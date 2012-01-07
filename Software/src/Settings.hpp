@@ -83,6 +83,8 @@ public:
     static QString getConnectedDeviceName();
     static void setConnectedDeviceName(const QString & deviceName);
     static QStringList getSupportedDevices();
+    static QKeySequence getOnOffDeviceKey();
+    static void setOnOffDeviceKey(const QKeySequence & keySequence);
     // [SerialPort]
     static QString getSerialPortName();
     static void setSerialPortName(const QString & port);

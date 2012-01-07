@@ -168,3 +168,10 @@ unix:include(qserialdevice/unix/ttylocker.pri)
 # QtSingleApplication
 #
 include(qtsingleapplication/src/qtsingleapplication.pri)
+
+#
+# Hotkeys based on PSI and QKeySequenceWidget
+#
+include(hotkeys/globalshortcut/globalshortcut.pri)
+include(hotkeys/qkeysequencewidget/qkeysequencewidget.pri)
+

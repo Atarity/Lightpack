@@ -33,6 +33,7 @@
 #include "debug.h"
 
 #include "../../CommonHeaders/COMMANDS.h"
+#include "hotkeys/globalshortcut/globalshortcutmanager.h"
 
 using namespace SettingsScope;
 
@@ -88,6 +89,8 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     initConnectedDeviceComboBox();
     initSerialPortBaudRateComboBox();
 
+    setupHotkeys();
+
     connectSignalsSlots();
 
     profileLoadLast();
@@ -108,7 +111,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     onGrabberChanged();
 
-    adjustSizeAndMoveCenter();
+    adjustSizeAndMoveCenter();   
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
@@ -220,6 +223,10 @@ void SettingsWindow::connectSignalsSlots()
 
     connect(ui->spinBox_LoggingLevel, SIGNAL(valueChanged(int)), this, SLOT(onLoggingLevel_valueChanged(int)));
     connect(ui->checkBox_PingDeviceEverySecond, SIGNAL(toggled(bool)), this, SLOT(onPingDeviceEverySecond_Toggled(bool)));
+
+    // HotKeys
+    connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(setOnOffHotKey(QKeySequence)));
+    connect(m_keySequenceWidget, SIGNAL(keySequenceCleared()), this, SLOT(clearOnOffHotKey()));
 }
 
 // ----------------------------------------------------------------------------
@@ -305,6 +312,7 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
     // Minimum level of sensitivity for ambilight mode
     ui->label_MinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
     ui->spinBox_GrabMinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
+    ui->groupBox_HotKeys->setVisible(Settings::isExpertModeEnabled());
 
     // Update device tab widgets depending on the connected device
     updateDeviceTabWidgetsVisibility();
@@ -1599,6 +1607,32 @@ Grab::GrabberType SettingsWindow::getSelectedGrabberType()
     }
 
     return Grab::QtGrabber;
+}
+
+// ----------------------------------------------------------------------------
+// Hotkeys slots and functions.
+// ----------------------------------------------------------------------------
+
+void SettingsWindow::setOnOffHotKey(QKeySequence keySequence)
+{
+    GlobalShortcutManager::instance()->clear();
+    GlobalShortcutManager::instance()->connect(keySequence, this, SLOT(switchBacklightOnOff()));
+    Settings::setOnOffDeviceKey(keySequence);
+}
+
+void SettingsWindow::clearOnOffHotKey()
+{
+    GlobalShortcutManager::instance()->clear();
+    Settings::setOnOffDeviceKey(QKeySequence());
+}
+
+void SettingsWindow::setupHotkeys()
+{
+    m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("On-Off light:"), this);
+    ui->groupBox_HotKeys->layout()->addWidget(m_keySequenceWidget);
+
+    m_keySequenceWidget->setKeySequence(Settings::getOnOffDeviceKey());
+    GlobalShortcutManager::instance()->connect(Settings::getOnOffDeviceKey(), this, SLOT(switchBacklightOnOff()));
 }
 
 // ----------------------------------------------------------------------------

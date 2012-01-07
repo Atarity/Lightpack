@@ -73,6 +73,13 @@ static const bool IsPingDeviceEverySecond = true;
 static const bool IsUpdateFirmwareMessageShown = false;
 static const QString ConnectedDeviceDefault = "Lightpack";
 static const QString SupportedDevices = SUPPORTED_DEVICES; /* comma separated values! */
+
+// [HotKeys]
+namespace HotKeys
+{
+static const QString OnOffDeviceKeyDefault = "Undefined";
+}
+
 // [API]
 namespace Api
 {
