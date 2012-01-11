@@ -1550,6 +1550,9 @@ void SettingsWindow::updateUiFromSettings()
     case Grab::WinAPIGrabber:
         ui->radioButton_GrabWinAPI->setChecked(true);
         break;
+    case Grab::WinAPIEachWidgetGrabber:
+        ui->radioButton_GrabWinAPI_EachWidget->setChecked(true);
+        break;
 #endif
 #ifdef D3D9_GRAB_SUPPORT
     case Grab::D3D9Grabber:
@@ -1566,6 +1569,10 @@ void SettingsWindow::updateUiFromSettings()
         ui->radioButton_GrabMacCoreGraphics->setChecked(true);
         break;
 #endif
+    case Grab::QtEachWidgetGrabber:
+        ui->radioButton_GrabQt_EachWidget->setChecked(true);
+        break;
+
     default:
         ui->radioButton_GrabQt->setChecked(true);
     }

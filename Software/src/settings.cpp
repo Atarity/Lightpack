@@ -791,36 +791,36 @@ Grab::GrabberType Settings::getGrabberType()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    QString strGrabbber = value(Profile::Key::Grab::Grabber).toString();
+    QString strGrabber = value(Profile::Key::Grab::Grabber).toString();
 
-    if (strGrabbber == Profile::Value::GrabberType::Qt)
+    if (strGrabber == Profile::Value::GrabberType::Qt)
         return Grab::QtGrabber;
-    if (strGrabbber == Profile::Value::GrabberType::QtEachWidget)
+    if (strGrabber == Profile::Value::GrabberType::QtEachWidget)
         return Grab::QtEachWidgetGrabber;
 
 #ifdef WINAPI_GRAB_SUPPORT
-    if (strGrabbber == Profile::Value::GrabberType::WinAPI)
+    if (strGrabber == Profile::Value::GrabberType::WinAPI)
         return Grab::WinAPIGrabber;
-    if (strGrabbber == Profile::Value::GrabberType::WinAPIEachWidget)
+    if (strGrabber == Profile::Value::GrabberType::WinAPIEachWidget)
         return Grab::WinAPIEachWidgetGrabber;
 #endif
 
 #ifdef D3D9_GRAB_SUPPORT
-    if (strGrabbber == Profile::Value::GrabberType::D3D9)
+    if (strGrabber == Profile::Value::GrabberType::D3D9)
         return Grab::D3D9Grabber;
 #endif
 
 #ifdef X11_GRAB_SUPPORT
-    if (strGrabbber == Profile::Value::GrabberType::X11)
+    if (strGrabber == Profile::Value::GrabberType::X11)
         return Grab::X11Grabber;
 #endif
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
-    if (strGrabbber == Profile::Value::GrabberType::MacCoreGraphics)
+    if (strGrabber == Profile::Value::GrabberType::MacCoreGraphics)
         return Grab::MacCoreGraphicsGrabber;
 #endif
 
-    qWarning() << Q_FUNC_INFO << Profile::Key::Grab::Grabber << "contains invalid value:" << strGrabbber << ", reset it to default:" << Profile::Grab::GrabberDefaultString;
+    qWarning() << Q_FUNC_INFO << Profile::Key::Grab::Grabber << "contains invalid value:" << strGrabber << ", reset it to default:" << Profile::Grab::GrabberDefaultString;
     setGrabberType(Profile::Grab::GrabberDefault);
 
     return Profile::Grab::GrabberDefault;
