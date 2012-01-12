@@ -1663,6 +1663,9 @@ void SettingsWindow::quit()
 {
     if (ui->checkBox_SwitchOffAtClosing->isChecked())
     {
+        // Process all currently pending signals (which may include updating the color signals)
+        QApplication::processEvents(QEventLoop::AllEvents, 1000);
+
         emit offLeds();
         QApplication::processEvents(QEventLoop::AllEvents, 1000);
     }
