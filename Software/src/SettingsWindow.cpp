@@ -24,15 +24,20 @@
  *
  */
 
-
 #include "SettingsWindow.hpp"
 #include "ui_SettingsWindow.h"
+
+#include "AboutDialog.hpp"
+#include "Settings.hpp"
+#include "GrabManager.hpp"
+#include "MoodLampManager.hpp"
+#include "SpeedTest.hpp"
+#include "ColorButton.hpp"
 #include "LedDeviceFactory.hpp"
-#include <QDesktopWidget>
-#include <QPlainTextEdit>
+#include "enums.hpp"
 #include "debug.h"
 
-#include "../../CommonHeaders/COMMANDS.h"
+#include "hotkeys/qkeysequencewidget/src/qkeysequencewidget.h"
 #include "hotkeys/globalshortcut/globalshortcutmanager.h"
 
 using namespace SettingsScope;
@@ -180,8 +185,8 @@ void SettingsWindow::connectSignalsSlots()
     // Open Settings file
     connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openCurrentProfile()));
 
-    // Connect profile signals to this slots
-    connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(returnPressed()), this, SLOT(profileRename()));
+    // Connect profile signals to this slots    
+    connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(editingFinished()) /* or returnPressed() */, this, SLOT(profileRename()));
     connect(ui->comboBox_Profiles, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileSwitch(QString)));
     connect(ui->pushButton_ProfileNew, SIGNAL(clicked()), this, SLOT(profileNew()));
     connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
@@ -1097,25 +1102,33 @@ void SettingsWindow::openCurrentProfile()
 
 void SettingsWindow::profileRename()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;       
 
-    //
-    // Press <Enter> in profile edit line will perform renaming it
-    // also update settings for usable configuration LED coefs
-    //
     QString configName = ui->comboBox_Profiles->currentText().trimmed();
-    ui->comboBox_Profiles->setItemText(ui->comboBox_Profiles->currentIndex(), configName);
+    ui->comboBox_Profiles->lineEdit()->setText(configName);
 
-    if(configName == ""){
+    // Signal editingFinished() will be emited if focus wasn't lost (for example when return pressed),
+    // and profileRename() function will be called again here
+    this->setFocus(Qt::OtherFocusReason);
+
+    if (Settings::getCurrentProfileName() == configName)
+    {
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Nothing has changed";
         return;
     }
 
-    Settings::renameCurrentProfile(configName);
+    if (configName == "")
+    {
+        configName = Settings::getCurrentProfileName();
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Profile name is empty, return back to" << configName;
+    }
+    else
+    {
+        Settings::renameCurrentProfile(configName);
+    }
 
-    this->setFocus(Qt::OtherFocusReason);
-
-    updateUiFromSettings();
-    emit settingsProfileChanged();
+    ui->comboBox_Profiles->lineEdit()->setText(configName);
+    ui->comboBox_Profiles->setItemText(ui->comboBox_Profiles->currentIndex(), configName);
 }
 
 void SettingsWindow::profileSwitch(const QString & configName)

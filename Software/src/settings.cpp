@@ -332,7 +332,7 @@ void Settings::loadOrCreateProfile(const QString & profileName)
 
 void Settings::renameCurrentProfile(const QString & profileName)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << profileName;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "from" << getCurrentProfileName() << "to" << profileName;
 
     QMutexLocker locker(&m_mutex);
 
