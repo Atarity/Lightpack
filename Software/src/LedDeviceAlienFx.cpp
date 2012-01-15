@@ -29,6 +29,7 @@
 #ifdef Q_WS_WIN
 
 #include "LedDeviceAlienFx.hpp"
+#include "Settings.hpp"
 
 #include <unistd.h>
 
@@ -36,6 +37,8 @@
 #include "debug.h"
 #include "../alienfx/LFX2.h"
 #include <windows.h>
+
+using namespace SettingsScope;
 
 LFX2INITIALIZE lfxInitFunction;
 LFX2RELEASE lfxReleaseFunction;
@@ -131,7 +134,10 @@ void LedDeviceAlienFx::setColors(const QList<QRgb> & colors)
 
 void LedDeviceAlienFx::offLeds()
 {
-    emit commandCompleted(true);
+    // TODO: fill it with current leds count
+    QList<QRgb> blackColor;
+    blackColor << 0;
+    setColors(blackColor);
 }
 
 void LedDeviceAlienFx::setRefreshDelay(int /*value*/)
