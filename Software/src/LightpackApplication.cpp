@@ -298,6 +298,7 @@ void LightpackApplication::startLedDeviceFactory()
     connect(m_settingsWindow, SIGNAL(updateGamma(double)),          m_ledDeviceFactory, SLOT(setGamma(double)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(updateBrightness(int)),        m_ledDeviceFactory, SLOT(setBrightness(int)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(requestFirmwareVersion()),     m_ledDeviceFactory, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(settingsProfileChanged()),     m_ledDeviceFactory, SLOT(updateDeviceSettings()), Qt::QueuedConnection);
 
     connect(m_ledDeviceFactory, SIGNAL(openDeviceSuccess(bool)),    m_settingsWindow, SLOT(ledDeviceOpenSuccess(bool)), Qt::QueuedConnection);
     connect(m_ledDeviceFactory, SIGNAL(ioDeviceSuccess(bool)),      m_settingsWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);

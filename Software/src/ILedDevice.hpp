@@ -53,6 +53,7 @@ public slots:
     virtual void setGamma(double value) = 0;
     virtual void setBrightness(int value) = 0;
     virtual void requestFirmwareVersion() = 0;
+    virtual void updateDeviceSettings() = 0;
 
     // deprecated, but may be usable for lightpack hw <= 5.5
     virtual void setColorDepth(int value) = 0;

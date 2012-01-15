@@ -52,6 +52,7 @@ signals:
     void ledDeviceSetGamma(double value);
     void ledDeviceSetBrightness(int value);
     void ledDeviceRequestFirmwareVersion();
+    void ledDeviceUpdateDeviceSettings();
 
 public slots:
     void recreateLedDevice();
@@ -65,6 +66,7 @@ public slots:
     void setGamma(double value);
     void setBrightness(int value);
     void requestFirmwareVersion();
+    void updateDeviceSettings();
 
 private slots:
     void ledDeviceCommandCompleted(bool ok);

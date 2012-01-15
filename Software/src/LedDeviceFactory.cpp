@@ -169,6 +169,19 @@ void LedDeviceFactory::requestFirmwareVersion()
     }
 }
 
+void LedDeviceFactory::updateDeviceSettings()
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << "Is last command completed:" << m_isLastCommandCompleted;
+
+    if (m_isLastCommandCompleted)
+    {
+        m_isLastCommandCompleted = false;
+        emit ledDeviceUpdateDeviceSettings();
+    } else {
+        cmdQueueAppend(LedDeviceCommands::UpdateDeviceSettings);
+    }
+}
+
 void LedDeviceFactory::ledDeviceCommandCompleted(bool ok)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << ok;
@@ -278,8 +291,8 @@ void LedDeviceFactory::connectSignalSlotsLedDevice()
 
     connect(m_ledDevice, SIGNAL(firmwareVersion(QString)),      this, SIGNAL(firmwareVersion(QString)), Qt::QueuedConnection);
     connect(m_ledDevice, SIGNAL(ioDeviceSuccess(bool)),         this, SIGNAL(ioDeviceSuccess(bool)), Qt::QueuedConnection);
-    connect(m_ledDevice, SIGNAL(openDeviceSuccess(bool)),       this, SIGNAL(openDeviceSuccess(bool)), Qt::QueuedConnection);
-    connect(m_ledDevice, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), this, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), Qt::QueuedConnection);
+    connect(m_ledDevice, SIGNAL(openDeviceSuccess(bool)),       this, SIGNAL(openDeviceSuccess(bool)), Qt::QueuedConnection);    
+    connect(m_ledDevice, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), this, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), Qt::QueuedConnection);    
 
     connect(this, SIGNAL(ledDeviceOpen()),                      m_ledDevice, SLOT(open()), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetColors(QList<QRgb>)),      m_ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
@@ -290,6 +303,7 @@ void LedDeviceFactory::connectSignalSlotsLedDevice()
     connect(this, SIGNAL(ledDeviceSetGamma(double)),            m_ledDevice, SLOT(setGamma(double)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetBrightness(int)),          m_ledDevice, SLOT(setBrightness(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceRequestFirmwareVersion()),    m_ledDevice, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
+    connect(this, SIGNAL(ledDeviceUpdateDeviceSettings()),      m_ledDevice, SLOT(updateDeviceSettings()), Qt::QueuedConnection);
 }
 
 void LedDeviceFactory::disconnectSignalSlotsLedDevice()
@@ -315,6 +329,7 @@ void LedDeviceFactory::disconnectSignalSlotsLedDevice()
     disconnect(this, SIGNAL(ledDeviceSetGamma(double)),         m_ledDevice, SLOT(setGamma(double)));
     disconnect(this, SIGNAL(ledDeviceSetBrightness(int)),       m_ledDevice, SLOT(setBrightness(int)));
     disconnect(this, SIGNAL(ledDeviceRequestFirmwareVersion()), m_ledDevice, SLOT(requestFirmwareVersion()));
+    disconnect(this, SIGNAL(ledDeviceUpdateDeviceSettings()),   m_ledDevice, SLOT(updateDeviceSettings()));
 }
 
 void LedDeviceFactory::cmdQueueAppend(LedDeviceCommands::Cmd cmd)
@@ -367,6 +382,10 @@ void LedDeviceFactory::cmdQueueProcessNext()
 
         case LedDeviceCommands::RequestFirmwareVersion:
             emit ledDeviceRequestFirmwareVersion();
+            break;
+
+        case LedDeviceCommands::UpdateDeviceSettings:
+            emit ledDeviceUpdateDeviceSettings();
             break;
 
         default:

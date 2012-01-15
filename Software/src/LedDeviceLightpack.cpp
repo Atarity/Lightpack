@@ -202,6 +202,20 @@ void LedDeviceLightpack::requestFirmwareVersion()
     emit commandCompleted(ok);
 }
 
+void LedDeviceLightpack::updateDeviceSettings()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    setRefreshDelay(Settings::getDeviceRefreshDelay());
+    setColorDepth(Settings::getDeviceColorDepth());
+    setSmoothSlowdown(Settings::getDeviceSmooth());
+    setGamma(Settings::getDeviceGamma());
+    setBrightness(Settings::getDeviceBrightness());
+
+    requestFirmwareVersion();
+}
+
+
 void LedDeviceLightpack::open()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
@@ -332,18 +346,6 @@ bool LedDeviceLightpack::writeBufferToDeviceWithCheck(int command)
         else
             return false;
     }
-}
-
-void LedDeviceLightpack::updateDeviceSettings()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    setRefreshDelay(Settings::getDeviceRefreshDelay());
-    setSmoothSlowdown(Settings::getDeviceSmooth());
-    setGamma(Settings::getDeviceGamma());
-    setBrightness(Settings::getDeviceBrightness());
-
-    requestFirmwareVersion();
 }
 
 void LedDeviceLightpack::resizeColorsBuffer(int buffSize)

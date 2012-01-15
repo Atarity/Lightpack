@@ -108,6 +108,14 @@ void LedDeviceVirtual::requestFirmwareVersion()
     emit commandCompleted(true);
 }
 
+void LedDeviceVirtual::updateDeviceSettings()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    setGamma(Settings::getDeviceGamma());
+    setBrightness(Settings::getDeviceBrightness());
+}
+
 void LedDeviceVirtual::open()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;

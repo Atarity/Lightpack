@@ -45,6 +45,7 @@ public slots:
     void setGamma(double value);
     void setBrightness(int value);
     void requestFirmwareVersion();
+    void updateDeviceSettings();
 
 private:
     void resizeColorsBuffer(int buffSize);

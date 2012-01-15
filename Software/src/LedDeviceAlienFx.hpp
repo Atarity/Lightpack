@@ -49,6 +49,7 @@ public slots:
     void setGamma(double /*value*/);
     void setBrightness(int /*value*/);
     void requestFirmwareVersion();
+    void updateDeviceSettings();
 
 private:
     HINSTANCE m_hLfxLibrary;

@@ -129,6 +129,14 @@ void LedDeviceArdulight::requestFirmwareVersion()
     emit commandCompleted(true);
 }
 
+void LedDeviceArdulight::updateDeviceSettings()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    setGamma(Settings::getDeviceGamma());
+    setBrightness(Settings::getDeviceBrightness());
+}
+
 void LedDeviceArdulight::open()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
