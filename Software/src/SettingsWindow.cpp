@@ -1539,7 +1539,9 @@ void SettingsWindow::updateUiFromSettings()
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
     ui->spinBox_GrabMinLevelOfSensitivity->setValue     (Settings::getGrabMinimumLevelOfSensitivity());
 
-    ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());
+    // Check the selected moodlamp mode (setChecked(false) not working to select another)
+    ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
+    ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());    
     ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
     ui->horizontalSlider_MoodLampSpeed->setValue        (Settings::getMoodLampSpeed());
 
@@ -1740,6 +1742,8 @@ void SettingsWindow::onMoodLampSpeed_valueChanged(int value)
 
 void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
+
     Settings::setMoodLampLiquidMode(checked);    
     if (Settings::isMoodLampLiquidMode())
     {
