@@ -227,6 +227,18 @@ void LightpackApplication::printVersionsSoftwareQtOS() const
 
 void LightpackApplication::checkSystemTrayAvailability() const
 {
+#   ifdef Q_OS_LINUX
+    // When you add lightpack in the Startup in Ubuntu (10.04), tray starts later than the application runs.
+    // Check availability tray every second for 20 seconds.
+    for (int i = 0; i < 20; i++)
+    {
+        if (QSystemTrayIcon::isSystemTrayAvailable())
+            break;
+
+        sleep(1);
+    }
+#   endif
+
     if (QSystemTrayIcon::isSystemTrayAvailable() == false)
     {
         QMessageBox::critical(0, "Lightpack", "I couldn't detect any system tray on this system.");
