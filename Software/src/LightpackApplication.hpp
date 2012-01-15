@@ -40,13 +40,14 @@ public:
     void initializeAll(const QString & appDirPath);
 
     enum ErrorCodes {
-        OK_ErrorCode = 0,
-        WrongCommandLineArgument_ErrorCode,
-        AppDirectoryCreationFail_ErrorCode,
-        OpenLogsFail_ErrorCode,
-        QFatalMessageHandler_ErrorCode,
+        OK_ErrorCode                            = 0,
+        WrongCommandLineArgument_ErrorCode      = 1,
+        AppDirectoryCreationFail_ErrorCode      = 2,
+        OpenLogsFail_ErrorCode                  = 3,
+        QFatalMessageHandler_ErrorCode          = 4,
+        LogsDirecroryCreationFail_ErrorCode     = 5,
         // Append new ErrorCodes here
-        JustEpicFail_ErrorCode = 93
+        JustEpicFail_ErrorCode                  = 93
     };
 
 signals:
