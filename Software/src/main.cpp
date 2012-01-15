@@ -37,6 +37,8 @@
 
 using namespace std;
 
+static const int StoreLogsLaunches = 5;
+
 unsigned g_debugLevel = SettingsScope::Main::DebugLevelDefault;
 QTextStream m_logStream;
 QMutex m_mutex;
@@ -59,11 +61,11 @@ QString getApplicationDirectoryPath(const char * firstCmdArgument)
     appDirPath = QDir::homePath() + "/.Lightpack";
 #   endif
 
-    QDir dir(appDirPath);
-    if (dir.exists() == false)
+    QDir appDir(appDirPath);
+    if (appDir.exists() == false)
     {
         cout << "mkdir " << appDirPath.toStdString() << endl;
-        if (dir.mkdir(appDirPath) == false)
+        if (appDir.mkdir(appDirPath) == false)
         {
             cerr << "Failed mkdir '" << appDirPath.toStdString() << "' for application generated stuff. Exit." << endl;
             exit(LightpackApplication::AppDirectoryCreationFail_ErrorCode);
@@ -76,26 +78,59 @@ QString getApplicationDirectoryPath(const char * firstCmdArgument)
 
 void openLogsFile(const QString & appDirPath)
 {
-    QString logFilePath = appDirPath + "/Lightpack.log";
+    QString logsDirPath = appDirPath + "/Logs";
+
+    QDir logsDir(logsDirPath);
+    if (logsDir.exists() == false)
+    {
+        cout << "mkdir " << logsDirPath.toStdString() << endl;
+        if (logsDir.mkdir(logsDirPath) == false)
+        {
+            cerr << "Failed mkdir '" << logsDirPath.toStdString() << "' for logs. Exit." << endl;
+            exit(LightpackApplication::LogsDirecroryCreationFail_ErrorCode);
+        }
+    }
+
+    QString logFilePath = logsDirPath + "/Lightpack.0.log";
+
+    QStringList logFiles = logsDir.entryList(QStringList("Lightpack.?.log"), QDir::Files, QDir::Name);
+
+    for (int i = logFiles.count() - 1; i >= 0; i--)
+    {
+        QString num = logFiles[i].split('.').at(1);
+        QString from = logsDirPath + "/" + QString("Lightpack.") + num + ".log";
+        QString to = logsDirPath + "/" + QString("Lightpack.") + QString::number(num.toInt() + 1) + ".log";
+
+        if (i >= StoreLogsLaunches - 1)
+        {
+            QFile::remove(from);
+            continue;
+        }
+
+        if (QFile::exists(to))
+            QFile::remove(to);
+
+        qDebug() << "Rename log:" << from << "to" << to;
+
+        bool ok = QFile::rename(from, to);
+        if (!ok)
+            qCritical() << "Fail rename log:" << from << "to" << to;
+    }
 
     QFile *logFile = new QFile(logFilePath);
-    QIODevice::OpenMode openFileAppendOrTruncateFlag = QIODevice::Append;
-    QFileInfo info(logFilePath);
-    if(info.size() > 1*1024*1024){
-        cout << "Log file size > 1 Mb. I'm going to clear it. Now!" << endl;
-        openFileAppendOrTruncateFlag = QIODevice::Truncate;
-    }
-    if(logFile->open(QIODevice::WriteOnly | openFileAppendOrTruncateFlag | QIODevice::Text)){
+
+    if (logFile->open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+    {
         m_logStream.setDevice(logFile);
         m_logStream << endl;
         m_logStream << QDateTime::currentDateTime().date().toString("yyyy_MM_dd") << " ";
         m_logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Lightpack sw" << VERSION_STR << endl;
-    }else{
+    } else {
         cerr << "Failed to open logs file: '" << logFilePath.toStdString() << "'. Exit." << endl;
         exit(LightpackApplication::OpenLogsFail_ErrorCode);
     }
 
-    qDebug() << "Logs file: " << logFilePath;
+    qDebug() << "Logs file:" << logFilePath;
 }
 
 void messageHandler(QtMsgType type, const char *msg)
@@ -139,10 +174,6 @@ int main(int argc, char **argv)
 
     QString appDirPath = getApplicationDirectoryPath(argv[0]);
 
-    openLogsFile(appDirPath);
-
-    qInstallMsgHandler(messageHandler);
-
     LightpackApplication lightpackApp(argc, argv);
 
     if (lightpackApp.isRunning())
@@ -153,10 +184,13 @@ int main(int argc, char **argv)
         exit(0);
     }
 
+    openLogsFile(appDirPath);
+
+    qInstallMsgHandler(messageHandler);
+
     lightpackApp.initializeAll(appDirPath);
 
     Q_INIT_RESOURCE(LightpackResources);
-
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << lightpackApp.thread()->currentThreadId();
 
