@@ -32,6 +32,7 @@ AppVerName=5.8
 UninstallDisplayName=UninstallLightpack
 UninstallDisplayIcon={app}\Lightpack.exe
 VersionInfoDescription=5.8
+AppMutex=LightpackAppMutex
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

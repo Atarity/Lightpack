@@ -134,6 +134,10 @@ void messageHandler(QtMsgType type, const char *msg)
 
 int main(int argc, char **argv)
 {
+#ifdef Q_WS_WIN
+#include <windows.h>
+    CreateMutex(NULL, FALSE, L"LightpackAppMutex");
+#endif
     // Using locale codec for console output in messageHandler(..) function ( cout << qstring.toStdString() )
     QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
 

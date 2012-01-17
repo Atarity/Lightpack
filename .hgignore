@@ -24,6 +24,5 @@ Software/[^/\\]+\.deb
 syntax: regexp
 Software/installer/Output/
 syntax: glob
-Software/installer/*.ico
 Software/installer/*.dll
 Software/installer/*.exe
