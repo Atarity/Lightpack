@@ -21,3 +21,9 @@ Software/apiexamples/.+\.pyc
 Software/deb/DEBIAN/md5sums
 Software/deb/usr/bin/lightpack
 Software/[^/\\]+\.deb
+syntax: regexp
+Software/installer/Output/
+syntax: glob
+Software/installer/*.ico
+Software/installer/*.dll
+Software/installer/*.exe
