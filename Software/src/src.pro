@@ -79,6 +79,9 @@ macx{
             -framework ApplicationServices \
             -framework OpenGL
     ICON = ../res/icons/Lightpack.icns
+
+    # For build universal binaries (native on Intel and PowerPC)
+    QMAKE_MAC_SDK = /Developer/SDKs/MacOSX10.6.sdk
 }
 
 INCLUDEPATH += ./hidapi ./grab ./alienfx ./
