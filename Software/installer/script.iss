@@ -62,6 +62,7 @@ Name: "{commonstartup}\{#MyAppName}"; Filename:"{app}\{#MyAppExeName}"; Tasks: s
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "http://code.google.com/p/lightpack/w/list"; Description: "{cm:OpenWiki}"; Flags: postinstall shellexec skipifsilent runasoriginaluser 
 
 [UninstallDelete]
 Name: "{app}\*.*"; Type: filesandordirs
@@ -72,3 +73,5 @@ russian.CreateStartupIcon=ƒобавить в автозагрузку
 english.CreateStartupIcon=Add to startup folder
 russian.UninstallName = Lightpack (только удаление)
 english.UninstallName = Lightpack (remove only)
+russian.OpenWiki = ќткрыть страницу с документацией
+english.OpenWiki = Open Wiki page
