@@ -29,7 +29,7 @@ Compression=lzma/Max
 SolidCompression=true
 AppCopyright=Lightpack
 AppVerName=5.8
-UninstallDisplayName=UninstallLightpack
+UninstallDisplayName={cm:UninstallName}
 UninstallDisplayIcon={app}\Lightpack.exe
 VersionInfoDescription=5.8
 AppMutex=LightpackAppMutex
@@ -70,3 +70,5 @@ Name: (app); Type: dirifempty
 [CustomMessages]
 russian.CreateStartupIcon=ƒобавить в автозагрузку
 english.CreateStartupIcon=Add to startup folder
+russian.UninstallName = Lightpack (только удаление)
+english.UninstallName = Lightpack (remove only)
