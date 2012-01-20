@@ -26,6 +26,7 @@
 
 
 #include <QtGui>
+#include <QTextItem>
 #include "GrabWidget.hpp"
 #include "ui_GrabWidget.h"
 #include "Settings.hpp"
@@ -57,17 +58,17 @@ GrabWidget::GrabWidget(int id, QWidget *parent) :
 
     ui->setupUi(this);
 
-    // Button image size 25x25 px
-    ui->button_OpenConfig->setFixedSize(25, 25);
+    // Button image size 24x24 px
+    ui->button_OpenConfig->setFixedSize(24, 24);
 
     m_selfId = id;
+    m_selfIdString = QString::number(m_selfId + 1);
 
     m_configWidget = new GrabConfigWidget();
 
     setCursorOnAll(Qt::OpenHandCursor);
     setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
     setFocusPolicy(Qt::NoFocus);
-    ui->label_ID->setText(QString::number(m_selfId + 1));
 
     setMouseTracking(true);
 
@@ -127,8 +128,6 @@ void GrabWidget::setCursorOnAll(Qt::CursorShape cursor)
 
     ui->button_OpenConfig->setCursor(Qt::ArrowCursor);
 
-    ui->label_ID->setCursor(cursor);
-    ui->labelWidthHeight->setCursor(cursor);
     setCursor(cursor);
 }
 
@@ -411,7 +410,7 @@ void GrabWidget::resizeEvent(QResizeEvent *)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    ui->labelWidthHeight->setText(QString::number(width()) + "x" + QString::number(height()));
+    m_widthHeight = QString::number(width()) + "x" + QString::number(height());
 }
 
 void GrabWidget::paintEvent(QPaintEvent *)
@@ -421,6 +420,37 @@ void GrabWidget::paintEvent(QPaintEvent *)
     QPainter painter(this);
     painter.setPen(QColor(0x77, 0x77, 0x77));
     painter.drawRect(0, 0, width() - 1, height() - 1);
+
+//    // Icon 'resize' opacity
+    painter.setOpacity(0.4);
+
+    // Draw icon 12x12px with 3px padding from the bottom right corner
+    if (m_textColor == Qt::white)
+        painter.drawPixmap(width() - 18, height() - 18, 12, 12, QPixmap(":/icons/res_light.png"));
+    else{
+        //painter.setOpacity(0.5);
+        painter.drawPixmap(width() - 18, height() - 18, 12, 12, QPixmap(":/icons/res_dark.png"));
+    }
+
+    // Self ID and size text opacity
+    painter.setOpacity(0.25);
+
+    QFont font = painter.font();
+    font.setBold(true);
+    font.setPixelSize((height() / 3 < width() / 3) ? height() / 3 : width() / 3);
+    painter.setFont(font);
+
+    painter.setPen(m_textColor);
+    painter.setBrush(QBrush(m_textColor));
+    painter.drawText(rect(), m_selfIdString, QTextOption(Qt::AlignCenter));
+
+    font.setBold(false);
+    font.setPointSize(10);
+    painter.setFont(font);
+
+    QRect rectWidthHeight = rect();
+    rectWidthHeight.setBottom(rect().bottom() - 3);
+    painter.drawText(rectWidthHeight, m_widthHeight, QTextOption(Qt::AlignHCenter | Qt::AlignBottom));
 }
 
 
@@ -582,19 +612,15 @@ void GrabWidget::setTextColor(QColor color)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << hex << color.rgb();
 
-    QPalette pal = palette();
-
     setOpenConfigButtonBackground(color);
 
     if (isAreaEnabled())
     {
-        pal.setBrush(QPalette::WindowText, QBrush(color));
+        m_textColor = color;
     } else {
         // Disabled widget
-        pal.setBrush(QPalette::WindowText, QBrush(Qt::darkGray));
+        m_textColor = Qt::black;
     }
-    ui->label_ID->setPalette(pal);
-    ui->labelWidthHeight->setPalette(pal);
 }
 
 void GrabWidget::setOpenConfigButtonBackground(const QColor &color)
@@ -602,8 +628,8 @@ void GrabWidget::setOpenConfigButtonBackground(const QColor &color)
     QString image = (color == Qt::white && isAreaEnabled()) ? "light" : "dark";
 
     ui->button_OpenConfig->setStyleSheet(
-                "QPushButton         { border-image: url(:/buttons/arrow_right_" + image + "_25px.png) }"
-                "QPushButton:hover   { border-image: url(:/buttons/arrow_right_" + image + "_25px_hover.png) }"
-                "QPushButton:pressed { border-image: url(:/buttons/arrow_right_" + image + "_25px_pressed.png) }"
+                "QPushButton         { border-image: url(:/buttons/arrow_right_" + image + "_24px.png) }"
+                "QPushButton:hover   { border-image: url(:/buttons/arrow_right_" + image + "_24px_hover.png) }"
+                "QPushButton:pressed { border-image: url(:/buttons/arrow_right_" + image + "_24px_pressed.png) }"
                 );
 }

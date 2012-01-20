@@ -117,6 +117,10 @@ private:
 
     GrabConfigWidget *m_configWidget;
 
+    QColor m_textColor;
+    QString m_selfIdString;
+    QString m_widthHeight;
+
 protected:
     virtual void mousePressEvent(QMouseEvent *pe);
     virtual void mouseMoveEvent(QMouseEvent *pe);
