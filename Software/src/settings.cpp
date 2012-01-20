@@ -1090,9 +1090,9 @@ void Settings::setValidLedCoef(int ledIndex, const QString & keyCoef, double coe
                    << keyCoef
                    << error
                    << "Convert to double error. Set it to default value" << keyCoef << "=" << Profile::Led::CoefDefault;
-        coef = Profile::Led::CoefDefault;
-        Settings::setValue(Profile::Key::Led::Prefix + QString::number(ledIndex + 1) + "/" + keyCoef, coef);
+        coef = Profile::Led::CoefDefault;        
     }
+    Settings::setValue(Profile::Key::Led::Prefix + QString::number(ledIndex + 1) + "/" + keyCoef, coef);
 }
 
 double Settings::getValidLedCoef(int ledIndex, const QString & keyCoef)

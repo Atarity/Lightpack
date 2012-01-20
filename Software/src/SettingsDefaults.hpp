@@ -173,9 +173,9 @@ static const double GammaMax = 10.0;
 namespace Led
 {
 static const bool IsEnabledDefault = true;
-static const double CoefMin = 0.1;
+static const double CoefMin = 0.0;
 static const double CoefDefault = 1.0;
-static const double CoefMax = 3;
+static const double CoefMax = 1.0;
 static const QSize SizeDefault = QSize(150, 150);
 }
 } /*Profile*/
