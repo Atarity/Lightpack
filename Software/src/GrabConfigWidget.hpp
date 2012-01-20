@@ -64,6 +64,7 @@ private:
 
 protected:
     virtual void paintEvent(QPaintEvent *);
+    virtual void changeEvent(QEvent *);
     
 private slots:
     void onIsAreaEnabled_Toggled(bool state);

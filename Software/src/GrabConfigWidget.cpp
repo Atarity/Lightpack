@@ -162,6 +162,20 @@ void GrabConfigWidget::paintEvent(QPaintEvent *)
     paintArrow(&painter, m_arrowSide);
 }
 
+void GrabConfigWidget::changeEvent(QEvent *e)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << e->type();
+
+    QWidget::changeEvent(e);
+    switch (e->type()) {
+    case QEvent::LanguageChange:
+        ui->retranslateUi(this);
+        break;
+    default:
+        break;
+    }
+}
+
 void GrabConfigWidget::onIsAreaEnabled_Toggled(bool state)
 {
     ui->spinBox_Red->setEnabled(state);
