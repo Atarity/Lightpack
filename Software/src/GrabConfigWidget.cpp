@@ -42,7 +42,7 @@ GrabConfigWidget::GrabConfigWidget(QWidget *parent) :
     setWindowFlags(Qt::FramelessWindowHint | Qt::Popup);
     setAttribute(Qt::WA_TranslucentBackground);
 
-    setArrow(LeftSide);
+    setArrow(RightSide);
 
     adjustSize();
 
@@ -109,6 +109,7 @@ void GrabConfigWidget::setArrow(ArrowSide arrowSide)
     m_arrowSide = arrowSide;
 
     QMargins margins(Margin, Margin, Margin, Margin);
+
     switch(arrowSide)
     {
     case LeftSide:
@@ -127,6 +128,41 @@ void GrabConfigWidget::setArrow(ArrowSide arrowSide)
 
     ui->gridLayout->setContentsMargins(margins);
     adjustSize();
+
+    QPolygon poly;
+
+    // After resize update mask for window system show valid shadows
+    switch(arrowSide)
+    {
+    case LeftSide:
+        poly.append(QPoint(0, 0));
+        poly.append(QPoint(width(), 0));
+        poly.append(QPoint(width(), height()));
+        poly.append(QPoint(Margin, height()));
+        poly.append(QPoint(Margin, height() / 2 + Margin+1));
+        poly.append(QPoint(0, height() / 2));
+        poly.append(QPoint(0, 0));
+        break;
+    case RightSide:
+        poly.append(QPoint(0, 0));
+        poly.append(QPoint(width() - Margin + 1, 0));
+        poly.append(QPoint(width() - Margin + 1, height() / 2 - Margin));
+        poly.append(QPoint(width() + 1, height() / 2));
+        poly.append(QPoint(width() - Margin + 1, height() / 2 + Margin));
+        poly.append(QPoint(width() - Margin + 1, height()));
+        poly.append(QPoint(0, height()));
+        poly.append(QPoint(0, 0));
+        break;
+    case TopSide:
+        // TODO
+        break;
+    case BottomSide:
+        // TODO
+        break;
+    }
+
+    // Update mask for window system show valid shadows
+    setMask(QRegion(poly));
 }
 
 void GrabConfigWidget::paintArrow(QPainter *p, ArrowSide side)
