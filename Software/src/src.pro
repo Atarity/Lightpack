@@ -8,13 +8,6 @@
 
 TARGET      = Lightpack
 DESTDIR     = bin
-
-# Portable version store logs and settings in application directory
-win32{
-    # Use it on your own risk!
-    DEFINES    += PORTABLE_VERSION
-}
-
 TEMPLATE    = app
 QT         += network
 

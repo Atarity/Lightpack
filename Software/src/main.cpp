@@ -42,34 +42,47 @@ QTextStream m_logStream;
 QMutex m_mutex;
 
 QString createApplicationDirectory(const char * firstCmdArgument)
-{
-    QString appDirPath = QString(firstCmdArgument);
+{    
+    QFileInfo fileInfo(firstCmdArgument);
+    QString appDirPath = fileInfo.absoluteDir().absolutePath();
 
-#ifdef PORTABLE_VERSION
-    // Find application directory
-    QFileInfo fileInfo(appDirPath);
-    appDirPath = fileInfo.absoluteDir().absolutePath();
-    cout << "Application directory: " << appDirPath.toStdString() << endl;
+    QString lightpackMainConfPath = appDirPath + "/LightpackMain.conf";
 
-#else
+    cout << lightpackMainConfPath.toStdString() << endl;
 
-#   ifdef Q_WS_WIN
-    appDirPath = QDir::homePath() + "/Lightpack";
-#   else
-    appDirPath = QDir::homePath() + "/.Lightpack";
-#   endif
-
-    QDir dir(appDirPath);
-    if (dir.exists() == false)
+    if (QFile::exists(lightpackMainConfPath))
     {
-        cout << "mkdir " << appDirPath.toStdString() << endl;
-        if (dir.mkdir(appDirPath) == false)
+        /// Portable version
+        /// Store logs and settings in application directory
+
+        cout << "Portable version" << endl;
+    }
+    else
+    {
+        /// Unportable version
+        /// Store logs and settings in home directory of the current user
+
+        cout << "Unportable version" << endl;
+
+#       ifdef Q_WS_WIN
+        appDirPath = QDir::homePath() + "/Lightpack";
+#       else
+        appDirPath = QDir::homePath() + "/.Lightpack";
+#       endif
+
+        QDir dir(appDirPath);
+        if (dir.exists() == false)
         {
-            cerr << "Failed mkdir '" << appDirPath.toStdString() << "' for application generated stuff. Exit." << endl;
-            exit(LightpackApplication::AppDirectoryCreationFail_ErrorCode);
+            cout << "mkdir " << appDirPath.toStdString() << endl;
+            if (dir.mkdir(appDirPath) == false)
+            {
+                cerr << "Failed mkdir '" << appDirPath.toStdString() << "' for application generated stuff. Exit." << endl;
+                exit(LightpackApplication::AppDirectoryCreationFail_ErrorCode);
+            }
         }
     }
-#endif
+
+    cout << "Application directory: " << appDirPath.toStdString() << endl;
 
     return appDirPath;
 }
