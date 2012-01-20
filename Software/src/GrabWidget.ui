@@ -55,6 +55,13 @@
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QPushButton" name="button_OpenConfig">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -86,24 +93,16 @@
       </spacer>
      </item>
      <item>
-      <widget class="QCheckBox" name="checkBox_SelfId">
+      <widget class="QLabel" name="label_ID">
        <property name="font">
         <font>
+         <pointsize>12</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
-       <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
-       </property>
-       <property name="locale">
-        <locale language="English" country="UnitedStates"/>
-       </property>
        <property name="text">
         <string notr="true">ID</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
        </property>
       </widget>
      </item>

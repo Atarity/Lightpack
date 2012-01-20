@@ -94,6 +94,7 @@ SOURCES += \
     AboutDialog.cpp \
     GrabManager.cpp \
     GrabWidget.cpp \
+    GrabConfigWidget.cpp \
     SpeedTest.cpp \
     LedDeviceFactory.cpp \
     LedDeviceLightpack.cpp \
@@ -124,6 +125,7 @@ HEADERS += \
     TimeEvaluations.hpp \
     GrabManager.hpp \
     GrabWidget.hpp \
+    GrabConfigWidget.hpp \
     debug.h \
     SpeedTest.hpp \
     alienfx/LFXDecl.h \
@@ -158,7 +160,8 @@ HEADERS += \
 
 FORMS += SettingsWindow.ui \
     AboutDialog.ui \
-    GrabWidget.ui
+    GrabWidget.ui \
+    GrabConfigWidget.ui
 
 #
 #   QSerialDevice

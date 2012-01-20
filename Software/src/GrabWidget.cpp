@@ -49,7 +49,6 @@ const QColor GrabWidget::m_colors[GrabWidget::ColorsCount][2] = {
     { Qt::white,       Qt::black }, // ColorIndexWhite == 11
 };
 
-
 GrabWidget::GrabWidget(int id, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::GrabWidget)
@@ -58,20 +57,29 @@ GrabWidget::GrabWidget(int id, QWidget *parent) :
 
     ui->setupUi(this);
 
-    this->m_selfId = id;
+    ui->button_OpenConfig->setFixedSize(25, 25);
 
-    this->setCursorOnAll(Qt::OpenHandCursor);
-    this->setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
-    this->setFocusPolicy(Qt::NoFocus);
-    ui->checkBox_SelfId->setText(QString::number(this->m_selfId + 1));
+    m_selfId = id;
 
-    this->setMouseTracking(true);
+    m_configWidget = new GrabConfigWidget();
 
-    this->resize(100, 100);
+
+    setCursorOnAll(Qt::OpenHandCursor);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
+    setFocusPolicy(Qt::NoFocus);
+    ui->label_ID->setText(QString::number(m_selfId + 1));
+
+    setMouseTracking(true);
+
+    resize(200, 200);
 
     fillBackgroundColored();
 
-    connect(ui->checkBox_SelfId, SIGNAL(toggled(bool)), this, SLOT(checkBoxSelfId_Toggled(bool)));
+    connect(m_configWidget, SIGNAL(isAreaEnabled_Toggled(bool)), this, SLOT(onIsAreaEnabled_Toggled(bool)));
+    connect(m_configWidget, SIGNAL(coefRed_ValueChanged(double)),   this, SLOT(onRedCoef_ValueChanged(double)));
+    connect(m_configWidget, SIGNAL(coefGreen_ValueChanged(double)), this, SLOT(onGreenCoef_ValueChanged(double)));
+    connect(m_configWidget, SIGNAL(coefBlue_ValueChanged(double)),  this, SLOT(onBlueCoef_ValueChanged(double)));
+    connect(ui->button_OpenConfig, SIGNAL(clicked()), this, SLOT(onOpenConfigButton_Clicked()));
 }
 
 GrabWidget::~GrabWidget()
@@ -109,14 +117,16 @@ void GrabWidget::settingsProfileChanged()
 
     emit resizeOrMoveCompleted( m_selfId );
 
-    ui->checkBox_SelfId->setChecked(Settings::isLedEnabled(m_selfId));
+    m_configWidget->setIsAreaEnabled(Settings::isLedEnabled(m_selfId));
 }
 
 void GrabWidget::setCursorOnAll(Qt::CursorShape cursor)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << cursor;
 
-    ui->checkBox_SelfId->setCursor(Qt::ArrowCursor);
+    ui->button_OpenConfig->setCursor(Qt::ArrowCursor);
+
+    ui->label_ID->setCursor(cursor);
     ui->labelWidthHeight->setCursor(cursor);
     this->setCursor(cursor);
 }
@@ -355,7 +365,7 @@ void GrabWidget::wheelEvent(QWheelEvent *pe)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    if(ui->checkBox_SelfId->isChecked() == false){
+    if (Settings::isLedEnabled(m_selfId) == false){
         return;
     }
 
@@ -412,7 +422,11 @@ bool GrabWidget::isGrabEnabled()
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    return ui->checkBox_SelfId->isChecked();
+    return true;
+
+    // TODO: test speed
+    return Settings::isLedEnabled(m_selfId);
+//    return ui->checkBox_SelfId->isChecked();
 }
 
 void GrabWidget::fillBackgroundWhite()
@@ -420,7 +434,7 @@ void GrabWidget::fillBackgroundWhite()
     DEBUG_MID_LEVEL << Q_FUNC_INFO << m_selfId;
 
     setBackgroundColor(Qt::white);
-    setTextColor(Qt::white);
+    setTextColor(Qt::black);
 }
 
 void GrabWidget::fillBackgroundColored()
@@ -469,13 +483,44 @@ void GrabWidget::checkAndSetCursors(QMouseEvent *pe)
     }
 }
 
-void GrabWidget::checkBoxSelfId_Toggled(bool state)
+void GrabWidget::onIsAreaEnabled_Toggled(bool state)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
-    fillBackgroundColored();
-
     Settings::setLedEnabled(m_selfId, state);
+
+    fillBackgroundColored();    
+}
+
+void GrabWidget::onOpenConfigButton_Clicked()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    // Find y-coordinate for center of the button
+    int buttonCenter = ui->button_OpenConfig->pos().y() + ui->button_OpenConfig->height() / 2;
+
+    m_configWidget->showConfigFor(pos(), rect(), buttonCenter);
+}
+
+void GrabWidget::onRedCoef_ValueChanged(double value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+    Settings::setLedCoefRed(m_selfId, value);
+    m_coefRed = Settings::getLedCoefRed(m_selfId);
+}
+
+void GrabWidget::onGreenCoef_ValueChanged(double value)
+{
+    DEBUG_LOW_LEVEL << value;
+    Settings::setLedCoefGreen(m_selfId, value);
+    m_coefGreen = Settings::getLedCoefGreen(m_selfId);
+}
+
+void GrabWidget::onBlueCoef_ValueChanged(double value)
+{
+    DEBUG_LOW_LEVEL << value;
+    Settings::setLedCoefBlue(m_selfId, value);
+    m_coefBlue = Settings::getLedCoefBlue(m_selfId);
 }
 
 void GrabWidget::setBackgroundColor(QColor color)
@@ -484,7 +529,7 @@ void GrabWidget::setBackgroundColor(QColor color)
 
     QPalette pal = this->palette();
 
-    if (ui->checkBox_SelfId->isChecked())
+    if (Settings::isLedEnabled(m_selfId))
     {
         pal.setBrush(this->backgroundRole(), QBrush(color));
     } else {
@@ -500,13 +545,26 @@ void GrabWidget::setTextColor(QColor color)
 
     QPalette pal = this->palette();
 
-    if (ui->checkBox_SelfId->isChecked())
+    setOpenConfigButtonBackground(color);
+
+    if (Settings::isLedEnabled(m_selfId))
     {
         pal.setBrush(QPalette::WindowText, QBrush(color));
     } else {
         // Disabled widget
-        pal.setBrush(QPalette::WindowText, QBrush(Qt::gray));
+        pal.setBrush(QPalette::WindowText, QBrush(Qt::darkGray));
     }
-    ui->checkBox_SelfId->setPalette(pal);
+    ui->label_ID->setPalette(pal);
     ui->labelWidthHeight->setPalette(pal);
+}
+
+void GrabWidget::setOpenConfigButtonBackground(const QColor &color)
+{
+    QString image = (color == Qt::white && Settings::isLedEnabled(m_selfId)) ? "light" : "dark";
+
+    ui->button_OpenConfig->setStyleSheet(
+                "QPushButton         { border-image: url(:/buttons/arrow_right_" + image + "_25px.png) }"
+                "QPushButton:hover   { border-image: url(:/buttons/arrow_right_" + image + "_25px_hover.png) }"
+                "QPushButton:pressed { border-image: url(:/buttons/arrow_right_" + image + "_25px_pressed.png) }"
+                );
 }

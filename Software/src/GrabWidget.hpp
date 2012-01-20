@@ -27,6 +27,7 @@
 #pragma once
 
 #include <QWidget>
+#include "GrabConfigWidget.hpp"
 
 namespace Ui {
     class GrabWidget;
@@ -54,14 +55,18 @@ private:
 signals:
     void resizeOrMoveStarted();
     void resizeOrMoveCompleted(int id);
-    void mouseRightButtonClicked(int m_selfId);
+    void mouseRightButtonClicked(int selfId);
     void sizeAndPositionChanged(int w, int h, int x, int y);
 
 public slots:
     void settingsProfileChanged();
 
 private slots:
-    void checkBoxSelfId_Toggled(bool state);
+    void onIsAreaEnabled_Toggled(bool state);
+    void onOpenConfigButton_Clicked();
+    void onRedCoef_ValueChanged(double value);
+    void onGreenCoef_ValueChanged(double value);
+    void onBlueCoef_ValueChanged(double value);
 
 private:
     virtual void closeEvent(QCloseEvent *event);
@@ -69,6 +74,7 @@ private:
     void checkAndSetCursors(QMouseEvent *pe);
     void setBackgroundColor(QColor color);
     void setTextColor(QColor color);
+    void setOpenConfigButtonBackground(const QColor &color);
 
 public:
     static const int ColorIndexWhite = 11;
@@ -108,6 +114,8 @@ private:
     double m_coefBlue;
 
     Ui::GrabWidget *ui;
+
+    GrabConfigWidget *m_configWidget;
 
 protected:
     virtual void mousePressEvent(QMouseEvent *pe);
