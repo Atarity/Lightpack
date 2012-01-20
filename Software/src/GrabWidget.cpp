@@ -538,7 +538,7 @@ void GrabWidget::onOpenConfigButton_Clicked()
     // Find y-coordinate for center of the button
     int buttonCenter = ui->button_OpenConfig->pos().y() + ui->button_OpenConfig->height() / 2;
 
-    m_configWidget->showConfigFor(pos(), rect(), buttonCenter);
+    m_configWidget->showConfigFor(geometry(), buttonCenter);
 }
 
 void GrabWidget::onRedCoef_ValueChanged(double value)

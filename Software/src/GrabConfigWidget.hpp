@@ -40,7 +40,7 @@ public:
     explicit GrabConfigWidget(QWidget *parent = 0);
     ~GrabConfigWidget();
 
-    void showConfigFor(QPoint p, QRect r, int buttonCenter);
+    void showConfigFor(QRect widgetGeometry, int buttonCenter);
     void setCoefs(double red, double green, double blue);
     void setIsAreaEnabled(bool isAreaEnabled);
     bool isAreaEnabled();
@@ -60,6 +60,7 @@ private:
     };
 
 private:
+    void setArrow(ArrowSide arrowSide);
     void paintArrow(QPainter *p, ArrowSide side);
 
 protected:

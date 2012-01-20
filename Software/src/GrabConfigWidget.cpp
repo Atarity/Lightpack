@@ -27,6 +27,7 @@
 #include "ui_GrabConfigWidget.h"
 #include <QPainter>
 #include <QBitmap>
+#include <QDesktopWidget>
 #include "debug.h"
 
 const unsigned GrabConfigWidget::MarginArrow = 20;
@@ -34,13 +35,14 @@ const unsigned GrabConfigWidget::Margin = 10;
 
 GrabConfigWidget::GrabConfigWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::GrabConfigWidget),
-    m_arrowSide(LeftSide)
+    ui(new Ui::GrabConfigWidget)
 {
     ui->setupUi(this);
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::Popup);
     setAttribute(Qt::WA_TranslucentBackground);
+
+    setArrow(LeftSide);
 
     adjustSize();
 
@@ -55,9 +57,33 @@ GrabConfigWidget::~GrabConfigWidget()
     delete ui;
 }
 
-void GrabConfigWidget::showConfigFor(QPoint p, QRect r, int buttonCenter)
+void GrabConfigWidget::showConfigFor(QRect widgetGeometry, int buttonCenter)
 {
-    move(p.x() + r.right(), p.y() - height() / 2 + buttonCenter);
+    QRect screen = QApplication::desktop()->screenGeometry(widgetGeometry.center());
+
+    move(widgetGeometry.right(), widgetGeometry.y() - height() / 2 + buttonCenter);
+
+    QRect r = geometry();
+
+    qDebug() << r;
+
+    if (r.top() < screen.top())
+        r.moveTop(screen.top());
+    if (r.bottom() > screen.bottom())
+        r.moveBottom(screen.bottom());
+
+    if (r.right() > screen.right())
+    {
+        setArrow(RightSide);
+
+        r = geometry();
+        r.moveRight(widgetGeometry.left());
+        r.moveTop(widgetGeometry.top() + widgetGeometry.height() / 2 - height() / 2);
+    } else {
+        setArrow(LeftSide);
+    }
+
+    move(r.topLeft());
     show();
 }
 
@@ -78,9 +104,33 @@ bool GrabConfigWidget::isAreaEnabled()
     return ui->checkBox_IsAreaEnabled->isChecked();
 }
 
+void GrabConfigWidget::setArrow(ArrowSide arrowSide)
+{
+    m_arrowSide = arrowSide;
+
+    QMargins margins(Margin, Margin, Margin, Margin);
+    switch(arrowSide)
+    {
+    case LeftSide:
+        margins.setLeft(MarginArrow);
+        break;
+    case RightSide:
+        margins.setRight(MarginArrow);
+        break;
+    case TopSide:
+        margins.setTop(MarginArrow);
+        break;
+    case BottomSide:
+        margins.setBottom(MarginArrow);
+        break;
+    }
+
+    ui->gridLayout->setContentsMargins(margins);
+    adjustSize();
+}
+
 void GrabConfigWidget::paintArrow(QPainter *p, ArrowSide side)
 {
-    QMargins margins(Margin, Margin, Margin, Margin);
     QRect mainRect(0, 0, width() - 1, height() - 1);
     QPainterPath pathArrow;
     QLine lineWhiteArrow;
@@ -88,7 +138,6 @@ void GrabConfigWidget::paintArrow(QPainter *p, ArrowSide side)
     switch(side)
     {
     case LeftSide:
-        margins.setLeft(MarginArrow);
         mainRect.setLeft(Margin);
 
         pathArrow.moveTo(Margin, height() / 2 - Margin);
@@ -100,8 +149,7 @@ void GrabConfigWidget::paintArrow(QPainter *p, ArrowSide side)
                                pathArrow.elementAt(2).x,
                                pathArrow.elementAt(2).y - 1);
         break;
-    case RightSide:
-        margins.setRight(MarginArrow);
+    case RightSide:        
         mainRect.setRight(width() - Margin - 1);
 
         pathArrow.moveTo(width() - Margin,  height() / 2 - Margin);
@@ -114,7 +162,6 @@ void GrabConfigWidget::paintArrow(QPainter *p, ArrowSide side)
                                pathArrow.elementAt(2).y - 1);
         break;
     case TopSide:
-        margins.setTop(MarginArrow);
         mainRect.setTop(Margin);
 
         pathArrow.moveTo(width() / 2 - Margin,  Margin);
@@ -128,7 +175,6 @@ void GrabConfigWidget::paintArrow(QPainter *p, ArrowSide side)
 
         break;
     case BottomSide:
-        margins.setBottom(MarginArrow);
         mainRect.setBottom(height() - Margin - 2);
 
         pathArrow.moveTo(width() / 2 - Margin,  height() - Margin - 1);
@@ -142,8 +188,6 @@ void GrabConfigWidget::paintArrow(QPainter *p, ArrowSide side)
 
         break;
     }
-
-    ui->gridLayout->setContentsMargins(margins);
 
     p->setPen(QColor(0x77, 0x77, 0x77));
     p->fillRect(mainRect, Qt::white);
