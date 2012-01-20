@@ -176,11 +176,12 @@ void GrabWidget::mousePressEvent(QMouseEvent *pe)
         // Click on center, just move it
         else{
             cmd = MOVE;
-            // Force set cursor to ClosedHand
-            this->grabMouse(Qt::ClosedHandCursor);
-            this->releaseMouse();
+
+            // Grab all mouse input
+            grabMouse(Qt::ClosedHandCursor);
+
             // And set it to this widget and labelWxH
-            this->setCursorOnAll(Qt::ClosedHandCursor);
+            setCursorOnAll(Qt::ClosedHandCursor);
         }
 
         emit resizeOrMoveStarted();
@@ -351,9 +352,8 @@ void GrabWidget::mouseReleaseEvent(QMouseEvent *pe)
 
     cmd = NOP;
 
-    // Force set cursor from widget to mouse
-    this->grabMouse(this->cursor());
-    this->releaseMouse();
+    // Release mouse after grab in mouse press event
+    releaseMouse();
 
     saveSizeAndPosition();
 
