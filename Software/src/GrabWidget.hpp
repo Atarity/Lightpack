@@ -45,7 +45,7 @@ public:
     double getCoefRed();
     double getCoefGreen();
     double getCoefBlue();
-    bool isGrabEnabled();    
+    bool isAreaEnabled();
     void fillBackgroundWhite();
     void fillBackgroundColored();
 

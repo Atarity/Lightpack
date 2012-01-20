@@ -250,7 +250,7 @@ void GrabManager::timeoutUpdateColors()
 
     for (int i = 0; i < m_ledWidgets.size(); i++)
     {
-        if (m_ledWidgets[i]->isGrabEnabled())
+        if (m_ledWidgets[i]->isAreaEnabled())
         {
             QRgb rgb = widgetsColors[i];
 
@@ -283,7 +283,7 @@ void GrabManager::timeoutUpdateColors()
         // Set one AVG color to all LEDs
         for (int ledIndex = 0; ledIndex < m_ledWidgets.size(); ledIndex++)
         {
-            if (m_ledWidgets[ledIndex]->isGrabEnabled())
+            if (m_ledWidgets[ledIndex]->isAreaEnabled())
             {
                 m_colorsNew[ledIndex] = qRgb(avgR, avgG, avgB);
             }

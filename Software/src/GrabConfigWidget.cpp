@@ -61,9 +61,21 @@ void GrabConfigWidget::showConfigFor(QPoint p, QRect r, int buttonCenter)
     show();
 }
 
+void GrabConfigWidget::setCoefs(double red, double green, double blue)
+{
+    ui->spinBox_Red->setValue(red * 100);
+    ui->spinBox_Green->setValue(green * 100);
+    ui->spinBox_Blue->setValue(blue * 100);
+}
+
 void GrabConfigWidget::setIsAreaEnabled(bool isAreaEnabled)
 {
     ui->checkBox_IsAreaEnabled->setChecked(isAreaEnabled);
+}
+
+bool GrabConfigWidget::isAreaEnabled()
+{
+    return ui->checkBox_IsAreaEnabled->isChecked();
 }
 
 void GrabConfigWidget::paintArrow(QPainter *p, ArrowSide side)

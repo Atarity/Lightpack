@@ -41,7 +41,9 @@ public:
     ~GrabConfigWidget();
 
     void showConfigFor(QPoint p, QRect r, int buttonCenter);
+    void setCoefs(double red, double green, double blue);
     void setIsAreaEnabled(bool isAreaEnabled);
+    bool isAreaEnabled();
 
 signals:
     void isAreaEnabled_Toggled(bool state);
