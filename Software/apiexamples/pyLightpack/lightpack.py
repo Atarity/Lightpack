@@ -4,11 +4,13 @@ class lightpack:
 
 #	host = '127.0.0.1'    # The remote host
 #	port = 3636              # The same port as used by the server
+#	apikey = 'key'		
 #	ledMap = [1,2,3,4,5,6,7,8,9,10] 	#mapped LEDs
 	
-	def __init__(self, _host, _port, _ledMap):
+	def __init__(self, _host, _port, _apikey, _ledMap):
 		self.host = _host
 		self.port = _port
+		self.apikey = _apikey
 		self.ledMap = _ledMap
 	
 	def __readResult(self):	# Return last-command API answer  (call in every local method)
@@ -36,6 +38,13 @@ class lightpack:
 		status = self.__readResult()
 		status = status.split(':')[1]
 		return status
+
+	def getCountLeds(self):
+		cmd = 'getcountleds\n'
+		self.connection.send(cmd)
+		count = self.__readResult()
+		count = count.split(':')[1]
+		return count
 		
 	def getAPIStatus(self):
 		cmd = 'getstatusapi\n'
@@ -49,9 +58,13 @@ class lightpack:
 			self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			self.connection.connect((self.host, self.port))			
 			self.__readResult()
+			cmd = 'apikey:' + self.apikey + '\n'			
+			self.connection.send(cmd)
+			self.__readResult()
+			return 0
 		except:
 			print 'Lightpack API server is missing'
-			sys.exit(0)
+			return -1
 		
 	def setColor(self, n, r, g, b): 	# Set color to the define LED		
 		cmd = 'setcolor:{0}-{1},{2},{3}\n'.format(self.ledMap[n-1], r, g, b)
@@ -76,8 +89,14 @@ class lightpack:
 		self.connection.send(cmd)
 		self.__readResult()
 
+	def setBrightness(self, s):
+		cmd = 'setbrightness:{0}\n'.format(s)
+		self.connection.send(cmd)
+		self.__readResult()
+
 	def setProfile(self, p):
-		cmd = 'setprofile:{0}\n'.format(p)
+		#cmd = 'setprofile:{0}\n'.format(p)
+		cmd = 'setprofile:%s\n' % p
 		self.connection.send(cmd)		
 		self.__readResult()
 		
