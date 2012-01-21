@@ -4,14 +4,14 @@ class lightpack:
 
 #	host = '127.0.0.1'    # The remote host
 #	port = 3636              # The same port as used by the server
-#	apikey = 'key'		
+#	apikey = 'key'		  # Secure API key which generates by Lightpack software on Dev tab
 #	ledMap = [1,2,3,4,5,6,7,8,9,10] 	#mapped LEDs
 	
-	def __init__(self, _host, _port, _apikey, _ledMap):
+	def __init__(self, _host, _port, _ledMap, _apikey = None):
 		self.host = _host
 		self.port = _port
-		self.apikey = _apikey
 		self.ledMap = _ledMap
+		self.apikey = _apikey		
 	
 	def __readResult(self):	# Return last-command API answer  (call in every local method)
 		total_data=[]
@@ -58,9 +58,10 @@ class lightpack:
 			self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			self.connection.connect((self.host, self.port))			
 			self.__readResult()
-			cmd = 'apikey:' + self.apikey + '\n'			
-			self.connection.send(cmd)
-			self.__readResult()
+			if self.apikey is not None:	
+				cmd = 'apikey:' + self.apikey + '\n'			
+				self.connection.send(cmd)
+				self.__readResult()
 			return 0
 		except:
 			print 'Lightpack API server is missing'
