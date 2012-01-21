@@ -142,6 +142,7 @@ private slots:
     void onExpertModeEnabled_Toggled(bool isEnabled);
     void onSwitchOffAtClosing_Toggled(bool isEnabled);
     void onEnableApi_Toggled(bool isEnabled);
+    void onApiKey_EditingFinished();
     void onGenerateNewApiKey_Clicked();
     void onSetApiPort_Clicked();
     void onIsApiAuthEnabled_Toggled(bool isEnabled);

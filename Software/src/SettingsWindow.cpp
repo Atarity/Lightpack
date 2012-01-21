@@ -74,9 +74,11 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     setFocus(Qt::OtherFocusReason);
 
     // Check windows reserved simbols in profile input name
-    QRegExp rx("[^<>:\"/\\|?*]+");
-    QRegExpValidator *validator = new QRegExpValidator(rx, this);
-    ui->comboBox_Profiles->lineEdit()->setValidator(validator);
+    QRegExpValidator *validatorProfileName = new QRegExpValidator(QRegExp("[^<>:\"/\\|?*]*"), this);
+    ui->comboBox_Profiles->lineEdit()->setValidator(validatorProfileName);
+
+    QRegExpValidator *validatorApiKey = new QRegExpValidator(QRegExp("[a-zA-Z0-9{}_-]*"), this);
+    ui->lineEdit_ApiKey->setValidator(validatorApiKey);
 
     m_grabManager = new GrabManager(this);
     m_moodlampManager = new MoodLampManager(this);
@@ -225,6 +227,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->pushButton_SetApiPort, SIGNAL(clicked()), this, SLOT(onSetApiPort_Clicked()));
     connect(ui->checkBox_IsApiAuthEnabled, SIGNAL(toggled(bool)), this, SLOT(onIsApiAuthEnabled_Toggled(bool)));
     connect(ui->pushButton_GenerateNewApiKey, SIGNAL(clicked()), this, SLOT(onGenerateNewApiKey_Clicked()));
+    connect(ui->lineEdit_ApiKey, SIGNAL(editingFinished()), this, SLOT(onApiKey_EditingFinished()));
 
     connect(ui->spinBox_LoggingLevel, SIGNAL(valueChanged(int)), this, SLOT(onLoggingLevel_valueChanged(int)));
     connect(ui->checkBox_PingDeviceEverySecond, SIGNAL(toggled(bool)), this, SLOT(onPingDeviceEverySecond_Toggled(bool)));
@@ -468,6 +471,26 @@ void SettingsWindow::onEnableApi_Toggled(bool isEnabled)
     Settings::setIsApiEnabled(isEnabled);
 
     emit enableApiServer(isEnabled);
+}
+
+void SettingsWindow::onApiKey_EditingFinished()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    QString apikey = ui->lineEdit_ApiKey->text();
+
+    if (apikey == "")
+    {
+        apikey = Settings::getApiAuthKey();
+
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "ApiKey is empty, return back to" << apikey;
+
+        ui->lineEdit_ApiKey->setText(apikey);
+        return;
+    }
+
+    Settings::setApiKey(apikey);
+    emit updateApiKey(apikey);
 }
 
 void SettingsWindow::onSetApiPort_Clicked()

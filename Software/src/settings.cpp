@@ -489,7 +489,18 @@ void Settings::setApiPort(int apiPort)
 
 QString Settings::getApiAuthKey()
 {
-    return valueMain(Main::Key::Api::AuthKey).toString();
+    QString apikey = valueMain(Main::Key::Api::AuthKey).toString();
+
+    if (apikey == "")
+    {
+        qWarning() << Q_FUNC_INFO << "ApiKey is empty, generate new one.";
+
+        apikey = QUuid::createUuid().toString();
+
+        setApiKey(apikey);
+    }
+
+    return apikey;
 }
 
 void Settings::setApiKey(const QString & apiKey)
