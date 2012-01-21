@@ -217,7 +217,12 @@ void ApiServer::clientProcessCommands()
 
         QString result = CmdUnknown;
 
-        if (cmdBuffer == CmdExit)
+        if (cmdBuffer.isEmpty())
+        {
+            // Ignore empty lines
+            return;
+        }
+        else if (cmdBuffer == CmdExit)
         {
             writeData(client, "Goodbye!\r\n");
             if (m_clients.contains(client))
