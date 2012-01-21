@@ -219,7 +219,7 @@ void ApiServer::clientProcessCommands()
 
         if (cmdBuffer == CmdExit)
         {
-            writeData(client, "Goodbye!\n");
+            writeData(client, "Goodbye!\r\n");
             if (m_clients.contains(client))
                 client->close();
             return;
