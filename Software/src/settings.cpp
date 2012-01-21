@@ -1018,45 +1018,45 @@ void Settings::setLedEnabled(int ledIndex, bool isEnabled)
 
 int Settings::getValidDeviceRefreshDelay(int value)
 {
-    if (value <= Profile::Device::RefreshDelayMin)
+    if (value < Profile::Device::RefreshDelayMin)
         value = Profile::Device::RefreshDelayMin;
-    else if (value >= Profile::Device::RefreshDelayMax)
+    else if (value > Profile::Device::RefreshDelayMax)
         value = Profile::Device::RefreshDelayMax;
     return value;
 }
 
 int Settings::getValidDeviceBrightness(int value)
 {
-    if (value <= Profile::Device::BrightnessMin)
+    if (value < Profile::Device::BrightnessMin)
         value = Profile::Device::BrightnessMin;
-    else if (value >= Profile::Device::BrightnessMax)
+    else if (value > Profile::Device::BrightnessMax)
         value = Profile::Device::BrightnessMax;
     return value;
 }
 
 int Settings::getValidDeviceSmooth(int value)
 {
-    if (value <= Profile::Device::SmoothMin)
+    if (value < Profile::Device::SmoothMin)
         value = Profile::Device::SmoothMin;
-    else if (value >= Profile::Device::SmoothMax)
+    else if (value > Profile::Device::SmoothMax)
         value = Profile::Device::SmoothMax;
     return value;
 }
 
 int Settings::getValidDeviceColorDepth(int value)
 {
-    if (value <= Profile::Device::ColorDepthMin)
+    if (value < Profile::Device::ColorDepthMin)
         value = Profile::Device::ColorDepthMin;
-    else if (value >= Profile::Device::ColorDepthMax)
+    else if (value > Profile::Device::ColorDepthMax)
         value = Profile::Device::ColorDepthMax;
     return value;
 }
 
 double Settings::getValidDeviceGamma(double value)
 {
-    if (value <= Profile::Device::GammaMin)
+    if (value < Profile::Device::GammaMin)
         value = Profile::Device::GammaMin;
-    else if (value >= Profile::Device::GammaMax)
+    else if (value > Profile::Device::GammaMax)
         value = Profile::Device::GammaMax;
     return value;
 }

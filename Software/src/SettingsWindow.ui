@@ -38,7 +38,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -674,7 +674,7 @@
            <item>
             <widget class="QSlider" name="horizontalSlider_DeviceRefreshDelay">
              <property name="minimum">
-              <number>10</number>
+              <number>64</number>
              </property>
              <property name="maximum">
               <number>1023</number>
@@ -683,7 +683,7 @@
               <number>1</number>
              </property>
              <property name="value">
-              <number>10</number>
+              <number>64</number>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -705,13 +705,13 @@
               </size>
              </property>
              <property name="minimum">
-              <number>10</number>
+              <number>64</number>
              </property>
              <property name="maximum">
               <number>1023</number>
              </property>
              <property name="value">
-              <number>10</number>
+              <number>64</number>
              </property>
             </widget>
            </item>
@@ -739,7 +739,7 @@
            <item row="0" column="0" rowspan="2">
             <widget class="QSlider" name="horizontalSlider_DeviceColorDepth">
              <property name="minimum">
-              <number>2</number>
+              <number>32</number>
              </property>
              <property name="maximum">
               <number>255</number>
@@ -770,7 +770,7 @@
               </size>
              </property>
              <property name="minimum">
-              <number>2</number>
+              <number>32</number>
              </property>
              <property name="maximum">
               <number>255</number>

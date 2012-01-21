@@ -149,7 +149,7 @@ static const bool IsLiquidMode = true;
 // [Device]
 namespace Device
 {
-static const int RefreshDelayMin = 10;
+static const int RefreshDelayMin = 64;
 static const int RefreshDelayDefault = 100;
 static const int RefreshDelayMax = 1023;
 
@@ -161,7 +161,7 @@ static const int SmoothMin = 0;
 static const int SmoothDefault = 100;
 static const int SmoothMax = 255;
 
-static const int ColorDepthMin = 2;
+static const int ColorDepthMin = 32;
 static const int ColorDepthDefault = 128;
 static const int ColorDepthMax = 255;
 
