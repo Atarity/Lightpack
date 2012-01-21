@@ -40,6 +40,7 @@ const char * ApiServer::ApiVersion = "Lightpack API v" API_VERSION " (type \"hel
 const char * ApiServer::CmdUnknown = "unknown command\r\n";
 const char * ApiServer::CmdExit = "exit";
 const char * ApiServer::CmdHelp = "help";
+const char * ApiServer::CmdHelpShort = "?";
 
 const char * ApiServer::CmdApiKey = "apikey:";
 const char * ApiServer::CmdApiKeyResult_Ok = "ok\r\n";
@@ -102,6 +103,7 @@ ApiServer::ApiServer(QObject *parent)
     initPrivateVariables();
     initApiSetColorTask();
     initHelpMessage();
+    initShortHelpMessage();
 }
 
 ApiServer::ApiServer(quint16 port, QObject *parent)
@@ -112,6 +114,7 @@ ApiServer::ApiServer(quint16 port, QObject *parent)
     initPrivateVariables();
     initApiSetColorTask();
     initHelpMessage();
+    initShortHelpMessage();
 
     m_apiPort = port;
 
@@ -232,6 +235,11 @@ void ApiServer::clientProcessCommands()
         else if (cmdBuffer == CmdHelp)
         {
             writeData(client, m_helpMessage);
+            return;
+        }
+        else if (cmdBuffer == CmdHelpShort)
+        {
+            writeData(client, m_shortHelpMessage);
             return;
         }
         else if (cmdBuffer.startsWith(CmdApiKey))
@@ -908,7 +916,45 @@ void ApiServer::initHelpMessage()
                 formatHelp(CmdSetStatus + QString(CmdSetStatus_Off)),
                 helpCmdSetResults);
 
+    m_helpMessage += formatHelp(CmdHelpShort, "Short version of this help");
+
     m_helpMessage += formatHelp(CmdExit, "Closes connection");
 
-    m_helpMessage += "\n";
+    m_helpMessage += "\r\n";
+}
+
+void ApiServer::initShortHelpMessage()
+{
+    m_shortHelpMessage += "\r\n";
+    m_shortHelpMessage += "List of available commands:\r\n";
+
+    QList<QString> cmds;
+    cmds << CmdApiKey << CmdLock << CmdUnlock
+         << CmdGetStatus << CmdGetStatusAPI
+         << CmdGetProfile << CmdGetProfiles << CmdGetCountLeds
+         << CmdSetColor << CmdSetGamma << CmdSetBrightness
+         << CmdSetSmooth << CmdSetProfile << CmdSetStatus
+         << CmdExit << CmdHelp << CmdHelpShort;
+
+    QString line = "    ";
+
+    for (int i = 0; i < cmds.count(); i++)
+    {
+        if (line.length() + cmds[i].length() < 80)
+        {
+            line += cmds[i].remove(':');
+        } else {
+            m_shortHelpMessage += line + "\r\n";
+            line = "    " + cmds[i].remove(':');
+        }
+
+        if (i != cmds.count() - 1)
+             line += ", ";
+    }
+
+    m_shortHelpMessage += line + "\r\n";
+
+    m_shortHelpMessage += "\r\n";
+    m_shortHelpMessage += "Detailed version is available by \"help\" command. \r\n";
+    m_shortHelpMessage += "\r\n";
 }
