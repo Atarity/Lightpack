@@ -1,8 +1,8 @@
 Package: lightpack
-Version: 5.8-1
+Version: 5.8.6-1
 Architecture: amd64
 Maintainer: Mike Shatohin <brunql@gmail.com>
-Installed-Size: 920
+Installed-Size: 1030
 Depends: libqtcore4 (>= 4.6), libqtgui4 (>= 4.6), libqt4-network (>= 4.6), libusb-1.0-0 (>= 2:1.0.6-1)
 Section: electronics
 Priority: optional
