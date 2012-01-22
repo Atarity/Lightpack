@@ -80,7 +80,7 @@ public:
     void setToolTip(const QString& tip);
 
     QHBoxLayout *layout;
-    QToolButton *clearButton;
+    QPushButton *clearButton;
     QShortcutButton *shortcutButton;
     QLabel *shortcutNameLabel;
 
@@ -99,10 +99,6 @@ public:
         :  QPushButton(parent)
         , d(p)
     {
-        qDebug() << "qShortcut button Create";
-        qDebug() << "parent----" << parent;
-
-        qDebug() << "visible " << isVisible();      
         setMinimumWidth(QPushButton::minimumWidth());
         QPushButton::setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
     }

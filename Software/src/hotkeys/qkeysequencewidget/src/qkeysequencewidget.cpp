@@ -276,8 +276,8 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     layout->setMargin(0);
     layout->setSpacing(1);
 
-    clearButton = new QToolButton(q_func());
-    clearButton->setText("x");
+    clearButton = new QPushButton(q_func());
+    clearButton->setText("");
 
     layout->addWidget(clearButton);
 
@@ -309,6 +309,10 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     // update ui
     updateDisplayShortcut();
     updateView();
+
+    // Fix diff between buttons heights
+    shortcutButton->adjustSize();
+    clearButton->setMaximumHeight(shortcutButton->height());
 }
 
 void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString noneStr, const QString shortcutName)
@@ -319,10 +323,8 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     layout->setMargin(0);
     layout->setSpacing(1);
 
-
-
-    clearButton = new QToolButton(q_func());
-    clearButton->setText("x");
+    clearButton = new QPushButton(q_func());
+    clearButton->setText("");
 
     layout->addWidget(clearButton);
 
@@ -354,11 +356,16 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     shortcutNameLabel = new QLabel(q_func());
     shortcutNameLabel->setText(shortcutName);
 
+    layout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding));
     layout->addWidget(shortcutNameLabel);
 
     // update ui
     updateDisplayShortcut();
     updateView();
+
+    // Fix diff between buttons heights
+    shortcutButton->adjustSize();
+    clearButton->setMaximumHeight(shortcutButton->height());
 }
 
 // set tooltip only for seqyence button
