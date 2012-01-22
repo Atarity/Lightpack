@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Lightpack"
-#define MyAppVersion "5.8"
+#define MyAppVersion "5.8.6"
 #define MyAppPublisher "Lightpack"
 #define MyAppURL "http://code.google.com/p/lightpack/"
 #define MyAppExeName "Lightpack.exe"
@@ -28,14 +28,14 @@ SetupIconFile=Lightpack.ico
 Compression=lzma/Max
 SolidCompression=true
 AppCopyright=Lightpack
-AppVerName=5.8
+AppVerName=5.8.6
 UninstallDisplayName={cm:UninstallName}
 UninstallDisplayIcon={app}\Lightpack.exe
 VersionInfoDescription=Lightpack is a monitor light device used for presence effect strengthening. 
 AppMutex=LightpackAppMutex
-VersionInfoVersion=5.8
+VersionInfoVersion=5.8.6
 VersionInfoProductName=Lightpack
-VersionInfoProductVersion=5.8
+VersionInfoProductVersion=5.8.6
 Uninstallable=IsNormalInstall
 
 [Languages]
