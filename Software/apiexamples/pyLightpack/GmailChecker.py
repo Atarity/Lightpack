@@ -14,7 +14,7 @@ def gmail_checker(username,password):
         except:
                 return False,0
 
-lpack = lightpack.lightpack('127.0.0.1', 3636, [2,3,6,7,8,9,10,4,5,1] )
+lpack = lightpack.lightpack('127.0.0.1', 3636, [2,3,6,7,8,9,10,4,5,1], 'mySecureAPIkey')
 lpack.connect()
 mail = raw_input('Gmail: ')
 passwd = getpass.getpass('password: ')

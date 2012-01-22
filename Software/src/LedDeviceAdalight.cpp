@@ -127,6 +127,14 @@ void LedDeviceAdalight::requestFirmwareVersion()
     emit commandCompleted(true);
 }
 
+void LedDeviceAdalight::updateDeviceSettings()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    setGamma(Settings::getDeviceGamma());
+    setBrightness(Settings::getDeviceBrightness());
+}
+
 void LedDeviceAdalight::open()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;

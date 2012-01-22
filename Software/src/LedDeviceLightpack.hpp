@@ -60,6 +60,7 @@ public slots:
     void setGamma(double value);
     void setBrightness(int percent);
     void requestFirmwareVersion();
+    void updateDeviceSettings();
 
 private: 
     bool readDataFromDevice();
@@ -67,7 +68,6 @@ private:
     bool tryToReopenDevice();
     bool readDataFromDeviceWithCheck();
     bool writeBufferToDeviceWithCheck(int command);    
-    void updateDeviceSettings();
     void resizeColorsBuffer(int buffSize);
     void closeDevice();
 

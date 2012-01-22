@@ -46,7 +46,8 @@ public slots:
     void setSmoothSlowdown(int /*value*/);
     void setGamma(double /*value*/);
     void setBrightness(int /*value*/);
-    void requestFirmwareVersion();    
+    void requestFirmwareVersion();
+    void updateDeviceSettings();
 
 private:
     bool writeBuffer(const QByteArray & buff);

@@ -26,25 +26,28 @@
 
 #pragma once
 
-#include <QApplication>
+#include <QtSingleApplication>
 #include "SettingsWindow.hpp"
 #include "ApiServer.hpp"
 #include "LedDeviceFactory.hpp"
 
-class LightpackApplication : public QApplication
+class LightpackApplication : public QtSingleApplication
 {
     Q_OBJECT
 public:
-    LightpackApplication(const QString & appDirPath, int &argc, char **argv);
+    LightpackApplication(int &argc, char **argv);
+
+    void initializeAll(const QString & appDirPath);
 
     enum ErrorCodes {
-        OK_ErrorCode = 0,
-        WrongCommandLineArgument_ErrorCode,
-        AppDirectoryCreationFail_ErrorCode,
-        OpenLogsFail_ErrorCode,
-        QFatalMessageHandler_ErrorCode,
+        OK_ErrorCode                            = 0,
+        WrongCommandLineArgument_ErrorCode      = 1,
+        AppDirectoryCreationFail_ErrorCode      = 2,
+        OpenLogsFail_ErrorCode                  = 3,
+        QFatalMessageHandler_ErrorCode          = 4,
+        LogsDirecroryCreationFail_ErrorCode     = 5,
         // Append new ErrorCodes here
-        JustEpicFail_ErrorCode = 93
+        JustEpicFail_ErrorCode                  = 93
     };
 
 signals:
@@ -62,6 +65,8 @@ private:
     void startLedDeviceFactory();
     void connectApiServerAndLedDeviceSignalsSlots();
     void disconnectApiServerAndLedDeviceSignalsSlots();
+
+    virtual void commitData(QSessionManager &sessionManager);
 
 private:
     SettingsWindow *m_settingsWindow;

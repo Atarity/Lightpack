@@ -117,10 +117,6 @@ static const QString ArdulightDevice = "Ardulight";
 static const QString VirtualDevice = "Virtual";
 }
 
-namespace HotKeys
-{
-static const QString OnOffDeviceKeyDefault = "Undefined";
-}
 } /*Value*/
 } /*Main*/
 
@@ -228,7 +224,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::IsUpdateFirmwareMessageShown, Main::IsUpdateFirmwareMessageShown);
     setNewOptionMain(Main::Key::ConnectedDevice,        Main::ConnectedDeviceDefault);
     setNewOptionMain(Main::Key::SupportedDevices,       Main::SupportedDevices, true /* always rewrite this information to main config */);
-    setNewOptionMain(Main::Key::Hotkeys::OnOffDeviceKey,Main::Value::HotKeys::OnOffDeviceKeyDefault);
+    setNewOptionMain(Main::Key::Hotkeys::OnOffDeviceKey,Main::HotKeys::OnOffDeviceKeyDefault);
     setNewOptionMain(Main::Key::Api::IsEnabled,         Main::Api::IsEnabledDefault);
     setNewOptionMain(Main::Key::Api::Port,              Main::Api::PortDefault);
     setNewOptionMain(Main::Key::Api::IsAuthEnabled,     Main::Api::IsAuthEnabledDefault);
@@ -336,7 +332,7 @@ void Settings::loadOrCreateProfile(const QString & profileName)
 
 void Settings::renameCurrentProfile(const QString & profileName)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << profileName;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "from" << getCurrentProfileName() << "to" << profileName;
 
     QMutexLocker locker(&m_mutex);
 
@@ -493,7 +489,18 @@ void Settings::setApiPort(int apiPort)
 
 QString Settings::getApiAuthKey()
 {
-    return valueMain(Main::Key::Api::AuthKey).toString();
+    QString apikey = valueMain(Main::Key::Api::AuthKey).toString();
+
+    if (apikey == "")
+    {
+        qWarning() << Q_FUNC_INFO << "ApiKey is empty, generate new one.";
+
+        apikey = QUuid::createUuid().toString();
+
+        setApiKey(apikey);
+    }
+
+    return apikey;
 }
 
 void Settings::setApiKey(const QString & apiKey)
@@ -610,7 +617,7 @@ QKeySequence Settings::getOnOffDeviceKey()
 void Settings::setOnOffDeviceKey(const QKeySequence &keySequence)
 {
     if( keySequence.isEmpty() ) {
-        setValueMain(Main::Key::Hotkeys::OnOffDeviceKey, Main::Value::HotKeys::OnOffDeviceKeyDefault);
+        setValueMain(Main::Key::Hotkeys::OnOffDeviceKey, Main::HotKeys::OnOffDeviceKeyDefault);
     } else {
         setValueMain(Main::Key::Hotkeys::OnOffDeviceKey, keySequence.toString());
     }
@@ -795,36 +802,36 @@ Grab::GrabberType Settings::getGrabberType()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    QString strGrabbber = value(Profile::Key::Grab::Grabber).toString();
+    QString strGrabber = value(Profile::Key::Grab::Grabber).toString();
 
-    if (strGrabbber == Profile::Value::GrabberType::Qt)
+    if (strGrabber == Profile::Value::GrabberType::Qt)
         return Grab::QtGrabber;
-    if (strGrabbber == Profile::Value::GrabberType::QtEachWidget)
+    if (strGrabber == Profile::Value::GrabberType::QtEachWidget)
         return Grab::QtEachWidgetGrabber;
 
 #ifdef WINAPI_GRAB_SUPPORT
-    if (strGrabbber == Profile::Value::GrabberType::WinAPI)
+    if (strGrabber == Profile::Value::GrabberType::WinAPI)
         return Grab::WinAPIGrabber;
-    if (strGrabbber == Profile::Value::GrabberType::WinAPIEachWidget)
+    if (strGrabber == Profile::Value::GrabberType::WinAPIEachWidget)
         return Grab::WinAPIEachWidgetGrabber;
 #endif
 
 #ifdef D3D9_GRAB_SUPPORT
-    if (strGrabbber == Profile::Value::GrabberType::D3D9)
+    if (strGrabber == Profile::Value::GrabberType::D3D9)
         return Grab::D3D9Grabber;
 #endif
 
 #ifdef X11_GRAB_SUPPORT
-    if (strGrabbber == Profile::Value::GrabberType::X11)
+    if (strGrabber == Profile::Value::GrabberType::X11)
         return Grab::X11Grabber;
 #endif
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
-    if (strGrabbber == Profile::Value::GrabberType::MacCoreGraphics)
+    if (strGrabber == Profile::Value::GrabberType::MacCoreGraphics)
         return Grab::MacCoreGraphicsGrabber;
 #endif
 
-    qWarning() << Q_FUNC_INFO << Profile::Key::Grab::Grabber << "contains invalid value:" << strGrabbber << ", reset it to default:" << Profile::Grab::GrabberDefaultString;
+    qWarning() << Q_FUNC_INFO << Profile::Key::Grab::Grabber << "contains invalid value:" << strGrabber << ", reset it to default:" << Profile::Grab::GrabberDefaultString;
     setGrabberType(Profile::Grab::GrabberDefault);
 
     return Profile::Grab::GrabberDefault;
@@ -1022,45 +1029,45 @@ void Settings::setLedEnabled(int ledIndex, bool isEnabled)
 
 int Settings::getValidDeviceRefreshDelay(int value)
 {
-    if (value <= Profile::Device::RefreshDelayMin)
+    if (value < Profile::Device::RefreshDelayMin)
         value = Profile::Device::RefreshDelayMin;
-    else if (value >= Profile::Device::RefreshDelayMax)
+    else if (value > Profile::Device::RefreshDelayMax)
         value = Profile::Device::RefreshDelayMax;
     return value;
 }
 
 int Settings::getValidDeviceBrightness(int value)
 {
-    if (value <= Profile::Device::BrightnessMin)
+    if (value < Profile::Device::BrightnessMin)
         value = Profile::Device::BrightnessMin;
-    else if (value >= Profile::Device::BrightnessMax)
+    else if (value > Profile::Device::BrightnessMax)
         value = Profile::Device::BrightnessMax;
     return value;
 }
 
 int Settings::getValidDeviceSmooth(int value)
 {
-    if (value <= Profile::Device::SmoothMin)
+    if (value < Profile::Device::SmoothMin)
         value = Profile::Device::SmoothMin;
-    else if (value >= Profile::Device::SmoothMax)
+    else if (value > Profile::Device::SmoothMax)
         value = Profile::Device::SmoothMax;
     return value;
 }
 
 int Settings::getValidDeviceColorDepth(int value)
 {
-    if (value <= Profile::Device::ColorDepthMin)
+    if (value < Profile::Device::ColorDepthMin)
         value = Profile::Device::ColorDepthMin;
-    else if (value >= Profile::Device::ColorDepthMax)
+    else if (value > Profile::Device::ColorDepthMax)
         value = Profile::Device::ColorDepthMax;
     return value;
 }
 
 double Settings::getValidDeviceGamma(double value)
 {
-    if (value <= Profile::Device::GammaMin)
+    if (value < Profile::Device::GammaMin)
         value = Profile::Device::GammaMin;
-    else if (value >= Profile::Device::GammaMax)
+    else if (value > Profile::Device::GammaMax)
         value = Profile::Device::GammaMax;
     return value;
 }
@@ -1094,9 +1101,9 @@ void Settings::setValidLedCoef(int ledIndex, const QString & keyCoef, double coe
                    << keyCoef
                    << error
                    << "Convert to double error. Set it to default value" << keyCoef << "=" << Profile::Led::CoefDefault;
-        coef = Profile::Led::CoefDefault;
-        Settings::setValue(Profile::Key::Led::Prefix + QString::number(ledIndex + 1) + "/" + keyCoef, coef);
+        coef = Profile::Led::CoefDefault;        
     }
+    Settings::setValue(Profile::Key::Led::Prefix + QString::number(ledIndex + 1) + "/" + keyCoef, coef);
 }
 
 double Settings::getValidLedCoef(int ledIndex, const QString & keyCoef)

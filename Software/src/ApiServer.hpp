@@ -59,6 +59,7 @@ public:
     static const char * CmdUnknown;
     static const char * CmdExit;
     static const char * CmdHelp;
+    static const char * CmdHelpShort;
 
     static const char * CmdApiKey;
     static const char * CmdApiKeyResult_Ok;
@@ -150,6 +151,7 @@ private:
     QString formatHelp(const QString & cmd, const QString & description, const QString & results);
     QString formatHelp(const QString & cmd, const QString & description, const QString & examples, const QString & results);
     void initHelpMessage();
+    void initShortHelpMessage();
 
 private:
     int m_apiPort;
@@ -171,4 +173,5 @@ private:
     Backlight::Status m_backlightStatusResult;
 
     QString m_helpMessage;
+    QString m_shortHelpMessage;
 };

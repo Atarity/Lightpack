@@ -24,15 +24,20 @@
  *
  */
 
-
 #include "SettingsWindow.hpp"
 #include "ui_SettingsWindow.h"
+
+#include "AboutDialog.hpp"
+#include "Settings.hpp"
+#include "GrabManager.hpp"
+#include "MoodLampManager.hpp"
+#include "SpeedTest.hpp"
+#include "ColorButton.hpp"
 #include "LedDeviceFactory.hpp"
-#include <QDesktopWidget>
-#include <QPlainTextEdit>
+#include "enums.hpp"
 #include "debug.h"
 
-#include "../../CommonHeaders/COMMANDS.h"
+#include "hotkeys/qkeysequencewidget/src/qkeysequencewidget.h"
 #include "hotkeys/globalshortcut/globalshortcutmanager.h"
 
 using namespace SettingsScope;
@@ -69,9 +74,11 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     setFocus(Qt::OtherFocusReason);
 
     // Check windows reserved simbols in profile input name
-    QRegExp rx("[^<>:\"/\\|?*]+");
-    QRegExpValidator *validator = new QRegExpValidator(rx, this);
-    ui->comboBox_Profiles->lineEdit()->setValidator(validator);
+    QRegExpValidator *validatorProfileName = new QRegExpValidator(QRegExp("[^<>:\"/\\|?*]*"), this);
+    ui->comboBox_Profiles->lineEdit()->setValidator(validatorProfileName);
+
+    QRegExpValidator *validatorApiKey = new QRegExpValidator(QRegExp("[a-zA-Z0-9{}_-]*"), this);
+    ui->lineEdit_ApiKey->setValidator(validatorApiKey);
 
     m_grabManager = new GrabManager(this);
     m_moodlampManager = new MoodLampManager(this);
@@ -89,11 +96,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     initConnectedDeviceComboBox();
     initSerialPortBaudRateComboBox();
 
-    /***************************************/    
-    m_KeySequenceWidget = new QKeySequenceWidget(QString("Undefined key"), QString("On-Off light:"), this);
-    ui->groupBox_HotKeys->layout()->addWidget(m_KeySequenceWidget);
     setupHotkeys();
-    /***************************************/
 
     connectSignalsSlots();
 
@@ -184,8 +187,8 @@ void SettingsWindow::connectSignalsSlots()
     // Open Settings file
     connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openCurrentProfile()));
 
-    // Connect profile signals to this slots
-    connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(returnPressed()), this, SLOT(profileRename()));
+    // Connect profile signals to this slots    
+    connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(editingFinished()) /* or returnPressed() */, this, SLOT(profileRename()));
     connect(ui->comboBox_Profiles, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileSwitch(QString)));
     connect(ui->pushButton_ProfileNew, SIGNAL(clicked()), this, SLOT(profileNew()));
     connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
@@ -224,13 +227,14 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->pushButton_SetApiPort, SIGNAL(clicked()), this, SLOT(onSetApiPort_Clicked()));
     connect(ui->checkBox_IsApiAuthEnabled, SIGNAL(toggled(bool)), this, SLOT(onIsApiAuthEnabled_Toggled(bool)));
     connect(ui->pushButton_GenerateNewApiKey, SIGNAL(clicked()), this, SLOT(onGenerateNewApiKey_Clicked()));
+    connect(ui->lineEdit_ApiKey, SIGNAL(editingFinished()), this, SLOT(onApiKey_EditingFinished()));
 
     connect(ui->spinBox_LoggingLevel, SIGNAL(valueChanged(int)), this, SLOT(onLoggingLevel_valueChanged(int)));
     connect(ui->checkBox_PingDeviceEverySecond, SIGNAL(toggled(bool)), this, SLOT(onPingDeviceEverySecond_Toggled(bool)));
 
     // HotKeys
-    connect(m_KeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(setOnOffHotKey(QKeySequence)));
-    connect(m_KeySequenceWidget, SIGNAL(keySequenceCleared()), this, SLOT(clearOnOffHotKey()));
+    connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(setOnOffHotKey(QKeySequence)));
+    connect(m_keySequenceWidget, SIGNAL(keySequenceCleared()), this, SLOT(clearOnOffHotKey()));
 }
 
 // ----------------------------------------------------------------------------
@@ -253,6 +257,9 @@ void SettingsWindow::changeEvent(QEvent *e)
         m_quitAction->setText(tr("&Quit"));
 
         m_profilesMenu->setTitle(tr("&Profiles"));
+
+        m_keySequenceWidget->setNoneText(tr("Undefined key"));
+        m_keySequenceWidget->setShortcutName(tr("On-Off light:"));
 
         switch (m_backlightStatus)
         {
@@ -316,6 +323,7 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
     // Minimum level of sensitivity for ambilight mode
     ui->label_MinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
     ui->spinBox_GrabMinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
+    ui->groupBox_HotKeys->setVisible(Settings::isExpertModeEnabled());
 
     // Update device tab widgets depending on the connected device
     updateDeviceTabWidgetsVisibility();
@@ -466,6 +474,26 @@ void SettingsWindow::onEnableApi_Toggled(bool isEnabled)
     Settings::setIsApiEnabled(isEnabled);
 
     emit enableApiServer(isEnabled);
+}
+
+void SettingsWindow::onApiKey_EditingFinished()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    QString apikey = ui->lineEdit_ApiKey->text();
+
+    if (apikey == "")
+    {
+        apikey = Settings::getApiAuthKey();
+
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "ApiKey is empty, return back to" << apikey;
+
+        ui->lineEdit_ApiKey->setText(apikey);
+        return;
+    }
+
+    Settings::setApiKey(apikey);
+    emit updateApiKey(apikey);
 }
 
 void SettingsWindow::onSetApiPort_Clicked()
@@ -796,6 +824,14 @@ void SettingsWindow::onPingDeviceEverySecond_Toggled(bool state)
     m_moodlampManager->reset();
 }
 
+void SettingsWindow::processMessage(const QString &message)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << message;
+
+    m_trayMessage = Tray_AnotherInstanceMessage;
+    m_trayIcon->showMessage(tr("Lightpack"), tr("Application already running"));
+}
+
 // ----------------------------------------------------------------------------
 // Show / Hide settings and about windows
 // ----------------------------------------------------------------------------
@@ -891,6 +927,7 @@ void SettingsWindow::ledDeviceFirmwareVersionResult(const QString & fwVersion)
 
             if (Settings::isUpdateFirmwareMessageShown() == false)
             {
+                m_trayMessage = Tray_UpdateFirmwareMessage;
                 m_trayIcon->showMessage(tr("Lightpack firmware update"), tr("Click on this message to open lightpack downloads page"));
                 Settings::setUpdateFirmwareMessageShown(true);
             }
@@ -1091,25 +1128,33 @@ void SettingsWindow::openCurrentProfile()
 
 void SettingsWindow::profileRename()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;       
 
-    //
-    // Press <Enter> in profile edit line will perform renaming it
-    // also update settings for usable configuration LED coefs
-    //
     QString configName = ui->comboBox_Profiles->currentText().trimmed();
-    ui->comboBox_Profiles->setItemText(ui->comboBox_Profiles->currentIndex(), configName);
+    ui->comboBox_Profiles->lineEdit()->setText(configName);
 
-    if(configName == ""){
+    // Signal editingFinished() will be emited if focus wasn't lost (for example when return pressed),
+    // and profileRename() function will be called again here
+    this->setFocus(Qt::OtherFocusReason);
+
+    if (Settings::getCurrentProfileName() == configName)
+    {
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Nothing has changed";
         return;
     }
 
-    Settings::renameCurrentProfile(configName);
+    if (configName == "")
+    {
+        configName = Settings::getCurrentProfileName();
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Profile name is empty, return back to" << configName;
+    }
+    else
+    {
+        Settings::renameCurrentProfile(configName);
+    }
 
-    this->setFocus(Qt::OtherFocusReason);
-
-    updateUiFromSettings();
-    emit settingsProfileChanged();
+    ui->comboBox_Profiles->lineEdit()->setText(configName);
+    ui->comboBox_Profiles->setItemText(ui->comboBox_Profiles->currentIndex(), configName);
 }
 
 void SettingsWindow::profileSwitch(const QString & configName)
@@ -1474,10 +1519,21 @@ void SettingsWindow::onTrayIcon_Activated(QSystemTrayIcon::ActivationReason reas
 
 void SettingsWindow::onTrayIcon_MessageClicked()
 {
-    if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_trayMessage;
+
+    switch(m_trayMessage)
     {
-        // Open lightpack downloads page
-        QDesktopServices::openUrl(QUrl(LightpackDownloadsPageUrl, QUrl::TolerantMode));
+    case Tray_UpdateFirmwareMessage:
+        if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
+        {
+            // Open lightpack downloads page
+            QDesktopServices::openUrl(QUrl(LightpackDownloadsPageUrl, QUrl::TolerantMode));
+        }
+        break;
+
+    case Tray_AnotherInstanceMessage:
+    default:
+        break;
     }
 }
 
@@ -1509,7 +1565,9 @@ void SettingsWindow::updateUiFromSettings()
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
     ui->spinBox_GrabMinLevelOfSensitivity->setValue     (Settings::getGrabMinimumLevelOfSensitivity());
 
-    ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());
+    // Check the selected moodlamp mode (setChecked(false) not working to select another)
+    ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
+    ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());    
     ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
     ui->horizontalSlider_MoodLampSpeed->setValue        (Settings::getMoodLampSpeed());
 
@@ -1533,6 +1591,9 @@ void SettingsWindow::updateUiFromSettings()
     case Grab::WinAPIGrabber:
         ui->radioButton_GrabWinAPI->setChecked(true);
         break;
+    case Grab::WinAPIEachWidgetGrabber:
+        ui->radioButton_GrabWinAPI_EachWidget->setChecked(true);
+        break;
 #endif
 #ifdef D3D9_GRAB_SUPPORT
     case Grab::D3D9Grabber:
@@ -1549,6 +1610,10 @@ void SettingsWindow::updateUiFromSettings()
         ui->radioButton_GrabMacCoreGraphics->setChecked(true);
         break;
 #endif
+    case Grab::QtEachWidgetGrabber:
+        ui->radioButton_GrabQt_EachWidget->setChecked(true);
+        break;
+
     default:
         ui->radioButton_GrabQt->setChecked(true);
     }
@@ -1611,7 +1676,10 @@ void SettingsWindow::clearOnOffHotKey()
 
 void SettingsWindow::setupHotkeys()
 {
-    m_KeySequenceWidget->setKeySequence(Settings::getOnOffDeviceKey());
+    m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("On-Off light:"), this);
+    ui->groupBox_HotKeys->layout()->addWidget(m_keySequenceWidget);
+
+    m_keySequenceWidget->setKeySequence(Settings::getOnOffDeviceKey());
     GlobalShortcutManager::instance()->connect(Settings::getOnOffDeviceKey(), this, SLOT(switchBacklightOnOff()));
 }
 
@@ -1623,6 +1691,9 @@ void SettingsWindow::quit()
 {
     if (ui->checkBox_SwitchOffAtClosing->isChecked())
     {
+        // Process all currently pending signals (which may include updating the color signals)
+        QApplication::processEvents(QEventLoop::AllEvents, 1000);
+
         emit offLeds();
         QApplication::processEvents(QEventLoop::AllEvents, 1000);
     }
@@ -1684,8 +1755,8 @@ void SettingsWindow::onLightpackModes_Activated(int index)
 void SettingsWindow::onMoodLampColor_changed(QColor color)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << color;
+    Settings::setMoodLampColor(color);
     m_moodlampManager->setCurrentColor(color);
-    // TODO: should i save current color to settings profile?
 }
 
 void SettingsWindow::onMoodLampSpeed_valueChanged(int value)
@@ -1697,6 +1768,8 @@ void SettingsWindow::onMoodLampSpeed_valueChanged(int value)
 
 void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
+
     Settings::setMoodLampLiquidMode(checked);    
     if (Settings::isMoodLampLiquidMode())
     {

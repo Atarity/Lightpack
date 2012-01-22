@@ -14,6 +14,44 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 ===================================================================================
 -----------------------------------------------------------------------------------
 
+Version sw5.8.6
+---------------
+January 21, 2012
+
+* Updated design of the grabbing areas
+* New widgets for configure grabbing areas
+* Hotkey for ON / OFF lights
+* Run only one instance of software
+* Fixed work with other USB HID on Mac OS X
+* New API command "?" for list all available commands
+* Each run in a separate log file
+* Many small fixes GUI
+
+Version sw5.8.0
+---------------
+December 28, 2011
+
+* API refactoring
+* Added new commands in API for authorization and help
+* Fixed Mac OS X grabber
+* Adalight and Ardulight devices support
+* Implemented multithreading
+* Added brightness control
+* Turn off lights when exiting application via tray menu
+
+Version sw5.5.0
+---------------
+August 11, 2011
+
+* New hardware with 10 LEDs
+* New algorithm for smoothly change colors
+* Native grabber for X-Window System (Linux)
+* Moodlamp with liquid mode
+* Gamma correction
+* AlienFX support
+* XBMC Plugin
+* API
+
 Version sw4.1.0
 ---------------
 brunql, March 23, 2011

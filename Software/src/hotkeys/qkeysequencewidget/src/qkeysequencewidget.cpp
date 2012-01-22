@@ -207,6 +207,12 @@ void QKeySequenceWidget::setNoneText(const QString text)
     d_ptr->updateDisplayShortcut();
 }
 
+void QKeySequenceWidget::setShortcutName(const QString &text)
+{
+    if (d_ptr->shortcutNameLabel != NULL)
+        d_ptr->shortcutNameLabel->setText(text);
+}
+
 /*!
     Get string for display when key sequence is undefined.
     \return Text string
@@ -243,6 +249,7 @@ void QKeySequenceWidget::_connectingSlots()
     // connect signals to slots
     connect(d_ptr->clearButton, SIGNAL(clicked()), this,SLOT(clearKeySequence()));
     connect(&d_ptr->modifierlessTimeout, SIGNAL(timeout()), this, SLOT(doneRecording()));
+    connect(&d_ptr->inputTimeout, SIGNAL(timeout()), this, SLOT(doneRecording()));
     connect(d_func()->shortcutButton, SIGNAL(clicked()), this, SLOT(captureKeySequence()));
 
 }
@@ -267,10 +274,9 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     Q_UNUSED(q);
     layout = new QHBoxLayout(q_func());
     layout->setMargin(0);
-    layout->setSpacing(1);
 
-    clearButton = new QToolButton(q_func());
-    clearButton->setText("x");
+    clearButton = new QPushButton(q_func());
+    clearButton->setText("");
 
     layout->addWidget(clearButton);
 
@@ -302,6 +308,10 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     // update ui
     updateDisplayShortcut();
     updateView();
+
+    // Fix diff between buttons heights
+    shortcutButton->adjustSize();
+    clearButton->setMaximumHeight(shortcutButton->height());
 }
 
 void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString noneStr, const QString shortcutName)
@@ -310,12 +320,9 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     Q_UNUSED(q);
     layout = new QHBoxLayout(q_func());
     layout->setMargin(0);
-    layout->setSpacing(1);
 
-
-
-    clearButton = new QToolButton(q_func());
-    clearButton->setText("x");
+    clearButton = new QPushButton(q_func());
+    clearButton->setText("");
 
     layout->addWidget(clearButton);
 
@@ -347,11 +354,16 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     shortcutNameLabel = new QLabel(q_func());
     shortcutNameLabel->setText(shortcutName);
 
+    layout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding));
     layout->addWidget(shortcutNameLabel);
 
     // update ui
     updateDisplayShortcut();
     updateView();
+
+    // Fix diff between buttons heights
+    shortcutButton->adjustSize();
+    clearButton->setMaximumHeight(shortcutButton->height());
 }
 
 // set tooltip only for seqyence button
@@ -393,6 +405,9 @@ void QKeySequenceWidgetPrivate::startRecording()
 
     shortcutButton->grabKeyboard();
 
+    inputTimeout.stop();
+    inputTimeout.start(3000);   // Give three seconds penality to input.
+
     if (!QWidget::keyboardGrabber())
     {
         qWarning() << "Failed to grab the keyboard! Most likely qt's nograb option is active";
@@ -404,26 +419,22 @@ void QKeySequenceWidgetPrivate::startRecording()
 
 void QKeySequenceWidgetPrivate::doneRecording()
 {
-    modifierlessTimeout.stop();
+    if( ( currentSequence.toString().length() == 1 ) && ( currentSequence.toString()[0].isLetterOrNumber() ) ) {
+        modifierlessTimeout.stop();
+        startRecording();
+    } else {
+        modifierlessTimeout.stop();        
 
-    isRecording = false;
-    shortcutButton->releaseKeyboard();
-    shortcutButton->setDown(false);
+        isRecording = false;
+        shortcutButton->releaseKeyboard();
+        shortcutButton->setDown(false);
 
-    // if sequence is not changed
-   /* if (currentSequence == oldSequence)
-    {
+        // key sequnce is changed
+        emit q_ptr->keySequenceChanged(currentSequence);
+
         // update Shortcut display
         updateDisplayShortcut();
-
-        return;
-    }*/
-
-    // key sequnce is changed
-    emit q_ptr->keySequenceChanged(currentSequence);
-
-    // update Shortcut display
-    updateDisplayShortcut();
+    }
 }
 
 inline void QKeySequenceWidgetPrivate::cancelRecording()
@@ -432,11 +443,11 @@ inline void QKeySequenceWidgetPrivate::cancelRecording()
     doneRecording();
 }
 
-inline void QKeySequenceWidgetPrivate::controlModifierlessTimout()
+inline void QKeySequenceWidgetPrivate::controlModifierlessTimeout()
 {
     if (numKey != 0 && !modifierKeys)
     {
-        // No modifier key pressed currently. Start the timout
+        // No modifier key pressed currently. Start the timeout
         modifierlessTimeout.start(600);
     }
     else
@@ -454,11 +465,21 @@ inline void QKeySequenceWidgetPrivate::keyNotSupported()
 
 void QKeySequenceWidgetPrivate::updateDisplayShortcut()
 {
+    // Fix bug with sequence Ctrl+ScrollLock
+    int code = currentSequence;
+    code &= ~Qt::KeyboardModifierMask;
+    if( code == 16908289) {
+        //QString fixedSequence;
+        //code = currentSequence;
+        currentSequence = QKeySequence(QString("Ctrl+ScrollLock"));
+    }
+
     // empty string if no non-modifier was pressed
     QString str = currentSequence.toString(QKeySequence::NativeText);    
-    str.replace('&', QLatin1String("&&"));  // TODO -- check it
 
-    if (isRecording == true)
+    //  str.replace('&', QLatin1String("&&"));  // TODO -- check it
+
+    /*if (isRecording == true)
     {        
         if (modifierKeys)
         {
@@ -479,6 +500,11 @@ void QKeySequenceWidgetPrivate::updateDisplayShortcut()
         }
 
         // make it clear that input is still going on
+        str.append("...");
+    }*/
+
+    // make it clear that input is still going on
+    if(isRecording) {
         str.append("...");
     }
 
@@ -522,8 +548,9 @@ bool QShortcutButton::event(QEvent *e)
 }
 
 void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
-{
+{    
     qDebug() << "key pressed";
+    d->inputTimeout.stop();
     int keyQt =  keyEvent->key();
 
     // The user press Ecape key - just return previous value
@@ -543,17 +570,17 @@ void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
 // We cannot do anything useful with those (several keys have -1,
 // indistinguishable)
 // and QKeySequence.toString() will also yield a garbage string.
-    if (keyQt == -1)
+    if  (keyQt == -1)
     {
-        // keu moy supported in Qt
+        // key not supported in Qt
         d->cancelRecording();
         d->keyNotSupported();
 
-    }
+    } 
 
     //get modifiers key
-    uint newModifiers = keyEvent->modifiers() & (Qt::SHIFT | Qt::CTRL | Qt::ALT
-| Qt::META);
+    uint newModifiers = NULL;
+    newModifiers = keyEvent->modifiers() & (Qt::SHIFT | Qt::CTRL | Qt::ALT | Qt::META);
 
     // block autostart capturing on key_return or key space press
     if (d->isRecording == false && (keyQt == Qt::Key_Return || keyQt == Qt::Key_Space))
@@ -581,7 +608,7 @@ void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
         case Qt::Key_Meta:
         case Qt::Key_Menu: //unused (yes, but why?)
         // TODO - check it key
-            d->controlModifierlessTimout();
+            d->controlModifierlessTimeout();
             d->updateDisplayShortcut();
             break;
         default:
@@ -606,7 +633,7 @@ void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
                 d->currentSequence = QKeySequence(keyQt);
             }
 
-            d->numKey++; // increment nuber of pressed keys
+            d->numKey++; // increment number of pressed keys
 
             if (d->numKey >= 4)
             {
@@ -614,7 +641,7 @@ void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
                 return;
             }
 
-            d->controlModifierlessTimout();
+            d->controlModifierlessTimeout();
             d->updateDisplayShortcut();
         }
     }
@@ -643,7 +670,7 @@ void QShortcutButton::keyReleaseEvent(QKeyEvent *keyEvent)
     if ((newModifiers & d->modifierKeys) < d->modifierKeys)
     {
         d->modifierKeys = newModifiers;
-        d->controlModifierlessTimout();
+        d->controlModifierlessTimeout();
         d->updateDisplayShortcut();
     }
 }

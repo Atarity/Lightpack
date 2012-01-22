@@ -12,5 +12,13 @@
         <file>icons/about.png</file>
         <file>icons/lock.png</file>
         <file>translations/ru_RU.qm</file>
+        <file>icons/res_dark.png</file>
+        <file>icons/res_light.png</file>
+        <file>buttons/arrow_right_dark_24px.png</file>
+        <file>buttons/arrow_right_dark_24px_hover.png</file>
+        <file>buttons/arrow_right_dark_24px_pressed.png</file>
+        <file>buttons/arrow_right_light_24px.png</file>
+        <file>buttons/arrow_right_light_24px_hover.png</file>
+        <file>buttons/arrow_right_light_24px_pressed.png</file>
     </qresource>
 </RCC>

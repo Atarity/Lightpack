@@ -40,7 +40,7 @@
 using namespace std;
 using namespace SettingsScope;
 
-#define VERSION_API_TESTS   "1.2"
+#define VERSION_API_TESTS   "1.3"
 
 // get
 // getstatus - on off
@@ -275,7 +275,7 @@ void LightpackApiTest::testCase_GetProfiles()
 
     writeCommand(m_socket, ApiServer::CmdGetProfiles);
 
-    QByteArray result = readResult(m_socket);
+    QByteArray result = readResult(m_socket).trimmed();
     QVERIFY(m_sockReadLineOk);
 
     qDebug() << "res=" << result;
@@ -294,7 +294,7 @@ void LightpackApiTest::testCase_GetProfiles()
 
     writeCommand(m_socket, ApiServer::CmdGetProfiles);
 
-    result = readResult(m_socket);
+    result = readResult(m_socket).trimmed();
     QVERIFY(m_sockReadLineOk);
 
     QVERIFY(result == cmdProfilesCheckResultWithUtf8);
@@ -303,13 +303,13 @@ void LightpackApiTest::testCase_GetProfiles()
 void LightpackApiTest::testCase_GetProfile()
 {
     QString cmdProfileCheckResult = ApiServer::CmdResultProfile +
-            Settings::getCurrentProfileName().toUtf8() + "\n";
+            Settings::getCurrentProfileName().toUtf8();
 
     // Test GetProfile command:
 
     writeCommand(m_socket, ApiServer::CmdGetProfile);
 
-    QByteArray result = readResult(m_socket);
+    QByteArray result = readResult(m_socket).trimmed();
     QVERIFY(m_sockReadLineOk);
 
     if (result != cmdProfileCheckResult)
@@ -814,7 +814,6 @@ QString LightpackApiTest::getProfilesResultString()
     QString cmdProfilesCheckResult = ApiServer::CmdResultProfiles;
     for (int i = 0; i < profiles.count(); i++)
         cmdProfilesCheckResult += profiles[i].toUtf8() + ";";
-    cmdProfilesCheckResult += "\n";
 
     return cmdProfilesCheckResult;
 }
@@ -837,7 +836,9 @@ bool LightpackApiTest::checkVersion(QTcpSocket * socket)
 
     QString result = readResult(socket);
 
-    return (m_sockReadLineOk && result.remove("version:").trimmed() == VERSION_API_TESTS);
+    QString versionTests = "Lightpack API v" VERSION_API_TESTS " (type \"help\" for more info)";
+
+    return (m_sockReadLineOk && result.trimmed() == versionTests);
 }
 
 bool LightpackApiTest::lock(QTcpSocket * socket)

@@ -26,6 +26,7 @@
 
 
 #include <QtGui>
+#include <QTextItem>
 #include "GrabWidget.hpp"
 #include "ui_GrabWidget.h"
 #include "Settings.hpp"
@@ -49,7 +50,6 @@ const QColor GrabWidget::m_colors[GrabWidget::ColorsCount][2] = {
     { Qt::white,       Qt::black }, // ColorIndexWhite == 11
 };
 
-
 GrabWidget::GrabWidget(int id, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::GrabWidget)
@@ -58,20 +58,29 @@ GrabWidget::GrabWidget(int id, QWidget *parent) :
 
     ui->setupUi(this);
 
-    this->m_selfId = id;
+    // Button image size 24x24 px
+    ui->button_OpenConfig->setFixedSize(24, 24);
 
-    this->setCursorOnAll(Qt::OpenHandCursor);
-    this->setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
-    this->setFocusPolicy(Qt::NoFocus);
-    ui->checkBox_SelfId->setText(QString::number(this->m_selfId + 1));
+    m_selfId = id;
+    m_selfIdString = QString::number(m_selfId + 1);
 
-    this->setMouseTracking(true);
+    m_configWidget = new GrabConfigWidget();
 
-    this->resize(100, 100);
+    setCursorOnAll(Qt::OpenHandCursor);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
+    setFocusPolicy(Qt::NoFocus);
+
+    setMouseTracking(true);
+
+    settingsProfileChanged();
 
     fillBackgroundColored();
 
-    connect(ui->checkBox_SelfId, SIGNAL(toggled(bool)), this, SLOT(checkBoxSelfId_Toggled(bool)));
+    connect(m_configWidget, SIGNAL(isAreaEnabled_Toggled(bool)), this, SLOT(onIsAreaEnabled_Toggled(bool)));
+    connect(m_configWidget, SIGNAL(coefRed_ValueChanged(double)),   this, SLOT(onRedCoef_ValueChanged(double)));
+    connect(m_configWidget, SIGNAL(coefGreen_ValueChanged(double)), this, SLOT(onGreenCoef_ValueChanged(double)));
+    connect(m_configWidget, SIGNAL(coefBlue_ValueChanged(double)),  this, SLOT(onBlueCoef_ValueChanged(double)));
+    connect(ui->button_OpenConfig, SIGNAL(clicked()), this, SLOT(onOpenConfigButton_Clicked()));
 }
 
 GrabWidget::~GrabWidget()
@@ -104,21 +113,22 @@ void GrabWidget::settingsProfileChanged()
     m_coefGreen = Settings::getLedCoefGreen(m_selfId);
     m_coefBlue = Settings::getLedCoefBlue(m_selfId);
 
-    this->move(Settings::getLedPosition(m_selfId));
-    this->resize(Settings::getLedSize(m_selfId));
+    m_configWidget->setIsAreaEnabled(Settings::isLedEnabled(m_selfId));
+    m_configWidget->setCoefs(m_coefRed, m_coefGreen, m_coefBlue);
 
-    emit resizeOrMoveCompleted( m_selfId );
+    move(Settings::getLedPosition(m_selfId));
+    resize(Settings::getLedSize(m_selfId));
 
-    ui->checkBox_SelfId->setChecked(Settings::isLedEnabled(m_selfId));
+    emit resizeOrMoveCompleted(m_selfId);
 }
 
 void GrabWidget::setCursorOnAll(Qt::CursorShape cursor)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << cursor;
 
-    ui->checkBox_SelfId->setCursor(Qt::ArrowCursor);
-    ui->labelWidthHeight->setCursor(cursor);
-    this->setCursor(cursor);
+    ui->button_OpenConfig->setCursor(Qt::ArrowCursor);
+
+    setCursor(cursor);
 }
 
 void GrabWidget::mousePressEvent(QMouseEvent *pe)
@@ -127,55 +137,70 @@ void GrabWidget::mousePressEvent(QMouseEvent *pe)
 
     mousePressPosition = pe->pos();
     mousePressGlobalPosition = pe->globalPos();
-    mousePressDiffFromBorder.setWidth(this->width() - pe->x());
-    mousePressDiffFromBorder.setHeight(this->height() - pe->y());
+    mousePressDiffFromBorder.setWidth(width() - pe->x());
+    mousePressDiffFromBorder.setHeight(height() - pe->y());
 
-    if(pe->buttons() == Qt::RightButton){
+    if (pe->buttons() == Qt::RightButton)
+    {
         // Send signal RightButtonClicked to main window for grouping widgets
         emit mouseRightButtonClicked(m_selfId);
-
-    }else if(pe->buttons() == Qt::LeftButton){
+    }
+    else if (pe->buttons() == Qt::LeftButton)
+    {
         // First check corners
-        if(pe->x() < BorderWidth && pe->y() < BorderWidth){
+        if (pe->x() < BorderWidth && pe->y() < BorderWidth)
+        {
             cmd = RESIZE_LEFT_UP;
-            this->setCursorOnAll(Qt::SizeFDiagCursor);
-        }else if(pe->x() < BorderWidth && (this->height() - pe->y()) < BorderWidth){
+            setCursorOnAll(Qt::SizeFDiagCursor);
+        }
+        else if (pe->x() < BorderWidth && (height() - pe->y()) < BorderWidth)
+        {
             cmd = RESIZE_LEFT_DOWN;
-            this->setCursorOnAll(Qt::SizeBDiagCursor);
-        }else if(pe->y() < BorderWidth && (this->width() - pe->x()) < BorderWidth){
+            setCursorOnAll(Qt::SizeBDiagCursor);
+        }
+        else if (pe->y() < BorderWidth && (width() - pe->x()) < BorderWidth)
+        {
             cmd = RESIZE_RIGHT_UP;
-            this->setCursorOnAll(Qt::SizeBDiagCursor);
-        }else if((this->height() - pe->y()) < BorderWidth && (this->width() - pe->x()) < BorderWidth){
+            setCursorOnAll(Qt::SizeBDiagCursor);
+        }
+        else if ((height() - pe->y()) < BorderWidth && (width() - pe->x()) < BorderWidth)
+        {
             cmd = RESIZE_RIGHT_DOWN;
-            this->setCursorOnAll(Qt::SizeFDiagCursor);
+            setCursorOnAll(Qt::SizeFDiagCursor);
         }
         // Next check sides
-        else if(pe->x() < BorderWidth){
+        else if (pe->x() < BorderWidth)
+        {
             cmd = RESIZE_HOR_LEFT;
-            this->setCursorOnAll(Qt::SizeHorCursor);
-        }else if((this->width() - pe->x()) < BorderWidth){
+            setCursorOnAll(Qt::SizeHorCursor);
+        }
+        else if ((width() - pe->x()) < BorderWidth)
+        {
             cmd = RESIZE_HOR_RIGHT;
-            this->setCursorOnAll(Qt::SizeHorCursor);
-        }else if(pe->y() < BorderWidth){
+            setCursorOnAll(Qt::SizeHorCursor);
+        }
+        else if (pe->y() < BorderWidth)
+        {
             cmd = RESIZE_VER_UP;
-            this->setCursorOnAll(Qt::SizeVerCursor);
-        }else if((this->height() - pe->y()) < BorderWidth){
+            setCursorOnAll(Qt::SizeVerCursor);
+        }
+        else if ((height() - pe->y()) < BorderWidth)
+        {
             cmd = RESIZE_VER_DOWN;
-            this->setCursorOnAll(Qt::SizeVerCursor);
+            setCursorOnAll(Qt::SizeVerCursor);
         }
         // Click on center, just move it
-        else{
+        else
+        {
             cmd = MOVE;
-            // Force set cursor to ClosedHand
-            this->grabMouse(Qt::ClosedHandCursor);
-            this->releaseMouse();
-            // And set it to this widget and labelWxH
-            this->setCursorOnAll(Qt::ClosedHandCursor);
+
+            // Grab all mouse input
+            grabMouse(Qt::ClosedHandCursor);
         }
-
         emit resizeOrMoveStarted();
-
-    }else{
+    }
+    else
+    {
         cmd = NOP;
     }
 }
@@ -191,138 +216,145 @@ void GrabWidget::mouseMoveEvent(QMouseEvent *pe)
 
     int left, top, right, bottom;
 
-    switch(cmd){
+    switch (cmd)
+    {
     case MOVE:
         moveHere = pe->globalPos() - mousePressPosition;
 
         left = moveHere.x();
         top = moveHere.y();
 
-        right = moveHere.x() + this->width();
-        bottom = moveHere.y() + this->height();
+        right = moveHere.x() + width();
+        bottom = moveHere.y() + height();
 
-        if(left < screen.left() + StickyCloserPixels &&
+        if (left < screen.left() + StickyCloserPixels &&
            left > screen.left() - StickyCloserPixels)
-            moveHere.setX( screen.left() );
+            moveHere.setX(screen.left());
 
-        if(top < screen.top() + StickyCloserPixels &&
+        if (top < screen.top() + StickyCloserPixels &&
            top > screen.top() - StickyCloserPixels)
-            moveHere.setY( screen.top() );
+            moveHere.setY(screen.top());
 
-        if(right < screen.right() + StickyCloserPixels &&
+        if (right < screen.right() + StickyCloserPixels &&
            right > screen.right() - StickyCloserPixels)
-            moveHere.setX(screen.right() - this->width() + 1);
+            moveHere.setX(screen.right() - width() + 1);
 
-        if(bottom < screen.bottom() + StickyCloserPixels &&
+        if (bottom < screen.bottom() + StickyCloserPixels &&
            bottom > screen.bottom() - StickyCloserPixels)
-            moveHere.setY(screen.bottom() - this->height() + 1);
+            moveHere.setY(screen.bottom() - height() + 1);
 
-        this->move(moveHere);
+        move(moveHere);
         break;
 
     case RESIZE_HOR_RIGHT:
         newWidth = pe->x() + mousePressDiffFromBorder.width();
-        this->resize((newWidth <= MinimumWidth) ? MinimumWidth : newWidth, this->height());
+        resize((newWidth <= MinimumWidth) ? MinimumWidth : newWidth, height());
         break;
 
     case RESIZE_VER_DOWN:
         newHeight = pe->y() + mousePressDiffFromBorder.height();
-        this->resize(this->width(), (newHeight <= MinimumHeight) ? MinimumHeight : newHeight);
+        resize(width(), (newHeight <= MinimumHeight) ? MinimumHeight : newHeight);
         break;
 
     case RESIZE_HOR_LEFT:
-        newY = this->pos().y();
-        newHeight = this->height();
+        newY = pos().y();
+        newHeight = height();
 
         newWidth = mousePressGlobalPosition.x() - pe->globalPos().x() + mousePressPosition.x() + mousePressDiffFromBorder.width();
 
-        if(newWidth < MinimumWidth){
+        if (newWidth < MinimumWidth)
+        {
             newWidth = MinimumWidth;
             newX = mousePressGlobalPosition.x() + mousePressDiffFromBorder.width() - MinimumWidth;
-        }else{
+        } else {
             newX = pe->globalPos().x() - mousePressPosition.x();
         }
-        this->resize(newWidth, newHeight);
-        this->move(newX, newY);
+        resize(newWidth, newHeight);
+        move(newX, newY);
         break;
 
     case RESIZE_VER_UP:
-        newX = this->pos().x();
-        newWidth = this->width();
+        newX = pos().x();
+        newWidth = width();
 
         newHeight = mousePressGlobalPosition.y() - pe->globalPos().y() + mousePressPosition.y() + mousePressDiffFromBorder.height();
 
-        if(newHeight < MinimumHeight){
+        if (newHeight < MinimumHeight)
+        {
             newHeight = MinimumHeight;
             newY = mousePressGlobalPosition.y() + mousePressDiffFromBorder.height() - MinimumHeight;
-        }else{
+        } else {
             newY = pe->globalPos().y() - mousePressPosition.y();
         }
-        this->resize(newWidth, newHeight);
-        this->move(newX, newY);
+        resize(newWidth, newHeight);
+        move(newX, newY);
         break;
 
 
     case RESIZE_RIGHT_DOWN:
         newWidth = pe->x() + mousePressDiffFromBorder.width();
         newHeight = pe->y() + mousePressDiffFromBorder.height();
-        this->resize((newWidth <= MinimumWidth) ? MinimumWidth : newWidth, (newHeight <= MinimumHeight) ? MinimumHeight : newHeight);
+        resize((newWidth <= MinimumWidth) ? MinimumWidth : newWidth, (newHeight <= MinimumHeight) ? MinimumHeight : newHeight);
         break;
 
     case RESIZE_RIGHT_UP:
         newWidth = pe->x() + mousePressDiffFromBorder.width();
-        if(newWidth < MinimumWidth) newWidth = MinimumWidth;
-        newX = this->pos().x();
+        if (newWidth < MinimumWidth) newWidth = MinimumWidth;
+        newX = pos().x();
 
         newHeight = mousePressGlobalPosition.y() - pe->globalPos().y() + mousePressPosition.y() + mousePressDiffFromBorder.height();
 
-        if(newHeight < MinimumHeight){
+        if (newHeight < MinimumHeight)
+        {
             newHeight = MinimumHeight;
             newY = mousePressGlobalPosition.y() + mousePressDiffFromBorder.height() - MinimumHeight;
-        }else{
+        } else {
             newY = pe->globalPos().y() - mousePressPosition.y();
         }
-        this->resize(newWidth, newHeight);
-        this->move(newX, newY);
+        resize(newWidth, newHeight);
+        move(newX, newY);
         break;
 
     case RESIZE_LEFT_DOWN:
         newHeight = pe->y() + mousePressDiffFromBorder.height();
-        if(newHeight < MinimumHeight) newHeight = MinimumHeight;
-        newY = this->pos().y();
+        if (newHeight < MinimumHeight) newHeight = MinimumHeight;
+        newY = pos().y();
 
         newWidth = mousePressGlobalPosition.x() - pe->globalPos().x() + mousePressPosition.x() + mousePressDiffFromBorder.width();
 
-        if(newWidth < MinimumWidth){
+        if (newWidth < MinimumWidth)
+        {
             newWidth = MinimumWidth;
             newX = mousePressGlobalPosition.x() + mousePressDiffFromBorder.width() - MinimumWidth;
-        }else{
+        } else {
             newX = pe->globalPos().x() - mousePressPosition.x();
         }
-        this->resize(newWidth, newHeight);
-        this->move(newX, newY);
+        resize(newWidth, newHeight);
+        move(newX, newY);
         break;
 
     case RESIZE_LEFT_UP:
         newWidth = mousePressGlobalPosition.x() - pe->globalPos().x() + mousePressPosition.x() + mousePressDiffFromBorder.width();
 
-        if(newWidth < MinimumWidth){
+        if (newWidth < MinimumWidth)
+        {
             newWidth = MinimumWidth;
             newX = mousePressGlobalPosition.x() + mousePressDiffFromBorder.width() - MinimumWidth;
-        }else{
+        } else {
             newX = pe->globalPos().x() - mousePressPosition.x();
         }
 
         newHeight = mousePressGlobalPosition.y() - pe->globalPos().y() + mousePressPosition.y() + mousePressDiffFromBorder.height();
 
-        if(newHeight < MinimumHeight){
+        if (newHeight < MinimumHeight)
+        {
             newHeight = MinimumHeight;
             newY = mousePressGlobalPosition.y() + mousePressDiffFromBorder.height() - MinimumHeight;
-        }else{
+        } else {
             newY = pe->globalPos().y() - mousePressPosition.y();
         }
-        this->resize(newWidth, newHeight);
-        this->move(newX, newY);
+        resize(newWidth, newHeight);
+        move(newX, newY);
         break;
 
     case NOP:
@@ -341,9 +373,8 @@ void GrabWidget::mouseReleaseEvent(QMouseEvent *pe)
 
     cmd = NOP;
 
-    // Force set cursor from widget to mouse
-    this->grabMouse(this->cursor());
-    this->releaseMouse();
+    // Release mouse after grab in mouse press event
+    releaseMouse();
 
     saveSizeAndPosition();
 
@@ -355,16 +386,21 @@ void GrabWidget::wheelEvent(QWheelEvent *pe)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    if(ui->checkBox_SelfId->isChecked() == false){
+    if (!isAreaEnabled())
+    {
+        // Do nothing if area disabled
         return;
     }
 
-    if(pe->delta() > 0) m_colorIndex++;
-    if(pe->delta() < 0) m_colorIndex--;
+    if (pe->delta() > 0) m_colorIndex++;
+    if (pe->delta() < 0) m_colorIndex--;
 
-    if(m_colorIndex >= ColorsCount){
+    if (m_colorIndex >= ColorsCount)
+    {
         m_colorIndex = 0;
-    }else if(m_colorIndex < 0) {
+    }
+    else if (m_colorIndex < 0)
+    {
         m_colorIndex = ColorsCount - 1;
     }
     fillBackground(m_colorIndex);
@@ -374,7 +410,7 @@ void GrabWidget::resizeEvent(QResizeEvent *)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    ui->labelWidthHeight->setText( QString::number(this->width()) + "x" + QString::number(this->height()) );
+    m_widthHeight = QString::number(width()) + "x" + QString::number(height());
 }
 
 void GrabWidget::paintEvent(QPaintEvent *)
@@ -384,6 +420,37 @@ void GrabWidget::paintEvent(QPaintEvent *)
     QPainter painter(this);
     painter.setPen(QColor(0x77, 0x77, 0x77));
     painter.drawRect(0, 0, width() - 1, height() - 1);
+
+//    // Icon 'resize' opacity
+    painter.setOpacity(0.4);
+
+    // Draw icon 12x12px with 3px padding from the bottom right corner
+    if (m_textColor == Qt::white)
+        painter.drawPixmap(width() - 18, height() - 18, 12, 12, QPixmap(":/icons/res_light.png"));
+    else{
+        //painter.setOpacity(0.5);
+        painter.drawPixmap(width() - 18, height() - 18, 12, 12, QPixmap(":/icons/res_dark.png"));
+    }
+
+    // Self ID and size text opacity
+    painter.setOpacity(0.25);
+
+    QFont font = painter.font();
+    font.setBold(true);
+    font.setPixelSize((height() / 3 < width() / 3) ? height() / 3 : width() / 3);
+    painter.setFont(font);
+
+    painter.setPen(m_textColor);
+    painter.setBrush(QBrush(m_textColor));
+    painter.drawText(rect(), m_selfIdString, QTextOption(Qt::AlignCenter));
+
+    font.setBold(false);
+    font.setPointSize(10);
+    painter.setFont(font);
+
+    QRect rectWidthHeight = rect();
+    rectWidthHeight.setBottom(rect().bottom() - 3);
+    painter.drawText(rectWidthHeight, m_widthHeight, QTextOption(Qt::AlignHCenter | Qt::AlignBottom));
 }
 
 
@@ -408,11 +475,11 @@ double GrabWidget::getCoefBlue()
     return m_coefBlue;
 }
 
-bool GrabWidget::isGrabEnabled()
+bool GrabWidget::isAreaEnabled()
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    return ui->checkBox_SelfId->isChecked();
+    return m_configWidget->isAreaEnabled();
 }
 
 void GrabWidget::fillBackgroundWhite()
@@ -420,7 +487,7 @@ void GrabWidget::fillBackgroundWhite()
     DEBUG_MID_LEVEL << Q_FUNC_INFO << m_selfId;
 
     setBackgroundColor(Qt::white);
-    setTextColor(Qt::white);
+    setTextColor(Qt::black);
 }
 
 void GrabWidget::fillBackgroundColored()
@@ -444,69 +511,125 @@ void GrabWidget::checkAndSetCursors(QMouseEvent *pe)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    if(pe->x() < BorderWidth && pe->y() < BorderWidth){
-        this->setCursorOnAll(Qt::SizeFDiagCursor);
-    }else if(pe->x() < BorderWidth && (this->height() - pe->y()) < BorderWidth){
-        this->setCursorOnAll(Qt::SizeBDiagCursor);
-    }else if(pe->y() < BorderWidth && (this->width() - pe->x()) < BorderWidth){
-        this->setCursorOnAll(Qt::SizeBDiagCursor);
-    }else if((this->height() - pe->y()) < BorderWidth && (this->width() - pe->x()) < BorderWidth){
-        this->setCursorOnAll(Qt::SizeFDiagCursor);
-    }else if(pe->x() < BorderWidth){
-        this->setCursorOnAll(Qt::SizeHorCursor);
-    }else if((this->width() - pe->x()) < BorderWidth){
-        this->setCursorOnAll(Qt::SizeHorCursor);
-    }else if(pe->y() < BorderWidth){
-        this->setCursorOnAll(Qt::SizeVerCursor);
-    }else if((this->height() - pe->y()) < BorderWidth){
-        this->setCursorOnAll(Qt::SizeVerCursor);
-    }else{
-        if(pe->buttons() & Qt::LeftButton){
-            this->setCursorOnAll(Qt::ClosedHandCursor);
-        }else{
-            this->setCursorOnAll(Qt::OpenHandCursor);
-        }
+    if (pe->x() < BorderWidth && pe->y() < BorderWidth)
+    {
+        setCursorOnAll(Qt::SizeFDiagCursor);
+    }
+    else if (pe->x() < BorderWidth && (height() - pe->y()) < BorderWidth)
+    {
+        setCursorOnAll(Qt::SizeBDiagCursor);
+    }
+    else if (pe->y() < BorderWidth && (width() - pe->x()) < BorderWidth)
+    {
+        setCursorOnAll(Qt::SizeBDiagCursor);
+    }
+    else if ((height() - pe->y()) < BorderWidth && (width() - pe->x()) < BorderWidth)
+    {
+        setCursorOnAll(Qt::SizeFDiagCursor);
+    }
+    else if (pe->x() < BorderWidth)
+    {
+        setCursorOnAll(Qt::SizeHorCursor);
+    }
+    else if ((width() - pe->x()) < BorderWidth)
+    {
+        setCursorOnAll(Qt::SizeHorCursor);
+    }
+    else if (pe->y() < BorderWidth)
+    {
+        setCursorOnAll(Qt::SizeVerCursor);
+    }
+    else if ((height() - pe->y()) < BorderWidth)
+    {
+        setCursorOnAll(Qt::SizeVerCursor);
+    }
+    else
+    {
+        if (pe->buttons() & Qt::LeftButton)
+            setCursorOnAll(Qt::ClosedHandCursor);
+        else
+            setCursorOnAll(Qt::OpenHandCursor);
     }
 }
 
-void GrabWidget::checkBoxSelfId_Toggled(bool state)
+void GrabWidget::onIsAreaEnabled_Toggled(bool state)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
-    fillBackgroundColored();
-
     Settings::setLedEnabled(m_selfId, state);
+
+    fillBackgroundColored();    
+}
+
+void GrabWidget::onOpenConfigButton_Clicked()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    // Find y-coordinate for center of the button
+    int buttonCenter = ui->button_OpenConfig->pos().y() + ui->button_OpenConfig->height() / 2;
+
+    m_configWidget->showConfigFor(geometry(), buttonCenter);
+}
+
+void GrabWidget::onRedCoef_ValueChanged(double value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+    Settings::setLedCoefRed(m_selfId, value);
+    m_coefRed = Settings::getLedCoefRed(m_selfId);
+}
+
+void GrabWidget::onGreenCoef_ValueChanged(double value)
+{
+    DEBUG_LOW_LEVEL << value;
+    Settings::setLedCoefGreen(m_selfId, value);
+    m_coefGreen = Settings::getLedCoefGreen(m_selfId);
+}
+
+void GrabWidget::onBlueCoef_ValueChanged(double value)
+{
+    DEBUG_LOW_LEVEL << value;
+    Settings::setLedCoefBlue(m_selfId, value);
+    m_coefBlue = Settings::getLedCoefBlue(m_selfId);
 }
 
 void GrabWidget::setBackgroundColor(QColor color)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << hex << color.rgb();
 
-    QPalette pal = this->palette();
+    QPalette pal = palette();
 
-    if (ui->checkBox_SelfId->isChecked())
+    if (isAreaEnabled())
     {
-        pal.setBrush(this->backgroundRole(), QBrush(color));
+        pal.setBrush(backgroundRole(), QBrush(color));
     } else {
         // Disabled widget
-        pal.setBrush(this->backgroundRole(), QBrush(Qt::gray));
+        pal.setBrush(backgroundRole(), QBrush(Qt::gray));
     }
-    this->setPalette(pal);
+    setPalette(pal);
 }
 
 void GrabWidget::setTextColor(QColor color)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << hex << color.rgb();
 
-    QPalette pal = this->palette();
+    setOpenConfigButtonBackground(color);
 
-    if (ui->checkBox_SelfId->isChecked())
+    if (isAreaEnabled())
     {
-        pal.setBrush(QPalette::WindowText, QBrush(color));
+        m_textColor = color;
     } else {
         // Disabled widget
-        pal.setBrush(QPalette::WindowText, QBrush(Qt::gray));
+        m_textColor = Qt::black;
     }
-    ui->checkBox_SelfId->setPalette(pal);
-    ui->labelWidthHeight->setPalette(pal);
+}
+
+void GrabWidget::setOpenConfigButtonBackground(const QColor &color)
+{
+    QString image = (color == Qt::white && isAreaEnabled()) ? "light" : "dark";
+
+    ui->button_OpenConfig->setStyleSheet(
+                "QPushButton         { border-image: url(:/buttons/arrow_right_" + image + "_24px.png) }"
+                "QPushButton:hover   { border-image: url(:/buttons/arrow_right_" + image + "_24px_hover.png) }"
+                "QPushButton:pressed { border-image: url(:/buttons/arrow_right_" + image + "_24px_pressed.png) }"
+                );
 }

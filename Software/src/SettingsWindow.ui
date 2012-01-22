@@ -38,7 +38,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -674,7 +674,7 @@
            <item>
             <widget class="QSlider" name="horizontalSlider_DeviceRefreshDelay">
              <property name="minimum">
-              <number>10</number>
+              <number>64</number>
              </property>
              <property name="maximum">
               <number>1023</number>
@@ -683,7 +683,7 @@
               <number>1</number>
              </property>
              <property name="value">
-              <number>10</number>
+              <number>64</number>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -705,13 +705,13 @@
               </size>
              </property>
              <property name="minimum">
-              <number>10</number>
+              <number>64</number>
              </property>
              <property name="maximum">
               <number>1023</number>
              </property>
              <property name="value">
-              <number>10</number>
+              <number>64</number>
              </property>
             </widget>
            </item>
@@ -739,7 +739,7 @@
            <item row="0" column="0" rowspan="2">
             <widget class="QSlider" name="horizontalSlider_DeviceColorDepth">
              <property name="minimum">
-              <number>2</number>
+              <number>32</number>
              </property>
              <property name="maximum">
               <number>255</number>
@@ -770,7 +770,7 @@
               </size>
              </property>
              <property name="minimum">
-              <number>2</number>
+              <number>32</number>
              </property>
              <property name="maximum">
               <number>255</number>
@@ -1141,7 +1141,7 @@
         <item>
          <widget class="QGroupBox" name="groupBox_HotKeys">
           <property name="title">
-           <string>HotKeys</string>
+           <string>Hot keys</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_8"/>
          </widget>
@@ -1246,7 +1246,7 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>40</height>
+            <height>1</height>
            </size>
           </property>
          </spacer>
@@ -1350,8 +1350,11 @@
              <property name="toolTip">
               <string>Copy and paste this key into the application using the API, for authorization on the server</string>
              </property>
+             <property name="maxLength">
+              <number>40</number>
+             </property>
              <property name="readOnly">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
             </widget>
            </item>

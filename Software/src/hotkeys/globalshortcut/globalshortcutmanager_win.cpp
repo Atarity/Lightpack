@@ -24,6 +24,8 @@
 #include <QWidget>
 
 #include <windows.h>
+#include <winuser.h>
+#include <QDebug>
 
 class GlobalShortcutManager::KeyTrigger::Impl : public QWidget
 {
@@ -37,7 +39,7 @@ public:
 	{
         UINT mod = 0, key = 0;
 		if (convertKeySequence(ks, &mod, &key))
-			if (RegisterHotKey(winId(), nextId, mod, key))
+            if (RegisterHotKey(winId(), nextId, mod, key))
 				id_ = nextId++;
 	}
 
@@ -77,9 +79,9 @@ private:
 
 	static bool convertKeySequence(const QKeySequence& ks, UINT* mod_, UINT* key_)
 	{
-		int code = ks;
+        int code = ks;
 
-		UINT mod = 0;
+        UINT mod = 0;
 		if (code & Qt::META)
 			mod |= MOD_WIN;
 		if (code & Qt::SHIFT)
@@ -89,9 +91,13 @@ private:
 		if (code & Qt::ALT)
 			mod |= MOD_ALT;
 
-		UINT key = 0;
-		code &= ~Qt::KeyboardModifierMask;
-		if (code >= 0x20 && code <= 0x7f)
+        code &= ~Qt::KeyboardModifierMask;
+
+
+		UINT key = 0;        
+
+        qDebug() << "Code is->" << code;
+        if (code >= 0x20 && code <= 0x7f && !isBugKeyCode(&code))
 			key = code;
 		else {
 			for (int n = 0; qt_vk_table[n].key != Qt::Key_unknown; ++n) {
@@ -111,6 +117,142 @@ private:
 
 		return true;
 	}
+
+    // Function check current key code value and if it's one of known bug keys, replace original key code with new one.
+    // Also we replace shifted cimbination(such as !)
+    // return true if keo code converted.
+    // return false if key code normal or not supported.
+    static bool isBugKeyCode(int *code)
+    {
+        switch (*code)
+        {
+            // ! key
+            case 33:
+                *code = Qt::Key_1;
+                return false;
+            break;
+
+            // @ key
+            case 64:
+                *code = Qt::Key_2;
+                return false;
+            break;
+
+            // # key
+            case 35:
+                *code = Qt::Key_3;
+                return false;
+            break;
+
+            // $ key
+            case 36:
+                *code = Qt::Key_4;
+                return false;
+            break;
+
+            // % key
+            case 37:
+                *code = Qt::Key_5;
+                return false;
+            break;
+
+            // ^ key
+            case 94:
+                *code = Qt::Key_6;
+                return false;
+            break;
+
+            // & key
+            case 38:
+                *code = Qt::Key_7;
+                return false;
+            break;
+
+            // ( key
+            case 40:
+                *code = Qt::Key_9;
+                return false;
+            break;
+
+            // ) key
+            case 41:
+                *code = Qt::Key_0;
+                return false;
+            break;
+
+            // Multiply key.
+            case 42:
+                *code = Qt::Key_multiply;
+                return false;
+            break;
+
+            // Plus key
+            case 43:
+               *code = Qt::Key_Plus;
+                return true;
+            break;
+
+            // Comma key
+            case 44:
+            case 60:
+                *code = Qt::Key_Comma;
+                return true;
+            break;
+
+            // Subtract key
+            case 45:
+            case 95:
+                *code = Qt::Key_Minus;
+                return true;
+            break;
+
+            // Dot key
+            case 46:
+            case 62:
+                *code = Qt::Key_Period;
+                return true;
+            break;
+
+            // Divide key
+            case 47:
+            case 63:
+                *code = Qt::Key_division;
+                return true;
+            break;
+
+            // ` and ~ keys
+            case 96:
+            case 126:
+                *code = Qt::Key_AsciiTilde;
+                return true;
+            break;
+
+            // \ key
+            case 92:
+            // |key
+            case 124:
+                *code = Qt::Key_brokenbar;
+                return true;
+            break;
+
+            // [ key
+            case 91:
+            // { key
+            case 123:
+                *code = Qt::Key_BracketLeft;
+                return true;
+            break;
+
+            // ] key
+            case 93:
+            // } key
+            case 125:
+                *code = Qt::Key_BracketRight;
+                return true;
+            break;
+        }
+        return false;
+    }
 };
 
 GlobalShortcutManager::KeyTrigger::Impl::Qt_VK_Keymap
@@ -184,7 +326,17 @@ GlobalShortcutManager::KeyTrigger::Impl::qt_vk_table[] = {
 	{ Qt::Key_Hyper_R,     0 },
 	{ Qt::Key_Help,        0 },
 	{ Qt::Key_Direction_L, 0 },
-	{ Qt::Key_Direction_R, 0 },
+    { Qt::Key_Direction_R, 0 },
+    { Qt::Key_multiply,    VK_MULTIPLY },
+    { Qt::Key_Comma,       188 }, // VK_OEM_COMMA
+    { Qt::Key_Plus,        VK_ADD },
+    { Qt::Key_Minus,       VK_SUBTRACT },
+    { Qt::Key_Period,      190 },   // VK_OEM_PERIOD
+    { Qt::Key_division,    VK_DIVIDE },
+    { Qt::Key_AsciiTilde,  192 },   // VK_OEM_3
+    { Qt::Key_BracketLeft, 219 },   // VK_OEM_4
+    { Qt::Key_BracketRight,221 },   // VK_OEM_6
+    { Qt::Key_brokenbar,   220 },   // VK_OEM_5
 
 	{ Qt::Key_unknown,     0 },
 };

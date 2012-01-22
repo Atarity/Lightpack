@@ -65,8 +65,16 @@ unix:!macx{
 macx{
     # MacOS version using libusb and hidapi codes
     SOURCES += hidapi/mac/hid.c
-    LIBS += -framework IOKit -framework CoreFoundation -framework ApplicationServices -framework OpenGL
+    LIBS += -framework IOKit \
+            -framework Cocoa \
+            -framework Carbon \
+            -framework CoreFoundation \
+            -framework ApplicationServices \
+            -framework OpenGL
     ICON = ../res/icons/Lightpack.icns
+
+    # For build universal binaries (native on Intel and PowerPC)
+    QMAKE_MAC_SDK = /Developer/SDKs/MacOSX10.6.sdk
 }
 
 INCLUDEPATH += ./hidapi ./grab ./alienfx ./
@@ -79,6 +87,7 @@ SOURCES += \
     AboutDialog.cpp \
     GrabManager.cpp \
     GrabWidget.cpp \
+    GrabConfigWidget.cpp \
     SpeedTest.cpp \
     LedDeviceFactory.cpp \
     LedDeviceLightpack.cpp \
@@ -109,6 +118,7 @@ HEADERS += \
     TimeEvaluations.hpp \
     GrabManager.hpp \
     GrabWidget.hpp \
+    GrabConfigWidget.hpp \
     debug.h \
     SpeedTest.hpp \
     alienfx/LFXDecl.h \
@@ -143,7 +153,8 @@ HEADERS += \
 
 FORMS += SettingsWindow.ui \
     AboutDialog.ui \
-    GrabWidget.ui
+    GrabWidget.ui \
+    GrabConfigWidget.ui
 
 #
 #   QSerialDevice
@@ -153,7 +164,13 @@ include(qserialdevice/qserialdeviceenumerator/qserialdeviceenumerator.pri)
 unix:include(qserialdevice/unix/ttylocker.pri)
 
 #
+# QtSingleApplication
+#
+include(qtsingleapplication/src/qtsingleapplication.pri)
+
+#
 # Hotkeys based on PSI and QKeySequenceWidget
 #
 include(hotkeys/globalshortcut/globalshortcut.pri)
 include(hotkeys/qkeysequencewidget/qkeysequencewidget.pri)
+

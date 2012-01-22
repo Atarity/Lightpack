@@ -51,7 +51,7 @@ public:
     ~SettingsWindow();
 
 public:
-    void startBacklight();
+    void startBacklight();    
 
 signals:
     void settingsProfileChanged();
@@ -89,6 +89,7 @@ public slots:
     void requestBacklightStatus();
     void onApiServer_ErrorOnStartListening(QString errorMessage);
     void onPingDeviceEverySecond_Toggled(bool state);
+    void processMessage(const QString &message);
 
 protected:
     virtual void changeEvent(QEvent *e);
@@ -141,6 +142,7 @@ private slots:
     void onExpertModeEnabled_Toggled(bool isEnabled);
     void onSwitchOffAtClosing_Toggled(bool isEnabled);
     void onEnableApi_Toggled(bool isEnabled);
+    void onApiKey_EditingFinished();
     void onGenerateNewApiKey_Clicked();
     void onSetApiPort_Clicked();
     void onIsApiAuthEnabled_Toggled(bool isEnabled);
@@ -208,6 +210,12 @@ private:
     QMenu *m_trayIconMenu;
     QMenu *m_profilesMenu;
 
+    enum TrayMessages
+    {
+        Tray_UpdateFirmwareMessage,
+        Tray_AnotherInstanceMessage
+    } m_trayMessage;
+
     QTranslator *m_translator;
 
     QString m_deviceFirmwareVersion;
@@ -216,5 +224,5 @@ private:
     static const unsigned AmbilightModeIndex;
     static const unsigned MoodLampModeIndex;
 
-    QKeySequenceWidget *m_KeySequenceWidget;
+    QKeySequenceWidget *m_keySequenceWidget;
 };

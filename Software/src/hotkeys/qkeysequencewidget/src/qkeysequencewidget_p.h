@@ -61,7 +61,7 @@ public:
     void startRecording();
     void doneRecording();
     inline void cancelRecording();
-    inline void controlModifierlessTimout();
+    inline void controlModifierlessTimeout();
     inline void keyNotSupported();
 
     void updateDisplayShortcut();
@@ -72,6 +72,7 @@ public:
     QString noneSequenceText;
 
     QTimer modifierlessTimeout;
+    QTimer inputTimeout;   // Fires then start capturing and need to avoi infinity waiting;
 
     quint32 numKey;
     quint32 modifierKeys;
@@ -79,7 +80,7 @@ public:
     void setToolTip(const QString& tip);
 
     QHBoxLayout *layout;
-    QToolButton *clearButton;
+    QPushButton *clearButton;
     QShortcutButton *shortcutButton;
     QLabel *shortcutNameLabel;
 
@@ -98,10 +99,6 @@ public:
         :  QPushButton(parent)
         , d(p)
     {
-        qDebug() << "qShortcut button Create";
-        qDebug() << "parent----" << parent;
-
-        qDebug() << "visible " << isVisible();      
         setMinimumWidth(QPushButton::minimumWidth());
         QPushButton::setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
     }

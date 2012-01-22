@@ -35,8 +35,13 @@
 using namespace std;
 using namespace SettingsScope;
 
-LightpackApplication::LightpackApplication(const QString & appDirPath, int &argc, char **argv)
-    : QApplication(argc, argv)
+LightpackApplication::LightpackApplication(int &argc, char **argv)
+    : QtSingleApplication(argc, argv)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+}
+
+void LightpackApplication::initializeAll(const QString & appDirPath)
 {
     setApplicationName("Lightpack");
     setOrganizationName("Lightpack");
@@ -55,6 +60,9 @@ LightpackApplication::LightpackApplication(const QString & appDirPath, int &argc
 
     m_settingsWindow = new SettingsWindow();
     m_settingsWindow->setVisible(false); /* Load to tray */
+
+    // Process messages from another instances in SettingsWindow
+    connect(this, SIGNAL(messageReceived(QString)), m_settingsWindow, SLOT(processMessage(QString)));
 
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
@@ -219,6 +227,18 @@ void LightpackApplication::printVersionsSoftwareQtOS() const
 
 void LightpackApplication::checkSystemTrayAvailability() const
 {
+#   ifdef Q_OS_LINUX
+    // When you add lightpack in the Startup in Ubuntu (10.04), tray starts later than the application runs.
+    // Check availability tray every second for 20 seconds.
+    for (int i = 0; i < 20; i++)
+    {
+        if (QSystemTrayIcon::isSystemTrayAvailable())
+            break;
+
+        sleep(1);
+    }
+#   endif
+
     if (QSystemTrayIcon::isSystemTrayAvailable() == false)
     {
         QMessageBox::critical(0, "Lightpack", "I couldn't detect any system tray on this system.");
@@ -278,6 +298,7 @@ void LightpackApplication::startLedDeviceFactory()
     connect(m_settingsWindow, SIGNAL(updateGamma(double)),          m_ledDeviceFactory, SLOT(setGamma(double)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(updateBrightness(int)),        m_ledDeviceFactory, SLOT(setBrightness(int)), Qt::QueuedConnection);
     connect(m_settingsWindow, SIGNAL(requestFirmwareVersion()),     m_ledDeviceFactory, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(settingsProfileChanged()),     m_ledDeviceFactory, SLOT(updateDeviceSettings()), Qt::QueuedConnection);
 
     connect(m_ledDeviceFactory, SIGNAL(openDeviceSuccess(bool)),    m_settingsWindow, SLOT(ledDeviceOpenSuccess(bool)), Qt::QueuedConnection);
     connect(m_ledDeviceFactory, SIGNAL(ioDeviceSuccess(bool)),      m_settingsWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
@@ -309,5 +330,26 @@ void LightpackApplication::disconnectApiServerAndLedDeviceSignalsSlots()
         disconnect(m_apiServer, SIGNAL(updateBrightness(int)),          m_ledDeviceFactory, SLOT(setBrightness(int)));
         disconnect(m_apiServer, SIGNAL(updateSmooth(int)),              m_ledDeviceFactory, SLOT(setSmoothSlowdown(int)));
         m_isApiServerConnectedToLedDeviceSignalsSlots = false;
+    }
+}
+
+void LightpackApplication::commitData(QSessionManager &sessionManager)
+{
+    Q_UNUSED(sessionManager);
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Off leds before quit";
+
+    if (m_ledDeviceFactory != NULL)
+    {
+        // Disable signals with new colors
+        disconnect(m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)),  m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)));
+        disconnect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)),  m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)));
+
+        // Process all currently pending signals
+        QApplication::processEvents(QEventLoop::AllEvents, 1000);
+
+        // Send signal and process it
+        m_ledDeviceFactory->offLeds();
+        QApplication::processEvents(QEventLoop::AllEvents, 1000);
     }
 }
