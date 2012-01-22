@@ -258,6 +258,9 @@ void SettingsWindow::changeEvent(QEvent *e)
 
         m_profilesMenu->setTitle(tr("&Profiles"));
 
+        m_keySequenceWidget->setNoneText(tr("Undefined key"));
+        m_keySequenceWidget->setShortcutName(tr("On-Off light:"));
+
         switch (m_backlightStatus)
         {
         case Backlight::StatusOn:
@@ -826,7 +829,7 @@ void SettingsWindow::processMessage(const QString &message)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << message;
 
     m_trayMessage = Tray_AnotherInstanceMessage;
-    m_trayIcon->showMessage(tr("Lightpack"), message);
+    m_trayIcon->showMessage(tr("Lightpack"), tr("Application already running"));
 }
 
 // ----------------------------------------------------------------------------

@@ -90,7 +90,7 @@ public:
     QSize sizeHint() const;
     void setToolTip(const QString &tip);
     QKeySequence keySequence() const;
-    QString noneText() const;
+    QString noneText() const;    
     QIcon clearButtonIcon() const;
 
     /*!
@@ -115,7 +115,8 @@ Q_SIGNALS:
 public Q_SLOTS:    
     void setKeySequence(const QKeySequence &key);
     void clearKeySequence();
-    void setNoneText(const QString text);        
+    void setNoneText(const QString text);
+    void setShortcutName(const QString &text);
     void setClearButtonIcon(const QIcon& icon);
     void setClearButtonShow(QKeySequenceWidget::ClearButtonShow show);
 };

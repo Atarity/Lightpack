@@ -207,6 +207,12 @@ void QKeySequenceWidget::setNoneText(const QString text)
     d_ptr->updateDisplayShortcut();
 }
 
+void QKeySequenceWidget::setShortcutName(const QString &text)
+{
+    if (d_ptr->shortcutNameLabel != NULL)
+        d_ptr->shortcutNameLabel->setText(text);
+}
+
 /*!
     Get string for display when key sequence is undefined.
     \return Text string

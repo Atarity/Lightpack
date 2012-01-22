@@ -51,7 +51,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>ApiServer</name>
     <message>
-        <location filename="../../src/ApiServer.cpp" line="710"/>
+        <location filename="../../src/ApiServer.cpp" line="723"/>
         <source>API server unable to start (port: %1): %2.</source>
         <translation>Проблемы с запуском API сервера (порт: %1): %2.</translation>
     </message>
@@ -87,9 +87,8 @@ p, li { white-space: pre-wrap; }
         <translation>устройство не отвечает</translation>
     </message>
     <message>
-        <location filename="../../src/main.cpp" line="181"/>
         <source>Application already running</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Приложение уже запущено</translation>
     </message>
 </context>
 <context>
@@ -217,7 +216,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.ui" line="848"/>
         <source>Serial port:</source>
-        <translation type="unfinished">COM порт:</translation>
+        <translation>COM порт:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="873"/>
@@ -237,7 +236,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.ui" line="998"/>
         <source>Switch off light at closing</source>
-        <translation type="unfinished">Выключить подсветку при закрытии</translation>
+        <translation>Выключить подсветку при закрытии</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1024"/>
@@ -272,7 +271,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1144"/>
         <source>Hot keys</source>
-        <translation type="unfinished"></translation>
+        <translation>Горячие клавиши</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1161"/>
@@ -291,9 +290,9 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1258"/>
-        <location filename="../../src/SettingsWindow.cpp" line="312"/>
+        <location filename="../../src/SettingsWindow.cpp" line="318"/>
         <source>Dev tab</source>
-        <translation type="unfinished">Отладка</translation>
+        <translation>Отладка</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1264"/>
@@ -313,7 +312,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1324"/>
         <source>Set</source>
-        <translation type="unfinished">Установить</translation>
+        <translation>Установить</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1331"/>
@@ -328,158 +327,165 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1351"/>
         <source>Copy and paste this key into the application using the API, for authorization on the server</source>
-        <translation type="unfinished">Скопируйте и вставьте этот ключ в приложение использующее API, дла авторизации на сервере</translation>
+        <translation>Скопируйте и вставьте этот ключ в приложение, использующее API, для авторизации на сервере</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1361"/>
+        <location filename="../../src/SettingsWindow.ui" line="1364"/>
         <source>Generate</source>
-        <translation type="unfinished">Сгенерировать</translation>
+        <translation>Сгенерировать</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1371"/>
+        <location filename="../../src/SettingsWindow.ui" line="1374"/>
         <source>Capture source</source>
         <translation>Источник захвата</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1481"/>
+        <location filename="../../src/SettingsWindow.ui" line="1484"/>
         <source>Logging level</source>
-        <translation type="unfinished">Детализация лога</translation>
+        <translation>Детализация лога</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1504"/>
+        <location filename="../../src/SettingsWindow.ui" line="1507"/>
         <source>Send data only if colors changes</source>
-        <translation type="unfinished">Посылать данные только при изменении</translation>
+        <translation>Посылать данные только при изменении</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1472"/>
+        <location filename="../../src/SettingsWindow.ui" line="1475"/>
         <source>Start tests</source>
-        <translation type="unfinished">Запустить тесты</translation>
+        <translation>Запустить тесты</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1497"/>
+        <location filename="../../src/SettingsWindow.ui" line="1500"/>
         <source>Ping lightpack device every second</source>
-        <translation type="unfinished">Проверять каждую секунду состояние устройства</translation>
+        <translation>Проверять каждую секунду состояние устройства</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1546"/>
+        <location filename="../../src/SettingsWindow.ui" line="1549"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="250"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1397"/>
+        <location filename="../../src/SettingsWindow.cpp" line="253"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1423"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="251"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1401"/>
+        <location filename="../../src/SettingsWindow.cpp" line="254"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1427"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="252"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1410"/>
+        <location filename="../../src/SettingsWindow.cpp" line="255"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1436"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="253"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1414"/>
+        <location filename="../../src/SettingsWindow.cpp" line="256"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1440"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="254"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1418"/>
+        <location filename="../../src/SettingsWindow.cpp" line="257"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1444"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="256"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1406"/>
+        <location filename="../../src/SettingsWindow.cpp" line="259"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1432"/>
         <source>&amp;Profiles</source>
         <translation>&amp;Профили</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="261"/>
-        <location filename="../../src/SettingsWindow.cpp" line="663"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1267"/>
+        <location filename="../../src/SettingsWindow.cpp" line="267"/>
+        <location filename="../../src/SettingsWindow.cpp" line="689"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1293"/>
         <source>Enabled profile: %1</source>
         <translation>Включен профиль: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="264"/>
-        <location filename="../../src/SettingsWindow.cpp" line="673"/>
+        <location filename="../../src/SettingsWindow.cpp" line="270"/>
+        <location filename="../../src/SettingsWindow.cpp" line="699"/>
         <source>Disabled</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="267"/>
-        <location filename="../../src/SettingsWindow.cpp" line="682"/>
+        <location filename="../../src/SettingsWindow.cpp" line="273"/>
+        <location filename="../../src/SettingsWindow.cpp" line="708"/>
         <source>Error with connection device, verbose in logs</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="274"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1264"/>
+        <location filename="../../src/SettingsWindow.cpp" line="280"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1290"/>
         <source>Lightpack: %1</source>
         <translation>Лайтпак: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="276"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1307"/>
+        <location filename="../../src/SettingsWindow.cpp" line="282"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1333"/>
         <source>System default</source>
         <translation>По умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="653"/>
-        <location filename="../../src/SettingsWindow.cpp" line="678"/>
+        <location filename="../../src/SettingsWindow.cpp" line="679"/>
+        <location filename="../../src/SettingsWindow.cpp" line="704"/>
         <source>Turn lights OFF</source>
         <translation>Выключить подсветку</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="669"/>
+        <location filename="../../src/SettingsWindow.cpp" line="695"/>
         <source>Turn lights ON</source>
         <translation>Включить подсветку</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1653"/>
+        <location filename="../../src/SettingsWindow.cpp" line="832"/>
+        <source>Application already running</source>
+        <translation>Приложение уже запущено</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.cpp" line="261"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1679"/>
         <source>Undefined key</source>
-        <translation type="unfinished"></translation>
+        <translation>Не задано</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1653"/>
+        <location filename="../../src/SettingsWindow.cpp" line="262"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1679"/>
         <source>On-Off light:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Вкл/выкл подсветки:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="660"/>
+        <location filename="../../src/SettingsWindow.cpp" line="686"/>
         <source>Device locked via API</source>
         <translation>Устройство заблокировано через API</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="806"/>
+        <location filename="../../src/SettingsWindow.cpp" line="832"/>
         <source>Lightpack</source>
-        <translation type="unfinished"></translation>
+        <translation>Лайтпак</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="899"/>
+        <location filename="../../src/SettingsWindow.cpp" line="925"/>
         <source>update firmware</source>
-        <translation type="unfinished"></translation>
+        <translation>обновить прошивку</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="905"/>
+        <location filename="../../src/SettingsWindow.cpp" line="931"/>
         <source>Lightpack firmware update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="905"/>
+        <location filename="../../src/SettingsWindow.cpp" line="931"/>
         <source>Click on this message to open lightpack downloads page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1190"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1216"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
     </message>
