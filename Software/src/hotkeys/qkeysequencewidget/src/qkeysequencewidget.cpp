@@ -274,7 +274,6 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     Q_UNUSED(q);
     layout = new QHBoxLayout(q_func());
     layout->setMargin(0);
-    layout->setSpacing(1);
 
     clearButton = new QPushButton(q_func());
     clearButton->setText("");
@@ -321,7 +320,6 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     Q_UNUSED(q);
     layout = new QHBoxLayout(q_func());
     layout->setMargin(0);
-    layout->setSpacing(1);
 
     clearButton = new QPushButton(q_func());
     clearButton->setText("");
