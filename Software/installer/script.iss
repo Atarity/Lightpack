@@ -74,33 +74,33 @@ Name: "{app}\*.*"; Type: filesandordirs
 Name: (app); Type: dirifempty
 
 [CustomMessages]
-// Startup icon name
+; Startup icon name
 russian.CreateStartupIcon=Добавить в автозагрузку
 english.CreateStartupIcon=Add to startup folder
 
-// Uninstall name
+; Uninstall name
 russian.UninstallName =Lightpack (только удаление)
 english.UninstallName =Lightpack (remove only)
 
-// Docs link name
+; Docs link name
 russian.OpenWiki =Открыть страницу с документацией
 english.OpenWiki =Open documentation
 
-// Имя формы выбора установки
+; Portable install form name
 russian.InstallTypeForm_Caption =Тип установки
 english.InstallTypeForm_Caption =Install type
 
-// Описание формы
+; Protable form description
 russian.InstallTypeForm_Description =Выберите режим установки
 english.InstallTypeForm_Description =Please choose install type
 
-// радиобаттоны
+; Radiobuttons
 russian.NormalInstallRadioButton_Caption =Обычная установка (рекомендуется)
 english.NormalInstallRadioButton_Caption =Typical install (recommend)
 russian.PortableInstallRadioButton_Caption =Портативная установка
 english.PortableInstallRadioButton_Caption =Portable install
 
-// Подписи к баттонам
+; Radiobuttons descriptions
 russian.PortableInstallLabel_Caption1 =Версия для установки на переносные носители.
 russian.PortableInstallLabel_Caption2 =Все настройки хранятся в папке с программой.
 english.PortableInstallLabel_Caption1 =Version for install on removable devices. 
@@ -209,7 +209,18 @@ var
         end;        
       end;
       Result := ResultCode;
-    end;    
+    end;      
+    
+    procedure CurPageChanged(CurPageID: Integer);
+    begin
+      If PortableInstallRadio.Checked then
+      begin
+        case CurPageID of
+          wpSelectDir:
+            WizardForm.DirEdit.Text := 'C:\Lightpack\';            
+        end;
+      end;
+    end;
 end.
 
  
