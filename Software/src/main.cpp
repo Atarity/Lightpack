@@ -47,7 +47,7 @@ unsigned g_debugLevel = SettingsScope::Main::DebugLevelDefault;
 QTextStream m_logStream;
 QMutex m_mutex;
 
-QString createApplicationDirectory(const char * firstCmdArgument)
+QString getApplicationDirectoryPath(const char * firstCmdArgument)
 {    
     QFileInfo fileInfo(firstCmdArgument);
     QString appDirPath = fileInfo.absoluteDir().absolutePath();
