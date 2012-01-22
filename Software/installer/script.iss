@@ -220,6 +220,13 @@ var
             WizardForm.DirEdit.Text := 'C:\Lightpack\';            
         end;
       end;
+      If NormalInstallRadio.Checked then
+      begin
+        case CurPageID of
+          wpSelectDir:
+            WizardForm.DirEdit.Text := ExpandConstant('{pf}\{#MyAppName}');            
+        end;        
+      end;
     end;
 end.
 
