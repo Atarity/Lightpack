@@ -193,9 +193,7 @@ void GrabWidget::mousePressEvent(QMouseEvent *pe)
         else
         {
             cmd = MOVE;
-
-            // Grab all mouse input
-            grabMouse(Qt::ClosedHandCursor);
+            setCursorOnAll(Qt::ClosedHandCursor);
         }
         emit resizeOrMoveStarted();
     }
@@ -372,9 +370,6 @@ void GrabWidget::mouseReleaseEvent(QMouseEvent *pe)
     checkAndSetCursors(pe);
 
     cmd = NOP;
-
-    // Release mouse after grab in mouse press event
-    releaseMouse();
 
     saveSizeAndPosition();
 
