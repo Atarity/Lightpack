@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Lightpack"
-#define MyAppVersion "5.8.6"
+#define MyAppVersion "5.8.6-1"
 #define MyAppPublisher "Lightpack"
 #define MyAppURL "http://code.google.com/p/lightpack/"
 #define MyAppExeName "Lightpack.exe"
@@ -23,19 +23,19 @@ DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=true
 LicenseFile=gpl-3.0.txt
-OutputBaseFilename=setup_lightpack
+OutputBaseFilename=LightpackSetup_{#MyAppVersion}
 SetupIconFile=Lightpack.ico
 Compression=lzma/Max
 SolidCompression=true
 AppCopyright=Lightpack
-AppVerName=5.8.6
+AppVerName=5.8.6.1
 UninstallDisplayName={cm:UninstallName}
 UninstallDisplayIcon={app}\Lightpack.exe
 VersionInfoDescription=Lightpack is a monitor light device used for presence effect strengthening. 
 AppMutex=LightpackAppMutex
-VersionInfoVersion=5.8.6
+VersionInfoVersion=5.8.6.1
 VersionInfoProductName=Lightpack
-VersionInfoProductVersion=5.8.6
+VersionInfoProductVersion=5.8.6.1
 Uninstallable=IsNormalInstall
 
 [Languages]
