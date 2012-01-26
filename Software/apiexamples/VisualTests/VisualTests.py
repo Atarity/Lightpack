@@ -13,8 +13,49 @@ print ('WARN: Disable authorization for proper execution of the script.')
 print ('      Open software, check "Profiles->Expert mode" and off auth on "Dev tab".')
 print ('')
 
+# Color RGB indexes
+R = 0
+G = 1
+B = 2
+ALL = 3
+
+def getColors(_rgbIndex, _color) :
+	_colors = [0, 0, 0]
+	if _rgbIndex == R or _rgbIndex == G or _rgbIndex == B :
+		_colors[_rgbIndex] = _color
+	elif _rgbIndex == ALL :
+		_colors[0] = _color
+		_colors[1] = _color
+		_colors[2] = _color
+	else :
+		print ('Fail in blinkAllLeds() on index: {0}'.format(_rgbIndex))
+		sys.exit(1);
+	return _colors
+
+
+def setLedColor(_led, _rgbIndex, _color, _delay) :
+	_colors = getColors(_rgbIndex, _color)
+	print ('  - R={0}, G={1}, B={2}, LED={3}'.format(_colors[0], _colors[1], _colors[2], _led))
+	lpack.setColor(_led, _colors[0], _colors[1], _colors[2])
+	time.sleep(_delay)
+	lpack.setColorToAll(0, 0, 0)
+
+def blinkAllLeds(_rgbIndex, _color, _delay, _times, _smooth = 0) :
+	lpack.setSmooth(_smooth)
+	_colors = getColors(_rgbIndex, _color)
+	print ('  - R={0}, G={1}, B={2}, all LEDs'.format(_colors[0], _colors[1], _colors[2]))
+	for i in range(0, _times) :
+		lpack.setColorToAll(_colors[0], _colors[1], _colors[2])
+		time.sleep(_delay)
+		lpack.setColorToAll(0, 0, 0)
+		time.sleep(_delay)
+	lpack.setSmooth(0)
+
+
 delay = 0.3
 brightness = 1.0
+smooth = 100
+smoothDelay = 1 # seconds
 
 if len(sys.argv) > 1 :
 	delay = float(sys.argv[1])
@@ -41,60 +82,29 @@ lpack.setColorToAll(0, 0, 0)
 while True :
 			
 	print ('1. Set color on each LED.')	
-	
+
 	for rgb in range (0, 3) : 
 		for led in range (1, 11) : 
-			if rgb == 0 :
-				print ('  - RED   = {0}, led = {1}'.format(color, led))
-				lpack.setColor(led, color, 0, 0)
-			elif rgb == 1 :
-				print ('  - GREEN = {0}, led = {1}'.format(color, led))
-				lpack.setColor(led, 0, color, 0)
-			elif rgb == 2 :
-				print ('  - BLUE  = {0}, led = {1}'.format(color, led))
-				lpack.setColor(led, 0, 0, color)
-	
-			time.sleep(delay)
-			lpack.setColorToAll(0, 0, 0)
-	
+			setLedColor(led, rgb, color, delay)
+		
 	print ('2. White color on each LED.')
 	
 	for led in range (1, 11) : 
-		print ('  - R={0}, G={0}, B={0}, led = {1}'.format(color, led))
-		lpack.setColor(led, color, color, color)
-		time.sleep(delay)
-		lpack.setColorToAll(0, 0, 0)
+		setLedColor(led, ALL, color, delay)
 
 	print ('3. Set one color on all LEDs.')
-	
-	for times in range (0, 3) :
-		print ('  - R={0}, G={1}, B={2}, all LEDs'.format(color, 0, 0))
-		lpack.setColorToAll(color, 0, 0)
-		time.sleep(delay)
-		lpack.setColorToAll(0, 0, 0)
-		time.sleep(delay)
 
-	for times in range (0, 3) :
-		print ('  - R=0, G={0}, B=0, all LEDs'.format(color))
-		lpack.setColorToAll(0, color, 0)
-		time.sleep(delay)
-		lpack.setColorToAll(0, 0, 0)
-		time.sleep(delay)
+	blinkAllLeds(R, color, delay, 3)
+	blinkAllLeds(R, color, smoothDelay, 1, smooth)
 
-	for times in range (0, 3) :	
-		print ('  - R=0, G=0, B={0}, all LEDs'.format(color))
-		lpack.setColorToAll(0, 0, color)
-		time.sleep(delay)
-		lpack.setColorToAll(0, 0, 0)
-		time.sleep(delay)
-	
+	blinkAllLeds(G, color, delay, 3)
+	blinkAllLeds(G, color, smoothDelay, 1, smooth)
+
+	blinkAllLeds(B, color, delay, 3)
+	blinkAllLeds(B, color, smoothDelay, 1, smooth)	
 
 	print ('4. White color on all LEDs.')
-	
-	for times in range (1, 11) : 
-		print ('  - R={0}, G={0}, B={0}, all LEDs'.format(color))
-		lpack.setColorToAll(color, color, color)
-		time.sleep(delay)
-		lpack.setColorToAll(0, 0, 0)
-		time.sleep(delay)
+
+	blinkAllLeds(ALL, color, delay, 3)
+	blinkAllLeds(ALL, color, smoothDelay, 1, smooth)
 
