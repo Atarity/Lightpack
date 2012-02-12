@@ -52,7 +52,7 @@ def blinkAllLeds(_rgbIndex, _color, _delay, _times, _smooth = 0) :
 	lpack.setSmooth(0)
 
 
-delay = 0.3
+delay = 0.5
 brightness = 1.0
 smooth = 100
 smoothDelay = 1 # seconds
@@ -77,7 +77,25 @@ lpack.connect()
 lpack.lock()
 lpack.turnOn()
 lpack.setSmooth(0)
-lpack.setColorToAll(0, 0, 0)
+
+# simple testing procedure
+while True :
+	print ('1. set all LEDs BLACK.')	
+	lpack.setColorToAll(0, 0, 0)
+	time.sleep(delay)
+	print ('2. set all LEDs WHITE.')	
+	lpack.setColorToAll(255, 255, 255)
+	time.sleep(delay)
+	print ('3. set all LEDs RED.')	
+	lpack.setColorToAll(255,0,0)
+	time.sleep(delay)
+	print ('4. set all LEDs GREEN.')	
+	lpack.setColorToAll(0,255,0)
+	time.sleep(delay)
+	print ('5. set all LEDs BLUE.')	
+	lpack.setColorToAll(0,0,255)
+	time.sleep(delay)
+# end of simple testing procedure
 
 while True :
 			
