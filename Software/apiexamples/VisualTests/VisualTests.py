@@ -13,7 +13,7 @@ print ('WARN: Disable authorization for proper execution of the script.')
 print ('      Open software, check "Profiles->Expert mode" and off auth on "Dev tab".')
 print ('')
 
-delay = 0.3
+delay = 0.5
 brightness = 1.0
 
 if len(sys.argv) > 1 :
@@ -36,7 +36,25 @@ lpack.connect()
 lpack.lock()
 lpack.turnOn()
 lpack.setSmooth(0)
-lpack.setColorToAll(0, 0, 0)
+
+# simple testing procedure
+while True :
+	print ('1. set all LEDs BLACK.')	
+	lpack.setColorToAll(0, 0, 0)
+	time.sleep(delay)
+	print ('2. set all LEDs WHITE.')	
+	lpack.setColorToAll(255, 255, 255)
+	time.sleep(delay)
+	print ('3. set all LEDs RED.')	
+	lpack.setColorToAll(255,0,0)
+	time.sleep(delay)
+	print ('4. set all LEDs GREEN.')	
+	lpack.setColorToAll(0,255,0)
+	time.sleep(delay)
+	print ('5. set all LEDs BLUE.')	
+	lpack.setColorToAll(0,0,255)
+	time.sleep(delay)
+# end of simple testing procedure
 
 while True :
 			
@@ -91,7 +109,7 @@ while True :
 
 	print ('4. White color on all LEDs.')
 	
-	for times in range (1, 11) : 
+	for times in range (0, 3) : 
 		print ('  - R={0}, G={0}, B={0}, all LEDs'.format(color))
 		lpack.setColorToAll(color, color, color)
 		time.sleep(delay)
