@@ -78,9 +78,48 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     m_settingsWindow->startBacklight();
 }
 
+#ifdef Q_OS_WIN
+bool LightpackApplication::winEventFilter ( MSG * msg, long * result )
+{
+    QString msgType;
+    static Backlight::Status oldBacklightStatus;
+    static bool powerOffProcessed = false;
+    static bool powerOnProcessed = false;
+
+    if (WM_POWERBROADCAST == msg->message)
+    {
+        switch(msg->wParam)
+        {
+            case PBT_APMRESUMEAUTOMATIC :
+                {
+                    if (false == powerOnProcessed) {
+                        powerOffProcessed = false;
+                        powerOnProcessed = true;
+                        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "WM_POWERBROADCAST message = PBT_APMRESUMEAUTOMATIC";
+                    }
+                    break;
+                }
+            case PBT_APMSUSPEND :
+                {
+                    if (false == powerOffProcessed) {
+                        powerOffProcessed = true;
+                        powerOnProcessed = false;
+                        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "WM_POWERBROADCAST message = PBT_APMSUSPEND";
+                    }
+                    break;
+                }
+        }
+        return(true);
+    }
+    return(false);
+}
+#endif
+
 void LightpackApplication::backlightStatusChanged(Backlight::Status status)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << status;
+
+    m_backlightStatus = status;
 
     switch (status)
     {
