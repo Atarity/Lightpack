@@ -38,7 +38,9 @@ public:
     LightpackApplication(int &argc, char **argv);
 
     void initializeAll(const QString & appDirPath);
-
+#ifdef Q_OS_WIN
+    bool winEventFilter ( MSG * msg, long * result );
+#endif
     enum ErrorCodes {
         OK_ErrorCode                            = 0,
         WrongCommandLineArgument_ErrorCode      = 1,
@@ -74,8 +76,9 @@ private:
     LedDeviceFactory *m_ledDeviceFactory;
     QThread *m_ledDeviceFactoryThread;
     QThread *m_apiServerThread;
-
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;
     bool m_isApiServerConnectedToLedDeviceSignalsSlots;
+
+    Backlight::Status m_backlightStatus;
 };
