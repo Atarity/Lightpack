@@ -48,10 +48,14 @@ class SettingsWindow : public QMainWindow {
     Q_OBJECT
 public:
     SettingsWindow(QWidget *parent = 0);
+    SettingsWindow(bool noGUI);
     ~SettingsWindow();
 
 public:
     void startBacklight();    
+    void createTrayIcon();
+    void connectSignalsSlots();
+
 
 signals:
     void settingsProfileChanged();
@@ -152,8 +156,6 @@ private slots:
     void clearOnOffHotKey();
 
 private:
-    void connectSignalsSlots();
-
     void updateTrayAndActionStates();    
     void updateExpertModeWidgetsVisibility();
     void updateDeviceTabWidgetsVisibility();
@@ -163,7 +165,7 @@ private:
     MaximumNumberOfLeds::Devices getLightpackMaximumNumberOfLeds();
     int getLigtpackFirmwareVersionMajor();
 
-    void createTrayIcon();
+
     void createActions();
     void updateUiFromSettings();
 

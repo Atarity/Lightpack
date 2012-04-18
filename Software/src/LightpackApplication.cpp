@@ -49,6 +49,7 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     setQuitOnLastWindowClosed(false);
 
     m_applicationDirPath = appDirPath;
+    m_noGui = false;
 
     processCommandLineArguments();
 
@@ -56,10 +57,15 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     Settings::Initialize(m_applicationDirPath, m_isDebugLevelObtainedFromCmdArgs);
 
-    checkSystemTrayAvailability();
+    if (!m_noGui)
+        checkSystemTrayAvailability();
 
     m_settingsWindow = new SettingsWindow();
     m_settingsWindow->setVisible(false); /* Load to tray */
+    if (!m_noGui)
+        m_settingsWindow->createTrayIcon();
+    m_settingsWindow->connectSignalsSlots();
+
 
     // Process messages from another instances in SettingsWindow
     connect(this, SIGNAL(messageReceived(QString)), m_settingsWindow, SLOT(processMessage(QString)));
@@ -108,7 +114,11 @@ void LightpackApplication::processCommandLineArguments()
 
     for (int i = 1; i < arguments().count(); i++)
     {
-        if (arguments().at(i) == "--off")
+        if (arguments().at(i) == "--nogui")
+        {
+            m_noGui = true;
+        }
+        else if (arguments().at(i) == "--off")
         {
             LedDeviceLightpack lightpackDevice;
             lightpackDevice.offLeds();
@@ -162,6 +172,7 @@ void LightpackApplication::printHelpMessage() const
     fprintf(stderr, "Build with Qt version %s\n", QT_VERSION_STR);
     fprintf(stderr, "\n");
     fprintf(stderr, "Options: \n");
+    fprintf(stderr, "  --nogui         - no GUI (console mode) \n");
     fprintf(stderr, "  --off         - send 'off leds' cmd to device \n");
     fprintf(stderr, "  --help        - show this help \n");
     fprintf(stderr, "  --debug-high  - maximum verbose level of debug output\n");

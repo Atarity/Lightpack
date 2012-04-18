@@ -78,4 +78,5 @@ private:
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;
     bool m_isApiServerConnectedToLedDeviceSignalsSlots;
+    bool m_noGui;
 };

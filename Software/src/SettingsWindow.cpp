@@ -57,15 +57,16 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::SettingsWindow),
     m_deviceFirmwareVersion(DeviceFirmvareVersionUndef)
-{   
+{
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
+
+    m_trayIcon = NULL;
 
     ui->setupUi(this);
 
     ui->tabWidget->setCurrentIndex(0);
 
     createActions();
-    createTrayIcon();
 
     setWindowFlags(Qt::Window |
                    Qt::WindowStaysOnTopHint |
@@ -97,8 +98,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     initSerialPortBaudRateComboBox();
 
     setupHotkeys();
-
-    connectSignalsSlots();
 
     profileLoadLast();
 
@@ -145,8 +144,13 @@ void SettingsWindow::connectSignalsSlots()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayIcon_Activated(QSystemTrayIcon::ActivationReason)));
-    connect(m_trayIcon, SIGNAL(messageClicked()), this, SLOT(onTrayIcon_MessageClicked()));
+    if (m_trayIcon!=NULL)
+    {
+        connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayIcon_Activated(QSystemTrayIcon::ActivationReason)));
+        connect(m_trayIcon, SIGNAL(messageClicked()), this, SLOT(onTrayIcon_MessageClicked()));
+    }
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << "tr";
+
     connect(ui->pushButton_Close, SIGNAL(clicked()), this, SLOT(close()));    
 
     connect(ui->spinBox_GrabSlowdown, SIGNAL(valueChanged(int)), this, SLOT(onGrabSlowdown_valueChanged(int)));
@@ -261,6 +265,7 @@ void SettingsWindow::changeEvent(QEvent *e)
         m_keySequenceWidget->setNoneText(tr("Undefined key"));
         m_keySequenceWidget->setShortcutName(tr("On-Off light:"));
 
+        if (m_trayIcon!=NULL)
         switch (m_backlightStatus)
         {
         case Backlight::StatusOn:
@@ -672,6 +677,8 @@ void SettingsWindow::updateTrayAndActionStates()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
+    if (m_trayIcon== NULL) return;
+
     switch (m_backlightStatus)
     {
     case Backlight::StatusOn:
@@ -828,6 +835,7 @@ void SettingsWindow::processMessage(const QString &message)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << message;
 
+    if (m_trayIcon==NULL) return;
     m_trayMessage = Tray_AnotherInstanceMessage;
     m_trayIcon->showMessage(tr("Lightpack"), tr("Application already running"));
 }
@@ -928,7 +936,8 @@ void SettingsWindow::ledDeviceFirmwareVersionResult(const QString & fwVersion)
             if (Settings::isUpdateFirmwareMessageShown() == false)
             {
                 m_trayMessage = Tray_UpdateFirmwareMessage;
-                m_trayIcon->showMessage(tr("Lightpack firmware update"), tr("Click on this message to open lightpack downloads page"));
+                if (m_trayIcon!=NULL)
+                    m_trayIcon->showMessage(tr("Lightpack firmware update"), tr("Click on this message to open lightpack downloads page"));
                 Settings::setUpdateFirmwareMessageShown(true);
             }
         }
@@ -1289,7 +1298,7 @@ void SettingsWindow::settingsProfileChanged_UpdateUI()
 
     setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
-    if (m_backlightStatus == Backlight::StatusOn)
+    if (m_backlightStatus == Backlight::StatusOn && m_trayIcon!=NULL)
         m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
     if(ui->comboBox_Profiles->count() > 1){
@@ -1700,6 +1709,7 @@ void SettingsWindow::quit()
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "trayIcon->hide();";
 
+    if (m_trayIcon!=NULL)
     m_trayIcon->hide();
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "QApplication::quit();";
