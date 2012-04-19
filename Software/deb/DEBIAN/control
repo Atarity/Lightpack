@@ -8,13 +8,13 @@ Section: electronics
 Priority: optional
 Homepage: http://code.google.com/p/lightpack/
 Description: Content-driving ambient lighting system
-	lightpack.googlecode.com
-	
-	* Open software and hardware
-	* Simple to build (DIY)
-	* Cross-platform software (Qt)
-	* Supports multiple devices
-	* Native screen grabbers
-	* API over TCP/IP
-	
-	Please let us know if you find mistakes, bugs or errors.
+ lightpack.googlecode.com
+ .
+  * Open software and hardware
+  * Simple to build (DIY)
+  * Cross-platform software (Qt)
+  * Supports multiple devices
+  * Native screen grabbers
+  * API over TCP/IP
+ .	
+ Please let us know if you find mistakes, bugs or errors.
