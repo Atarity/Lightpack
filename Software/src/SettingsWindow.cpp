@@ -29,8 +29,6 @@
 
 #include "AboutDialog.hpp"
 #include "Settings.hpp"
-#include "GrabManager.hpp"
-#include "MoodLampManager.hpp"
 #include "SpeedTest.hpp"
 #include "ColorButton.hpp"
 #include "LedDeviceFactory.hpp"
@@ -81,8 +79,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     QRegExpValidator *validatorApiKey = new QRegExpValidator(QRegExp("[a-zA-Z0-9{}_-]*"), this);
     ui->lineEdit_ApiKey->setValidator(validatorApiKey);
 
-    m_grabManager = new GrabManager(this);
-    m_moodlampManager = new MoodLampManager(this);
     m_aboutDialog = new AboutDialog(this);
     m_speedTest = new SpeedTest();
 
@@ -135,7 +131,6 @@ SettingsWindow::~SettingsWindow()
     delete m_trayIcon;
     delete m_trayIconMenu;
 
-    delete m_grabManager;
 
     delete ui;
 }
@@ -157,16 +152,9 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->spinBox_GrabMinLevelOfSensitivity, SIGNAL(valueChanged(int)), this, SLOT(onGrabMinLevelOfSensivity_valueChanged(int)));
     connect(ui->checkBox_GrabIsAvgColors, SIGNAL(toggled(bool)), this, SLOT(onGrabIsAvgColors_toggled(bool)));
 
-    // Connect to GrabManager
-    connect(this, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
-    connect(ui->groupBox_GrabShowGrabWidgets, SIGNAL(toggled(bool)), m_grabManager, SLOT(setVisibleLedWidgets(bool)));
-    connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), m_grabManager, SLOT(setColoredLedWidgets(bool)));
-    connect(ui->radioButton_White, SIGNAL(toggled(bool)), m_grabManager, SLOT(setWhiteLedWidgets(bool)));
-    // GrabManager to this
-    connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), this, SLOT(refreshAmbilightEvaluated(double)));
-
-    // Connect to MoodLampManager
-    connect(this, SIGNAL(settingsProfileChanged()), m_moodlampManager, SLOT(settingsProfileChanged()));
+    connect(ui->groupBox_GrabShowGrabWidgets, SIGNAL(toggled(bool)), this, SLOT( onShowLedWidgets_Toggled(bool)));
+    connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), this, SLOT(onSetColoredLedWidgets()));
+    connect(ui->radioButton_White, SIGNAL(toggled(bool)), this, SLOT(onSetWhiteLedWidgets()));
 
     connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLampLiquidMode_Toggled(bool)));
     connect(ui->horizontalSlider_MoodLampSpeed, SIGNAL(valueChanged(int)), this, SLOT(onMoodLampSpeed_valueChanged(int)));
@@ -222,9 +210,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->radioButton_GrabMacCoreGraphics, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
 #endif
 
-    // Connections to signals which will be connected to ILedDevice
-    connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
-    connect(m_moodlampManager, SIGNAL(updateLedsColors(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)));
+
 
     // Dev tab configure API (port, apikey)
     connect(ui->groupBox_Api, SIGNAL(toggled(bool)), this, SLOT(onEnableApi_Toggled(bool)));
@@ -564,9 +550,6 @@ void SettingsWindow::setDeviceLockViaAPI(Api::DeviceLockStatus status)
 {
     m_deviceLockStatus = status;
 
-    if (m_grabManager == NULL)
-        qFatal("%s m_grabManager == NULL", Q_FUNC_INFO);
-
     if (m_deviceLockStatus == Api::DeviceUnlocked)
     {
         syncLedDeviceWithSettingsWindow();
@@ -649,26 +632,27 @@ void SettingsWindow::startBacklight()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "m_backlightStatus =" << m_backlightStatus
                     << "m_deviceLockStatus =" << m_deviceLockStatus;
 
-    bool isBacklightEnabled = (m_backlightStatus == Backlight::StatusOn || m_backlightStatus == Backlight::StatusDeviceError);
-    bool isCanStart = (isBacklightEnabled && m_deviceLockStatus == Api::DeviceUnlocked);
+//    bool isBacklightEnabled = (m_backlightStatus == Backlight::StatusOn || m_backlightStatus == Backlight::StatusDeviceError);
+//    bool isCanStart = (isBacklightEnabled && m_deviceLockStatus == Api::DeviceUnlocked);
 
-    Settings::setIsBacklightEnabled(isBacklightEnabled);
+//    Settings::setIsBacklightEnabled(isBacklightEnabled);
 
-    switch (m_lightpackMode)
-    {
-    case Lightpack::AmbilightMode:
-        m_grabManager->start(isCanStart);
-        m_moodlampManager->start(false);
-        break;
+//    emit settingsChanged();
+////    switch (m_lightpackMode)
+////    {
+////    case Lightpack::AmbilightMode:
+////        m_grabManager->start(isCanStart);
+////        m_moodlampManager->start(false);
+////        break;
 
-    case Lightpack::MoodLampMode:
-        m_grabManager->start(false);
-        m_moodlampManager->start(isCanStart);
-        break;
-    }
+////    case Lightpack::MoodLampMode:
+////        m_grabManager->start(false);
+////        m_moodlampManager->start(isCanStart);
+////        break;
+////    }
 
-    if (m_backlightStatus == Backlight::StatusOff)
-        emit offLeds();
+//    if (m_backlightStatus == Backlight::StatusOff)
+//        emit offLeds();
 
     updateTrayAndActionStates();
 }
@@ -826,9 +810,10 @@ void SettingsWindow::onPingDeviceEverySecond_Toggled(bool state)
 
     Settings::setPingDeviceEverySecond(state);
 
+    emit settingsChanged();
     // Force update colors on device for start ping device
-    m_grabManager->reset();
-    m_moodlampManager->reset();
+//    m_grabManager->reset();
+//    m_moodlampManager->reset();
 }
 
 void SettingsWindow::processMessage(const QString &message)
@@ -864,7 +849,7 @@ void SettingsWindow::showSettings()
 
     Lightpack::Mode mode = Settings::getLightpackMode();
     ui->comboBox_LightpackModes->setCurrentIndex((mode == Lightpack::AmbilightMode) ? 0 : 1); // we assume that Lightpack::Mode in same order as comboBox_Modes
-    m_grabManager->setVisibleLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && ui->comboBox_LightpackModes->currentIndex()==0);
+    emit showLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && ui->comboBox_LightpackModes->currentIndex()==0);
     this->show();
 }
 
@@ -872,7 +857,8 @@ void SettingsWindow::hideSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_grabManager->setVisibleLedWidgets(false);
+    emit showLedWidgets(false);
+
     this->hide();
 }
 
@@ -888,8 +874,8 @@ void SettingsWindow::ledDeviceOpenSuccess(bool isSuccess)
     {
         // Device just connected and for updating colors
         // we should reset previous saved states
-        m_grabManager->reset();
-        m_moodlampManager->reset();
+        //m_grabManager->reset();
+       // m_moodlampManager->reset();
     }
 
     ledDeviceCallSuccess(isSuccess);
@@ -972,7 +958,8 @@ void SettingsWindow::onGrabberChanged()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "GrabberType:" << grabberType;
 
     Settings::setGrabberType(grabberType);
-    m_grabManager->setGrabber(Settings::getGrabberType());
+    emit settingsChanged();
+   // m_grabManager->setGrabber(Settings::getGrabberType());
 }
 
 void SettingsWindow::onGrabSlowdown_valueChanged(int value)
@@ -980,7 +967,8 @@ void SettingsWindow::onGrabSlowdown_valueChanged(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setGrabSlowdown(value);
-    m_grabManager->setSlowdownTime(Settings::getGrabSlowdown());
+    emit settingsChanged();
+    //m_grabManager->setSlowdownTime(Settings::getGrabSlowdown());
 }
 
 void SettingsWindow::onGrabMinLevelOfSensivity_valueChanged(int value)
@@ -988,7 +976,8 @@ void SettingsWindow::onGrabMinLevelOfSensivity_valueChanged(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setGrabMinimumLevelOfSensitivity(value);
-    m_grabManager->setMinLevelOfSensivity(Settings::getGrabMinimumLevelOfSensitivity());
+    emit settingsChanged();
+    //m_grabManager->setMinLevelOfSensivity(Settings::getGrabMinimumLevelOfSensitivity());
 }
 
 void SettingsWindow::onGrabIsAvgColors_toggled(bool state)
@@ -996,7 +985,8 @@ void SettingsWindow::onGrabIsAvgColors_toggled(bool state)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
     Settings::setGrabAvgColorsEnabled(state);
-    m_grabManager->setAvgColorsOnAllLeds(Settings::isGrabAvgColorsEnabled());
+    emit settingsChanged();
+    //m_grabManager->setAvgColorsOnAllLeds(Settings::isGrabAvgColorsEnabled());
 }
 
 void SettingsWindow::onDeviceRefreshDelay_valueChanged(int value)
@@ -1062,8 +1052,9 @@ void SettingsWindow::onDeviceNumberOfLeds_valueChanged(int value)
 
     int numOfLeds = Settings::getNumberOfLeds(Settings::getConnectedDevice());
 
-    m_grabManager->setNumberOfLeds(numOfLeds);
-    m_moodlampManager->setNumberOfLeds(numOfLeds);
+    emit settingsChanged();
+    //m_grabManager->setNumberOfLeds(numOfLeds);
+    //m_moodlampManager->setNumberOfLeds(numOfLeds);
 
     if (Settings::getConnectedDevice() == SupportedDevices::VirtualDevice)
         initVirtualLeds();
@@ -1105,8 +1096,9 @@ void SettingsWindow::onDeviceSendDataOnlyIfColorsChanged_toggled(bool state)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
     Settings::setSendDataOnlyIfColorsChanges(state);
-    m_grabManager->setSendDataOnlyIfColorsChanged(Settings::isSendDataOnlyIfColorsChanges());
-    m_moodlampManager->setSendDataOnlyIfColorsChanged(Settings::isSendDataOnlyIfColorsChanges());
+    emit settingsChanged();
+    //m_grabManager->setSendDataOnlyIfColorsChanged(Settings::isSendDataOnlyIfColorsChanges());
+    //m_moodlampManager->setSendDataOnlyIfColorsChanged(Settings::isSendDataOnlyIfColorsChanges());
 }
 
 // ----------------------------------------------------------------------------
@@ -1721,20 +1713,12 @@ void SettingsWindow::onLightpackModes_Activated(int index)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
 
-    bool isBacklightEnabled = (m_backlightStatus == Backlight::StatusOn || m_backlightStatus == Backlight::StatusDeviceError);
-    bool isCanStart = (isBacklightEnabled && m_deviceLockStatus == Api::DeviceUnlocked);
-
     switch (index)
     {
     case AmbilightModeIndex:
         Settings::setLightpackMode(Lightpack::AmbilightMode);
         ui->stackedWidget_LightpackModes->setCurrentIndex(AmbilightModeIndex);
-
-        m_grabManager->start(isCanStart);
-        m_grabManager->setVisibleLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && this->isVisible());
-
-        m_moodlampManager->start(false);
-
+        emit showLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && this->isVisible());
         if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
         {
             // Restore smooth slowdown value
@@ -1745,12 +1729,7 @@ void SettingsWindow::onLightpackModes_Activated(int index)
     case MoodLampModeIndex:
         Settings::setLightpackMode(Lightpack::MoodLampMode);
         ui->stackedWidget_LightpackModes->setCurrentIndex(MoodLampModeIndex);
-
-        m_grabManager->start(false);
-        m_grabManager->setVisibleLedWidgets(false);
-
-        m_moodlampManager->start(isCanStart);
-
+        emit showLedWidgets(false);
         if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
         {
             // Switch off smooth if moodlamp liquid mode
@@ -1758,7 +1737,7 @@ void SettingsWindow::onLightpackModes_Activated(int index)
         }
         break;
     }
-
+    backlightStatusChanged(m_backlightStatus);
     m_lightpackMode = Settings::getLightpackMode();
 }
 
@@ -1766,14 +1745,14 @@ void SettingsWindow::onMoodLampColor_changed(QColor color)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << color;
     Settings::setMoodLampColor(color);
-    m_moodlampManager->setCurrentColor(color);
+    emit settingsChanged();
 }
 
 void SettingsWindow::onMoodLampSpeed_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
     Settings::setMoodLampSpeed(value);
-    m_moodlampManager->setLiquidModeSpeed(Settings::getMoodLampSpeed());
+    emit settingsChanged();
 }
 
 void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
@@ -1781,15 +1760,13 @@ void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
 
     Settings::setMoodLampLiquidMode(checked);    
+    emit settingsChanged();
     if (Settings::isMoodLampLiquidMode())
     {
         // Liquid color mode
         ui->pushButton_SelectColor->setEnabled(false);
         ui->horizontalSlider_MoodLampSpeed->setEnabled(true);
         ui->label_MoodLampSpeed->setEnabled(true);
-
-        m_moodlampManager->setLiquidMode(true);
-
         // Switch off smooth if liquid mode enabled
         // this helps normal work liquid mode on hw5 and hw4 lightpacks
         emit updateSmoothSlowdown(0);
@@ -1798,11 +1775,26 @@ void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
         ui->pushButton_SelectColor->setEnabled(true);
         ui->horizontalSlider_MoodLampSpeed->setEnabled(false);
         ui->label_MoodLampSpeed->setEnabled(false);
-
-        m_moodlampManager->setLiquidMode(false);
-
         emit updateSmoothSlowdown(Settings::getDeviceSmooth());
     }
+}
+
+ void SettingsWindow::onShowLedWidgets_Toggled(bool checked)
+ {
+     DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
+     emit showLedWidgets(checked);
+ }
+
+ void SettingsWindow::onSetColoredLedWidgets()
+ {
+     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+     emit setColoredLedWidget(true);
+ }
+
+ void SettingsWindow::onSetWhiteLedWidgets()
+{
+      DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+     emit setColoredLedWidget(false);
 }
 
 void SettingsWindow::initConnectedDeviceComboBox()

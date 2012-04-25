@@ -56,6 +56,12 @@ public slots:
 
 private slots:
     void backlightStatusChanged(Backlight::Status);
+    void setDeviceLockViaAPI(Api::DeviceLockStatus status);
+    void settingsChanged();
+    void showLedWidgets(bool visible);
+    void setColoredLedWidget(bool colored);
+
+
 private:
     void processCommandLineArguments();
     void printHelpMessage() const;
@@ -63,6 +69,7 @@ private:
     void checkSystemTrayAvailability() const;
     void startApiServer();
     void startLedDeviceFactory();
+    void startGrabManager();
     void connectApiServerAndLedDeviceSignalsSlots();
     void disconnectApiServerAndLedDeviceSignalsSlots();
 
@@ -75,8 +82,15 @@ private:
     QThread *m_ledDeviceFactoryThread;
     QThread *m_apiServerThread;
 
+    GrabManager *m_grabManager;
+    MoodLampManager *m_moodlampManager;
+    QThread *m_grabManagerThread;
+    QThread *m_moodlampManagerThread;
+
+
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;
     bool m_isApiServerConnectedToLedDeviceSignalsSlots;
     bool m_noGui;
+    bool m_deviceLockStatus;
 };

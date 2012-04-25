@@ -58,35 +58,62 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     Settings::Initialize(m_applicationDirPath, m_isDebugLevelObtainedFromCmdArgs);
 
     if (!m_noGui)
+    {
         checkSystemTrayAvailability();
 
-    m_settingsWindow = new SettingsWindow();
-    m_settingsWindow->setVisible(false); /* Load to tray */
-    if (!m_noGui)
+        m_settingsWindow = new SettingsWindow();
+        m_settingsWindow->setVisible(false); /* Load to tray */
         m_settingsWindow->createTrayIcon();
-    m_settingsWindow->connectSignalsSlots();
+        m_settingsWindow->connectSignalsSlots();
 
 
     // Process messages from another instances in SettingsWindow
     connect(this, SIGNAL(messageReceived(QString)), m_settingsWindow, SLOT(processMessage(QString)));
-
+}
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
     qRegisterMetaType<Backlight::Status>("Backlight::Status");
     qRegisterMetaType<Api::DeviceLockStatus>("Api::DeviceLockStatus");
 
+    m_deviceLockStatus = Api::DeviceUnlocked;
+
     startLedDeviceFactory();
 
     startApiServer();
 
-    connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(backlightStatusChanged(Backlight::Status)));
+    startGrabManager();
 
-    m_settingsWindow->startBacklight();
+    if (!m_noGui)
+    {
+        connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(backlightStatusChanged(Backlight::Status)));
+        m_settingsWindow->startBacklight();
+    }
 }
 
 void LightpackApplication::backlightStatusChanged(Backlight::Status status)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << status;
+
+    bool isBacklightEnabled = (status == Backlight::StatusOn || status == Backlight::StatusDeviceError);
+    bool isCanStart = (isBacklightEnabled && m_deviceLockStatus == Api::DeviceUnlocked);
+
+    Settings::setIsBacklightEnabled(isBacklightEnabled);
+
+    switch (Settings::getLightpackMode())
+    {
+    case Lightpack::AmbilightMode:
+        m_grabManager->start(isCanStart);
+        m_moodlampManager->start(false);
+        break;
+
+    case Lightpack::MoodLampMode:
+        m_grabManager->start(false);
+        m_moodlampManager->start(isCanStart);
+        break;
+    }
+
+    //if (m_backlightStatus == Backlight::StatusOff)
+    //    emit offLeds();
 
     switch (status)
     {
@@ -106,6 +133,15 @@ void LightpackApplication::backlightStatusChanged(Backlight::Status status)
     }
 }
 
+void LightpackApplication::setDeviceLockViaAPI(Api::DeviceLockStatus status)
+{
+    m_deviceLockStatus = status;
+
+    if (m_grabManager == NULL)
+        qFatal("%s m_grabManager == NULL", Q_FUNC_INFO);
+    backlightStatusChanged(Backlight::StatusOn);
+}
+
 void LightpackApplication::processCommandLineArguments()
 {
     g_debugLevel = SettingsScope::Main::DebugLevelDefault;
@@ -117,7 +153,7 @@ void LightpackApplication::processCommandLineArguments()
         if (arguments().at(i) == "--nogui")
         {
             m_noGui = true;
-             qDebug() << "Application running no_GUI mode";
+            DEBUG_LOW_LEVEL <<  "Application running no_GUI mode";
         }
         else if (arguments().at(i) == "--off")
         {
@@ -269,12 +305,13 @@ void LightpackApplication::startApiServer()
 
     connect(this, SIGNAL(clearColorBuffers()), m_apiServer, SIGNAL(clearColorBuffers()));
 
+    if (!m_noGui)
+    {
     connect(m_settingsWindow, SIGNAL(enableApiServer(bool)),    m_apiServer, SLOT(enableApiServer(bool)));
     connect(m_settingsWindow, SIGNAL(enableApiAuth(bool)),      m_apiServer, SLOT(enableApiAuth(bool)));
     connect(m_settingsWindow, SIGNAL(updateApiKey(QString)),    m_apiServer, SLOT(updateApiKey(QString)));
     connect(m_settingsWindow, SIGNAL(updateApiPort(int)),       m_apiServer, SLOT(updateApiPort(int)));    
     connect(m_settingsWindow, SIGNAL(resultBacklightStatus(Backlight::Status)), m_apiServer, SLOT(resultBacklightStatus(Backlight::Status)));
-
     connect(m_settingsWindow, SIGNAL(updateApiDeviceNumberOfLeds(int)), m_apiServer, SIGNAL(updateApiDeviceNumberOfLeds(int)));
 
     connect(m_apiServer, SIGNAL(errorOnStartListening(QString)), m_settingsWindow, SLOT(onApiServer_ErrorOnStartListening(QString)));
@@ -283,8 +320,10 @@ void LightpackApplication::startApiServer()
     connect(m_apiServer, SIGNAL(updateProfile(QString)),                        m_settingsWindow, SLOT(profileSwitch(QString)));
     connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)),               m_settingsWindow, SLOT(setBacklightStatus(Backlight::Status)));
     connect(m_apiServer, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), m_settingsWindow, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
-
+    }
     connect(m_ledDeviceFactory, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), m_apiServer, SLOT(updateColors(QList<QRgb>)), Qt::QueuedConnection);
+
+    connect(m_apiServer, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), this, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
 
 
     if (Settings::isBacklightEnabled())
@@ -300,9 +339,12 @@ void LightpackApplication::startApiServer()
 
 void LightpackApplication::startLedDeviceFactory()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     m_ledDeviceFactory = new LedDeviceFactory();
     m_ledDeviceFactoryThread = new QThread();
 
+     if (!m_noGui)
+     {
     connect(m_settingsWindow, SIGNAL(recreateLedDevice()),                      m_ledDeviceFactory, SLOT(recreateLedDevice()), Qt::DirectConnection);
     connect(m_settingsWindow, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
 
@@ -319,9 +361,68 @@ void LightpackApplication::startLedDeviceFactory()
     connect(m_ledDeviceFactory, SIGNAL(ioDeviceSuccess(bool)),      m_settingsWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
     connect(m_ledDeviceFactory, SIGNAL(firmwareVersion(QString)),   m_settingsWindow, SLOT(ledDeviceFirmwareVersionResult(QString)), Qt::QueuedConnection);
     connect(m_ledDeviceFactory, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), m_settingsWindow, SLOT(updateVirtualLedsColors(QList<QRgb>)), Qt::QueuedConnection);
-
+}
     m_ledDeviceFactory->moveToThread(m_ledDeviceFactoryThread);
     m_ledDeviceFactoryThread->start();
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "end";
+
+}
+
+void LightpackApplication::startGrabManager()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_grabManager = new GrabManager(NULL);
+//    m_grabManagerThread = new QThread();
+    m_moodlampManager = new MoodLampManager(NULL);
+
+    // Connections to signals which will be connected to ILedDevice
+    if (!m_noGui)
+    {
+        // Connect to GrabManager
+        connect(m_settingsWindow, SIGNAL(settingsChanged()), this, SLOT(settingsChanged()));
+        connect(m_settingsWindow, SIGNAL(showLedWidgets(bool)), this, SLOT(showLedWidgets(bool)));
+        connect(m_settingsWindow, SIGNAL(setColoredLedWidget(bool)), this, SLOT(setColoredLedWidget(bool)));
+
+        connect(m_settingsWindow, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
+        //todo
+        //connect(m_settingsWindow->ui->groupBox_GrabShowGrabWidgets, SIGNAL(toggled(bool)), m_grabManager, SLOT(setVisibleLedWidgets(bool)));
+//        connect(m_settingsWindow->ui->radioButton_Colored, SIGNAL(toggled(bool)), m_grabManager, SLOT(setColoredLedWidgets(bool)));
+//        connect(m_settingsWindow->ui->radioButton_White, SIGNAL(toggled(bool)), m_grabManager, SLOT(setWhiteLedWidgets(bool)));
+
+        // GrabManager to this
+        connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), m_settingsWindow, SLOT(refreshAmbilightEvaluated(double)));
+
+        // Connect to MoodLampManager
+        connect(m_settingsWindow, SIGNAL(settingsProfileChanged()), m_moodlampManager, SLOT(settingsProfileChanged()));
+
+
+
+        connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)));
+        connect(m_moodlampManager, SIGNAL(updateLedsColors(QList<QRgb>)), m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)));
+    }
+    else
+    {
+        connect(m_grabManager, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
+        connect(m_moodlampManager, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
+    }
+    this->settingsChanged();
+
+    bool isCanStart =Settings::isBacklightEnabled();
+
+    switch (Settings::getLightpackMode())
+    {
+    case Lightpack::AmbilightMode:
+        m_grabManager->start(isCanStart);
+        m_moodlampManager->start(false);
+        break;
+
+    case Lightpack::MoodLampMode:
+        m_grabManager->start(false);
+        m_moodlampManager->start(isCanStart);
+        break;
+    }
+
 }
 
 void LightpackApplication::connectApiServerAndLedDeviceSignalsSlots()
@@ -367,4 +468,59 @@ void LightpackApplication::commitData(QSessionManager &sessionManager)
         m_ledDeviceFactory->offLeds();
         QApplication::processEvents(QEventLoop::AllEvents, 1000);
     }
+}
+
+void LightpackApplication::settingsChanged()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    m_grabManager->setGrabber(Settings::getGrabberType());
+     m_grabManager->setSlowdownTime(Settings::getGrabSlowdown());
+     m_grabManager->setMinLevelOfSensivity(Settings::getGrabMinimumLevelOfSensitivity());
+      m_grabManager->setAvgColorsOnAllLeds(Settings::isGrabAvgColorsEnabled());
+
+      int numOfLeds = Settings::getNumberOfLeds(Settings::getConnectedDevice());
+     m_grabManager->setNumberOfLeds(numOfLeds);
+      m_moodlampManager->setNumberOfLeds(numOfLeds);
+
+      m_grabManager->setSendDataOnlyIfColorsChanged(Settings::isSendDataOnlyIfColorsChanges());
+      m_moodlampManager->setSendDataOnlyIfColorsChanged(Settings::isSendDataOnlyIfColorsChanges());
+
+      m_moodlampManager->setCurrentColor(Settings::getMoodLampColor());
+      m_moodlampManager->setLiquidModeSpeed(Settings::getMoodLampSpeed());
+      m_moodlampManager->setLiquidMode(Settings::isMoodLampLiquidMode());
+
+      bool isBacklightEnabled = Settings::isBacklightEnabled();
+      bool isCanStart =(isBacklightEnabled && m_deviceLockStatus == Api::DeviceUnlocked);
+
+      switch (Settings::getLightpackMode())
+      {
+      case Lightpack::AmbilightMode:
+          m_grabManager->start(isCanStart);
+          m_moodlampManager->start(false);
+          break;
+
+      case Lightpack::MoodLampMode:
+          m_grabManager->start(false);
+          m_moodlampManager->start(isCanStart);
+          break;
+      }
+
+       //Force update colors on device for start ping device
+      m_grabManager->reset();
+      m_moodlampManager->reset();
+
+}
+
+void LightpackApplication::showLedWidgets(bool visible)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << visible;
+    m_grabManager->setVisibleLedWidgets(visible);
+}
+
+void LightpackApplication::setColoredLedWidget(bool colored)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << colored;
+    m_grabManager->setColoredLedWidgets(colored);
+    m_grabManager->setWhiteLedWidgets(!colored);
 }

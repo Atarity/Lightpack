@@ -52,13 +52,15 @@ public:
     ~SettingsWindow();
 
 public:
-    void startBacklight();    
+    void startBacklight();
     void createTrayIcon();
     void connectSignalsSlots();
 
-
 signals:
     void settingsProfileChanged();
+    void settingsChanged();
+    void showLedWidgets(bool visible);
+    void setColoredLedWidget(bool colored);
     void offLeds();
     void updateLedsColors(const QList<QRgb> &);
     void updateRefreshDelay(int value);
@@ -130,6 +132,10 @@ private slots:
     void onDeviceGammaCorrection_valueChanged(double value);
     void onDeviceSendDataOnlyIfColorsChanged_toggled(bool state);
 
+    void onShowLedWidgets_Toggled(bool checked);
+    void onSetColoredLedWidgets();
+    void onSetWhiteLedWidgets();
+
     void openCurrentProfile();
 
     void profileRename();
@@ -186,21 +192,18 @@ private:
     void setupHotkeys();
 
 private:
+    Ui::SettingsWindow *ui;
     // Main backlight status for all modes (Grab, MoodLamp, etc.)
     Backlight::Status m_backlightStatus;
     Api::DeviceLockStatus m_deviceLockStatus;
     Lightpack::Mode m_lightpackMode;
 
-    GrabManager *m_grabManager;
-    MoodLampManager *m_moodlampManager;
     AboutDialog *m_aboutDialog;
     SpeedTest *m_speedTest;
 
     Grab::GrabberType getSelectedGrabberType();
 
     QList<QLabel *> m_labelsGrabbedColors;
-
-    Ui::SettingsWindow *ui;
 
     QAction *m_switchOnBacklightAction;
     QAction *m_switchOffBacklightAction;
