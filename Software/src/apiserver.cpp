@@ -69,6 +69,9 @@ const char * ApiServer::CmdGetCountLeds = "getcountleds";
 // Necessary to add a new line after filling results!
 const char * ApiServer::CmdResultCountLeds = "countleds:";
 
+const char * ApiServer::CmdGetLeds = "getleds";
+const char * ApiServer::CmdResultLeds = "leds:";
+
 const char * ApiServer::CmdLock = "lock";
 const char * ApiServer::CmdResultLock_Success = "lock:success\r\n";
 const char * ApiServer::CmdResultLock_Busy = "lock:busy\r\n";
@@ -359,6 +362,18 @@ void ApiServer::clientProcessCommands()
             API_DEBUG_OUT << CmdGetCountLeds;
 
             result = QString("%1%2\r\n").arg(CmdResultCountLeds).arg(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
+        }
+        else if (cmdBuffer == CmdGetLeds)
+        {
+            API_DEBUG_OUT << CmdGetLeds;
+            result = ApiServer::CmdResultLeds;
+
+            for (int i = 0; i < curentColors.count(); i++)
+            {
+                QColor color(curentColors[i]);
+                result += QString("%1-%2,%3,%4;").arg(i).arg(color.red()).arg(color.green()).arg(color.blue());
+            }
+            result += "\r\n";
         }
         else if (cmdBuffer == CmdLock)
         {
@@ -957,4 +972,10 @@ void ApiServer::initShortHelpMessage()
     m_shortHelpMessage += "\r\n";
     m_shortHelpMessage += "Detailed version is available by \"help\" command. \r\n";
     m_shortHelpMessage += "\r\n";
+}
+
+void ApiServer::updateColors(const QList<QRgb> & colors)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+    curentColors = colors;
 }

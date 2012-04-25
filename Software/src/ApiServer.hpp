@@ -85,6 +85,9 @@ public:
     static const char * CmdGetCountLeds;
     static const char * CmdResultCountLeds;
 
+    static const char * CmdGetLeds;
+    static const char * CmdResultLeds;
+
     static const char * CmdLock;
     static const char * CmdResultLock_Success;
     static const char * CmdResultLock_Busy;
@@ -130,6 +133,7 @@ public slots:
     void enableApiAuth(bool isEnabled);
     void updateApiPort(int port);
     void updateApiKey(QString key);
+    void updateColors(const QList<QRgb> & colors);
 
 protected:
     void incomingConnection(int socketDescriptor);
@@ -163,6 +167,8 @@ private:
 
     QThread *m_apiSetColorTaskThread;
     ApiServerSetColorTask *m_apiSetColorTask;
+
+    QList<QRgb> curentColors;
 
     QTime m_time;
 

@@ -117,6 +117,7 @@ void LightpackApplication::processCommandLineArguments()
         if (arguments().at(i) == "--nogui")
         {
             m_noGui = true;
+             qDebug() << "Application running no_GUI mode";
         }
         else if (arguments().at(i) == "--off")
         {
@@ -282,6 +283,9 @@ void LightpackApplication::startApiServer()
     connect(m_apiServer, SIGNAL(updateProfile(QString)),                        m_settingsWindow, SLOT(profileSwitch(QString)));
     connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)),               m_settingsWindow, SLOT(setBacklightStatus(Backlight::Status)));
     connect(m_apiServer, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), m_settingsWindow, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
+
+    connect(m_ledDeviceFactory, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), m_apiServer, SLOT(updateColors(QList<QRgb>)), Qt::QueuedConnection);
+
 
     if (Settings::isBacklightEnabled())
     {
