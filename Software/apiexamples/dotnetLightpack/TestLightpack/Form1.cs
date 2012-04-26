@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -10,23 +11,28 @@ using libLightpack;
 
 namespace TestLightpack
 {
-	public struct Options
+    public struct Options
     {
         public string host;
         public string port;
         public string apikey;
     }
-	
+
     public partial class Form1 : Form
     {
-    	string configFile = Application.StartupPath+@"\option.cfg";
-    	
+        private string configFile = Application.StartupPath + @"\option.cfg";
+
         private ApiLightpack api;
+        private Bitmap DrawArea;
+
+
 
         public Form1()
         {
             InitializeComponent();
             api = new ApiLightpack();
+            DrawArea = new Bitmap(pictureBox1.Size.Width, pictureBox1.Size.Height);
+            pictureBox1.Image = DrawArea;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -34,31 +40,40 @@ namespace TestLightpack
             label1.Text = String.Empty;
             label6.Text = String.Empty;
             string configFile = Application.StartupPath + @"\option.cfg";
-        	if (File.Exists(configFile))
-        	{
-	        	XmlSerializer myXmlSer = new XmlSerializer(typeof(Options));
-	            FileStream mySet = new FileStream(configFile, FileMode.Open);
-	            Options o = (Options)myXmlSer.Deserialize(mySet);
-	            mySet.Close();
-	        	textBox1.Text = o.host;
-	        	textBox2.Text = o.port;
-	        	textBox3.Text = o.apikey;
-        	}
+            if (File.Exists(configFile))
+            {
+                XmlSerializer myXmlSer = new XmlSerializer(typeof (Options));
+                FileStream mySet = new FileStream(configFile, FileMode.Open);
+                Options o = (Options) myXmlSer.Deserialize(mySet);
+                mySet.Close();
+                textBox1.Text = o.host;
+                textBox2.Text = o.port;
+                textBox3.Text = o.apikey;
+            }
+
+            Graphics g;
+            g = Graphics.FromImage(DrawArea);
+
+            Pen mypen = new Pen(Brushes.Black);
+            g.Clear(Color.White);
+            g.DrawLine(mypen, 0, 0, DrawArea.Width, DrawArea.Height);
+            g.Dispose();
+
             
         }
-    
-        void Form1FormClosed(object sender, FormClosedEventArgs e)
+
+        private void Form1FormClosed(object sender, FormClosedEventArgs e)
         {
-        	Options o;
-        	o.host = textBox1.Text;
-        	o.port = textBox2.Text;
-        	o.apikey = textBox3.Text;
-        	XmlSerializer myXmlSer = new XmlSerializer(o.GetType());
+            Options o;
+            o.host = textBox1.Text;
+            o.port = textBox2.Text;
+            o.apikey = textBox3.Text;
+            XmlSerializer myXmlSer = new XmlSerializer(o.GetType());
             StreamWriter myWriter = new StreamWriter(configFile);
-            myXmlSer.Serialize(myWriter,o);
+            myXmlSer.Serialize(myWriter, o);
             myWriter.Close();
         }
-        
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (button1.Text != "Disconnect")
@@ -81,7 +96,7 @@ namespace TestLightpack
                 button2.Enabled = api.IsLock;
                 button4.Enabled = api.IsLock;
                 button5.Enabled = api.IsLock;
-                    
+
 
 
                 if (api.IsAuth)
@@ -117,7 +132,7 @@ namespace TestLightpack
                 button3.Enabled = false;
                 button5.Enabled = false;
                 button6.Enabled = false;
-                    
+
                 listBox1.Enabled = false;
                 listBox1.Items.Clear();
             }
@@ -127,7 +142,7 @@ namespace TestLightpack
         private void button2_Click(object sender, EventArgs e)
         {
             ColorDialog cd = new ColorDialog();
-            if (cd.ShowDialog()==DialogResult.OK)
+            if (cd.ShowDialog() == DialogResult.OK)
             {
                 api.SetAllColor(cd.Color);
             }
@@ -155,15 +170,15 @@ namespace TestLightpack
             for (int i = 0; i < api.CountLeds; i++)
             {
                 Thread.Sleep(200);
-                api.SetColor(i+1,Color.Red);
-                if (i>0)
-                    api.SetColor(i,Color.Black);
+                api.SetColor(i + 1, Color.Red);
+                if (i > 0)
+                    api.SetColor(i, Color.Black);
             }
         }
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex>=0)
+            if (listBox1.SelectedIndex >= 0)
             {
                 api.Lock();
                 api.SetProfile(listBox1.Items[listBox1.SelectedIndex].ToString());
@@ -173,7 +188,7 @@ namespace TestLightpack
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (api.GetStatus()==Status.On)
+            if (api.GetStatus() == Status.On)
                 api.SetStatus(Status.Off);
             else
                 api.SetStatus(Status.On);
@@ -186,7 +201,40 @@ namespace TestLightpack
             hf.richTextBox1.Text = api.Help();
             hf.ShowDialog();
         }
-        
-        
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            List<Color> colors = api.GetColors();
+            
+            Graphics g;
+            g = Graphics.FromImage(DrawArea);
+            if (colors.Count > 0)
+            {
+                g.Clear(Color.White);
+
+                int w = DrawArea.Width/colors.Count;
+                int h = DrawArea.Height;
+                for (int i = 0; i < colors.Count; ++i)
+                {
+                    Brush br = new SolidBrush(colors[i]);
+                    g.FillRegion(br, new Region(new Rectangle(w*i, 0, w, h)));
+                }
+            }
+            else
+            {
+                g.Clear(Color.Black);
+            }
+
+            pictureBox1.Image = DrawArea;
+
+            g.Dispose();
+        }
+
+
+
+
+
+
+
     }
 }
