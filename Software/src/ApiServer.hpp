@@ -134,6 +134,7 @@ public slots:
     void updateApiPort(int port);
     void updateApiKey(QString key);
     void updateColors(const QList<QRgb> & colors);
+    void resultBacklightStatus(Backlight::Status status);
 
 protected:
     void incomingConnection(int socketDescriptor);
@@ -141,7 +142,6 @@ protected:
 private slots:
     void clientDisconnected();
     void clientProcessCommands();
-    void resultBacklightStatus(Backlight::Status status);
     void taskSetColorIsSuccess(bool isSuccess);
 
 private:

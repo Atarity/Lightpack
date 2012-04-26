@@ -53,14 +53,15 @@ public:
 signals:
     void clearColorBuffers();
 public slots:
+    void setBacklightStatusChanged(Backlight::Status);
 
 private slots:
-    void backlightStatusChanged(Backlight::Status);
+    void requestBacklightStatus();
     void setDeviceLockViaAPI(Api::DeviceLockStatus status);
+    void profileSwitch(const QString & configName);
     void settingsChanged();
     void showLedWidgets(bool visible);
     void setColoredLedWidget(bool colored);
-
 
 private:
     void processCommandLineArguments();
@@ -70,6 +71,7 @@ private:
     void startApiServer();
     void startLedDeviceFactory();
     void startGrabManager();
+    void startBacklight();
     void connectApiServerAndLedDeviceSignalsSlots();
     void disconnectApiServerAndLedDeviceSignalsSlots();
 
@@ -93,4 +95,5 @@ private:
     bool m_isApiServerConnectedToLedDeviceSignalsSlots;
     bool m_noGui;
     bool m_deviceLockStatus;
+    Backlight::Status m_backlightStatus;
 };

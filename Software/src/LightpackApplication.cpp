@@ -75,7 +75,6 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     qRegisterMetaType<Backlight::Status>("Backlight::Status");
     qRegisterMetaType<Api::DeviceLockStatus>("Api::DeviceLockStatus");
 
-    m_deviceLockStatus = Api::DeviceUnlocked;
 
     startLedDeviceFactory();
 
@@ -83,18 +82,47 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     startGrabManager();
 
+    if (Settings::isBacklightEnabled())
+    {
+        m_backlightStatus = Backlight::StatusOn;
+    } else {
+        m_backlightStatus = Backlight::StatusOff;
+    }
+    m_deviceLockStatus = Api::DeviceUnlocked;
+
+    setBacklightStatusChanged(m_backlightStatus);
+
     if (!m_noGui)
     {
-        connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(backlightStatusChanged(Backlight::Status)));
+        connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(setBacklightStatusChanged(Backlight::Status)));
         m_settingsWindow->startBacklight();
     }
 }
 
-void LightpackApplication::backlightStatusChanged(Backlight::Status status)
+void LightpackApplication::setBacklightStatusChanged(Backlight::Status status)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << status;
 
-    bool isBacklightEnabled = (status == Backlight::StatusOn || status == Backlight::StatusDeviceError);
+     m_backlightStatus = status;
+
+     startBacklight();
+}
+
+void LightpackApplication::setDeviceLockViaAPI(Api::DeviceLockStatus status)
+{
+    m_deviceLockStatus = status;
+
+    if (m_grabManager == NULL)
+        qFatal("%s m_grabManager == NULL", Q_FUNC_INFO);
+    startBacklight();
+}
+
+void LightpackApplication::startBacklight()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "m_backlightStatus =" << m_backlightStatus
+                    << "m_deviceLockStatus =" << m_deviceLockStatus;
+
+    bool isBacklightEnabled = (m_backlightStatus == Backlight::StatusOn || m_backlightStatus == Backlight::StatusDeviceError);
     bool isCanStart = (isBacklightEnabled && m_deviceLockStatus == Api::DeviceUnlocked);
 
     Settings::setIsBacklightEnabled(isBacklightEnabled);
@@ -115,7 +143,7 @@ void LightpackApplication::backlightStatusChanged(Backlight::Status status)
     //if (m_backlightStatus == Backlight::StatusOff)
     //    emit offLeds();
 
-    switch (status)
+    switch (m_backlightStatus)
     {
     case Backlight::StatusOn:
     case Backlight::StatusDeviceError:
@@ -124,22 +152,13 @@ void LightpackApplication::backlightStatusChanged(Backlight::Status status)
 
     case Backlight::StatusOff:
         disconnectApiServerAndLedDeviceSignalsSlots();
-        emit clearColorBuffers();
+        //emit clearColorBuffers();
         break;
 
     default:
-        qWarning() << Q_FUNC_INFO << "status contains crap =" << status;
+        qWarning() << Q_FUNC_INFO << "status contains crap =" << m_backlightStatus;
         break;
     }
-}
-
-void LightpackApplication::setDeviceLockViaAPI(Api::DeviceLockStatus status)
-{
-    m_deviceLockStatus = status;
-
-    if (m_grabManager == NULL)
-        qFatal("%s m_grabManager == NULL", Q_FUNC_INFO);
-    backlightStatusChanged(Backlight::StatusOn);
 }
 
 void LightpackApplication::processCommandLineArguments()
@@ -321,8 +340,13 @@ void LightpackApplication::startApiServer()
     connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)),               m_settingsWindow, SLOT(setBacklightStatus(Backlight::Status)));
     connect(m_apiServer, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), m_settingsWindow, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
     }
-    connect(m_ledDeviceFactory, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), m_apiServer, SLOT(updateColors(QList<QRgb>)), Qt::QueuedConnection);
-
+    else
+    {
+        connect(m_apiServer, SIGNAL(updateProfile(QString)),                        this, SLOT(profileSwitch(QString)));
+        connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)),               this, SLOT(setBacklightStatusChanged(Backlight::Status)));
+        connect(m_apiServer, SIGNAL(requestBacklightStatus()),       this, SLOT(requestBacklightStatus()));
+    }
+    connect(m_ledDeviceFactory, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), m_apiServer,    SLOT(updateColors(QList<QRgb>)), Qt::QueuedConnection);
     connect(m_apiServer, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), this, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
 
 
@@ -408,20 +432,7 @@ void LightpackApplication::startGrabManager()
     }
     this->settingsChanged();
 
-    bool isCanStart =Settings::isBacklightEnabled();
-
-    switch (Settings::getLightpackMode())
-    {
-    case Lightpack::AmbilightMode:
-        m_grabManager->start(isCanStart);
-        m_moodlampManager->start(false);
-        break;
-
-    case Lightpack::MoodLampMode:
-        m_grabManager->start(false);
-        m_moodlampManager->start(isCanStart);
-        break;
-    }
+    startBacklight();
 
 }
 
@@ -468,6 +479,13 @@ void LightpackApplication::commitData(QSessionManager &sessionManager)
         m_ledDeviceFactory->offLeds();
         QApplication::processEvents(QEventLoop::AllEvents, 1000);
     }
+}
+
+void LightpackApplication::profileSwitch(const QString & configName)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << configName;
+    Settings::loadOrCreateProfile(configName);
+    this->settingsChanged();
 }
 
 void LightpackApplication::settingsChanged()
@@ -523,4 +541,9 @@ void LightpackApplication::setColoredLedWidget(bool colored)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << colored;
     m_grabManager->setColoredLedWidgets(colored);
     m_grabManager->setWhiteLedWidgets(!colored);
+}
+
+void LightpackApplication::requestBacklightStatus()
+{
+    m_apiServer->resultBacklightStatus(m_backlightStatus);
 }
