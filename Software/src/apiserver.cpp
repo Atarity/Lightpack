@@ -69,8 +69,8 @@ const char * ApiServer::CmdGetCountLeds = "getcountleds";
 // Necessary to add a new line after filling results!
 const char * ApiServer::CmdResultCountLeds = "countleds:";
 
-const char * ApiServer::CmdGetLeds = "getleds";
-const char * ApiServer::CmdResultLeds = "leds:";
+const char * ApiServer::CmdGetColors = "getcolors";
+const char * ApiServer::CmdResultGetColors = "colors:";
 
 const char * ApiServer::CmdLock = "lock";
 const char * ApiServer::CmdResultLock_Success = "lock:success\r\n";
@@ -363,10 +363,10 @@ void ApiServer::clientProcessCommands()
 
             result = QString("%1%2\r\n").arg(CmdResultCountLeds).arg(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
         }
-        else if (cmdBuffer == CmdGetLeds)
+        else if (cmdBuffer == CmdGetColors)
         {
-            API_DEBUG_OUT << CmdGetLeds;
-            result = ApiServer::CmdResultLeds;
+            API_DEBUG_OUT << CmdGetColors;
+            result = ApiServer::CmdResultGetColors;
 
             for (int i = 0; i < curentColors.count(); i++)
             {
