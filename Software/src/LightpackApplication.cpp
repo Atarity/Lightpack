@@ -75,13 +75,6 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     qRegisterMetaType<Backlight::Status>("Backlight::Status");
     qRegisterMetaType<Api::DeviceLockStatus>("Api::DeviceLockStatus");
 
-
-    startLedDeviceFactory();
-
-    startApiServer();
-
-    startGrabManager();
-
     if (Settings::isBacklightEnabled())
     {
         m_backlightStatus = Backlight::StatusOn;
@@ -90,7 +83,11 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     }
     m_deviceLockStatus = Api::DeviceUnlocked;
 
-    setBacklightStatusChanged(m_backlightStatus);
+    startLedDeviceFactory();
+
+    startApiServer();
+
+    startGrabManager();
 
     if (!m_noGui)
     {
@@ -140,8 +137,8 @@ void LightpackApplication::startBacklight()
         break;
     }
 
-    //if (m_backlightStatus == Backlight::StatusOff)
-    //    emit offLeds();
+    if (m_backlightStatus == Backlight::StatusOff)
+        m_ledDeviceFactory->offLeds();
 
     switch (m_backlightStatus)
     {
@@ -152,7 +149,7 @@ void LightpackApplication::startBacklight()
 
     case Backlight::StatusOff:
         disconnectApiServerAndLedDeviceSignalsSlots();
-        //emit clearColorBuffers();
+        emit clearColorBuffers();
         break;
 
     default:
@@ -409,18 +406,11 @@ void LightpackApplication::startGrabManager()
         connect(m_settingsWindow, SIGNAL(setColoredLedWidget(bool)), this, SLOT(setColoredLedWidget(bool)));
 
         connect(m_settingsWindow, SIGNAL(settingsProfileChanged()), m_grabManager, SLOT(settingsProfileChanged()));
-        //todo
-        //connect(m_settingsWindow->ui->groupBox_GrabShowGrabWidgets, SIGNAL(toggled(bool)), m_grabManager, SLOT(setVisibleLedWidgets(bool)));
-//        connect(m_settingsWindow->ui->radioButton_Colored, SIGNAL(toggled(bool)), m_grabManager, SLOT(setColoredLedWidgets(bool)));
-//        connect(m_settingsWindow->ui->radioButton_White, SIGNAL(toggled(bool)), m_grabManager, SLOT(setWhiteLedWidgets(bool)));
-
         // GrabManager to this
         connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), m_settingsWindow, SLOT(refreshAmbilightEvaluated(double)));
 
         // Connect to MoodLampManager
         connect(m_settingsWindow, SIGNAL(settingsProfileChanged()), m_moodlampManager, SLOT(settingsProfileChanged()));
-
-
 
         connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)));
         connect(m_moodlampManager, SIGNAL(updateLedsColors(QList<QRgb>)), m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)));
