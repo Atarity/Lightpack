@@ -108,6 +108,10 @@ public:
     static const char * CmdSetSmooth;
     static const char * CmdSetProfile;
 
+    static const char * CmdNewProfile;
+    static const char * CmdDeleteProfile;
+
+
     static const char * CmdSetStatus;
     static const char * CmdSetStatus_On;
     static const char * CmdSetStatus_Off;

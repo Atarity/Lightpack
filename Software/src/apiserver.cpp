@@ -94,6 +94,9 @@ const char * ApiServer::CmdSetBrightness = "setbrightness:";
 const char * ApiServer::CmdSetSmooth = "setsmooth:";
 const char * ApiServer::CmdSetProfile = "setprofile:";
 
+const char * ApiServer::CmdNewProfile = "newprofile:";
+const char * ApiServer::CmdDeleteProfile = "deleteprofile:";
+
 const char * ApiServer::CmdSetStatus = "setstatus:";
 const char * ApiServer::CmdSetStatus_On = "on";
 const char * ApiServer::CmdSetStatus_Off = "off";
@@ -627,6 +630,63 @@ void ApiServer::clientProcessCommands()
                     result = CmdSetResult_Ok;
                 } else {
                     API_DEBUG_OUT << CmdSetProfile << "Error (profile not found):" << setProfileName;
+                    result = CmdSetResult_Error;
+                }
+            }
+            else if (m_lockedClient == NULL)
+            {
+                result = CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result = CmdSetResult_Busy;
+            }
+        }
+        else if (cmdBuffer.startsWith(CmdNewProfile))
+        {
+            API_DEBUG_OUT << CmdNewProfile;
+
+            if (m_lockedClient == client)
+            {
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
+                QString newProfileName = QString(cmdBuffer);
+                Settings::loadOrCreateProfile(newProfileName);
+                 API_DEBUG_OUT << CmdNewProfile << "OK:" << newProfileName;
+                 emit updateProfile(newProfileName);
+                 result = CmdSetResult_Ok;
+            }
+            else if (m_lockedClient == NULL)
+            {
+                result = CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result = CmdSetResult_Busy;
+            }
+        }
+        else if (cmdBuffer.startsWith(CmdDeleteProfile))
+        {
+            API_DEBUG_OUT << CmdDeleteProfile;
+
+            if (m_lockedClient == client)
+            {
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
+
+                QString deleteProfileName = QString(cmdBuffer);
+                QStringList profiles = Settings::findAllProfiles();
+
+                if (profiles.contains(deleteProfileName))
+                {
+                    API_DEBUG_OUT << CmdDeleteProfile << "OK:" << deleteProfileName;
+                    Settings::loadOrCreateProfile(deleteProfileName);
+                    Settings::removeCurrentProfile();
+                    QString profile = Settings::getLastProfileName();
+                    emit updateProfile(profile);
+                    result = CmdSetResult_Ok;
+                } else {
+                    API_DEBUG_OUT << CmdDeleteProfile << "Error (profile not found):" << deleteProfileName;
                     result = CmdSetResult_Error;
                 }
             }

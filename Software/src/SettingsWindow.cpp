@@ -1162,6 +1162,8 @@ void SettingsWindow::profileSwitch(const QString & configName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << configName;
 
+    profilesLoadAll();
+
     int index = ui->comboBox_Profiles->findText(configName);
 
     if (index < 0)
