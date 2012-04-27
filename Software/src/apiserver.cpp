@@ -101,6 +101,10 @@ const char * ApiServer::CmdSetStatus = "setstatus:";
 const char * ApiServer::CmdSetStatus_On = "on";
 const char * ApiServer::CmdSetStatus_Off = "off";
 
+const char * ApiServer::CmdSetBacklight = "setmode:";
+const char * ApiServer::CmdSetBacklight_Ambilight = "ambilight";
+const char * ApiServer::CmdSetBacklight_Moodlamp = "moodlamp";
+
 const int ApiServer::SignalWaitTimeoutMs = 1000; // 1 second
 
 ApiServer::ApiServer(QObject *parent)
@@ -724,6 +728,43 @@ void ApiServer::clientProcessCommands()
                     result = CmdSetResult_Ok;
                 } else {
                     API_DEBUG_OUT << CmdSetStatus << "Error (status not recognized):" << status;
+                    result = CmdSetResult_Error;
+                }
+            }
+            else if (m_lockedClient == NULL)
+            {
+                result = CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result = CmdSetResult_Busy;
+            }
+        }
+        else if (cmdBuffer.startsWith(CmdSetBacklight))
+        {
+            API_DEBUG_OUT << CmdSetBacklight;
+
+            if (m_lockedClient == client)
+            {
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
+
+                Lightpack::Mode status =  Lightpack::UnknowMode;
+
+                if (cmdBuffer == CmdSetBacklight_Ambilight)
+                    status = Lightpack::AmbilightMode;
+                else if (cmdBuffer == CmdSetBacklight_Moodlamp)
+                    status = Lightpack::MoodLampMode;
+
+                if (status != Lightpack::UnknowMode)
+                {
+                    API_DEBUG_OUT << CmdSetBacklight << "OK:" << status;
+
+                    emit updateBacklight(status);
+
+                    result = CmdSetResult_Ok;
+                } else {
+                    API_DEBUG_OUT << CmdSetBacklight << "Error (status not recognized):" << status;
                     result = CmdSetResult_Error;
                 }
             }

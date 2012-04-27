@@ -116,6 +116,10 @@ public:
     static const char * CmdSetStatus_On;
     static const char * CmdSetStatus_Off;
 
+    static const char * CmdSetBacklight;
+    static const char * CmdSetBacklight_Ambilight;
+    static const char * CmdSetBacklight_Moodlamp;
+
     static const int SignalWaitTimeoutMs;
 
 signals:
@@ -127,6 +131,7 @@ signals:
     void updateSmooth(int value);
     void updateProfile(QString profileName);
     void updateStatus(Backlight::Status status);
+    void updateBacklight(Lightpack::Mode status);
     void updateDeviceLockStatus(Api::DeviceLockStatus status);
     void errorOnStartListening(QString errorMessage);
     void clearColorBuffers();

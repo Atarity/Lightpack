@@ -86,6 +86,7 @@ public slots:
 
     void setDeviceLockViaAPI(Api::DeviceLockStatus status);
     void setBacklightStatus(Backlight::Status);
+    void setModeChanged(Lightpack::Mode);
     void backlightOn(); /* using in actions */
     void backlightOff(); /* using in actions */
     void profilesLoadAll();

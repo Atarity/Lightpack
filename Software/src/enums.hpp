@@ -51,6 +51,7 @@ namespace Lightpack
 enum Mode {
     AmbilightMode,
     MoodLampMode,
+    UnknowMode,
     Default = AmbilightMode
 };
 }

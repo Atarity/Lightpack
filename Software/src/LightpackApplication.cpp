@@ -72,6 +72,7 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 }
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
+    qRegisterMetaType<Lightpack::Mode>("Lightpack::Mode");
     qRegisterMetaType<Backlight::Status>("Backlight::Status");
     qRegisterMetaType<Api::DeviceLockStatus>("Api::DeviceLockStatus");
 
@@ -91,18 +92,25 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     if (!m_noGui)
     {
-        connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(setBacklightStatusChanged(Backlight::Status)));
+        connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(setStatusChanged(Backlight::Status)));
         m_settingsWindow->startBacklight();
     }
 }
 
-void LightpackApplication::setBacklightStatusChanged(Backlight::Status status)
+void LightpackApplication::setStatusChanged(Backlight::Status status)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << status;
-
      m_backlightStatus = status;
-
      startBacklight();
+}
+
+void LightpackApplication::setBacklightChanged(Lightpack::Mode mode)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
+    Settings::setLightpackMode(mode);
+    if (!m_noGui)
+         m_settingsWindow->setModeChanged(mode);
+    startBacklight();
 }
 
 void LightpackApplication::setDeviceLockViaAPI(Api::DeviceLockStatus status)
@@ -340,9 +348,11 @@ void LightpackApplication::startApiServer()
     else
     {
         connect(m_apiServer, SIGNAL(updateProfile(QString)),                        this, SLOT(profileSwitch(QString)));
-        connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)),               this, SLOT(setBacklightStatusChanged(Backlight::Status)));
+        connect(m_apiServer, SIGNAL(updateStatus(Backlight::Status)),               this, SLOT(setStatusChanged(Backlight::Status)));
         connect(m_apiServer, SIGNAL(requestBacklightStatus()),       this, SLOT(requestBacklightStatus()));
     }
+
+    connect(m_apiServer, SIGNAL(updateBacklight(Lightpack::Mode)) , this, SLOT(setBacklightChanged(Lightpack::Mode)));
     connect(m_ledDeviceFactory, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), m_apiServer,    SLOT(updateColors(QList<QRgb>)), Qt::QueuedConnection);
     connect(m_apiServer, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), this, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
 

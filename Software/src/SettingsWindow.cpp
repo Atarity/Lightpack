@@ -569,6 +569,11 @@ void SettingsWindow::setDeviceLockViaAPI(Api::DeviceLockStatus status)
 
     startBacklight();
 }
+void SettingsWindow::setModeChanged(Lightpack::Mode mode)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
+    updateUiFromSettings();
+}
 
 void SettingsWindow::setBacklightStatus(Backlight::Status status)
 {

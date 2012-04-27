@@ -53,7 +53,8 @@ public:
 signals:
     void clearColorBuffers();
 public slots:
-    void setBacklightStatusChanged(Backlight::Status);
+    void setStatusChanged(Backlight::Status);
+    void setBacklightChanged(Lightpack::Mode);
 
 private slots:
     void requestBacklightStatus();
