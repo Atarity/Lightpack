@@ -31,8 +31,18 @@ namespace TestLightpack
         {
             InitializeComponent();
             api = new ApiLightpack();
+            api.LogEvent += new EventHandler<LogEventArgs>(api_LogEvent);
             DrawArea = new Bitmap(pictureBox1.Size.Width, pictureBox1.Size.Height);
             pictureBox1.Image = DrawArea;
+        }
+
+        void api_LogEvent(object sender, LogEventArgs e)
+        {
+            textBox4.Text += e.Message + Environment.NewLine;
+            //move the caret to the end of the text
+            textBox4.SelectionStart = textBox4.TextLength;
+            //scroll to the caret
+            textBox4.ScrollToCaret();
         }
 
         private void Form1_Load(object sender, EventArgs e)

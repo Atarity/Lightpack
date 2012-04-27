@@ -19,6 +19,7 @@ namespace libLightpack
 	    private bool isAuth = false;
         private bool isLock = false;
 
+        public event EventHandler<LogEventArgs> LogEvent;
 
         public string Version
         {
@@ -89,10 +90,12 @@ namespace libLightpack
                 data = data.Replace("\n", string.Empty);
                 data = data.Replace("\r", string.Empty);
             }
+            OnLogMessage(data);
 	        return data;
         }
         private void _sendData(string data)
         {
+            OnLogMessage(data);
             Byte[] bytesSent = Encoding.UTF8.GetBytes(data);
             _client.Client.Send(bytesSent);
         }
@@ -303,5 +306,18 @@ namespace libLightpack
 
 	        return colors;
 	    }
+
+        private void OnLogMessage(string message)
+        {
+             EventHandler<LogEventArgs> temp = this.LogEvent;
+            if (temp != null)
+            {
+                LogEventArgs ea = new LogEventArgs(message);
+                Delegate[] il = temp.GetInvocationList();
+                if (il != null)
+                    foreach (EventHandler<LogEventArgs> dgt in il)
+                        dgt.Invoke(this, ea);
+            }
+        }
     }
 }
