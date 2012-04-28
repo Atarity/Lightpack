@@ -279,7 +279,7 @@ namespace libLightpack
             }
         }
 
-        public string Help()
+	    public string Help()
         {
             _sendData("help\n");
             return _readData(false);
@@ -319,5 +319,51 @@ namespace libLightpack
                         dgt.Invoke(this, ea);
             }
         }
+
+	    public Size GetScreen()
+	    {
+            _sendData(String.Format("getscreensize\n"));
+            string s = _readData();
+            string[] list = s.Split(':');
+            if (list.Length > 1)
+            {
+                list = list[1].Split(',');
+            }
+            return  new Size(Convert.ToInt32(list[0]),Convert.ToInt32(list[1]));
+	    }
+
+        public List<Rectangle> GetLeds()
+        {
+            List<Rectangle> leds = new List<Rectangle>();
+            _sendData(String.Format("getleds\n"));
+            string s = _readData();
+            string[] list = s.Split(':');
+            if (list.Length > 1)
+            {
+                list = list[1].Split(';');
+            }
+            foreach (string s1 in list)
+            {
+                if (string.IsNullOrEmpty(s1)) continue;
+                string tmp = s1.Substring(s1.IndexOf("-") + 1, s1.Length - s1.IndexOf("-") - 1);
+                string[] cl = tmp.Split(',');
+                Rectangle color = new Rectangle(Convert.ToInt32(cl[0]), Convert.ToInt32(cl[1]), Convert.ToInt32(cl[2]), Convert.ToInt32(cl[3]));
+                leds.Add(color);
+            }
+
+            return leds;
+        }
+
+	    public string FPS()
+	    {
+            _sendData(String.Format("getfps\n"));
+            string s = _readData();
+            string[] list = s.Split(':');
+            if (list.Length > 1)
+            {
+                return list[1];
+            }
+            return "?";
+	    }
     }
 }

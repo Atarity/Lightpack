@@ -24,6 +24,7 @@ namespace TestLightpack
 
         private ApiLightpack api;
         private Bitmap DrawArea;
+        private Bitmap DrawScreen;
 
 
 
@@ -34,6 +35,8 @@ namespace TestLightpack
             api.LogEvent += new EventHandler<LogEventArgs>(api_LogEvent);
             DrawArea = new Bitmap(pictureBox1.Size.Width, pictureBox1.Size.Height);
             pictureBox1.Image = DrawArea;
+            DrawScreen = new Bitmap(pictureBox2.Size.Width, pictureBox2.Size.Height);
+            pictureBox2.Image = DrawScreen;
         }
 
         void api_LogEvent(object sender, LogEventArgs e)
@@ -66,7 +69,9 @@ namespace TestLightpack
 
             Pen mypen = new Pen(Brushes.Black);
             g.Clear(Color.White);
-            g.DrawLine(mypen, 0, 0, DrawArea.Width, DrawArea.Height);
+            
+            g = Graphics.FromImage(DrawScreen);
+            g.Clear(Color.Black);
             g.Dispose();
 
             
@@ -240,11 +245,48 @@ namespace TestLightpack
             g.Dispose();
         }
 
+        private void button8_Click(object sender, EventArgs e)
+        {
+            Size screen = api.GetScreen();
+            List<Rectangle> leds = api.GetLeds();
+            List<Color> colors = api.GetColors();
+            Graphics g;
+            g = Graphics.FromImage(DrawScreen);
+            if (colors.Count > 0)
+            {
+                g.Clear(Color.White);
+                for (int i = 0; i < leds.Count; ++i)
+                {
 
+                    Brush br = new SolidBrush(colors[i]);
+                    g.FillRegion(br, new Region(GetPos(new Size(DrawScreen.Width,DrawScreen.Height),screen,leds[i])));
+                }
+            }
+            else
+            {
+                g.Clear(Color.Black);
+            }
+            pictureBox2.Image = DrawScreen;
 
+            g.Dispose();
+        }
 
+        private Rectangle GetPos(Size size, Size screen, Rectangle rectangle)
+        {
+            float coefx = (float)size.Width/screen.Width;
+            float coefy = (float)size.Height/screen.Height;
 
+            return new Rectangle(
+                (int) (rectangle.X*coefx),
+                (int) (rectangle.Y*coefy),
+                (int) (rectangle.Width*coefx),
+                (int) (rectangle.Height*coefy)
+                );
+        }
 
-
+        private void button9_Click(object sender, EventArgs e)
+        {
+            label7.Text = string.Format("FPS: {0} Hz", api.FPS());
+        }
     }
 }
