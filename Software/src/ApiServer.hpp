@@ -117,10 +117,10 @@ public:
     static const char * CmdSetBrightness;
     static const char * CmdSetSmooth;
     static const char * CmdSetProfile;
+    static const char * CmdSetLeds;
 
     static const char * CmdNewProfile;
     static const char * CmdDeleteProfile;
-
 
     static const char * CmdSetStatus;
     static const char * CmdSetStatus_On;

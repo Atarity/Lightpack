@@ -103,6 +103,7 @@ const char * ApiServer::CmdSetGamma = "setgamma:";
 const char * ApiServer::CmdSetBrightness = "setbrightness:";
 const char * ApiServer::CmdSetSmooth = "setsmooth:";
 const char * ApiServer::CmdSetProfile = "setprofile:";
+const char * ApiServer::CmdSetLeds = "setleds:";
 
 const char * ApiServer::CmdNewProfile = "newprofile:";
 const char * ApiServer::CmdDeleteProfile = "deleteprofile:";
@@ -683,6 +684,56 @@ void ApiServer::clientProcessCommands()
                     API_DEBUG_OUT << CmdSetProfile << "Error (profile not found):" << setProfileName;
                     result = CmdSetResult_Error;
                 }
+            }
+            else if (m_lockedClient == NULL)
+            {
+                result = CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result = CmdSetResult_Busy;
+            }
+        }
+        else if (cmdBuffer.startsWith(CmdSetLeds))
+        {
+            API_DEBUG_OUT << CmdSetLeds;
+
+            if (m_lockedClient == client)
+            {
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
+                int countleds = Settings::getNumberOfLeds(Settings::getConnectedDevice());
+                QStringList leds = ((QString)cmdBuffer).split(";");
+                for (int i = 0; i < leds.size(); ++i)
+                {
+                    bool ok;
+                    QString led = leds.at(i);
+                    if (led!="")
+                    {
+                        qDebug() << "led:" << led;
+                        int num=0,x=0,y=0,w=0, h=0;
+                        if (led.indexOf("-")>0)
+                        {
+                             num= led.split("-")[0].toInt(&ok);
+                             if (ok)
+                             {
+                                 QStringList xywh = led.split("-")[1].split(",");
+                                  if (xywh.count()>0) x = xywh[0].toInt(&ok);
+                                  if (xywh.count()>1) y = xywh[1].toInt(&ok);
+                                  if (xywh.count()>2) w = xywh[2].toInt(&ok);
+                                  if (xywh.count()>3) h = xywh[3].toInt(&ok);
+                             }
+                             if ((ok)&&(num>0)&&(num<countleds))
+                             {
+                                 Settings::setLedPosition(num, QPoint(x,y));
+                                 Settings::setLedSize(num,QSize(w,h));
+                             }
+                        }
+                    }
+                }
+                QString profile = Settings::getCurrentProfileName();
+                emit updateProfile(profile);
+                result = CmdSetResult_Ok;
             }
             else if (m_lockedClient == NULL)
             {
