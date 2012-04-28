@@ -431,6 +431,7 @@ void LightpackApplication::startGrabManager()
         connect(m_moodlampManager, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
     }
     connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), m_apiServer, SLOT(refreshAmbilightEvaluated(double)));
+    connect(m_grabManager,SIGNAL(changeScreen(QRect)),m_apiServer,SLOT(refreshScreenRect(QRect)));
 
     this->settingsChanged();
 

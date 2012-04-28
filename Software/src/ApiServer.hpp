@@ -94,6 +94,9 @@ public:
     static const char * CmdGetFPS;
     static const char * CmdResultFPS;
 
+    static const char * CmdGetScreenSize;
+    static const char * CmdResultScreenSize;
+
     static const char * CmdGetBacklight;
     static const char * CmdResultBacklight_Ambilight;
     static const char * CmdResultBacklight_Moodlamp;
@@ -154,6 +157,7 @@ public slots:
     void updateApiKey(QString key);
     void updateColors(const QList<QRgb> & colors);
     void refreshAmbilightEvaluated(double updateResultMs);
+    void refreshScreenRect(QRect rect);
     void resultBacklightStatus(Backlight::Status status);
 
 protected:
@@ -198,6 +202,7 @@ private:
 
     bool m_isRequestBacklightStatusDone;
     Backlight::Status m_backlightStatusResult;
+    QRect screen;
 
     QString m_helpMessage;
     QString m_shortHelpMessage;

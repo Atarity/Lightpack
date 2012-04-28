@@ -78,6 +78,10 @@ const char * ApiServer::CmdResultGetColors = "colors:";
 const char * ApiServer::CmdGetFPS = "getfps";
 const char * ApiServer::CmdResultFPS = "fps:";
 
+const char * ApiServer::CmdGetScreenSize = "getscreensize";
+const char * ApiServer:: CmdResultScreenSize = "screensize:";
+
+
 const char * ApiServer::CmdGetBacklight = "getmode";
 const char * ApiServer::CmdResultBacklight_Ambilight = "mode:ambilight\r\n";
 const char * ApiServer::CmdResultBacklight_Moodlamp = "mode:moodlamp\r\n";
@@ -413,6 +417,12 @@ void ApiServer::clientProcessCommands()
             API_DEBUG_OUT << CmdGetFPS;
 
             result = QString("%1%2\r\n").arg(CmdResultFPS).arg(hz);
+        }
+        else if (cmdBuffer == CmdGetScreenSize)
+        {
+            API_DEBUG_OUT << CmdGetScreenSize;
+
+            result = QString("%1%2,%3\r\n").arg(CmdResultScreenSize).arg(screen.width()).arg(screen.height());
         }
         else if (cmdBuffer == CmdGetBacklight)
         {
@@ -1189,4 +1199,9 @@ void ApiServer::refreshAmbilightEvaluated(double updateResultMs)
     if(secs != 0){
         hz = 1 / secs;
     }
+}
+
+void ApiServer::refreshScreenRect(QRect rect)
+{
+    screen = rect;
 }
