@@ -88,6 +88,9 @@ public:
     static const char * CmdGetColors;
     static const char * CmdResultGetColors;
 
+    static const char * CmdGetFPS;
+    static const char * CmdResultGetFPS;
+
     static const char * CmdLock;
     static const char * CmdResultLock_Success;
     static const char * CmdResultLock_Busy;
@@ -143,6 +146,7 @@ public slots:
     void updateApiPort(int port);
     void updateApiKey(QString key);
     void updateColors(const QList<QRgb> & colors);
+    void refreshAmbilightEvaluated(double updateResultMs);
     void resultBacklightStatus(Backlight::Status status);
 
 protected:
@@ -168,6 +172,7 @@ private:
 
 private:
     int m_apiPort;
+    double hz;
     QString m_apiAuthKey;
     bool m_isAuthEnabled;
 

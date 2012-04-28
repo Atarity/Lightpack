@@ -72,6 +72,9 @@ const char * ApiServer::CmdResultCountLeds = "countleds:";
 const char * ApiServer::CmdGetColors = "getcolors";
 const char * ApiServer::CmdResultGetColors = "colors:";
 
+const char * ApiServer::CmdGetFPS = "getfps";
+const char * ApiServer::CmdResultGetFPS = "fps:";
+
 const char * ApiServer::CmdLock = "lock";
 const char * ApiServer::CmdResultLock_Success = "lock:success\r\n";
 const char * ApiServer::CmdResultLock_Busy = "lock:busy\r\n";
@@ -381,6 +384,12 @@ void ApiServer::clientProcessCommands()
                 result += QString("%1-%2,%3,%4;").arg(i).arg(color.red()).arg(color.green()).arg(color.blue());
             }
             result += "\r\n";
+        }
+        else if (cmdBuffer == CmdGetFPS)
+        {
+            API_DEBUG_OUT << CmdGetFPS;
+
+            result = QString("%1%2\r\n").arg(CmdResultGetFPS).arg(hz);
         }
         else if (cmdBuffer == CmdLock)
         {
@@ -1079,4 +1088,16 @@ void ApiServer::updateColors(const QList<QRgb> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
     curentColors = colors;
+}
+
+void ApiServer::refreshAmbilightEvaluated(double updateResultMs)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << updateResultMs;
+
+    double secs = updateResultMs / 1000;
+    hz = 0;
+
+    if(secs != 0){
+        hz = 1 / secs;
+    }
 }

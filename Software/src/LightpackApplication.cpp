@@ -430,6 +430,8 @@ void LightpackApplication::startGrabManager()
         connect(m_grabManager, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
         connect(m_moodlampManager, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
     }
+    connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), m_apiServer, SLOT(refreshAmbilightEvaluated(double)));
+
     this->settingsChanged();
 
     startBacklight();
