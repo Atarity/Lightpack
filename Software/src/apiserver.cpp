@@ -78,6 +78,10 @@ const char * ApiServer::CmdResultGetColors = "colors:";
 const char * ApiServer::CmdGetFPS = "getfps";
 const char * ApiServer::CmdResultFPS = "fps:";
 
+const char * ApiServer::CmdGetBacklight = "getmode";
+const char * ApiServer::CmdResultBacklight_Ambilight = "mode:ambilight\r\n";
+const char * ApiServer::CmdResultBacklight_Moodlamp = "mode:moodlamp\r\n";
+
 const char * ApiServer::CmdLock = "lock";
 const char * ApiServer::CmdResultLock_Success = "lock:success\r\n";
 const char * ApiServer::CmdResultLock_Busy = "lock:busy\r\n";
@@ -408,6 +412,22 @@ void ApiServer::clientProcessCommands()
             API_DEBUG_OUT << CmdGetFPS;
 
             result = QString("%1%2\r\n").arg(CmdResultFPS).arg(hz);
+        }
+        else if (cmdBuffer == CmdGetBacklight)
+        {
+            API_DEBUG_OUT << CmdGetBacklight;
+
+            Lightpack::Mode mode =  Settings::getLightpackMode();
+
+            switch (mode)
+            {
+            case Lightpack::AmbilightMode:
+                result = CmdResultBacklight_Ambilight;
+                break;
+            case Lightpack::MoodLampMode:
+                result = CmdResultBacklight_Moodlamp;
+                break;
+            }
         }
         else if (cmdBuffer == CmdLock)
         {
