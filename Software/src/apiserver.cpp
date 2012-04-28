@@ -69,11 +69,14 @@ const char * ApiServer::CmdGetCountLeds = "getcountleds";
 // Necessary to add a new line after filling results!
 const char * ApiServer::CmdResultCountLeds = "countleds:";
 
+const char * ApiServer::CmdGetLeds = "getleds";
+const char * ApiServer::CmdResultLeds = "leds:";
+
 const char * ApiServer::CmdGetColors = "getcolors";
 const char * ApiServer::CmdResultGetColors = "colors:";
 
 const char * ApiServer::CmdGetFPS = "getfps";
-const char * ApiServer::CmdResultGetFPS = "fps:";
+const char * ApiServer::CmdResultFPS = "fps:";
 
 const char * ApiServer::CmdLock = "lock";
 const char * ApiServer::CmdResultLock_Success = "lock:success\r\n";
@@ -373,6 +376,21 @@ void ApiServer::clientProcessCommands()
 
             result = QString("%1%2\r\n").arg(CmdResultCountLeds).arg(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
         }
+        else if (cmdBuffer == CmdGetLeds)
+        {
+            API_DEBUG_OUT << CmdGetLeds;
+
+            result = ApiServer::CmdResultLeds;
+
+            for (int i = 0; i < Settings::getNumberOfLeds(Settings::getConnectedDevice()); i++)
+            {
+                QSize size = Settings::getLedSize(i);
+                QPoint pos = Settings::getLedPosition(i);
+                result += QString("%1-%2,%3,%4,%5;").arg(i).arg(pos.x()).arg(pos.y()).arg(size.width()).arg(size.height());
+            }
+            result += "\r\n";
+
+        }
         else if (cmdBuffer == CmdGetColors)
         {
             API_DEBUG_OUT << CmdGetColors;
@@ -389,7 +407,7 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdGetFPS;
 
-            result = QString("%1%2\r\n").arg(CmdResultGetFPS).arg(hz);
+            result = QString("%1%2\r\n").arg(CmdResultFPS).arg(hz);
         }
         else if (cmdBuffer == CmdLock)
         {

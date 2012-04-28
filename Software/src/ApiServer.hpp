@@ -85,11 +85,14 @@ public:
     static const char * CmdGetCountLeds;
     static const char * CmdResultCountLeds;
 
+    static const char * CmdGetLeds;
+    static const char * CmdResultLeds;
+
     static const char * CmdGetColors;
     static const char * CmdResultGetColors;
 
     static const char * CmdGetFPS;
-    static const char * CmdResultGetFPS;
+    static const char * CmdResultFPS;
 
     static const char * CmdLock;
     static const char * CmdResultLock_Success;
