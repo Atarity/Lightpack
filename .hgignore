@@ -6,8 +6,6 @@ Firmware/.dep/
 Firmware/.settings
 Firmware/.project
 Firmware/.cproject
-Software/[^.]+/bin/
-Software/[^.]+/stuff/
 Software/[^.]*Makefile
 Software/res/qrc_[^.]+.cpp
 Software/[^.]+.pro.user
@@ -26,4 +24,7 @@ Software/installer/Output/
 syntax: glob
 Software/installer/*.dll
 Software/installer/*.exe
+Software/bin
+Software/**/bin
+**/stuff
 **.o
