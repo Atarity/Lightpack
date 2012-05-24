@@ -26,5 +26,7 @@ Software/installer/*.dll
 Software/installer/*.exe
 Software/bin
 Software/**/bin
+Software/docs
+Doxyfile
 **/stuff
 **.o
