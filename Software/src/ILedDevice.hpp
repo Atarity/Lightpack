@@ -29,6 +29,9 @@
 #include <QtGui>
 
 
+/**
+ * abstract class representing any LED device
+ */
 class ILedDevice : public QObject
 {
     Q_OBJECT
@@ -39,8 +42,13 @@ signals:
     void openDeviceSuccess(bool isSuccess);
     void ioDeviceSuccess(bool isSuccess);
     void firmwareVersion(const QString & fwVersion);
-    // Signal commandCompleted(bool) must be sent at the completion of each command
-    // (setColors, setTimerOptions, setColorDepth, setSmoothSlowdown, etc.)
+
+    /**
+     * This signal must be sent at the completion of each command
+     * (setColors, setTimerOptions, setColorDepth, setSmoothSlowdown, etc.)
+     *
+     * @param ok is command completed successfully
+     */
     void commandCompleted(bool ok);
     void setColors_VirtualDeviceCallback(QList<QRgb> colors);
 
@@ -55,6 +63,8 @@ public slots:
     virtual void requestFirmwareVersion() = 0;
     virtual void updateDeviceSettings() = 0;
 
-    // deprecated, but may be usable for lightpack hw <= 5.5
+    /**
+     * @deprecated used only for compatibility with Lightpack hw <= 5.5
+     */
     virtual void setColorDepth(int value) = 0;
 };
