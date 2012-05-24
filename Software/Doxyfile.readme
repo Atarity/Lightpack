@@ -1,0 +1,7 @@
+To be able to generate Qt help files (.qhc) you need to provide doxygen with correct Doxyfile.
+
+1. execute in current directory
+	cp Doxyfile.original Doxyfile
+
+2. make sure you have correct QHG_LOCATION tag there
+	QHG_LOCATION = full\path\to\qhelpgenerator.exe
