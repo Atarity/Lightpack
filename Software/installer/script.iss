@@ -96,7 +96,7 @@ english.InstallTypeForm_Description =Please choose install type
 
 ; Radiobuttons
 russian.NormalInstallRadioButton_Caption =Обычная установка (рекомендуется)
-english.NormalInstallRadioButton_Caption =Typical install (recommend)
+english.NormalInstallRadioButton_Caption =Typical install (recommended)
 russian.PortableInstallRadioButton_Caption =Портативная установка
 english.PortableInstallRadioButton_Caption =Portable install
 

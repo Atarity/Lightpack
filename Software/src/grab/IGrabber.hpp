@@ -30,10 +30,18 @@
 #include "defs.h"
 #include "GrabWidget.hpp"
 
+
 class IGrabber
 {
 public:
     virtual const char * getName() = 0;
+
+    /**
+     * Updates screen to capture image from (for dual monitor systems).
+     * Called when some widget is moved to another monitor or monitor configuration is changed.
+     *
+     * @param widget used to determine new monitor
+     */
     virtual void updateGrabScreenFromWidget( QWidget * widget ) = 0;
     virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets) = 0;
 };
