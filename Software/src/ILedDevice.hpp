@@ -55,7 +55,7 @@ signals:
 public slots:
     virtual void open() = 0;
     virtual void setColors(const QList<QRgb> & colors) = 0;
-    virtual void offLeds() = 0;
+    virtual void switchOffLeds() = 0;
     virtual void setRefreshDelay(int value) = 0;
     virtual void setSmoothSlowdown(int value) = 0;
     virtual void setGamma(double value) = 0;

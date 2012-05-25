@@ -1,5 +1,5 @@
 /*
- * LedDeviceFactory.hpp
+ * LedDeviceManager.hpp
  *
  *  Created on: 17.04.2011
  *      Author: Timur Sattarov && Mike Shatohin
@@ -29,12 +29,12 @@
 #include "enums.hpp"
 #include "ILedDevice.hpp"
 
-class LedDeviceFactory : public QObject
+class LedDeviceManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit LedDeviceFactory(QObject *parent = 0);
+    explicit LedDeviceManager(QObject *parent = 0);
 
 signals:
     void openDeviceSuccess(bool isSuccess);
@@ -59,7 +59,8 @@ public slots:
 
     // This slots are protected from the overflow of queries
     void setColors(const QList<QRgb> & colors);
-    void offLeds();
+    void switchOffLeds();
+    void switchOnLeds();
     void setRefreshDelay(int value);
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);

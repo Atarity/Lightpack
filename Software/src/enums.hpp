@@ -128,7 +128,7 @@ enum Options
 };
 }
 
-// Using in commands queue of LedDeviceFactory
+// Using in commands queue of LedDeviceManager
 namespace LedDeviceCommands
 {
 enum Cmd {

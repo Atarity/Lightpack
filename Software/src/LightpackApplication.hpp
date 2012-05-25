@@ -29,7 +29,7 @@
 #include <QtSingleApplication>
 #include "SettingsWindow.hpp"
 #include "ApiServer.hpp"
-#include "LedDeviceFactory.hpp"
+#include "LedDeviceManager.hpp"
 
 class LightpackApplication : public QtSingleApplication
 {
@@ -64,7 +64,7 @@ private:
     void printVersionsSoftwareQtOS() const;
     void checkSystemTrayAvailability() const;
     void startApiServer();
-    void startLedDeviceFactory();
+    void startLedDeviceManager();
     void connectApiServerAndLedDeviceSignalsSlots();
     void disconnectApiServerAndLedDeviceSignalsSlots();
 
@@ -73,8 +73,8 @@ private:
 private:
     SettingsWindow *m_settingsWindow;
     ApiServer *m_apiServer;
-    LedDeviceFactory *m_ledDeviceFactory;
-    QThread *m_ledDeviceFactoryThread;
+    LedDeviceManager *m_LedDeviceManager;
+    QThread *m_LedDeviceManagerThread;
     QThread *m_apiServerThread;
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;

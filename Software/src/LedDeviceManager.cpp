@@ -1,5 +1,5 @@
 /*
- * LedDeviceFactory.cpp
+ * LedDeviceManager.cpp
  *
  *  Created on: 17.04.2011
  *      Author: Timur Sattarov && Mike Shatohin
@@ -26,7 +26,7 @@
 
 #include <qglobal.h>
 
-#include "LedDeviceFactory.hpp"
+#include "LedDeviceManager.hpp"
 #include "LedDeviceLightpack.hpp"
 #include "LedDeviceAlienFx.hpp"
 #include "LedDeviceAdalight.hpp"
@@ -36,7 +36,7 @@
 
 using namespace SettingsScope;
 
-LedDeviceFactory::LedDeviceFactory(QObject *parent)
+LedDeviceManager::LedDeviceManager(QObject *parent)
     : QObject(parent)
 {
     m_isLastCommandCompleted = true;
@@ -49,7 +49,7 @@ LedDeviceFactory::LedDeviceFactory(QObject *parent)
     initLedDevice();
 }
 
-void LedDeviceFactory::recreateLedDevice()
+void LedDeviceManager::recreateLedDevice()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -58,7 +58,7 @@ void LedDeviceFactory::recreateLedDevice()
     initLedDevice();
 }
 
-void LedDeviceFactory::setColors(const QList<QRgb> & colors)
+void LedDeviceManager::setColors(const QList<QRgb> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "Is last command completed:" << m_isLastCommandCompleted;
 
@@ -72,7 +72,7 @@ void LedDeviceFactory::setColors(const QList<QRgb> & colors)
     }
 }
 
-void LedDeviceFactory::offLeds()
+void LedDeviceManager::switchOffLeds()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "Is last command completed:" << m_isLastCommandCompleted;
 
@@ -85,7 +85,7 @@ void LedDeviceFactory::offLeds()
     }
 }
 
-void LedDeviceFactory::setRefreshDelay(int value)
+void LedDeviceManager::setRefreshDelay(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << value
                     << "Is last command completed:" << m_isLastCommandCompleted;
@@ -100,7 +100,7 @@ void LedDeviceFactory::setRefreshDelay(int value)
     }
 }
 
-void LedDeviceFactory::setColorDepth(int value)
+void LedDeviceManager::setColorDepth(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << value << "Is last command completed:" << m_isLastCommandCompleted;
 
@@ -114,7 +114,7 @@ void LedDeviceFactory::setColorDepth(int value)
     }
 }
 
-void LedDeviceFactory::setSmoothSlowdown(int value)
+void LedDeviceManager::setSmoothSlowdown(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << value << "Is last command completed:" << m_isLastCommandCompleted;
 
@@ -128,7 +128,7 @@ void LedDeviceFactory::setSmoothSlowdown(int value)
     }
 }
 
-void LedDeviceFactory::setGamma(double value)
+void LedDeviceManager::setGamma(double value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << value << "Is last command completed:" << m_isLastCommandCompleted;
 
@@ -142,7 +142,7 @@ void LedDeviceFactory::setGamma(double value)
     }
 }
 
-void LedDeviceFactory::setBrightness(int value)
+void LedDeviceManager::setBrightness(int value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << value << "Is last command completed:" << m_isLastCommandCompleted;
 
@@ -156,7 +156,7 @@ void LedDeviceFactory::setBrightness(int value)
     }
 }
 
-void LedDeviceFactory::requestFirmwareVersion()
+void LedDeviceManager::requestFirmwareVersion()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "Is last command completed:" << m_isLastCommandCompleted;
 
@@ -169,7 +169,7 @@ void LedDeviceFactory::requestFirmwareVersion()
     }
 }
 
-void LedDeviceFactory::updateDeviceSettings()
+void LedDeviceManager::updateDeviceSettings()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "Is last command completed:" << m_isLastCommandCompleted;
 
@@ -182,7 +182,7 @@ void LedDeviceFactory::updateDeviceSettings()
     }
 }
 
-void LedDeviceFactory::ledDeviceCommandCompleted(bool ok)
+void LedDeviceManager::ledDeviceCommandCompleted(bool ok)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << ok;
 
@@ -202,7 +202,7 @@ void LedDeviceFactory::ledDeviceCommandCompleted(bool ok)
     emit ioDeviceSuccess(ok);
 }
 
-void LedDeviceFactory::initLedDevice()
+void LedDeviceManager::initLedDevice()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -229,7 +229,7 @@ void LedDeviceFactory::initLedDevice()
     emit ledDeviceOpen();
 }
 
-ILedDevice * LedDeviceFactory::createLedDevice(SupportedDevices::DeviceType deviceType)
+ILedDevice * LedDeviceManager::createLedDevice(SupportedDevices::DeviceType deviceType)
 {    
 
     if (deviceType == SupportedDevices::AlienFxDevice){
@@ -279,7 +279,7 @@ ILedDevice * LedDeviceFactory::createLedDevice(SupportedDevices::DeviceType devi
     return NULL; // Avoid compiler warning
 }
 
-void LedDeviceFactory::connectSignalSlotsLedDevice()
+void LedDeviceManager::connectSignalSlotsLedDevice()
 {
     if (m_ledDevice == NULL)
     {
@@ -296,7 +296,7 @@ void LedDeviceFactory::connectSignalSlotsLedDevice()
 
     connect(this, SIGNAL(ledDeviceOpen()),                      m_ledDevice, SLOT(open()), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetColors(QList<QRgb>)),      m_ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
-    connect(this, SIGNAL(ledDeviceOffLeds()),                   m_ledDevice, SLOT(offLeds()), Qt::QueuedConnection);
+    connect(this, SIGNAL(ledDeviceOffLeds()),                   m_ledDevice, SLOT(switchOffLeds()), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetRefreshDelay(int)),        m_ledDevice, SLOT(setRefreshDelay(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetColorDepth(int)),          m_ledDevice, SLOT(setColorDepth(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetSmoothSlowdown(int)),      m_ledDevice, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
@@ -306,7 +306,7 @@ void LedDeviceFactory::connectSignalSlotsLedDevice()
     connect(this, SIGNAL(ledDeviceUpdateDeviceSettings()),      m_ledDevice, SLOT(updateDeviceSettings()), Qt::QueuedConnection);
 }
 
-void LedDeviceFactory::disconnectSignalSlotsLedDevice()
+void LedDeviceManager::disconnectSignalSlotsLedDevice()
 {
     if (m_ledDevice == NULL)
     {
@@ -322,7 +322,7 @@ void LedDeviceFactory::disconnectSignalSlotsLedDevice()
 
     disconnect(this, SIGNAL(ledDeviceOpen()),                   m_ledDevice, SLOT(open()));
     disconnect(this, SIGNAL(ledDeviceSetColors(QList<QRgb>)),   m_ledDevice, SLOT(setColors(QList<QRgb>)));
-    disconnect(this, SIGNAL(ledDeviceOffLeds()),                m_ledDevice, SLOT(offLeds()));
+    disconnect(this, SIGNAL(ledDeviceOffLeds()),                m_ledDevice, SLOT(switchOffLeds()));
     disconnect(this, SIGNAL(ledDeviceSetRefreshDelay(int)),     m_ledDevice, SLOT(setRefreshDelay(int)));
     disconnect(this, SIGNAL(ledDeviceSetColorDepth(int)),       m_ledDevice, SLOT(setColorDepth(int)));
     disconnect(this, SIGNAL(ledDeviceSetSmoothSlowdown(int)),   m_ledDevice, SLOT(setSmoothSlowdown(int)));
@@ -332,7 +332,7 @@ void LedDeviceFactory::disconnectSignalSlotsLedDevice()
     disconnect(this, SIGNAL(ledDeviceUpdateDeviceSettings()),   m_ledDevice, SLOT(updateDeviceSettings()));
 }
 
-void LedDeviceFactory::cmdQueueAppend(LedDeviceCommands::Cmd cmd)
+void LedDeviceManager::cmdQueueAppend(LedDeviceCommands::Cmd cmd)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << cmd;
 
@@ -342,7 +342,7 @@ void LedDeviceFactory::cmdQueueAppend(LedDeviceCommands::Cmd cmd)
     }
 }
 
-void LedDeviceFactory::cmdQueueProcessNext()
+void LedDeviceManager::cmdQueueProcessNext()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << m_cmdQueue;
 

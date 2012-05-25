@@ -81,7 +81,7 @@ void LedDeviceArdulight::setColors(const QList<QRgb> & colors)
     emit commandCompleted(ok);
 }
 
-void LedDeviceArdulight::offLeds()
+void LedDeviceArdulight::switchOffLeds()
 {
     int count = m_colorsSaved.count();
     m_colorsSaved.clear();

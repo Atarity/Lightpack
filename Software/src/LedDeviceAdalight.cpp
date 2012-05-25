@@ -79,7 +79,7 @@ void LedDeviceAdalight::setColors(const QList<QRgb> & colors)
     emit commandCompleted(ok);
 }
 
-void LedDeviceAdalight::offLeds()
+void LedDeviceAdalight::switchOffLeds()
 {
     int count = m_colorsSaved.count();
     m_colorsSaved.clear();

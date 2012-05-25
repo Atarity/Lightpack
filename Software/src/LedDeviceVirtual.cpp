@@ -60,7 +60,7 @@ void LedDeviceVirtual::setColors(const QList<QRgb> & colors)
     emit commandCompleted(true);
 }
 
-void LedDeviceVirtual::offLeds()
+void LedDeviceVirtual::switchOffLeds()
 {
     int count = m_colorsSaved.count();
     m_colorsSaved.clear();

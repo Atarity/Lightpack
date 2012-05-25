@@ -89,7 +89,6 @@ SOURCES += \
     GrabWidget.cpp \
     GrabConfigWidget.cpp \
     SpeedTest.cpp \
-    LedDeviceFactory.cpp \
     LedDeviceLightpack.cpp \
     LedDeviceAlienFx.cpp \
     LedDeviceAdalight.cpp \
@@ -106,7 +105,8 @@ SOURCES += \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
     LightpackMath.cpp \
-    MoodLampManager.cpp
+    MoodLampManager.cpp \
+    LedDeviceManager.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -123,7 +123,6 @@ HEADERS += \
     SpeedTest.hpp \
     alienfx/LFXDecl.h \
     alienfx/LFX2.h \
-    LedDeviceFactory.hpp \
     ILedDevice.hpp \    
     LedDeviceLightpack.hpp \
     LedDeviceAlienFx.hpp \
@@ -149,7 +148,8 @@ HEADERS += \
     grab/D3D9Grabber.hpp \
     LightpackMath.hpp \
     StructRgb.hpp \
-    MoodLampManager.hpp
+    MoodLampManager.hpp \
+    LedDeviceManager.hpp
 
 FORMS += SettingsWindow.ui \
     AboutDialog.ui \

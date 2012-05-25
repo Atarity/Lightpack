@@ -132,7 +132,7 @@ void LedDeviceAlienFx::setColors(const QList<QRgb> & colors)
     emit commandCompleted(true);
 }
 
-void LedDeviceAlienFx::offLeds()
+void LedDeviceAlienFx::switchOffLeds()
 {
     // TODO: fill it with current leds count
     QList<QRgb> blackColor;

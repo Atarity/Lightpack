@@ -33,7 +33,7 @@
 #include "MoodLampManager.hpp"
 #include "SpeedTest.hpp"
 #include "ColorButton.hpp"
-#include "LedDeviceFactory.hpp"
+#include "LedDeviceManager.hpp"
 #include "enums.hpp"
 #include "debug.h"
 
@@ -551,10 +551,6 @@ void SettingsWindow::onLoggingLevel_valueChanged(int value)
     Settings::setDebugLevel(value);
 }
 
-// ----------------------------------------------------------------------------
-// Backlight On / Off
-// ----------------------------------------------------------------------------
-
 void SettingsWindow::setDeviceLockViaAPI(Api::DeviceLockStatus status)
 {
     m_deviceLockStatus = status;
@@ -663,7 +659,9 @@ void SettingsWindow::startBacklight()
     }
 
     if (m_backlightStatus == Backlight::StatusOff)
-        emit offLeds();
+        emit switchOffLeds();
+    else if (m_backlightStatus == Backlight::StatusOn)
+        emit switchOnLeds();
 
     updateTrayAndActionStates();
 }
@@ -1694,7 +1692,7 @@ void SettingsWindow::quit()
         // Process all currently pending signals (which may include updating the color signals)
         QApplication::processEvents(QEventLoop::AllEvents, 1000);
 
-        emit offLeds();
+        emit switchOffLeds();
         QApplication::processEvents(QEventLoop::AllEvents, 1000);
     }
 

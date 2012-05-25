@@ -100,11 +100,11 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
 
     bool ok = writeBufferToDeviceWithCheck(CMD_UPDATE_LEDS);
 
-    // WARNING: LedDeviceFactory sends data only when the arrival of this signal
+    // WARNING: LedDeviceManager sends data only when the arrival of this signal
     emit commandCompleted(ok);
 }
 
-void LedDeviceLightpack::offLeds()
+void LedDeviceLightpack::switchOffLeds()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -119,7 +119,7 @@ void LedDeviceLightpack::offLeds()
 
     setColors(m_colorsSaved);
 
-    // Stop ping device if offLeds() signal comes
+    // Stop ping device if switchOffLeds() signal comes
     m_timerPingDevice->stop();
 }
 
