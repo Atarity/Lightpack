@@ -26,14 +26,23 @@
 
 #include "LightpackApplication.hpp"
 #include "LedDeviceLightpack.hpp"
+#include "LightpackPluginInterface.hpp"
 #include "version.h"
 
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
 
+
 using namespace std;
 using namespace SettingsScope;
+
+struct QtMetaObject : private QObject
+{
+public:
+    static const QMetaObject *get()
+        { return &static_cast<QtMetaObject*>(0)->staticQtMetaObject; }
+};
 
 LightpackApplication::LightpackApplication(int &argc, char **argv)
     : QtSingleApplication(argc, argv)
@@ -65,10 +74,8 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
         m_settingsWindow->setVisible(false); /* Load to tray */
         m_settingsWindow->createTrayIcon();
         m_settingsWindow->connectSignalsSlots();
-
-
-    // Process messages from another instances in SettingsWindow
-    connect(this, SIGNAL(messageReceived(QString)), m_settingsWindow, SLOT(processMessage(QString)));
+        // Process messages from another instances in SettingsWindow
+        connect(this, SIGNAL(messageReceived(QString)), m_settingsWindow, SLOT(processMessage(QString)));
 }
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
@@ -90,12 +97,16 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     startGrabManager();
 
+    startPluginManager();
+
     if (!m_noGui)
     {
         connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(setStatusChanged(Backlight::Status)));
         m_settingsWindow->startBacklight();
     }
 }
+
+
 
 void LightpackApplication::setStatusChanged(Backlight::Status status)
 {
@@ -404,7 +415,6 @@ void LightpackApplication::startGrabManager()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     m_grabManager = new GrabManager(NULL);
-//    m_grabManagerThread = new QThread();
     m_moodlampManager = new MoodLampManager(NULL);
 
     // Connections to signals which will be connected to ILedDevice
@@ -437,6 +447,46 @@ void LightpackApplication::startGrabManager()
 
     startBacklight();
 
+}
+
+void LightpackApplication::startPluginManager()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    m_pluginInterface = new LightpackPluginInterface(NULL);
+    m_pluginManager = new PluginManager(NULL);
+    m_PluginThread = new QThread();
+    QWidget* settingsBox = NULL;
+     if (!m_noGui)
+         settingsBox = m_settingsWindow->getSettingBox();
+
+    m_pluginManager->init(m_pluginInterface,settingsBox);
+
+    connect(m_pluginInterface, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), this, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
+    connect(m_pluginInterface, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
+
+     if (!m_noGui)
+     {
+         connect(m_pluginInterface, SIGNAL(updateLedsColors(QList<QRgb>)), m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)));
+         connect(m_pluginInterface, SIGNAL(updateDeviceLockStatus(Api::DeviceLockStatus)), m_settingsWindow, SLOT(setDeviceLockViaAPI(Api::DeviceLockStatus)));
+
+         connect(m_pluginManager,SIGNAL(updatePlugin(QList<PyPlugin*>)),m_settingsWindow,SLOT(updatePlugin(QList<PyPlugin*>)));
+         connect(m_settingsWindow,SIGNAL(getPluginConsole()),this,SLOT(getConsole()));
+     }
+
+     m_pluginManager->loadPlugins();
+
+     m_pluginManager->moveToThread(m_PluginThread);
+     m_PluginThread->start();
+
+
+   // getConsole();
+
+}
+void LightpackApplication::getConsole()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_pluginManager->getConsole(NULL);
 }
 
 void LightpackApplication::connectApiServerAndLedDeviceSignalsSlots()

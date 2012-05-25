@@ -54,7 +54,7 @@ signals:
     void changeScreen(QRect rect);
 
 public:
-    void start(bool isGrabEnabled);
+
 
     // Grab options
     void setGrabber(Grab::GrabberType grabber);
@@ -68,6 +68,7 @@ public:
     void reset();
 
 public slots:
+    void start(bool isGrabEnabled);
     void settingsProfileChanged();
     void setVisibleLedWidgets(bool state);
     void setColoredLedWidgets(bool state);

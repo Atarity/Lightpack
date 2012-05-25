@@ -30,6 +30,8 @@
 #include "SettingsWindow.hpp"
 #include "ApiServer.hpp"
 #include "LedDeviceFactory.hpp"
+#include "LightpackPluginInterface.hpp"
+#include "PluginManager.hpp"
 
 class LightpackApplication : public QtSingleApplication
 {
@@ -63,6 +65,7 @@ private slots:
     void settingsChanged();
     void showLedWidgets(bool visible);
     void setColoredLedWidget(bool colored);
+    void getConsole();
 
 private:
     void processCommandLineArguments();
@@ -72,6 +75,7 @@ private:
     void startApiServer();
     void startLedDeviceFactory();
     void startGrabManager();
+    void startPluginManager();
     void startBacklight();
     void connectApiServerAndLedDeviceSignalsSlots();
     void disconnectApiServerAndLedDeviceSignalsSlots();
@@ -90,6 +94,9 @@ private:
     QThread *m_grabManagerThread;
     QThread *m_moodlampManagerThread;
 
+    LightpackPluginInterface *m_pluginInterface;
+    PluginManager *m_pluginManager;
+    QThread* m_PluginThread;
 
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;

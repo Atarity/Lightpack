@@ -106,7 +106,11 @@ SOURCES += \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
     LightpackMath.cpp \
-    MoodLampManager.cpp
+    MoodLampManager.cpp \
+    LightpackPluginInterface.cpp \
+    PluginManager.cpp \
+    plugins/PyPlugin.cpp \
+    AboutPluginDialog.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -149,12 +153,18 @@ HEADERS += \
     grab/D3D9Grabber.hpp \
     LightpackMath.hpp \
     StructRgb.hpp \
-    MoodLampManager.hpp
+    MoodLampManager.hpp \
+    LightpackPluginInterface.hpp \
+    PluginManager.hpp \
+    plugins/PyPlugin.h \
+    AboutPluginDialog.hpp
+
 
 FORMS += SettingsWindow.ui \
     AboutDialog.ui \
     GrabWidget.ui \
-    GrabConfigWidget.ui
+    GrabConfigWidget.ui \
+    AboutPluginDialog.ui
 
 #
 #   QSerialDevice
@@ -173,4 +183,14 @@ include(qtsingleapplication/src/qtsingleapplication.pri)
 #
 include(hotkeys/globalshortcut/globalshortcut.pri)
 include(hotkeys/qkeysequencewidget/qkeysequencewidget.pri)
+
+#
+# PythonQt
+#
+include (../PythonQT/build/common.prf )
+include (../PythonQT/build/PythonQt.prf )
+include (../PythonQT/build/PythonQt_QtAll.prf )
+
+OTHER_FILES += \
+    test.js
 

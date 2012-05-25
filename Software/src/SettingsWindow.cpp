@@ -28,12 +28,15 @@
 #include "ui_SettingsWindow.h"
 
 #include "AboutDialog.hpp"
+#include "AboutPluginDialog.hpp"
 #include "Settings.hpp"
 #include "SpeedTest.hpp"
 #include "ColorButton.hpp"
 #include "LedDeviceFactory.hpp"
 #include "enums.hpp"
 #include "debug.h"
+
+#include "plugins/PyPlugin.h"
 
 #include "hotkeys/qkeysequencewidget/src/qkeysequencewidget.h"
 #include "hotkeys/globalshortcut/globalshortcutmanager.h"
@@ -225,6 +228,12 @@ void SettingsWindow::connectSignalsSlots()
     // HotKeys
     connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(setOnOffHotKey(QKeySequence)));
     connect(m_keySequenceWidget, SIGNAL(keySequenceCleared()), this, SLOT(clearOnOffHotKey()));
+
+    //Plugins
+    connect(ui->cbPlugins, SIGNAL(currentIndexChanged(QString)), this, SLOT(pluginSwitch(QString)));
+    connect(ui->checkBox_PluginEnabled, SIGNAL(toggled(bool)), this, SLOT(pluginEnabled_Toggled(bool)));
+    connect(ui->pushButton_ConsolePlugin,SIGNAL(clicked()),this,SLOT(viewPluginConsole()));
+
 }
 
 // ----------------------------------------------------------------------------
@@ -1867,4 +1876,67 @@ void SettingsWindow::adjustSizeAndMoveCenter()
     move(screen.width()  / 2 - width()  / 2,
          screen.height() / 2 - height() / 2);
     resize(minimumSize());
+}
+
+QWidget* SettingsWindow::getSettingBox()
+{
+    return ui->gbSettingBox;
+}
+
+void SettingsWindow::updatePlugin(QList<PyPlugin*> plugins)
+{
+    //_plugins.clear();
+    _plugins = plugins;
+    ui->cbPlugins->clear();
+    foreach(PyPlugin* plugin, _plugins){
+        int index = _plugins.indexOf(plugin);
+        ui->cbPlugins->addItem(plugin->getName(),index);
+        }
+}
+
+void SettingsWindow::pluginSwitch(const QString & pluginName)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << pluginName;
+    int index = ui->cbPlugins->findText(pluginName);
+    if (index < 0)
+    {
+        qCritical() << Q_FUNC_INFO << "Fail find text:" << pluginName << "in plugin combobox";
+        return;
+    }
+
+//    foreach (QObject *object, ui->gbSettingBox->children()) {
+//      QWidget *widget = qobject_cast<QWidget*>(object);
+//      if (widget) {
+//        delete widget;
+//      }
+//    }
+    qDeleteAll( ui->gbSettingBox->findChildren<QWidget*>() );
+    ui->gbSettingBox->layout()->deleteLater();
+    //ui->cbPlugins->setCurrentIndex(index);
+    //ui->label_VersionPlugin->setText("Version:"+_plugins[index]->getVersion());
+    ui->checkBox_PluginEnabled->setChecked(_plugins[index]->isEnabled());
+    if (_plugins[index]->isEnabled())
+        _plugins[index]->getSettings();
+
+}
+
+void SettingsWindow::pluginEnabled_Toggled(bool isEnabled)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
+    int index = ui->cbPlugins->currentIndex();
+    _plugins[index]->setEnabled(isEnabled);
+}
+
+void SettingsWindow::viewPluginConsole()
+{
+    emit getPluginConsole();
+}
+
+void SettingsWindow::on_pushButton_PluginInfo_clicked()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    int index = ui->cbPlugins->currentIndex();
+    AboutPluginDialog* info = new AboutPluginDialog(_plugins[index],this);
+    info->show();
+
 }

@@ -36,6 +36,7 @@
 #include "ColorButton.hpp"
 #include "enums.hpp"
 
+
 #include "hotkeys/qkeysequencewidget/src/qkeysequencewidget.h"
 
 namespace Ui {
@@ -43,6 +44,7 @@ namespace Ui {
 }
 
 class GrabManager; // forward declaration
+class PyPlugin;
 
 class SettingsWindow : public QMainWindow {
     Q_OBJECT
@@ -55,6 +57,7 @@ public:
     void startBacklight();
     void createTrayIcon();
     void connectSignalsSlots();
+    QWidget* getSettingBox();
 
 signals:
     void settingsProfileChanged();
@@ -77,6 +80,7 @@ signals:
     void updateApiPort(int port);
     void updateApiKey(QString key);
     void updateApiDeviceNumberOfLeds(int value);
+    void getPluginConsole();
 
 public slots:
     void ledDeviceOpenSuccess(bool isSuccess);
@@ -97,6 +101,9 @@ public slots:
     void onApiServer_ErrorOnStartListening(QString errorMessage);
     void onPingDeviceEverySecond_Toggled(bool state);
     void processMessage(const QString &message);
+
+    void updatePlugin(QList<PyPlugin*> plugins);
+
 
 protected:
     virtual void changeEvent(QEvent *e);
@@ -161,6 +168,12 @@ private slots:
 
     void setOnOffHotKey(QKeySequence);
     void clearOnOffHotKey();
+
+    void pluginSwitch(const QString & pluginName);
+    void pluginEnabled_Toggled(bool isEnabled);
+    void viewPluginConsole();
+
+    void on_pushButton_PluginInfo_clicked();
 
 private:
     void updateTrayAndActionStates();    
@@ -231,4 +244,6 @@ private:
     static const unsigned MoodLampModeIndex;
 
     QKeySequenceWidget *m_keySequenceWidget;
+
+    QList<PyPlugin*> _plugins;
 };

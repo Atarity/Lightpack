@@ -1,0 +1,49 @@
+************************************************************************
+Not in type system
+ - QMetaType::Type
+ - enum_2
+************************************************************************
+
+************************************************************************
+Generation disabled by type system
+ - QDataStream::ByteOrder
+ - QFont::ResolveProperties
+ - QGradient::InterpolationMode
+ - QXmlNodeModelIndex::Axis
+ - Qt::Initialization
+ - Qt::Modifier
+ - QtConcurrent::enum_1
+ - QtValidLicenseForActiveQtModule
+ - QtValidLicenseForCoreModule
+ - QtValidLicenseForDBusModule
+ - QtValidLicenseForDeclarativeModule
+ - QtValidLicenseForGuiModule
+ - QtValidLicenseForHelpModule
+ - QtValidLicenseForMultimediaModule
+ - QtValidLicenseForNetworkModule
+ - QtValidLicenseForOpenGLModule
+ - QtValidLicenseForOpenVGModule
+ - QtValidLicenseForQt3SupportLightModule
+ - QtValidLicenseForQt3SupportModule
+ - QtValidLicenseForScriptModule
+ - QtValidLicenseForScriptToolsModule
+ - QtValidLicenseForSqlModule
+ - QtValidLicenseForSvgModule
+ - QtValidLicenseForTestModule
+ - QtValidLicenseForXmlModule
+ - QtValidLicenseForXmlPatternsModule
+ - enum_1
+************************************************************************
+
+************************************************************************
+Type redefined to not be a class
+************************************************************************
+
+************************************************************************
+Unmatched argument type
+************************************************************************
+
+************************************************************************
+Unmatched return type
+************************************************************************
+
