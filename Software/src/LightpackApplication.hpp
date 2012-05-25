@@ -73,7 +73,7 @@ private:
 private:
     SettingsWindow *m_settingsWindow;
     ApiServer *m_apiServer;
-    LedDeviceManager *m_LedDeviceManager;
+    LedDeviceManager *m_ledDeviceManager;
     QThread *m_LedDeviceManagerThread;
     QThread *m_apiServerThread;
     QString m_applicationDirPath;

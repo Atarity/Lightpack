@@ -55,7 +55,8 @@ public:
 
 signals:
     void settingsProfileChanged();
-    void offLeds();
+    void switchOffLeds();
+    void switchOnLeds();
     void updateLedsColors(const QList<QRgb> &);
     void updateRefreshDelay(int value);
     void updateColorDepth(int value);

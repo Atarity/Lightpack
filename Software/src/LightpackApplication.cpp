@@ -79,36 +79,28 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 }
 
 #ifdef Q_OS_WIN
-bool LightpackApplication::winEventFilter ( MSG * msg, long * result )
-{
-    QString msgType;
-    static Backlight::Status oldBacklightStatus;
-    static bool powerOffProcessed = false;
-    static bool powerOnProcessed = false;
-
-    if (WM_POWERBROADCAST == msg->message)
-    {
-        switch(msg->wParam)
-        {
-            case PBT_APMRESUMEAUTOMATIC :
-            {
-                if (false == powerOnProcessed) {
-                    powerOffProcessed = false;
-                    powerOnProcessed = true;
-                    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "WM_POWERBROADCAST message = PBT_APMRESUMEAUTOMATIC";
-                }
-                break;
+bool LightpackApplication::winEventFilter ( MSG * msg, long * result ) {
+    const unsigned char POWER_RESUME  = 0x01;
+    const unsigned char POWER_SUSPEND = 0x02;
+    static unsigned char processed;
+    if (WM_POWERBROADCAST == msg->message) {
+        switch(msg->wParam) {
+        case PBT_APMRESUMEAUTOMATIC :
+            if (! POWER_RESUME & processed) {
+                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "WM_POWERBROADCAST message = PBT_APMRESUMEAUTOMATIC";
+                m_ledDeviceManager->switchOnLeds();
+                processed = POWER_RESUME;
             }
-            case PBT_APMSUSPEND :
-            {
-                if (false == powerOffProcessed) {
-                    powerOffProcessed = true;
-                    powerOnProcessed = false;
-                    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "WM_POWERBROADCAST message = PBT_APMSUSPEND";
-                }
-                break;
+            break;
+        case PBT_APMSUSPEND :
+            if (! POWER_SUSPEND & processed) {
+                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "WM_POWERBROADCAST message = PBT_APMSUSPEND";
+                m_ledDeviceManager->switchOffLeds();
+                processed = POWER_SUSPEND;
             }
+            break;
         }
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "hwnd = " << msg->hwnd;
         return(true);
     }
     return(false);
@@ -324,27 +316,28 @@ void LightpackApplication::startApiServer()
 
 void LightpackApplication::startLedDeviceManager()
 {
-    m_LedDeviceManager = new LedDeviceManager();
+    m_ledDeviceManager = new LedDeviceManager();
     m_LedDeviceManagerThread = new QThread();
 
-    connect(m_settingsWindow, SIGNAL(recreateLedDevice()),                      m_LedDeviceManager, SLOT(recreateLedDevice()), Qt::DirectConnection);
-    connect(m_settingsWindow, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_LedDeviceManager, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(recreateLedDevice()),                      m_ledDeviceManager, SLOT(recreateLedDevice()), Qt::DirectConnection);
+    connect(m_settingsWindow, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceManager, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
 
-    connect(m_settingsWindow, SIGNAL(switchOffLeds()),              m_LedDeviceManager, SLOT(switchOffLeds()), Qt::QueuedConnection);
-    connect(m_settingsWindow, SIGNAL(updateColorDepth(int)),        m_LedDeviceManager, SLOT(setColorDepth(int)), Qt::QueuedConnection);
-    connect(m_settingsWindow, SIGNAL(updateSmoothSlowdown(int)),    m_LedDeviceManager, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
-    connect(m_settingsWindow, SIGNAL(updateRefreshDelay(int)),      m_LedDeviceManager, SLOT(setRefreshDelay(int)), Qt::QueuedConnection);
-    connect(m_settingsWindow, SIGNAL(updateGamma(double)),          m_LedDeviceManager, SLOT(setGamma(double)), Qt::QueuedConnection);
-    connect(m_settingsWindow, SIGNAL(updateBrightness(int)),        m_LedDeviceManager, SLOT(setBrightness(int)), Qt::QueuedConnection);
-    connect(m_settingsWindow, SIGNAL(requestFirmwareVersion()),     m_LedDeviceManager, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
-    connect(m_settingsWindow, SIGNAL(settingsProfileChanged()),     m_LedDeviceManager, SLOT(updateDeviceSettings()), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(switchOffLeds()),              m_ledDeviceManager, SLOT(switchOffLeds()), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(switchOnLeds()),               m_ledDeviceManager, SLOT(switchOnLeds()), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(updateColorDepth(int)),        m_ledDeviceManager, SLOT(setColorDepth(int)), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(updateSmoothSlowdown(int)),    m_ledDeviceManager, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(updateRefreshDelay(int)),      m_ledDeviceManager, SLOT(setRefreshDelay(int)), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(updateGamma(double)),          m_ledDeviceManager, SLOT(setGamma(double)), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(updateBrightness(int)),        m_ledDeviceManager, SLOT(setBrightness(int)), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(requestFirmwareVersion()),     m_ledDeviceManager, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
+    connect(m_settingsWindow, SIGNAL(settingsProfileChanged()),     m_ledDeviceManager, SLOT(updateDeviceSettings()), Qt::QueuedConnection);
 
-    connect(m_LedDeviceManager, SIGNAL(openDeviceSuccess(bool)),    m_settingsWindow, SLOT(ledDeviceOpenSuccess(bool)), Qt::QueuedConnection);
-    connect(m_LedDeviceManager, SIGNAL(ioDeviceSuccess(bool)),      m_settingsWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
-    connect(m_LedDeviceManager, SIGNAL(firmwareVersion(QString)),   m_settingsWindow, SLOT(ledDeviceFirmwareVersionResult(QString)), Qt::QueuedConnection);
-    connect(m_LedDeviceManager, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), m_settingsWindow, SLOT(updateVirtualLedsColors(QList<QRgb>)), Qt::QueuedConnection);
+    connect(m_ledDeviceManager, SIGNAL(openDeviceSuccess(bool)),    m_settingsWindow, SLOT(ledDeviceOpenSuccess(bool)), Qt::QueuedConnection);
+    connect(m_ledDeviceManager, SIGNAL(ioDeviceSuccess(bool)),      m_settingsWindow, SLOT(ledDeviceCallSuccess(bool)), Qt::QueuedConnection);
+    connect(m_ledDeviceManager, SIGNAL(firmwareVersion(QString)),   m_settingsWindow, SLOT(ledDeviceFirmwareVersionResult(QString)), Qt::QueuedConnection);
+    connect(m_ledDeviceManager, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), m_settingsWindow, SLOT(updateVirtualLedsColors(QList<QRgb>)), Qt::QueuedConnection);
 
-    m_LedDeviceManager->moveToThread(m_LedDeviceManagerThread);
+    m_ledDeviceManager->moveToThread(m_LedDeviceManagerThread);
     m_LedDeviceManagerThread->start();
 }
 
@@ -352,10 +345,10 @@ void LightpackApplication::connectApiServerAndLedDeviceSignalsSlots()
 {
     if (m_isApiServerConnectedToLedDeviceSignalsSlots == false)
     {
-        connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_LedDeviceManager, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
-        connect(m_apiServer, SIGNAL(updateGamma(double)),           m_LedDeviceManager, SLOT(setGamma(double)), Qt::QueuedConnection);
-        connect(m_apiServer, SIGNAL(updateBrightness(int)),         m_LedDeviceManager, SLOT(setBrightness(int)), Qt::QueuedConnection);
-        connect(m_apiServer, SIGNAL(updateSmooth(int)),             m_LedDeviceManager, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
+        connect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDeviceManager, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
+        connect(m_apiServer, SIGNAL(updateGamma(double)),           m_ledDeviceManager, SLOT(setGamma(double)), Qt::QueuedConnection);
+        connect(m_apiServer, SIGNAL(updateBrightness(int)),         m_ledDeviceManager, SLOT(setBrightness(int)), Qt::QueuedConnection);
+        connect(m_apiServer, SIGNAL(updateSmooth(int)),             m_ledDeviceManager, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
         m_isApiServerConnectedToLedDeviceSignalsSlots = true;
     }
 }
@@ -364,10 +357,10 @@ void LightpackApplication::disconnectApiServerAndLedDeviceSignalsSlots()
 {
     if (m_isApiServerConnectedToLedDeviceSignalsSlots == true)
     {
-        disconnect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)),  m_LedDeviceManager, SLOT(setColors(QList<QRgb>)));
-        disconnect(m_apiServer, SIGNAL(updateGamma(double)),            m_LedDeviceManager, SLOT(setGamma(double)));
-        disconnect(m_apiServer, SIGNAL(updateBrightness(int)),          m_LedDeviceManager, SLOT(setBrightness(int)));
-        disconnect(m_apiServer, SIGNAL(updateSmooth(int)),              m_LedDeviceManager, SLOT(setSmoothSlowdown(int)));
+        disconnect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)),  m_ledDeviceManager, SLOT(setColors(QList<QRgb>)));
+        disconnect(m_apiServer, SIGNAL(updateGamma(double)),            m_ledDeviceManager, SLOT(setGamma(double)));
+        disconnect(m_apiServer, SIGNAL(updateBrightness(int)),          m_ledDeviceManager, SLOT(setBrightness(int)));
+        disconnect(m_apiServer, SIGNAL(updateSmooth(int)),              m_ledDeviceManager, SLOT(setSmoothSlowdown(int)));
         m_isApiServerConnectedToLedDeviceSignalsSlots = false;
     }
 }
@@ -378,17 +371,17 @@ void LightpackApplication::commitData(QSessionManager &sessionManager)
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Off leds before quit";
 
-    if (m_LedDeviceManager != NULL)
+    if (m_ledDeviceManager != NULL)
     {
         // Disable signals with new colors
-        disconnect(m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)),  m_LedDeviceManager, SLOT(setColors(QList<QRgb>)));
-        disconnect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)),  m_LedDeviceManager, SLOT(setColors(QList<QRgb>)));
+        disconnect(m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)),  m_ledDeviceManager, SLOT(setColors(QList<QRgb>)));
+        disconnect(m_apiServer, SIGNAL(updateLedsColors(QList<QRgb>)),  m_ledDeviceManager, SLOT(setColors(QList<QRgb>)));
 
         // Process all currently pending signals
         QApplication::processEvents(QEventLoop::AllEvents, 1000);
 
         // Send signal and process it
-        m_LedDeviceManager->switchOffLeds();
+        m_ledDeviceManager->switchOffLeds();
         QApplication::processEvents(QEventLoop::AllEvents, 1000);
     }
 }

@@ -43,6 +43,8 @@ LedDeviceManager::LedDeviceManager(QObject *parent)
 
     m_ledDeviceThread = new QThread();
 
+    m_backlightStatus = Backlight::StatusOn;
+
     for (int i = 0; i < SupportedDevices::DevicesCount; i++)
         m_ledDevices.append(NULL);
 
@@ -58,17 +60,28 @@ void LedDeviceManager::recreateLedDevice()
     initLedDevice();
 }
 
+void LedDeviceManager::switchOnLeds()
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
+    m_backlightStatus = Backlight::StatusOn;
+}
+
 void LedDeviceManager::setColors(const QList<QRgb> & colors)
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << "Is last command completed:" << m_isLastCommandCompleted;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << "Is last command completed:" << m_isLastCommandCompleted
+                    << " m_backlightStatus = " << m_backlightStatus;
 
-    if (m_isLastCommandCompleted)
+    if (m_backlightStatus == Backlight::StatusOn)
     {
-        m_isLastCommandCompleted = false;
-        emit ledDeviceSetColors(colors);
-    } else {
-        m_savedColors = colors;
-        cmdQueueAppend(LedDeviceCommands::SetColors);
+        if (m_isLastCommandCompleted)
+        {
+            m_isLastCommandCompleted = false;
+            emit ledDeviceSetColors(colors);
+        } else {
+            m_savedColors = colors;
+            cmdQueueAppend(LedDeviceCommands::SetColors);
+        }
     }
 }
 
@@ -79,10 +92,16 @@ void LedDeviceManager::switchOffLeds()
     if (m_isLastCommandCompleted)
     {
         m_isLastCommandCompleted = false;
-        emit ledDeviceOffLeds();
+        processOffLeds();
     } else {
         cmdQueueAppend(LedDeviceCommands::OffLeds);
     }
+}
+
+void LedDeviceManager::processOffLeds()
+{
+    m_backlightStatus = Backlight::StatusOff;
+    emit ledDeviceOffLeds();
 }
 
 void LedDeviceManager::setRefreshDelay(int value)
@@ -353,7 +372,7 @@ void LedDeviceManager::cmdQueueProcessNext()
         switch(cmd)
         {
         case LedDeviceCommands::OffLeds:
-            emit ledDeviceOffLeds();
+            processOffLeds();
             break;
 
         case LedDeviceCommands::SetColors:

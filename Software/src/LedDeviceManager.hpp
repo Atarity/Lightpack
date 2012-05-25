@@ -79,9 +79,11 @@ private:
     void disconnectSignalSlotsLedDevice();
     void cmdQueueAppend(LedDeviceCommands::Cmd);
     void cmdQueueProcessNext();
+    void processOffLeds();
 
 private:
     bool m_isLastCommandCompleted;
+    Backlight::Status m_backlightStatus;
 
     QList<LedDeviceCommands::Cmd> m_cmdQueue;
 
