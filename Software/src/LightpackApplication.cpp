@@ -82,28 +82,28 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 bool LightpackApplication::winEventFilter ( MSG * msg, long * result ) {
     const unsigned char POWER_RESUME  = 0x01;
     const unsigned char POWER_SUSPEND = 0x02;
-    static unsigned char processed;
-    if (WM_POWERBROADCAST == msg->message) {
+    static unsigned char processed = 0x00;
+    if ( WM_POWERBROADCAST == msg->message ) {
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "WM_POWERBROADCAST "  <<  msg->wParam << " " << processed;
         switch(msg->wParam) {
         case PBT_APMRESUMEAUTOMATIC :
-            if (! POWER_RESUME & processed) {
-                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "WM_POWERBROADCAST message = PBT_APMRESUMEAUTOMATIC";
+            if ( !(POWER_RESUME & processed) ) {
                 m_ledDeviceManager->switchOnLeds();
                 processed = POWER_RESUME;
+                return true;
             }
             break;
         case PBT_APMSUSPEND :
-            if (! POWER_SUSPEND & processed) {
-                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "WM_POWERBROADCAST message = PBT_APMSUSPEND";
+            if ( !(POWER_SUSPEND & processed) ) {
                 m_ledDeviceManager->switchOffLeds();
                 processed = POWER_SUSPEND;
+                return true;
             }
             break;
         }
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "hwnd = " << msg->hwnd;
-        return(true);
     }
-    return(false);
+    return false;
 }
 #endif
 
