@@ -65,6 +65,7 @@ void LedDeviceManager::switchOnLeds()
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
     m_backlightStatus = Backlight::StatusOn;
+    emit ledDeviceSetColors(m_savedColors);
 }
 
 void LedDeviceManager::setColors(const QList<QRgb> & colors)
@@ -74,12 +75,12 @@ void LedDeviceManager::setColors(const QList<QRgb> & colors)
 
     if (m_backlightStatus == Backlight::StatusOn)
     {
+        m_savedColors = colors;
         if (m_isLastCommandCompleted)
         {
             m_isLastCommandCompleted = false;
             emit ledDeviceSetColors(colors);
         } else {
-            m_savedColors = colors;
             cmdQueueAppend(LedDeviceCommands::SetColors);
         }
     }
@@ -101,6 +102,7 @@ void LedDeviceManager::switchOffLeds()
 void LedDeviceManager::processOffLeds()
 {
     m_backlightStatus = Backlight::StatusOff;
+
     emit ledDeviceOffLeds();
 }
 

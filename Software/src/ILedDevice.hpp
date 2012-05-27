@@ -27,7 +27,6 @@
 #pragma once
 
 #include <QtGui>
-#include "LedDeviceManager.hpp"
 /*!
     Abstract class representing any LED device.
     \a LedDeviceManager
