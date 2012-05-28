@@ -76,7 +76,8 @@ ISR ( TIMER0_OVF_vect )
 // Watchdog interrupt
 ISR ( WDT_vect )
 {
-    _BlinkUsbLed(10, 20);
+    _BlinkUsbLed(3, 40);
+    for(;;);
 }
 
 static inline void Timer_Init(void)
@@ -168,7 +169,6 @@ int main(void)
     for (;;)
     {
         wdt_reset();
-
         ProcessUsbTasks();
         _ProcessFlags();
     }
