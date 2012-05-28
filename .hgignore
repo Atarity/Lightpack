@@ -27,6 +27,7 @@ Software/installer/*.exe
 Software/bin
 Software/**/bin
 Software/docs
+Firmware/LUFA/Documentation
 Doxyfile
 **/stuff
 **.o
