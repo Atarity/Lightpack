@@ -31,3 +31,4 @@ Firmware/LUFA/Documentation
 Doxyfile
 **/stuff
 **.o
+**.log
