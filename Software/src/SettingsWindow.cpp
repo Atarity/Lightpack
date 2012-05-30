@@ -111,7 +111,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     emit backlightStatusChanged(m_backlightStatus);
 
-    m_deviceLockStatus = Api::DeviceUnlocked;
+    m_deviceLockStatus = DeviceLocked::Unlocked;
     m_lightpackMode = Settings::getLightpackMode();
 
     onGrabberChanged();
@@ -555,11 +555,12 @@ void SettingsWindow::onLoggingLevel_valueChanged(int value)
 // Backlight On / Off
 // ----------------------------------------------------------------------------
 
-void SettingsWindow::setDeviceLockViaAPI(Api::DeviceLockStatus status)
+void SettingsWindow::setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << status;
     m_deviceLockStatus = status;
 
-    if (m_deviceLockStatus == Api::DeviceUnlocked)
+    if (m_deviceLockStatus == DeviceLocked::Unlocked)
     {
         syncLedDeviceWithSettingsWindow();
 
@@ -685,10 +686,15 @@ void SettingsWindow::updateTrayAndActionStates()
         m_switchOnBacklightAction->setEnabled(false);
         m_switchOffBacklightAction->setEnabled(true);
 
-        if (m_deviceLockStatus == Api::DeviceLocked)
+        if (m_deviceLockStatus == DeviceLocked::Api)
         {
             m_trayIcon->setIcon(QIcon(":/icons/lock.png"));
             m_trayIcon->setToolTip(tr("Device locked via API"));
+        } else
+        if (m_deviceLockStatus == DeviceLocked::Plugin)
+        {
+            m_trayIcon->setIcon(QIcon(":/icons/lock.png"));
+            m_trayIcon->setToolTip(tr("Device locked via Plugin"));
         } else {
             m_trayIcon->setIcon(QIcon(":/icons/on.png"));
             m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
@@ -1911,7 +1917,8 @@ void SettingsWindow::pluginSwitch(const QString & pluginName)
 //      }
 //    }
     qDeleteAll( ui->gbSettingBox->findChildren<QWidget*>() );
-    ui->gbSettingBox->layout()->deleteLater();
+    delete  ui->gbSettingBox->layout();
+    //ui->gbSettingBox->layout()->deleteLater();
     //ui->cbPlugins->setCurrentIndex(index);
     //ui->label_VersionPlugin->setText("Version:"+_plugins[index]->getVersion());
     ui->checkBox_PluginEnabled->setChecked(_plugins[index]->isEnabled());
@@ -1939,4 +1946,9 @@ void SettingsWindow::on_pushButton_PluginInfo_clicked()
     AboutPluginDialog* info = new AboutPluginDialog(_plugins[index],this);
     info->show();
 
+}
+
+void SettingsWindow::on_pushButton_clicked()
+{
+    emit reloadPlugins();
 }

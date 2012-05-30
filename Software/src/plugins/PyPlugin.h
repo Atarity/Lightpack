@@ -25,11 +25,6 @@ class PyPlugin : public QObject{
         void setEnabled(bool enable);
         void execute();
 	
-	protected slots:
-
-        void exec();
-        void  settings();
-
 	signals:
 		void aboutToExecute();
 		void executed();

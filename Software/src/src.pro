@@ -187,10 +187,9 @@ include(hotkeys/qkeysequencewidget/qkeysequencewidget.pri)
 #
 # PythonQt
 #
-include (../PythonQT/build/common.prf )
-include (../PythonQT/build/PythonQt.prf )
-include (../PythonQT/build/PythonQt_QtAll.prf )
+include (../PythonQt/build/common.prf )
+include (../PythonQt/build/PythonQt.prf )
+include (../PythonQt/build/PythonQt_QtAll.prf )
 
-OTHER_FILES += \
-    test.js
+OTHER_FILES +=
 

@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>407</width>
+    <width>424</width>
     <height>654</height>
    </rect>
   </property>
@@ -1257,7 +1257,7 @@
        <attribute name="title">
         <string>Plugins</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_11">
+       <layout class="QVBoxLayout" name="verticalLayout_14">
         <item>
          <widget class="QGroupBox" name="groupBox_2">
           <property name="sizePolicy">
@@ -1287,7 +1287,7 @@
           <property name="flat">
            <bool>false</bool>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_14">
+          <layout class="QVBoxLayout" name="verticalLayout_11">
            <item>
             <widget class="QComboBox" name="cbPlugins">
              <property name="sizePolicy">
@@ -1330,23 +1330,51 @@
             </layout>
            </item>
           </layout>
-          <zorder>layoutWidget</zorder>
-          <zorder>cbPlugins</zorder>
          </widget>
         </item>
         <item>
          <widget class="QGroupBox" name="gbSettingBox">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>40</height>
+           </size>
+          </property>
           <property name="title">
            <string>Plugin settings</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_ConsolePlugin">
-          <property name="text">
-           <string>Plugin Console</string>
+         <spacer name="verticalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
-         </widget>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_9">
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Reload plugins</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_ConsolePlugin">
+            <property name="text">
+             <string>Plugin Console</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>

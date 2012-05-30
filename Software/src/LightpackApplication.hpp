@@ -54,13 +54,14 @@ public:
 
 signals:
     void clearColorBuffers();
+
 public slots:
     void setStatusChanged(Backlight::Status);
     void setBacklightChanged(Lightpack::Mode);
 
 private slots:
     void requestBacklightStatus();
-    void setDeviceLockViaAPI(Api::DeviceLockStatus status);
+    void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status);
     void profileSwitch(const QString & configName);
     void settingsChanged();
     void showLedWidgets(bool visible);
@@ -97,6 +98,7 @@ private:
     LightpackPluginInterface *m_pluginInterface;
     PluginManager *m_pluginManager;
     QThread* m_PluginThread;
+    PythonQtScriptingConsole* consolePlugin;
 
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;

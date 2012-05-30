@@ -24,8 +24,6 @@ PluginManager::PluginManager(QObject *parent) :
         mainContext->evalScript("sys.path.append(':/plugin')\n");
         //load base plugin class
         mainContext->evalFile(":/plugin/BasePlugin.py");
-        //load plugin loader class
-        mainContext->evalFile(":/plugin/PluginLoader.py");
 
         // todo remove
 //        console = new PythonQtScriptingConsole(NULL,*mainContext);
@@ -38,19 +36,17 @@ PluginManager::PluginManager(QObject *parent) :
         }
    }
 
+PluginManager::~PluginManager(){
+    dropPlugins();
+    PythonQt::cleanup();
+}
+
 void PluginManager::init(LightpackPluginInterface *pluginInterface, QWidget* settingsBox)
 {
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     mainContext->addObject("Lightpack", pluginInterface);
     mainContext->addObject("SettingsBox", settingsBox);
-
-//    loader = mainContext->evalScript("PluginLoader()\n", Py_eval_input);
-//    if(loader.isNull()){
-//        qCritical() << "ERROR : Can't load plugin loader";
-//    }
-//    //load plugins
-//    loadPlugins();
 
     // -----------------------------------------------------------------
     // Alternative 1: make CustomObject known and use decorators for wrapping:
@@ -82,7 +78,6 @@ void PluginManager::dropPlugins(){
         delete p;
     }
     _plugins.clear();
-    _availablePlugins.clear();
 }
 
 void PluginManager::loadPlugins(){
@@ -94,21 +89,10 @@ void PluginManager::loadPlugins(){
       QDir dir(path);
       QStringList files = dir.entryList(QStringList("*.py"), QDir::Files);
 
-
-//    //load plugin
-//    QVariant ret = loader.call("load", QVariantList() << pluginPaths);
-//    QMap<QString, QVariant> pluginMap = ret.toMap();
-
-//    //if(!pluginMap.isEmpty())
-//     //   _pluginMenu.addSeparator();
-
-//    for(QMap<QString, QVariant>::iterator it = pluginMap.begin(); it != pluginMap.end(); ++it){
-
       foreach(QString fileName, files){
        DEBUG_LOW_LEVEL << fileName;
 
         QString plugin = QFileInfo (fileName).baseName ();
-       // _availablePlugins[fileName] = plugin;
         //add python plugin to file to path
         // TODO: fail
         //mainContext->evalFile(it.key());
@@ -117,8 +101,6 @@ void PluginManager::loadPlugins(){
         mainContext->evalScript(file.readAll());
 
        DEBUG_LOW_LEVEL << plugin;
-            //if(settings.getLoadStatus(plugin) == false)
-            //    continue;
 
             //get plugin info
             QString pluginConstructor = plugin + "()\n";
@@ -139,7 +121,7 @@ void PluginManager::loadPlugins(){
             DEBUG_LOW_LEVEL <<p->getName()<<  p->getAuthor() << p->getDescription() << p->getVersion();
 //            connect(p, SIGNAL(aboutToExecute()), this, SLOT(aboutToExecutePlugin()));
 //            connect(p, SIGNAL(executed()), this, SLOT(cleanUp()));
-//            connect(p, SIGNAL(executed()), this, SIGNAL(pluginExecuted()));
+            connect(p, SIGNAL(executed()), this, SIGNAL(pluginExecuted()));
            _plugins[plugin] = p;
 
            if (p->isEnabled())
@@ -171,3 +153,5 @@ PythonQtScriptingConsole* PluginManager::getConsole(QWidget* parent_){
     pyconsole->show();
     return pyconsole;
 }
+
+

@@ -38,11 +38,12 @@ enum Status {
 };
 }
 
-namespace Api
+namespace DeviceLocked
 {
 enum DeviceLockStatus {
-    DeviceUnlocked,
-    DeviceLocked
+    Unlocked,
+    Api,
+    Plugin
 };
 }
 

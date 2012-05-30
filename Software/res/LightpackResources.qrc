@@ -21,8 +21,7 @@
         <file>buttons/arrow_right_light_24px_hover.png</file>
         <file>buttons/arrow_right_light_24px_pressed.png</file>
     </qresource>
-    <qresource prefix="plugin">
+    <qresource prefix="/plugin">
         <file alias="BasePlugin.py">python/BasePlugin.py</file>
-        <file alias="PluginLoader.py">python/PluginLoader.py</file>
     </qresource>
 </RCC>

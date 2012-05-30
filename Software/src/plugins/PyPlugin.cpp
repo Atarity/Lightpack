@@ -30,48 +30,32 @@ using namespace SettingsScope;
 
 PyPlugin::PyPlugin(PythonQtObjectPtr plugin_,  QObject* parent_) :
 	QObject(parent_), _plugin(plugin_) {
-     _plugin.call("__init__", QVariantList()).toString();
     _name = _plugin.call("name", QVariantList()).toString();
 	_description = _plugin.call("description", QVariantList()).toString();
 	_author = _plugin.call("author", QVariantList()).toString();
 	_version = _plugin.call("version", QVariantList()).toString();
-
 }
 
 PyPlugin::~PyPlugin(){
 
 }
 
-
-
 void PyPlugin::execute(){
 
 	emit aboutToExecute();
-    //todo need thread
-  // QFuture<void> future = QtConcurrent::run(this, &PyPlugin::exec);
    QVariant ret = _plugin.call("run", QVariantList());
     //@todo use ret ???
 	emit executed();
 }
 
-void PyPlugin::exec()
-{
-    QVariant ret = _plugin.call("run", QVariantList());
-}
-
 void  PyPlugin::getSettings()
 {
-   //  QFuture<void> future = QtConcurrent::run(this, &PyPlugin::settings);
+    emit aboutToExecute();
     QVariant ret;
     ret =  _plugin.call("settings", QVariantList());
-
+    emit executed();
 }
-void  PyPlugin::settings()
-{
-    QVariant ret;
-    ret =  _plugin.call("settings", QVariantList());
 
-}
 QString PyPlugin::getName() const {
 	return _name;
 }

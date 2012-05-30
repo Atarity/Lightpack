@@ -145,12 +145,13 @@ signals:
     void updateProfile(QString profileName);
     void updateStatus(Backlight::Status status);
     void updateBacklight(Lightpack::Mode status);
-    void updateDeviceLockStatus(Api::DeviceLockStatus status);
+    void updateDeviceLockStatus(DeviceLocked::DeviceLockStatus status);
     void errorOnStartListening(QString errorMessage);
     void clearColorBuffers();
     void updateApiDeviceNumberOfLeds(int value);
 
 public slots:
+    void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status);
     void enableApiServer(bool isEnabled);
     void enableApiAuth(bool isEnabled);
     void updateApiPort(int port);
@@ -186,6 +187,7 @@ private:
     double hz;
     QString m_apiAuthKey;
     bool m_isAuthEnabled;
+    bool m_lockedPlugin;
 
     QTcpSocket *m_lockedClient;
     QMap <QTcpSocket*, ClientInfo> m_clients;

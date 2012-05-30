@@ -81,6 +81,7 @@ signals:
     void updateApiKey(QString key);
     void updateApiDeviceNumberOfLeds(int value);
     void getPluginConsole();
+    void reloadPlugins();
 
 public slots:
     void ledDeviceOpenSuccess(bool isSuccess);
@@ -88,7 +89,7 @@ public slots:
     void ledDeviceFirmwareVersionResult(const QString & fwVersion);
     void refreshAmbilightEvaluated(double updateResultMs);
 
-    void setDeviceLockViaAPI(Api::DeviceLockStatus status);
+    void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status);
     void setBacklightStatus(Backlight::Status);
     void setModeChanged(Lightpack::Mode);
     void backlightOn(); /* using in actions */
@@ -175,6 +176,8 @@ private slots:
 
     void on_pushButton_PluginInfo_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     void updateTrayAndActionStates();    
     void updateExpertModeWidgetsVisibility();
@@ -209,7 +212,7 @@ private:
     Ui::SettingsWindow *ui;
     // Main backlight status for all modes (Grab, MoodLamp, etc.)
     Backlight::Status m_backlightStatus;
-    Api::DeviceLockStatus m_deviceLockStatus;
+    DeviceLocked::DeviceLockStatus m_deviceLockStatus;
     Lightpack::Mode m_lightpackMode;
 
     AboutDialog *m_aboutDialog;

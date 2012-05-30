@@ -194,6 +194,14 @@ void ApiServer::updateApiKey(QString key)
     m_apiAuthKey = key;
 }
 
+void ApiServer::setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status)
+{
+    if (status == DeviceLocked::Plugin)
+        m_lockedPlugin = true;
+    else
+        m_lockedPlugin = false;
+}
+
 void ApiServer::incomingConnection(int socketDescriptor)
 {
     QTcpSocket *client = new QTcpSocket(this);
@@ -222,7 +230,7 @@ void ApiServer::clientDisconnected()
     {
         m_lockedClient = NULL;
 
-        emit updateDeviceLockStatus(Api::DeviceUnlocked);
+        emit updateDeviceLockStatus(DeviceLocked::Unlocked);
     }
     m_clients.remove(client);
 
@@ -444,11 +452,11 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdLock;
 
-            if (m_lockedClient == NULL)
+            if (m_lockedClient == NULL && !m_lockedPlugin)
             {
                 m_lockedClient = client;
 
-                emit updateDeviceLockStatus(Api::DeviceLocked);
+                emit updateDeviceLockStatus(DeviceLocked::Api);
 
                 result = CmdResultLock_Success;                
             } else {
@@ -471,7 +479,7 @@ void ApiServer::clientProcessCommands()
                 if (m_lockedClient == client)
                 {
                     m_lockedClient = NULL;
-                    emit updateDeviceLockStatus(Api::DeviceUnlocked);
+                    emit updateDeviceLockStatus(DeviceLocked::Unlocked);
                 }
                 result = CmdResultUnlock_Success;               
             }
@@ -912,6 +920,7 @@ void ApiServer::initPrivateVariables()
     m_apiAuthKey = Settings::getApiAuthKey();
     m_isAuthEnabled = Settings::isApiAuthEnabled();
 
+    m_lockedPlugin = false;
     m_lockedClient = NULL;
     m_isRequestBacklightStatusDone = true;
     m_backlightStatusResult = Backlight::StatusUnknown;
@@ -962,7 +971,7 @@ void ApiServer::stopListening()
 
     m_lockedClient = NULL;
 
-    emit updateDeviceLockStatus(Api::DeviceUnlocked);
+    emit updateDeviceLockStatus(DeviceLocked::Unlocked);
 
     QMap<QTcpSocket*, ClientInfo>::iterator i;
     for (i = m_clients.begin(); i != m_clients.end(); ++i)
