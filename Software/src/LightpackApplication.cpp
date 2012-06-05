@@ -145,6 +145,8 @@ void LightpackApplication::startBacklight()
     bool isBacklightEnabled = (m_backlightStatus == Backlight::StatusOn || m_backlightStatus == Backlight::StatusDeviceError);
     bool isCanStart = (isBacklightEnabled && m_deviceLockStatus == DeviceLocked::Unlocked);
 
+    m_pluginInterface->resultBacklightStatus(m_backlightStatus);
+
     Settings::setIsBacklightEnabled(isBacklightEnabled);
 
     switch (Settings::getLightpackMode())
@@ -470,15 +472,28 @@ void LightpackApplication::startPluginManager()
     connect(m_pluginInterface, SIGNAL(updateDeviceLockStatus(DeviceLocked::DeviceLockStatus)), m_apiServer, SLOT(setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus)));
     connect(m_apiServer, SIGNAL(updateDeviceLockStatus(DeviceLocked::DeviceLockStatus)), m_pluginInterface, SLOT(setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus)));
 
+    connect(m_pluginInterface, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDeviceFactory, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
+    connect(m_pluginInterface, SIGNAL(updateGamma(double)),           m_ledDeviceFactory, SLOT(setGamma(double)), Qt::QueuedConnection);
+    connect(m_pluginInterface, SIGNAL(updateBrightness(int)),         m_ledDeviceFactory, SLOT(setBrightness(int)), Qt::QueuedConnection);
+    connect(m_pluginInterface, SIGNAL(updateSmooth(int)),             m_ledDeviceFactory, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
+    connect(m_pluginInterface, SIGNAL(requestBacklightStatus()),       this, SLOT(requestBacklightStatus()));
 
      if (!m_noGui)
      {
          connect(m_pluginInterface, SIGNAL(updateLedsColors(QList<QRgb>)), m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)));
          connect(m_pluginInterface, SIGNAL(updateDeviceLockStatus(DeviceLocked::DeviceLockStatus)), m_settingsWindow, SLOT(setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus)));
+         connect(m_pluginInterface, SIGNAL(updateProfile(QString)),                        m_settingsWindow, SLOT(profileSwitch(QString)));
+         connect(m_pluginInterface, SIGNAL(updateStatus(Backlight::Status)),               m_settingsWindow, SLOT(setBacklightStatus(Backlight::Status)));
+
 
          connect(m_pluginManager,SIGNAL(updatePlugin(QList<PyPlugin*>)),m_settingsWindow,SLOT(updatePlugin(QList<PyPlugin*>)));
          connect(m_settingsWindow,SIGNAL(getPluginConsole()),this,SLOT(getConsole()));
          connect(m_settingsWindow,SIGNAL(reloadPlugins()),m_pluginManager,SLOT(loadPlugins()));
+     }
+     else
+     {
+         connect(m_pluginInterface, SIGNAL(updateProfile(QString)),                        this, SLOT(profileSwitch(QString)));
+         connect(m_pluginInterface, SIGNAL(updateStatus(Backlight::Status)),               this, SLOT(setStatusChanged(Backlight::Status)));
      }
 
      m_pluginManager->loadPlugins();
@@ -555,7 +570,9 @@ void LightpackApplication::settingsChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_grabManager->setGrabber(Settings::getGrabberType());
+     m_pluginInterface->changeProfile(Settings::getCurrentProfileName());
+
+     m_grabManager->setGrabber(Settings::getGrabberType());
      m_grabManager->setSlowdownTime(Settings::getGrabSlowdown());
      m_grabManager->setMinLevelOfSensivity(Settings::getGrabMinimumLevelOfSensitivity());
       m_grabManager->setAvgColorsOnAllLeds(Settings::isGrabAvgColorsEnabled());
@@ -610,4 +627,5 @@ void LightpackApplication::setColoredLedWidget(bool colored)
 void LightpackApplication::requestBacklightStatus()
 {
     m_apiServer->resultBacklightStatus(m_backlightStatus);
+    m_pluginInterface->resultBacklightStatus(m_backlightStatus);
 }

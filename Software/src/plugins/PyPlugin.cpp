@@ -30,6 +30,8 @@ using namespace SettingsScope;
 
 PyPlugin::PyPlugin(PythonQtObjectPtr plugin_,  QObject* parent_) :
 	QObject(parent_), _plugin(plugin_) {
+    if (this->isEnabled())
+        _plugin.call("init", QVariantList()).toString();
     _name = _plugin.call("name", QVariantList()).toString();
 	_description = _plugin.call("description", QVariantList()).toString();
 	_author = _plugin.call("author", QVariantList()).toString();
@@ -37,7 +39,8 @@ PyPlugin::PyPlugin(PythonQtObjectPtr plugin_,  QObject* parent_) :
 }
 
 PyPlugin::~PyPlugin(){
-
+    if (this->isEnabled())
+        _plugin.call("dispose", QVariantList()).toString();
 }
 
 void PyPlugin::execute(){

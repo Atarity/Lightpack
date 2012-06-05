@@ -85,6 +85,20 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     m_aboutDialog = new AboutDialog(this);
     m_speedTest = new SpeedTest();
 
+    ui->listWidget->setViewMode(QListView::IconMode);
+    ui->listWidget->setIconSize(QSize(64, 64));
+    ui->listWidget->setMovement(QListView::Static);
+    ui->listWidget->setMaximumWidth(110);
+    ui->listWidget->setMinimumWidth(110);
+    ui->listWidget->setSpacing(12);
+    ui->listWidget->setCurrentRow(0);
+    QTabBar* tabBar=qFindChild<QTabBar*>(ui->tabWidget);
+    tabBar->hide();
+
+    connect(ui->listWidget,
+            SIGNAL(currentRowChanged(int)),
+            this, SLOT(changePage(int)));
+
     // Request firmware version of the device to show message about update the firmware
     QTimer::singleShot(1000, this, SIGNAL(requestFirmwareVersion()));
 
@@ -119,6 +133,11 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     adjustSizeAndMoveCenter();   
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
+}
+
+void SettingsWindow::changePage(int page)
+{
+    ui->tabWidget->setCurrentIndex(page);
 }
 
 SettingsWindow::~SettingsWindow()
@@ -316,8 +335,10 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
     if(Settings::isExpertModeEnabled()) {
         if (ui->tabWidget->indexOf(ui->tabDevTab) < 0)
             ui->tabWidget->addTab(ui->tabDevTab, tr("Dev tab"));
+            ui->listWidget->setItemHidden(ui->listWidget->item(4),false);
     } else {
         ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabDevTab));
+        ui->listWidget->setItemHidden(ui->listWidget->item(4),true);
     }
 
     // Minimum level of sensitivity for ambilight mode

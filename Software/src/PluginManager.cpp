@@ -48,6 +48,7 @@ void PluginManager::init(LightpackPluginInterface *pluginInterface, QWidget* set
     mainContext->addObject("Lightpack", pluginInterface);
     mainContext->addObject("SettingsBox", settingsBox);
 
+
     // -----------------------------------------------------------------
     // Alternative 1: make CustomObject known and use decorators for wrapping:
     // -----------------------------------------------------------------

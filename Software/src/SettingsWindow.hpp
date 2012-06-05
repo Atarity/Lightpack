@@ -121,6 +121,8 @@ private slots:
     void showSettings(); /* using in actions */
     void hideSettings(); /* using in iconActivated(..) */
 
+    void changePage(int page);
+
     void quit(); /* using in actions */
 
     void switchBacklightOnOff();
