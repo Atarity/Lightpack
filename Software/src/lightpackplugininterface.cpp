@@ -1,6 +1,10 @@
+#include <QtGui>
 #include "LightpackPluginInterface.hpp"
-#include "ApiServer.hpp"
+
 #include "Settings.hpp"
+#include "version.h"
+#include "debug.h"
+
 
 using namespace SettingsScope;
 
@@ -14,7 +18,6 @@ LightpackPluginInterface::LightpackPluginInterface(QObject *parent) :
     initColors(10);
     m_timerLock = new QTimer(this);
     connect(m_timerLock, SIGNAL(timeout()), this, SLOT(timeoutLock()));
-
 }
 
 LightpackPluginInterface::~LightpackPluginInterface()
@@ -78,18 +81,32 @@ void LightpackPluginInterface::changeProfile(QString profile)
     emit ChangeProfile(profile);
 }
 
-void LightpackPluginInterface::setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status)
+void LightpackPluginInterface::refreshAmbilightEvaluated(double updateResultMs)
 {
-    if (status == DeviceLocked::Unlocked)
-    {
-        lockSessionKey = "";
-        emit ChangeLockStatus(false);
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << updateResultMs;
+
+    double secs = updateResultMs / 1000;
+    hz = 0;
+
+    if(secs != 0){
+        hz = 1 / secs;
     }
-    if (status == DeviceLocked::Api)
-    {
-        lockSessionKey = "LockApi";
-        emit ChangeLockStatus(true);
-    }
+}
+
+void LightpackPluginInterface::refreshScreenRect(QRect rect)
+{
+    screen = rect;
+}
+
+void LightpackPluginInterface::updateColors(const QList<QRgb> & colors)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+    m_colors = colors;
+}
+
+QString LightpackPluginInterface::Version()
+{
+    return API_VERSION;
 }
 
 // TODO identification plugin locked
@@ -97,6 +114,16 @@ QString LightpackPluginInterface::GetSessionKey()
 {
     return QUuid::createUuid().toString();
 }
+
+int LightpackPluginInterface::CheckLock(QString sessionKey)
+{
+    if (lockSessionKey=="")
+        return 0;
+    if (lockSessionKey==sessionKey)
+        return 1;
+    return -1;
+}
+
 
 //TODO: lock unlock
 bool LightpackPluginInterface::Lock(QString sessionKey)
@@ -106,7 +133,10 @@ bool LightpackPluginInterface::Lock(QString sessionKey)
             lockSessionKey = sessionKey;
             lockAlive = true;
             m_timerLock->start(5000); // check in 5000 ms
-            emit updateDeviceLockStatus(DeviceLocked::Plugin);
+            if (sessionKey.indexOf("API", 0) != -1)
+                emit updateDeviceLockStatus(DeviceLocked::Api);
+            else
+                emit updateDeviceLockStatus(DeviceLocked::Plugin);
             emit ChangeLockStatus (true);
             return true;
         } else
@@ -122,9 +152,12 @@ bool LightpackPluginInterface::UnLock(QString sessionKey)
             emit updateDeviceLockStatus(DeviceLocked::Unlocked);
             emit ChangeLockStatus(false);
             return true;
-        } else {
-            return false;
+        } else if (lockSessionKey == "")
+        {
+            return true;
         }
+        return false;
+
 }
 // TODO: setcolor
 bool LightpackPluginInterface::SetColors(QString sessionKey, int r, int g, int b)
@@ -212,6 +245,68 @@ bool LightpackPluginInterface::SetStatus(QString sessionKey, int status)
          return false;
 }
 
+bool LightpackPluginInterface::SetLeds(QString sessionKey, QList<QRect> leds)
+{
+    if (lockSessionKey!=sessionKey) return false;
+    int num =0;
+     foreach(QRect rectLed, leds){
+        Settings::setLedPosition(num, QPoint(rectLed.x(),rectLed.y()));
+        Settings::setLedSize(num,QSize(rectLed.width(),rectLed.height()));
+        ++ num;
+     }
+    QString profile = Settings::getCurrentProfileName();
+    emit updateProfile(profile);
+    return true;
+}
+
+bool LightpackPluginInterface::NewProfile(QString sessionKey, QString profile)
+{
+    if (lockSessionKey!=sessionKey) return false;
+
+     Settings::loadOrCreateProfile(profile);
+     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "OK:" << profile;
+     emit updateProfile(profile);
+
+     return true;
+}
+
+bool LightpackPluginInterface::DeleteProfile(QString sessionKey, QString profile)
+{
+    if (lockSessionKey!=sessionKey) return false;
+    QStringList profiles = Settings::findAllProfiles();
+    if (profiles.contains(profile))
+    {
+        Settings::loadOrCreateProfile(profile);
+        Settings::removeCurrentProfile();
+        QString profileLast = Settings::getLastProfileName();
+        emit updateProfile(profileLast);
+        return true;
+    }
+    else
+        return false;
+}
+
+bool LightpackPluginInterface::SetBacklight(QString sessionKey, int backlight)
+{
+    if (lockSessionKey!=sessionKey) return false;
+
+    Lightpack::Mode status =  Lightpack::UnknowMode;
+
+    if (backlight == 1)
+        status = Lightpack::AmbilightMode;
+    else if (backlight == 2)
+        status = Lightpack::MoodLampMode;
+
+    if (status != Lightpack::UnknowMode)
+    {
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "OK:" << status;
+
+        emit updateBacklight(status);
+        return true;
+    }
+    return false;
+}
+
 int LightpackPluginInterface::GetCountLeds()
 {
     return m_colors.count();
@@ -245,16 +340,18 @@ int LightpackPluginInterface::GetStatus()
                 return 0;
                 break;
             case Backlight::StatusDeviceError:
-            default:
                 return -1;
+                break;
+            default:
+                return -2;
                 break;
             }
         } else {
             m_isRequestBacklightStatusDone = true;
-            return -1;
+            return -2;
         }
     }
-   return -1;
+   return -2;
 }
 
 bool LightpackPluginInterface::GetStatusAPI()
@@ -270,6 +367,48 @@ QStringList LightpackPluginInterface::GetProfiles()
 QString LightpackPluginInterface::GetProfile()
 {
     return Settings::getCurrentProfileName();
+}
+
+QList<QRect> LightpackPluginInterface::GetLeds()
+{
+    QList<QRect> leds;
+    for (int i = 0; i < Settings::getNumberOfLeds(Settings::getConnectedDevice()); i++)
+    {
+        QPoint top = Settings::getLedPosition(i);
+        QSize size = Settings::getLedSize(i);
+        leds << QRect(top.x(),top.y(),size.width(),size.height());
+    }
+    return leds;
+}
+
+QList<QRgb> LightpackPluginInterface::GetColors()
+{
+   return m_colors;
+}
+
+double LightpackPluginInterface::GetFPS()
+{
+    return hz;
+}
+
+QRect LightpackPluginInterface::GetScreenSize()
+{
+    return screen;
+}
+
+int LightpackPluginInterface::GetBacklight()
+{
+    Lightpack::Mode mode =  Settings::getLightpackMode();
+
+    switch (mode)
+    {
+    case Lightpack::AmbilightMode:
+        return 1;
+        break;
+    case Lightpack::MoodLampMode:
+        return 2;
+        break;
+    }
 }
 
 // TODO: settings (global or profile?)
@@ -292,7 +431,5 @@ QVariant LightpackPluginInterface::GetSettingMain(QString key)
 {
     return Settings::valueMain(key);
 }
-
-
 
 

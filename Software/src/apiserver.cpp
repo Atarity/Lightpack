@@ -28,6 +28,7 @@
 #include <stdlib.h>
 
 #include "ApiServer.hpp"
+#include "LightpackPluginInterface.hpp"
 #include "ApiServerSetColorTask.hpp"
 #include "Settings.hpp"
 #include "TimeEvaluations.hpp"
@@ -124,7 +125,7 @@ const int ApiServer::SignalWaitTimeoutMs = 1000; // 1 second
 
 ApiServer::ApiServer(QObject *parent)
     : QTcpServer(parent)
-{    
+{
     initPrivateVariables();
     initApiSetColorTask();
     initHelpMessage();
@@ -149,6 +150,16 @@ ApiServer::ApiServer(quint16 port, QObject *parent)
         qFatal("%s listen(Any, %d) fail", Q_FUNC_INFO, m_apiPort);
     }
 }
+
+void ApiServer::setInterface(LightpackPluginInterface *lightpackInterface)
+{
+    QString test = lightpack->Version();
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << test;
+    lightpack = lightpackInterface;
+    connect(m_apiSetColorTask, SIGNAL(taskParseSetColorDone(QList<QRgb>)), lightpack, SIGNAL(updateLedsColors(QList<QRgb>)), Qt::QueuedConnection);
+
+}
+
 
 void ApiServer::firstStart()
 {
@@ -194,14 +205,6 @@ void ApiServer::updateApiKey(QString key)
     m_apiAuthKey = key;
 }
 
-void ApiServer::setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status)
-{
-    if (status == DeviceLocked::Plugin)
-        m_lockedPlugin = true;
-    else
-        m_lockedPlugin = false;
-}
-
 void ApiServer::incomingConnection(int socketDescriptor)
 {
     QTcpSocket *client = new QTcpSocket(this);
@@ -209,6 +212,7 @@ void ApiServer::incomingConnection(int socketDescriptor)
 
     ClientInfo cs;
     cs.isAuthorized = false;
+    cs.sessionKey = "API"+lightpack->GetSessionKey();
 
     m_clients.insert(client, cs);
 
@@ -226,12 +230,10 @@ void ApiServer::clientDisconnected()
 
     DEBUG_LOW_LEVEL << "Client disconnected:" << client->peerAddress().toString();
 
-    if (m_lockedClient == client)
-    {
-        m_lockedClient = NULL;
+    QString sessionKey = m_clients[client].sessionKey;
+    if (lightpack->CheckLock(sessionKey)==1)
+        lightpack->UnLock(sessionKey);
 
-        emit updateDeviceLockStatus(DeviceLocked::Unlocked);
-    }
     m_clients.remove(client);
 
     disconnect(client, SIGNAL(readyRead()), this, SLOT(clientProcessCommands()));
@@ -248,6 +250,9 @@ void ApiServer::clientProcessCommands()
 
     while (m_clients.contains(client) && client->canReadLine())
     {
+        QString sessionKey =  m_clients[client].sessionKey;
+        int m_lockedClient = lightpack->CheckLock(sessionKey);
+
         QByteArray cmdBuffer = client->readLine().trimmed();
         API_DEBUG_OUT << cmdBuffer;
 
@@ -321,50 +326,17 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdGetStatus;
 
-            if (m_isRequestBacklightStatusDone)
-            {
-                m_isRequestBacklightStatusDone = false;
-                m_backlightStatusResult = Backlight::StatusUnknown;
-
-                emit requestBacklightStatus();
-
-                // Wait signal from SettingsWindow with status of backlight
-                // or if timeout -- result will be unknown
-                m_time.restart();
-                while (m_isRequestBacklightStatusDone == false && m_time.elapsed() < SignalWaitTimeoutMs)
-                {
-                    QApplication::processEvents(QEventLoop::WaitForMoreEvents, SignalWaitTimeoutMs);
-                }
-
-                if (m_isRequestBacklightStatusDone)
-                {
-                    switch (m_backlightStatusResult)
-                    {
-                    case Backlight::StatusOn:
-                        result = CmdResultStatus_On;
-                        break;
-                    case Backlight::StatusOff:
-                        result = CmdResultStatus_Off;
-                        break;
-                    case Backlight::StatusDeviceError:
-                        result = CmdResultStatus_DeviceError;
-                        break;
-                    default:
-                        result = CmdResultStatus_Unknown;
-                        break;
-                    }
-                } else {
-                    m_isRequestBacklightStatusDone = true;
-                    result = CmdResultStatus_Unknown;
-                    qWarning() << Q_FUNC_INFO << "Timeout waiting resultBacklightStatus() signal from SettingsWindow";
-                }
-            }
+            int status = lightpack->GetStatus();
+            if (status==1) result = CmdResultStatus_On;
+            if (status==0) result = CmdResultStatus_Off;
+            if (status==-1) result =  CmdResultStatus_DeviceError;
+            if (status==-2) result =  CmdResultStatus_Unknown;
         }
         else if (cmdBuffer == CmdGetStatusAPI)
         {
             API_DEBUG_OUT << CmdGetStatusAPI;
 
-            if (m_lockedClient != NULL)
+            if (lightpack->GetStatusAPI())
                 result = CmdResultStatusAPI_Busy;
             else
                 result = CmdResultStatusAPI_Idle;
@@ -373,7 +345,7 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdGetProfiles;
 
-            QStringList profiles = Settings::findAllProfiles();
+            QStringList profiles = lightpack->GetProfiles();
 
             result = ApiServer::CmdResultProfiles;
 
@@ -385,13 +357,13 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdGetProfile;
 
-            result = CmdResultProfile + Settings::getCurrentProfileName() + "\r\n";
+            result = CmdResultProfile + lightpack->GetProfile() + "\r\n";
         }
         else if (cmdBuffer == CmdGetCountLeds)
         {
             API_DEBUG_OUT << CmdGetCountLeds;
 
-            result = QString("%1%2\r\n").arg(CmdResultCountLeds).arg(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
+            result = QString("%1%2\r\n").arg(CmdResultCountLeds).arg(lightpack->GetCountLeds());
         }
         else if (cmdBuffer == CmdGetLeds)
         {
@@ -413,6 +385,8 @@ void ApiServer::clientProcessCommands()
             API_DEBUG_OUT << CmdGetColors;
             result = ApiServer::CmdResultGetColors;
 
+            QList<QRgb> curentColors = lightpack->GetColors();
+
             for (int i = 0; i < curentColors.count(); i++)
             {
                 QColor color(curentColors[i]);
@@ -424,11 +398,13 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdGetFPS;
 
-            result = QString("%1%2\r\n").arg(CmdResultFPS).arg(hz);
+            result = QString("%1%2\r\n").arg(CmdResultFPS).arg(lightpack->GetFPS());
         }
         else if (cmdBuffer == CmdGetScreenSize)
         {
             API_DEBUG_OUT << CmdGetScreenSize;
+
+            QRect screen = lightpack->GetScreenSize();
 
             result = QString("%1%2,%3\r\n").arg(CmdResultScreenSize).arg(screen.width()).arg(screen.height());
         }
@@ -452,43 +428,33 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdLock;
 
-            if (m_lockedClient == NULL && !m_lockedPlugin)
+            bool res = lightpack->Lock(sessionKey);
+
+            if (res)
             {
-                m_lockedClient = client;
-
-                emit updateDeviceLockStatus(DeviceLocked::Api);
-
-                result = CmdResultLock_Success;                
+                m_clients[client].isAuthorized = true;
+                result = CmdResultLock_Success;
             } else {
-                if (m_lockedClient == client)
-                {
-                    result = CmdResultLock_Success;
-                } else {
                     result = CmdResultLock_Busy;
-                }
             }
         }
         else if (cmdBuffer == CmdUnlock)
         {
             API_DEBUG_OUT << CmdUnlock;
 
-            if (m_lockedClient == NULL)
+            bool res = lightpack->UnLock(sessionKey);
+            if (!res)
             {
-                result = CmdResultUnlock_NotLocked;
+                result = CmdResultLock_Busy;
             } else {
-                if (m_lockedClient == client)
-                {
-                    m_lockedClient = NULL;
-                    emit updateDeviceLockStatus(DeviceLocked::Unlocked);
-                }
-                result = CmdResultUnlock_Success;               
+                result = CmdResultUnlock_Success;
             }
         }
         else if (cmdBuffer.startsWith(CmdSetColor))
         {
             API_DEBUG_OUT << CmdSetColor;
 
-            if (m_lockedClient == client)
+            if (m_lockedClient == 1)
             {
                 cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
                 API_DEBUG_OUT << QString(cmdBuffer);
@@ -529,7 +495,7 @@ void ApiServer::clientProcessCommands()
                     qWarning() << Q_FUNC_INFO << "Task setcolor is not completed (you should increase the delay to not skip commands), skip setcolor.";
                 }
             }
-            else if (m_lockedClient == NULL)
+            else if (m_lockedClient == 0)
             {
                 result = CmdSetResult_NotLocked;
             }
@@ -542,7 +508,7 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdSetGamma;
 
-            if (m_lockedClient == client)
+            if (m_lockedClient == 1)
             {
                 cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
                 API_DEBUG_OUT << QString(cmdBuffer);
@@ -559,12 +525,9 @@ void ApiServer::clientProcessCommands()
 
                     if (ok)
                     {
-                        if (gamma >= Profile::Device::GammaMin && gamma <= Profile::Device::GammaMax)
+                        API_DEBUG_OUT << CmdSetGamma << "OK:" << gamma;
+                        if (lightpack->SetGamma(sessionKey,gamma))
                         {
-                            API_DEBUG_OUT << CmdSetGamma << "OK:" << gamma;
-
-                            emit updateGamma(gamma);
-
                             result = CmdSetResult_Ok;
                         } else {
                             API_DEBUG_OUT << CmdSetGamma << "Error (max min test fail):" << gamma;
@@ -576,7 +539,7 @@ void ApiServer::clientProcessCommands()
                     }
                 }
             }
-            else if (m_lockedClient == NULL)
+            else if (m_lockedClient == 0)
             {
                 result = CmdSetResult_NotLocked;
             }
@@ -589,7 +552,7 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdSetBrightness;
 
-            if (m_lockedClient == client)
+            if (m_lockedClient == 1)
             {
                 cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
                 API_DEBUG_OUT << QString(cmdBuffer);
@@ -606,12 +569,9 @@ void ApiServer::clientProcessCommands()
 
                     if (ok)
                     {
-                        if (brightness >= Profile::Device::BrightnessMin && brightness <= Profile::Device::BrightnessMax)
+                        if (lightpack->SetBrightness(sessionKey,brightness))
                         {
                             API_DEBUG_OUT << CmdSetBrightness << "OK:" << brightness;
-
-                            emit updateBrightness(brightness);
-
                             result = CmdSetResult_Ok;
                         } else {
                             API_DEBUG_OUT << CmdSetBrightness << "Error (max min test fail):" << brightness;
@@ -623,7 +583,7 @@ void ApiServer::clientProcessCommands()
                     }
                 }
             }
-            else if (m_lockedClient == NULL)
+            else if (m_lockedClient == 0)
             {
                 result = CmdSetResult_NotLocked;
             }
@@ -636,7 +596,7 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdSetSmooth;
 
-            if (m_lockedClient == client)
+            if (m_lockedClient == 1)
             {
                 cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
                 API_DEBUG_OUT << QString(cmdBuffer);
@@ -653,12 +613,9 @@ void ApiServer::clientProcessCommands()
 
                     if (ok)
                     {
-                        if (smooth >= Profile::Device::SmoothMin && smooth <= Profile::Device::SmoothMax)
+                        if (lightpack->SetSmooth(sessionKey,smooth))
                         {
                             API_DEBUG_OUT << CmdSetSmooth << "OK:" << smooth;
-
-                            emit updateSmooth(smooth);
-
                             result = CmdSetResult_Ok;
                         } else {
                             API_DEBUG_OUT << CmdSetSmooth << "Error (max min test fail):" << smooth;
@@ -670,7 +627,7 @@ void ApiServer::clientProcessCommands()
                     }
                 }
             }
-            else if (m_lockedClient == NULL)
+            else if (m_lockedClient == 0)
             {
                 result = CmdSetResult_NotLocked;
             }
@@ -683,27 +640,21 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdSetProfile;
 
-            if (m_lockedClient == client)
+            if (m_lockedClient == 1)
             {
                 cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
                 API_DEBUG_OUT << QString(cmdBuffer);
-
                 QString setProfileName = QString(cmdBuffer);
-                QStringList profiles = Settings::findAllProfiles();
-
-                if (profiles.contains(setProfileName))
+                if (lightpack->SetProfile(sessionKey, setProfileName))
                 {
                     API_DEBUG_OUT << CmdSetProfile << "OK:" << setProfileName;
-
-                    emit updateProfile(setProfileName);
-
                     result = CmdSetResult_Ok;
                 } else {
                     API_DEBUG_OUT << CmdSetProfile << "Error (profile not found):" << setProfileName;
                     result = CmdSetResult_Error;
                 }
             }
-            else if (m_lockedClient == NULL)
+            else if (m_lockedClient == 0)
             {
                 result = CmdSetResult_NotLocked;
             }
@@ -716,11 +667,12 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdSetLeds;
 
-            if (m_lockedClient == client)
+            if (m_lockedClient == 1)
             {
                 cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
                 API_DEBUG_OUT << QString(cmdBuffer);
-                int countleds = Settings::getNumberOfLeds(Settings::getConnectedDevice());
+                int countleds = lightpack->GetCountLeds();
+                QList<QRect> rectLeds;
                 QStringList leds = ((QString)cmdBuffer).split(";");
                 for (int i = 0; i < leds.size(); ++i)
                 {
@@ -743,17 +695,15 @@ void ApiServer::clientProcessCommands()
                              }
                              if ((ok)&&(num>0)&&(num<countleds))
                              {
-                                 Settings::setLedPosition(num, QPoint(x,y));
-                                 Settings::setLedSize(num,QSize(w,h));
+                                 rectLeds << QRect(x,y,w,h);
                              }
                         }
                     }
                 }
-                QString profile = Settings::getCurrentProfileName();
-                emit updateProfile(profile);
+                lightpack->SetLeds(sessionKey,rectLeds);
                 result = CmdSetResult_Ok;
             }
-            else if (m_lockedClient == NULL)
+            else if (m_lockedClient == 0)
             {
                 result = CmdSetResult_NotLocked;
             }
@@ -766,17 +716,20 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdNewProfile;
 
-            if (m_lockedClient == client)
+            if (m_lockedClient == 1)
             {
                 cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
                 API_DEBUG_OUT << QString(cmdBuffer);
                 QString newProfileName = QString(cmdBuffer);
-                Settings::loadOrCreateProfile(newProfileName);
-                 API_DEBUG_OUT << CmdNewProfile << "OK:" << newProfileName;
-                 emit updateProfile(newProfileName);
-                 result = CmdSetResult_Ok;
+                if (lightpack->NewProfile(sessionKey, newProfileName))
+                {
+                     API_DEBUG_OUT << CmdNewProfile << "OK:" << newProfileName;
+                    result = CmdSetResult_Ok;
+                }
+                else
+                    result = CmdSetResult_Error;
             }
-            else if (m_lockedClient == NULL)
+            else if (m_lockedClient == 0)
             {
                 result = CmdSetResult_NotLocked;
             }
@@ -789,28 +742,23 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdDeleteProfile;
 
-            if (m_lockedClient == client)
+            if (m_lockedClient == 1)
             {
                 cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
                 API_DEBUG_OUT << QString(cmdBuffer);
 
                 QString deleteProfileName = QString(cmdBuffer);
-                QStringList profiles = Settings::findAllProfiles();
 
-                if (profiles.contains(deleteProfileName))
+                if (lightpack->DeleteProfile(sessionKey, deleteProfileName))
                 {
                     API_DEBUG_OUT << CmdDeleteProfile << "OK:" << deleteProfileName;
-                    Settings::loadOrCreateProfile(deleteProfileName);
-                    Settings::removeCurrentProfile();
-                    QString profile = Settings::getLastProfileName();
-                    emit updateProfile(profile);
                     result = CmdSetResult_Ok;
                 } else {
                     API_DEBUG_OUT << CmdDeleteProfile << "Error (profile not found):" << deleteProfileName;
                     result = CmdSetResult_Error;
                 }
             }
-            else if (m_lockedClient == NULL)
+            else if (m_lockedClient == 0)
             {
                 result = CmdSetResult_NotLocked;
             }
@@ -823,23 +771,23 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdSetStatus;
 
-            if (m_lockedClient == client)
+            if (m_lockedClient == 1)
             {
                 cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
                 API_DEBUG_OUT << QString(cmdBuffer);
 
-                Backlight::Status status = Backlight::StatusUnknown;
+                int status = -1;
 
                 if (cmdBuffer == CmdSetStatus_On)
-                    status = Backlight::StatusOn;
+                    status =1;
                 else if (cmdBuffer == CmdSetStatus_Off)
-                    status = Backlight::StatusOff;
+                    status = 0;
 
-                if (status != Backlight::StatusUnknown)
+                if (status != -1)
                 {
                     API_DEBUG_OUT << CmdSetStatus << "OK:" << status;
 
-                    emit updateStatus(status);
+                    lightpack->SetStatus(sessionKey,status);
 
                     result = CmdSetResult_Ok;
                 } else {
@@ -847,7 +795,7 @@ void ApiServer::clientProcessCommands()
                     result = CmdSetResult_Error;
                 }
             }
-            else if (m_lockedClient == NULL)
+            else if (m_lockedClient == 0)
             {
                 result = CmdSetResult_NotLocked;
             }
@@ -860,31 +808,29 @@ void ApiServer::clientProcessCommands()
         {
             API_DEBUG_OUT << CmdSetBacklight;
 
-            if (m_lockedClient == client)
+            if (m_lockedClient == 1)
             {
                 cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
                 API_DEBUG_OUT << QString(cmdBuffer);
 
-                Lightpack::Mode status =  Lightpack::UnknowMode;
+                int status =  0;
 
                 if (cmdBuffer == CmdSetBacklight_Ambilight)
-                    status = Lightpack::AmbilightMode;
+                    status = 1;
                 else if (cmdBuffer == CmdSetBacklight_Moodlamp)
-                    status = Lightpack::MoodLampMode;
+                    status = 2;
 
-                if (status != Lightpack::UnknowMode)
+                if (status != 0)
                 {
                     API_DEBUG_OUT << CmdSetBacklight << "OK:" << status;
-
-                    emit updateBacklight(status);
-
+                    lightpack->SetBacklight(sessionKey,status);
                     result = CmdSetResult_Ok;
                 } else {
                     API_DEBUG_OUT << CmdSetBacklight << "Error (status not recognized):" << status;
                     result = CmdSetResult_Error;
                 }
             }
-            else if (m_lockedClient == NULL)
+            else if (m_lockedClient == 0)
             {
                 result = CmdSetResult_NotLocked;
             }
@@ -908,22 +854,11 @@ void ApiServer::taskSetColorIsSuccess(bool isSuccess)
     m_isTaskSetColorParseSuccess = isSuccess;
 }
 
-void ApiServer::resultBacklightStatus(Backlight::Status status)
-{
-    m_isRequestBacklightStatusDone = true;
-    m_backlightStatusResult = status;
-}
-
 void ApiServer::initPrivateVariables()
 {
     m_apiPort = Settings::getApiPort();
     m_apiAuthKey = Settings::getApiAuthKey();
     m_isAuthEnabled = Settings::isApiAuthEnabled();
-
-    m_lockedPlugin = false;
-    m_lockedClient = NULL;
-    m_isRequestBacklightStatusDone = true;
-    m_backlightStatusResult = Backlight::StatusUnknown;
 }
 
 void ApiServer::initApiSetColorTask()
@@ -933,13 +868,9 @@ void ApiServer::initApiSetColorTask()
     m_apiSetColorTaskThread = new QThread();
     m_apiSetColorTask = new ApiServerSetColorTask();
 
-    connect(m_apiSetColorTask, SIGNAL(taskParseSetColorDone(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)), Qt::QueuedConnection);
 
     connect(m_apiSetColorTask, SIGNAL(taskParseSetColorIsSuccess(bool)), this, SLOT(taskSetColorIsSuccess(bool)), Qt::QueuedConnection);
-
     connect(this, SIGNAL(startParseSetColorTask(QByteArray)), m_apiSetColorTask, SLOT(startParseSetColorTask(QByteArray)), Qt::QueuedConnection);
-    connect(this, SIGNAL(updateApiDeviceNumberOfLeds(int)),   m_apiSetColorTask, SLOT(setApiDeviceNumberOfLeds(int)), Qt::QueuedConnection);
-    connect(this, SIGNAL(clearColorBuffers()),                m_apiSetColorTask, SLOT(reinitColorBuffers()));
 
     m_apiSetColorTask->moveToThread(m_apiSetColorTaskThread);
     m_apiSetColorTaskThread->start();
@@ -969,14 +900,15 @@ void ApiServer::stopListening()
     // Closes the server. The server will no longer listen for incoming connections.
     close();
 
-    m_lockedClient = NULL;
-
-    emit updateDeviceLockStatus(DeviceLocked::Unlocked);
-
     QMap<QTcpSocket*, ClientInfo>::iterator i;
     for (i = m_clients.begin(); i != m_clients.end(); ++i)
     {
+
         QTcpSocket * client = dynamic_cast<QTcpSocket*>(i.key());
+
+        QString sessionKey = m_clients[client].sessionKey;
+        if (lightpack->CheckLock(sessionKey)==1)
+            lightpack->UnLock(sessionKey);
 
         disconnect(client, SIGNAL(readyRead()), this, SLOT(clientProcessCommands()));
         disconnect(client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
@@ -1190,27 +1122,4 @@ void ApiServer::initShortHelpMessage()
     m_shortHelpMessage += "\r\n";
     m_shortHelpMessage += "Detailed version is available by \"help\" command. \r\n";
     m_shortHelpMessage += "\r\n";
-}
-
-void ApiServer::updateColors(const QList<QRgb> & colors)
-{
-    DEBUG_MID_LEVEL << Q_FUNC_INFO;
-    curentColors = colors;
-}
-
-void ApiServer::refreshAmbilightEvaluated(double updateResultMs)
-{
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << updateResultMs;
-
-    double secs = updateResultMs / 1000;
-    hz = 0;
-
-    if(secs != 0){
-        hz = 1 / secs;
-    }
-}
-
-void ApiServer::refreshScreenRect(QRect rect)
-{
-    screen = rect;
 }

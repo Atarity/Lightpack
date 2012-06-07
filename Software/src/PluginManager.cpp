@@ -1,5 +1,8 @@
+#include <QtGui>
+
 #include "PluginManager.hpp"
 #include "LightpackPluginInterface.hpp"
+#include "debug.h"
 #include "PythonQt.h"
 #include "PythonQtImporter.h"
 #include "PythonQt_QtAll.h"
@@ -18,7 +21,6 @@ PluginManager::PluginManager(QObject *parent) :
         PythonQt_QtAll::init();
 
         mainContext = new PythonQtObjectPtr(PythonQt::self()->getMainModule());
-
 
         mainContext->evalScript(QString("import sys\n"));
         mainContext->evalScript("sys.path.append(':/plugin')\n");
@@ -48,6 +50,7 @@ void PluginManager::init(LightpackPluginInterface *pluginInterface, QWidget* set
     mainContext->addObject("Lightpack", pluginInterface);
     mainContext->addObject("SettingsBox", settingsBox);
 
+ QString test = pluginInterface->GetSessionKey();
 
     // -----------------------------------------------------------------
     // Alternative 1: make CustomObject known and use decorators for wrapping:

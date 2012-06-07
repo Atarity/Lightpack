@@ -2,12 +2,13 @@
 #define PLUGINMANAGER_HPP
 
 #include <QObject>
-#include "LightpackPluginInterface.hpp"
+//#include "LightpackPluginInterface.hpp"
 #include "PythonQt.h"
 #include "gui/PythonQtScriptingConsole.h"
 
 class PyPlugin;
 class PythonQtScriptingConsole;
+class LightpackPluginInterface;
 
 class PluginManager : public QObject
 {

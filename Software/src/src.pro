@@ -80,14 +80,8 @@ macx{
 INCLUDEPATH += ./hidapi ./grab ./alienfx ./
 
 SOURCES += \
-    LightpackApplication.cpp \
-    main.cpp \
-    SettingsWindow.cpp \
-    Settings.cpp \
-    AboutDialog.cpp \
-    GrabManager.cpp \
-    GrabWidget.cpp \
-    GrabConfigWidget.cpp \
+    LightpackApplication.cpp  main.cpp   SettingsWindow.cpp  Settings.cpp \
+    AboutDialog.cpp   GrabManager.cpp  GrabWidget.cpp  GrabConfigWidget.cpp \
     SpeedTest.cpp \
     LedDeviceFactory.cpp \
     LedDeviceLightpack.cpp \
@@ -103,11 +97,11 @@ SOURCES += \
     grab/QtGrabberEachWidget.cpp \
     grab/MacOSGrabber.cpp \
     grab/D3D9Grabber.cpp \
+    LightpackPluginInterface.cpp \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
     LightpackMath.cpp \
     MoodLampManager.cpp \
-    LightpackPluginInterface.cpp \
     PluginManager.cpp \
     plugins/PyPlugin.cpp \
     AboutPluginDialog.cpp
@@ -143,21 +137,14 @@ HEADERS += \
     grab/WinAPIGrabber.hpp \
     grab/WinAPIGrabberEachWidget.hpp \
     defs.h \
-    enums.hpp \
-    ApiServer.hpp \
-    ApiServerSetColorTask.hpp \
+    enums.hpp     LightpackPluginInterface.hpp     ApiServer.hpp     ApiServerSetColorTask.hpp \
     hidapi/hidapi.h \
     ../../CommonHeaders/LIGHTPACK_HW.h \
     ../../CommonHeaders/COMMANDS.h \
     ../../CommonHeaders/USB_ID.h \
     grab/D3D9Grabber.hpp \
     LightpackMath.hpp \
-    StructRgb.hpp \
-    MoodLampManager.hpp \
-    LightpackPluginInterface.hpp \
-    PluginManager.hpp \
-    plugins/PyPlugin.h \
-    AboutPluginDialog.hpp
+    StructRgb.hpp     MoodLampManager.hpp     PluginManager.hpp     plugins/PyPlugin.h     AboutPluginDialog.hpp
 
 
 FORMS += SettingsWindow.ui \
@@ -191,5 +178,4 @@ include (../PythonQt/build/common.prf )
 include (../PythonQt/build/PythonQt.prf )
 include (../PythonQt/build/PythonQt_QtAll.prf )
 
-OTHER_FILES +=
 

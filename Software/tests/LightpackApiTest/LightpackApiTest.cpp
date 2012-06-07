@@ -30,6 +30,7 @@
 
 #include "debug.h"
 #include "ApiServer.hpp"
+#include "LightpackPluginInterface.hpp"
 #include "Settings.hpp"
 #include "enums.hpp"
 #include "SettingsWindowLittleVersion.hpp"
@@ -126,6 +127,7 @@ private:
 private:
     ApiServer *m_apiServer;
     QThread *m_apiServerThread;
+    LightpackPluginInterface *interfaceApi;
     SettingsWindowLittleVersion *m_little;
 
     QTcpSocket * m_socket;
@@ -149,6 +151,8 @@ void LightpackApiTest::initTestCase()
 
     // Start Api Server in separate thread for access by QTcpSocket-s
     m_apiServer = new ApiServer(3636);
+    interfaceApi = new LightpackPluginInterface();
+    m_apiServer->setInterface(interfaceApi);
     m_apiServerThread = new QThread();
 
     m_apiServer->moveToThread(m_apiServerThread);

@@ -32,13 +32,17 @@
 #include <QMap>
 #include <QSet>
 #include <QRgb>
-#include "ApiServerSetColorTask.hpp"
+#include <QTime>
 #include "SettingsWindow.hpp"
+#include "LightpackPluginInterface.hpp"
+#include "ApiServerSetColorTask.hpp"
 #include "debug.h"
+#include "enums.hpp"
 
 struct ClientInfo
 {
     bool isAuthorized;
+    QString sessionKey;
     // Think about it. May be we need to save gamma,
     // smooth and brightness and after success lock send
     // this values to device?
@@ -52,6 +56,7 @@ public:
     ApiServer(QObject *parent = 0);
     ApiServer(quint16 port, QObject *parent = 0);
 
+    void setInterface(LightpackPluginInterface *lightpackInterface);
     void firstStart();
 
 public:
@@ -136,30 +141,14 @@ public:
     static const int SignalWaitTimeoutMs;
 
 signals:
-    void requestBacklightStatus();
     void startParseSetColorTask(QByteArray buffer);
-    void updateLedsColors(const QList<QRgb> & colors);
-    void updateGamma(double value);
-    void updateBrightness(int value);
-    void updateSmooth(int value);
-    void updateProfile(QString profileName);
-    void updateStatus(Backlight::Status status);
-    void updateBacklight(Lightpack::Mode status);
-    void updateDeviceLockStatus(DeviceLocked::DeviceLockStatus status);
     void errorOnStartListening(QString errorMessage);
-    void clearColorBuffers();
-    void updateApiDeviceNumberOfLeds(int value);
 
 public slots:
-    void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status);
     void enableApiServer(bool isEnabled);
     void enableApiAuth(bool isEnabled);
     void updateApiPort(int port);
     void updateApiKey(QString key);
-    void updateColors(const QList<QRgb> & colors);
-    void refreshAmbilightEvaluated(double updateResultMs);
-    void refreshScreenRect(QRect rect);
-    void resultBacklightStatus(Backlight::Status status);
 
 protected:
     void incomingConnection(int socketDescriptor);
@@ -170,6 +159,7 @@ private slots:
     void taskSetColorIsSuccess(bool isSuccess);
 
 private:
+    LightpackPluginInterface *lightpack;
     void initPrivateVariables();
     void initApiSetColorTask();
     void startListening();
@@ -184,27 +174,17 @@ private:
 
 private:
     int m_apiPort;
-    double hz;
     QString m_apiAuthKey;
     bool m_isAuthEnabled;
-    bool m_lockedPlugin;
+    QTime m_time;
 
-    QTcpSocket *m_lockedClient;
     QMap <QTcpSocket*, ClientInfo> m_clients;
 
     QThread *m_apiSetColorTaskThread;
     ApiServerSetColorTask *m_apiSetColorTask;
 
-    QList<QRgb> curentColors;
-
-    QTime m_time;
-
     bool m_isTaskSetColorDone;
     bool m_isTaskSetColorParseSuccess;
-
-    bool m_isRequestBacklightStatusDone;
-    Backlight::Status m_backlightStatusResult;
-    QRect screen;
 
     QString m_helpMessage;
     QString m_shortHelpMessage;
