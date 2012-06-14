@@ -20,7 +20,8 @@
 
 #include <PythonQt.h>
 #include <QFileInfo>
-#include <QtCore>
+#include <QIcon>
+#include <QUuid>
 #include "PyPlugin.h"
 
 #include "Settings.hpp"
@@ -30,25 +31,44 @@ using namespace SettingsScope;
 
 PyPlugin::PyPlugin(PythonQtObjectPtr plugin_,  QObject* parent_) :
 	QObject(parent_), _plugin(plugin_) {
-    if (this->isEnabled())
-        _plugin.call("init", QVariantList()).toString();
+    _sessionKey = QUuid::createUuid().toString();
     _name = _plugin.call("name", QVariantList()).toString();
 	_description = _plugin.call("description", QVariantList()).toString();
 	_author = _plugin.call("author", QVariantList()).toString();
 	_version = _plugin.call("version", QVariantList()).toString();
+    _icon = QString(Settings::getApplicationDirPath()+ "Plugins/"+_name +"/icon.png");
+    runing = false;
 }
 
 PyPlugin::~PyPlugin(){
     if (this->isEnabled())
+    {
+        if ( runing ) this->stop();
         _plugin.call("dispose", QVariantList()).toString();
+    }
+}
+
+void PyPlugin::init(){
+  if (this->isEnabled())
+    _plugin.call("init", QVariantList()).toString();
 }
 
 void PyPlugin::execute(){
 
 	emit aboutToExecute();
    QVariant ret = _plugin.call("run", QVariantList());
+   runing = true;
     //@todo use ret ???
 	emit executed();
+}
+
+void PyPlugin::stop(){
+
+    emit aboutToExecute();
+   QVariant ret = _plugin.call("stop", QVariantList());
+   runing = false;
+    //@todo use ret ???
+    emit executed();
 }
 
 void  PyPlugin::getSettings()
@@ -57,6 +77,11 @@ void  PyPlugin::getSettings()
     QVariant ret;
     ret =  _plugin.call("settings", QVariantList());
     emit executed();
+}
+
+
+QString PyPlugin::getSessionKey() const {
+    return _sessionKey;
 }
 
 QString PyPlugin::getName() const {
@@ -75,14 +100,40 @@ QString PyPlugin::getVersion() const {
 	return _version;
 }
 
+
+QIcon PyPlugin::getIcon() const {
+    // TODO path to image
+   QFileInfo f(_icon);
+   if (f.exists())
+       return QIcon(_icon);
+   return QIcon(":/plugin/Plugin.png");
+}
+
+
+int PyPlugin::getPriority() {
+    QString key = this->_name+"/Priority";
+    return Settings::valueMain(key).toInt();
+}
+
+void PyPlugin::setPriority(int priority) {
+    QString key = this->_name+"/Priority";
+    Settings::setValueMain(key,priority);
+}
+
 bool PyPlugin::isEnabled() {
     QString key = this->_name+"/Enable";
     return Settings::valueMain(key).toBool();
 }
 
 void PyPlugin::setEnabled(bool enable){
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << enable;
     QString key = this->_name+"/Enable";
     Settings::setValueMain(key,enable);
+    if (!enable && runing ) this->stop();
+    if (enable && !runing ) {
+        this->init();
+        this->execute();
+    }
 }
 
 

@@ -5,6 +5,7 @@
 #include "version.h"
 #include "debug.h"
 
+#include <plugins/PyPlugin.h>
 
 using namespace SettingsScope;
 
@@ -36,15 +37,22 @@ void LightpackPluginInterface::timeoutLock()
         lockAlive = false;
     }
     else
-        UnLock(lockSessionKey);
+    {
+        if (!lockSessionKeys.isEmpty())
+            UnLock(lockSessionKeys[0]);
+    }
 }
 
 void LightpackPluginInterface::initColors(int numberOfLeds)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << numberOfLeds;
-    m_colors.clear();
+    m_curColors.clear();
+    m_setColors.clear();
     for (int i = 0; i < numberOfLeds; i++)
-        m_colors << 0;
+    {
+        m_setColors << 0;
+        m_curColors << 0;
+    }
 }
 
 void LightpackPluginInterface::setNumberOfLeds(int numberOfLeds)
@@ -52,6 +60,15 @@ void LightpackPluginInterface::setNumberOfLeds(int numberOfLeds)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << numberOfLeds;
 
     initColors(numberOfLeds);
+}
+
+void LightpackPluginInterface::updatePlugin(QList<PyPlugin*> plugins)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    lockSessionKeys.clear();
+    //emit updateDeviceLockStatus(DeviceLocked::Unlocked, lockSessionKeys);
+    _plugins = plugins;
+
 }
 
 void LightpackPluginInterface::resultBacklightStatus(Backlight::Status status)
@@ -101,7 +118,7 @@ void LightpackPluginInterface::refreshScreenRect(QRect rect)
 void LightpackPluginInterface::updateColors(const QList<QRgb> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
-    m_colors = colors;
+    m_curColors = colors;
 }
 
 QString LightpackPluginInterface::Version()
@@ -109,17 +126,42 @@ QString LightpackPluginInterface::Version()
     return API_VERSION;
 }
 
-// TODO identification plugin locked
-QString LightpackPluginInterface::GetSessionKey()
+PyPlugin* LightpackPluginInterface::findName(QString name)
 {
-    return QUuid::createUuid().toString();
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << name;
+    foreach(PyPlugin* plugin, _plugins){
+        if (plugin->getName() == name)
+            return plugin;
+    }
+
+    return NULL;
+}
+
+PyPlugin* LightpackPluginInterface::findSessionKey(QString sessionKey)
+{
+    foreach(PyPlugin* plugin, _plugins){
+        if (plugin->getSessionKey() == sessionKey)
+            return plugin;
+    }
+
+    return NULL;
+}
+
+
+// TODO identification plugin locked
+QString LightpackPluginInterface::GetSessionKey(QString module)
+{
+    if (module=="API") return "Lock";
+    PyPlugin* plugin = findName(module);
+    if (plugin == NULL) return "";
+    return plugin->getSessionKey();
 }
 
 int LightpackPluginInterface::CheckLock(QString sessionKey)
 {
-    if (lockSessionKey=="")
+    if (lockSessionKeys.isEmpty())
         return 0;
-    if (lockSessionKey==sessionKey)
+    if (lockSessionKeys[0]==sessionKey)
         return 1;
     return -1;
 }
@@ -128,63 +170,116 @@ int LightpackPluginInterface::CheckLock(QString sessionKey)
 //TODO: lock unlock
 bool LightpackPluginInterface::Lock(QString sessionKey)
 {
-    if (lockSessionKey=="" || lockSessionKey==sessionKey)
-        {
-            lockSessionKey = sessionKey;
-            lockAlive = true;
-            m_timerLock->start(5000); // check in 5000 ms
-            if (sessionKey.indexOf("API", 0) != -1)
-                emit updateDeviceLockStatus(DeviceLocked::Api);
-            else
-                emit updateDeviceLockStatus(DeviceLocked::Plugin);
-            emit ChangeLockStatus (true);
-            return true;
-        } else
-            return false;
+    if (sessionKey == "") return false;
+    if (lockSessionKeys.contains(sessionKey)) return true;
+    if (sessionKey.indexOf("API", 0) != -1)
+    {
+        if (lockSessionKeys.count()>0)
+            if (lockSessionKeys[0].indexOf("API", 0) != -1) return false;
+        lockSessionKeys.insert(0,sessionKey);
+        emit updateDeviceLockStatus(DeviceLocked::Api,lockSessionKeys);
+    }
+    else
+    {
+          PyPlugin* plugin = findSessionKey(sessionKey);
+          if (plugin == NULL) return false;
+
+              foreach (QString key,lockSessionKeys)
+              {
+                  if (key.indexOf("API", 0) != -1) break;
+
+                         PyPlugin* pluginLock = findSessionKey(key);
+                         if (pluginLock == NULL) return false;
+                         DEBUG_LOW_LEVEL << Q_FUNC_INFO << lockSessionKeys.indexOf(key);
+                         if (plugin->getPriority() > pluginLock->getPriority())
+                             lockSessionKeys.insert(lockSessionKeys.indexOf(key),sessionKey);
+                         DEBUG_LOW_LEVEL << Q_FUNC_INFO << lockSessionKeys.indexOf(sessionKey);
+
+              }
+              if (!lockSessionKeys.contains(sessionKey))
+              {
+                  DEBUG_LOW_LEVEL << Q_FUNC_INFO << "add to end";
+                  lockSessionKeys.insert(lockSessionKeys.count(),sessionKey);
+              }
+              if (lockSessionKeys[0].indexOf("API", 0) != -1)
+                  emit updateDeviceLockStatus(DeviceLocked::Api,lockSessionKeys);
+              else
+                  emit updateDeviceLockStatus(DeviceLocked::Plugin, lockSessionKeys);
+    }
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "lock end";
+    lockAlive = true;
+    m_timerLock->start(5000); // check in 5000 ms
+    emit ChangeLockStatus (true);
+    return true;
 }
 
 bool LightpackPluginInterface::UnLock(QString sessionKey)
 {
-        if (lockSessionKey==sessionKey)
+    if (lockSessionKeys.isEmpty()) return true;
+        if (lockSessionKeys[0]==sessionKey)
         {
-            lockSessionKey = "";
-            m_timerLock->stop();
-            emit updateDeviceLockStatus(DeviceLocked::Unlocked);
-            emit ChangeLockStatus(false);
-            return true;
-        } else if (lockSessionKey == "")
-        {
+            lockSessionKeys.removeFirst();
+            if (lockSessionKeys.count()==0)
+            {
+                m_timerLock->stop();
+                emit updateDeviceLockStatus(DeviceLocked::Unlocked, lockSessionKeys);
+                emit ChangeLockStatus(false);
+            }
+            else
+            {
+                if (lockSessionKeys[0].indexOf("API", 0) != -1)
+                    emit updateDeviceLockStatus(DeviceLocked::Api,lockSessionKeys);
+                else
+                    emit updateDeviceLockStatus(DeviceLocked::Plugin, lockSessionKeys);
+            }
             return true;
         }
+        else
+            if (lockSessionKeys.indexOf(sessionKey)!= -1)
+            {
+               lockSessionKeys.removeOne(sessionKey);
+               if (lockSessionKeys[0].indexOf("API", 0) != -1)
+                   emit updateDeviceLockStatus(DeviceLocked::Api,lockSessionKeys);
+               else
+                   emit updateDeviceLockStatus(DeviceLocked::Plugin, lockSessionKeys);
+               return true;
+            }
         return false;
 
 }
 // TODO: setcolor
 bool LightpackPluginInterface::SetColors(QString sessionKey, int r, int g, int b)
 {
-     if (lockSessionKey!=sessionKey) return false;
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
      lockAlive = true;
-    for (int i = 0; i < m_colors.size(); i++)
+    for (int i = 0; i < m_setColors.size(); i++)
     {
-            m_colors[i] = qRgb(r,g,b);
+            m_setColors[i] = qRgb(r,g,b);
     }
-    emit updateLedsColors(m_colors);
+    m_curColors = m_setColors;
+    emit updateLedsColors(m_setColors);
     return true;
 }
 
 bool LightpackPluginInterface::SetColor(QString sessionKey, int ind,int r, int g, int b)
 {
-    if (lockSessionKey!=sessionKey) return false;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << sessionKey;
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
     lockAlive = true;
-    if (ind>m_colors.size()-1) return false;
-    m_colors[ind] = qRgb(r,g,b);
-    emit updateLedsColors(m_colors);
+    if (ind>m_setColors.size()-1) return false;
+    m_setColors[ind] = qRgb(r,g,b);
+    m_curColors = m_setColors;
+    emit updateLedsColors(m_setColors);
     return true;
 }
 
 bool LightpackPluginInterface::SetGamma(QString sessionKey, int gamma)
 {
-     if (lockSessionKey!=sessionKey) return false;
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
      if (gamma >= Profile::Device::GammaMin && gamma <= Profile::Device::GammaMax)
      {
          emit updateGamma(gamma);
@@ -195,7 +290,8 @@ bool LightpackPluginInterface::SetGamma(QString sessionKey, int gamma)
 
 bool LightpackPluginInterface::SetBrightness(QString sessionKey, int brightness)
 {
-     if (lockSessionKey!=sessionKey) return false;
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
      if (brightness >= Profile::Device::BrightnessMin && brightness <= Profile::Device::BrightnessMax)
      {
          emit updateBrightness(brightness);
@@ -206,7 +302,8 @@ bool LightpackPluginInterface::SetBrightness(QString sessionKey, int brightness)
 
 bool LightpackPluginInterface::SetSmooth(QString sessionKey, int smooth)
 {
-     if (lockSessionKey!=sessionKey) return false;
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
      if (smooth >= Profile::Device::SmoothMin && smooth <= Profile::Device::SmoothMax)
      {
              emit updateSmooth(smooth);
@@ -217,7 +314,8 @@ bool LightpackPluginInterface::SetSmooth(QString sessionKey, int smooth)
 
 bool LightpackPluginInterface::SetProfile(QString sessionKey,QString profile)
 {
-     if (lockSessionKey!=sessionKey) return false;
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
      QStringList profiles = Settings::findAllProfiles();
      if (profiles.contains(profile))
      {
@@ -229,7 +327,8 @@ bool LightpackPluginInterface::SetProfile(QString sessionKey,QString profile)
 
 bool LightpackPluginInterface::SetStatus(QString sessionKey, int status)
 {
-     if (lockSessionKey!=sessionKey) return false;
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
      Backlight::Status statusSet = Backlight::StatusUnknown;
 
      if (status == 1)
@@ -247,7 +346,8 @@ bool LightpackPluginInterface::SetStatus(QString sessionKey, int status)
 
 bool LightpackPluginInterface::SetLeds(QString sessionKey, QList<QRect> leds)
 {
-    if (lockSessionKey!=sessionKey) return false;
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
     int num =0;
      foreach(QRect rectLed, leds){
         Settings::setLedPosition(num, QPoint(rectLed.x(),rectLed.y()));
@@ -261,7 +361,8 @@ bool LightpackPluginInterface::SetLeds(QString sessionKey, QList<QRect> leds)
 
 bool LightpackPluginInterface::NewProfile(QString sessionKey, QString profile)
 {
-    if (lockSessionKey!=sessionKey) return false;
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
 
      Settings::loadOrCreateProfile(profile);
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << "OK:" << profile;
@@ -272,7 +373,8 @@ bool LightpackPluginInterface::NewProfile(QString sessionKey, QString profile)
 
 bool LightpackPluginInterface::DeleteProfile(QString sessionKey, QString profile)
 {
-    if (lockSessionKey!=sessionKey) return false;
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
     QStringList profiles = Settings::findAllProfiles();
     if (profiles.contains(profile))
     {
@@ -288,8 +390,8 @@ bool LightpackPluginInterface::DeleteProfile(QString sessionKey, QString profile
 
 bool LightpackPluginInterface::SetBacklight(QString sessionKey, int backlight)
 {
-    if (lockSessionKey!=sessionKey) return false;
-
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
     Lightpack::Mode status =  Lightpack::UnknowMode;
 
     if (backlight == 1)
@@ -309,7 +411,7 @@ bool LightpackPluginInterface::SetBacklight(QString sessionKey, int backlight)
 
 int LightpackPluginInterface::GetCountLeds()
 {
-    return m_colors.count();
+    return m_curColors.count();
 }
 
 int LightpackPluginInterface::GetStatus()
@@ -356,7 +458,7 @@ int LightpackPluginInterface::GetStatus()
 
 bool LightpackPluginInterface::GetStatusAPI()
 {
-    return (lockSessionKey!="");
+    return (!lockSessionKeys.isEmpty());
 }
 
 QStringList LightpackPluginInterface::GetProfiles()
@@ -383,7 +485,7 @@ QList<QRect> LightpackPluginInterface::GetLeds()
 
 QList<QRgb> LightpackPluginInterface::GetColors()
 {
-   return m_colors;
+   return m_curColors;
 }
 
 double LightpackPluginInterface::GetFPS()

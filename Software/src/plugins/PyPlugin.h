@@ -12,19 +12,25 @@ class PyPlugin : public QObject{
         PyPlugin(PythonQtObjectPtr plugin_, QObject* parent_ = 0);
 		~PyPlugin();
 		
-		QString getName() const;
+        QString getSessionKey() const;
+        QString getName() const;
 		QString getDescription() const;
 		QString getAuthor() const;
 		QString getVersion() const;
+        QIcon getIcon() const;
 	
         bool isEnabled();
+        int getPriority();
 
         void getSettings();
 	
 	public slots:
+        void init();
         void setEnabled(bool enable);
+        void setPriority(int priority);
         void execute();
-	
+        void stop();
+
 	signals:
 		void aboutToExecute();
 		void executed();
@@ -32,10 +38,13 @@ class PyPlugin : public QObject{
     private:
 		PythonQtObjectPtr _plugin;
 	
+        bool runing;
+        QString _sessionKey;
 		QString _name;
 		QString _description;
 		QString _author;
 		QString _version;
+        QString _icon;
 };
 
 //#endif // __PLUGIN_ENGINE_H__

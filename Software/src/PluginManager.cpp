@@ -9,23 +9,61 @@
 #include "gui/PythonQtScriptingConsole.h"
 #include "plugins/PyPlugin.h"
 
+#include "Settings.hpp"
+
+using namespace SettingsScope;
+
 PluginManager::PluginManager(QObject *parent) :
     QObject(parent)
 {
+    //initialize python qt
+    PythonQt::init(PythonQt::IgnoreSiteModule | PythonQt::RedirectStdOut);
+    PythonQt::self()->setImporter(0);
+    // TODO: make init modules manual
+    PythonQt_QtAll::init();
+}
+
+PluginManager::~PluginManager(){
+    dropPlugins();
+    deinitPython();
+    PythonQt::cleanup();
+}
+
+void PluginManager::initPython()
+{
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     try{
-        //initialize python qt
-        PythonQt::init(PythonQt::IgnoreSiteModule | PythonQt::RedirectStdOut);
-        PythonQt::self()->setImporter(0);
-        // TODO: make init modules manual
-        PythonQt_QtAll::init();
 
         mainContext = new PythonQtObjectPtr(PythonQt::self()->getMainModule());
 
         mainContext->evalScript(QString("import sys\n"));
         mainContext->evalScript("sys.path.append(':/plugin')\n");
+        mainContext->evalScript("sys.path.append('./python')\n");
         //load base plugin class
         mainContext->evalFile(":/plugin/BasePlugin.py");
+
+        mainContext->addObject("Lightpack", _pluginInterface);
+        mainContext->addObject("SettingsBox", _settingsBox);
+
+        // -----------------------------------------------------------------
+        // Alternative 1: make CustomObject known and use decorators for wrapping:
+        // -----------------------------------------------------------------
+
+        // register the new object as a known classname and add it's wrapper object
+        //PythonQt::self()->registerCPPClass("LedDeviceFactory", "","example", PythonQtCreateObject<LedDeviceFactory>);
+
+        // -----------------------------------------------------------------
+        // Alternative 2: make CustomObject2 known and use a wrapper factory for wrapping:
+        // -----------------------------------------------------------------
+
+        // add a factory that can handle pointers to CustomObject2
+        //PythonQt::self()->addWrapperFactory(m_ledDeviceFactory);
+
+        // the following is optional and only needed if you want a constructor:
+        // register the new object as a known classname
+        //PythonQt::self()->registerCPPClass("LedDeviceFactory", "", "example");
+        // add a constructor for CustomObject2
+        //PythonQt::self()->addClassDecorators(m_ledDeviceFactory);
 
         // todo remove
 //        console = new PythonQtScriptingConsole(NULL,*mainContext);
@@ -36,42 +74,34 @@ PluginManager::PluginManager(QObject *parent) :
         {
 
         }
-   }
 
-PluginManager::~PluginManager(){
-    dropPlugins();
-    PythonQt::cleanup();
+}
+
+void PluginManager::deinitPython()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    delete mainContext;
+
 }
 
 void PluginManager::init(LightpackPluginInterface *pluginInterface, QWidget* settingsBox)
 {
-
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    mainContext->addObject("Lightpack", pluginInterface);
-    mainContext->addObject("SettingsBox", settingsBox);
 
- QString test = pluginInterface->GetSessionKey();
+    _pluginInterface = pluginInterface;
+    _settingsBox = settingsBox;
 
-    // -----------------------------------------------------------------
-    // Alternative 1: make CustomObject known and use decorators for wrapping:
-    // -----------------------------------------------------------------
+    initPython();
 
-    // register the new object as a known classname and add it's wrapper object
-    //PythonQt::self()->registerCPPClass("LedDeviceFactory", "","example", PythonQtCreateObject<LedDeviceFactory>);
+    loadPlugins();
+}
 
-    // -----------------------------------------------------------------
-    // Alternative 2: make CustomObject2 known and use a wrapper factory for wrapping:
-    // -----------------------------------------------------------------
-
-    // add a factory that can handle pointers to CustomObject2
-    //PythonQt::self()->addWrapperFactory(m_ledDeviceFactory);
-
-    // the following is optional and only needed if you want a constructor:
-    // register the new object as a known classname
-    //PythonQt::self()->registerCPPClass("LedDeviceFactory", "", "example");
-    // add a constructor for CustomObject2
-    //PythonQt::self()->addClassDecorators(m_ledDeviceFactory);
-
+void PluginManager::reloadPlugins(){
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    dropPlugins();
+    deinitPython();
+    initPython();
+    loadPlugins();
 }
 
 void PluginManager::dropPlugins(){
@@ -79,28 +109,35 @@ void PluginManager::dropPlugins(){
     //cleanAll();
     for(QMap<QString, PyPlugin*>::iterator it = _plugins.begin(); it != _plugins.end(); ++it){
         PyPlugin* p = it.value();
+        p->stop();
         delete p;
     }
     _plugins.clear();
+    _pluginInterface->updatePlugin(_plugins.values());
 }
 
 void PluginManager::loadPlugins(){
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    dropPlugins();
 
     QStringList pluginPaths = QApplication::libraryPaths();
-      QString path = "./plugins";
+      QString path = QString(Settings::getApplicationDirPath() + "Plugins");
       QDir dir(path);
       QStringList files = dir.entryList(QStringList("*.py"), QDir::Files);
 
-      foreach(QString fileName, files){
-       DEBUG_LOW_LEVEL << fileName;
+      QStringList lstDirs = dir.entryList(QDir::Dirs |
+       QDir::AllDirs |
+       QDir::NoDotAndDotDot); //Получаем список папок
 
+      foreach(QString pluginDir, lstDirs){
+       DEBUG_LOW_LEVEL << pluginDir;
+
+       QString fileName = path+"/"+pluginDir+"/"+pluginDir+".py";
         QString plugin = QFileInfo (fileName).baseName ();
         //add python plugin to file to path
         // TODO: fail
         //mainContext->evalFile(it.key());
-        QFile file(path+"/"+fileName);
+        QFile file(fileName);
+        if (!file.exists()) continue;
         file.open(QIODevice::ReadOnly);
         mainContext->evalScript(file.readAll());
 
@@ -128,14 +165,22 @@ void PluginManager::loadPlugins(){
             connect(p, SIGNAL(executed()), this, SIGNAL(pluginExecuted()));
            _plugins[plugin] = p;
 
-           if (p->isEnabled())
-               p->execute();
+
 
          //  QThread* m_PluginThread = new QThread();
            //p->moveToThread(m_PluginThread);
           // m_PluginThread->start();
     }
+
+      _pluginInterface->updatePlugin(_plugins.values());
      emit updatePlugin(_plugins.values());
+
+     for(QMap<QString, PyPlugin*>::iterator it = _plugins.begin(); it != _plugins.end(); ++it){
+         PyPlugin* p = it.value();
+         p->init();
+         if (p->isEnabled())
+             p->execute();
+     }
 }
 
 PyPlugin* PluginManager::getPlugin(const QString& name_){

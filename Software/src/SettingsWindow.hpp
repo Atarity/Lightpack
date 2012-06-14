@@ -28,7 +28,6 @@
 #pragma once
 
 #include <QtGui>
-#include "AboutDialog.hpp"
 #include "Settings.hpp"
 #include "GrabManager.hpp"
 #include "MoodLampManager.hpp"
@@ -89,7 +88,7 @@ public slots:
     void ledDeviceFirmwareVersionResult(const QString & fwVersion);
     void refreshAmbilightEvaluated(double updateResultMs);
 
-    void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status);
+    void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status,  QList<QString> modules);
     void setBacklightStatus(Backlight::Status);
     void setModeChanged(Lightpack::Mode);
     void backlightOn(); /* using in actions */
@@ -172,13 +171,13 @@ private slots:
     void setOnOffHotKey(QKeySequence);
     void clearOnOffHotKey();
 
-    void pluginSwitch(const QString & pluginName);
-    void pluginEnabled_Toggled(bool isEnabled);
+    void pluginSwitch(int index);
     void viewPluginConsole();
 
-    void on_pushButton_PluginInfo_clicked();
-
+    void on_list_Plugins_clicked(QListWidgetItem* current);
     void on_pushButton_clicked();
+    void MoveUpPlugin();
+    void MoveDownPlugin();
 
 private:
     void updateTrayAndActionStates();    
@@ -210,14 +209,21 @@ private:
 
     void setupHotkeys();
 
+    void setFirmwareVersion(const QString &firmwareVersion);
+    void versionsUpdate();
+
+    void savePriorityPlugin();
+
+
 private:
     Ui::SettingsWindow *ui;
     // Main backlight status for all modes (Grab, MoodLamp, etc.)
     Backlight::Status m_backlightStatus;
     DeviceLocked::DeviceLockStatus m_deviceLockStatus;
+    QList<QString> m_deviceLockKey;
+    QString m_deviceLockModule;
     Lightpack::Mode m_lightpackMode;
 
-    AboutDialog *m_aboutDialog;
     SpeedTest *m_speedTest;
 
     Grab::GrabberType getSelectedGrabberType();
@@ -233,6 +239,10 @@ private:
     QSystemTrayIcon *m_trayIcon;
     QMenu *m_trayIconMenu;
     QMenu *m_profilesMenu;
+
+    QLabel *labelProfile;
+    QLabel *labelDevice;
+    QLabel *labelFPS;
 
     enum TrayMessages
     {
@@ -250,5 +260,8 @@ private:
 
     QKeySequenceWidget *m_keySequenceWidget;
 
+    QString fimwareVersion;
+
     QList<PyPlugin*> _plugins;
+    static bool toPriority(PyPlugin* s1 , PyPlugin* s2 );
 };

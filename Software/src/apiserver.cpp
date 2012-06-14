@@ -212,7 +212,7 @@ void ApiServer::incomingConnection(int socketDescriptor)
 
     ClientInfo cs;
     cs.isAuthorized = false;
-    cs.sessionKey = "API"+lightpack->GetSessionKey();
+    cs.sessionKey = "API"+lightpack->GetSessionKey("API")+QString(m_clients.count());
 
     m_clients.insert(client, cs);
 
@@ -868,9 +868,13 @@ void ApiServer::initApiSetColorTask()
     m_apiSetColorTaskThread = new QThread();
     m_apiSetColorTask = new ApiServerSetColorTask();
 
-
+    //connect(m_apiSetColorTask, SIGNAL(taskParseSetColorDone(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)), Qt::QueuedConnection);
     connect(m_apiSetColorTask, SIGNAL(taskParseSetColorIsSuccess(bool)), this, SLOT(taskSetColorIsSuccess(bool)), Qt::QueuedConnection);
+
     connect(this, SIGNAL(startParseSetColorTask(QByteArray)), m_apiSetColorTask, SLOT(startParseSetColorTask(QByteArray)), Qt::QueuedConnection);
+    connect(this, SIGNAL(updateApiDeviceNumberOfLeds(int)),   m_apiSetColorTask, SLOT(setApiDeviceNumberOfLeds(int)), Qt::QueuedConnection);
+    connect(this, SIGNAL(clearColorBuffers()),                m_apiSetColorTask, SLOT(reinitColorBuffers()));
+
 
     m_apiSetColorTask->moveToThread(m_apiSetColorTaskThread);
     m_apiSetColorTaskThread->start();

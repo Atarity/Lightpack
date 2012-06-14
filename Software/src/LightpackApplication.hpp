@@ -61,12 +61,13 @@ public slots:
 
 private slots:
     void requestBacklightStatus();
-    void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status);
+    void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status, QList<QString> modules);
     void profileSwitch(const QString & configName);
     void settingsChanged();
     void showLedWidgets(bool visible);
     void setColoredLedWidget(bool colored);
     void getConsole();
+    void consoleClosing();
 
 private:
     void processCommandLineArguments();
@@ -99,6 +100,7 @@ private:
     PluginManager *m_pluginManager;
     QThread* m_PluginThread;
     PythonQtScriptingConsole* consolePlugin;
+    // QWidget *consolePlugin;
 
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;

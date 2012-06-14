@@ -4,6 +4,8 @@
 #include <QObject>
 #include "enums.hpp"
 
+class PyPlugin;
+
 class LightpackPluginInterface : public QObject
 {
     Q_OBJECT
@@ -13,7 +15,7 @@ public:
 
  public slots:
 // Plugin section
-     QString GetSessionKey();
+     QString GetSessionKey(QString module);
      int CheckLock(QString sessionKey);
      bool Lock(QString sessionKey);
 
@@ -60,7 +62,7 @@ signals:
 
 signals:
      void requestBacklightStatus();
-     void updateDeviceLockStatus(DeviceLocked::DeviceLockStatus status);
+     void updateDeviceLockStatus(DeviceLocked::DeviceLockStatus status, QList<QString> modules);
      void updateLedsColors(const QList<QRgb> & colors);
      void updateGamma(double value);
      void updateBrightness(int value);
@@ -77,6 +79,7 @@ public slots:
      void refreshAmbilightEvaluated(double updateResultMs);
      void refreshScreenRect(QRect rect);
      void updateColors(const QList<QRgb> & colors);
+     void updatePlugin(QList<PyPlugin*> plugins);
 
 private slots:
       void timeoutLock();
@@ -92,11 +95,17 @@ private:
       double hz;
       QRect screen;
 
-     QString lockSessionKey;
-     QList<QRgb> m_colors;
+     QList<QString> lockSessionKeys;
+     //QString lockSessionKey;
+     QList<QRgb> m_setColors;
+     QList<QRgb> m_curColors;
      QTimer *m_timerLock;
+
      void initColors(int numberOfLeds);
 
+     QList<PyPlugin*> _plugins;
+     PyPlugin* findName(QString name);
+     PyPlugin* findSessionKey(QString sessionKey);
 };
 
 

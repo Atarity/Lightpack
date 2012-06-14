@@ -143,6 +143,8 @@ public:
 signals:
     void startParseSetColorTask(QByteArray buffer);
     void errorOnStartListening(QString errorMessage);
+    void clearColorBuffers();
+    void updateApiDeviceNumberOfLeds(int value);
 
 public slots:
     void enableApiServer(bool isEnabled);

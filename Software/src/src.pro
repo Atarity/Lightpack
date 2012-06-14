@@ -81,7 +81,7 @@ INCLUDEPATH += ./hidapi ./grab ./alienfx ./
 
 SOURCES += \
     LightpackApplication.cpp  main.cpp   SettingsWindow.cpp  Settings.cpp \
-    AboutDialog.cpp   GrabManager.cpp  GrabWidget.cpp  GrabConfigWidget.cpp \
+      GrabManager.cpp  GrabWidget.cpp  GrabConfigWidget.cpp \
     SpeedTest.cpp \
     LedDeviceFactory.cpp \
     LedDeviceLightpack.cpp \
@@ -104,7 +104,7 @@ SOURCES += \
     MoodLampManager.cpp \
     PluginManager.cpp \
     plugins/PyPlugin.cpp \
-    AboutPluginDialog.cpp
+    SelectWidget.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -112,7 +112,6 @@ HEADERS += \
     Settings.hpp \
     SettingsDefaults.hpp \
     version.h \
-    AboutDialog.hpp \
     TimeEvaluations.hpp \
     GrabManager.hpp \
     GrabWidget.hpp \
@@ -144,14 +143,13 @@ HEADERS += \
     ../../CommonHeaders/USB_ID.h \
     grab/D3D9Grabber.hpp \
     LightpackMath.hpp \
-    StructRgb.hpp     MoodLampManager.hpp     PluginManager.hpp     plugins/PyPlugin.h     AboutPluginDialog.hpp
+    StructRgb.hpp     MoodLampManager.hpp     PluginManager.hpp     plugins/PyPlugin.h \    
+    SelectWidget.hpp
 
 
 FORMS += SettingsWindow.ui \
-    AboutDialog.ui \
     GrabWidget.ui \
-    GrabConfigWidget.ui \
-    AboutPluginDialog.ui
+    GrabConfigWidget.ui
 
 #
 #   QSerialDevice

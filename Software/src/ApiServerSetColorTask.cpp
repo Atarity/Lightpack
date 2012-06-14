@@ -186,6 +186,8 @@ void ApiServerSetColorTask::reinitColorBuffers()
 
 void ApiServerSetColorTask::setApiDeviceNumberOfLeds(int value)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
     m_numberOfLeds = value;
 
     reinitColorBuffers();
