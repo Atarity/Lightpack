@@ -32,12 +32,21 @@ SOURCES += \
     ../../src/ApiServer.cpp \
     ../../src/Settings.cpp \
     ../../src/LightpackPluginInterface.cpp \
+    ../../src/plugins/PyPlugin.cpp \
     SettingsWindowLittleVersion.cpp
 HEADERS += \
     ../../src/ApiServerSetColorTask.hpp \
     ../../src/ApiServer.hpp \
     ../../src/debug.h \
     ../../src/Settings.hpp \
+    ../../src/plugins/PyPlugin.h \
     ../../src/LightpackPluginInterface.hpp \
     SettingsWindowLittleVersion.hpp
 
+
+#
+# PythonQt
+#
+include (../../PythonQt/build/common.prf )
+include (../../PythonQt/build/PythonQt.prf )
+include (../../PythonQt/build/PythonQt_QtAll.prf )
