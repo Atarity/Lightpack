@@ -45,7 +45,6 @@
 #include "PythonQtPythonInclude.h"
 
 #include "PythonQtSystem.h"
-
 #include <QPointer>
 
 #include "structmember.h"

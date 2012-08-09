@@ -180,7 +180,7 @@ void PythonQtScriptingConsole::executeCode(const QString& code)
     dict = _context;
   }
   if (dict) {
-    p.setNewRef(PyRun_String(code.toLatin1().data(), Py_single_input, dict, dict));
+    p.setNewRef(PyRun_String(code.toAscii().data(), Py_single_input, dict, dict));
   }
 
   if (!p) {

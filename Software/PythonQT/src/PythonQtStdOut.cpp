@@ -56,32 +56,16 @@ static PyObject *PythonQtStdOutRedirect_write(PyObject *self, PyObject *args)
 {
   PythonQtStdOutRedirect*  s = (PythonQtStdOutRedirect*)self;
   if (s->_cb) {
-    QString output;
-    if (PyTuple_GET_SIZE(args)>=1) {
-      PyObject* obj = PyTuple_GET_ITEM(args,0);
-      if (PyUnicode_Check(obj)) {
-        PyObject *tmp = PyUnicode_AsUTF8String(obj);
-        if(tmp) {
-          output = QString::fromUtf8(PyString_AS_STRING(tmp));
-          Py_DECREF(tmp);
-        } else {
-          return NULL;
-        }
-      } else {
-        char *string;
-        if (!PyArg_ParseTuple(args, "s", &string)) {
-          return NULL;
-        }
-        output = QString::fromLatin1(string);
-      }
-    }
+    char *string;
+    if (!PyArg_ParseTuple(args, "s", &string))
+      return NULL;
 
     if (s->softspace > 0) {
       (*s->_cb)(QString(""));
       s->softspace = 0;
     }
 
-    (*s->_cb)(output);
+    (*s->_cb)(QString(string));
   }
   return Py_BuildValue("");
 }

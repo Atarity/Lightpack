@@ -20,7 +20,7 @@ PluginManager::PluginManager(QObject *parent) :
    PythonQt::init(PythonQt::IgnoreSiteModule | PythonQt::RedirectStdOut);
    PythonQt::self()->setImporter(0);
    /// TODO: make init modules manual
-   PythonQt_QtAll::init();
+    PythonQt_QtAll::init();
 }
 
 PluginManager::~PluginManager(){
