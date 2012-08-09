@@ -11,5 +11,5 @@ CONFIG(debug, debug|release) {
   DEBUG_EXT = 
 }
 
-win32::LIBS += $$PWD/../lib/libPythonQt$${DEBUG_EXT}.a
+win32::LIBS += $$PWD/../lib/PythonQt$${DEBUG_EXT}.lib
 unix::LIBS += -L$$PWD/../lib -lPythonQt$${DEBUG_EXT}

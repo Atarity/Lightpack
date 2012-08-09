@@ -17,10 +17,10 @@ PluginManager::PluginManager(QObject *parent) :
     QObject(parent)
 {
     //initialize python qt
-    PythonQt::init(PythonQt::IgnoreSiteModule | PythonQt::RedirectStdOut);
-    PythonQt::self()->setImporter(0);
-    // TODO: make init modules manual
-    PythonQt_QtAll::init();
+   PythonQt::init(PythonQt::IgnoreSiteModule | PythonQt::RedirectStdOut);
+   PythonQt::self()->setImporter(0);
+   /// TODO: make init modules manual
+   PythonQt_QtAll::init();
 }
 
 PluginManager::~PluginManager(){
@@ -33,7 +33,7 @@ void PluginManager::initPython()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     try{
-
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO;
         mainContext = new PythonQtObjectPtr(PythonQt::self()->getMainModule());
 
         mainContext->evalScript(QString("import sys\n"));
@@ -81,7 +81,6 @@ void PluginManager::deinitPython()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     delete mainContext;
-
 }
 
 void PluginManager::init(LightpackPluginInterface *pluginInterface, QWidget* settingsBox)
@@ -109,8 +108,10 @@ void PluginManager::dropPlugins(){
     //cleanAll();
     for(QMap<QString, PyPlugin*>::iterator it = _plugins.begin(); it != _plugins.end(); ++it){
         PyPlugin* p = it.value();
+        QString name = p->getName();
         p->stop();
         delete p;
+        mainContext->evalScript("del "+name);
     }
     _plugins.clear();
     _pluginInterface->updatePlugin(_plugins.values());
@@ -141,7 +142,7 @@ void PluginManager::loadPlugins(){
         file.open(QIODevice::ReadOnly);
         mainContext->evalScript(file.readAll());
 
-       DEBUG_LOW_LEVEL << plugin;
+        DEBUG_LOW_LEVEL << plugin;
 
             //get plugin info
             QString pluginConstructor = plugin + "()\n";
@@ -198,7 +199,7 @@ QList<PyPlugin*> PluginManager::getPluginList(){
 PythonQtScriptingConsole* PluginManager::getConsole(QWidget* parent_){
     PythonQtScriptingConsole* pyconsole = new PythonQtScriptingConsole(parent_, *mainContext);
     pyconsole->appendCommandPrompt();
-    connect(this, SIGNAL(pluginExecuted()), pyconsole, SLOT(externalUpdate()));
+    //connect(this, SIGNAL(pluginExecuted()), pyconsole, SLOT(externalUpdate()));
     pyconsole->show();
     return pyconsole;
 }

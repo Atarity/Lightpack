@@ -2020,6 +2020,9 @@ void SettingsWindow::viewPluginConsole()
 
 void SettingsWindow::on_pushButton_clicked()
 {
+     foreach(PyPlugin* plugin, _plugins){
+         plugin->stop();
+     }
     qDeleteAll( ui->tabSettingsPlugin->findChildren<QWidget*>() );
     delete  ui->tabSettingsPlugin->layout();
     ui->list_Plugins->clear();

@@ -65,6 +65,8 @@ void LightpackPluginInterface::setNumberOfLeds(int numberOfLeds)
 void LightpackPluginInterface::updatePlugin(QList<PyPlugin*> plugins)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    if (!lockSessionKeys.isEmpty())
+        UnLock(lockSessionKeys[0]);
     lockSessionKeys.clear();
     //emit updateDeviceLockStatus(DeviceLocked::Unlocked, lockSessionKeys);
     _plugins = plugins;

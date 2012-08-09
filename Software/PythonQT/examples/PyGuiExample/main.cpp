@@ -60,7 +60,7 @@ int main( int argc, char **argv )
   PythonQtObjectPtr  mainContext = PythonQt::self()->getMainModule();
   PythonQtScriptingConsole console(NULL, mainContext);
 
-  mainContext.evalScript("example.py");
+  mainContext.evalFile(":example.py");
 
   console.show();
   return qapp.exec();

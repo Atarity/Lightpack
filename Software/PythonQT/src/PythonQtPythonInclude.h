@@ -30,6 +30,15 @@
  *
  */
 
+//----------------------------------------------------------------------------------
+/*!
+// \file    dPython.h - This file was copied from VTK and was originally named vtkPython.h
+// \author  David Gobbi
+// \author  Last changed by $Author: jcfr $
+// \date    2012
+*/
+//----------------------------------------------------------------------------------
+
 #ifndef __PythonQtPythonInclude_h
 #define __PythonQtPythonInclude_h
 
@@ -38,18 +47,73 @@
 #undef _POSIX_THREADS
 #undef _XOPEN_SOURCE
 
+// 
+// Use the real python debugging library if it is provided.  
+// Otherwise use the "documented" trick involving checking for _DEBUG
+// and undefined that symbol while we include Python headers.
+// Update: this method does not fool Microsoft Visual C++ 8 anymore; two
+// of its header files (crtdefs.h and use_ansi.h) check if _DEBUG was set
+// or not, and set flags accordingly (_CRT_MANIFEST_RETAIL, 
+// _CRT_MANIFEST_DEBUG, _CRT_MANIFEST_INCONSISTENT). The next time the
+// check is performed in the same compilation unit, and the flags are found,
+// and error is triggered. Let's prevent that by setting _CRT_NOFORCE_MANIFEST.
+//
+
 // If PYTHONQT_USE_RELEASE_PYTHON_FALLBACK is enabled, try to link
 // release Python DLL if it is available by undefining _DEBUG while
 // including Python.h
 #if defined(PYTHONQT_USE_RELEASE_PYTHON_FALLBACK) && defined(_DEBUG)
-#undef _DEBUG
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-#define _CRT_NOFORCE_MANIFEST 1
-#endif
-#include <Python.h>
-#define _DEBUG
+# undef _DEBUG
+// Include these low level headers before undefing _DEBUG. Otherwise when doing
+// a debug build against a release build of python the compiler will end up
+// including these low level headers without DEBUG enabled, causing it to try
+// and link release versions of this low level C api.
+# include <basetsd.h>
+# include <assert.h>
+# include <ctype.h>
+# include <errno.h>
+# include <io.h>
+# include <math.h>
+# include <sal.h>
+# include <stdarg.h>
+# include <stddef.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/stat.h>
+# include <time.h>
+# include <wchar.h>
+# if defined(_MSC_VER) && _MSC_VER >= 1400
+#  define _CRT_NOFORCE_MANIFEST 1
+#  define _STL_NOFORCE_MANIFEST 1
+# endif
+# include <Python.h>
+# define _DEBUG
 #else
-#include <Python.h>
+# include <Python.h>
 #endif
 
+/*
+ * The following undefs for C standard library macros prevent
+ * build errors of the following type on mac ox 10.7.4 and XCode 4.3.3
+ *
+/usr/include/c++/4.2.1/bits/localefwd.h:57:21: error: too many arguments provided to function-like macro invocation
+    isspace(_CharT, const locale&);
+                    ^
+/usr/include/c++/4.2.1/bits/localefwd.h:56:5: error: 'inline' can only appear on functions
+    inline bool
+    ^
+/usr/include/c++/4.2.1/bits/localefwd.h:57:5: error: variable 'isspace' declared as a template
+    isspace(_CharT, const locale&);
+    ^
+*/
+#undef isspace
+#undef isupper
+#undef islower
+#undef isalpha
+#undef isalnum
+#undef toupper
+#undef tolower
+
 #endif
+
