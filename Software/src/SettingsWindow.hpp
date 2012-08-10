@@ -28,13 +28,13 @@
 #pragma once
 
 #include <QtGui>
-#include "AboutDialog.hpp"
 #include "Settings.hpp"
 #include "GrabManager.hpp"
 #include "MoodLampManager.hpp"
 #include "SpeedTest.hpp"
 #include "ColorButton.hpp"
 #include "enums.hpp"
+
 
 #include "hotkeys/qkeysequencewidget/src/qkeysequencewidget.h"
 
@@ -43,20 +43,28 @@ namespace Ui {
 }
 
 class GrabManager; // forward declaration
+class PyPlugin;
 
 class SettingsWindow : public QMainWindow {
     Q_OBJECT
 public:
     SettingsWindow(QWidget *parent = 0);
+    SettingsWindow(bool noGUI);
     ~SettingsWindow();
 
 public:
-    void startBacklight();    
+    void startBacklight();
+    void createTrayIcon();
+    void connectSignalsSlots();
+    QWidget* getSettingBox();
 
 signals:
     void settingsProfileChanged();
     void switchOffLeds();
     void switchOnLeds();
+    void settingsChanged();
+    void showLedWidgets(bool visible);
+    void setColoredLedWidget(bool colored);
     void updateLedsColors(const QList<QRgb> &);
     void updateRefreshDelay(int value);
     void updateColorDepth(int value);
@@ -72,6 +80,8 @@ signals:
     void updateApiPort(int port);
     void updateApiKey(QString key);
     void updateApiDeviceNumberOfLeds(int value);
+    void getPluginConsole();
+    void reloadPlugins();
 
 public slots:
     void ledDeviceOpenSuccess(bool isSuccess);
@@ -79,8 +89,9 @@ public slots:
     void ledDeviceFirmwareVersionResult(const QString & fwVersion);
     void refreshAmbilightEvaluated(double updateResultMs);
 
-    void setDeviceLockViaAPI(Api::DeviceLockStatus status);
+    void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status,  QList<QString> modules);
     void setBacklightStatus(Backlight::Status);
+    void setModeChanged(Lightpack::Mode);
     void backlightOn(); /* using in actions */
     void backlightOff(); /* using in actions */
     void profilesLoadAll();
@@ -91,6 +102,9 @@ public slots:
     void onApiServer_ErrorOnStartListening(QString errorMessage);
     void onPingDeviceEverySecond_Toggled(bool state);
     void processMessage(const QString &message);
+
+    void updatePlugin(QList<PyPlugin*> plugins);
+
 
 protected:
     virtual void changeEvent(QEvent *e);
@@ -106,6 +120,8 @@ private slots:
     void showAbout(); /* using in actions */
     void showSettings(); /* using in actions */
     void hideSettings(); /* using in iconActivated(..) */
+
+    void changePage(int page);
 
     void quit(); /* using in actions */
 
@@ -126,6 +142,10 @@ private slots:
     void onDeviceSerialPortBaudRate_valueChanged(QString value);
     void onDeviceGammaCorrection_valueChanged(double value);
     void onDeviceSendDataOnlyIfColorsChanged_toggled(bool state);
+
+    void onShowLedWidgets_Toggled(bool checked);
+    void onSetColoredLedWidgets();
+    void onSetWhiteLedWidgets();
 
     void openCurrentProfile();
 
@@ -152,9 +172,15 @@ private slots:
     void setOnOffHotKey(QKeySequence);
     void clearOnOffHotKey();
 
-private:
-    void connectSignalsSlots();
+    void pluginSwitch(int index);
+    void viewPluginConsole();
 
+    void on_list_Plugins_clicked(QListWidgetItem* current);
+    void on_pushButton_clicked();
+    void MoveUpPlugin();
+    void MoveDownPlugin();
+
+private:
     void updateTrayAndActionStates();    
     void updateExpertModeWidgetsVisibility();
     void updateDeviceTabWidgetsVisibility();
@@ -164,7 +190,7 @@ private:
     MaximumNumberOfLeds::Devices getLightpackMaximumNumberOfLeds();
     int getLigtpackFirmwareVersionMajor();
 
-    void createTrayIcon();
+
     void createActions();
     void updateUiFromSettings();
 
@@ -184,22 +210,26 @@ private:
 
     void setupHotkeys();
 
+    void setFirmwareVersion(const QString &firmwareVersion);
+    void versionsUpdate();
+
+    void savePriorityPlugin();
+
+
 private:
+    Ui::SettingsWindow *ui;
     // Main backlight status for all modes (Grab, MoodLamp, etc.)
     Backlight::Status m_backlightStatus;
-    Api::DeviceLockStatus m_deviceLockStatus;
+    DeviceLocked::DeviceLockStatus m_deviceLockStatus;
+    QList<QString> m_deviceLockKey;
+    QString m_deviceLockModule;
     Lightpack::Mode m_lightpackMode;
 
-    GrabManager *m_grabManager;
-    MoodLampManager *m_moodlampManager;
-    AboutDialog *m_aboutDialog;
     SpeedTest *m_speedTest;
 
     Grab::GrabberType getSelectedGrabberType();
 
     QList<QLabel *> m_labelsGrabbedColors;
-
-    Ui::SettingsWindow *ui;
 
     QAction *m_switchOnBacklightAction;
     QAction *m_switchOffBacklightAction;
@@ -210,6 +240,10 @@ private:
     QSystemTrayIcon *m_trayIcon;
     QMenu *m_trayIconMenu;
     QMenu *m_profilesMenu;
+
+    QLabel *labelProfile;
+    QLabel *labelDevice;
+    QLabel *labelFPS;
 
     enum TrayMessages
     {
@@ -226,4 +260,9 @@ private:
     static const unsigned MoodLampModeIndex;
 
     QKeySequenceWidget *m_keySequenceWidget;
+
+    QString fimwareVersion;
+
+    QList<PyPlugin*> _plugins;
+    static bool toPriority(PyPlugin* s1 , PyPlugin* s2 );
 };

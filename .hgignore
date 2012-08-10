@@ -24,6 +24,9 @@ Software/installer/Output/
 syntax: glob
 Software/installer/*.dll
 Software/installer/*.exe
+Software/PythonQT/lib/
+*.log
+generated_cpp/
 Software/bin
 Software/**/bin
 Software/docs

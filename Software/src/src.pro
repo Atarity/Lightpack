@@ -80,14 +80,8 @@ macx{
 INCLUDEPATH += ./hidapi ./grab ./alienfx ./
 
 SOURCES += \
-    LightpackApplication.cpp \
-    main.cpp \
-    SettingsWindow.cpp \
-    Settings.cpp \
-    AboutDialog.cpp \
-    GrabManager.cpp \
-    GrabWidget.cpp \
-    GrabConfigWidget.cpp \
+    LightpackApplication.cpp  main.cpp   SettingsWindow.cpp  Settings.cpp \
+      GrabManager.cpp  GrabWidget.cpp  GrabConfigWidget.cpp \
     SpeedTest.cpp \
     LedDeviceLightpack.cpp \
     LedDeviceAlienFx.cpp \
@@ -102,11 +96,15 @@ SOURCES += \
     grab/QtGrabberEachWidget.cpp \
     grab/MacOSGrabber.cpp \
     grab/D3D9Grabber.cpp \
+    LightpackPluginInterface.cpp \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
     LightpackMath.cpp \
     MoodLampManager.cpp \
-    LedDeviceManager.cpp
+    PluginManager.cpp \
+    LedDeviceManager.cpp \
+    plugins/PyPlugin.cpp \
+    SelectWidget.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -114,7 +112,6 @@ HEADERS += \
     Settings.hpp \
     SettingsDefaults.hpp \
     version.h \
-    AboutDialog.hpp \
     TimeEvaluations.hpp \
     GrabManager.hpp \
     GrabWidget.hpp \
@@ -138,9 +135,7 @@ HEADERS += \
     grab/WinAPIGrabber.hpp \
     grab/WinAPIGrabberEachWidget.hpp \
     defs.h \
-    enums.hpp \
-    ApiServer.hpp \
-    ApiServerSetColorTask.hpp \
+    enums.hpp     LightpackPluginInterface.hpp     ApiServer.hpp     ApiServerSetColorTask.hpp \
     hidapi/hidapi.h \
     ../../CommonHeaders/LIGHTPACK_HW.h \
     ../../CommonHeaders/COMMANDS.h \
@@ -148,11 +143,14 @@ HEADERS += \
     grab/D3D9Grabber.hpp \
     LightpackMath.hpp \
     StructRgb.hpp \
+    PluginManager.hpp \
+    plugins/PyPlugin.h \    
     MoodLampManager.hpp \
-    LedDeviceManager.hpp
+    LedDeviceManager.hpp \
+    SelectWidget.hpp
+
 
 FORMS += SettingsWindow.ui \
-    AboutDialog.ui \
     GrabWidget.ui \
     GrabConfigWidget.ui
 
@@ -173,4 +171,12 @@ include(qtsingleapplication/src/qtsingleapplication.pri)
 #
 include(hotkeys/globalshortcut/globalshortcut.pri)
 include(hotkeys/qkeysequencewidget/qkeysequencewidget.pri)
+
+#
+# PythonQt
+#
+include (../PythonQt/build/common.prf )
+include (../PythonQt/build/PythonQt.prf )
+include (../PythonQt/build/PythonQt_QtAll.prf )
+
 

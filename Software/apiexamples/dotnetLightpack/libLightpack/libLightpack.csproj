@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="ApiLightpack.cs" />
     <Compile Include="Const.cs" />
+    <Compile Include="LogEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -30,6 +30,8 @@
 #include "SettingsWindow.hpp"
 #include "ApiServer.hpp"
 #include "LedDeviceManager.hpp"
+#include "LightpackPluginInterface.hpp"
+#include "PluginManager.hpp"
 
 class LightpackApplication : public QtSingleApplication
 {
@@ -54,10 +56,21 @@ public:
 
 signals:
     void clearColorBuffers();
+
 public slots:
+    void setStatusChanged(Backlight::Status);
+    void setBacklightChanged(Lightpack::Mode);
 
 private slots:
-    void backlightStatusChanged(Backlight::Status);
+    void requestBacklightStatus();
+    void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status, QList<QString> modules);
+    void profileSwitch(const QString & configName);
+    void settingsChanged();
+    void showLedWidgets(bool visible);
+    void setColoredLedWidget(bool colored);
+    void getConsole();
+    void consoleClosing();
+
 private:
     void processCommandLineArguments();
     void printHelpMessage() const;
@@ -65,6 +78,9 @@ private:
     void checkSystemTrayAvailability() const;
     void startApiServer();
     void startLedDeviceManager();
+    void startGrabManager();
+    void startPluginManager();
+    void startBacklight();
     void connectApiServerAndLedDeviceSignalsSlots();
     void disconnectApiServerAndLedDeviceSignalsSlots();
 
@@ -76,9 +92,21 @@ private:
     LedDeviceManager *m_ledDeviceManager;
     QThread *m_LedDeviceManagerThread;
     QThread *m_apiServerThread;
+    GrabManager *m_grabManager;
+    MoodLampManager *m_moodlampManager;
+    QThread *m_grabManagerThread;
+    QThread *m_moodlampManagerThread;
+
+    LightpackPluginInterface *m_pluginInterface;
+    PluginManager *m_pluginManager;
+    QThread* m_PluginThread;
+    PythonQtScriptingConsole* consolePlugin;
+    // QWidget *consolePlugin;
+
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;
     bool m_isApiServerConnectedToLedDeviceSignalsSlots;
-
+    bool m_noGui;
+    bool m_deviceLockStatus;
     Backlight::Status m_backlightStatus;
 };

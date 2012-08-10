@@ -32,13 +32,17 @@
 #include <QMap>
 #include <QSet>
 #include <QRgb>
-#include "ApiServerSetColorTask.hpp"
+#include <QTime>
 #include "SettingsWindow.hpp"
+#include "LightpackPluginInterface.hpp"
+#include "ApiServerSetColorTask.hpp"
 #include "debug.h"
+#include "enums.hpp"
 
 struct ClientInfo
 {
     bool isAuthorized;
+    QString sessionKey;
     // Think about it. May be we need to save gamma,
     // smooth and brightness and after success lock send
     // this values to device?
@@ -52,6 +56,7 @@ public:
     ApiServer(QObject *parent = 0);
     ApiServer(quint16 port, QObject *parent = 0);
 
+    void setInterface(LightpackPluginInterface *lightpackInterface);
     void firstStart();
 
 public:
@@ -85,6 +90,22 @@ public:
     static const char * CmdGetCountLeds;
     static const char * CmdResultCountLeds;
 
+    static const char * CmdGetLeds;
+    static const char * CmdResultLeds;
+
+    static const char * CmdGetColors;
+    static const char * CmdResultGetColors;
+
+    static const char * CmdGetFPS;
+    static const char * CmdResultFPS;
+
+    static const char * CmdGetScreenSize;
+    static const char * CmdResultScreenSize;
+
+    static const char * CmdGetBacklight;
+    static const char * CmdResultBacklight_Ambilight;
+    static const char * CmdResultBacklight_Moodlamp;
+
     static const char * CmdLock;
     static const char * CmdResultLock_Success;
     static const char * CmdResultLock_Busy;
@@ -104,23 +125,23 @@ public:
     static const char * CmdSetBrightness;
     static const char * CmdSetSmooth;
     static const char * CmdSetProfile;
+    static const char * CmdSetLeds;
+
+    static const char * CmdNewProfile;
+    static const char * CmdDeleteProfile;
 
     static const char * CmdSetStatus;
     static const char * CmdSetStatus_On;
     static const char * CmdSetStatus_Off;
 
+    static const char * CmdSetBacklight;
+    static const char * CmdSetBacklight_Ambilight;
+    static const char * CmdSetBacklight_Moodlamp;
+
     static const int SignalWaitTimeoutMs;
 
 signals:
-    void requestBacklightStatus();
     void startParseSetColorTask(QByteArray buffer);
-    void updateLedsColors(const QList<QRgb> & colors);
-    void updateGamma(double value);
-    void updateBrightness(int value);
-    void updateSmooth(int value);
-    void updateProfile(QString profileName);
-    void updateStatus(Backlight::Status status);
-    void updateDeviceLockStatus(Api::DeviceLockStatus status);
     void errorOnStartListening(QString errorMessage);
     void clearColorBuffers();
     void updateApiDeviceNumberOfLeds(int value);
@@ -137,10 +158,10 @@ protected:
 private slots:
     void clientDisconnected();
     void clientProcessCommands();
-    void resultBacklightStatus(Backlight::Status status);
     void taskSetColorIsSuccess(bool isSuccess);
 
 private:
+    LightpackPluginInterface *lightpack;
     void initPrivateVariables();
     void initApiSetColorTask();
     void startListening();
@@ -157,20 +178,15 @@ private:
     int m_apiPort;
     QString m_apiAuthKey;
     bool m_isAuthEnabled;
+    QTime m_time;
 
-    QTcpSocket *m_lockedClient;
     QMap <QTcpSocket*, ClientInfo> m_clients;
 
     QThread *m_apiSetColorTaskThread;
     ApiServerSetColorTask *m_apiSetColorTask;
 
-    QTime m_time;
-
     bool m_isTaskSetColorDone;
     bool m_isTaskSetColorParseSuccess;
-
-    bool m_isRequestBacklightStatusDone;
-    Backlight::Status m_backlightStatusResult;
 
     QString m_helpMessage;
     QString m_shortHelpMessage;

@@ -363,6 +363,7 @@ void GrabManager::firstWidgetPositionChanged()
 
     m_screenSavedIndex = QApplication::desktop()->screenNumber(m_ledWidgets[0]);
     m_screenSavedRect = QApplication::desktop()->screenGeometry(m_screenSavedIndex);
+    emit changeScreen(m_screenSavedRect);
 
     if (m_grabber == NULL)
     {

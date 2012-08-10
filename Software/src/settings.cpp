@@ -1158,11 +1158,13 @@ void Settings::initCurrentProfile(bool isResetDefault)
     setNewOption(Profile::Key::Device::Gamma,       Profile::Device::GammaDefault, isResetDefault);
     setNewOption(Profile::Key::Device::ColorDepth,  Profile::Device::ColorDepthDefault, isResetDefault);
 
+
     QPoint ledPosition;
 
     for (int i = 0; i < MaximumNumberOfLeds::AbsoluteMaximum; i++)
     {
         ledPosition = getDefaultPosition(i);
+
 
         setNewOption(Profile::Key::Led::Prefix + QString::number(i + 1) + "/" + Profile::Key::Led::IsEnabled,
                      Profile::Led::IsEnabledDefault, isResetDefault);
@@ -1179,6 +1181,7 @@ void Settings::initCurrentProfile(bool isResetDefault)
                      Profile::Led::CoefDefault, isResetDefault);
     }
 
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "led";
     QMutexLocker locker(&m_mutex);
     m_currentProfile->sync();
 }

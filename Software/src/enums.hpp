@@ -38,11 +38,12 @@ enum Status {
 };
 }
 
-namespace Api
+namespace DeviceLocked
 {
 enum DeviceLockStatus {
-    DeviceUnlocked,
-    DeviceLocked
+    Unlocked,
+    Api,
+    Plugin
 };
 }
 
@@ -51,6 +52,7 @@ namespace Lightpack
 enum Mode {
     AmbilightMode,
     MoodLampMode,
+    UnknownMode,
     Default = AmbilightMode
 };
 }
@@ -93,7 +95,7 @@ enum Devices
     Adalight    = 255,
     Ardulight   = 50,
     AlienFx     = 1,
-    Virtual     = 50,
+    Virtual     = 255,
 
     Lightpack4  = 8,
     Lightpack5  = 10,

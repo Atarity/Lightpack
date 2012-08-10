@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Net.Sockets;
 using System.Text;
@@ -18,6 +19,7 @@ namespace libLightpack
 	    private bool isAuth = false;
         private bool isLock = false;
 
+        public event EventHandler<LogEventArgs> LogEvent;
 
         public string Version
         {
@@ -88,10 +90,12 @@ namespace libLightpack
                 data = data.Replace("\n", string.Empty);
                 data = data.Replace("\r", string.Empty);
             }
+            OnLogMessage(data);
 	        return data;
         }
         private void _sendData(string data)
         {
+            OnLogMessage(data);
             Byte[] bytesSent = Encoding.UTF8.GetBytes(data);
             _client.Client.Send(bytesSent);
         }
@@ -104,14 +108,9 @@ namespace libLightpack
                 isLock = false;
                 isAuth = false;
 	            _client.Connect(Host, Port);
-	            string[] list = _readData().Split(':');
-		     	if (list.Length > 1)
-		         	_version = list[1];
-                // old version api
-                if (_version == "1.0")
-                    isAuth = true;
-                else
-                    Login();
+	            string data = _readData();
+                _version = data.Substring(data.IndexOf("API v") + 5, 3); ;
+                Login();
 
                 GetCountLeds();
             }
@@ -160,7 +159,7 @@ namespace libLightpack
             string s="off";
             if (status == Status.On) s = "on";
             _sendData(String.Format("setstatus:{0}\n",s));
-            _readData();
+            string res = _readData();
         }
 
         public StatusApi GetStatusApi()
@@ -280,10 +279,91 @@ namespace libLightpack
             }
         }
 
-        public string Help()
+	    public string Help()
         {
             _sendData("help\n");
             return _readData(false);
         }
+
+	    public List<Color> GetColors()
+	    {
+            List<Color> colors = new List<Color>();
+                _sendData(String.Format("getcolors\n"));
+            string s = _readData();
+            string[] list = s.Split(':');
+            if (list.Length > 1)
+            {
+                list = list[1].Split(';');
+            }
+	        foreach (string s1 in list)
+	        {
+                if (string.IsNullOrEmpty(s1)) continue;
+	            string tmp = s1.Substring(s1.IndexOf("-") + 1, s1.Length - s1.IndexOf("-")-1);
+	            string[] cl = tmp.Split(',');
+	            Color color = Color.FromArgb(255, Convert.ToInt32(cl[0]), Convert.ToInt32(cl[1]), Convert.ToInt32(cl[2]));
+                colors.Add(color);
+	        }
+
+	        return colors;
+	    }
+
+        private void OnLogMessage(string message)
+        {
+             EventHandler<LogEventArgs> temp = this.LogEvent;
+            if (temp != null)
+            {
+                LogEventArgs ea = new LogEventArgs(message);
+                Delegate[] il = temp.GetInvocationList();
+                if (il != null)
+                    foreach (EventHandler<LogEventArgs> dgt in il)
+                        dgt.Invoke(this, ea);
+            }
+        }
+
+	    public Size GetScreen()
+	    {
+            _sendData(String.Format("getscreensize\n"));
+            string s = _readData();
+            string[] list = s.Split(':');
+            if (list.Length > 1)
+            {
+                list = list[1].Split(',');
+            }
+            return  new Size(Convert.ToInt32(list[0]),Convert.ToInt32(list[1]));
+	    }
+
+        public List<Rectangle> GetLeds()
+        {
+            List<Rectangle> leds = new List<Rectangle>();
+            _sendData(String.Format("getleds\n"));
+            string s = _readData();
+            string[] list = s.Split(':');
+            if (list.Length > 1)
+            {
+                list = list[1].Split(';');
+            }
+            foreach (string s1 in list)
+            {
+                if (string.IsNullOrEmpty(s1)) continue;
+                string tmp = s1.Substring(s1.IndexOf("-") + 1, s1.Length - s1.IndexOf("-") - 1);
+                string[] cl = tmp.Split(',');
+                Rectangle color = new Rectangle(Convert.ToInt32(cl[0]), Convert.ToInt32(cl[1]), Convert.ToInt32(cl[2]), Convert.ToInt32(cl[3]));
+                leds.Add(color);
+            }
+
+            return leds;
+        }
+
+	    public string FPS()
+	    {
+            _sendData(String.Format("getfps\n"));
+            string s = _readData();
+            string[] list = s.Split(':');
+            if (list.Length > 1)
+            {
+                return list[1];
+            }
+            return "?";
+	    }
     }
 }

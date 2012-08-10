@@ -158,6 +158,9 @@ private:
     static double getValidLedCoef(int ledIndex, const QString & keyCoef);
 
     static void initCurrentProfile(bool isResetDefault);
+    static void initDevicesMap();
+
+public:
     static void setNewOption(const QString & name, const QVariant & value,
                             bool isForceSetOption = false, QSettings * settings = m_currentProfile);
     static void setNewOptionMain(const QString & name, const QVariant & value,
@@ -169,7 +172,7 @@ private:
     static void setValue(const QString & key, const QVariant & value);
     static QVariant value(const QString & key);
 
-    static void initDevicesMap();
+
 
 
 

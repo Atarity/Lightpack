@@ -186,6 +186,7 @@ void messageHandler(QtMsgType type, const char *msg)
 
 int main(int argc, char **argv)
 {
+
 #   ifdef Q_WS_WIN
     CreateMutex(NULL, FALSE, L"LightpackAppMutex");
 #   endif
@@ -203,6 +204,9 @@ int main(int argc, char **argv)
         qWarning() << "Application already running";
         exit(0);
     }
+
+    QStringList paths = QStringList() << getApplicationDirectoryPath(argv[0]) + "/plugins";
+    lightpackApp.setLibraryPaths(paths);
 
     openLogsFile(appDirPath);
 
