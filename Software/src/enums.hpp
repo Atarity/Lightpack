@@ -93,7 +93,7 @@ enum Devices
     AbsoluteMaximum = 255,
 
     Adalight    = 255,
-    Ardulight   = 50,
+    Ardulight   = 255,
     AlienFx     = 1,
     Virtual     = 255,
 
