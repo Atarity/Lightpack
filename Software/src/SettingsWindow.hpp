@@ -142,6 +142,7 @@ private slots:
     void onDeviceSerialPortBaudRate_valueChanged(QString value);
     void onDeviceGammaCorrection_valueChanged(double value);
     void onDeviceSendDataOnlyIfColorsChanged_toggled(bool state);
+    void onColorSequence_valueChanged(QString value);
 
     void onShowLedWidgets_Toggled(bool checked);
     void onSetColoredLedWidgets();

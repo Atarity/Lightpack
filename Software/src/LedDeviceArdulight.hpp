@@ -61,6 +61,7 @@ private:
 
     double m_gamma;
     int m_brightness;
+    QString m_colorSequence;
 
     QList<QRgb> m_colorsSaved;
     QList<StructRgb> m_colorsBuffer;

@@ -150,7 +150,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -1074,6 +1074,72 @@
             <property name="value">
              <double>2.000000000000000</double>
             </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_ColorSequence">
+          <property name="leftMargin">
+           <number>9</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>9</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_ColorSequence">
+            <property name="text">
+             <string>Color Sequence</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_ColorSequence">
+            <property name="minimumSize">
+             <size>
+              <width>143</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>143</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>RGB</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>RBG</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>GRB</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>GBR</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>BRG</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>BGR</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>

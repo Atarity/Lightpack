@@ -119,11 +119,12 @@ enum Options
     SmoothSlowdown  = (1 << 5),
     SerialPort      = (1 << 6), /* serial port name and baud rate */
     VirtualLeds     = (1 << 7),
+    ColorSequence  = (1 << 8),
 
     Default         = NumberOfLeds | Brightness | Gamma,
 
-    Adalight        = Default | SerialPort,
-    Ardulight       = Default | SerialPort,
+    Adalight        = Default | SerialPort | ColorSequence,
+    Ardulight       = Default | SerialPort | ColorSequence,
     AlienFx         = Default,
     Lightpack       = Default | SmoothSlowdown | RefreshDelay | ColorDepth,
     Virtual         = Default | VirtualLeds

@@ -208,6 +208,8 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->comboBox_SerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceSerialPortBaudRate_valueChanged(QString)));
     connect(ui->doubleSpinBox_DeviceGamma, SIGNAL(valueChanged(double)), this, SLOT(onDeviceGammaCorrection_valueChanged(double)));
     connect(ui->checkBox_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), this, SLOT(onDeviceSendDataOnlyIfColorsChanged_toggled(bool)));
+    connect(ui->comboBox_ColorSequence, SIGNAL(currentIndexChanged(QString)), this, SLOT(onColorSequence_valueChanged(QString)));
+
 
     // Open Settings file
     connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openCurrentProfile()));
@@ -439,6 +441,10 @@ void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
 
     // Virtual leds
     ui->frame_VirtualLeds->setVisible(options & DeviceTab::VirtualLeds);   
+
+     // ColorSequence
+    ui->label_ColorSequence->setVisible(options & DeviceTab::ColorSequence);
+    ui->comboBox_ColorSequence->setVisible(options & DeviceTab::ColorSequence);
 }
 
 void SettingsWindow::syncLedDeviceWithSettingsWindow()
@@ -1093,6 +1099,11 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
     // Update number of leds for current selected device
     ui->spinBox_NumberOfLeds->setValue(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
 
+    int index = ui->comboBox_ColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
+    if (index < 0)
+        index = 0;
+    ui->comboBox_ColorSequence->setCurrentIndex(index);
+
     this->labelDevice->setText(tr("Device:")+value);
     emit recreateLedDevice();
 }
@@ -1135,6 +1146,15 @@ void SettingsWindow::onDeviceSerialPortBaudRate_valueChanged(QString value)
 
     if (Settings::isConnectedDeviceUsesSerialPort())
         emit recreateLedDevice();
+}
+
+void SettingsWindow::onColorSequence_valueChanged(QString value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    Settings::setColorSequence(Settings::getConnectedDevice(),value);
+
+    emit settingsProfileChanged();
 }
 
 void SettingsWindow::onDeviceGammaCorrection_valueChanged(double value)
@@ -1618,6 +1638,11 @@ void SettingsWindow::updateUiFromSettings()
         break;
     }
 
+    int index = ui->comboBox_ColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
+    if (index < 0)
+        index = 0;
+    ui->comboBox_ColorSequence->setCurrentIndex(index);
+
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
 
     ui->checkBox_SendDataOnlyIfColorsChanges->setChecked(Settings::isSendDataOnlyIfColorsChanges());
@@ -1890,6 +1915,12 @@ void SettingsWindow::initConnectedDeviceComboBox()
         currentIndex = 0;
     }
     ui->comboBox_ConnectedDevice->setCurrentIndex(currentIndex);
+
+    int index = ui->comboBox_ColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
+    if (index < 0)
+        index = 0;
+    ui->comboBox_ColorSequence->setCurrentIndex(index);
+
 }
 
 void SettingsWindow::initSerialPortBaudRateComboBox()

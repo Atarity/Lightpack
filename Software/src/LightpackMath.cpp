@@ -68,9 +68,6 @@ void LightpackMath::brightnessCorrection(int brightness, QList<StructRgb> & resu
 void LightpackMath::maxCorrection(int max, QList<StructRgb> & result)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << max;
-
-    // brightness -- must be in percentage (0..100%)
-
     for (int i = 0; i < result.count(); i++)
     {
         if (result[i].r > max) result[i].r = max;

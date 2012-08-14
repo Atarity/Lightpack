@@ -96,6 +96,8 @@ public:
     static void setNumberOfLeds(SupportedDevices::DeviceType device, int numberOfLeds);
     static int getNumberOfLeds(SupportedDevices::DeviceType device);
 
+    static void setColorSequence(SupportedDevices::DeviceType device, QString colorSequence);
+    static QString getColorSequence(SupportedDevices::DeviceType device);
 
     // Profile
     static int getGrabSlowdown();

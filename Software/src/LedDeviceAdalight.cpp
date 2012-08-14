@@ -38,6 +38,7 @@ LedDeviceAdalight::LedDeviceAdalight(QObject * parent) : ILedDevice(parent)
 
     m_gamma = Settings::getDeviceGamma();
     m_brightness = Settings::getDeviceBrightness();
+    m_colorSequence =Settings::getColorSequence(SupportedDevices::AdalightDevice);
 
     // TODO: think about init m_savedColors in all ILedDevices
 
@@ -69,9 +70,42 @@ void LedDeviceAdalight::setColors(const QList<QRgb> & colors)
     {
         StructRgb color = m_colorsBuffer[i];
 
-        m_writeBuffer.append(color.r);
-        m_writeBuffer.append(color.g);
-        m_writeBuffer.append(color.b);
+        if (m_colorSequence == "RBG")
+        {
+            m_writeBuffer.append(color.r);
+            m_writeBuffer.append(color.b);
+            m_writeBuffer.append(color.g);
+        }
+        else if (m_colorSequence == "BRG")
+        {
+            m_writeBuffer.append(color.b);
+            m_writeBuffer.append(color.r);
+            m_writeBuffer.append(color.g);
+        }
+        else if (m_colorSequence == "BGR")
+        {
+            m_writeBuffer.append(color.b);
+            m_writeBuffer.append(color.g);
+            m_writeBuffer.append(color.r);
+        }
+        else if (m_colorSequence == "GRB")
+        {
+            m_writeBuffer.append(color.g);
+            m_writeBuffer.append(color.r);
+            m_writeBuffer.append(color.b);
+        }
+        else if (m_colorSequence == "GBR")
+        {
+            m_writeBuffer.append(color.g);
+            m_writeBuffer.append(color.b);
+            m_writeBuffer.append(color.r);
+        }
+        else
+        {
+            m_writeBuffer.append(color.r);
+            m_writeBuffer.append(color.g);
+            m_writeBuffer.append(color.b);
+        }
     }
 
     bool ok = writeBuffer(m_writeBuffer);
@@ -133,6 +167,7 @@ void LedDeviceAdalight::updateDeviceSettings()
 
     setGamma(Settings::getDeviceGamma());
     setBrightness(Settings::getDeviceBrightness());
+    m_colorSequence = Settings::getColorSequence(SupportedDevices::AdalightDevice);
 }
 
 void LedDeviceAdalight::open()

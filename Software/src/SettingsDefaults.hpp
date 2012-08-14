@@ -97,10 +97,12 @@ static const QString BaudRateDefault = "115200";
 namespace Adalight
 {
 static const int NumberOfLedsDefault = 25;
+static const QString ColorSequence = "RGB";
 }
 namespace Ardulight
 {
 static const int NumberOfLedsDefault = 10;
+static const QString ColorSequence = "RGB";
 }
 namespace AlienFx
 {

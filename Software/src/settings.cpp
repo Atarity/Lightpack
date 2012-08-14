@@ -85,10 +85,12 @@ static const QString BaudRate = "SerialPort/BaudRate";
 namespace Adalight
 {
 static const QString NumberOfLeds = "Adalight/NumberOfLeds";
+static const QString ColorSequence = "Adalight/ColorSequence";
 }
 namespace Ardulight
 {
 static const QString NumberOfLeds = "Ardulight/NumberOfLeds";
+static const QString ColorSequence = "Ardulight/ColorSequence";
 }
 namespace AlienFx
 {
@@ -237,7 +239,9 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
 
     // Init number of leds for each supported device
     setNewOptionMain(Main::Key::Adalight::NumberOfLeds,     Main::Adalight::NumberOfLedsDefault);
+    setNewOptionMain(Main::Key::Adalight::ColorSequence,     Main::Adalight::ColorSequence);
     setNewOptionMain(Main::Key::Ardulight::NumberOfLeds,    Main::Ardulight::NumberOfLedsDefault);
+    setNewOptionMain(Main::Key::Ardulight::ColorSequence,     Main::Ardulight::ColorSequence);
     setNewOptionMain(Main::Key::AlienFx::NumberOfLeds,      Main::AlienFx::NumberOfLedsDefault);
     setNewOptionMain(Main::Key::Lightpack::NumberOfLeds,    Main::Lightpack::NumberOfLedsDefault);
     setNewOptionMain(Main::Key::Virtual::NumberOfLeds,      Main::Virtual::NumberOfLedsDefault);
@@ -694,6 +698,36 @@ int Settings::getNumberOfLeds(SupportedDevices::DeviceType device)
 
     // TODO: validator on maximum number of leds for current 'device'
     return valueMain(key).toInt();
+}
+
+void Settings::setColorSequence(SupportedDevices::DeviceType device, QString colorSequence)
+{
+     DEBUG_LOW_LEVEL << Q_FUNC_INFO << device << colorSequence;
+    switch (device)
+    {
+        case  SupportedDevices::AdalightDevice:
+            setValueMain(Main::Key::Adalight::ColorSequence, colorSequence);
+            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "ada" << colorSequence;
+            break;
+        case SupportedDevices::ArdulightDevice:
+            setValueMain(Main::Key::Ardulight::ColorSequence, colorSequence);
+            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "ard" << colorSequence;
+            break;
+    }
+}
+
+QString Settings::getColorSequence(SupportedDevices::DeviceType device)
+{
+    switch (device)
+    {
+        case  SupportedDevices::AdalightDevice:
+            return valueMain(Main::Key::Adalight::ColorSequence).toString();
+            break;
+        case SupportedDevices::ArdulightDevice:
+            return valueMain(Main::Key::Ardulight::ColorSequence).toString();
+            break;
+    }
+    return "RGB";
 }
 
 int Settings::getGrabSlowdown()
