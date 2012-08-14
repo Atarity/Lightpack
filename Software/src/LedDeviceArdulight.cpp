@@ -63,6 +63,7 @@ void LedDeviceArdulight::setColors(const QList<QRgb> & colors)
 
     LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer);
     LightpackMath::brightnessCorrection(m_brightness, m_colorsBuffer);
+    LightpackMath::maxCorrection(254,m_colorsBuffer);
 
     m_writeBuffer.clear();
     m_writeBuffer.append(m_writeBufferHeader);
