@@ -30,4 +30,4 @@
 # -------------------------------------------------
 
 TEMPLATE = subdirs
-SUBDIRS = PythonQt src tests
+SUBDIRS = src tests
