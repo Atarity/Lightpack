@@ -2108,10 +2108,10 @@ void SettingsWindow::versionsUpdate()
     // Save templete for construct version string
     QString versionsTemplate = ui->labelVersions->text();
 
-#ifdef HG_REVISION
+#ifdef GIT_REVISION
     versionsTemplate = versionsTemplate.arg(
             QApplication::applicationVersion(),
-            HG_REVISION,
+            GIT_REVISION,
             fimwareVersion );
 #else
     versionsTemplate = versionsTemplate.arg(

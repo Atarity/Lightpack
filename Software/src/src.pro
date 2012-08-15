@@ -17,22 +17,22 @@ MOC_DIR     = stuff
 UI_DIR      = stuff
 RCC_DIR     = stuff
 
-# Find currect mercurial revision
-HG_REVISION = $$system(hg id -i)
+# Find currect git revision
+GIT_REVISION = $$system(git show -s --format="%h")
 
-# For update HG_REVISION use it:
+# For update GIT_REVISION use it:
 #   $ qmake Lightpack.pro && make clean && make
 #
 # Or simply edit this file (add space anythere
 # for cause to call qmake) and re-build project
 
-isEmpty( HG_REVISION ){
-    # In code uses #ifdef HG_REVISION ... #endif
-    message( "Mercurial not found, HG_REVISION will be undefined" )
+isEmpty( GIT_REVISION ){
+    # In code uses #ifdef GIT_REVISION ... #endif
+    message( "GIT not found, GIT_REVISION will be undefined" )
 } else {
     # Define currect mercurial revision id
     # It will be show in about dialog and --help output
-    DEFINES += HG_REVISION=\\\"$${HG_REVISION}\\\"
+    DEFINES += GIT_REVISION=\\\"$${GIT_REVISION}\\\"
 }
 
 TRANSLATIONS = ../res/translations/ru_RU.ts
