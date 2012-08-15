@@ -35,3 +35,4 @@ Doxyfile
 **/stuff
 **.o
 **.log
+*.user
