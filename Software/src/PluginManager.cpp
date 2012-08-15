@@ -17,9 +17,9 @@ PluginManager::PluginManager(QObject *parent) :
     QObject(parent)
 {
     //initialize python qt
-   PythonQt::init(PythonQt::IgnoreSiteModule | PythonQt::RedirectStdOut);
-   PythonQt::self()->setImporter(0);
-   /// TODO: make init modules manual
+    PythonQt::init(PythonQt::IgnoreSiteModule | PythonQt::RedirectStdOut);
+    PythonQt::self()->setImporter(0);
+    /// TODO: make init modules manual
     PythonQt_QtAll::init();
 }
 
@@ -66,14 +66,14 @@ void PluginManager::initPython()
         //PythonQt::self()->addClassDecorators(m_ledDeviceFactory);
 
         // todo remove
-//        console = new PythonQtScriptingConsole(NULL,*mainContext);
-//        console->appendCommandPrompt();
-//        console->show();
-        }
-        catch (...)
-        {
+        //        console = new PythonQtScriptingConsole(NULL,*mainContext);
+        //        console->appendCommandPrompt();
+        //        console->show();
+    }
+    catch (...)
+    {
 
-        }
+    }
 
 }
 
@@ -121,18 +121,18 @@ void PluginManager::loadPlugins(){
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     QStringList pluginPaths = QApplication::libraryPaths();
-      QString path = QString(Settings::getApplicationDirPath() + "Plugins");
-      QDir dir(path);
-      QStringList files = dir.entryList(QStringList("*.py"), QDir::Files);
+    QString path = QString(Settings::getApplicationDirPath() + "Plugins");
+    QDir dir(path);
+    QStringList files = dir.entryList(QStringList("*.py"), QDir::Files);
 
-      QStringList lstDirs = dir.entryList(QDir::Dirs |
-       QDir::AllDirs |
-       QDir::NoDotAndDotDot); //Получаем список папок
+    QStringList lstDirs = dir.entryList(QDir::Dirs |
+                                        QDir::AllDirs |
+                                        QDir::NoDotAndDotDot); //Получаем список папок
 
-      foreach(QString pluginDir, lstDirs){
-       DEBUG_LOW_LEVEL << pluginDir;
+    foreach(QString pluginDir, lstDirs){
+        DEBUG_LOW_LEVEL << pluginDir;
 
-       QString fileName = path+"/"+pluginDir+"/"+pluginDir+".py";
+        QString fileName = path+"/"+pluginDir+"/"+pluginDir+".py";
         QString plugin = QFileInfo (fileName).baseName ();
         //add python plugin to file to path
         // TODO: fail
@@ -144,44 +144,44 @@ void PluginManager::loadPlugins(){
 
         DEBUG_LOW_LEVEL << plugin;
 
-            //get plugin info
-            QString pluginConstructor = plugin + "()\n";
-            PythonQtObjectPtr pyPluginObj = mainContext->evalScript(pluginConstructor, Py_eval_input);
-            if(pyPluginObj.isNull()){
-                DEBUG_LOW_LEVEL << "Can't load plugin " << plugin ;
-                continue;
-            }
+        //get plugin info
+        QString pluginConstructor = plugin + "()\n";
+        PythonQtObjectPtr pyPluginObj = mainContext->evalScript(pluginConstructor, Py_eval_input);
+        if(pyPluginObj.isNull()) {
+            DEBUG_LOW_LEVEL << "Can't load plugin " << plugin ;
+            continue;
+        }
 
-            QMap<QString, PyPlugin*>::iterator found = _plugins.find(plugin);
-            if(found != _plugins.end()){
-                DEBUG_LOW_LEVEL << "Already load a plugin named " << plugin << " !";
-                continue;
-            }
-
-
-            PyPlugin* p = new PyPlugin(pyPluginObj, NULL);
-            DEBUG_LOW_LEVEL <<p->getName()<<  p->getAuthor() << p->getDescription() << p->getVersion();
-//            connect(p, SIGNAL(aboutToExecute()), this, SLOT(aboutToExecutePlugin()));
-//            connect(p, SIGNAL(executed()), this, SLOT(cleanUp()));
-            connect(p, SIGNAL(executed()), this, SIGNAL(pluginExecuted()));
-           _plugins[plugin] = p;
+        QMap<QString, PyPlugin*>::iterator found = _plugins.find(plugin);
+        if(found != _plugins.end()){
+            DEBUG_LOW_LEVEL << "Already load a plugin named " << plugin << " !";
+            continue;
+        }
 
 
+        PyPlugin* p = new PyPlugin(pyPluginObj, NULL);
+        DEBUG_LOW_LEVEL <<p->getName()<<  p->getAuthor() << p->getDescription() << p->getVersion();
+        //            connect(p, SIGNAL(aboutToExecute()), this, SLOT(aboutToExecutePlugin()));
+        //            connect(p, SIGNAL(executed()), this, SLOT(cleanUp()));
+        connect(p, SIGNAL(executed()), this, SIGNAL(pluginExecuted()));
+        _plugins[plugin] = p;
 
-         //  QThread* m_PluginThread = new QThread();
-           //p->moveToThread(m_PluginThread);
-          // m_PluginThread->start();
+
+
+        //  QThread* m_PluginThread = new QThread();
+        //p->moveToThread(m_PluginThread);
+        // m_PluginThread->start();
     }
 
-      _pluginInterface->updatePlugin(_plugins.values());
-     emit updatePlugin(_plugins.values());
+    _pluginInterface->updatePlugin(_plugins.values());
+    emit updatePlugin(_plugins.values());
 
-     for(QMap<QString, PyPlugin*>::iterator it = _plugins.begin(); it != _plugins.end(); ++it){
-         PyPlugin* p = it.value();
-         p->init();
-         if (p->isEnabled())
-             p->execute();
-     }
+    for(QMap<QString, PyPlugin*>::iterator it = _plugins.begin(); it != _plugins.end(); ++it){
+        PyPlugin* p = it.value();
+        p->init();
+        if (p->isEnabled())
+            p->execute();
+    }
 }
 
 PyPlugin* PluginManager::getPlugin(const QString& name_){
