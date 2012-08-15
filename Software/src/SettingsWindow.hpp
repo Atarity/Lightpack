@@ -235,7 +235,6 @@ private:
     QAction *m_switchOnBacklightAction;
     QAction *m_switchOffBacklightAction;
     QAction *m_settingsAction;
-    QAction *m_aboutAction;
     QAction *m_quitAction;
 
     QSystemTrayIcon *m_trayIcon;

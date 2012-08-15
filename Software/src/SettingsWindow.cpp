@@ -160,7 +160,6 @@ SettingsWindow::~SettingsWindow()
     delete m_switchOnBacklightAction;
     delete m_switchOffBacklightAction;
     delete m_settingsAction;
-    delete m_aboutAction;
     delete m_quitAction;
 
     delete m_trayIcon;
@@ -284,7 +283,6 @@ void SettingsWindow::changeEvent(QEvent *e)
         m_switchOnBacklightAction->setText(tr("&Turn on"));
         m_switchOffBacklightAction->setText(tr("&Turn off"));
         m_settingsAction->setText(tr("&Settings"));
-        m_aboutAction->setText(tr("&About"));
         m_quitAction->setText(tr("&Quit"));
 
         m_profilesMenu->setTitle(tr("&Profiles"));
@@ -410,7 +408,7 @@ void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << options;
 
-    ui->groupBox_DeviceBrightness->setVisible(options & DeviceTab::Brightness);
+//    ui->groupBox_DeviceBrightness->setVisible(options & DeviceTab::Brightness);
     ui->groupBox_DeviceSmoothSlowdown->setVisible(options & DeviceTab::SmoothSlowdown);
     ui->groupBox_DeviceRefreshDelay->setVisible((options & DeviceTab::RefreshDelay) && Settings::isExpertModeEnabled());
 
@@ -1517,10 +1515,6 @@ void SettingsWindow::createActions()
     m_settingsAction->setIconVisibleInMenu(true);
     connect(m_settingsAction, SIGNAL(triggered()), this, SLOT(showSettings()));
 
-    m_aboutAction = new QAction(QIcon(":/icons/about.png"), tr("&About"), this);
-    m_aboutAction->setIconVisibleInMenu(true);
-    connect(m_aboutAction, SIGNAL(triggered()), this, SLOT(showAbout()));
-
     m_quitAction = new QAction(tr("&Quit"), this);
     connect(m_quitAction, SIGNAL(triggered()), this, SLOT(quit()));
 }
@@ -1535,7 +1529,6 @@ void SettingsWindow::createTrayIcon()
     m_trayIconMenu->addSeparator();
     m_trayIconMenu->addMenu(m_profilesMenu);
     m_trayIconMenu->addAction(m_settingsAction);
-    m_trayIconMenu->addAction(m_aboutAction);
     m_trayIconMenu->addSeparator();
     m_trayIconMenu->addAction(m_quitAction);
 

@@ -18,7 +18,7 @@ UI_DIR      = stuff
 RCC_DIR     = stuff
 
 # Find currect mercurial revision
-HG_REVISION = $$system(hg id -i)
+HG_REVISION = $$system(git log -1 --format="%H")
 
 # For update HG_REVISION use it:
 #   $ qmake Lightpack.pro && make clean && make
