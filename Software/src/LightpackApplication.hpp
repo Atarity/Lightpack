@@ -66,6 +66,7 @@ private slots:
     void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status, QList<QString> modules);
     void profileSwitch(const QString & configName);
     void settingsChanged();
+    void numberOfLedsChanged();
     void showLedWidgets(bool visible);
     void setColoredLedWidget(bool colored);
     void getConsole();

@@ -63,6 +63,7 @@ signals:
     void switchOffLeds();
     void switchOnLeds();
     void settingsChanged();
+    void numberOfLedsChanged();
     void showLedWidgets(bool visible);
     void setColoredLedWidget(bool colored);
     void updateLedsColors(const QList<QRgb> &);
@@ -141,6 +142,7 @@ private slots:
     void onDeviceSerialPort_editingFinished();
     void onDeviceSerialPortBaudRate_valueChanged(QString value);
     void onDeviceGammaCorrection_valueChanged(double value);
+    void onSliderDeviceGammaCorrection_valueChanged(int value);
     void onDeviceSendDataOnlyIfColorsChanged_toggled(bool state);
     void onColorSequence_valueChanged(QString value);
 

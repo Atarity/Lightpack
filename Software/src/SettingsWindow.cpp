@@ -203,11 +203,15 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->spinBox_DeviceColorDepth, SIGNAL(valueChanged(int)), this, SLOT(onDeviceColorDepth_valueChanged(int)));
     connect(ui->comboBox_ConnectedDevice, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceConnectedDevice_currentIndexChanged(QString)));
     connect(ui->spinBox_NumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onDeviceNumberOfLeds_valueChanged(int)));
-    connect(ui->lineEdit_SerialPort, SIGNAL(editingFinished()), this, SLOT(onDeviceSerialPort_editingFinished()));
-    connect(ui->comboBox_SerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceSerialPortBaudRate_valueChanged(QString)));
+    connect(ui->lineEdit_AdalightSerialPort, SIGNAL(editingFinished()), this, SLOT(onDeviceSerialPort_editingFinished()));
+    connect(ui->comboBox_AdalightSerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceSerialPortBaudRate_valueChanged(QString)));
+    connect(ui->lineEdit_ArdulightSerialPort, SIGNAL(editingFinished()), this, SLOT(onDeviceSerialPort_editingFinished()));
+    connect(ui->comboBox_ArdulightSerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceSerialPortBaudRate_valueChanged(QString)));
     connect(ui->doubleSpinBox_DeviceGamma, SIGNAL(valueChanged(double)), this, SLOT(onDeviceGammaCorrection_valueChanged(double)));
+    connect(ui->horizontalSlider_GammaCorrection, SIGNAL(valueChanged(int)), this, SLOT(onSliderDeviceGammaCorrection_valueChanged(int)));
     connect(ui->checkBox_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), this, SLOT(onDeviceSendDataOnlyIfColorsChanged_toggled(bool)));
-    connect(ui->comboBox_ColorSequence, SIGNAL(currentIndexChanged(QString)), this, SLOT(onColorSequence_valueChanged(QString)));
+    connect(ui->comboBox_AdalightColorSequence, SIGNAL(currentIndexChanged(QString)), this, SLOT(onColorSequence_valueChanged(QString)));
+    connect(ui->comboBox_ArdulightColorSequence, SIGNAL(currentIndexChanged(QString)), this, SLOT(onColorSequence_valueChanged(QString)));
 
 
     // Open Settings file
@@ -409,40 +413,40 @@ void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << options;
 
 //    ui->groupBox_DeviceBrightness->setVisible(options & DeviceTab::Brightness);
-    ui->groupBox_DeviceSmoothSlowdown->setVisible(options & DeviceTab::SmoothSlowdown);
-    ui->groupBox_DeviceRefreshDelay->setVisible((options & DeviceTab::RefreshDelay) && Settings::isExpertModeEnabled());
+//    ui->groupBox_DeviceSmoothSlowdown->setVisible(options & DeviceTab::SmoothSlowdown);
+//    ui->groupBox_DeviceRefreshDelay->setVisible((options & DeviceTab::RefreshDelay) && Settings::isExpertModeEnabled());
 
     int majorVersion = getLigtpackFirmwareVersionMajor();
     if (majorVersion == 4 || majorVersion == 5)
     {
         // Show color depth only if lightpack hw4.x or hw5.x
-        ui->groupBox_DeviceColorDepth->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
+//        ui->groupBox_DeviceColorDepth->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
     } else {
-        ui->groupBox_DeviceColorDepth->setVisible(false);
+//        ui->groupBox_DeviceColorDepth->setVisible(false);
     }
 
     // NumberOfLeds
-    ui->label_NumberOfLeds->setVisible(options & DeviceTab::NumberOfLeds);
-    ui->spinBox_NumberOfLeds->setVisible(options & DeviceTab::NumberOfLeds);
+//    ui->label_NumberOfLeds->setVisible(options & DeviceTab::NumberOfLeds);
+//    ui->spinBox_NumberOfLeds->setVisible(options & DeviceTab::NumberOfLeds);
 
     // SerialPort
-    ui->label_SerialPort->setVisible(options & DeviceTab::SerialPort);
-    ui->lineEdit_SerialPort->setVisible(options & DeviceTab::SerialPort);
+//    ui->label_SerialPort->setVisible(options & DeviceTab::SerialPort);
+//    ui->lineEdit_SerialPort->setVisible(options & DeviceTab::SerialPort);
 
     // SerialPortBaudRate
-    ui->label_SerialPortBaudRate->setVisible(options & DeviceTab::SerialPort);
-    ui->comboBox_SerialPortBaudRate->setVisible(options & DeviceTab::SerialPort);
+//    ui->label_SerialPortBaudRate->setVisible(options & DeviceTab::SerialPort);
+//    ui->comboBox_SerialPortBaudRate->setVisible(options & DeviceTab::SerialPort);
 
     // Gamma
-    ui->label_GammaCorrection->setVisible((options & DeviceTab::Gamma) && Settings::isExpertModeEnabled());
-    ui->doubleSpinBox_DeviceGamma->setVisible((options & DeviceTab::Gamma) && Settings::isExpertModeEnabled());
+//    ui->label_GammaCorrection->setVisible((options & DeviceTab::Gamma) && Settings::isExpertModeEnabled());
+//    ui->doubleSpinBox_DeviceGamma->setVisible((options & DeviceTab::Gamma) && Settings::isExpertModeEnabled());
 
     // Virtual leds
-    ui->frame_VirtualLeds->setVisible(options & DeviceTab::VirtualLeds);   
+//    ui->frame_VirtualLeds->setVisible(options & DeviceTab::VirtualLeds);
 
      // ColorSequence
-    ui->label_ColorSequence->setVisible(options & DeviceTab::ColorSequence);
-    ui->comboBox_ColorSequence->setVisible(options & DeviceTab::ColorSequence);
+//    ui->label_ColorSequence->setVisible(options & DeviceTab::ColorSequence);
+//    ui->comboBox_ColorSequence->setVisible(options & DeviceTab::ColorSequence);
 }
 
 void SettingsWindow::syncLedDeviceWithSettingsWindow()
@@ -1004,7 +1008,7 @@ void SettingsWindow::refreshAmbilightEvaluated(double updateResultMs)
 
     ui->label_GrabFrequency_value->setText(QString::number(hz,'f', 2) /* ms to hz */);
 
-    this->labelFPS->setText(tr("FPS:")+QString::number(hz,'f', 2) );
+    this->labelFPS->setText(tr("FPS: ")+QString::number(hz,'f', 2) );
 }
 
 void SettingsWindow::onGrabberChanged()
@@ -1097,10 +1101,10 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
     // Update number of leds for current selected device
     ui->spinBox_NumberOfLeds->setValue(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
 
-    int index = ui->comboBox_ColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
+    int index = ui->comboBox_AdalightColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
     if (index < 0)
         index = 0;
-    ui->comboBox_ColorSequence->setCurrentIndex(index);
+    ui->comboBox_AdalightColorSequence->setCurrentIndex(index);
 
     this->labelDevice->setText(tr("Device:")+value);
     emit recreateLedDevice();
@@ -1115,19 +1119,19 @@ void SettingsWindow::onDeviceNumberOfLeds_valueChanged(int value)
 
     int numOfLeds = Settings::getNumberOfLeds(Settings::getConnectedDevice());
 
-    emit settingsChanged();
     //m_grabManager->setNumberOfLeds(numOfLeds);
     //m_moodlampManager->setNumberOfLeds(numOfLeds);
 
     if (Settings::getConnectedDevice() == SupportedDevices::VirtualDevice)
         initVirtualLeds();
 
+    emit numberOfLedsChanged();
     emit updateApiDeviceNumberOfLeds(numOfLeds);
 }
 
 void SettingsWindow::onDeviceSerialPort_editingFinished()
 {
-    QString serialPort = ui->lineEdit_SerialPort->text();
+    QString serialPort = ui->lineEdit_AdalightSerialPort->text();
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << serialPort;
 
     Settings::setSerialPortName(serialPort);
@@ -1152,7 +1156,7 @@ void SettingsWindow::onColorSequence_valueChanged(QString value)
 
     Settings::setColorSequence(Settings::getConnectedDevice(),value);
 
-    emit settingsProfileChanged();
+    emit settingsChanged();
 }
 
 void SettingsWindow::onDeviceGammaCorrection_valueChanged(double value)
@@ -1160,8 +1164,18 @@ void SettingsWindow::onDeviceGammaCorrection_valueChanged(double value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setDeviceGamma(value);
+    ui->horizontalSlider_GammaCorrection->setValue(floor((value * 100 + 0.5)));
     emit updateGamma(Settings::getDeviceGamma());
 }
+
+void SettingsWindow::onSliderDeviceGammaCorrection_valueChanged(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+    Settings::setDeviceGamma(static_cast<double>(value + 0.4) / 100);
+    ui->doubleSpinBox_DeviceGamma->setValue(Settings::getDeviceGamma());
+    emit updateGamma(Settings::getDeviceGamma());
+}
+
 
 void SettingsWindow::onDeviceSendDataOnlyIfColorsChanged_toggled(bool state)
 {
@@ -1631,10 +1645,10 @@ void SettingsWindow::updateUiFromSettings()
         break;
     }
 
-    int index = ui->comboBox_ColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
+    int index = ui->comboBox_AdalightColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
     if (index < 0)
         index = 0;
-    ui->comboBox_ColorSequence->setCurrentIndex(index);
+    ui->comboBox_AdalightColorSequence->setCurrentIndex(index);
 
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
 
@@ -1658,7 +1672,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());
     ui->horizontalSlider_DeviceColorDepth->setValue     (Settings::getDeviceColorDepth());
     ui->doubleSpinBox_DeviceGamma->setValue             (Settings::getDeviceGamma());
-    ui->lineEdit_SerialPort->setText                    (Settings::getSerialPortName());
+    ui->lineEdit_AdalightSerialPort->setText            (Settings::getSerialPortName());
 
     ui->groupBox_Api->setChecked                        (Settings::isApiEnabled());
     ui->lineEdit_ApiPort->setText                       (QString::number(Settings::getApiPort()));
@@ -1909,10 +1923,10 @@ void SettingsWindow::initConnectedDeviceComboBox()
     }
     ui->comboBox_ConnectedDevice->setCurrentIndex(currentIndex);
 
-    int index = ui->comboBox_ColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
+    int index = ui->comboBox_AdalightColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
     if (index < 0)
         index = 0;
-    ui->comboBox_ColorSequence->setCurrentIndex(index);
+    ui->comboBox_AdalightColorSequence->setCurrentIndex(index);
 
 }
 
@@ -1922,12 +1936,12 @@ void SettingsWindow::initSerialPortBaudRateComboBox()
 
     QString baudrate = Settings::getSerialPortBaudRate();
 
-    ui->comboBox_SerialPortBaudRate->clear();
+    ui->comboBox_AdalightSerialPortBaudRate->clear();
 
     // NOTE: This line emit's signal currentIndex_Changed()
-    ui->comboBox_SerialPortBaudRate->addItems(Settings::getSupportedSerialPortBaudRates());
+    ui->comboBox_AdalightSerialPortBaudRate->addItems(Settings::getSupportedSerialPortBaudRates());
 
-    int index = ui->comboBox_SerialPortBaudRate->findText(baudrate);
+    int index = ui->comboBox_AdalightSerialPortBaudRate->findText(baudrate);
 
     if (index < 0)
     {
@@ -1935,7 +1949,7 @@ void SettingsWindow::initSerialPortBaudRateComboBox()
                     << Settings::getSupportedSerialPortBaudRates() << "doesn't contains baud rate:" << baudrate;
         index = 0;
     }
-    ui->comboBox_SerialPortBaudRate->setCurrentIndex(index);
+    ui->comboBox_AdalightSerialPortBaudRate->setCurrentIndex(index);
 }
 
 void SettingsWindow::adjustSizeAndMoveCenter()
