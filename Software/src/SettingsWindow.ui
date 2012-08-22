@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>499</width>
+    <width>608</width>
     <height>650</height>
    </rect>
   </property>
@@ -160,7 +160,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -646,7 +646,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
         <item row="10" column="0" colspan="2">
          <widget class="QTabWidget" name="tabDevices">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tabDeviceLightpack">
            <attribute name="title">
@@ -706,7 +706,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
             <item row="2" column="0">
              <widget class="QLabel" name="label_7">
               <property name="text">
-               <string>Color depth</string>
+               <string>Color depth:</string>
               </property>
              </widget>
             </item>
@@ -763,11 +763,11 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
             <item row="4" column="0">
              <widget class="QLabel" name="label_9">
               <property name="text">
-               <string>Smoothness</string>
+               <string>Smoothness:</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="0">
+            <item row="10" column="0">
              <spacer name="verticalSpacer_2">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -802,7 +802,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
             <item row="6" column="0">
              <widget class="QLabel" name="label_6">
               <property name="text">
-               <string>Refresh delay</string>
+               <string>Refresh delay:</string>
               </property>
              </widget>
             </item>
@@ -837,6 +837,66 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
               </property>
              </widget>
             </item>
+            <item row="9" column="0">
+             <widget class="QSlider" name="horizontalSlider_LightpackNumberOfLeds">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+              <property name="tickInterval">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="label_NumberOfLeds">
+              <property name="text">
+               <string>Number of LEDs:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1">
+             <widget class="QSpinBox" name="spinBox_LightpackNumberOfLeds">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>60</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
           <widget class="QWidget" name="tabDeviceAdalight">
@@ -867,14 +927,14 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
             <item row="5" column="0">
              <widget class="QLabel" name="label_ColorSequence">
               <property name="text">
-               <string>Color Sequence</string>
+               <string>Color sequence:</string>
               </property>
               <property name="buddy">
                <cstring>comboBox_AdalightColorSequence</cstring>
               </property>
              </widget>
             </item>
-            <item row="7" column="0">
+            <item row="9" column="0">
              <spacer name="verticalSpacer_14">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -980,18 +1040,47 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <spacer name="horizontalSpacer_2">
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Number of LEDs:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QSlider" name="horizontalSlider_AdalightNumberOfLeds">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>255</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
-              <property name="sizeHint" stdset="0">
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QSpinBox" name="spinBox_AdalightNumberOfLeds">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
                <size>
-                <width>40</width>
-                <height>20</height>
+                <width>60</width>
+                <height>0</height>
                </size>
               </property>
-             </spacer>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>255</number>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -1003,30 +1092,17 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
             <item row="0" column="0">
              <widget class="QLabel" name="label_SerialPort_2">
               <property name="text">
-               <string>Serial port</string>
+               <string>Serial port:</string>
               </property>
               <property name="buddy">
                <cstring>lineEdit_AdalightSerialPort</cstring>
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
-             <spacer name="horizontalSpacer_6">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>277</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
             <item row="3" column="0">
              <widget class="QLabel" name="label_SerialPortBaudRate_2">
               <property name="text">
-               <string>Baud rate</string>
+               <string>Baud rate:</string>
               </property>
               <property name="buddy">
                <cstring>comboBox_AdalightSerialPortBaudRate</cstring>
@@ -1055,7 +1131,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
             <item row="5" column="0">
              <widget class="QLabel" name="label_ColorSequence_2">
               <property name="text">
-               <string>Color Sequence</string>
+               <string>Color sequence:</string>
               </property>
               <property name="buddy">
                <cstring>comboBox_AdalightColorSequence</cstring>
@@ -1108,7 +1184,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
               </item>
              </widget>
             </item>
-            <item row="7" column="0">
+            <item row="9" column="0">
              <spacer name="verticalSpacer_16">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -1149,6 +1225,48 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
               </property>
              </widget>
             </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Number of LEDs:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QSlider" name="horizontalSlider_ArdulightNumberOfLeds">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>255</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QSpinBox" name="spinBox_ArdulightNumberOfLeds">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>255</number>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
           <widget class="QWidget" name="tabDeviceVirtual">
@@ -1156,7 +1274,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
             <string>Virtual</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_7">
-            <item row="0" column="0">
+            <item row="2" column="0" colspan="2">
              <widget class="QFrame" name="frame_VirtualLeds">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -1171,7 +1289,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
               </layout>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item row="3" column="0">
              <spacer name="verticalSpacer_15">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -1184,6 +1302,48 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
               </property>
              </spacer>
             </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>Number of LEDs:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QSlider" name="horizontalSlider_VirtualNumberOfLeds">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>255</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="spinBox_VirtualNumberOfLeds">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>255</number>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </widget>
@@ -1191,14 +1351,14 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
         <item row="1" column="0">
          <widget class="QLabel" name="label_ConnectedDevice">
           <property name="text">
-           <string>Connected device</string>
+           <string>Connected device:</string>
           </property>
          </widget>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>Brightness</string>
+           <string>Brightness:</string>
           </property>
          </widget>
         </item>
@@ -1255,7 +1415,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
         <item row="5" column="0">
          <widget class="QLabel" name="label_GammaCorrection">
           <property name="text">
-           <string>Gamma correction</string>
+           <string>Gamma correction:</string>
           </property>
          </widget>
         </item>
@@ -1290,60 +1450,6 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
           </property>
           <property name="value">
            <double>2.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0">
-         <widget class="QLabel" name="label_NumberOfLeds">
-          <property name="text">
-           <string>Number of LEDs</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="0">
-         <widget class="QSlider" name="horizontalSlider_NumberOfLeds">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>255</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="1">
-         <widget class="QSpinBox" name="spinBox_NumberOfLeds">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>60</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>60</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>10</number>
-          </property>
-          <property name="value">
-           <number>10</number>
           </property>
          </widget>
         </item>
@@ -2353,12 +2459,10 @@ p, li { white-space: pre-wrap; }
   <tabstop>comboBox_ConnectedDevice</tabstop>
   <tabstop>horizontalSlider_DeviceBrightness</tabstop>
   <tabstop>horizontalSlider_GammaCorrection</tabstop>
-  <tabstop>horizontalSlider_NumberOfLeds</tabstop>
   <tabstop>checkBox_SwitchOffAtClosing</tabstop>
   <tabstop>tabDevices</tabstop>
   <tabstop>spinBox_DeviceBrightness</tabstop>
   <tabstop>doubleSpinBox_DeviceGamma</tabstop>
-  <tabstop>spinBox_NumberOfLeds</tabstop>
   <tabstop>horizontalSlider_DeviceColorDepth</tabstop>
   <tabstop>horizontalSlider_DeviceSmooth</tabstop>
   <tabstop>spinBox_DeviceColorDepth</tabstop>
@@ -2604,9 +2708,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>horizontalSlider_NumberOfLeds</sender>
+   <sender>horizontalSlider_LightpackNumberOfLeds</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>spinBox_NumberOfLeds</receiver>
+   <receiver>spinBox_LightpackNumberOfLeds</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -2620,9 +2724,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>spinBox_NumberOfLeds</sender>
+   <sender>spinBox_LightpackNumberOfLeds</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider_NumberOfLeds</receiver>
+   <receiver>horizontalSlider_LightpackNumberOfLeds</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -2632,6 +2736,102 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>357</x>
      <y>235</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_AdalightNumberOfLeds</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_AdalightNumberOfLeds</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>326</x>
+     <y>455</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>542</x>
+     <y>455</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_AdalightNumberOfLeds</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSlider_AdalightNumberOfLeds</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>542</x>
+     <y>455</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>455</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_ArdulightNumberOfLeds</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_ArdulightNumberOfLeds</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>326</x>
+     <y>455</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>542</x>
+     <y>455</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_ArdulightNumberOfLeds</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSlider_ArdulightNumberOfLeds</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>542</x>
+     <y>455</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>455</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_VirtualNumberOfLeds</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_VirtualNumberOfLeds</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>326</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>542</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_VirtualNumberOfLeds</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSlider_VirtualNumberOfLeds</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>542</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>299</y>
     </hint>
    </hints>
   </connection>

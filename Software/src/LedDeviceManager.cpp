@@ -51,7 +51,7 @@ LedDeviceManager::LedDeviceManager(QObject *parent)
     initLedDevice();
 }
 
-void LedDeviceManager::recreateLedDevice()
+void LedDeviceManager::recreateLedDevice(const SupportedDevices::DeviceType deviceType)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 

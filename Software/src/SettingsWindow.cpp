@@ -115,7 +115,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     initGrabbersRadioButtonsVisibility();
     initLanguages();
-    initVirtualLeds();
+    initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::VirtualDevice));
     initConnectedDeviceComboBox();
     initSerialPortBaudRateComboBox();
 
@@ -202,7 +202,6 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->spinBox_DeviceBrightness, SIGNAL(valueChanged(int)), this, SLOT(onDeviceBrightness_valueChanged(int)));
     connect(ui->spinBox_DeviceColorDepth, SIGNAL(valueChanged(int)), this, SLOT(onDeviceColorDepth_valueChanged(int)));
     connect(ui->comboBox_ConnectedDevice, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceConnectedDevice_currentIndexChanged(QString)));
-    connect(ui->spinBox_NumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onDeviceNumberOfLeds_valueChanged(int)));
     connect(ui->lineEdit_AdalightSerialPort, SIGNAL(editingFinished()), this, SLOT(onDeviceSerialPort_editingFinished()));
     connect(ui->comboBox_AdalightSerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceSerialPortBaudRate_valueChanged(QString)));
     connect(ui->lineEdit_ArdulightSerialPort, SIGNAL(editingFinished()), this, SLOT(onDeviceSerialPort_editingFinished()));
@@ -212,7 +211,10 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->checkBox_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), this, SLOT(onDeviceSendDataOnlyIfColorsChanged_toggled(bool)));
     connect(ui->comboBox_AdalightColorSequence, SIGNAL(currentIndexChanged(QString)), this, SLOT(onColorSequence_valueChanged(QString)));
     connect(ui->comboBox_ArdulightColorSequence, SIGNAL(currentIndexChanged(QString)), this, SLOT(onColorSequence_valueChanged(QString)));
-
+    connect(ui->spinBox_LightpackNumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onLightpackNumberOfLeds_valueChanged(int)));
+    connect(ui->spinBox_AdalightNumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onAdalightNumberOfLeds_valueChanged(int)));
+    connect(ui->spinBox_ArdulightNumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onArdulightNumberOfLeds_valueChanged(int)));
+    connect(ui->spinBox_VirtualNumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onVirtualNumberOfLeds_valueChanged(int)));
 
     // Open Settings file
     connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openCurrentProfile()));
@@ -220,11 +222,12 @@ void SettingsWindow::connectSignalsSlots()
     // Connect profile signals to this slots    
     connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(editingFinished()) /* or returnPressed() */, this, SLOT(profileRename()));
     connect(ui->comboBox_Profiles, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileSwitch(QString)));
+    connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)), this, SLOT(profileSwitch(QString)));
     connect(ui->pushButton_ProfileNew, SIGNAL(clicked()), this, SLOT(profileNew()));
     connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
 
-    connect(this, SIGNAL(settingsProfileChanged()), this, SLOT(settingsProfileChanged_UpdateUI()));
+    connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)), this, SLOT(settingsProfileChanged_UpdateUI(const QString &)));
     connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColor_changed(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabled_Toggled(bool)));
     connect(ui->checkBox_SwitchOffAtClosing, SIGNAL(toggled(bool)), this, SLOT(onSwitchOffAtClosing_Toggled(bool)));    
@@ -369,43 +372,43 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
 
 void SettingsWindow::updateDeviceTabWidgetsVisibility()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+//    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    SupportedDevices::DeviceType connectedDevice = Settings::getConnectedDevice();
+//    SupportedDevices::DeviceType connectedDevice = Settings::getConnectedDevice();
 
-    switch (connectedDevice)
-    {
-    case SupportedDevices::AdalightDevice:
-        setDeviceTabWidgetsVisibility(DeviceTab::Adalight);
-        setMaximumNumberOfLeds(MaximumNumberOfLeds::Adalight);
-        break;
+//    switch (connectedDevice)
+//    {
+//    case SupportedDevices::AdalightDevice:
+//        setDeviceTabWidgetsVisibility(DeviceTab::Adalight);
+//        setMaximumNumberOfLeds(MaximumNumberOfLeds::Adalight);
+//        break;
 
-    case SupportedDevices::ArdulightDevice:
-        setDeviceTabWidgetsVisibility(DeviceTab::Ardulight);
-        setMaximumNumberOfLeds(MaximumNumberOfLeds::Ardulight);
-        break;
+//    case SupportedDevices::ArdulightDevice:
+//        setDeviceTabWidgetsVisibility(DeviceTab::Ardulight);
+//        setMaximumNumberOfLeds(MaximumNumberOfLeds::Ardulight);
+//        break;
 
-    case SupportedDevices::AlienFxDevice:
-        setDeviceTabWidgetsVisibility(DeviceTab::AlienFx);
-        setMaximumNumberOfLeds(MaximumNumberOfLeds::AlienFx);
-        break;
+//    case SupportedDevices::AlienFxDevice:
+//        setDeviceTabWidgetsVisibility(DeviceTab::AlienFx);
+//        setMaximumNumberOfLeds(MaximumNumberOfLeds::AlienFx);
+//        break;
 
-    case SupportedDevices::LightpackDevice:
-        setDeviceTabWidgetsVisibility(DeviceTab::Lightpack);
-        setMaximumNumberOfLeds(getLightpackMaximumNumberOfLeds());
-        break;
+//    case SupportedDevices::LightpackDevice:
+//        setDeviceTabWidgetsVisibility(DeviceTab::Lightpack);
+//        setMaximumNumberOfLeds(getLightpackMaximumNumberOfLeds());
+//        break;
 
-    case SupportedDevices::VirtualDevice:
-        setDeviceTabWidgetsVisibility(DeviceTab::Virtual);
-        setMaximumNumberOfLeds(MaximumNumberOfLeds::Virtual);
-        // Sync Virtual Leds count with NumberOfLeds field
-        initVirtualLeds();
-        break;
+//    case SupportedDevices::VirtualDevice:
+//        setDeviceTabWidgetsVisibility(DeviceTab::Virtual);
+//        setMaximumNumberOfLeds(MaximumNumberOfLeds::Virtual);
+//        // Sync Virtual Leds count with NumberOfLeds field
+////        initVirtualLeds();
+//        break;
 
-    default:
-        qCritical() << Q_FUNC_INFO << "Fail. Unknown connectedDevice ==" << connectedDevice;
-        break;
-    }
+//    default:
+//        qCritical() << Q_FUNC_INFO << "Fail. Unknown connectedDevice ==" << connectedDevice;
+//        break;
+//    }
 }
 
 void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
@@ -458,9 +461,9 @@ void SettingsWindow::syncLedDeviceWithSettingsWindow()
 
 void SettingsWindow::setMaximumNumberOfLeds(MaximumNumberOfLeds::Devices maximumNumberOfLeds)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << maximumNumberOfLeds;
+//    DEBUG_LOW_LEVEL << Q_FUNC_INFO << maximumNumberOfLeds;
 
-    ui->spinBox_NumberOfLeds->setMaximum(maximumNumberOfLeds);
+//    ui->spinBox_NumberOfLeds->setMaximum(maximumNumberOfLeds);
 }
 
 int SettingsWindow::getLigtpackFirmwareVersionMajor()
@@ -489,33 +492,12 @@ int SettingsWindow::getLigtpackFirmwareVersionMajor()
     return majorVersion;
 }
 
-MaximumNumberOfLeds::Devices SettingsWindow::getLightpackMaximumNumberOfLeds()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    int majorVersion = getLigtpackFirmwareVersionMajor();
-
-    if (majorVersion < 0)
-        return MaximumNumberOfLeds::Default;
-
-    if (majorVersion == 4)
-        return MaximumNumberOfLeds::Lightpack4;
-    else if (majorVersion == 5)
-        return MaximumNumberOfLeds::Lightpack5;
-    else if (majorVersion == 6)
-        return MaximumNumberOfLeds::Lightpack6;
-
-    qWarning() << Q_FUNC_INFO << "Unknown device firmware version. m_deviceFirmwareVersion =" << m_deviceFirmwareVersion << "majorVersion =" << majorVersion;
-    return MaximumNumberOfLeds::Default;
-}
-
 void SettingsWindow::onEnableApi_Toggled(bool isEnabled)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
 
     Settings::setIsApiEnabled(isEnabled);
 
-    emit enableApiServer(isEnabled);
 }
 
 void SettingsWindow::onApiKey_EditingFinished()
@@ -535,7 +517,6 @@ void SettingsWindow::onApiKey_EditingFinished()
     }
 
     Settings::setApiKey(apikey);
-    emit updateApiKey(apikey);
 }
 
 void SettingsWindow::onSetApiPort_Clicked()
@@ -571,7 +552,6 @@ void SettingsWindow::onGenerateNewApiKey_Clicked()
     ui->lineEdit_ApiKey->setText(generatedApiKey);
 
     Settings::setApiKey(generatedApiKey);
-    emit updateApiKey(generatedApiKey);
 }
 
 void SettingsWindow::onIsApiAuthEnabled_Toggled(bool isEnabled)
@@ -579,8 +559,6 @@ void SettingsWindow::onIsApiAuthEnabled_Toggled(bool isEnabled)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
 
     Settings::setIsApiAuthEnabled(isEnabled);
-
-    emit enableApiAuth(isEnabled);
 }
 
 void SettingsWindow::onLoggingLevel_valueChanged(int value)
@@ -792,10 +770,8 @@ void SettingsWindow::initGrabbersRadioButtonsVisibility()
 // Show grabbed colors in another GUI
 // ----------------------------------------------------------------------------
 
-void SettingsWindow::initVirtualLeds()
+void SettingsWindow::initVirtualLeds(int virtualLedsCount)
 {
-    int virtualLedsCount = Settings::getNumberOfLeds(Settings::getConnectedDevice());
-
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << virtualLedsCount;
 
     // Remove all virtual leds from grid layout
@@ -872,7 +848,6 @@ void SettingsWindow::onPingDeviceEverySecond_Toggled(bool state)
 
     Settings::setPingDeviceEverySecond(state);
 
-    emit settingsChanged();
     // Force update colors on device for start ping device
 //    m_grabManager->reset();
 //    m_moodlampManager->reset();
@@ -1018,8 +993,6 @@ void SettingsWindow::onGrabberChanged()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "GrabberType:" << grabberType;
 
     Settings::setGrabberType(grabberType);
-    emit settingsChanged();
-   // m_grabManager->setGrabber(Settings::getGrabberType());
 }
 
 void SettingsWindow::onGrabSlowdown_valueChanged(int value)
@@ -1027,8 +1000,6 @@ void SettingsWindow::onGrabSlowdown_valueChanged(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setGrabSlowdown(value);
-    emit settingsChanged();
-    //m_grabManager->setSlowdownTime(Settings::getGrabSlowdown());
 }
 
 void SettingsWindow::onGrabMinLevelOfSensivity_valueChanged(int value)
@@ -1036,8 +1007,6 @@ void SettingsWindow::onGrabMinLevelOfSensivity_valueChanged(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setGrabMinimumLevelOfSensitivity(value);
-    emit settingsChanged();
-    //m_grabManager->setMinLevelOfSensivity(Settings::getGrabMinimumLevelOfSensitivity());
 }
 
 void SettingsWindow::onGrabIsAvgColors_toggled(bool state)
@@ -1045,8 +1014,6 @@ void SettingsWindow::onGrabIsAvgColors_toggled(bool state)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
     Settings::setGrabAvgColorsEnabled(state);
-    emit settingsChanged();
-    //m_grabManager->setAvgColorsOnAllLeds(Settings::isGrabAvgColorsEnabled());
 }
 
 void SettingsWindow::onDeviceRefreshDelay_valueChanged(int value)
@@ -1054,7 +1021,6 @@ void SettingsWindow::onDeviceRefreshDelay_valueChanged(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setDeviceRefreshDelay(value);
-    emit updateRefreshDelay(Settings::getDeviceRefreshDelay());
 }
 
 void SettingsWindow::onDeviceSmooth_valueChanged(int value)
@@ -1062,7 +1028,6 @@ void SettingsWindow::onDeviceSmooth_valueChanged(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setDeviceSmooth(value);
-    emit updateSmoothSlowdown(Settings::getDeviceSmooth());
 }
 
 void SettingsWindow::onDeviceBrightness_valueChanged(int percent)
@@ -1070,7 +1035,6 @@ void SettingsWindow::onDeviceBrightness_valueChanged(int percent)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << percent;
 
     Settings::setDeviceBrightness(percent);
-    emit updateBrightness(Settings::getDeviceBrightness());
 }
 
 void SettingsWindow::onDeviceColorDepth_valueChanged(int value)
@@ -1078,7 +1042,6 @@ void SettingsWindow::onDeviceColorDepth_valueChanged(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setDeviceColorDepth(value);
-    emit updateColorDepth(Settings::getDeviceColorDepth());
 }
 
 void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
@@ -1099,7 +1062,7 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
     updateDeviceTabWidgetsVisibility();
 
     // Update number of leds for current selected device
-    ui->spinBox_NumberOfLeds->setValue(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
+//    ui->spinBox_NumberOfLeds->setValue(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
 
     int index = ui->comboBox_AdalightColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
     if (index < 0)
@@ -1111,22 +1074,36 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
 }
 
 
-void SettingsWindow::onDeviceNumberOfLeds_valueChanged(int value)
+void SettingsWindow::onLightpackNumberOfLeds_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    Settings::setNumberOfLeds(Settings::getConnectedDevice(), value);
+    Settings::setNumberOfLeds(SupportedDevices::LightpackDevice, value);
 
-    int numOfLeds = Settings::getNumberOfLeds(Settings::getConnectedDevice());
+}
 
-    //m_grabManager->setNumberOfLeds(numOfLeds);
-    //m_moodlampManager->setNumberOfLeds(numOfLeds);
+void SettingsWindow::onAdalightNumberOfLeds_valueChanged(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    if (Settings::getConnectedDevice() == SupportedDevices::VirtualDevice)
-        initVirtualLeds();
+    Settings::setNumberOfLeds(SupportedDevices::AdalightDevice, value);
 
-    emit numberOfLedsChanged();
-    emit updateApiDeviceNumberOfLeds(numOfLeds);
+}
+
+void SettingsWindow::onArdulightNumberOfLeds_valueChanged(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    Settings::setNumberOfLeds(SupportedDevices::ArdulightDevice, value);
+
+}
+
+void SettingsWindow::onVirtualNumberOfLeds_valueChanged(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    Settings::setNumberOfLeds(SupportedDevices::VirtualDevice, value);
+    initVirtualLeds(value);
 }
 
 void SettingsWindow::onDeviceSerialPort_editingFinished()
@@ -1134,7 +1111,7 @@ void SettingsWindow::onDeviceSerialPort_editingFinished()
     QString serialPort = ui->lineEdit_AdalightSerialPort->text();
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << serialPort;
 
-    Settings::setSerialPortName(serialPort);
+    Settings::setAdalightSerialPortName(serialPort);
 
     if (Settings::isConnectedDeviceUsesSerialPort())
         emit recreateLedDevice();
@@ -1144,7 +1121,7 @@ void SettingsWindow::onDeviceSerialPortBaudRate_valueChanged(QString value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    Settings::setSerialPortBaudRate(value);
+    Settings::setAdalightSerialPortBaudRate(value);
 
     if (Settings::isConnectedDeviceUsesSerialPort())
         emit recreateLedDevice();
@@ -1155,8 +1132,6 @@ void SettingsWindow::onColorSequence_valueChanged(QString value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setColorSequence(Settings::getConnectedDevice(),value);
-
-    emit settingsChanged();
 }
 
 void SettingsWindow::onDeviceGammaCorrection_valueChanged(double value)
@@ -1182,9 +1157,6 @@ void SettingsWindow::onDeviceSendDataOnlyIfColorsChanged_toggled(bool state)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
 
     Settings::setSendDataOnlyIfColorsChanges(state);
-    emit settingsChanged();
-    //m_grabManager->setSendDataOnlyIfColorsChanged(Settings::isSendDataOnlyIfColorsChanges());
-    //m_moodlampManager->setSendDataOnlyIfColorsChanged(Settings::isSendDataOnlyIfColorsChanges());
 }
 
 // ----------------------------------------------------------------------------
@@ -1375,14 +1347,14 @@ void SettingsWindow::profileLoadLast()
     emit settingsProfileChanged();
 }
 
-void SettingsWindow::settingsProfileChanged_UpdateUI()
+void SettingsWindow::settingsProfileChanged_UpdateUI(const QString &profileName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+    setWindowTitle(tr("Lightpack: %1").arg(profileName));
 
     if (m_backlightStatus == Backlight::StatusOn && m_trayIcon!=NULL)
-        m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+        m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(profileName));
 
     if(ui->comboBox_Profiles->count() > 1){
         ui->pushButton_DeleteProfile->setEnabled(true);
@@ -1666,13 +1638,13 @@ void SettingsWindow::updateUiFromSettings()
     ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
     ui->horizontalSlider_MoodLampSpeed->setValue        (Settings::getMoodLampSpeed());
 
-    ui->spinBox_NumberOfLeds->setValue                  (Settings::getNumberOfLeds(Settings::getConnectedDevice()));
+    ui->spinBox_LightpackNumberOfLeds->setValue                  (Settings::getNumberOfLeds(Settings::getConnectedDevice()));
     ui->horizontalSlider_DeviceRefreshDelay->setValue   (Settings::getDeviceRefreshDelay());
     ui->horizontalSlider_DeviceBrightness->setValue     (Settings::getDeviceBrightness());
     ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());
     ui->horizontalSlider_DeviceColorDepth->setValue     (Settings::getDeviceColorDepth());
     ui->doubleSpinBox_DeviceGamma->setValue             (Settings::getDeviceGamma());
-    ui->lineEdit_AdalightSerialPort->setText            (Settings::getSerialPortName());
+    ui->lineEdit_AdalightSerialPort->setText            (Settings::getAdalightSerialPortName());
 
     ui->groupBox_Api->setChecked                        (Settings::isApiEnabled());
     ui->lineEdit_ApiPort->setText                       (QString::number(Settings::getApiPort()));
@@ -1839,14 +1811,12 @@ void SettingsWindow::onMoodLampColor_changed(QColor color)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << color;
     Settings::setMoodLampColor(color);
-    emit settingsChanged();
 }
 
 void SettingsWindow::onMoodLampSpeed_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
     Settings::setMoodLampSpeed(value);
-    emit settingsChanged();
 }
 
 void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
@@ -1854,7 +1824,6 @@ void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
 
     Settings::setMoodLampLiquidMode(checked);    
-    emit settingsChanged();
     if (Settings::isMoodLampLiquidMode())
     {
         // Liquid color mode
@@ -1934,7 +1903,7 @@ void SettingsWindow::initSerialPortBaudRateComboBox()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    QString baudrate = Settings::getSerialPortBaudRate();
+    QString baudrate = Settings::getAdalightSerialPortBaudRate();
 
     ui->comboBox_AdalightSerialPortBaudRate->clear();
 

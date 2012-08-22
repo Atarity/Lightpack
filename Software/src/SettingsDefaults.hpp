@@ -88,21 +88,19 @@ static const int PortDefault = 3636;
 static const bool IsAuthEnabledDefault = true;
 // See ApiKey generation in Settings initialization
 }
-// [SerialPort]
-namespace SerialPort
-{
-static const QString PortDefault = SERIAL_PORT_DEFAULT;
-static const QString BaudRateDefault = "115200";
-}
 namespace Adalight
 {
 static const int NumberOfLedsDefault = 25;
 static const QString ColorSequence = "RGB";
+static const QString PortDefault = SERIAL_PORT_DEFAULT;
+static const QString BaudRateDefault = "115200";
 }
 namespace Ardulight
 {
 static const int NumberOfLedsDefault = 10;
 static const QString ColorSequence = "RGB";
+static const QString PortDefault = SERIAL_PORT_DEFAULT;
+static const QString BaudRateDefault = "115200";
 }
 namespace AlienFx
 {

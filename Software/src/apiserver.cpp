@@ -198,7 +198,7 @@ void ApiServer::updateApiPort(int port)
     startListening();
 }
 
-void ApiServer::updateApiKey(QString key)
+void ApiServer::updateApiKey(const QString &key)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << key;
 

@@ -103,7 +103,7 @@ void GrabManager::start(bool isGrabEnabled)
     }
 }
 
-void GrabManager::setGrabber(Grab::GrabberType grabberType)
+void GrabManager::onGrabberTypeChanged(const Grab::GrabberType &grabberType)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << grabberType;
 
@@ -117,25 +117,25 @@ void GrabManager::setGrabber(Grab::GrabberType grabberType)
     firstWidgetPositionChanged();
 }
 
-void GrabManager::setSlowdownTime(int ms)
+void GrabManager::onGrabSlowdownChanged(int ms)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << ms;
     m_slowdownTime = ms;
 }
 
-void GrabManager::setMinLevelOfSensivity(int value)
+void GrabManager::onThresholdOfBlackChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
     m_minLevelOfSensivity = value;
 }
 
-void GrabManager::setAvgColorsOnAllLeds(bool state)
+void GrabManager::onGrabAvgColorsEnabledChanged(bool state)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
     m_avgColorsOnAllLeds = state;
 }
 
-void GrabManager::setSendDataOnlyIfColorsChanged(bool state)
+void GrabManager::onSendDataOnlyIfColorsEnabledChanged(bool state)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
     m_isSendDataOnlyIfColorsChanged = state;
@@ -160,7 +160,7 @@ void GrabManager::reset()
     clearColorsCurrent();
 }
 
-void GrabManager::settingsProfileChanged()
+void GrabManager::settingsProfileChanged(const QString &profileName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 

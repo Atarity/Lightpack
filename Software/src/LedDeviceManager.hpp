@@ -59,7 +59,7 @@ signals:
     void ledDeviceUpdateDeviceSettings();
 
 public slots:
-    void recreateLedDevice();
+    void recreateLedDevice(const SupportedDevices::DeviceType deviceType);
 
     // This slots are protected from the overflow of queries
     void setColors(const QList<QRgb> & colors);

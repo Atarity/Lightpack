@@ -29,6 +29,7 @@
 #include <QSettings>
 #include <QVariant>
 #include <QMutex>
+#include <QColor>
 
 #include "SettingsDefaults.hpp"
 #include "enums.hpp"
@@ -43,8 +44,10 @@ class Settings : public QObject
     Q_OBJECT
 
 public:
+    Settings();
     static void Initialize(const QString & applicationDirPath, bool isSetDebugLevelFromConfig);
     static void resetDefaults();
+    static const Settings * settingsSingleton() { return m_this; }
 
     static QStringList findAllProfiles();
     static void loadOrCreateProfile(const QString & configName);
@@ -85,11 +88,10 @@ public:
     static QStringList getSupportedDevices();
     static QKeySequence getOnOffDeviceKey();
     static void setOnOffDeviceKey(const QKeySequence & keySequence);
-    // [SerialPort]
-    static QString getSerialPortName();
-    static void setSerialPortName(const QString & port);
-    static QString getSerialPortBaudRate();
-    static void setSerialPortBaudRate(const QString & baud);
+    static QString getAdalightSerialPortName();
+    static void setAdalightSerialPortName(const QString & port);
+    static QString getAdalightSerialPortBaudRate();
+    static void setAdalightSerialPortBaudRate(const QString & baud);
     static QStringList getSupportedSerialPortBaudRates();
     static bool isConnectedDeviceUsesSerialPort();
     // [Adalight | Ardulight | Lightpack | ... | Virtual]
@@ -174,15 +176,60 @@ public:
     static void setValue(const QString & key, const QVariant & value);
     static QVariant value(const QString & key);
 
+signals:
+    void profileLoaded(const QString &);
+    void currentProfileNameChanged(const QString &);
+    void currentProfileRemoved();
+    void currentProfileInited();
+    void apiServerEnabledChanged(bool);
+    void apiPortChanged(int);
+    void apiKeyChanged(const QString &);
+    void apiAuthEnabledChanged(bool);
+    void expertModeEnabledChanged(bool);
+    void switchOffAtClosingChanged(bool isEnabled);
+    void pingDeviceEverySecondEnabledChanged(bool);
 
-
-
+    void languageChanged(const QString &);
+    void debugLevelChanged(int);
+    void updateFirmwareMessageShownChanged(bool isShown);
+    void connectedDeviceChanged(const SupportedDevices::DeviceType device);
+    void connectedDeviceNameChanged(const QString & deviceName);
+    void onOffDeviceKeyChanged(const QKeySequence & keySequence);
+    void adalightSerialPortNameChanged(const QString & port);
+    void adalightSerialPortBaudRateChanged(const QString & baud);
+    void lightpackNumberOfLedsChanged(int numberOfLeds);
+    void adalightNumberOfLedsChanged(int numberOfLeds);
+    void ardulightNumberOfLedsChanged(int numberOfLeds);
+    void virtualNumberOfLedsChanged(int numberOfLeds);
+    void colorSequenceChanged(const SupportedDevices::DeviceType device, const QString &colorSequence);
+    void grabSlowdownChanged(int value);
+    void backlightEnabledChanged(bool isEnabled);
+    void grabAvgColorsEnabledChanged(bool isEnabled);
+    void sendDataOnlyIfColorsChangesChanged(bool isEnabled);
+    void thresholdOfBlackChanged(int value);
+    void deviceRefreshDelayChanged(int value);
+    void deviceBrightnessChanged(int value);
+    void deviceSmoothChanged(int value);
+    void deviceColorDepthChanged(int value);
+    void deviceGammaChanged(double gamma);
+    void grabberTypeChanged(const Grab::GrabberType grabMode);
+    void lightpackModeChanged(const Lightpack::Mode mode);
+    void moodLampLiquidModeChanged(bool isLiquidMode);
+    void moodLampColorChanged(const QColor color);
+    void moodLampSpeedChanged(int value);
+    void ledCoefRedChanged(int ledIndex, double value);
+    void ledCoefGreenChanged(int ledIndex, double value);
+    void ledCoefBlueChanged(int ledIndex, double value);
+    void ledSizeChanged(int ledIndex, const QSize &size);
+    void ledPositionChanged(int ledIndex, const QPoint &position);
+    void ledEnabledChanged(int ledIndex, bool isEnabled);
 
 private:
     static QMutex m_mutex; // for thread-safe access to QSettings* variables
     static QSettings * m_currentProfile; // using profile
     static QSettings * m_mainConfig;     // store last used profile name, locale and so on
     static QString m_applicationDirPath; // path to store app generated stuff
+    static Settings *m_this;
     static QMap<SupportedDevices::DeviceType, QString> m_devicesTypeToNameMap;
     static QMap<SupportedDevices::DeviceType, QString> m_devicesTypeToKeyNumberOfLedsMap;
 };

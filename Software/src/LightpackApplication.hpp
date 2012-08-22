@@ -43,6 +43,7 @@ public:
 #ifdef Q_OS_WIN
     bool winEventFilter ( MSG * msg, long * result );
 #endif
+    const SettingsScope::Settings * settings() { return SettingsScope::Settings::settingsSingleton(); }
     enum ErrorCodes {
         OK_ErrorCode                            = 0,
         WrongCommandLineArgument_ErrorCode      = 1,
@@ -66,7 +67,7 @@ private slots:
     void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status, QList<QString> modules);
     void profileSwitch(const QString & configName);
     void settingsChanged();
-    void numberOfLedsChanged();
+    void numberOfLedsChanged(int);
     void showLedWidgets(bool visible);
     void setColoredLedWidget(bool colored);
     void getConsole();

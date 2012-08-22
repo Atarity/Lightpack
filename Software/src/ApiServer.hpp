@@ -150,7 +150,7 @@ public slots:
     void enableApiServer(bool isEnabled);
     void enableApiAuth(bool isEnabled);
     void updateApiPort(int port);
-    void updateApiKey(QString key);
+    void updateApiKey(const QString &key);
 
 protected:
     void incomingConnection(int socketDescriptor);

@@ -118,7 +118,7 @@ void MoodLampManager::reset()
     m_rgbSaved = 0;
 }
 
-void MoodLampManager::settingsProfileChanged()
+void MoodLampManager::settingsProfileChanged(const QString &profileName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 

@@ -141,7 +141,7 @@ void LedDeviceLightpack::setColorDepth(int value)
     m_writeBuffer[WRITE_BUFFER_INDEX_DATA_START] = (unsigned char)value;
 
     bool ok = writeBufferToDeviceWithCheck(CMD_SET_PWM_LEVEL_MAX_VALUE);
-    emit commandCompleted(ok);
+    emit commandCompleted(true);
 }
 
 void LedDeviceLightpack::setSmoothSlowdown(int value)

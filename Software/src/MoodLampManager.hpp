@@ -42,7 +42,6 @@ public:
     void start(bool isMoodLampEnabled);
 
     // MoodLamp options
-    void setCurrentColor(QColor color);
     void setLiquidMode(bool isEnabled);
     void setLiquidModeSpeed(int value);
 
@@ -52,7 +51,8 @@ public:
     void reset();
 
 public slots:
-    void settingsProfileChanged();
+    void settingsProfileChanged(const QString &profileName);
+    void setCurrentColor(QColor color);
 
 private slots:
     void updateColors();

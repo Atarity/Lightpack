@@ -57,19 +57,19 @@ public:
 
 
     // Grab options
-    void setGrabber(Grab::GrabberType grabber);
-    void setSlowdownTime(int ms);
-    void setMinLevelOfSensivity(int value);
-    void setAvgColorsOnAllLeds(bool state);
 
     // Common options
-    void setSendDataOnlyIfColorsChanged(bool state);
     void setNumberOfLeds(int numberOfLeds);
     void reset();
 
 public slots:
+    void onGrabberTypeChanged(const Grab::GrabberType &grabberType);
+    void onGrabSlowdownChanged(int ms);
+    void onThresholdOfBlackChanged(int value);
+    void onGrabAvgColorsEnabledChanged(bool state);
+    void onSendDataOnlyIfColorsEnabledChanged(bool state);
     void start(bool isGrabEnabled);
-    void settingsProfileChanged();
+    void settingsProfileChanged(const QString &profileName);
     void setVisibleLedWidgets(bool state);
     void setColoredLedWidgets(bool state);
     void setWhiteLedWidgets(bool state);

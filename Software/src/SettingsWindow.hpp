@@ -62,8 +62,6 @@ signals:
     void settingsProfileChanged();
     void switchOffLeds();
     void switchOnLeds();
-    void settingsChanged();
-    void numberOfLedsChanged();
     void showLedWidgets(bool visible);
     void setColoredLedWidget(bool colored);
     void updateLedsColors(const QList<QRgb> &);
@@ -138,7 +136,10 @@ private slots:
     void onDeviceBrightness_valueChanged(int value);
     void onDeviceColorDepth_valueChanged(int value);
     void onDeviceConnectedDevice_currentIndexChanged(QString value);
-    void onDeviceNumberOfLeds_valueChanged(int value);
+    void onLightpackNumberOfLeds_valueChanged(int value);
+    void onAdalightNumberOfLeds_valueChanged(int value);
+    void onArdulightNumberOfLeds_valueChanged(int value);
+    void onVirtualNumberOfLeds_valueChanged(int value);
     void onDeviceSerialPort_editingFinished();
     void onDeviceSerialPortBaudRate_valueChanged(QString value);
     void onDeviceGammaCorrection_valueChanged(double value);
@@ -157,7 +158,7 @@ private slots:
     void profileNew();
     void profileResetToDefaultCurrent();
     void profileDeleteCurrent();
-    void settingsProfileChanged_UpdateUI();
+    void settingsProfileChanged_UpdateUI(const QString &profileName);
 
     void loadTranslation(const QString & language);
 
@@ -205,7 +206,7 @@ private:
     void openFile(const QString &filePath);
 
     void initGrabbersRadioButtonsVisibility();
-    void initVirtualLeds();
+    void initVirtualLeds(int ledsCount);
     void initConnectedDeviceComboBox();
     void initSerialPortBaudRateComboBox();    
 
