@@ -8,14 +8,20 @@
     <x>0</x>
     <y>0</y>
     <width>608</width>
-    <height>650</height>
+    <height>620</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+   <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>700</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string notr="true">Lightpack</string>
@@ -25,7 +31,7 @@
     <normaloff>:/icons/settings.png</normaloff>:/icons/settings.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">QLabel {margin-top:0.5em}
+   <string notr="true">QLabel {margin-top:0.4em}
 QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
   </property>
   <property name="locale">
@@ -148,7 +154,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
     <item row="1" column="1">
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -643,713 +649,14 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
           </property>
          </widget>
         </item>
-        <item row="10" column="0" colspan="2">
-         <widget class="QTabWidget" name="tabDevices">
-          <property name="currentIndex">
-           <number>1</number>
-          </property>
-          <widget class="QWidget" name="tabDeviceLightpack">
-           <attribute name="title">
-            <string>Lightpack</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_13">
-            <item row="3" column="0">
-             <widget class="QSlider" name="horizontalSlider_DeviceColorDepth">
-              <property name="minimum">
-               <number>32</number>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-              <property name="pageStep">
-               <number>1</number>
-              </property>
-              <property name="value">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QSpinBox" name="spinBox_DeviceColorDepth">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>60</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="minimum">
-               <number>32</number>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-              <property name="value">
-               <number>100</number>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_7">
-              <property name="text">
-               <string>Color depth:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QSlider" name="horizontalSlider_DeviceSmooth">
-              <property name="minimum">
-               <number>0</number>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-              <property name="pageStep">
-               <number>1</number>
-              </property>
-              <property name="value">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QSpinBox" name="spinBox_DeviceSmooth">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>60</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="minimum">
-               <number>0</number>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-              <property name="value">
-               <number>100</number>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_9">
-              <property name="text">
-               <string>Smoothness:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="10" column="0">
-             <spacer name="verticalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="7" column="0">
-             <widget class="QSlider" name="horizontalSlider_DeviceRefreshDelay">
-              <property name="minimum">
-               <number>64</number>
-              </property>
-              <property name="maximum">
-               <number>1023</number>
-              </property>
-              <property name="pageStep">
-               <number>1</number>
-              </property>
-              <property name="value">
-               <number>64</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_6">
-              <property name="text">
-               <string>Refresh delay:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="QSpinBox" name="spinBox_DeviceRefreshDelay">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>60</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="minimum">
-               <number>64</number>
-              </property>
-              <property name="maximum">
-               <number>1023</number>
-              </property>
-              <property name="value">
-               <number>64</number>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="0">
-             <widget class="QSlider" name="horizontalSlider_LightpackNumberOfLeds">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>10</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksAbove</enum>
-              </property>
-              <property name="tickInterval">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="0">
-             <widget class="QLabel" name="label_NumberOfLeds">
-              <property name="text">
-               <string>Number of LEDs:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="1">
-             <widget class="QSpinBox" name="spinBox_LightpackNumberOfLeds">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>60</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>10</number>
-              </property>
-              <property name="value">
-               <number>10</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tabDeviceAdalight">
-           <attribute name="title">
-            <string>Adalight</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_6">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_SerialPort">
-              <property name="text">
-               <string>Serial port:</string>
-              </property>
-              <property name="buddy">
-               <cstring>lineEdit_AdalightSerialPort</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_SerialPortBaudRate">
-              <property name="text">
-               <string>Baud rate:</string>
-              </property>
-              <property name="buddy">
-               <cstring>comboBox_AdalightSerialPortBaudRate</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="label_ColorSequence">
-              <property name="text">
-               <string>Color sequence:</string>
-              </property>
-              <property name="buddy">
-               <cstring>comboBox_AdalightColorSequence</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="0">
-             <spacer name="verticalSpacer_14">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLineEdit" name="lineEdit_AdalightSerialPort">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>143</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>143</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Example for Windows: COM1, COM2 .. COMn, for Linux: /dev/ttyS0, /dev/ttyS1, /dev/ttyUSB0</string>
-              </property>
-              <property name="text">
-               <string notr="true"/>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QComboBox" name="comboBox_AdalightColorSequence">
-              <property name="minimumSize">
-               <size>
-                <width>143</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>143</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <item>
-               <property name="text">
-                <string>RGB</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>RBG</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>GRB</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>GBR</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>BRG</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>BGR</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QComboBox" name="comboBox_AdalightSerialPortBaudRate">
-              <property name="minimumSize">
-               <size>
-                <width>143</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>143</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="currentIndex">
-               <number>-1</number>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QLabel" name="label_10">
-              <property name="text">
-               <string>Number of LEDs:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="0">
-             <widget class="QSlider" name="horizontalSlider_AdalightNumberOfLeds">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="1">
-             <widget class="QSpinBox" name="spinBox_AdalightNumberOfLeds">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tabDeviceArdulight">
-           <attribute name="title">
-            <string>Ardulight</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_2">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_SerialPort_2">
-              <property name="text">
-               <string>Serial port:</string>
-              </property>
-              <property name="buddy">
-               <cstring>lineEdit_AdalightSerialPort</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_SerialPortBaudRate_2">
-              <property name="text">
-               <string>Baud rate:</string>
-              </property>
-              <property name="buddy">
-               <cstring>comboBox_AdalightSerialPortBaudRate</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QComboBox" name="comboBox_ArdulightSerialPortBaudRate">
-              <property name="minimumSize">
-               <size>
-                <width>143</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>143</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="currentIndex">
-               <number>-1</number>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="label_ColorSequence_2">
-              <property name="text">
-               <string>Color sequence:</string>
-              </property>
-              <property name="buddy">
-               <cstring>comboBox_AdalightColorSequence</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QComboBox" name="comboBox_ArdulightColorSequence">
-              <property name="minimumSize">
-               <size>
-                <width>143</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>143</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <item>
-               <property name="text">
-                <string>RGB</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>RBG</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>GRB</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>GBR</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>BRG</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>BGR</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="9" column="0">
-             <spacer name="verticalSpacer_16">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>140</width>
-                <height>141</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLineEdit" name="lineEdit_ArdulightSerialPort">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>143</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>143</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Example for Windows: COM1, COM2 .. COMn, for Linux: /dev/ttyS0, /dev/ttyS1, /dev/ttyUSB0</string>
-              </property>
-              <property name="text">
-               <string notr="true"/>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QLabel" name="label_11">
-              <property name="text">
-               <string>Number of LEDs:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="0">
-             <widget class="QSlider" name="horizontalSlider_ArdulightNumberOfLeds">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="1">
-             <widget class="QSpinBox" name="spinBox_ArdulightNumberOfLeds">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tabDeviceVirtual">
-           <attribute name="title">
-            <string>Virtual</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_7">
-            <item row="2" column="0" colspan="2">
-             <widget class="QFrame" name="frame_VirtualLeds">
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_7">
-               <item>
-                <layout class="QGridLayout" name="gridLayout_VirtualLeds"/>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <spacer name="verticalSpacer_15">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_12">
-              <property name="text">
-               <string>Number of LEDs:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QSlider" name="horizontalSlider_VirtualNumberOfLeds">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="spinBox_VirtualNumberOfLeds">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_ConnectedDevice">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Connected device:</string>
           </property>
@@ -1357,6 +664,12 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_5">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Brightness:</string>
           </property>
@@ -1414,6 +727,12 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
         </item>
         <item row="5" column="0">
          <widget class="QLabel" name="label_GammaCorrection">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Gamma correction:</string>
           </property>
@@ -1480,6 +799,835 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
            <number>100</number>
           </property>
          </widget>
+        </item>
+        <item row="10" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBox_DeviceSpecificOptions">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>280</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>280</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="title">
+           <string>Device-specific options</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QTabWidget" name="tabDevices">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <property name="documentMode">
+              <bool>true</bool>
+             </property>
+             <widget class="QWidget" name="tabDeviceLightpack">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>50</height>
+               </size>
+              </property>
+              <attribute name="title">
+               <string>Lightpack</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_13">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <item row="5" column="0">
+                <widget class="QSlider" name="horizontalSlider_DeviceSmooth">
+                 <property name="minimum">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <number>255</number>
+                 </property>
+                 <property name="pageStep">
+                  <number>1</number>
+                 </property>
+                 <property name="value">
+                  <number>100</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QSpinBox" name="spinBox_DeviceSmooth">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>60</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>60</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="minimum">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <number>255</number>
+                 </property>
+                 <property name="value">
+                  <number>100</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_9">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Smoothness:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QSlider" name="horizontalSlider_DeviceRefreshDelay">
+                 <property name="minimum">
+                  <number>64</number>
+                 </property>
+                 <property name="maximum">
+                  <number>1023</number>
+                 </property>
+                 <property name="pageStep">
+                  <number>1</number>
+                 </property>
+                 <property name="value">
+                  <number>64</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_6">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Refresh delay:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QSpinBox" name="spinBox_DeviceRefreshDelay">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>60</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>60</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="minimum">
+                  <number>64</number>
+                 </property>
+                 <property name="maximum">
+                  <number>1023</number>
+                 </property>
+                 <property name="value">
+                  <number>64</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QSlider" name="horizontalSlider_LightpackNumberOfLeds">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>10</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="tickPosition">
+                  <enum>QSlider::TicksAbove</enum>
+                 </property>
+                 <property name="tickInterval">
+                  <number>1</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLabel" name="label_NumberOfLeds">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Number of LEDs:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QSpinBox" name="spinBox_LightpackNumberOfLeds">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>60</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>60</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>10</number>
+                 </property>
+                 <property name="value">
+                  <number>10</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0" colspan="2">
+                <widget class="QFrame" name="frame_LightpackColorDepth">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_14">
+                  <property name="margin">
+                   <number>0</number>
+                  </property>
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_7">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>Color depth:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QSlider" name="horizontalSlider_DeviceColorDepth">
+                    <property name="minimum">
+                     <number>32</number>
+                    </property>
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="pageStep">
+                     <number>1</number>
+                    </property>
+                    <property name="value">
+                     <number>100</number>
+                    </property>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QSpinBox" name="spinBox_DeviceColorDepth">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>60</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="minimum">
+                     <number>32</number>
+                    </property>
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>100</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="10" column="0">
+                <spacer name="verticalSpacer_8">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tabDeviceAdalight">
+              <attribute name="title">
+               <string>Adalight</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_6">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_SerialPort">
+                 <property name="text">
+                  <string>Serial port:</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>lineEdit_AdalightSerialPort</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_SerialPortBaudRate">
+                 <property name="text">
+                  <string>Baud rate:</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>comboBox_AdalightSerialPortBaudRate</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_ColorSequence">
+                 <property name="text">
+                  <string>Color sequence:</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>comboBox_AdalightColorSequence</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <spacer name="verticalSpacer_14">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLineEdit" name="lineEdit_AdalightSerialPort">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>143</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>143</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="toolTip">
+                  <string>Example for Windows: COM1, COM2 .. COMn, for Linux: /dev/ttyS0, /dev/ttyS1, /dev/ttyUSB0</string>
+                 </property>
+                 <property name="text">
+                  <string notr="true"/>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QComboBox" name="comboBox_AdalightColorSequence">
+                 <property name="minimumSize">
+                  <size>
+                   <width>143</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>143</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>RGB</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>RBG</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>GRB</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>GBR</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>BRG</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>BGR</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QComboBox" name="comboBox_AdalightSerialPortBaudRate">
+                 <property name="minimumSize">
+                  <size>
+                   <width>143</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>143</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="currentIndex">
+                  <number>-1</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_10">
+                 <property name="text">
+                  <string>Number of LEDs:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0">
+                <widget class="QSlider" name="horizontalSlider_AdalightNumberOfLeds">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>255</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QSpinBox" name="spinBox_AdalightNumberOfLeds">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>60</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>255</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tabDeviceArdulight">
+              <attribute name="title">
+               <string>Ardulight</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_2">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_SerialPort_2">
+                 <property name="text">
+                  <string>Serial port:</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>lineEdit_AdalightSerialPort</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_SerialPortBaudRate_2">
+                 <property name="text">
+                  <string>Baud rate:</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>comboBox_AdalightSerialPortBaudRate</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QComboBox" name="comboBox_ArdulightSerialPortBaudRate">
+                 <property name="minimumSize">
+                  <size>
+                   <width>143</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>143</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="currentIndex">
+                  <number>-1</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_ColorSequence_2">
+                 <property name="text">
+                  <string>Color sequence:</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>comboBox_AdalightColorSequence</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QComboBox" name="comboBox_ArdulightColorSequence">
+                 <property name="minimumSize">
+                  <size>
+                   <width>143</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>143</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>RGB</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>RBG</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>GRB</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>GBR</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>BRG</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>BGR</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <spacer name="verticalSpacer_16">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>140</width>
+                   <height>141</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLineEdit" name="lineEdit_ArdulightSerialPort">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>143</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>143</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="toolTip">
+                  <string>Example for Windows: COM1, COM2 .. COMn, for Linux: /dev/ttyS0, /dev/ttyS1, /dev/ttyUSB0</string>
+                 </property>
+                 <property name="text">
+                  <string notr="true"/>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_11">
+                 <property name="text">
+                  <string>Number of LEDs:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0">
+                <widget class="QSlider" name="horizontalSlider_ArdulightNumberOfLeds">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>255</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QSpinBox" name="spinBox_ArdulightNumberOfLeds">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>60</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>255</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tabDeviceVirtual">
+              <attribute name="title">
+               <string>Virtual</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="2" column="0" colspan="2">
+                <widget class="QFrame" name="frame_VirtualLeds">
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_7">
+                  <item>
+                   <layout class="QGridLayout" name="gridLayout_VirtualLeds"/>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <spacer name="verticalSpacer_15">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_12">
+                 <property name="text">
+                  <string>Number of LEDs:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QSlider" name="horizontalSlider_VirtualNumberOfLeds">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>255</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QSpinBox" name="spinBox_VirtualNumberOfLeds">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>60</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>255</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="11" column="0">
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -1926,7 +2074,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
         <item>
          <widget class="QGroupBox" name="groupBox_Api">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -1941,22 +2089,12 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
            <bool>true</bool>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_ApiPort">
-             <property name="text">
-              <string>Port</string>
-             </property>
-             <property name="buddy">
-              <cstring>lineEdit_ApiPort</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
+           <item row="1" column="0">
             <widget class="QLineEdit" name="lineEdit_ApiPort">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
-               <verstretch>100</verstretch>
+               <verstretch>0</verstretch>
               </sizepolicy>
              </property>
              <property name="inputMask">
@@ -1964,20 +2102,20 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="pushButton_SetApiPort">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_ApiPort">
+             <property name="styleSheet">
+              <string notr="true">margin-top: .1em</string>
              </property>
              <property name="text">
-              <string>Set</string>
+              <string>Port:</string>
+             </property>
+             <property name="buddy">
+              <cstring>lineEdit_ApiPort</cstring>
              </property>
             </widget>
            </item>
-           <item row="1" column="0" colspan="3">
+           <item row="3" column="0">
             <widget class="QCheckBox" name="checkBox_IsApiAuthEnabled">
              <property name="text">
               <string>Enable authorization</string>
@@ -1990,20 +2128,32 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_ApiKey">
+           <item row="5" column="2">
+            <widget class="QPushButton" name="pushButton_GenerateNewApiKey">
              <property name="text">
-              <string>Key</string>
-             </property>
-             <property name="buddy">
-              <cstring>lineEdit_ApiKey</cstring>
+              <string>Generate</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
+           <item row="5" column="0">
             <widget class="QLineEdit" name="lineEdit_ApiKey">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>0</width>
+               <height>20</height>
+              </size>
+             </property>
              <property name="toolTip">
               <string>Copy and paste this key into the application using the API, for authorization on the server</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">margin-left:2em</string>
              </property>
              <property name="maxLength">
               <number>40</number>
@@ -2013,10 +2163,16 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="2">
-            <widget class="QPushButton" name="pushButton_GenerateNewApiKey">
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_ApiKey">
+             <property name="styleSheet">
+              <string notr="true">margin-left:2em; margin-top:0</string>
+             </property>
              <property name="text">
-              <string>Generate</string>
+              <string>Key:</string>
+             </property>
+             <property name="buddy">
+              <cstring>lineEdit_ApiKey</cstring>
              </property>
             </widget>
            </item>
@@ -2460,19 +2616,11 @@ p, li { white-space: pre-wrap; }
   <tabstop>horizontalSlider_DeviceBrightness</tabstop>
   <tabstop>horizontalSlider_GammaCorrection</tabstop>
   <tabstop>checkBox_SwitchOffAtClosing</tabstop>
-  <tabstop>tabDevices</tabstop>
   <tabstop>spinBox_DeviceBrightness</tabstop>
   <tabstop>doubleSpinBox_DeviceGamma</tabstop>
-  <tabstop>horizontalSlider_DeviceColorDepth</tabstop>
   <tabstop>horizontalSlider_DeviceSmooth</tabstop>
-  <tabstop>spinBox_DeviceColorDepth</tabstop>
   <tabstop>spinBox_DeviceSmooth</tabstop>
   <tabstop>comboBox_Profiles</tabstop>
-  <tabstop>lineEdit_ApiPort</tabstop>
-  <tabstop>pushButton_SetApiPort</tabstop>
-  <tabstop>checkBox_IsApiAuthEnabled</tabstop>
-  <tabstop>lineEdit_ApiKey</tabstop>
-  <tabstop>pushButton_GenerateNewApiKey</tabstop>
   <tabstop>radioButton_GrabQt</tabstop>
   <tabstop>radioButton_GrabQt_EachWidget</tabstop>
   <tabstop>radioButton_GrabD3D9</tabstop>
@@ -2576,22 +2724,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>423</x>
      <y>412</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lineEdit_ApiPort</sender>
-   <signal>returnPressed()</signal>
-   <receiver>pushButton_SetApiPort</receiver>
-   <slot>animateClick()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>370</x>
-     <y>117</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>578</x>
-     <y>140</y>
     </hint>
    </hints>
   </connection>

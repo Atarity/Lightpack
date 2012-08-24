@@ -92,7 +92,12 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     ui->listWidget->setSpacing(12);
     ui->listWidget->setCurrentRow(0);
     ui->listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+// hide main tabbar
     QTabBar* tabBar=qFindChild<QTabBar*>(ui->tabWidget);
+    tabBar->hide();
+
+// hide device options tabbar
+    tabBar=qFindChild<QTabBar*>(ui->tabDevices);
     tabBar->hide();
 
     connect(ui->listWidget,
@@ -138,6 +143,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     m_lightpackMode = Settings::getLightpackMode();
 
     onGrabberChanged();
+
 
     adjustSizeAndMoveCenter();   
 
@@ -255,7 +261,7 @@ void SettingsWindow::connectSignalsSlots()
 
     // Dev tab configure API (port, apikey)
     connect(ui->groupBox_Api, SIGNAL(toggled(bool)), this, SLOT(onEnableApi_Toggled(bool)));
-    connect(ui->pushButton_SetApiPort, SIGNAL(clicked()), this, SLOT(onSetApiPort_Clicked()));
+    connect(ui->lineEdit_ApiPort, SIGNAL(editingFinished()), this, SLOT(onSetApiPort_Clicked()));
     connect(ui->checkBox_IsApiAuthEnabled, SIGNAL(toggled(bool)), this, SLOT(onIsApiAuthEnabled_Toggled(bool)));
     connect(ui->pushButton_GenerateNewApiKey, SIGNAL(clicked()), this, SLOT(onGenerateNewApiKey_Clicked()));
     connect(ui->lineEdit_ApiKey, SIGNAL(editingFinished()), this, SLOT(onApiKey_EditingFinished()));
@@ -372,43 +378,47 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
 
 void SettingsWindow::updateDeviceTabWidgetsVisibility()
 {
-//    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-//    SupportedDevices::DeviceType connectedDevice = Settings::getConnectedDevice();
+    SupportedDevices::DeviceType connectedDevice = Settings::getConnectedDevice();
 
-//    switch (connectedDevice)
-//    {
-//    case SupportedDevices::AdalightDevice:
-//        setDeviceTabWidgetsVisibility(DeviceTab::Adalight);
-//        setMaximumNumberOfLeds(MaximumNumberOfLeds::Adalight);
-//        break;
+    switch (connectedDevice)
+    {
+    case SupportedDevices::AdalightDevice:
+        ui->groupBox_DeviceSpecificOptions->show();
+        ui->tabDevices->setCurrentWidget(ui->tabDeviceAdalight);
+        setDeviceTabWidgetsVisibility(DeviceTab::Adalight);
+        break;
 
-//    case SupportedDevices::ArdulightDevice:
-//        setDeviceTabWidgetsVisibility(DeviceTab::Ardulight);
-//        setMaximumNumberOfLeds(MaximumNumberOfLeds::Ardulight);
-//        break;
+    case SupportedDevices::ArdulightDevice:
+        ui->groupBox_DeviceSpecificOptions->show();
+        ui->tabDevices->setCurrentWidget(ui->tabDeviceArdulight);
+        setDeviceTabWidgetsVisibility(DeviceTab::Ardulight);
+        break;
 
-//    case SupportedDevices::AlienFxDevice:
-//        setDeviceTabWidgetsVisibility(DeviceTab::AlienFx);
-//        setMaximumNumberOfLeds(MaximumNumberOfLeds::AlienFx);
-//        break;
+    case SupportedDevices::AlienFxDevice:
+        ui->groupBox_DeviceSpecificOptions->hide();
+        setDeviceTabWidgetsVisibility(DeviceTab::AlienFx);
+        break;
 
-//    case SupportedDevices::LightpackDevice:
-//        setDeviceTabWidgetsVisibility(DeviceTab::Lightpack);
-//        setMaximumNumberOfLeds(getLightpackMaximumNumberOfLeds());
-//        break;
+    case SupportedDevices::LightpackDevice:
+        ui->groupBox_DeviceSpecificOptions->show();
+        ui->tabDevices->setCurrentWidget(ui->tabDeviceLightpack);
+        setDeviceTabWidgetsVisibility(DeviceTab::Lightpack);
+        break;
 
-//    case SupportedDevices::VirtualDevice:
-//        setDeviceTabWidgetsVisibility(DeviceTab::Virtual);
-//        setMaximumNumberOfLeds(MaximumNumberOfLeds::Virtual);
-//        // Sync Virtual Leds count with NumberOfLeds field
-////        initVirtualLeds();
-//        break;
+    case SupportedDevices::VirtualDevice:
+        ui->groupBox_DeviceSpecificOptions->show();
+        ui->tabDevices->setCurrentWidget(ui->tabDeviceVirtual);
+        setDeviceTabWidgetsVisibility(DeviceTab::Virtual);
+        // Sync Virtual Leds count with NumberOfLeds field
+        initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::VirtualDevice));
+        break;
 
-//    default:
-//        qCritical() << Q_FUNC_INFO << "Fail. Unknown connectedDevice ==" << connectedDevice;
-//        break;
-//    }
+    default:
+        qCritical() << Q_FUNC_INFO << "Fail. Unknown connectedDevice ==" << connectedDevice;
+        break;
+    }
 }
 
 void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
@@ -423,9 +433,9 @@ void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
     if (majorVersion == 4 || majorVersion == 5)
     {
         // Show color depth only if lightpack hw4.x or hw5.x
-//        ui->groupBox_DeviceColorDepth->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
+        ui->frame_LightpackColorDepth->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
     } else {
-//        ui->groupBox_DeviceColorDepth->setVisible(false);
+        ui->frame_LightpackColorDepth->setVisible(false);
     }
 
     // NumberOfLeds
@@ -1006,7 +1016,7 @@ void SettingsWindow::onGrabMinLevelOfSensivity_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    Settings::setGrabMinimumLevelOfSensitivity(value);
+    Settings::setThresholdOfBlack(value);
 }
 
 void SettingsWindow::onGrabIsAvgColors_toggled(bool state)
@@ -1362,6 +1372,7 @@ void SettingsWindow::settingsProfileChanged_UpdateUI(const QString &profileName)
         ui->pushButton_DeleteProfile->setEnabled(false);
     }
 
+    updateUiFromSettings();
     profileTraySync();
 }
 
@@ -1630,7 +1641,7 @@ void SettingsWindow::updateUiFromSettings()
 
     ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsEnabled());
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
-    ui->spinBox_GrabMinLevelOfSensitivity->setValue     (Settings::getGrabMinimumLevelOfSensitivity());
+    ui->spinBox_GrabMinLevelOfSensitivity->setValue     (Settings::getThresholdOfBlack());
 
     // Check the selected moodlamp mode (setChecked(false) not working to select another)
     ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
@@ -1638,7 +1649,10 @@ void SettingsWindow::updateUiFromSettings()
     ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
     ui->horizontalSlider_MoodLampSpeed->setValue        (Settings::getMoodLampSpeed());
 
-    ui->spinBox_LightpackNumberOfLeds->setValue                  (Settings::getNumberOfLeds(Settings::getConnectedDevice()));
+    ui->spinBox_LightpackNumberOfLeds->setValue         (Settings::getNumberOfLeds(SupportedDevices::LightpackDevice));
+    ui->spinBox_AdalightNumberOfLeds->setValue          (Settings::getNumberOfLeds(SupportedDevices::AdalightDevice));
+    ui->spinBox_ArdulightNumberOfLeds->setValue         (Settings::getNumberOfLeds(SupportedDevices::ArdulightDevice));
+    ui->spinBox_VirtualNumberOfLeds->setValue           (Settings::getNumberOfLeds(SupportedDevices::VirtualDevice));
     ui->horizontalSlider_DeviceRefreshDelay->setValue   (Settings::getDeviceRefreshDelay());
     ui->horizontalSlider_DeviceBrightness->setValue     (Settings::getDeviceBrightness());
     ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());

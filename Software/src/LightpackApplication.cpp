@@ -170,6 +170,9 @@ void LightpackApplication::startBacklight()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "m_backlightStatus =" << m_backlightStatus
                     << "m_deviceLockStatus =" << m_deviceLockStatus;
 
+    connect(settings(), SIGNAL(moodLampColorChanged(QColor)), m_moodlampManager, SLOT(setCurrentColor(QColor)));
+    connect(settings(), SIGNAL(profileLoaded(const QString &)), m_moodlampManager, SLOT(settingsProfileChanged(const QString &)));
+
     bool isBacklightEnabled = (m_backlightStatus == Backlight::StatusOn || m_backlightStatus == Backlight::StatusDeviceError);
     bool isCanStart = (isBacklightEnabled && m_deviceLockStatus == DeviceLocked::Unlocked);
 
@@ -413,7 +416,7 @@ void LightpackApplication::startLedDeviceManager()
     m_ledDeviceManager = new LedDeviceManager();
     m_LedDeviceManagerThread = new QThread();
 
-    connect(settings(), SIGNAL(connectedDeviceChanged(const SupportedDevices::DeviceType &)), m_ledDeviceManager, SLOT(recreateLedDevice(SupportedDevices::DeviceType)), Qt::DirectConnection);
+    connect(settings(), SIGNAL(connectedDeviceChanged(const SupportedDevices::DeviceType)), m_ledDeviceManager, SLOT(recreateLedDevice(SupportedDevices::DeviceType)), Qt::DirectConnection);
 //    connect(settings(), SIGNAL(adalightSerialPortNameChanged(QString)),               m_ledDeviceManager, SLOT(recreateLedDevice()), Qt::DirectConnection);
 //    connect(settings(), SIGNAL(adalightSerialPortBaudRateChanged(QString)),           m_ledDeviceManager, SLOT(recreateLedDevice()), Qt::DirectConnection);
 //    connect(m_settingsWindow, SIGNAL(updateLedsColors(const QList<QRgb> &)),          m_ledDeviceManager, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
@@ -480,8 +483,6 @@ void LightpackApplication::startGrabManager()
     connect(settings(), SIGNAL(ardulightNumberOfLedsChanged(int)), this, SLOT(numberOfLedsChanged(int)));
     connect(settings(), SIGNAL(virtualNumberOfLedsChanged(int)), this, SLOT(numberOfLedsChanged(int)));
     connect(settings(), SIGNAL(profileLoaded(const QString &)), m_grabManager,     SLOT(settingsProfileChanged(const QString &)));
-    connect(settings(), SIGNAL(profileLoaded(const QString &)), m_moodlampManager, SLOT(settingsProfileChanged(const QString &)));
-    connect(settings(), SIGNAL(moodLampColorChanged(QColor)), m_moodlampManager, SLOT(setCurrentColor(QColor)));
     // Connections to signals which will be connected to ILedDevice
     if (!m_noGui)
     {
@@ -632,6 +633,8 @@ void LightpackApplication::settingsChanged()
 
     bool isBacklightEnabled = Settings::isBacklightEnabled();
     bool isCanStart =(isBacklightEnabled && m_deviceLockStatus == DeviceLocked::Unlocked);
+
+    numberOfLedsChanged(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
 
     switch (Settings::getLightpackMode())
     {

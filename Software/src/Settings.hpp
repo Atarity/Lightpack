@@ -110,8 +110,8 @@ public:
     static void setGrabAvgColorsEnabled(bool isEnabled);
     static bool isSendDataOnlyIfColorsChanges();
     static void setSendDataOnlyIfColorsChanges(bool isEnabled);
-    static int getGrabMinimumLevelOfSensitivity();
-    static void setGrabMinimumLevelOfSensitivity(int value);
+    static int getThresholdOfBlack();
+    static void setThresholdOfBlack(int value);
     // [Device]
     static int getDeviceRefreshDelay();
     static void setDeviceRefreshDelay(int value);

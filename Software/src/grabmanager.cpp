@@ -103,7 +103,7 @@ void GrabManager::start(bool isGrabEnabled)
     }
 }
 
-void GrabManager::onGrabberTypeChanged(const Grab::GrabberType &grabberType)
+void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << grabberType;
 
@@ -166,8 +166,10 @@ void GrabManager::settingsProfileChanged(const QString &profileName)
 
     m_isSendDataOnlyIfColorsChanged = Settings::isSendDataOnlyIfColorsChanges();
     m_avgColorsOnAllLeds = Settings::isGrabAvgColorsEnabled();
-    m_minLevelOfSensivity = Settings::getGrabMinimumLevelOfSensitivity();
+    m_minLevelOfSensivity = Settings::getThresholdOfBlack();
     m_slowdownTime = Settings::getGrabSlowdown();
+
+    setNumberOfLeds(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
 
     for (int i = 0; i < m_ledWidgets.size(); i++)
     {

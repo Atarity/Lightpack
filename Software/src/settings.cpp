@@ -461,6 +461,7 @@ QString Settings::getLanguage()
 
 void Settings::setLanguage(const QString & language)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::Language, language);
     m_this->languageChanged(language);
 }
@@ -472,6 +473,7 @@ int Settings::getDebugLevel()
 
 void Settings::setDebugLevel(int debugLvl)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::DebugLevel, debugLvl);
     m_this->debugLevelChanged(debugLvl);
 }
@@ -483,6 +485,7 @@ bool Settings::isApiEnabled()
 
 void Settings::setIsApiEnabled(bool isEnabled)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::Api::IsEnabled, isEnabled);
     m_this->apiServerEnabledChanged(isEnabled);
 }
@@ -494,6 +497,7 @@ int Settings::getApiPort()
 
 void Settings::setApiPort(int apiPort)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::Api::Port, apiPort);
     m_this->apiPortChanged(apiPort);
 }
@@ -516,6 +520,7 @@ QString Settings::getApiAuthKey()
 
 void Settings::setApiKey(const QString & apiKey)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::Api::AuthKey, apiKey);
     m_this->apiKeyChanged(apiKey);
 }
@@ -527,6 +532,7 @@ bool Settings::isApiAuthEnabled()
 
 void Settings::setIsApiAuthEnabled(bool isEnabled)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::Api::IsAuthEnabled, isEnabled);
     m_this->apiAuthEnabledChanged(isEnabled);
 }
@@ -538,6 +544,7 @@ bool Settings::isExpertModeEnabled()
 
 void Settings::setExpertModeEnabled(bool isEnabled)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::IsExpertModeEnabled, isEnabled);
     m_this->expertModeEnabledChanged(isEnabled);
 }
@@ -549,6 +556,7 @@ bool Settings::isSwitchOffAtClosing()
 
 void Settings::setSwitchOffAtClosing(bool isEnabled)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::IsSwitchOffAtClosing, isEnabled);
     m_this->switchOffAtClosingChanged(isEnabled);
 }
@@ -560,6 +568,7 @@ bool Settings::isPingDeviceEverySecond()
 
 void Settings::setPingDeviceEverySecond(bool isEnabled)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::IsPingDeviceEverySecond, isEnabled);
     m_this->pingDeviceEverySecondEnabledChanged(isEnabled);
 }
@@ -571,6 +580,7 @@ bool Settings::isUpdateFirmwareMessageShown()
 
 void Settings::setUpdateFirmwareMessageShown(bool isShown)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::IsUpdateFirmwareMessageShown, isShown);
     m_this->updateFirmwareMessageShownChanged(isShown);
 }
@@ -593,6 +603,7 @@ SupportedDevices::DeviceType Settings::getConnectedDevice()
 
 void Settings::setConnectedDevice(SupportedDevices::DeviceType device)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     QString deviceName = m_devicesTypeToNameMap.value(device, Main::ConnectedDeviceDefault);
 
     setValueMain(Main::Key::ConnectedDevice, deviceName);
@@ -606,6 +617,7 @@ QString Settings::getConnectedDeviceName()
 
 void Settings::setConnectedDeviceName(const QString & deviceName)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     if (deviceName == "")
         return; // silent return
 
@@ -635,6 +647,7 @@ QKeySequence Settings::getOnOffDeviceKey()
 
 void Settings::setOnOffDeviceKey(const QKeySequence &keySequence)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     if( keySequence.isEmpty() ) {
         setValueMain(Main::Key::Hotkeys::OnOffDeviceKey, Main::HotKeys::OnOffDeviceKeyDefault);
     } else {
@@ -650,6 +663,7 @@ QString Settings::getAdalightSerialPortName()
 
 void Settings::setAdalightSerialPortName(const QString & port)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::Adalight::Port, port);
     m_this->adalightSerialPortNameChanged(port);
 }
@@ -662,6 +676,7 @@ QString Settings::getAdalightSerialPortBaudRate()
 
 void Settings::setAdalightSerialPortBaudRate(const QString & baud)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     // TODO: validator
     setValueMain(Main::Key::Adalight::BaudRate, baud);
     m_this->adalightSerialPortBaudRateChanged(baud);
@@ -693,6 +708,7 @@ bool Settings::isConnectedDeviceUsesSerialPort()
 
 void Settings::setNumberOfLeds(SupportedDevices::DeviceType device, int numberOfLeds)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     QString key = m_devicesTypeToKeyNumberOfLedsMap.value(device);
 
     if (key == "")
@@ -740,6 +756,7 @@ int Settings::getNumberOfLeds(SupportedDevices::DeviceType device)
 
 void Settings::setColorSequence(SupportedDevices::DeviceType device, QString colorSequence)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << device << colorSequence;
     switch (device)
     {
@@ -789,6 +806,7 @@ bool Settings::isBacklightEnabled()
 
 void Settings::setIsBacklightEnabled(bool isEnabled)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::IsBacklightEnabled, isEnabled);
     m_this->backlightEnabledChanged(isEnabled);
 }
@@ -800,6 +818,7 @@ bool Settings::isGrabAvgColorsEnabled()
 
 void Settings::setGrabAvgColorsEnabled(bool isEnabled)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Grab::IsAvgColorsEnabled, isEnabled);
     m_this->grabAvgColorsEnabledChanged(isEnabled);
 }
@@ -811,17 +830,19 @@ bool Settings::isSendDataOnlyIfColorsChanges()
 
 void Settings::setSendDataOnlyIfColorsChanges(bool isEnabled)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Grab::IsSendDataOnlyIfColorsChanges, isEnabled);
     m_this->sendDataOnlyIfColorsChangesChanged(isEnabled);
 }
 
-int Settings::getGrabMinimumLevelOfSensitivity()
+int Settings::getThresholdOfBlack()
 {
     return value(Profile::Key::Grab::MinimumLevelOfSensitivity).toInt();
 }
 
-void Settings::setGrabMinimumLevelOfSensitivity(int value)
+void Settings::setThresholdOfBlack(int value)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Grab::MinimumLevelOfSensitivity, value);
     m_this->thresholdOfBlackChanged(value);
 }
@@ -833,6 +854,7 @@ int Settings::getDeviceRefreshDelay()
 
 void Settings::setDeviceRefreshDelay(int value)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Device::RefreshDelay, getValidDeviceRefreshDelay(value));
     m_this->deviceRefreshDelayChanged(value);
 }
@@ -844,6 +866,7 @@ int Settings::getDeviceBrightness()
 
 void Settings::setDeviceBrightness(int value)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Device::Brightness, getValidDeviceBrightness(value));
     m_this->deviceBrightnessChanged(value);
 }
@@ -855,6 +878,7 @@ int Settings::getDeviceSmooth()
 
 void Settings::setDeviceSmooth(int value)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Device::Smooth, getValidDeviceSmooth(value));
     m_this->deviceSmoothChanged(value);
 }
@@ -866,6 +890,7 @@ int Settings::getDeviceColorDepth()
 
 void Settings::setDeviceColorDepth(int value)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Device::ColorDepth, getValidDeviceColorDepth(value));
     m_this->deviceColorDepthChanged(value);
 }
@@ -877,6 +902,7 @@ double Settings::getDeviceGamma()
 
 void Settings::setDeviceGamma(double gamma)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Device::Gamma, getValidDeviceGamma(gamma));
     m_this->deviceGammaChanged(gamma);
 }
@@ -1034,7 +1060,7 @@ QColor Settings::getMoodLampColor()
 
 void Settings::setMoodLampColor(QColor value)
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << value.name();
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value.name();
     setValue(Profile::Key::MoodLamp::Color, value.name() );
     m_this->moodLampColorChanged(value);
 }
@@ -1069,18 +1095,21 @@ double Settings::getLedCoefBlue(int ledIndex)
 
 void Settings::setLedCoefRed(int ledIndex, double value)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValidLedCoef(ledIndex, Profile::Key::Led::CoefRed, value);
     m_this->ledCoefRedChanged(ledIndex, value);
 }
 
 void Settings::setLedCoefGreen(int ledIndex, double value)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValidLedCoef(ledIndex, Profile::Key::Led::CoefGreen, value);
     m_this->ledCoefGreenChanged(ledIndex, value);
 }
 
 void Settings::setLedCoefBlue(int ledIndex, double value)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValidLedCoef(ledIndex, Profile::Key::Led::CoefBlue, value);
     m_this->ledCoefBlueChanged(ledIndex, value);
 }
@@ -1092,6 +1121,7 @@ QSize Settings::getLedSize(int ledIndex)
 
 void Settings::setLedSize(int ledIndex, QSize size)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Led::Prefix + QString::number(ledIndex + 1) + "/" + Profile::Key::Led::Size, size);
     m_this->ledSizeChanged(ledIndex, size);
 }
@@ -1103,6 +1133,7 @@ QPoint Settings::getLedPosition(int ledIndex)
 
 void Settings::setLedPosition(int ledIndex, QPoint position)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Led::Prefix + QString::number(ledIndex + 1) + "/" + Profile::Key::Led::Position, position);
     m_this->ledPositionChanged(ledIndex, position);
 }
@@ -1118,6 +1149,7 @@ bool Settings::isLedEnabled(int ledIndex)
 
 void Settings::setLedEnabled(int ledIndex, bool isEnabled)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Led::Prefix + QString::number(ledIndex + 1) + "/" + Profile::Key::Led::IsEnabled, isEnabled);
     m_this->ledEnabledChanged(ledIndex, isEnabled);
 }

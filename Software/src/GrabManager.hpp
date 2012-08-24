@@ -63,7 +63,7 @@ public:
     void reset();
 
 public slots:
-    void onGrabberTypeChanged(const Grab::GrabberType &grabberType);
+    void onGrabberTypeChanged(const Grab::GrabberType grabberType);
     void onGrabSlowdownChanged(int ms);
     void onThresholdOfBlackChanged(int value);
     void onGrabAvgColorsEnabledChanged(bool state);
