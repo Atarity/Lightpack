@@ -127,10 +127,9 @@ int D3D9Grabber::getBufLength(const RECT &rect)
     return (rect.right - rect.left) * (rect.bottom - rect.top) * BYTES_PER_PIXEL;
 }
 
-QList<QRgb> D3D9Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
+GrabResult D3D9Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors)
 {
     D3DSURFACE_DESC surfaceDesc;
-    QList<QRgb> result;
     m_rect = getEffectiveRect(widgets);
     m_surface->GetDesc(&surfaceDesc);
     clipRect(&m_rect, &surfaceDesc);
@@ -146,9 +145,9 @@ QList<QRgb> D3D9Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
     for(int i = 0; i < widgets.size(); i++)
     {
         GrabWidget * widget = widgets[i];
-        result.append(getColor(widget->x(), widget->y(), widget->width(), widget->height()));
+        widgetsColors->append(getColor(widget->x(), widget->y(), widget->width(), widget->height()));
     }
-    return result;
+    return GrabResultOk;
 }
 
 void D3D9Grabber::clipRect(RECT *rect, D3DSURFACE_DESC *surfaceDesc) {

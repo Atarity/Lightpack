@@ -241,6 +241,7 @@ void SettingsWindow::connectSignalsSlots()
     // Dev tab
     connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
 
+    connect(ui->checkBox_EnableDx1011Capture, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
     connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
     connect(ui->radioButton_GrabQt_EachWidget, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
 #ifdef WINAPI_GRAB_SUPPORT
@@ -384,30 +385,30 @@ void SettingsWindow::updateDeviceTabWidgetsVisibility()
 
     switch (connectedDevice)
     {
-    case SupportedDevices::AdalightDevice:
+    case SupportedDevices::DeviceTypeAdalight:
         ui->groupBox_DeviceSpecificOptions->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceAdalight);
         setDeviceTabWidgetsVisibility(DeviceTab::Adalight);
         break;
 
-    case SupportedDevices::ArdulightDevice:
+    case SupportedDevices::DeviceTypeArdulight:
         ui->groupBox_DeviceSpecificOptions->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceArdulight);
         setDeviceTabWidgetsVisibility(DeviceTab::Ardulight);
         break;
 
-    case SupportedDevices::AlienFxDevice:
+    case SupportedDevices::DeviceTypeAlienFx:
         ui->groupBox_DeviceSpecificOptions->hide();
         setDeviceTabWidgetsVisibility(DeviceTab::AlienFx);
         break;
 
-    case SupportedDevices::LightpackDevice:
+    case SupportedDevices::DeviceTypeLightpack:
         ui->groupBox_DeviceSpecificOptions->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceLightpack);
         setDeviceTabWidgetsVisibility(DeviceTab::Lightpack);
         break;
 
-    case SupportedDevices::VirtualDevice:
+    case SupportedDevices::DeviceTypeVirtual:
         ui->groupBox_DeviceSpecificOptions->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceVirtual);
         setDeviceTabWidgetsVisibility(DeviceTab::Virtual);
@@ -480,7 +481,7 @@ int SettingsWindow::getLigtpackFirmwareVersionMajor()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
-    if (Settings::getConnectedDevice() != SupportedDevices::LightpackDevice)
+    if (Settings::getConnectedDevice() != SupportedDevices::DeviceTypeLightpack)
         return -1;
 
     if (m_deviceFirmwareVersion == DeviceFirmvareVersionUndef)
@@ -956,7 +957,7 @@ void SettingsWindow::ledDeviceFirmwareVersionResult(const QString & fwVersion)
 
     QString aboutDialogFirmwareString = m_deviceFirmwareVersion;
 
-    if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
+    if (Settings::getConnectedDevice() == SupportedDevices::DeviceTypeLightpack)
     {
         if (m_deviceFirmwareVersion == "5.0" || m_deviceFirmwareVersion == "4.3")
         {
@@ -1000,7 +1001,7 @@ void SettingsWindow::onGrabberChanged()
 {
     Grab::GrabberType grabberType = getSelectedGrabberType();
 
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "GrabberType:" << grabberType;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "GrabberType: " << grabberType << ", isDx1011CaptureEnabled: " << isDx1011CaptureEnabled();
 
     Settings::setGrabberType(grabberType);
 }
@@ -1594,7 +1595,7 @@ void SettingsWindow::onTrayIcon_MessageClicked()
     switch(m_trayMessage)
     {
     case Tray_UpdateFirmwareMessage:
-        if (Settings::getConnectedDevice() == SupportedDevices::LightpackDevice)
+        if (Settings::getConnectedDevice() == SupportedDevices::DeviceTypeLightpack)
         {
             // Open lightpack downloads page
             QDesktopServices::openUrl(QUrl(LightpackDownloadsPageUrl, QUrl::TolerantMode));
@@ -1669,15 +1670,15 @@ void SettingsWindow::updateUiFromSettings()
     switch (Settings::getGrabberType())
     {
 #ifdef WINAPI_GRAB_SUPPORT
-    case Grab::WinAPIGrabber:
+    case Grab::GrabberTypeWinAPI:
         ui->radioButton_GrabWinAPI->setChecked(true);
         break;
-    case Grab::WinAPIEachWidgetGrabber:
+    case Grab::GrabberTypeWinAPIEachWidget:
         ui->radioButton_GrabWinAPI_EachWidget->setChecked(true);
         break;
 #endif
 #ifdef D3D9_GRAB_SUPPORT
-    case Grab::D3D9Grabber:
+    case Grab::GrabberTypeD3D9:
         ui->radioButton_GrabD3D9->setChecked(true);
         break;
 #endif
@@ -1691,7 +1692,7 @@ void SettingsWindow::updateUiFromSettings()
         ui->radioButton_GrabMacCoreGraphics->setChecked(true);
         break;
 #endif
-    case Grab::QtEachWidgetGrabber:
+    case Grab::GrabberTypeQtEachWidget:
         ui->radioButton_GrabQt_EachWidget->setChecked(true);
         break;
 
@@ -1714,15 +1715,15 @@ Grab::GrabberType SettingsWindow::getSelectedGrabberType()
 #endif
 #ifdef WINAPI_GRAB_SUPPORT
     if (ui->radioButton_GrabWinAPI->isChecked()) {
-        return Grab::WinAPIGrabber;
+        return Grab::GrabberTypeWinAPI;
     }
     if (ui->radioButton_GrabWinAPI_EachWidget->isChecked()) {
-        return Grab::WinAPIEachWidgetGrabber;
+        return Grab::GrabberTypeWinAPIEachWidget;
     }
 #endif
 #ifdef D3D9_GRAB_SUPPORT
     if (ui->radioButton_GrabD3D9->isChecked()) {
-        return Grab::D3D9Grabber;
+        return Grab::GrabberTypeD3D9;
     }
 #endif
 #ifdef MAC_OS_CG_GRAB_SUPPORT
@@ -1732,10 +1733,14 @@ Grab::GrabberType SettingsWindow::getSelectedGrabberType()
 #endif
 
     if (ui->radioButton_GrabQt_EachWidget->isChecked()) {
-        return Grab::QtEachWidgetGrabber;
+        return Grab::GrabberTypeQtEachWidget;
     }
 
-    return Grab::QtGrabber;
+    return Grab::GrabberTypeQt;
+}
+
+bool SettingsWindow::isDx1011CaptureEnabled() {
+    return ui->checkBox_EnableDx1011Capture->isChecked();
 }
 
 // ----------------------------------------------------------------------------

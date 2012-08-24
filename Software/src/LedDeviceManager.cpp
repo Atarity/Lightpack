@@ -45,7 +45,7 @@ LedDeviceManager::LedDeviceManager(QObject *parent)
 
     m_backlightStatus = Backlight::StatusOn;
 
-    for (int i = 0; i < SupportedDevices::DevicesCount; i++)
+    for (int i = 0; i < SupportedDevices::DeviceTypesCount; i++)
         m_ledDevices.append(NULL);
 
     initLedDevice();
@@ -253,7 +253,7 @@ void LedDeviceManager::initLedDevice()
 ILedDevice * LedDeviceManager::createLedDevice(SupportedDevices::DeviceType deviceType)
 {    
 
-    if (deviceType == SupportedDevices::AlienFxDevice){
+    if (deviceType == SupportedDevices::DeviceTypeAlienFx){
 #       if !defined(Q_WS_WIN)
         qWarning() << Q_FUNC_INFO << "AlienFx not supported on current platform";
 
@@ -264,11 +264,11 @@ ILedDevice * LedDeviceManager::createLedDevice(SupportedDevices::DeviceType devi
 
     switch (deviceType){
 
-    case SupportedDevices::LightpackDevice:
+    case SupportedDevices::DeviceTypeLightpack:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::LightpackDevice";
         return (ILedDevice *)new LedDeviceLightpack();
 
-    case SupportedDevices::AlienFxDevice:
+    case SupportedDevices::DeviceTypeAlienFx:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::AlienFxDevice";
 
 #       ifdef Q_WS_WIN
@@ -277,15 +277,15 @@ ILedDevice * LedDeviceManager::createLedDevice(SupportedDevices::DeviceType devi
         break;
 #       endif /* Q_WS_WIN */
 
-    case SupportedDevices::AdalightDevice:
+    case SupportedDevices::DeviceTypeAdalight:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::AdalightDevice";
         return (ILedDevice *)new LedDeviceAdalight();
 
-    case SupportedDevices::ArdulightDevice:
+    case SupportedDevices::DeviceTypeArdulight:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::ArdulightDevice";
         return (ILedDevice *)new LedDeviceArdulight();
 
-    case SupportedDevices::VirtualDevice:
+    case SupportedDevices::DeviceTypeVirtual:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::VirtualDevice";
         return (ILedDevice *)new LedDeviceVirtual();
 

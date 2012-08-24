@@ -108,10 +108,18 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     {
         connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(setStatusChanged(Backlight::Status)));
         m_settingsWindow->startBacklight();
+
+    emit postInitialization();
     }
 }
 
 #ifdef Q_OS_WIN
+HWND LightpackApplication::getMainWindowHandle() {
+    // to get HWND sometimes needed to activate window
+//    winFocus(m_settingsWindow, true);
+    return m_settingsWindow->winId();
+}
+
 bool LightpackApplication::winEventFilter ( MSG * msg, long * result ) {
     const unsigned char POWER_RESUME  = 0x01;
     const unsigned char POWER_SUSPEND = 0x02;

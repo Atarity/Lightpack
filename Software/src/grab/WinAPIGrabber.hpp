@@ -25,26 +25,43 @@
 
 #pragma once
 
-#include "IGrabber.hpp"
+#include "GrabberBase.hpp"
+#include "enums.hpp"
 #ifdef WINAPI_GRAB_SUPPORT
 
 #define WINVER 0x0500 /* Windows2000 for MonitorFromWindow(..) func */
 
 #include <windows.h>
 
-class WinAPIGrabber : public IGrabber
+using namespace Grab;
+
+class WinAPIGrabber : public GrabberBase
 {
 public:
-    WinAPIGrabber();
+    WinAPIGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
     ~WinAPIGrabber();
     virtual const char * getName();
-    virtual void updateGrabScreenFromWidget( QWidget * widget );
-    virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
+
+    virtual void startGrabbing();
+    virtual void stopGrabbing();
+    virtual void isGrabbingStarted();
+    virtual void setGrabInterval(int msec);
+
+protected:
+    virtual GrabResult _grab();
+
+public slots:
+
+    virtual void firstWidgetPositionChanged(QWidget * widget );
+
+signals:
+    void frameGrabAttempted(GrabResult grabResult);
+
 private:
     void captureScreen();
     void freeDCs();
     QRgb getColor(const QWidget * grabme);
-    QRgb getColor(int x, int y, int width, int height);
+    QRgb getColor(const QRect &widgetRect);
 
 private:
     HMONITOR hMonitor;

@@ -1,8 +1,8 @@
 /*
- * defs.h
+ * D3D10GrabberDefs.hpp
  *
- *  Created on: 17.04.2011
- *      Author: Timur Sattarov && Mike Shatohin
+ *  Created on: 01.06.2012
+ *      Author: Timur Sattarov
  *     Project: Lightpack
  *
  *  Lightpack is very simple implementation of the backlight for a laptop
@@ -26,26 +26,19 @@
 
 #pragma once
 
-#include <qglobal.h>
+#define D3D10GRABBER_SHARED_MEM_NAME L"Lightpack.D3D10Grabber.SharedMem"
+#define MB (1024*1024)
+#define D3D10GRABBER_SHARED_MEM_SIZE (50*MB)
+#define D3D10GRABBER_MUTEX_MEM_NAME L"Lightpack.D3D10Grabber.Mutex"
 
-#define QT_GRAB_SUPPORT
-#ifdef Q_WS_WIN
-#   define WINAPI_GRAB_SUPPORT
-#   define D3D9_GRAB_SUPPORT
-#   define D3D10_GRAB_SUPPORT
-#elif defined(Q_OS_UNIX)
-#   define X11_GRAB_SUPPORT
-#endif
+#define D3D10GRABBER_BLANK_FRAME_ID 0xffffffff
 
-#if defined(Q_OS_DARWIN) || defined(Q_OS_DARWIN64) || defined(Q_OS_MAC) || defined(Q_OS_MACX) || defined(Q_OS_MAC64)
-#   define MAC_OS
-#   define MAC_OS_CG_GRAB_SUPPORT
-#   undef X11_GRAB_SUPPORT
-#endif
+struct D3D10GRABBER_SHARED_MEM_DESC {
+    UINT dxgiPresentFuncOffset;
+    UINT width;
+    UINT height;
+    UINT rowPitch;
+    UINT frameId;
+} ;
 
-#ifdef Q_WS_WIN
-#   define ALIEN_FX_SUPPORTED
-#endif
-
-#define DEBUG_OUT_RGB( RGB_VALUE ) \
-    qDebug() << #RGB_VALUE << "=" << qRed(RGB_VALUE) << qGreen(RGB_VALUE) << qBlue(RGB_VALUE)
+#define D3D10GRABBER_SHARED_MEM_DATA_SIZE (D3D10GRABBER_SHARED_MEM_SIZE - sizeof(D3D10GRABBER_SHARED_MEM_DESC))

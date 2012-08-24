@@ -25,20 +25,23 @@
 
 #pragma once
 
-#include <IGrabber.hpp>
+#include "GrabberBase.hpp"
+#include "enums.hpp"
 
 #ifdef D3D9_GRAB_SUPPORT
 
 #include <d3d9.h>
 
-class D3D9Grabber : public IGrabber
+using namespace Grab;
+
+class D3D9Grabber : public GrabberBase
 {
 public:
     D3D9Grabber();
     ~D3D9Grabber();
     virtual const char * getName();
-    virtual void updateGrabScreenFromWidget( QWidget * widget ) {}
-    virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
+    virtual void updateGrabScreenFromWidget( QWidget * ){}
+    virtual GrabResult grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors);
 
 private:
     LPDIRECT3D9 m_d3D;

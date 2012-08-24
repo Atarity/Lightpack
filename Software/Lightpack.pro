@@ -31,3 +31,8 @@
 
 TEMPLATE = subdirs
 SUBDIRS = src tests
+win32 {
+    SUBDIRS += src/libraryinjector \
+               src/hooks
+
+}

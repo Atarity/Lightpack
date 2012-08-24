@@ -594,11 +594,11 @@ SupportedDevices::DeviceType Settings::getConnectedDevice()
         qWarning() << Q_FUNC_INFO << Main::Key::ConnectedDevice << "in main config contains crap or unsupported device,"
                    << "reset it to default value:" << Main::ConnectedDeviceDefault;
 
-        setConnectedDevice(SupportedDevices::DefaultDevice);
+        setConnectedDevice(SupportedDevices::DefaultDeviceType);
         deviceName = Main::ConnectedDeviceDefault;
     }
 
-    return m_devicesTypeToNameMap.key(deviceName, SupportedDevices::DefaultDevice);
+    return m_devicesTypeToNameMap.key(deviceName, SupportedDevices::DefaultDeviceType);
 }
 
 void Settings::setConnectedDevice(SupportedDevices::DeviceType device)
@@ -697,9 +697,9 @@ bool Settings::isConnectedDeviceUsesSerialPort()
 {
     switch (getConnectedDevice())
     {
-    case SupportedDevices::AdalightDevice:
+    case SupportedDevices::DeviceTypeAdalight:
         return true;
-    case SupportedDevices::ArdulightDevice:
+    case SupportedDevices::DeviceTypeArdulight:
         return true;
     default:
         return false;
@@ -914,20 +914,20 @@ Grab::GrabberType Settings::getGrabberType()
     QString strGrabber = value(Profile::Key::Grab::Grabber).toString();
 
     if (strGrabber == Profile::Value::GrabberType::Qt)
-        return Grab::QtGrabber;
+        return Grab::GrabberTypeQt;
     if (strGrabber == Profile::Value::GrabberType::QtEachWidget)
-        return Grab::QtEachWidgetGrabber;
+        return Grab::GrabberTypeQtEachWidget;
 
 #ifdef WINAPI_GRAB_SUPPORT
     if (strGrabber == Profile::Value::GrabberType::WinAPI)
-        return Grab::WinAPIGrabber;
+        return Grab::GrabberTypeWinAPI;
     if (strGrabber == Profile::Value::GrabberType::WinAPIEachWidget)
-        return Grab::WinAPIEachWidgetGrabber;
+        return Grab::GrabberTypeWinAPIEachWidget;
 #endif
 
 #ifdef D3D9_GRAB_SUPPORT
     if (strGrabber == Profile::Value::GrabberType::D3D9)
-        return Grab::D3D9Grabber;
+        return Grab::GrabberTypeD3D9;
 #endif
 
 #ifdef X11_GRAB_SUPPORT
@@ -953,25 +953,25 @@ void Settings::setGrabberType(Grab::GrabberType grabberType)
     QString strGrabber;
     switch (grabberType)
     {
-    case Grab::QtGrabber:
+    case Grab::GrabberTypeQt:
         strGrabber = Profile::Value::GrabberType::Qt;
         break;
 
-    case Grab::QtEachWidgetGrabber:
+    case Grab::GrabberTypeQtEachWidget:
         strGrabber = Profile::Value::GrabberType::QtEachWidget;
         break;
 
 #ifdef WINAPI_GRAB_SUPPORT
-    case Grab::WinAPIGrabber:
+    case Grab::GrabberTypeWinAPI:
         strGrabber = Profile::Value::GrabberType::WinAPI;
         break;
-    case Grab::WinAPIEachWidgetGrabber:
+    case Grab::GrabberTypeWinAPIEachWidget:
         strGrabber = Profile::Value::GrabberType::WinAPIEachWidget;
         break;
 #endif
 
 #ifdef D3D9_GRAB_SUPPORT
-    case Grab::D3D9Grabber:
+    case Grab::GrabberTypeD3D9:
         strGrabber = Profile::Value::GrabberType::D3D9;
         break;
 #endif
@@ -1400,19 +1400,19 @@ void Settings::initDevicesMap()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_devicesTypeToNameMap[SupportedDevices::AdalightDevice]  = Main::Value::ConnectedDevice::AdalightDevice;
-    m_devicesTypeToNameMap[SupportedDevices::ArdulightDevice] = Main::Value::ConnectedDevice::ArdulightDevice;
-    m_devicesTypeToNameMap[SupportedDevices::LightpackDevice] = Main::Value::ConnectedDevice::LightpackDevice;
-    m_devicesTypeToNameMap[SupportedDevices::VirtualDevice]   = Main::Value::ConnectedDevice::VirtualDevice;
+    m_devicesTypeToNameMap[SupportedDevices::DeviceTypeAdalight]  = Main::Value::ConnectedDevice::AdalightDevice;
+    m_devicesTypeToNameMap[SupportedDevices::DeviceTypeArdulight] = Main::Value::ConnectedDevice::ArdulightDevice;
+    m_devicesTypeToNameMap[SupportedDevices::DeviceTypeLightpack] = Main::Value::ConnectedDevice::LightpackDevice;
+    m_devicesTypeToNameMap[SupportedDevices::DeviceTypeVirtual]   = Main::Value::ConnectedDevice::VirtualDevice;
 
-    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::AdalightDevice]  = Main::Key::Adalight::NumberOfLeds;
-    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::ArdulightDevice] = Main::Key::Ardulight::NumberOfLeds;
-    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::LightpackDevice] = Main::Key::Lightpack::NumberOfLeds;
-    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::VirtualDevice]   = Main::Key::Virtual::NumberOfLeds;
+    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::DeviceTypeAdalight]  = Main::Key::Adalight::NumberOfLeds;
+    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::DeviceTypeArdulight] = Main::Key::Ardulight::NumberOfLeds;
+    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::DeviceTypeLightpack] = Main::Key::Lightpack::NumberOfLeds;
+    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::DeviceTypeVirtual]   = Main::Key::Virtual::NumberOfLeds;
 
 #ifdef ALIEN_FX_SUPPORTED
-    m_devicesTypeToNameMap[SupportedDevices::AlienFxDevice]   = Main::Value::ConnectedDevice::AlienFxDevice;
-    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::AlienFxDevice]   = Main::Key::AlienFx::NumberOfLeds;
+    m_devicesTypeToNameMap[SupportedDevices::DeviceTypeAlienFx]   = Main::Value::ConnectedDevice::AlienFxDevice;
+    m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::DeviceTypeAlienFx]   = Main::Key::AlienFx::NumberOfLeds;
 #endif
 }
 } /*SettingsScope*/

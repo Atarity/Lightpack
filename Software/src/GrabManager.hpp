@@ -31,12 +31,13 @@
 #include "TimeEvaluations.hpp"
 #include "GrabWidget.hpp"
 #include "WinAPIGrabber.hpp"
-#include "WinAPIGrabberEachWidget.hpp"
-#include "QtGrabber.hpp"
-#include "QtGrabberEachWidget.hpp"
-#include "X11Grabber.hpp"
-#include "MacOSGrabber.hpp"
-#include "D3D9Grabber.hpp"
+//#include "WinAPIGrabberEachWidget.hpp"
+//#include "QtGrabber.hpp"
+//#include "QtGrabberEachWidget.hpp"
+//#include "X11Grabber.hpp"
+//#include "MacOSGrabber.hpp"
+//#include "D3D9Grabber.hpp"
+#include "D3D10Grabber/D3D10Grabber.hpp"
 
 #include "enums.hpp"
 
@@ -63,7 +64,7 @@ public:
     void reset();
 
 public slots:
-    void onGrabberTypeChanged(const Grab::GrabberType grabberType);
+    void onGrabberTypeChanged(const Grab::GrabberType grabberType, bool isDx1011CapturingEnabled);
     void onGrabSlowdownChanged(int ms);
     void onThresholdOfBlackChanged(int value);
     void onGrabAvgColorsEnabledChanged(bool state);
@@ -83,19 +84,22 @@ private slots:
     void scaleLedWidgets(int screenIndexResized);
 
 private:
-    IGrabber *createGrabber(Grab::GrabberType grabber);
+    GrabberBase *queryGrabber(Grab::GrabberType grabber);
+    void initGrabbers();
     void initColorLists(int numberOfLeds);
     void clearColorsNew();
     void clearColorsCurrent();
     void initLedWidgets(int numberOfLeds);
 
 private:
-    QList<IGrabber*> m_grabbers;
-    IGrabber *m_grabber;
+    QList<GrabberBase*> m_grabbers;
+    GrabberBase *m_grabber;
+    D3D10Grabber *m_dx1011Grabber;
     QTimer *m_timerGrab;
     QTimer *m_timerUpdateFPS;
     QWidget *m_parentWidget;
     QList<GrabWidget *> m_ledWidgets;
+    QList<QRgb> m_grabResult;
     const static QColor m_backgroundAndTextColors[10][2];
     TimeEvaluations *m_timeEval;
 
@@ -105,7 +109,6 @@ private:
     QRect m_screenSavedRect;
     int m_screenSavedIndex;
 
-    bool m_isGrabEnabled;
     bool m_isPauseGrabWhileResizeOrMoving;
     bool m_isSendDataOnlyIfColorsChanged;
     bool m_avgColorsOnAllLeds;
@@ -114,6 +117,5 @@ private:
     // Store last grabbing time in milliseconds
     double m_fpsMs;
 
-    int m_slowdownTime;
     bool m_isGrabWidgetsVisible;
 };

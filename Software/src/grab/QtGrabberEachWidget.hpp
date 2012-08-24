@@ -25,18 +25,21 @@
 
 #pragma once
 
-#include "IGrabber.hpp"
+#include "GrabberBase.hpp"
+#include "enums.hpp"
 
 #ifdef QT_GRAB_SUPPORT
 
-class QtGrabberEachWidget : public IGrabber
+using namespace Grab;
+
+class QtGrabberEachWidget : public GrabberBase
 {
 public:
     QtGrabberEachWidget();
     ~QtGrabberEachWidget();
     virtual const char * getName();
     virtual void updateGrabScreenFromWidget( QWidget * widget );
-    virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
+    virtual GrabResult grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors);
 
 private:
     QRgb getColor(const QWidget * w);

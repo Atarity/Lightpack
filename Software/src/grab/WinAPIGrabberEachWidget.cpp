@@ -51,13 +51,12 @@ void WinAPIGrabberEachWidget::updateGrabScreenFromWidget(QWidget *widget)
     isBufferNeedsResize = true;
 }
 
-QList<QRgb> WinAPIGrabberEachWidget::grabWidgetsColors(QList<GrabWidget *> &widgets)
+GrabResult WinAPIGrabberEachWidget::grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors)
 {
-    QList<QRgb> widgetsColors;
     for(int i = 0; i < widgets.size(); i++) {
-        widgetsColors.append(getColor(widgets[i]));
+        widgetsColors->append(getColor(widgets[i]));
     }
-    return widgetsColors;
+    return GrabResultOk;
 }
 
 void WinAPIGrabberEachWidget::captureWidget(const QWidget * w)

@@ -30,7 +30,7 @@ isEmpty( GIT_REVISION ){
     # In code uses #ifdef GIT_REVISION ... #endif
     message( "GIT not found, GIT_REVISION will be undefined" )
 } else {
-    # Define currect mercurial revision id
+    # Define current mercurial revision id
     # It will be show in about dialog and --help output
     DEFINES += GIT_REVISION=\\\"$${GIT_REVISION}\\\"
 }
@@ -38,6 +38,8 @@ isEmpty( GIT_REVISION ){
 TRANSLATIONS = ../res/translations/ru_RU.ts
 RESOURCES    = ../res/LightpackResources.qrc
 RC_FILE      = ../res/Lightpack.rc
+
+include(src.pri)
 
 unix{
     CONFIG    += link_pkgconfig
@@ -51,8 +53,17 @@ win32 {
     LIBS    += -luuid -ladvapi32
 
     SOURCES += hidapi/windows/hid.c
-    # Windows version using WinAPI + GDI for grab colors
-    LIBS    += -lgdi32 -ld3d9
+
+    QMAKE_CFLAGS += -O2
+    # Windows version using WinAPI + GDI + DirectX for grab colors
+    isEmpty( DIRECTX_SDK_DIR ) {
+        error("please make sure you have defined DIRECTX_SDK_DIR in your src.pri file")
+    }
+    INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
+    LIBS    += -lgdi32 -ld3d9 -lwsock32 -lshlwapi -lole32 -L"$${DIRECTX_SDK_DIR}/Lib/x86" -ldxguid -ld3dx10 -ld3d10 -ld3d10_1 -ldxgi
+
+    LIBS    += -lpsapi
+    
 }
 
 unix:!macx{
@@ -89,13 +100,7 @@ SOURCES += \
     LedDeviceArdulight.cpp \
     LedDeviceVirtual.cpp \
     ColorButton.cpp \
-    grab/X11Grabber.cpp \
     grab/WinAPIGrabber.cpp \
-    grab/WinAPIGrabberEachWidget.cpp \
-    grab/QtGrabber.cpp \
-    grab/QtGrabberEachWidget.cpp \
-    grab/MacOSGrabber.cpp \
-    grab/D3D9Grabber.cpp \
     LightpackPluginInterface.cpp \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
@@ -104,7 +109,10 @@ SOURCES += \
     PluginManager.cpp \
     LedDeviceManager.cpp \
     plugins/PyPlugin.cpp \
-    SelectWidget.cpp
+    SelectWidget.cpp \
+    grab/D3D10Grabber/D3D10Grabber.cpp \
+    grab/GrabberBase.cpp \
+    grab/calculations.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -127,28 +135,24 @@ HEADERS += \
     LedDeviceArdulight.hpp \
     LedDeviceVirtual.hpp \
     ColorButton.hpp \
-    grab/IGrabber.hpp \
-    grab/QtGrabber.hpp \
-    grab/QtGrabberEachWidget.hpp \
-    grab/X11Grabber.hpp \
-    grab/MacOSGrabber.hpp \
     grab/WinAPIGrabber.hpp \
-    grab/WinAPIGrabberEachWidget.hpp \
     defs.h \
     enums.hpp     LightpackPluginInterface.hpp     ApiServer.hpp     ApiServerSetColorTask.hpp \
     hidapi/hidapi.h \
     ../../CommonHeaders/LIGHTPACK_HW.h \
     ../../CommonHeaders/COMMANDS.h \
     ../../CommonHeaders/USB_ID.h \
-    grab/D3D9Grabber.hpp \
     LightpackMath.hpp \
     StructRgb.hpp \
     PluginManager.hpp \
     plugins/PyPlugin.h \    
     MoodLampManager.hpp \
     LedDeviceManager.hpp \
-    SelectWidget.hpp
-
+    SelectWidget.hpp \
+    grab/D3D10Grabber/D3D10GrabberDefs.hpp \
+    grab/D3D10Grabber/D3D10Grabber.hpp \
+    grab/calculations.hpp \
+    grab/GrabberBase.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \
@@ -178,5 +182,4 @@ include(hotkeys/qkeysequencewidget/qkeysequencewidget.pri)
 include (../PythonQt/build/common.prf )
 include (../PythonQt/build/PythonQt.prf )
 include (../PythonQt/build/PythonQt_QtAll.prf )
-
 

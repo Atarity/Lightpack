@@ -39,15 +39,16 @@ GrabManager::GrabManager(QWidget *parent) : QObject(parent)
     for (int i = 0; i < Grab::GrabbersCount; i++)
         m_grabbers.append(NULL);
 
+    m_dx1011Grabber = NULL;
+
     m_timerGrab = new QTimer(this);
     m_timeEval = new TimeEvaluations();
 
     m_fpsMs = 0;
-    m_isGrabEnabled = false;
 
     m_isSendDataOnlyIfColorsChanged = Settings::isSendDataOnlyIfColorsChanges();
 
-    m_grabber = createGrabber(Settings::getGrabberType());
+    m_grabber = queryGrabber(Settings::getGrabberType());
 
     m_timerUpdateFPS = new QTimer(this);
     connect(m_timerUpdateFPS, SIGNAL(timeout()), this, SLOT(timeoutUpdateFPS()));
@@ -84,43 +85,43 @@ GrabManager::~GrabManager()
 
     for (int i = 0; i < Grab::GrabbersCount; i++)
         delete m_grabbers[i];
+    delete m_dx1011Grabber;
 }
 
 void GrabManager::start(bool isGrabEnabled)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isGrabEnabled;
 
-    m_isGrabEnabled = isGrabEnabled;
-
     clearColorsNew();
 
-    if (m_isGrabEnabled)
-    {
-        m_timerGrab->start(0);
+    if (isGrabEnabled) {
+        m_grabber->startGrabbing();
     } else {
-        m_timerGrab->stop();
         clearColorsCurrent();
+        m_grabber->stopGrabbing();
     }
 }
 
-void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType)
+void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType, bool isDx1011CapturingEnabled)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << grabberType;
 
-    if (m_grabbers[grabberType] == NULL)
-    {
-        m_grabbers[grabberType] = createGrabber(grabberType);
+    if (isDx1011CapturingEnabled) {
+        if (m_dx1011Grabber == NULL) {
+//            m_dx1011Grabber = new D3D10Grabber(static_cast<QObject *>(this), &m_grabResult, &m_ledWidgets);
+            m_dx1011Grabber->init();
+        }
+        m_dx1011Grabber->setFallbackGrabber(queryGrabber(grabberType));
     }
 
-    m_grabber = m_grabbers[grabberType];
-
+    m_grabber = isDx1011CapturingEnabled ? m_dx1011Grabber : queryGrabber(grabberType);
     firstWidgetPositionChanged();
 }
 
 void GrabManager::onGrabSlowdownChanged(int ms)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << ms;
-    m_slowdownTime = ms;
+    emit(slowdownChanged(ms));
 }
 
 void GrabManager::onThresholdOfBlackChanged(int value)
@@ -167,7 +168,6 @@ void GrabManager::settingsProfileChanged(const QString &profileName)
     m_isSendDataOnlyIfColorsChanged = Settings::isSendDataOnlyIfColorsChanges();
     m_avgColorsOnAllLeds = Settings::isGrabAvgColorsEnabled();
     m_minLevelOfSensivity = Settings::getThresholdOfBlack();
-    m_slowdownTime = Settings::getGrabSlowdown();
 
     setNumberOfLeds(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
 
@@ -247,28 +247,37 @@ void GrabManager::timeoutUpdateColors()
 #if PRINT_TIME_SPENT_ON_GRAB
     QTime t; t.start();
 #endif
+    QList<QRgb> * widgetsColors = new QList<QRgb>();
+//    GrabResult gr = m_grabber->grab();
+//    if(gr == GrabResultOk) {
+//        Q_ASSERT(m_ledWidgets.size() == widgetsColors->size());
+//        for (int i = 0; i < m_ledWidgets.size(); i++)
+//        {
+//            if (m_ledWidgets[i]->isAreaEnabled())
+//            {
+//                QRgb rgb = (*widgetsColors)[i];
 
-    QList<QRgb> widgetsColors = m_grabber->grabWidgetsColors(m_ledWidgets);
+//                if (m_avgColorsOnAllLeds)
+//                {
+//                    avgR += qRed(rgb);
+//                    avgG += qGreen(rgb);
+//                    avgB += qBlue(rgb);
+//                    countGrabEnabled++;
+//                } else {
+//                    m_colorsNew[i] = rgb;
+//                }
+//            }else{
+//                m_colorsNew[i] = 0; // off led
+//            }
+//        }
+//    }
+//    delete widgetsColors;
 
-    for (int i = 0; i < m_ledWidgets.size(); i++)
-    {
-        if (m_ledWidgets[i]->isAreaEnabled())
-        {
-            QRgb rgb = widgetsColors[i];
+//    if(gr == GrabResultFrameNotReady) {
+//        m_timerGrab->start(5); // check in 5 ms
+//        return;
+//    }
 
-            if (m_avgColorsOnAllLeds)
-            {
-                avgR += qRed(rgb);
-                avgG += qGreen(rgb);
-                avgB += qBlue(rgb);
-                countGrabEnabled++;
-            } else {
-                m_colorsNew[i] = rgb;
-            }
-        }else{
-            m_colorsNew[i] = 0; // off led
-        }
-    }
 
 #if PRINT_TIME_SPENT_ON_GRAB
     qDebug() << "Time spent on grab:" << t.elapsed() << "ms";
@@ -337,8 +346,6 @@ void GrabManager::timeoutUpdateColors()
     m_fpsMs = m_timeEval->howLongItEnd();
     m_timeEval->howLongItStart();
 
-    if (m_isGrabEnabled)
-        m_timerGrab->start(m_slowdownTime);
 }
 
 void GrabManager::timeoutUpdateFPS()
@@ -373,7 +380,7 @@ void GrabManager::firstWidgetPositionChanged()
         return;
     }
 
-    m_grabber->updateGrabScreenFromWidget(m_ledWidgets[0]);
+    m_grabber->firstWidgetPositionChanged(m_ledWidgets[0]);
 }
 
 void GrabManager::scaleLedWidgets(int screenIndexResized)
@@ -441,36 +448,46 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
     firstWidgetPositionChanged();
 }
 
-IGrabber * GrabManager::createGrabber(Grab::GrabberType grabberType)
+GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
 {
-    switch (grabberType)
-    {
-#ifdef Q_WS_X11
-    case Grab::X11Grabber:
-        return new X11Grabber();
-#endif
-#ifdef Q_WS_WIN
-    case Grab::WinAPIGrabber:
-        return new WinAPIGrabber();
+    if (m_grabbers[grabberType] != NULL) {
+        return m_grabbers[grabberType];
+    } else {
+        GrabberBase *result = NULL;
+        switch (grabberType)
+        {
+    #ifdef Q_WS_X11
+        case Grab::X11Grabber:
+            result = new X11Grabber();
+            break;
+    #endif
+    #ifdef Q_WS_WIN
+        case Grab::GrabberTypeWinAPI:
+            result = new D3D10Grabber(this, &m_grabResult, &m_ledWidgets);
+            break;
+    //        result = new WinAPIGrabber(this, m_grabResult, m_ledWidgets);
 
-    case Grab::WinAPIEachWidgetGrabber:
-        return new WinAPIGrabberEachWidget();
+    //    case Grab::WinAPIEachWidgetGrabber:
+    //        result = new WinAPIGrabberEachWidget();
 
-    case Grab::D3D9Grabber:
-        return new D3D9Grabber();
-#endif
+    //    case Grab::D3D9Grabber:
+    //        result = new D3D9Grabber();
+    #endif
 
-#ifdef MAC_OS
-    case Grab::MacCoreGraphicsGrabber:
-        return new MacOSGrabber();
-#endif
+    #ifdef MAC_OS
+        case Grab::MacCoreGraphicsGrabber:
+            result = new MacOSGrabber();
+    #endif
 
-    case Grab::QtEachWidgetGrabber:
-        return new QtGrabberEachWidget();
-
-    default:
-        return new QtGrabber();
-    }   
+    //    case Grab::QtEachWidgetGrabber:
+    //        result new QtGrabberEachWidget();
+        default:
+            break;
+    //        result new WinAPIGrabber(this, m_grabResult, m_ledWidgets);
+        }
+        m_grabbers[grabberType] = result;
+        return result;
+    }
 }
 
 void GrabManager::initColorLists(int numberOfLeds)

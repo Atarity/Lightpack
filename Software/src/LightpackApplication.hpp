@@ -33,6 +33,8 @@
 #include "LightpackPluginInterface.hpp"
 #include "PluginManager.hpp"
 
+#define getLightpackApp() static_cast<LightpackApplication *>(QCoreApplication::instance())
+
 class LightpackApplication : public QtSingleApplication
 {
     Q_OBJECT
@@ -42,6 +44,7 @@ public:
     void initializeAll(const QString & appDirPath);
 #ifdef Q_OS_WIN
     bool winEventFilter ( MSG * msg, long * result );
+    HWND getMainWindowHandle();
 #endif
     const SettingsScope::Settings * settings() { return SettingsScope::Settings::settingsSingleton(); }
     enum ErrorCodes {
@@ -57,7 +60,7 @@ public:
 
 signals:
     void clearColorBuffers();
-
+    void postInitialization(); /*!< emits at the end of initializeAll method*/
 public slots:
     void setStatusChanged(Backlight::Status);
     void setBacklightChanged(Lightpack::Mode);

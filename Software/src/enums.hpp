@@ -59,14 +59,19 @@ enum Mode {
 
 namespace Grab
 {
+enum BufferFormat {
+    BufferFormatArgb,
+    BufferFormatAbgr
+};
+
 enum GrabberType {
-    QtGrabber,
-    QtEachWidgetGrabber,
-    X11Grabber,
-    WinAPIGrabber,
-    WinAPIEachWidgetGrabber,
-    D3D9Grabber,
-    MacCoreGraphicsGrabber,
+    GrabberTypeQt,
+    GrabberTypeQtEachWidget,
+    GrabberTypeX11,
+    GrabberTypeWinAPI,
+    GrabberTypeWinAPIEachWidget,
+    GrabberTypeD3D9,
+    GrabberTypeMacCoreGraphics,
 
     GrabbersCount
 };
@@ -75,14 +80,14 @@ enum GrabberType {
 namespace SupportedDevices
 {
 enum DeviceType {
-    LightpackDevice,
-    AlienFxDevice,
-    AdalightDevice,
-    VirtualDevice,
-    ArdulightDevice,
+    DeviceTypeLightpack,
+    DeviceTypeAlienFx,
+    DeviceTypeAdalight,
+    DeviceTypeVirtual,
+    DeviceTypeArdulight,
 
-    DevicesCount,
-    DefaultDevice = LightpackDevice
+    DeviceTypesCount,
+    DefaultDeviceType = DeviceTypeLightpack
 };
 }
 

@@ -38,7 +38,7 @@
 #endif
 
 #ifdef WINAPI_GRAB_SUPPORT
-#   define GRABMODE_DEFAULT         ::Grab::WinAPIGrabber
+#   define GRABMODE_DEFAULT         ::Grab::GrabberTypeWinAPI
 #   define GRABMODE_DEFAULT_STR     "WinAPI"
 #elif defined(X11_GRAB_SUPPORT)
 #   define GRABMODE_DEFAULT         ::Grab::X11Grabber

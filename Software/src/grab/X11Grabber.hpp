@@ -25,9 +25,11 @@
 
 #pragma once
 
-#include "IGrabber.hpp"
+#include "GrabberBase.hpp"
+#include "enums.hpp"
 
 #ifdef X11_GRAB_SUPPORT
+
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -39,6 +41,8 @@
 #include "debug.h"
 
 struct X11GrabberData;
+
+using namespace Grab;
 
 class X11Grabber : public IGrabber
 {

@@ -7,4 +7,5 @@
 # -------------------------------------------------
 
 TEMPLATE = subdirs
-SUBDIRS = LightpackApiTest
+SUBDIRS = LightpackApiTest \
+    GrabCalculationTest

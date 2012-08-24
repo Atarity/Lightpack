@@ -27,8 +27,11 @@
 #ifdef WINAPI_GRAB_SUPPORT
 #include"debug.h"
 #include<cmath>
+#include"calculations.hpp"
+#include"enums.hpp"
 
-WinAPIGrabber::WinAPIGrabber()
+WinAPIGrabber::WinAPIGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
+    : GrabberBase(parent, grabResult, grabAreasGeometry)
 {
     pbPixelsBuff = NULL;
 }
@@ -56,7 +59,19 @@ void WinAPIGrabber::freeDCs()
         DeleteObject(hMemDC);
 }
 
-void WinAPIGrabber::updateGrabScreenFromWidget(QWidget *widget)
+void WinAPIGrabber::startGrabbing() {
+}
+
+void WinAPIGrabber::stopGrabbing() {
+}
+
+void WinAPIGrabber::isGrabbingStarted() {
+}
+
+void WinAPIGrabber::setGrabInterval(int msec) {
+}
+
+void WinAPIGrabber::firstWidgetPositionChanged(QWidget *widget)
 {
     HMONITOR hMonitorNew = MonitorFromWindow(widget->winId(), MONITOR_DEFAULTTONEAREST);
     if (hMonitor != hMonitorNew) {
@@ -122,14 +137,14 @@ void WinAPIGrabber::updateGrabScreenFromWidget(QWidget *widget)
 
 }
 
-QList<QRgb> WinAPIGrabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
+GrabResult WinAPIGrabber::_grab()
 {
-    QList<QRgb> widgetsColors;
     captureScreen();
-    for(int i = 0; i < widgets.size(); i++) {
-        widgetsColors.append(getColor(widgets[i]));
+    m_grabResult->clear();
+    foreach(GrabWidget * widget, *m_grabWidgets) {
+        m_grabResult->append(getColor(widget));
     }
-    return widgetsColors;
+    return GrabResultOk;
 }
 
 void WinAPIGrabber::captureScreen()
@@ -148,16 +163,13 @@ QRgb WinAPIGrabber::getColor(const QWidget * grabme)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    return getColor(grabme->x(),
-                    grabme->y(),
-                    grabme->width(),
-                    grabme->height());
+    QRect widgetRect = grabme->frameGeometry();
+    return getColor(widgetRect);
 }
 
-QRgb WinAPIGrabber::getColor(int x, int y, int width, int height)
+QRgb WinAPIGrabber::getColor(const QRect &widgetRect)
 {
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO
-                     << "x y w h:" << x << y << width << height;
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << Debug::toString(widgetRect);
 
     if (pbPixelsBuff == NULL)
     {
@@ -165,65 +177,39 @@ QRgb WinAPIGrabber::getColor(int x, int y, int width, int height)
         return 0;
     }
 
-    // Checking for the 'grabme' widget position inside the monitor that is used to capture color
-    if(     x + width  < monitorInfo.rcMonitor.left   ||
-            x          > monitorInfo.rcMonitor.right  ||
-            y + height < monitorInfo.rcMonitor.top    ||
-            y          > monitorInfo.rcMonitor.bottom ){
+    RECT rcMonitor = monitorInfo.rcMonitor;
+    QRect monitorRect = QRect( QPoint(rcMonitor.left, rcMonitor.top), QPoint(rcMonitor.right, rcMonitor.bottom));
 
-        DEBUG_MID_LEVEL << "Widget 'grabme' is out of screen, x y w h:" << x << y << width << height;
+    QRect clippedRect = monitorRect.intersected(widgetRect);
+
+    // Checking for the 'grabme' widget position inside the monitor that is used to capture color
+    if( !clippedRect.isValid() ){
+
+        DEBUG_MID_LEVEL << "Widget 'grabme' is out of screen:" << Debug::toString(clippedRect);
 
         // Widget 'grabme' is out of screen
         return 0x000000;
     }
 
     // Convert coordinates from "Main" desktop coord-system to capture-monitor coord-system
-    x -= monitorInfo.rcMonitor.left;
-    y -= monitorInfo.rcMonitor.top;
+    QRect preparedRect = clippedRect.translated(-monitorRect.x(), -monitorRect.y());
 
-    // Ignore part of LED widget which out of screen
-    if( x < 0 ) {
-        width  += x;  /* reduce width  */
-        x = 0;
-    }
-    if( y < 0 ) {
-        height += y;  /* reduce height */
-        y = 0;
-    }
-    if( x + width  > (int)screenWidth  ) width  -= (x + width ) - screenWidth;
-    if( y + height > (int)screenHeight ) height -= (y + height) - screenHeight;
+    // Align width by 4 for accelerated calculations
+    preparedRect.setWidth(preparedRect.width() - (preparedRect.width() % 4));
 
-    //calculate aligned width (align by 4 pixels)
-    width = width - (width % 4);
-
-    if(width < 0 || height < 0){
-        qWarning() << Q_FUNC_INFO << "width < 0 || height < 0:" << width << height;
+    if( !preparedRect.isValid() ){
+        qWarning() << Q_FUNC_INFO << " preparedRect is not valid:" << Debug::toString(preparedRect);
 
         // width and height can't be negative
         return 0x000000;
     }
 
-    unsigned count = 0; // count the amount of pixels taken into account
-    unsigned endIndex = (screenWidth * (y + height) + x + width) * bytesPerPixel;
-    register unsigned index = (screenWidth * y + x) * bytesPerPixel; // index of the selected pixel in pbPixelsBuff
-    register unsigned r = 0, g = 0, b = 0;
-    while (index < endIndex - width * bytesPerPixel) {
-        for(int i = 0; i < width; i += 4) {
-            b += pbPixelsBuff[index]     + pbPixelsBuff[index + 4] + pbPixelsBuff[index + 8 ] + pbPixelsBuff[index + 12];
-            g += pbPixelsBuff[index + 1] + pbPixelsBuff[index + 5] + pbPixelsBuff[index + 9 ] + pbPixelsBuff[index + 13];
-            r += pbPixelsBuff[index + 2] + pbPixelsBuff[index + 6] + pbPixelsBuff[index + 10] + pbPixelsBuff[index + 14];
-
-            count+=4;
-            index += bytesPerPixel * 4;
-        }
-
-        index += (screenWidth - width) * bytesPerPixel;
-    }
-
-    if( count != 0 ){
-        r = (unsigned)round((double) r / count) & 0xff;
-        g = (unsigned)round((double) g / count) & 0xff;
-        b = (unsigned)round((double) b / count) & 0xff;
+    using namespace Grab;
+    QRgb avgColor;
+    if (Calculations::calculateAvgColor(avgColor, pbPixelsBuff, BufferFormatArgb, screenWidth * bytesPerPixel, preparedRect ) == 0) {
+        return avgColor;
+    } else {
+        return qRgb(0,0,0);
     }
 
 #if 0
@@ -245,11 +231,6 @@ QRgb WinAPIGrabber::getColor(int x, int y, int width, int height)
     }
 #endif
 
-    QRgb result = qRgb(r, g, b);
-
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << "QRgb result =" << hex << result;
-
-    return result;
 }
 
 #endif // WINAPI_GRAB_SUPPORT

@@ -68,6 +68,7 @@ signals:
     void updateRefreshDelay(int value);
     void updateColorDepth(int value);
     void updateSmoothSlowdown(int value);
+    void updateSlowdown(int value);
     void updateGamma(double value);
     void updateBrightness(int percent);
     void requestFirmwareVersion();
@@ -232,6 +233,8 @@ private:
     SpeedTest *m_speedTest;
 
     Grab::GrabberType getSelectedGrabberType();
+
+    bool isDx1011CaptureEnabled();
 
     QList<QLabel *> m_labelsGrabbedColors;
 

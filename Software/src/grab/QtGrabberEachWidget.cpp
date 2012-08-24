@@ -47,16 +47,15 @@ void QtGrabberEachWidget::updateGrabScreenFromWidget(QWidget * /*widget*/)
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 }
 
-QList<QRgb> QtGrabberEachWidget::grabWidgetsColors(QList<GrabWidget *> &widgets)
+GrabResult QtGrabberEachWidget::grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    QList<QRgb> result;
     for (int i = 0; i < widgets.size(); i++)
 	{
-        result.append(getColor(widgets[i]));
+        widgetsColors->append(getColor(widgets[i]));
     }
-    return result;
+    return GrabResultOk;
 }
 
 QRgb QtGrabberEachWidget::getColor(const QWidget * w)

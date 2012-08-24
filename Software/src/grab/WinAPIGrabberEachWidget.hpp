@@ -25,21 +25,24 @@
 
 #pragma once
 
-#include "IGrabber.hpp"
+#include "GrabberBase.hpp"
+#include "enums.hpp"
 
 #ifdef WINAPI_GRAB_SUPPORT
 
 #define WINVER 0x0500 /* Windows2000 for MonitorFromWindow(..) func */
 #include <windows.h>
 
-class WinAPIGrabberEachWidget : public IGrabber
+using namespace Grab;
+
+class WinAPIGrabberEachWidget : public GrabberBase
 {
 public:
     WinAPIGrabberEachWidget();
     ~WinAPIGrabberEachWidget();
     virtual const char * getName();
     virtual void updateGrabScreenFromWidget( QWidget * widget );
-    virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
+    virtual GrabResult grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors);
 
 private:
     void captureWidget(const QWidget * w);
