@@ -16,11 +16,9 @@ isEmpty( DIRECTX_SDK_DIR ) {
 }
 INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
 
-debug {
+CONFIG(debug, debug | release) {
     QMAKE_POST_LINK = cp -f debug/lightpack-hooks.dll ../bin
-}
-
-!debug {
+} else {
     QMAKE_POST_LINK = cp -f release/lightpack-hooks.dll ../bin
 }
 
