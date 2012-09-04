@@ -33,38 +33,57 @@
 #include"D3D10GrabberDefs.hpp"
 #include<QList>
 #include<libraryinjector/ILibraryInjector.h>
+
+class D3D10GrabberWorker: public QObject {
+    Q_OBJECT
+    public:
+        D3D10GrabberWorker(QObject *parent, LPSECURITY_ATTRIBUTES lpsa);
+        ~D3D10GrabberWorker();
+    private:
+        HANDLE m_frameGrabbedEvent;
+    signals:
+        void frameGrabbed();
+    public slots:
+        void runLoop();
+};
+
 class D3D10Grabber : public GrabberBase
 {
+
     Q_OBJECT
 public:
     D3D10Grabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets);
     ~D3D10Grabber();
 
-    virtual void startGrabbing();
-    virtual void stopGrabbing();
-    virtual void isGrabbingStarted();
-    virtual void setGrabInterval(int msec);
-
-    void setFallbackGrabber(GrabberBase * grabber);
+    void init(void);
 
 protected:
     virtual GrabResult _grab();
 
 public slots:
-    virtual void firstWidgetPositionChanged(QWidget * firstWidget);
-    void init(void);
+    virtual void updateGrabMonitor(QWidget * firstWidget);
+    virtual void startGrabbing();
+    virtual void stopGrabbing();
+    virtual bool isGrabbingStarted() const { return false; }
+    virtual void setGrabInterval(int msec);
+    virtual void grab();
+
+    void setFallbackGrabber(GrabberBase * grabber);
 
 private slots:
     void infectCleanDxProcesses(void);
 
 private:
-    bool initIPC();
+    bool initIPC(LPSECURITY_ATTRIBUTES lpsa);
     void freeIPC();
     QRgb getColor(QRect &widgetRect);
 
     static HANDLE m_sharedMem;
     static HANDLE m_mutex;
+    static bool m_isStarted;
     static PVOID m_memMap;
+    D3D10GrabberWorker *m_worker;
+    QThread * m_workerThread;
     GrabberBase * m_fallbackGrabber;
     D3D10GRABBER_SHARED_MEM_DESC m_memDesc;
     static UINT m_lastFrameId;

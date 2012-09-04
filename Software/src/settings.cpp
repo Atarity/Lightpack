@@ -130,6 +130,7 @@ static const QString IsAvgColorsEnabled = "Grab/IsAvgColorsEnabled";
 static const QString IsSendDataOnlyIfColorsChanges = "Grab/IsSendDataOnlyIfColorsChanges";
 static const QString Slowdown = "Grab/Slowdown";
 static const QString MinimumLevelOfSensitivity = "Grab/MinimumLevelOfSensitivity";
+static const QString IsDx1011GrabberEnabled = "Grab/IsDX1011GrabberEnabled";
 }
 // [MoodLamp]
 namespace MoodLamp
@@ -721,19 +722,19 @@ void Settings::setNumberOfLeds(SupportedDevices::DeviceType device, int numberOf
     {
         using namespace SupportedDevices;
         switch(device) {
-            case LightpackDevice:
+            case DeviceTypeLightpack:
             m_this->lightpackNumberOfLedsChanged(numberOfLeds);
             break;
 
-            case AdalightDevice:
+            case DeviceTypeAdalight:
             m_this->adalightNumberOfLedsChanged(numberOfLeds);
             break;
 
-            case ArdulightDevice:
+            case DeviceTypeArdulight:
             m_this->ardulightNumberOfLedsChanged(numberOfLeds);
             break;
 
-            case VirtualDevice:
+            case DeviceTypeVirtual:
             m_this->virtualNumberOfLedsChanged(numberOfLeds);
             break;
         }
@@ -760,11 +761,11 @@ void Settings::setColorSequence(SupportedDevices::DeviceType device, QString col
      DEBUG_LOW_LEVEL << Q_FUNC_INFO << device << colorSequence;
     switch (device)
     {
-        case  SupportedDevices::AdalightDevice:
+        case  SupportedDevices::DeviceTypeAdalight:
             setValueMain(Main::Key::Adalight::ColorSequence, colorSequence);
             DEBUG_LOW_LEVEL << Q_FUNC_INFO << "ada" << colorSequence;
             break;
-        case SupportedDevices::ArdulightDevice:
+        case SupportedDevices::DeviceTypeArdulight:
             setValueMain(Main::Key::Ardulight::ColorSequence, colorSequence);
             DEBUG_LOW_LEVEL << Q_FUNC_INFO << "ard" << colorSequence;
             break;
@@ -776,10 +777,10 @@ QString Settings::getColorSequence(SupportedDevices::DeviceType device)
 {
     switch (device)
     {
-        case SupportedDevices::AdalightDevice:
+        case SupportedDevices::DeviceTypeAdalight:
             return valueMain(Main::Key::Adalight::ColorSequence).toString();
             break;
-        case SupportedDevices::ArdulightDevice:
+        case SupportedDevices::DeviceTypeArdulight:
             return valueMain(Main::Key::Ardulight::ColorSequence).toString();
             break;
     }
@@ -994,6 +995,15 @@ void Settings::setGrabberType(Grab::GrabberType grabberType)
     }
     setValue(Profile::Key::Grab::Grabber, strGrabber);
     m_this->grabberTypeChanged(grabberType);
+}
+
+bool Settings::isDx1011GrabberEnabled() {
+    return value(Profile::Key::Grab::IsDx1011GrabberEnabled).toBool();
+}
+
+void Settings::setDx1011GrabberEnabled(bool isEnabled) {
+    setValue(Profile::Key::Grab::IsDx1011GrabberEnabled, isEnabled);
+    m_this->dx1011GrabberEnabledChanged(isEnabled);
 }
 
 Lightpack::Mode Settings::getLightpackMode()

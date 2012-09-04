@@ -41,17 +41,15 @@ signals:
 public:
     void start(bool isMoodLampEnabled);
 
-    // MoodLamp options
-    void setLiquidMode(bool isEnabled);
-    void setLiquidModeSpeed(int value);
-
     // Common options
     void setSendDataOnlyIfColorsChanged(bool state);
-    void setNumberOfLeds(int value);
     void reset();
 
 public slots:
+    void setLiquidMode(bool isEnabled);
+    void setLiquidModeSpeed(int value);
     void settingsProfileChanged(const QString &profileName);
+    void setNumberOfLeds(int value);
     void setCurrentColor(QColor color);
 
 private slots:

@@ -40,6 +40,7 @@ char executableName[255];
 
 HANDLE hSharedMem;
 HANDLE hMutex;
+HANDLE hFrameGrabbedEvent;
 
 D3D10GRABBER_SHARED_MEM_DESC memDesc;
 
@@ -125,7 +126,7 @@ void D3D10Grab(ID3D10Texture2D* pBackBuffer) {
 //    reportLog(EVENTLOG_INFORMATION_TYPE, L"texture description. width: %u, height: %u, pitch: %u", tex_desc.Width, tex_desc.Height, mappedTexture.RowPitch);
 
     DWORD errorcode;
-    if (WAIT_OBJECT_0 == (errorcode = WaitForSingleObject(hMutex, 10))) {
+    if (WAIT_OBJECT_0 == (errorcode = WaitForSingleObject(hMutex, 0))) {
         //            __asm__("int $3");
 //        reportLog(EVENTLOG_INFORMATION_TYPE, L"writing description to mem mapped file");
         memcpy(pMemMap, &memDesc, sizeof (memDesc));
@@ -143,6 +144,7 @@ void D3D10Grab(ID3D10Texture2D* pBackBuffer) {
             }
         }
         ReleaseMutex(hMutex);
+        SetEvent(hFrameGrabbedEvent);
     } else {
         reportLog(EVENTLOG_ERROR_TYPE, L"couldn't wait mutex. errocode = 0x%x", errorcode);
     }
@@ -199,7 +201,7 @@ void D3D11Grab(ID3D11Texture2D* pBackBuffer) {
 //    reportLog(EVENTLOG_INFORMATION_TYPE, L"d3d11 texture description. width: %u, height: %u, pitch: %u", tex_desc.Width, tex_desc.Height, mappedTexture.RowPitch);
 
     DWORD errorcode;
-    if (WAIT_OBJECT_0 == (errorcode = WaitForSingleObject(hMutex, 10))) {
+    if (WAIT_OBJECT_0 == (errorcode = WaitForSingleObject(hMutex, 0))) {
         //            __asm__("int $3");
 //        reportLog(EVENTLOG_INFORMATION_TYPE, L"d3d11 writing description to mem mapped file");
         memcpy(pMemMap, &memDesc, sizeof (memDesc));
@@ -217,6 +219,7 @@ void D3D11Grab(ID3D11Texture2D* pBackBuffer) {
             }
         }
         ReleaseMutex(hMutex);
+        SetEvent(hFrameGrabbedEvent);
     } else {
         reportLog(EVENTLOG_ERROR_TYPE, L"d3d11 couldn't wait mutex. errocode = 0x%x", errorcode);
     }
@@ -302,13 +305,18 @@ HOOKSDLL_API BOOL APIENTRY DllMain(HINSTANCE hModule, DWORD fdwReason, LPVOID lp
 
         hEventSrc = RegisterEventSourceW(NULL, L"Lightpack hooks");
 
-        while ((hMutex = OpenMutexW(SYNCHRONIZE, false, D3D10GRABBER_MUTEX_MEM_NAME)) == NULL || GetLastError() == ERROR_FILE_NOT_FOUND) {
-            Sleep(100);
+        if (NULL == (hMutex = OpenMutexW(SYNCHRONIZE, false, D3D10GRABBER_MUTEX_MEM_NAME))) {
+            reportLog(EVENTLOG_ERROR_TYPE, L"error occured while opening mutex 0x%x", GetLastError());
         }
 
-        while ((hSharedMem = OpenFileMappingW(GENERIC_WRITE | GENERIC_READ, false, D3D10GRABBER_SHARED_MEM_NAME)) == NULL || GetLastError() == ERROR_FILE_NOT_FOUND) {
-            Sleep(100);
+        if (NULL == (hSharedMem = OpenFileMappingW(GENERIC_WRITE | GENERIC_READ, false, D3D10GRABBER_SHARED_MEM_NAME))) {
+            reportLog(EVENTLOG_ERROR_TYPE, L"error occured while opening memory-mapped file 0x%x", GetLastError());
         }
+
+        if (NULL == (hFrameGrabbedEvent = CreateEventW(NULL, true, false, D3D10GRABBER_FRAMEGRABBED_EVENT_NAME))) {
+            reportLog(EVENTLOG_ERROR_TYPE, L"error occured while opening event 0x%x", GetLastError());
+        }
+
 
         pMemMap = MapViewOfFile(hSharedMem, FILE_MAP_WRITE, 0, 0, D3D10GRABBER_SHARED_MEM_SIZE);
         if (pMemMap == NULL) {

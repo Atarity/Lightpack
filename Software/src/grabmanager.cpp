@@ -34,6 +34,8 @@ GrabManager::GrabManager(QWidget *parent) : QObject(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    qRegisterMetaType<GrabResult>("GrabResult");
+
     m_parentWidget = parent;
 
     for (int i = 0; i < Grab::GrabbersCount; i++)
@@ -48,6 +50,7 @@ GrabManager::GrabManager(QWidget *parent) : QObject(parent)
 
     m_isSendDataOnlyIfColorsChanged = Settings::isSendDataOnlyIfColorsChanges();
 
+//    m_grabbersThread = new QThread();
     m_grabber = queryGrabber(Settings::getGrabberType());
 
     m_timerUpdateFPS = new QTimer(this);
@@ -61,10 +64,13 @@ GrabManager::GrabManager(QWidget *parent) : QObject(parent)
     initColorLists(MaximumNumberOfLeds::Default);
     initLedWidgets(MaximumNumberOfLeds::Default);
 
-    connect(m_timerGrab, SIGNAL(timeout()), this, SLOT(timeoutUpdateColors()));
+//    connect(m_timerGrab, SIGNAL(timeout()), this, SLOT(handleGrabbedColors()));
     connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(scaleLedWidgets(int)));
 
     firstWidgetPositionChanged();
+
+    settingsProfileChanged(Settings::getCurrentProfileName());
+
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
@@ -85,6 +91,8 @@ GrabManager::~GrabManager()
 
     for (int i = 0; i < Grab::GrabbersCount; i++)
         delete m_grabbers[i];
+
+//    delete m_grabbersThread;
     delete m_dx1011Grabber;
 }
 
@@ -94,34 +102,41 @@ void GrabManager::start(bool isGrabEnabled)
 
     clearColorsNew();
 
-    if (isGrabEnabled) {
-        m_grabber->startGrabbing();
-    } else {
-        clearColorsCurrent();
-        m_grabber->stopGrabbing();
+    if (m_grabber != NULL) {
+        if (isGrabEnabled) {
+            QMetaObject::invokeMethod(m_grabber, "startGrabbing", Qt::QueuedConnection );
+//            m_grabber->startGrabbing();
+        } else {
+            clearColorsCurrent();
+            QMetaObject::invokeMethod(m_grabber, "stopGrabbing", Qt::QueuedConnection );
+        }
     }
 }
 
-void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType, bool isDx1011CapturingEnabled)
+void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << grabberType;
 
-    if (isDx1011CapturingEnabled) {
+    if (m_grabber != NULL)
+        m_grabber->stopGrabbing();
+
+    if (1){//Settings::isDx1011GrabberEnabled()) {
         if (m_dx1011Grabber == NULL) {
-//            m_dx1011Grabber = new D3D10Grabber(static_cast<QObject *>(this), &m_grabResult, &m_ledWidgets);
+            m_dx1011Grabber = new D3D10Grabber(static_cast<QObject *>(this), &m_colorsNew, &m_ledWidgets);
             m_dx1011Grabber->init();
         }
         m_dx1011Grabber->setFallbackGrabber(queryGrabber(grabberType));
     }
 
-    m_grabber = isDx1011CapturingEnabled ? m_dx1011Grabber : queryGrabber(grabberType);
+    m_grabber = Settings::isDx1011GrabberEnabled() ? m_dx1011Grabber : queryGrabber(grabberType);
+    m_grabber->startGrabbing();
     firstWidgetPositionChanged();
 }
 
 void GrabManager::onGrabSlowdownChanged(int ms)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << ms;
-    emit(slowdownChanged(ms));
+    //emit(slowdownChanged(ms));
 }
 
 void GrabManager::onThresholdOfBlackChanged(int value)
@@ -218,7 +233,7 @@ void GrabManager::setWhiteLedWidgets(bool state)
     }
 }
 
-void GrabManager::timeoutUpdateColors()
+void GrabManager::handleGrabbedColors()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
 
@@ -241,7 +256,7 @@ void GrabManager::timeoutUpdateColors()
     int avgR = 0, avgG = 0, avgB = 0;
     int countGrabEnabled = 0;
 
-    clearColorsNew();
+//    clearColorsNew();
 
 #define PRINT_TIME_SPENT_ON_GRAB 0
 #if PRINT_TIME_SPENT_ON_GRAB
@@ -369,18 +384,21 @@ void GrabManager::resumeAfterResizeOrMoving()
 void GrabManager::firstWidgetPositionChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    int newScreenNum = QApplication::desktop()->screenNumber(m_ledWidgets[0]);
+    QRect newScreenRect = QApplication::desktop()->screenGeometry(newScreenNum);
+    if (m_screenSavedIndex != newScreenNum || m_screenSavedRect == newScreenRect) {
+        m_screenSavedIndex = newScreenNum;
+        m_screenSavedRect = newScreenRect;
+        emit changeScreen(m_screenSavedRect);
 
-    m_screenSavedIndex = QApplication::desktop()->screenNumber(m_ledWidgets[0]);
-    m_screenSavedRect = QApplication::desktop()->screenGeometry(m_screenSavedIndex);
-    emit changeScreen(m_screenSavedRect);
+        if (m_grabber == NULL)
+        {
+            qCritical() << Q_FUNC_INFO << "m_grabber == NULL";
+            return;
+        }
 
-    if (m_grabber == NULL)
-    {
-        qCritical() << Q_FUNC_INFO << "m_grabber == NULL";
-        return;
+        m_grabber->updateGrabMonitor(m_ledWidgets[0]);
     }
-
-    m_grabber->firstWidgetPositionChanged(m_ledWidgets[0]);
 }
 
 void GrabManager::scaleLedWidgets(int screenIndexResized)
@@ -463,9 +481,9 @@ GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
     #endif
     #ifdef Q_WS_WIN
         case Grab::GrabberTypeWinAPI:
-            result = new D3D10Grabber(this, &m_grabResult, &m_ledWidgets);
-            break;
-    //        result = new WinAPIGrabber(this, m_grabResult, m_ledWidgets);
+//            result = new D3D10Grabber(NULL, &m_grabResult, &m_ledWidgets);
+//            break;
+            result = new WinAPIGrabber(NULL, &m_colorsNew, &m_ledWidgets);
 
     //    case Grab::WinAPIEachWidgetGrabber:
     //        result = new WinAPIGrabberEachWidget();
@@ -482,11 +500,24 @@ GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
     //    case Grab::QtEachWidgetGrabber:
     //        result new QtGrabberEachWidget();
         default:
-            break;
-    //        result new WinAPIGrabber(this, m_grabResult, m_ledWidgets);
+            result = new WinAPIGrabber(NULL, &m_colorsNew, &m_ledWidgets);
         }
         m_grabbers[grabberType] = result;
+//        result->moveToThread(m_grabbersThread);
+//        m_grabbersThread->start();
+        QMetaObject::invokeMethod(result, "init", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(result, "setGrabInterval", Qt::QueuedConnection, Q_ARG(int, Settings::getGrabSlowdown()));
+        QMetaObject::invokeMethod(result, "startGrabbing", Qt::QueuedConnection);
+        bool isConnected = connect(result, SIGNAL(frameGrabAttempted(GrabResult)), this, SLOT(onFrameGrabAttempted(GrabResult)), Qt::QueuedConnection);
+        Q_ASSERT_X(isConnected, "connecting grabber to grabManager", "failed");
+
         return result;
+    }
+}
+
+void GrabManager::onFrameGrabAttempted(GrabResult grabResult) {
+    if (grabResult == GrabResultOk) {
+        handleGrabbedColors();
     }
 }
 

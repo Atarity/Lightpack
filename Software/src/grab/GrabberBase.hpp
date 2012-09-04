@@ -1,10 +1,10 @@
 /*
  * GrabberBase.hpp
  *
- *  Created on: 25.07.11
+ *  Created on: 18.07.2012
  *     Project: Lightpack
  *
- *  Copyright (c) 2011 Timur Sattarov, Mike Shatohin
+ *  Copyright (c) 2012 Timur Sattarov
  *
  *  Lightpack a USB content-driving ambient lighting system
  *
@@ -43,16 +43,27 @@ class GrabberBase : public QObject
 {
     Q_OBJECT
 public:
-/*!
- \param parent standart Qt-specific owner
- \param grabResult \code QList to write results of grabbing to
- \param grabWidgets List of GrabWidgets
-*/
+
+    /*!
+     \param parent standart Qt-specific owner
+     \param grabResult \code QList to write results of grabbing to
+     \param grabWidgets List of GrabWidgets
+    */
     GrabberBase(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets);
+
+public slots:
+    virtual void init() = 0;
     virtual void startGrabbing() = 0;
     virtual void stopGrabbing() = 0;
-    virtual void isGrabbingStarted() = 0;
+    virtual bool isGrabbingStarted() const = 0;
     virtual void setGrabInterval(int msec) = 0;
+    virtual void grab();
+
+    /*!
+      Updates monitor to grab picture from. We are grabbing picture from monitor first grabWidget belongs to.
+     \param widget
+    */
+    virtual void updateGrabMonitor(QWidget * widget) = 0;
 
     /*!
       Grab implementation, called from @a GrabberBase#grab() slot, needs to be overriden
@@ -60,18 +71,12 @@ public:
     */
     virtual GrabResult _grab() = 0;
 
+signals:
+    void frameGrabAttempted(GrabResult grabResult);
+
 protected:
     QList<QRgb> *m_grabResult; /*!< @code QList which stores grab result and could be accessed by @code GrabManager */
     QList<GrabWidget *> *m_grabWidgets;
+    GrabResult m_lastGrabResult;
 
-
-
-public slots:
-
-    virtual void grab();
-
-    virtual void firstWidgetPositionChanged(QWidget * widget) = 0;
-
-signals:
-    void frameGrabAttempted(GrabResult grabResult);
 };

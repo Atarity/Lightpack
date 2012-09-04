@@ -126,6 +126,12 @@ public:
 
     static Grab::GrabberType getGrabberType();
     static void setGrabberType(Grab::GrabberType grabMode);
+
+#ifdef D3D10_GRAB_SUPPORT
+    static bool isDx1011GrabberEnabled();
+    static void setDx1011GrabberEnabled(bool isEnabled);
+#endif
+
     static Lightpack::Mode getLightpackMode();
     static void setLightpackMode(Lightpack::Mode mode);
     static bool isMoodLampLiquidMode();
@@ -213,6 +219,7 @@ signals:
     void deviceColorDepthChanged(int value);
     void deviceGammaChanged(double gamma);
     void grabberTypeChanged(const Grab::GrabberType grabMode);
+    void dx1011GrabberEnabledChanged(const bool isEnabled);
     void lightpackModeChanged(const Lightpack::Mode mode);
     void moodLampLiquidModeChanged(bool isLiquidMode);
     void moodLampColorChanged(const QColor color);

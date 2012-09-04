@@ -87,6 +87,7 @@ HANDLE D3D10Grabber::m_mutex = NULL;
 MONITORINFO D3D10Grabber::m_monitorInfo;
 QTimer * D3D10Grabber::m_processesScanAndInfectTimer;
 bool D3D10Grabber::m_isInited = false;
+bool D3D10Grabber::m_isStarted = false;
 ILibraryInjector * D3D10Grabber::m_libraryInjector = NULL;
 WCHAR D3D10Grabber::m_hooksLibPath[300];
 
@@ -112,36 +113,28 @@ PVOID BuildRestrictedSD(PSECURITY_DESCRIPTOR pSD);
 // BuildRestrictedSD() function
 VOID FreeRestrictedSD(PVOID ptr);
 
-BOOL GetAccessPermissionsForLUAServer(SECURITY_DESCRIPTOR **ppSD);
-
-HRESULT InitComSecurity();
-
-HRESULT CoCreateInstanceAsAdmin(HWND hwnd, REFCLSID rclsid, REFIID riid, void ** ppv);
-
-
-
-
-
-
-bool D3D10Grabber::initIPC() {
-
-    AcquirePrivileges();
-
-    SECURITY_ATTRIBUTES sa;
-    SECURITY_DESCRIPTOR sd;
-
-    PVOID  ptr;
-
-    // build a restricted security descriptor
-    ptr = BuildRestrictedSD(&sd);
-    if (!ptr) {
-        syslog(LOG_ERR, "BuildRestrictedSD() failed");
-        return false;
+D3D10GrabberWorker::D3D10GrabberWorker(QObject *parent, LPSECURITY_ATTRIBUTES lpsa) : QObject(parent) {
+    if (NULL == (m_frameGrabbedEvent = CreateEventW(lpsa, false, false, D3D10GRABBER_FRAMEGRABBED_EVENT_NAME))) {
+        qCritical() << Q_FUNC_INFO << "unable to create frameGrabbedEvent";
     }
+}
+D3D10GrabberWorker::~D3D10GrabberWorker() {
+    if (m_frameGrabbedEvent)
+        CloseHandle(m_frameGrabbedEvent);
+}
 
-    sa.nLength = sizeof(sa);
-    sa.lpSecurityDescriptor = &sd;
-    sa.bInheritHandle = FALSE;
+void D3D10GrabberWorker::runLoop() {
+    while(1) {
+        if (WAIT_OBJECT_0 == WaitForSingleObject(m_frameGrabbedEvent, 50)) {
+            emit frameGrabbed();
+            if (!ResetEvent(m_frameGrabbedEvent)) {
+                qCritical() << Q_FUNC_INFO << "couldn't reset frameGrabbedEvent";
+            }
+        }
+    }
+}
+
+bool D3D10Grabber::initIPC(LPSECURITY_ATTRIBUTES lpsa) {
 
     WSADATA wsaData;
     int result = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -153,7 +146,7 @@ bool D3D10Grabber::initIPC() {
     sockaddr_in localhost;
     in_addr adr;
 
-    m_sharedMem = CreateFileMappingW(INVALID_HANDLE_VALUE, &sa, PAGE_READWRITE, 0, D3D10GRABBER_SHARED_MEM_SIZE, D3D10GRABBER_SHARED_MEM_NAME );
+    m_sharedMem = CreateFileMappingW(INVALID_HANDLE_VALUE, lpsa, PAGE_READWRITE, 0, D3D10GRABBER_SHARED_MEM_SIZE, D3D10GRABBER_SHARED_MEM_NAME );
     if(!m_sharedMem) {
         m_sharedMem = OpenFileMappingW(GENERIC_READ | GENERIC_WRITE, false, D3D10GRABBER_SHARED_MEM_NAME);
         if(!m_sharedMem) {
@@ -181,7 +174,7 @@ bool D3D10Grabber::initIPC() {
         UnmapViewOfFile(memMap);
     }
 
-    m_mutex = CreateMutexW(&sa, false, D3D10GRABBER_MUTEX_MEM_NAME);
+    m_mutex = CreateMutexW(lpsa, false, D3D10GRABBER_MUTEX_MEM_NAME);
     if(!m_mutex) {
         m_mutex = OpenMutexW(SYNCHRONIZE, false, D3D10GRABBER_MUTEX_MEM_NAME);
         if(!m_mutex) {
@@ -191,7 +184,6 @@ bool D3D10Grabber::initIPC() {
         }
     }
 
-    FreeRestrictedSD(ptr);
     return true;
 }
 
@@ -202,6 +194,7 @@ D3D10Grabber::D3D10Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabW
 void D3D10Grabber::init(void) {
     HRESULT hr;
     if(!m_isInited) {
+        AcquirePrivileges();
         GetCurrentDirectoryW(sizeof(m_hooksLibPath)/2, m_hooksLibPath);
         wcscat(m_hooksLibPath, L"\\");
         wcscat(m_hooksLibPath, lightpackHooksDllName);
@@ -211,7 +204,23 @@ void D3D10Grabber::init(void) {
         //        hr = CoCreateInstanceAsAdmin(NULL, CLSID_ILibraryInjector, IID_ILibraryInjector, reinterpret_cast<void **>(&m_libraryInjector));
         hr = CoCreateInstance(CLSID_ILibraryInjector, NULL, CLSCTX_INPROC_SERVER, IID_ILibraryInjector, reinterpret_cast<void **>(&m_libraryInjector));
 
-        if (!initIPC()) {
+        SECURITY_ATTRIBUTES sa;
+        SECURITY_DESCRIPTOR sd;
+
+        PVOID  ptr;
+
+        // build a restricted security descriptor
+        ptr = BuildRestrictedSD(&sd);
+        if (!ptr) {
+    //        syslog(LOG_ERR, "BuildRestrictedSD() failed");
+            return;
+        }
+
+        sa.nLength = sizeof(sa);
+        sa.lpSecurityDescriptor = &sd;
+        sa.bInheritHandle = FALSE;
+
+        if (!initIPC(&sa)) {
             freeIPC();
             return;
         }
@@ -221,21 +230,39 @@ void D3D10Grabber::init(void) {
         connect(m_processesScanAndInfectTimer, SIGNAL(timeout()), this, SLOT(infectCleanDxProcesses()) );
         m_processesScanAndInfectTimer->start();
 
+        m_workerThread = new QThread();
+        m_worker = new D3D10GrabberWorker(NULL, &sa);
+        m_worker->moveToThread(m_workerThread);
+        m_workerThread->start();
+        connect(m_worker, SIGNAL(frameGrabbed()), this, SLOT(grab()));
+        QMetaObject::invokeMethod(m_worker, "runLoop", Qt::QueuedConnection);
+
+        FreeRestrictedSD(ptr);
+
         m_isInited = true;
+
 
     }
 }
 
 void D3D10Grabber::startGrabbing() {
+    m_isStarted = true;
+    grab();
 }
 
 void D3D10Grabber::stopGrabbing() {
-}
-
-void D3D10Grabber::isGrabbingStarted() {
+    m_isStarted = false;
 }
 
 void D3D10Grabber::setGrabInterval(int msec) {
+    m_fallbackGrabber->setGrabInterval(msec);
+}
+
+void D3D10Grabber::grab() {
+    if (m_isStarted) {
+        m_lastGrabResult = _grab();
+        emit frameGrabAttempted(m_lastGrabResult);
+    }
 }
 
 GrabResult D3D10Grabber::_grab() {
@@ -270,6 +297,8 @@ D3D10Grabber::~D3D10Grabber() {
         CoUninitialize();
         freeIPC();
         m_isInited = false;
+        delete m_worker;
+        delete m_workerThread;
     }
 }
 
@@ -287,7 +316,7 @@ void D3D10Grabber::freeIPC() {
     }
 }
 
-void D3D10Grabber::firstWidgetPositionChanged(QWidget *widget) {
+void D3D10Grabber::updateGrabMonitor(QWidget *widget) {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     if (m_isInited) {
         HMONITOR hMonitor = MonitorFromWindow( widget->winId(), MONITOR_DEFAULTTONEAREST );
@@ -468,10 +497,10 @@ BOOL AcquirePrivileges() {
     HANDLE hCurrentProcToken;
 
     if (!OpenProcessToken(hCurrentProc, TOKEN_QUERY | TOKEN_ADJUST_PRIVILEGES, &hCurrentProcToken)) {
-        syslog(LOG_ERR, "OpenProcessToken Error %u", GetLastError());
+//        syslog(LOG_ERR, "OpenProcessToken Error %u", GetLastError());
     } else {
         if (!SetPrivilege(hCurrentProcToken, SE_DEBUG_NAME, TRUE)) {
-            syslog(LOG_ERR, "SetPrivleges SE_DEBUG_NAME Error %u", GetLastError());
+//            syslog(LOG_ERR, "SetPrivleges SE_DEBUG_NAME Error %u", GetLastError());
         } else {
             return TRUE;
         }
@@ -566,8 +595,8 @@ PVOID BuildRestrictedSD(PSECURITY_DESCRIPTOR pSD) {
     // initialize the security descriptor
     if (!InitializeSecurityDescriptor(pSD,
                                       SECURITY_DESCRIPTOR_REVISION)) {
-        syslog(LOG_ERR, "InitializeSecurityDescriptor() failed with error %d\n",
-               GetLastError());
+//        syslog(LOG_ERR, "InitializeSecurityDescriptor() failed with error %d\n",
+//               GetLastError());
         goto end;
     }
 
@@ -575,8 +604,8 @@ PVOID BuildRestrictedSD(PSECURITY_DESCRIPTOR pSD) {
     if (!AllocateAndInitializeSid(&siaNT, 1,
                                   SECURITY_AUTHENTICATED_USER_RID, 0, 0, 0, 0, 0, 0, 0,
                                   &pAuthenticatedUsersSID)) {
-        syslog(LOG_ERR, "AllocateAndInitializeSid() failed with error %d\n",
-               GetLastError());
+//        syslog(LOG_ERR, "AllocateAndInitializeSid() failed with error %d\n",
+//               GetLastError());
         goto end;
     }
 
@@ -598,31 +627,32 @@ PVOID BuildRestrictedSD(PSECURITY_DESCRIPTOR pSD) {
     pDACL = (PACL) HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
                              dwAclLength);
     if (!pDACL) {
-        syslog(LOG_ERR, "HeapAlloc() failed with error %d\n", GetLastError());
+//        syslog(LOG_ERR, "HeapAlloc() failed with error %d\n", GetLastError());
         goto end;
     }
 
     // initialize the DACL
     if (!InitializeAcl(pDACL, dwAclLength, ACL_REVISION)) {
-        syslog(LOG_ERR, "InitializeAcl() failed with error %d\n",
-               GetLastError());
+//        syslog(LOG_ERR, "InitializeAcl() failed with error %d\n",
+//               GetLastError());
         goto end;
     }
 
     // add the Authenticated Users group ACE to the DACL with
     // GENERIC_READ, GENERIC_WRITE, and GENERIC_EXECUTE access
+
     if (!AddAccessAllowedAce(pDACL, ACL_REVISION,
-                             GENERIC_READ | GENERIC_WRITE | GENERIC_EXECUTE,
+                             MAXIMUM_ALLOWED ,
                              pAuthenticatedUsersSID)) {
-        syslog(LOG_ERR, "AddAccessAllowedAce() failed with error %d\n",
-               GetLastError());
+//        syslog(LOG_ERR, "AddAccessAllowedAce() failed with error %d\n",
+//               GetLastError());
         goto end;
     }
 
     // set the DACL in the security descriptor
     if (!SetSecurityDescriptorDacl(pSD, TRUE, pDACL, FALSE)) {
-        syslog(LOG_ERR, "SetSecurityDescriptorDacl() failed with error %d\n",
-               GetLastError());
+//        syslog(LOG_ERR, "SetSecurityDescriptorDacl() failed with error %d\n",
+//               GetLastError());
         goto end;
     }
 
@@ -644,122 +674,6 @@ VOID FreeRestrictedSD(PVOID ptr) {
     if (ptr) HeapFree(GetProcessHeap(), 0, ptr);
 
     return;
-}
-
-BOOL GetAccessPermissionsForLUAServer(SECURITY_DESCRIPTOR **ppSD)
-{
-    // Local call permissions to IU, SY
-    LPWSTR lpszSDDL = L"O:BAG:BAD:(A;;0x3;;;IU)(A;;0x3;;;SY)";
-    SECURITY_DESCRIPTOR *pSD;
-    *ppSD = NULL;
-
-    if (ConvertStringSidToSidW(lpszSDDL, reinterpret_cast<void **>(&pSD)))
-        //    if (ConvertStringSecurityDescriptorToSecurityDescriptor(lpszSDDL, SDDL_REVISION_1, (PSECURITY_DESCRIPTOR *)&pSD, NULL))
-    {
-        *ppSD = pSD;
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-HRESULT InitComSecurity() {
-    // Absolute SD values
-    PSECURITY_DESCRIPTOR pSD;
-    PSECURITY_DESCRIPTOR pAbsSD = NULL;
-    DWORD AbsSdSize = 0;
-    PACL  pAbsAcl = NULL;
-    DWORD AbsAclSize = 0;
-    PACL  pAbsSacl = NULL;
-    DWORD AbsSaclSize = 0;
-    PSID  pAbsOwner = NULL;
-    DWORD AbsOwnerSize = 0;
-    PSID  pAbsGroup = NULL;
-    DWORD AbsGroupSize = 0;
-
-    HRESULT hr;
-
-    BOOL result = GetAccessPermissionsForLUAServer(&pSD);
-
-    MakeAbsoluteSD (
-                pSD,
-                pAbsSD,
-                &AbsSdSize,
-                pAbsAcl,
-                &AbsAclSize,
-                pAbsSacl,
-                &AbsSaclSize,
-                pAbsOwner,
-                &AbsOwnerSize,
-                pAbsGroup,
-                &AbsGroupSize
-                );
-
-    if (ERROR_INSUFFICIENT_BUFFER == GetLastError())
-    {
-        pAbsSD = (PSECURITY_DESCRIPTOR)LocalAlloc(LMEM_FIXED, AbsSdSize);
-        pAbsAcl = (PACL)LocalAlloc(LMEM_FIXED, AbsAclSize);
-        pAbsSacl = (PACL)LocalAlloc(LMEM_FIXED, AbsSaclSize);
-        pAbsOwner = (PSID)LocalAlloc(LMEM_FIXED, AbsOwnerSize);
-        pAbsGroup = (PSID)LocalAlloc(LMEM_FIXED, AbsGroupSize);
-
-        if ( ! (pAbsSD && pAbsAcl && pAbsSacl && pAbsOwner && pAbsGroup))
-        {
-            hr = E_OUTOFMEMORY;
-            goto Cleanup;
-        }
-        if ( ! MakeAbsoluteSD(
-                 pSD,
-                 pAbsSD,
-                 &AbsSdSize,
-                 pAbsAcl,
-                 &AbsAclSize,
-                 pAbsSacl,
-                 &AbsSaclSize,
-                 pAbsOwner,
-                 &AbsOwnerSize,
-                 pAbsGroup,
-                 &AbsGroupSize
-                 ))
-        {
-            hr = HRESULT_FROM_WIN32(GetLastError());
-            goto Cleanup;
-        }
-    }
-    else
-    {
-        hr = HRESULT_FROM_WIN32(GetLastError());
-        goto Cleanup;
-    }
-
-    hr = CoInitializeSecurity( pSD,
-                               -1,
-                               NULL,
-                               NULL,
-                               RPC_C_AUTHN_LEVEL_PKT_PRIVACY,
-                               RPC_C_IMP_LEVEL_IDENTIFY,
-                               NULL,
-                               EOAC_NONE,
-                               NULL );
-    return hr;
-Cleanup:
-    LocalFree(reinterpret_cast<void *>(pSD));
-    LocalFree(reinterpret_cast<void *>(pAbsSD));
-}
-
-HRESULT CoCreateInstanceAsAdmin(HWND hwnd, REFCLSID rclsid, REFIID riid, void ** ppv)
-{
-    BIND_OPTS bo;
-    WCHAR  wszCLSID[50];
-    WCHAR  wszMonikerName[300];
-
-    StringFromGUID2(rclsid, wszCLSID, sizeof(wszCLSID)/sizeof(wszCLSID[0]));
-    wsprintfW(wszMonikerName, L"Elevation:Administrator!new:%s", wszCLSID);
-    memset(&bo, 0, sizeof(bo));
-    bo.cbStruct = sizeof(bo);
-    //    bo.hwnd = hwnd;
-    //    bo.dwClassContext  = CLSCTX_LOCAL_SERVER;
-    return CoGetObject(wszMonikerName, NULL, riid, ppv);
 }
 
 #endif

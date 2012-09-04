@@ -1,7 +1,7 @@
 /*
- * GrabberBase.cpp
+ * TimeredGrabber.cpp
  *
- *  Created on: 18.07.2012
+ *  Created on: 27.08.2012
  *     Project: Lightpack
  *
  *  Copyright (c) 2012 Timur Sattarov
@@ -23,14 +23,35 @@
  *
  */
 
-#include "GrabberBase.hpp"
 
-GrabberBase::GrabberBase(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets) : QObject(parent) {
-    m_grabResult = grabResult;
-    m_grabWidgets = grabWidgets;
+#include "TimeredGrabber.hpp"
+
+TimeredGrabber::TimeredGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry) : GrabberBase(parent, grabResult, grabAreasGeometry) {
 }
 
-void GrabberBase::grab() {
-    m_lastGrabResult = _grab();
-    emit frameGrabAttempted(m_lastGrabResult);
+TimeredGrabber::~TimeredGrabber() {
+    if (m_timer)
+        delete m_timer;
+}
+
+void TimeredGrabber::init() {
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(grab()));
+    m_timer->setSingleShot(false);
+}
+
+void TimeredGrabber::setGrabInterval(int msec) {
+    m_timer->setInterval(msec);
+}
+
+void TimeredGrabber::startGrabbing() {
+    m_timer->start();
+}
+
+void TimeredGrabber::stopGrabbing() {
+    m_timer->stop();
+}
+
+bool TimeredGrabber::isGrabbingStarted() const {
+    return m_timer->isActive();
 }

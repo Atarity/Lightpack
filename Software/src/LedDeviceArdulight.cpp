@@ -41,7 +41,7 @@ LedDeviceArdulight::LedDeviceArdulight(QObject * parent) : ILedDevice(parent)
 
     m_writeBufferHeader.append((char)255);
 
-    m_colorSequence = Settings::getColorSequence(SupportedDevices::ArdulightDevice);
+    m_colorSequence = Settings::getColorSequence(SupportedDevices::DeviceTypeArdulight);
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
@@ -172,7 +172,7 @@ void LedDeviceArdulight::updateDeviceSettings()
 
     setGamma(Settings::getDeviceGamma());
     setBrightness(Settings::getDeviceBrightness());
-    m_colorSequence = Settings::getColorSequence(SupportedDevices::ArdulightDevice);
+    m_colorSequence = Settings::getColorSequence(SupportedDevices::DeviceTypeArdulight);
 }
 
 void LedDeviceArdulight::open()

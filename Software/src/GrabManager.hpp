@@ -64,7 +64,7 @@ public:
     void reset();
 
 public slots:
-    void onGrabberTypeChanged(const Grab::GrabberType grabberType, bool isDx1011CapturingEnabled);
+    void onGrabberTypeChanged(const Grab::GrabberType grabberType);
     void onGrabSlowdownChanged(int ms);
     void onThresholdOfBlackChanged(int value);
     void onGrabAvgColorsEnabledChanged(bool state);
@@ -76,12 +76,13 @@ public slots:
     void setWhiteLedWidgets(bool state);
 
 private slots:
-    void timeoutUpdateColors();
+    void handleGrabbedColors();
     void timeoutUpdateFPS();
     void pauseWhileResizeOrMoving();
     void resumeAfterResizeOrMoving();
     void firstWidgetPositionChanged();
     void scaleLedWidgets(int screenIndexResized);
+    void onFrameGrabAttempted(GrabResult result);
 
 private:
     GrabberBase *queryGrabber(Grab::GrabberType grabber);
@@ -97,6 +98,7 @@ private:
     D3D10Grabber *m_dx1011Grabber;
     QTimer *m_timerGrab;
     QTimer *m_timerUpdateFPS;
+    QThread *m_grabbersThread;
     QWidget *m_parentWidget;
     QList<GrabWidget *> m_ledWidgets;
     QList<QRgb> m_grabResult;

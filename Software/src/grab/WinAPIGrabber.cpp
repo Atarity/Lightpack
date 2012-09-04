@@ -31,7 +31,7 @@
 #include"enums.hpp"
 
 WinAPIGrabber::WinAPIGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
-    : GrabberBase(parent, grabResult, grabAreasGeometry)
+    : TimeredGrabber(parent, grabResult, grabAreasGeometry)
 {
     pbPixelsBuff = NULL;
 }
@@ -59,19 +59,7 @@ void WinAPIGrabber::freeDCs()
         DeleteObject(hMemDC);
 }
 
-void WinAPIGrabber::startGrabbing() {
-}
-
-void WinAPIGrabber::stopGrabbing() {
-}
-
-void WinAPIGrabber::isGrabbingStarted() {
-}
-
-void WinAPIGrabber::setGrabInterval(int msec) {
-}
-
-void WinAPIGrabber::firstWidgetPositionChanged(QWidget *widget)
+void WinAPIGrabber::updateGrabMonitor(QWidget *widget)
 {
     HMONITOR hMonitorNew = MonitorFromWindow(widget->winId(), MONITOR_DEFAULTTONEAREST);
     if (hMonitor != hMonitorNew) {

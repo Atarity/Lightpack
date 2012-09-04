@@ -38,7 +38,7 @@ LedDeviceAdalight::LedDeviceAdalight(QObject * parent) : ILedDevice(parent)
 
     m_gamma = Settings::getDeviceGamma();
     m_brightness = Settings::getDeviceBrightness();
-    m_colorSequence =Settings::getColorSequence(SupportedDevices::AdalightDevice);
+    m_colorSequence =Settings::getColorSequence(SupportedDevices::DeviceTypeAdalight);
 
     // TODO: think about init m_savedColors in all ILedDevices
 
@@ -167,7 +167,7 @@ void LedDeviceAdalight::updateDeviceSettings()
 
     setGamma(Settings::getDeviceGamma());
     setBrightness(Settings::getDeviceBrightness());
-    m_colorSequence = Settings::getColorSequence(SupportedDevices::AdalightDevice);
+    m_colorSequence = Settings::getColorSequence(SupportedDevices::DeviceTypeAdalight);
 }
 
 void LedDeviceAdalight::open()

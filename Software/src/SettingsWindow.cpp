@@ -120,7 +120,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     initGrabbersRadioButtonsVisibility();
     initLanguages();
-    initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::VirtualDevice));
+    initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::DeviceTypeVirtual));
     initConnectedDeviceComboBox();
     initSerialPortBaudRateComboBox();
 
@@ -413,7 +413,7 @@ void SettingsWindow::updateDeviceTabWidgetsVisibility()
         ui->tabDevices->setCurrentWidget(ui->tabDeviceVirtual);
         setDeviceTabWidgetsVisibility(DeviceTab::Virtual);
         // Sync Virtual Leds count with NumberOfLeds field
-        initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::VirtualDevice));
+        initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::DeviceTypeVirtual));
         break;
 
     default:
@@ -1089,7 +1089,7 @@ void SettingsWindow::onLightpackNumberOfLeds_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    Settings::setNumberOfLeds(SupportedDevices::LightpackDevice, value);
+    Settings::setNumberOfLeds(SupportedDevices::DeviceTypeLightpack, value);
 
 }
 
@@ -1097,7 +1097,7 @@ void SettingsWindow::onAdalightNumberOfLeds_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    Settings::setNumberOfLeds(SupportedDevices::AdalightDevice, value);
+    Settings::setNumberOfLeds(SupportedDevices::DeviceTypeAdalight, value);
 
 }
 
@@ -1105,7 +1105,7 @@ void SettingsWindow::onArdulightNumberOfLeds_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    Settings::setNumberOfLeds(SupportedDevices::ArdulightDevice, value);
+    Settings::setNumberOfLeds(SupportedDevices::DeviceTypeArdulight, value);
 
 }
 
@@ -1113,7 +1113,7 @@ void SettingsWindow::onVirtualNumberOfLeds_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    Settings::setNumberOfLeds(SupportedDevices::VirtualDevice, value);
+    Settings::setNumberOfLeds(SupportedDevices::DeviceTypeVirtual, value);
     initVirtualLeds(value);
 }
 
@@ -1650,10 +1650,10 @@ void SettingsWindow::updateUiFromSettings()
     ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
     ui->horizontalSlider_MoodLampSpeed->setValue        (Settings::getMoodLampSpeed());
 
-    ui->spinBox_LightpackNumberOfLeds->setValue         (Settings::getNumberOfLeds(SupportedDevices::LightpackDevice));
-    ui->spinBox_AdalightNumberOfLeds->setValue          (Settings::getNumberOfLeds(SupportedDevices::AdalightDevice));
-    ui->spinBox_ArdulightNumberOfLeds->setValue         (Settings::getNumberOfLeds(SupportedDevices::ArdulightDevice));
-    ui->spinBox_VirtualNumberOfLeds->setValue           (Settings::getNumberOfLeds(SupportedDevices::VirtualDevice));
+    ui->spinBox_LightpackNumberOfLeds->setValue         (Settings::getNumberOfLeds(SupportedDevices::DeviceTypeLightpack));
+    ui->spinBox_AdalightNumberOfLeds->setValue          (Settings::getNumberOfLeds(SupportedDevices::DeviceTypeAdalight));
+    ui->spinBox_ArdulightNumberOfLeds->setValue         (Settings::getNumberOfLeds(SupportedDevices::DeviceTypeArdulight));
+    ui->spinBox_VirtualNumberOfLeds->setValue           (Settings::getNumberOfLeds(SupportedDevices::DeviceTypeVirtual));
     ui->horizontalSlider_DeviceRefreshDelay->setValue   (Settings::getDeviceRefreshDelay());
     ui->horizontalSlider_DeviceBrightness->setValue     (Settings::getDeviceBrightness());
     ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());
