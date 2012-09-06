@@ -56,7 +56,7 @@ void LedDeviceVirtual::setColors(const QList<QRgb> & colors)
         callbackColors.append(qRgb(m_colorsBuffer[i].r, m_colorsBuffer[i].g, m_colorsBuffer[i].b));
     }
 
-    emit setColors_VirtualDeviceCallback(callbackColors);
+    emit colorsUpdated(callbackColors);
     emit commandCompleted(true);
 }
 

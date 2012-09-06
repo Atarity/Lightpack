@@ -48,7 +48,7 @@ signals:
       \param ok is command completed successfully
     */
     void commandCompleted(bool ok);
-    void setColors_VirtualDeviceCallback(QList<QRgb> colors);
+    void colorsUpdated(QList<QRgb> colors);
 
 public slots:
     virtual void open() = 0;
