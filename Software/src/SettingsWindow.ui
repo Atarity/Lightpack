@@ -101,7 +101,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
        </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/Lightpack.png</normaloff>:/icons/Lightpack.png</iconset>
+         <normaloff>:/icons/modes.png</normaloff>:/icons/modes.png</iconset>
        </property>
       </item>
       <item>
@@ -110,7 +110,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
        </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/on.png</normaloff>:/icons/on.png</iconset>
+         <normaloff>:/icons/device.png</normaloff>:/icons/device.png</iconset>
        </property>
       </item>
       <item>
@@ -137,7 +137,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
        </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/lock.png</normaloff>:/icons/lock.png</iconset>
+         <normaloff>:/icons/nerd.png</normaloff>:/icons/nerd.png</iconset>
        </property>
       </item>
       <item>

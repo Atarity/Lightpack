@@ -25,17 +25,15 @@
 
 #pragma once
 
-#include"QRect"
-#include"QRgb"
-#include"../enums.hpp"
+#include "QRect"
+#include "QRgb"
+#include "QList"
+#include "../enums.hpp"
 
 namespace Grab {
     namespace Calculations {
 
-        int calculateAvgColor(QRgb &result, unsigned char *buffer, BufferFormat bufferFormat, unsigned int pitch, const QRect &rect );
-
-
-
-
+        QRgb calculateAvgColor(QRgb *result, unsigned char *buffer, BufferFormat bufferFormat, unsigned int pitch, const QRect &rect );
+        QRgb calculateAvgColor(QList<QRgb> *colors);
     }
 }

@@ -130,7 +130,7 @@ GrabResult WinAPIGrabber::_grab()
     captureScreen();
     m_grabResult->clear();
     foreach(GrabWidget * widget, *m_grabWidgets) {
-        m_grabResult->append(getColor(widget));
+        m_grabResult->append( widget->isEnabled() ? getColor(widget) : qRgb(0,0,0) );
     }
     return GrabResultOk;
 }
@@ -194,7 +194,7 @@ QRgb WinAPIGrabber::getColor(const QRect &widgetRect)
 
     using namespace Grab;
     QRgb avgColor;
-    if (Calculations::calculateAvgColor(avgColor, pbPixelsBuff, BufferFormatArgb, screenWidth * bytesPerPixel, preparedRect ) == 0) {
+    if (Calculations::calculateAvgColor(&avgColor, pbPixelsBuff, BufferFormatArgb, screenWidth * bytesPerPixel, preparedRect ) == 0) {
         return avgColor;
     } else {
         return qRgb(0,0,0);

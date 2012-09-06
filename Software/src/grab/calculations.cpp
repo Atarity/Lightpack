@@ -30,7 +30,7 @@ namespace Grab {
 
         const char bytesPerPixel = 4;
 
-        int calculateAvgColor(QRgb &result, unsigned char *buffer, BufferFormat bufferFormat, unsigned int pitch, const QRect &rect ) {
+        QRgb calculateAvgColor(QRgb *result, unsigned char *buffer, BufferFormat bufferFormat, unsigned int pitch, const QRect &rect ) {
 
             Q_ASSERT_X(rect.width() % 4 == 0, "average color calculation", "rect width should be aligned by 4 bytes");
 
@@ -77,9 +77,21 @@ namespace Grab {
                 b = ( b / count) & 0xff;
             }
 
-            result = qRgb(r,g,b);
+            *result = qRgb(r,g,b);
             return 0;
         }
 
+        QRgb calculateAvgColor(QList<QRgb> *colors) {
+            int r=0, g=0, b=0;
+            for( int i=0; i<colors->size(); i++) {
+               r += qRed(colors->at(i));
+               g += qGreen(colors->at(i));
+               b += qBlue(colors->at(i));
+            }
+            r = r / colors->size();
+            g = g / colors->size();
+            b = b / colors->size();
+            return qRgb(r, g, b);
+        }
     }
 }

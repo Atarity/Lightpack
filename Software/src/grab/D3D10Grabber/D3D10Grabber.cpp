@@ -220,7 +220,7 @@ void D3D10Grabber::init(void) {
         sa.lpSecurityDescriptor = &sd;
         sa.bInheritHandle = FALSE;
 
-        if (!initIPC(&sa)) {
+        if (!initIPC(NULL)) {
             freeIPC();
             return;
         }
@@ -231,7 +231,7 @@ void D3D10Grabber::init(void) {
         m_processesScanAndInfectTimer->start();
 
         m_workerThread = new QThread();
-        m_worker = new D3D10GrabberWorker(NULL, &sa);
+        m_worker = new D3D10GrabberWorker(NULL, NULL);
         m_worker->moveToThread(m_workerThread);
         m_workerThread->start();
         connect(m_worker, SIGNAL(frameGrabbed()), this, SLOT(grab()));
@@ -247,7 +247,7 @@ void D3D10Grabber::init(void) {
 
 void D3D10Grabber::startGrabbing() {
     m_isStarted = true;
-    grab();
+//    grab();
 }
 
 void D3D10Grabber::stopGrabbing() {
@@ -327,12 +327,12 @@ void D3D10Grabber::updateGrabMonitor(QWidget *widget) {
         // Get position and resolution of the monitor
         GetMonitorInfo( hMonitor, &m_monitorInfo );
 
-//        m_fallbackGrabber->firstWidgetPositionChanged(widget);
+        m_fallbackGrabber->updateGrabMonitor(widget);
     }
 }
 
 void D3D10Grabber::setFallbackGrabber(GrabberBase *grabber) {
-//    m_fallbackGrabber = grabber;
+    m_fallbackGrabber = grabber;
 }
 
 void D3D10Grabber::infectCleanDxProcesses() {
@@ -454,7 +454,7 @@ QRgb D3D10Grabber::getColor(QRect &widgetRect)
 
     QRgb result;
 
-    if (Calculations::calculateAvgColor(result, pbPixelsBuff, BufferFormatAbgr, m_memDesc.rowPitch, widgetRect) == 0) {
+    if (Calculations::calculateAvgColor(&result, pbPixelsBuff, BufferFormatAbgr, m_memDesc.rowPitch, preparedRect) == 0) {
         return result;
     } else {
         return qRgb(0,0,0);

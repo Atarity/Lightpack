@@ -503,6 +503,10 @@ int SettingsWindow::getLigtpackFirmwareVersionMajor()
     return majorVersion;
 }
 
+void SettingsWindow::onPostInit() {
+    updateUiFromSettings();
+}
+
 void SettingsWindow::onEnableApi_Toggled(bool isEnabled)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;

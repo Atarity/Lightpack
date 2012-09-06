@@ -41,6 +41,7 @@ struct D3D10GRABBER_SHARED_MEM_DESC {
     UINT height;
     UINT rowPitch;
     UINT frameId;
+    UINT verboseDebug;
 };
 
 enum D3D10GRABBER_PIPE_MSG_TYPE {

@@ -120,6 +120,7 @@ private slots:
     void showAbout(); /* using in actions */
     void showSettings(); /* using in actions */
     void hideSettings(); /* using in iconActivated(..) */
+    void onPostInit();
 
     void changePage(int page);
 

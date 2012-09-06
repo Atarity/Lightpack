@@ -128,7 +128,7 @@ static HRESULT STDMETHODCALLTYPE LibraryInjector_Inject(LibraryInjector * this, 
         0xB8, 0x00, 0x00, 0x00, 0x00,             // mov eax, LoadLibProc
         0xFF, 0xD0,                               // call eax
         0x83, 0xEC, 0x04,                         // sub esp,4
-        0xB8, 0x00, 0x00, 0x00, 0x00,             // mov eax, ExitThreadProc
+        0xB8, 0x00, 0x00, 0x00, 0x00,             // mov eax, ExitTheadProc
         0xFF, 0xD0                                // call eax
     };
 #define LIB_NAME_OFFSET 4

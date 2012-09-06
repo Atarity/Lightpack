@@ -106,7 +106,7 @@ private:
     TimeEvaluations *m_timeEval;
 
     QList<QRgb> m_colorsCurrent;
-    QList<QRgb> m_colorsNew;       
+    QList<QRgb> m_colorsNew;
 
     QRect m_screenSavedRect;
     int m_screenSavedIndex;

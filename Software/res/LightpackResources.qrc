@@ -23,6 +23,9 @@
         <file>icons/uac-shield.png</file>
         <file>icons/arrow_up.png</file>
         <file>icons/arrow_down.png</file>
+        <file>icons/nerd.png</file>
+        <file>icons/modes.png</file>
+        <file>icons/device.png</file>
     </qresource>
     <qresource prefix="/plugin">
         <file alias="BasePlugin.py">python/BasePlugin.py</file>
