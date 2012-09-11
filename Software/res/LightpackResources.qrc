@@ -26,6 +26,14 @@
         <file>icons/nerd.png</file>
         <file>icons/modes.png</file>
         <file>icons/device.png</file>
+        <file>icons/colorset.png</file>
+        <file>icons/package_system.png</file>
+        <file>icons/profiles2.png</file>
+        <file>icons/plugins.png</file>
+        <file>icons/plugins.png</file>
+        <file>icons/profiles.png</file>
+        <file>icons/device.png</file>
+        <file>icons/nerd2.png</file>
     </qresource>
     <qresource prefix="/plugin">
         <file alias="BasePlugin.py">python/BasePlugin.py</file>

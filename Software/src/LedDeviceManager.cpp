@@ -313,7 +313,7 @@ void LedDeviceManager::connectSignalSlotsLedDevice()
     connect(m_ledDevice, SIGNAL(firmwareVersion(QString)),      this, SIGNAL(firmwareVersion(QString)), Qt::QueuedConnection);
     connect(m_ledDevice, SIGNAL(ioDeviceSuccess(bool)),         this, SIGNAL(ioDeviceSuccess(bool)), Qt::QueuedConnection);
     connect(m_ledDevice, SIGNAL(openDeviceSuccess(bool)),       this, SIGNAL(openDeviceSuccess(bool)), Qt::QueuedConnection);    
-    connect(m_ledDevice, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), this, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), Qt::QueuedConnection);    
+    connect(m_ledDevice, SIGNAL(colorsUpdated(QList<QRgb>)),    this, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), Qt::QueuedConnection);
 
     connect(this, SIGNAL(ledDeviceOpen()),                      m_ledDevice, SLOT(open()), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetColors(QList<QRgb>)),      m_ledDevice, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);

@@ -257,7 +257,9 @@ void SettingsWindow::connectSignalsSlots()
 #ifdef MAC_OS_CG_GRAB_SUPPORT
     connect(ui->radioButton_GrabMacCoreGraphics, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
 #endif
-
+#ifdef D3D10_GRAB_SUPPORT
+    connect(ui->checkBox_EnableDx1011Capture, SIGNAL(toggled(bool)), this, SLOT(onDx1011CaptureEnabledChanged(bool)));
+#endif
 
 
     // Dev tab configure API (port, apikey)
@@ -612,6 +614,12 @@ void SettingsWindow::setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status, 
 
     startBacklight();
 }
+
+void SettingsWindow::onDx1011CaptureEnabledChanged(bool isEnabled) {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
+
+    Settings::setDx1011GrabberEnabled(isEnabled);
+}
 void SettingsWindow::setModeChanged(Lightpack::Mode mode)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
@@ -827,6 +835,9 @@ void SettingsWindow::initVirtualLeds(int virtualLedsCount)
 void SettingsWindow::updateVirtualLedsColors(const QList<QRgb> & colors)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
+    if (Settings::getConnectedDevice() != SupportedDevices::DeviceTypeVirtual)
+        return;
 
     if (colors.count() != m_labelsGrabbedColors.count())
     {
@@ -1670,6 +1681,8 @@ void SettingsWindow::updateUiFromSettings()
     ui->checkBox_IsApiAuthEnabled->setChecked           (Settings::isApiAuthEnabled());
     ui->lineEdit_ApiKey->setText                        (Settings::getApiAuthKey());
     ui->spinBox_LoggingLevel->setValue                  (g_debugLevel);
+
+    ui->checkBox_EnableDx1011Capture->setChecked        (Settings::isDx1011GrabberEnabled());
 
     switch (Settings::getGrabberType())
     {

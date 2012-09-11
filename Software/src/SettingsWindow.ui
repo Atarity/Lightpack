@@ -55,7 +55,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
       </property>
       <property name="maximumSize">
        <size>
-        <width>110</width>
+        <width>100</width>
         <height>16777215</height>
        </size>
       </property>
@@ -119,7 +119,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
        </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/profiles.png</normaloff>:/icons/profiles.png</iconset>
+         <normaloff>:/icons/profiles2.png</normaloff>:/icons/profiles2.png</iconset>
        </property>
       </item>
       <item>
@@ -128,16 +128,16 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
        </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/settings.png</normaloff>:/icons/settings.png</iconset>
+         <normaloff>:/icons/plugins.png</normaloff>:/icons/plugins.png</iconset>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Dev tab</string>
+        <string>Experimental</string>
        </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/nerd.png</normaloff>:/icons/nerd.png</iconset>
+         <normaloff>:/icons/nerd2.png</normaloff>:/icons/nerd2.png</iconset>
        </property>
       </item>
       <item>
@@ -145,8 +145,8 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
         <string>About</string>
        </property>
        <property name="icon">
-        <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/about.png</normaloff>:/icons/about.png</iconset>
+        <iconset>
+         <normaloff>:/icons/mode.png</normaloff>:/icons/mode.png</iconset>
        </property>
       </item>
      </widget>
@@ -166,7 +166,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -2360,7 +2360,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
         <string>About</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_10">
-        <item row="1" column="1">
+        <item row="2" column="1">
          <widget class="QWidget" name="widget" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
@@ -2385,59 +2385,6 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_4">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>&lt;small&gt;THIS PROGRAM IS DISTRIBUTED &quot;AS IS&quot;. NO WARRANTY OF ANY KIND IS EXPRESSED OR IMPLIED. YOU USE AT YOUR OWN RISK. THE AUTHOR WILL NOT BE LIABLE FOR DATA LOSS, DAMAGES, LOSS OF PROFITS OR ANY OTHER KIND OF LOSS WHILE USING OR MISUSING THIS SOFTWARE.&lt;/small&gt;</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label">
-             <property name="minimumSize">
-              <size>
-               <width>100</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>150</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="../res/LightpackResources.qrc">:/icons/Lightpack.png</pixmap>
-             </property>
-             <property name="scaledContents">
-              <bool>false</bool>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignHCenter|Qt::AlignTop</set>
              </property>
             </widget>
            </item>
@@ -2557,10 +2504,63 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>150</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="../res/LightpackResources.qrc">:/icons/Lightpack.png</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>false</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignHCenter|Qt::AlignTop</set>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>&lt;small&gt;THIS PROGRAM IS DISTRIBUTED &quot;AS IS&quot;. NO WARRANTY OF ANY KIND IS EXPRESSED OR IMPLIED. YOU USE AT YOUR OWN RISK. THE AUTHOR WILL NOT BE LIABLE FOR DATA LOSS, DAMAGES, LOSS OF PROFITS OR ANY OTHER KIND OF LOSS WHILE USING OR MISUSING THIS SOFTWARE.&lt;/small&gt;</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="1" column="1">
          <spacer name="verticalSpacer_12">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -2573,7 +2573,7 @@ p, li { white-space: pre-wrap; }
           </property>
          </spacer>
         </item>
-        <item row="1" column="0">
+        <item row="2" column="0">
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -2586,7 +2586,7 @@ p, li { white-space: pre-wrap; }
           </property>
          </spacer>
         </item>
-        <item row="1" column="2">
+        <item row="2" column="2">
          <spacer name="horizontalSpacer_4">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -2599,7 +2599,7 @@ p, li { white-space: pre-wrap; }
           </property>
          </spacer>
         </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <spacer name="verticalSpacer_13">
           <property name="orientation">
            <enum>Qt::Vertical</enum>

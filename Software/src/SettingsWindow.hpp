@@ -148,6 +148,7 @@ private slots:
     void onSliderDeviceGammaCorrection_valueChanged(int value);
     void onDeviceSendDataOnlyIfColorsChanged_toggled(bool state);
     void onColorSequence_valueChanged(QString value);
+    void onDx1011CaptureEnabledChanged(bool isEnabled);
 
     void onShowLedWidgets_Toggled(bool checked);
     void onSetColoredLedWidgets();
