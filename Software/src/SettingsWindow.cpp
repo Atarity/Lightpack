@@ -360,11 +360,11 @@ void SettingsWindow::onExpertModeEnabled_Toggled(bool isEnabled)
 void SettingsWindow::updateExpertModeWidgetsVisibility()
 {    
     if(Settings::isExpertModeEnabled()) {
-        if (ui->tabWidget->indexOf(ui->tabDevTab) < 0)
-            ui->tabWidget->insertTab(4,ui->tabDevTab, tr("Dev tab"));
+        if (ui->tabWidget->indexOf(ui->tabExperimental) < 0)
+            ui->tabWidget->insertTab(4,ui->tabExperimental, tr("Dev tab"));
             ui->listWidget->setItemHidden(ui->listWidget->item(4),false);
     } else {
-        ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabDevTab));
+        ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabExperimental));
         ui->listWidget->setItemHidden(ui->listWidget->item(4),true);
     }
 

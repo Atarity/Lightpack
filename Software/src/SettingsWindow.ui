@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>608</width>
+    <width>619</width>
     <height>620</height>
    </rect>
   </property>
@@ -60,7 +60,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -1944,9 +1944,9 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabDevTab">
+      <widget class="QWidget" name="tabExperimental">
        <attribute name="title">
-        <string>Dev tab</string>
+        <string>Experimental</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
