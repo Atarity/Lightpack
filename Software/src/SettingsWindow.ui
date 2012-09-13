@@ -12,7 +12,7 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -45,113 +45,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_8">
-    <item row="1" column="0">
-     <widget class="QListWidget" name="listWidget">
-      <property name="minimumSize">
-       <size>
-        <width>110</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>100</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>64</width>
-        <height>64</height>
-       </size>
-      </property>
-      <property name="textElideMode">
-       <enum>Qt::ElideLeft</enum>
-      </property>
-      <property name="movement">
-       <enum>QListView::Static</enum>
-      </property>
-      <property name="flow">
-       <enum>QListView::LeftToRight</enum>
-      </property>
-      <property name="isWrapping" stdset="0">
-       <bool>true</bool>
-      </property>
-      <property name="spacing">
-       <number>12</number>
-      </property>
-      <property name="gridSize">
-       <size>
-        <width>80</width>
-        <height>80</height>
-       </size>
-      </property>
-      <property name="viewMode">
-       <enum>QListView::IconMode</enum>
-      </property>
-      <property name="currentRow">
-       <number>-1</number>
-      </property>
-      <property name="sortingEnabled">
-       <bool>false</bool>
-      </property>
-      <item>
-       <property name="text">
-        <string>Mode</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/modes.png</normaloff>:/icons/modes.png</iconset>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Device</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/device.png</normaloff>:/icons/device.png</iconset>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Profiles</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/profiles2.png</normaloff>:/icons/profiles2.png</iconset>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Plugins</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/plugins.png</normaloff>:/icons/plugins.png</iconset>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Experimental</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../res/LightpackResources.qrc">
-         <normaloff>:/icons/nerd2.png</normaloff>:/icons/nerd2.png</iconset>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>About</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>:/icons/mode.png</normaloff>:/icons/mode.png</iconset>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="1" column="1">
+    <item row="1" column="2">
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -166,7 +60,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -2058,7 +1952,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
         <item>
          <widget class="QLabel" name="label_DevTabWarning">
           <property name="text">
-           <string>This tab is used only by project developers. Any tuning with all these controls provide inevetible plane crash, miscarrige or nuclear disaster. Use it on your own risk.</string>
+           <string>This tab is used for experimental and not stable features. Any tuning with all these controls provide inevetible plane crash, miscarrige or nuclear disaster. Use it on your own risk.</string>
           </property>
           <property name="scaledContents">
            <bool>false</bool>
@@ -2580,7 +2474,7 @@ p, li { white-space: pre-wrap; }
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>40</width>
+            <width>60</width>
             <height>20</height>
            </size>
           </property>
@@ -2593,7 +2487,7 @@ p, li { white-space: pre-wrap; }
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>40</width>
+            <width>60</width>
             <height>20</height>
            </size>
           </property>
@@ -2614,6 +2508,160 @@ p, li { white-space: pre-wrap; }
         </item>
        </layout>
       </widget>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QListWidget" name="listWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>110</width>
+        <height>16777208</height>
+       </size>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="showDropIndicator" stdset="0">
+       <bool>false</bool>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>false</bool>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>64</width>
+        <height>64</height>
+       </size>
+      </property>
+      <property name="textElideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
+      <property name="verticalScrollMode">
+       <enum>QAbstractItemView::ScrollPerPixel</enum>
+      </property>
+      <property name="movement">
+       <enum>QListView::Static</enum>
+      </property>
+      <property name="flow">
+       <enum>QListView::LeftToRight</enum>
+      </property>
+      <property name="isWrapping" stdset="0">
+       <bool>true</bool>
+      </property>
+      <property name="gridSize">
+       <size>
+        <width>107</width>
+        <height>90</height>
+       </size>
+      </property>
+      <property name="viewMode">
+       <enum>QListView::IconMode</enum>
+      </property>
+      <property name="uniformItemSizes">
+       <bool>true</bool>
+      </property>
+      <property name="selectionRectVisible">
+       <bool>true</bool>
+      </property>
+      <item>
+       <property name="text">
+        <string>Mode</string>
+       </property>
+       <property name="background">
+        <brush brushstyle="NoBrush">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+       <property name="icon">
+        <iconset resource="../res/LightpackResources.qrc">
+         <normaloff>:/icons/modes.png</normaloff>:/icons/modes.png</iconset>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Device</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../res/LightpackResources.qrc">
+         <normaloff>:/icons/device.png</normaloff>:/icons/device.png</iconset>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Profiles</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../res/LightpackResources.qrc">
+         <normaloff>:/icons/profiles2.png</normaloff>:/icons/profiles2.png</iconset>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Plugins</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../res/LightpackResources.qrc">
+         <normaloff>:/icons/plugins.png</normaloff>:/icons/plugins.png</iconset>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Experimental</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../res/LightpackResources.qrc">
+         <normaloff>:/icons/nerd2.png</normaloff>:/icons/nerd2.png</iconset>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>About</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../res/LightpackResources.qrc">
+         <normaloff>:/icons/about.png</normaloff>:/icons/about.png</iconset>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+       </property>
+      </item>
      </widget>
     </item>
    </layout>
@@ -2647,7 +2695,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>spinBox_LoggingLevel</tabstop>
   <tabstop>checkBox_PingDeviceEverySecond</tabstop>
   <tabstop>checkBox_SendDataOnlyIfColorsChanges</tabstop>
-  <tabstop>listWidget</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>pushButton_EnableDisableDevice</tabstop>
   <tabstop>checkBox_GrabIsAvgColors</tabstop>
