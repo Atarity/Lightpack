@@ -736,7 +736,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
               </size>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <property name="documentMode">
               <bool>true</bool>
@@ -1217,6 +1217,12 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
+                 <property name="tickPosition">
+                  <enum>QSlider::TicksAbove</enum>
+                 </property>
+                 <property name="tickInterval">
+                  <number>5</number>
+                 </property>
                 </widget>
                </item>
                <item row="8" column="1">
@@ -1402,6 +1408,12 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
+                 <property name="tickPosition">
+                  <enum>QSlider::TicksAbove</enum>
+                 </property>
+                 <property name="tickInterval">
+                  <number>5</number>
+                 </property>
                 </widget>
                </item>
                <item row="8" column="1">
@@ -1478,6 +1490,12 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
                  </property>
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="tickPosition">
+                  <enum>QSlider::TicksAbove</enum>
+                 </property>
+                 <property name="tickInterval">
+                  <number>5</number>
                  </property>
                 </widget>
                </item>
