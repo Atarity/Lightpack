@@ -28,7 +28,7 @@ echo
 echo "================================================="
 echo "Updating translation files for Lightpack project:"
 echo 
-lupdate src/src.pro
+lupdate $1 src/src.pro
 
 echo 
 echo "==========================================================="
