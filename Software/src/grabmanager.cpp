@@ -104,8 +104,8 @@ void GrabManager::start(bool isGrabEnabled)
 
     if (m_grabber != NULL) {
         if (isGrabEnabled) {
-            QMetaObject::invokeMethod(m_grabber, "startGrabbing", Qt::QueuedConnection );
-//            m_grabber->startGrabbing();
+//            QMetaObject::invokeMethod(m_grabber, "startGrabbing", Qt::QueuedConnection );
+            m_grabber->startGrabbing();
         } else {
             clearColorsCurrent();
             QMetaObject::invokeMethod(m_grabber, "stopGrabbing", Qt::QueuedConnection );
@@ -117,8 +117,11 @@ void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << grabberType;
 
-    if (m_grabber != NULL)
+    bool isStartNeeded = false;
+    if (m_grabber != NULL) {
+        isStartNeeded = m_grabber->isGrabbingStarted();
         m_grabber->stopGrabbing();
+    }
 
     if (Settings::isDx1011GrabberEnabled()) {
         if (m_dx1011Grabber == NULL) {
@@ -129,7 +132,8 @@ void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType)
     }
 
     m_grabber = Settings::isDx1011GrabberEnabled() ? m_dx1011Grabber : queryGrabber(grabberType);
-    m_grabber->startGrabbing();
+    if (isStartNeeded)
+        m_grabber->startGrabbing();
     firstWidgetPositionChanged();
 }
 
@@ -507,7 +511,7 @@ GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
 //        m_grabbersThread->start();
         QMetaObject::invokeMethod(result, "init", Qt::QueuedConnection);
         QMetaObject::invokeMethod(result, "setGrabInterval", Qt::QueuedConnection, Q_ARG(int, Settings::getGrabSlowdown()));
-        QMetaObject::invokeMethod(result, "startGrabbing", Qt::QueuedConnection);
+//        QMetaObject::invokeMethod(result, "startGrabbing", Qt::QueuedConnection);
         bool isConnected = connect(result, SIGNAL(frameGrabAttempted(GrabResult)), this, SLOT(onFrameGrabAttempted(GrabResult)), Qt::QueuedConnection);
         Q_ASSERT_X(isConnected, "connecting grabber to grabManager", "failed");
 

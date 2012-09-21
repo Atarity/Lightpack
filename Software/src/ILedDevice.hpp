@@ -54,7 +54,7 @@ public slots:
     virtual void open() = 0;
     virtual void setColors(const QList<QRgb> & colors) = 0;
     virtual void switchOffLeds() = 0;
-    virtual void setRefreshDelay(int value) = 0;
+    virtual void setRefreshDelay(int value) = 0; //!< PWM timer period. only for Lightpack <=5.5
     virtual void setSmoothSlowdown(int value) = 0;
     virtual void setGamma(double value) = 0;
     virtual void setBrightness(int value) = 0;

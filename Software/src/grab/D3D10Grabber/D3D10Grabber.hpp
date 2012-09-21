@@ -64,7 +64,7 @@ public slots:
     virtual void updateGrabMonitor(QWidget * firstWidget);
     virtual void startGrabbing();
     virtual void stopGrabbing();
-    virtual bool isGrabbingStarted() const { return false; }
+    virtual bool isGrabbingStarted() const { return true; }
     virtual void setGrabInterval(int msec);
     virtual void grab();
 
