@@ -109,9 +109,9 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
         labelFPS  = new QLabel();
 
         statusBar()->setSizeGripEnabled(false);
+        statusBar()->addWidget(labelProfile, 1);
         statusBar()->addWidget(labelDevice, 1);
-        statusBar()->addWidget(labelProfile, 2);
-        statusBar()->addWidget(labelFPS, 3);
+        statusBar()->addWidget(labelFPS, 1);
 
     // Request firmware version of the device to show message about update the firmware
     QTimer::singleShot(1000, this, SIGNAL(requestFirmwareVersion()));
@@ -304,7 +304,7 @@ void SettingsWindow::changeEvent(QEvent *e)
         m_profilesMenu->setTitle(tr("&Profiles"));
 
         m_keySequenceWidget->setNoneText(tr("Undefined key"));
-        m_keySequenceWidget->setShortcutName(tr("On-Off light:"));
+        m_keySequenceWidget->setShortcutName(tr("On/Off light:"));
 
         if (m_trayIcon!=NULL)
         switch (m_backlightStatus)
@@ -1263,7 +1263,7 @@ void SettingsWindow::profileSwitch(const QString & configName)
 
     this->setFocus(Qt::OtherFocusReason);
 
-    this->labelProfile->setText(tr("Profile:")+configName);
+    this->labelProfile->setText(tr("Profile: %1").arg(configName));
     // Update settings
     updateUiFromSettings();
     emit settingsProfileChanged();
@@ -1627,8 +1627,8 @@ void SettingsWindow::updateUiFromSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    this->labelProfile->setText(tr("Profile:")+Settings::getCurrentProfileName());
-    this->labelDevice->setText(tr("Device:")+Settings::getConnectedDeviceName());
+    this->labelProfile->setText(tr("Profile: %1").arg(Settings::getCurrentProfileName()));
+    this->labelDevice->setText(tr("Device: %1").arg(Settings::getConnectedDeviceName()));
 
     Lightpack::Mode mode = Settings::getLightpackMode();
     switch (mode)
@@ -1779,7 +1779,7 @@ void SettingsWindow::clearOnOffHotKey()
 
 void SettingsWindow::setupHotkeys()
 {
-    m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("On-Off light:"), this);
+    m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("On/Off light:"), this);
     ui->groupBox_HotKeys->layout()->addWidget(m_keySequenceWidget);
 
     m_keySequenceWidget->setKeySequence(Settings::getOnOffDeviceKey());

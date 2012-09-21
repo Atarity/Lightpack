@@ -1060,7 +1060,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
              </widget>
              <widget class="QWidget" name="tabDeviceAdalight">
               <attribute name="title">
-               <string>Adalight</string>
+               <string notr="true">Adalight</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_6">
                <item row="0" column="0">
@@ -1150,32 +1150,32 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
                  </property>
                  <item>
                   <property name="text">
-                   <string>RGB</string>
+                   <string notr="true">RGB</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>RBG</string>
+                   <string notr="true">RBG</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>GRB</string>
+                   <string notr="true">GRB</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>GBR</string>
+                   <string notr="true">GBR</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>BRG</string>
+                   <string notr="true">BRG</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>BGR</string>
+                   <string notr="true">BGR</string>
                   </property>
                  </item>
                 </widget>
@@ -1245,7 +1245,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
              </widget>
              <widget class="QWidget" name="tabDeviceArdulight">
               <attribute name="title">
-               <string>Ardulight</string>
+               <string notr="true">Ardulight</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_2">
                <item row="0" column="0">
@@ -1313,32 +1313,32 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
                  </property>
                  <item>
                   <property name="text">
-                   <string>RGB</string>
+                   <string notr="true">RGB</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>RBG</string>
+                   <string notr="true">RBG</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>GRB</string>
+                   <string notr="true">GRB</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>GBR</string>
+                   <string notr="true">GBR</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>BRG</string>
+                   <string notr="true">BRG</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>BGR</string>
+                   <string notr="true">BGR</string>
                   </property>
                  </item>
                 </widget>
@@ -2385,7 +2385,7 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="text">
-              <string>&lt;a href=&quot;http://lightpack.googlecode.com/&quot;&gt;lightpack.googlecode.com&lt;/a&gt;</string>
+              <string notr="true">&lt;a href=&quot;http://lightpack.googlecode.com/&quot;&gt;lightpack.googlecode.com&lt;/a&gt;</string>
              </property>
              <property name="margin">
               <number>0</number>
