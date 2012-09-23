@@ -436,9 +436,13 @@ void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
     if (majorVersion == 4 || majorVersion == 5)
     {
         // Show color depth only if lightpack hw4.x or hw5.x
-        ui->frame_LightpackColorDepth->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
+        ui->label_7->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
+        ui->horizontalSlider_DeviceColorDepth->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
+        ui->spinBox_DeviceColorDepth->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
     } else {
-        ui->frame_LightpackColorDepth->setVisible(false);
+        ui->label_7->setVisible(false);
+        ui->horizontalSlider_DeviceColorDepth->setVisible(false);
+        ui->spinBox_DeviceColorDepth->setVisible(false);
     }
 
     // NumberOfLeds
