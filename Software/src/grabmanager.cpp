@@ -507,17 +507,21 @@ GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
 
     //    case Grab::D3D9Grabber:
     //        result = new D3D9Grabber();
+    //        break;
     #endif
 
     #ifdef MAC_OS
         case Grab::MacCoreGraphicsGrabber:
             result = new MacOSGrabber();
+            break;
     #endif
 
         case Grab::GrabberTypeQtEachWidget:
-            //result = new QtGrabberEachWidget();
+            result = new QtGrabberEachWidget(NULL, &m_colorsNew, &m_ledWidgets);
             break;
         case Grab::GrabberTypeQt:
+            result = new QtGrabber(NULL, &m_colorsNew, &m_ledWidgets);
+            break;
         default:
             result = new QtGrabber(NULL, &m_colorsNew, &m_ledWidgets);
             break;
@@ -525,7 +529,7 @@ GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
         m_grabbers[grabberType] = result;
 //        result->moveToThread(m_grabbersThread);
 //        m_grabbersThread->start();
-        QMetaObject::invokeMethod(result, "init", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(result, "init", Qt::DirectConnection);
         QMetaObject::invokeMethod(result, "setGrabInterval", Qt::QueuedConnection, Q_ARG(int, Settings::getGrabSlowdown()));
 //        QMetaObject::invokeMethod(result, "startGrabbing", Qt::QueuedConnection);
         bool isConnected = connect(result, SIGNAL(frameGrabAttempted(GrabResult)), this, SLOT(onFrameGrabAttempted(GrabResult)), Qt::QueuedConnection);

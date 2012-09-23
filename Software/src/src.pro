@@ -115,7 +115,8 @@ SOURCES += \
     grab/calculations.cpp \
     grab/TimeredGrabber.cpp \
     grab/X11Grabber.cpp \
-    grab/QtGrabber.cpp
+    grab/QtGrabber.cpp \
+    grab/QtGrabberEachWidget.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -158,7 +159,8 @@ HEADERS += \
     grab/GrabberBase.hpp \
     grab/TimeredGrabber.hpp \
     grab/X11Grabber.hpp \
-    grab/QtGrabber.hpp
+    grab/QtGrabber.hpp \
+    grab/QtGrabberEachWidget.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \

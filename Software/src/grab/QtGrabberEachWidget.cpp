@@ -29,7 +29,8 @@
 #include <QtGui>
 #include "debug.h"
 
-QtGrabberEachWidget::QtGrabberEachWidget()
+QtGrabberEachWidget::QtGrabberEachWidget(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
+    : TimeredGrabber(parent, grabResult, grabAreasGeometry)
 {
 }
 
@@ -42,18 +43,19 @@ const char * QtGrabberEachWidget::getName()
     return "QtGrabberEachWidget";
 }
 
-void QtGrabberEachWidget::updateGrabScreenFromWidget(QWidget * /*widget*/)
+void QtGrabberEachWidget::updateGrabMonitor(QWidget * /*widget*/)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 }
 
-GrabResult QtGrabberEachWidget::grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors)
+GrabResult QtGrabberEachWidget::_grab()
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    for (int i = 0; i < widgets.size(); i++)
+    m_grabResult->clear();
+    foreach(GrabWidget * widget, *m_grabWidgets)
 	{
-        widgetsColors->append(getColor(widgets[i]));
+        m_grabResult->append( widget->isEnabled() ? getColor(widget) : qRgb(0,0,0) );
     }
     return GrabResultOk;
 }
