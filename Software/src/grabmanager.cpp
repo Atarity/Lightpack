@@ -41,7 +41,9 @@ GrabManager::GrabManager(QWidget *parent) : QObject(parent)
     for (int i = 0; i < Grab::GrabbersCount; i++)
         m_grabbers.append(NULL);
 
+#ifdef D3D10_GRAB_SUPPORT
     m_dx1011Grabber = NULL;
+#endif
 
     m_timerGrab = new QTimer(this);
     m_timeEval = new TimeEvaluations();
@@ -93,7 +95,9 @@ GrabManager::~GrabManager()
         delete m_grabbers[i];
 
 //    delete m_grabbersThread;
+    #ifdef D3D10_GRAB_SUPPORT
     delete m_dx1011Grabber;
+   #endif
 }
 
 void GrabManager::start(bool isGrabEnabled)
@@ -123,6 +127,7 @@ void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType)
         m_grabber->stopGrabbing();
     }
 
+    #ifdef D3D10_GRAB_SUPPORT
     if (Settings::isDx1011GrabberEnabled()) {
         if (m_dx1011Grabber == NULL) {
             m_dx1011Grabber = new D3D10Grabber(static_cast<QObject *>(this), &m_colorsNew, &m_ledWidgets);
@@ -130,8 +135,13 @@ void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType)
         }
         m_dx1011Grabber->setFallbackGrabber(queryGrabber(grabberType));
     }
+#endif
 
+    #ifdef D3D10_GRAB_SUPPORT
     m_grabber = Settings::isDx1011GrabberEnabled() ? m_dx1011Grabber : queryGrabber(grabberType);
+    #else
+    m_grabber = queryGrabber(grabberType);
+    #endif
     if (isStartNeeded)
         m_grabber->startGrabbing();
     firstWidgetPositionChanged();
@@ -472,6 +482,8 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
 
 GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "grabberType:" << grabberType;
+
     if (m_grabbers[grabberType] != NULL) {
         return m_grabbers[grabberType];
     } else {
@@ -479,8 +491,8 @@ GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
         switch (grabberType)
         {
     #ifdef Q_WS_X11
-        case Grab::X11Grabber:
-            result = new X11Grabber();
+        case Grab::GrabberTypeX11:
+            result = new X11Grabber(NULL, &m_colorsNew, &m_ledWidgets);
             break;
     #endif
     #ifdef Q_WS_WIN
@@ -488,9 +500,10 @@ GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
 //            result = new D3D10Grabber(NULL, &m_grabResult, &m_ledWidgets);
 //            break;
             result = new WinAPIGrabber(NULL, &m_colorsNew, &m_ledWidgets);
+            break;
 
-    //    case Grab::WinAPIEachWidgetGrabber:
-    //        result = new WinAPIGrabberEachWidget();
+        case Grab::WinAPIEachWidgetGrabber:
+            result = new WinAPIGrabberEachWidget(NULL, &m_colorsNew, &m_ledWidgets);
 
     //    case Grab::D3D9Grabber:
     //        result = new D3D9Grabber();
@@ -501,10 +514,13 @@ GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
             result = new MacOSGrabber();
     #endif
 
-    //    case Grab::QtEachWidgetGrabber:
-    //        result new QtGrabberEachWidget();
+        case Grab::GrabberTypeQtEachWidget:
+            //result = new QtGrabberEachWidget();
+            break;
+        case Grab::GrabberTypeQt:
         default:
-            result = new WinAPIGrabber(NULL, &m_colorsNew, &m_ledWidgets);
+            result = new QtGrabber(NULL, &m_colorsNew, &m_ledWidgets);
+            break;
         }
         m_grabbers[grabberType] = result;
 //        result->moveToThread(m_grabbersThread);

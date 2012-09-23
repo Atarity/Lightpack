@@ -25,8 +25,10 @@
 
 
 #include "TimeredGrabber.hpp"
+#include "debug.h"
 
 TimeredGrabber::TimeredGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry) : GrabberBase(parent, grabResult, grabAreasGeometry) {
+    init();
 }
 
 TimeredGrabber::~TimeredGrabber() {
@@ -35,6 +37,7 @@ TimeredGrabber::~TimeredGrabber() {
 }
 
 void TimeredGrabber::init() {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(grab()));
     m_timer->setSingleShot(false);
@@ -45,6 +48,7 @@ void TimeredGrabber::setGrabInterval(int msec) {
 }
 
 void TimeredGrabber::startGrabbing() {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     m_timer->start();
 }
 

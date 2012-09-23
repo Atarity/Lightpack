@@ -41,7 +41,7 @@
 #   define GRABMODE_DEFAULT         ::Grab::GrabberTypeWinAPI
 #   define GRABMODE_DEFAULT_STR     "WinAPI"
 #elif defined(X11_GRAB_SUPPORT)
-#   define GRABMODE_DEFAULT         ::Grab::X11Grabber
+#   define GRABMODE_DEFAULT         ::Grab::GrabberTypeX11
 #   define GRABMODE_DEFAULT_STR     "X11"
 #elif defined(MAC_OS_CG_GRAB_SUPPORT)
 #   define GRABMODE_DEFAULT         ::Grab::MacCoreGraphicsGrabber

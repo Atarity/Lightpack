@@ -113,7 +113,9 @@ SOURCES += \
     grab/D3D10Grabber/D3D10Grabber.cpp \
     grab/GrabberBase.cpp \
     grab/calculations.cpp \
-    grab/TimeredGrabber.cpp
+    grab/TimeredGrabber.cpp \
+    grab/X11Grabber.cpp \
+    grab/QtGrabber.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -154,7 +156,9 @@ HEADERS += \
     grab/D3D10Grabber/D3D10Grabber.hpp \
     grab/calculations.hpp \
     grab/GrabberBase.hpp \
-    grab/TimeredGrabber.hpp
+    grab/TimeredGrabber.hpp \
+    grab/X11Grabber.hpp \
+    grab/QtGrabber.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \

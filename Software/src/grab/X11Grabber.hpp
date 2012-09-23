@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GrabberBase.hpp"
+#include "TimeredGrabber.hpp"
 #include "enums.hpp"
 
 #ifdef X11_GRAB_SUPPORT
@@ -44,14 +44,17 @@ struct X11GrabberData;
 
 using namespace Grab;
 
-class X11Grabber : public IGrabber
+class X11Grabber : public TimeredGrabber
 {
 public:
-    X11Grabber();
+    X11Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
     ~X11Grabber();
     virtual const char * getName();
-    virtual void updateGrabScreenFromWidget( QWidget * widget );
+    virtual void updateGrabMonitor( QWidget * widget );
     virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
+
+protected:
+    virtual GrabResult _grab();
 
 private:
     void captureScreen();

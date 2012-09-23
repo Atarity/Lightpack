@@ -32,9 +32,9 @@
 #include "GrabWidget.hpp"
 #include "WinAPIGrabber.hpp"
 //#include "WinAPIGrabberEachWidget.hpp"
-//#include "QtGrabber.hpp"
-//#include "QtGrabberEachWidget.hpp"
-//#include "X11Grabber.hpp"
+#include "QtGrabber.hpp"
+#include "QtGrabberEachWidget.hpp"
+#include "X11Grabber.hpp"
 //#include "MacOSGrabber.hpp"
 //#include "D3D9Grabber.hpp"
 #include "D3D10Grabber/D3D10Grabber.hpp"
@@ -95,7 +95,9 @@ private:
 private:
     QList<GrabberBase*> m_grabbers;
     GrabberBase *m_grabber;
+    #ifdef D3D10_GRAB_SUPPORT
     D3D10Grabber *m_dx1011Grabber;
+    #endif
     QTimer *m_timerGrab;
     QTimer *m_timerUpdateFPS;
     QThread *m_grabbersThread;

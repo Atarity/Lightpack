@@ -42,7 +42,8 @@ struct X11GrabberData
     XShmSegmentInfo shminfo;
 };
 
-X11Grabber::X11Grabber()
+X11Grabber::X11Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
+    : TimeredGrabber(parent, grabResult, grabAreasGeometry)
 {
     this->updateScreenAndAllocateMemory = true;
     this->screen = 0;
@@ -61,7 +62,7 @@ const char * X11Grabber::getName()
 {
     return "X11Grabber";
 }
-void X11Grabber::updateGrabScreenFromWidget(QWidget *widget)
+void X11Grabber::updateGrabMonitor(QWidget *widget)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
     updateScreenAndAllocateMemory = true;
@@ -76,6 +77,16 @@ QList<QRgb> X11Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
         result.append(getColor(widgets[i]));
     }
     return result;
+}
+
+GrabResult X11Grabber::_grab()
+{
+    captureScreen();
+    m_grabResult->clear();
+    foreach(GrabWidget * widget, *m_grabWidgets) {
+        m_grabResult->append( widget->isEnabled() ? getColor(widget) : qRgb(0,0,0) );
+    }
+    return GrabResultOk;
 }
 
 void X11Grabber::captureScreen()

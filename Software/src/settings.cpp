@@ -933,7 +933,7 @@ Grab::GrabberType Settings::getGrabberType()
 
 #ifdef X11_GRAB_SUPPORT
     if (strGrabber == Profile::Value::GrabberType::X11)
-        return Grab::X11Grabber;
+        return Grab::GrabberTypeX11;
 #endif
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
@@ -978,7 +978,7 @@ void Settings::setGrabberType(Grab::GrabberType grabberType)
 #endif
 
 #ifdef X11_GRAB_SUPPORT
-    case Grab::X11Grabber:
+    case Grab::GrabberTypeX11:
         strGrabber = Profile::Value::GrabberType::X11;
         break;
 #endif
@@ -997,6 +997,7 @@ void Settings::setGrabberType(Grab::GrabberType grabberType)
     m_this->grabberTypeChanged(grabberType);
 }
 
+#ifdef D3D10_GRAB_SUPPORT
 bool Settings::isDx1011GrabberEnabled() {
     return value(Profile::Key::Grab::IsDx1011GrabberEnabled).toBool();
 }
@@ -1005,6 +1006,7 @@ void Settings::setDx1011GrabberEnabled(bool isEnabled) {
     setValue(Profile::Key::Grab::IsDx1011GrabberEnabled, isEnabled);
     m_this->dx1011GrabberEnabledChanged(isEnabled);
 }
+#endif
 
 Lightpack::Mode Settings::getLightpackMode()
 {

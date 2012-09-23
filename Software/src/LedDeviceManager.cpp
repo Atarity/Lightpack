@@ -257,7 +257,7 @@ ILedDevice * LedDeviceManager::createLedDevice(SupportedDevices::DeviceType devi
 #       if !defined(Q_WS_WIN)
         qWarning() << Q_FUNC_INFO << "AlienFx not supported on current platform";
 
-        Settings::setConnectedDevice(SupportedDevices::DefaultDevice);
+        Settings::setConnectedDevice(SupportedDevices::DefaultDeviceType);
         deviceType = Settings::getConnectedDevice();
 #       endif /* Q_WS_WIN */
     }

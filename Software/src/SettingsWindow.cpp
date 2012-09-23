@@ -618,7 +618,9 @@ void SettingsWindow::setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status, 
 void SettingsWindow::onDx1011CaptureEnabledChanged(bool isEnabled) {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
 
+    #ifdef D3D10_GRAB_SUPPORT
     Settings::setDx1011GrabberEnabled(isEnabled);
+    #endif
 }
 void SettingsWindow::setModeChanged(Lightpack::Mode mode)
 {
@@ -1682,7 +1684,9 @@ void SettingsWindow::updateUiFromSettings()
     ui->lineEdit_ApiKey->setText                        (Settings::getApiAuthKey());
     ui->spinBox_LoggingLevel->setValue                  (g_debugLevel);
 
+    #ifdef D3D10_GRAB_SUPPORT
     ui->checkBox_EnableDx1011Capture->setChecked        (Settings::isDx1011GrabberEnabled());
+    #endif
 
     switch (Settings::getGrabberType())
     {
@@ -1700,7 +1704,7 @@ void SettingsWindow::updateUiFromSettings()
         break;
 #endif
 #ifdef X11_GRAB_SUPPORT
-    case Grab::X11Grabber:
+    case Grab::GrabberTypeX11:
         ui->radioButton_GrabX11->setChecked(true);
         break;
 #endif
@@ -1727,7 +1731,7 @@ Grab::GrabberType SettingsWindow::getSelectedGrabberType()
 {
 #ifdef X11_GRAB_SUPPORT
     if (ui->radioButton_GrabX11->isChecked()) {
-        return Grab::X11Grabber;
+        return Grab::GrabberTypeX11;
     }
 #endif
 #ifdef WINAPI_GRAB_SUPPORT

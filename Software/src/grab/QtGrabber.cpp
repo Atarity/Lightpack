@@ -30,9 +30,12 @@
 #include "debug.h"
 #include <QtGui>
 
-QtGrabber::QtGrabber()
+QtGrabber::QtGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
+    : TimeredGrabber(parent, grabResult, grabAreasGeometry)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     screen = 0;
+    updateGrabMonitor(m_grabWidgets->value(0));
 }
 
 QtGrabber::~QtGrabber()
@@ -44,7 +47,7 @@ const char * QtGrabber::getName()
     return "QtGrabber";
 }
 
-void QtGrabber::updateGrabScreenFromWidget(QWidget *widget)
+void QtGrabber::updateGrabMonitor(QWidget *widget)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
     screen = QApplication::desktop()->screenNumber( widget );
@@ -54,7 +57,7 @@ void QtGrabber::updateGrabScreenFromWidget(QWidget *widget)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenres " << screenres;
 }
 
-GrabResult QtGrabber::grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors)
+GrabResult QtGrabber::_grab()
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
     QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->screen(-1) ->winId(),
@@ -62,10 +65,15 @@ GrabResult QtGrabber::grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb
                                   screenres.y(), //!
                                   screenres.width(),
                                   screenres.height());
-    for(int i = 0; i < widgets.size(); i++) {
-        widgetsColors->append(getColor(pixmap, widgets[i]));
+//    for(int i = 0; i < widgets.size(); i++) {
+//        widgetsColors->append(getColor(pixmap, widgets[i]));
+//    }
+    m_grabResult->clear();
+    foreach(GrabWidget * widget, *m_grabWidgets) {
+        m_grabResult->append( widget->isEnabled() ? getColor(pixmap,widget) : qRgb(0,0,0) );
     }
-#if 0
+
+#if 1
     if (screenres.width() < 1920)
         pixmap.toImage().save("screen.jpg");
 #endif
