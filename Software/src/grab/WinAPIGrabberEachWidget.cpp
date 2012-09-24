@@ -29,7 +29,8 @@
 #include "debug.h"
 #include <cmath>
 
-WinAPIGrabberEachWidget::WinAPIGrabberEachWidget()
+WinAPIGrabberEachWidget::WinAPIGrabberEachWidget(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
+    : TimeredGrabber(parent, grabResult, grabAreasGeometry)
 {
     pbPixelsBuff = NULL;
     isBufferNeedsResize = true;
@@ -45,16 +46,17 @@ const char * WinAPIGrabberEachWidget::getName()
     return "WinAPIGrabberEachWidget";
 }
 
-void WinAPIGrabberEachWidget::updateGrabScreenFromWidget(QWidget *widget)
+void WinAPIGrabberEachWidget::updateGrabMonitor(QWidget *widget)
 {
     hMonitor = MonitorFromWindow( widget->winId(), MONITOR_DEFAULTTONEAREST );
     isBufferNeedsResize = true;
 }
 
-GrabResult WinAPIGrabberEachWidget::grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors)
+GrabResult WinAPIGrabberEachWidget::_grab()
 {
-    for(int i = 0; i < widgets.size(); i++) {
-        widgetsColors->append(getColor(widgets[i]));
+    m_grabResult->clear();
+    foreach(GrabWidget * widget, *m_grabWidgets) {
+        m_grabResult->append( widget->isEnabled() ? getColor(widget) : qRgb(0,0,0) );
     }
     return GrabResultOk;
 }

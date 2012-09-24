@@ -54,13 +54,16 @@ win32 {
 
     SOURCES += hidapi/windows/hid.c
 
+    #DX9 grab
+    LIBS    += -lgdi32 -ld3d9
+
     QMAKE_CFLAGS += -O2
     # Windows version using WinAPI + GDI + DirectX for grab colors
     isEmpty( DIRECTX_SDK_DIR ) {
         error("please make sure you have defined DIRECTX_SDK_DIR in your src.pri file")
     }
     INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
-    LIBS    += -lgdi32 -ld3d9 -lwsock32 -lshlwapi -lole32 -L"$${DIRECTX_SDK_DIR}/Lib/x86" -ldxguid -ld3dx10 -ld3d10 -ld3d10_1 -ldxgi
+    LIBS    += -lwsock32 -lshlwapi -lole32 -L"$${DIRECTX_SDK_DIR}/Lib/x86" -ldxguid -ld3dx10 -ld3d10 -ld3d10_1 -ldxgi
 
     LIBS    += -lpsapi
     
@@ -92,7 +95,7 @@ INCLUDEPATH += ./hidapi ./grab ./alienfx ./
 
 SOURCES += \
     LightpackApplication.cpp  main.cpp   SettingsWindow.cpp  Settings.cpp \
-      GrabManager.cpp  GrabWidget.cpp  GrabConfigWidget.cpp \
+      grabmanager.cpp  GrabWidget.cpp  GrabConfigWidget.cpp \
     SpeedTest.cpp \
     LedDeviceLightpack.cpp \
     LedDeviceAlienFx.cpp \
@@ -116,7 +119,9 @@ SOURCES += \
     grab/TimeredGrabber.cpp \
     grab/X11Grabber.cpp \
     grab/QtGrabber.cpp \
-    grab/QtGrabberEachWidget.cpp
+    grab/QtGrabberEachWidget.cpp \
+    grab/WinAPIGrabberEachWidget.cpp \
+    grab/D3D9Grabber.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -160,7 +165,9 @@ HEADERS += \
     grab/TimeredGrabber.hpp \
     grab/X11Grabber.hpp \
     grab/QtGrabber.hpp \
-    grab/QtGrabberEachWidget.hpp
+    grab/QtGrabberEachWidget.hpp \
+    grab/WinAPIGrabberEachWidget.hpp \
+    grab/D3D9Grabber.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \

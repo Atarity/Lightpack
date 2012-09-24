@@ -502,12 +502,12 @@ GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
             result = new WinAPIGrabber(NULL, &m_colorsNew, &m_ledWidgets);
             break;
 
-        case Grab::WinAPIEachWidgetGrabber:
+        case Grab::GrabberTypeWinAPIEachWidget:
             result = new WinAPIGrabberEachWidget(NULL, &m_colorsNew, &m_ledWidgets);
 
-    //    case Grab::D3D9Grabber:
-    //        result = new D3D9Grabber();
-    //        break;
+        case Grab::GrabberTypeD3D9:
+            result = new D3D9Grabber(NULL, &m_colorsNew, &m_ledWidgets);
+            break;
     #endif
 
     #ifdef MAC_OS

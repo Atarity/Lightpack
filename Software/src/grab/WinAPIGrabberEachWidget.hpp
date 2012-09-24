@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GrabberBase.hpp"
+#include "TimeredGrabber.hpp"
 #include "enums.hpp"
 
 #ifdef WINAPI_GRAB_SUPPORT
@@ -35,14 +35,16 @@
 
 using namespace Grab;
 
-class WinAPIGrabberEachWidget : public GrabberBase
+class WinAPIGrabberEachWidget : public TimeredGrabber
 {
 public:
-    WinAPIGrabberEachWidget();
+    WinAPIGrabberEachWidget(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
     ~WinAPIGrabberEachWidget();
     virtual const char * getName();
-    virtual void updateGrabScreenFromWidget( QWidget * widget );
-    virtual GrabResult grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors);
+    virtual void updateGrabMonitor( QWidget * widget );
+
+protected:
+    virtual GrabResult _grab();
 
 private:
     void captureWidget(const QWidget * w);

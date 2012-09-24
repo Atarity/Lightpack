@@ -33,7 +33,8 @@
 #include "cmath"
 #define BYTES_PER_PIXEL 4
 
-D3D9Grabber::D3D9Grabber() : m_d3D(NULL), m_d3Device(NULL), m_surface(NULL)
+D3D9Grabber::D3D9Grabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
+    : TimeredGrabber(parent, grabResult, grabAreasGeometry), m_d3D(NULL), m_d3Device(NULL), m_surface(NULL)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -127,10 +128,10 @@ int D3D9Grabber::getBufLength(const RECT &rect)
     return (rect.right - rect.left) * (rect.bottom - rect.top) * BYTES_PER_PIXEL;
 }
 
-GrabResult D3D9Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors)
+GrabResult D3D9Grabber::_grab()
 {
     D3DSURFACE_DESC surfaceDesc;
-    m_rect = getEffectiveRect(widgets);
+    m_rect = getEffectiveRect(*m_grabWidgets);
     m_surface->GetDesc(&surfaceDesc);
     clipRect(&m_rect, &surfaceDesc);
     int bufLengthNeeded = getBufLength(m_rect);
@@ -142,10 +143,11 @@ GrabResult D3D9Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QR
         m_bufLength = bufLengthNeeded;
     }
     getImageData(m_buf, m_rect);
-    for(int i = 0; i < widgets.size(); i++)
-    {
-        GrabWidget * widget = widgets[i];
-        widgetsColors->append(getColor(widget->x(), widget->y(), widget->width(), widget->height()));
+    m_grabResult->clear();
+    foreach(GrabWidget * widget, *m_grabWidgets) {
+        m_grabResult->append( widget->isEnabled() ?
+                                  getColor(widget->x(), widget->y(), widget->width(), widget->height()) :
+                                  qRgb(0,0,0) );
     }
     return GrabResultOk;
 }

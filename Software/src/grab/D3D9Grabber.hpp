@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GrabberBase.hpp"
+#include "TimeredGrabber.hpp"
 #include "enums.hpp"
 
 #ifdef D3D9_GRAB_SUPPORT
@@ -34,14 +34,16 @@
 
 using namespace Grab;
 
-class D3D9Grabber : public GrabberBase
+class D3D9Grabber : public TimeredGrabber
 {
 public:
-    D3D9Grabber();
+    D3D9Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
     ~D3D9Grabber();
     virtual const char * getName();
-    virtual void updateGrabScreenFromWidget( QWidget * ){}
-    virtual GrabResult grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors);
+    virtual void updateGrabMonitor( QWidget * ){}
+
+protected:
+    virtual GrabResult _grab();
 
 private:
     LPDIRECT3D9 m_d3D;
