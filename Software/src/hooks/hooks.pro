@@ -34,5 +34,6 @@ SOURCES += \
 
 HEADERS += \
     hooks.h \
-    ../grab/D3D10Grabber/D3D10GrabberDefs.hpp
+    ../grab/D3D10Grabber/D3D10GrabberDefs.hpp \
+    ../defs.h
 

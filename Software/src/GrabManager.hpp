@@ -56,7 +56,6 @@ signals:
 
 public:
 
-
     // Grab options
 
     // Common options

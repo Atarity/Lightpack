@@ -43,6 +43,7 @@ void TimeredGrabber::init() {
 }
 
 void TimeredGrabber::setGrabInterval(int msec) {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     m_timer->setInterval(msec);
 }
 
@@ -52,9 +53,11 @@ void TimeredGrabber::startGrabbing() {
 }
 
 void TimeredGrabber::stopGrabbing() {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     m_timer->stop();
 }
 
 bool TimeredGrabber::isGrabbingStarted() const {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     return m_timer->isActive();
 }

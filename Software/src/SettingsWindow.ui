@@ -60,7 +60,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -736,7 +736,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
               </size>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>3</number>
              </property>
              <property name="documentMode">
               <bool>true</bool>
@@ -2510,20 +2510,20 @@ p, li { white-space: pre-wrap; }
        <bool>true</bool>
       </property>
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>115</width>
+        <height>580</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>110</width>
+        <width>115</width>
         <height>16777208</height>
        </size>
       </property>
