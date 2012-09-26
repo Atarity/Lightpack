@@ -94,9 +94,11 @@ private:
 private:
     QList<GrabberBase*> m_grabbers;
     GrabberBase *m_grabber;
+
     #ifdef D3D10_GRAB_SUPPORT
     D3D10Grabber *m_dx1011Grabber;
     #endif
+
     QTimer *m_timerGrab;
     QTimer *m_timerUpdateFPS;
     QThread *m_grabbersThread;

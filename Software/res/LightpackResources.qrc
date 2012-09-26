@@ -28,6 +28,8 @@
         <file>icons/profiles2.png</file>
         <file>icons/plugins.png</file>
         <file>icons/nerd2.png</file>
+        <file>icons/refresh.png</file>
+        <file>icons/donate.png</file>
     </qresource>
     <qresource prefix="/plugin">
         <file alias="BasePlugin.py">python/BasePlugin.py</file>

@@ -60,7 +60,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -1835,7 +1835,11 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
           <item>
            <widget class="QPushButton" name="pushButton">
             <property name="text">
-             <string>Reload plugins</string>
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/LightpackResources.qrc">
+              <normaloff>:/icons/refresh.png</normaloff>:/icons/refresh.png</iconset>
             </property>
            </widget>
           </item>
@@ -2003,27 +2007,14 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QCheckBox" name="checkBox_IsApiAuthEnabled">
-             <property name="text">
-              <string>Enable authorization</string>
-             </property>
-             <property name="checkable">
-              <bool>true</bool>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="2">
+           <item row="4" column="2">
             <widget class="QPushButton" name="pushButton_GenerateNewApiKey">
              <property name="text">
               <string>Generate</string>
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
+           <item row="4" column="0">
             <widget class="QLineEdit" name="lineEdit_ApiKey">
              <property name="minimumSize">
               <size>
@@ -2041,7 +2032,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
               <string>Copy and paste this key into the application using the API, for authorization on the server</string>
              </property>
              <property name="styleSheet">
-              <string notr="true">margin-left:2em</string>
+              <string notr="true"/>
              </property>
              <property name="maxLength">
               <number>40</number>
@@ -2051,13 +2042,13 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
+           <item row="3" column="0">
             <widget class="QLabel" name="label_ApiKey">
              <property name="styleSheet">
-              <string notr="true">margin-left:2em; margin-top:0</string>
+              <string notr="true">margin-top:0</string>
              </property>
              <property name="text">
-              <string>Key:</string>
+              <string>Key (authorization disabled if empty):</string>
              </property>
              <property name="buddy">
               <cstring>lineEdit_ApiKey</cstring>
@@ -2257,7 +2248,7 @@ QCheckBox {margin-top:.5em; margin-bottom:.5em}</string>
            </sizepolicy>
           </property>
           <layout class="QGridLayout" name="gridLayout_11">
-           <item row="5" column="0">
+           <item row="6" column="0">
             <widget class="Line" name="line">
              <property name="minimumSize">
               <size>
@@ -2420,7 +2411,7 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
+           <item row="7" column="0">
             <widget class="QLabel" name="label_4">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -2441,6 +2432,19 @@ p, li { white-space: pre-wrap; }
               <set>Qt::AlignJustify|Qt::AlignVCenter</set>
              </property>
              <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_13">
+             <property name="text">
+              <string notr="true">&lt;a href=&quot;https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=W6VQABKTGW6F4&amp;lc=RU&amp;item_name=Pixelkit%20LLC&amp;currency_code=USD&amp;bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted&quot;&gt;&lt;img src=&quot;:/icons/donate.png&quot;&gt;&lt;/a&gt;</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::RichText</enum>
+             </property>
+             <property name="openExternalLinks">
               <bool>true</bool>
              </property>
             </widget>
@@ -2780,54 +2784,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>423</x>
      <y>412</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox_IsApiAuthEnabled</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>label_ApiKey</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>566</x>
-     <y>173</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>171</x>
-     <y>202</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox_IsApiAuthEnabled</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>lineEdit_ApiKey</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>566</x>
-     <y>173</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>497</x>
-     <y>200</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox_IsApiAuthEnabled</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>pushButton_GenerateNewApiKey</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>566</x>
-     <y>173</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>578</x>
-     <y>202</y>
     </hint>
    </hints>
   </connection>

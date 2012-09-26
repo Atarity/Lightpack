@@ -265,7 +265,7 @@ void SettingsWindow::connectSignalsSlots()
     // Dev tab configure API (port, apikey)
     connect(ui->groupBox_Api, SIGNAL(toggled(bool)), this, SLOT(onEnableApi_Toggled(bool)));
     connect(ui->lineEdit_ApiPort, SIGNAL(editingFinished()), this, SLOT(onSetApiPort_Clicked()));
-    connect(ui->checkBox_IsApiAuthEnabled, SIGNAL(toggled(bool)), this, SLOT(onIsApiAuthEnabled_Toggled(bool)));
+    //connect(ui->checkBox_IsApiAuthEnabled, SIGNAL(toggled(bool)), this, SLOT(onIsApiAuthEnabled_Toggled(bool)));
     connect(ui->pushButton_GenerateNewApiKey, SIGNAL(clicked()), this, SLOT(onGenerateNewApiKey_Clicked()));
     connect(ui->lineEdit_ApiKey, SIGNAL(editingFinished()), this, SLOT(onApiKey_EditingFinished()));
 
@@ -573,13 +573,6 @@ void SettingsWindow::onGenerateNewApiKey_Clicked()
     ui->lineEdit_ApiKey->setText(generatedApiKey);
 
     Settings::setApiKey(generatedApiKey);
-}
-
-void SettingsWindow::onIsApiAuthEnabled_Toggled(bool isEnabled)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
-
-    Settings::setIsApiAuthEnabled(isEnabled);
 }
 
 void SettingsWindow::onLoggingLevel_valueChanged(int value)
@@ -1684,7 +1677,6 @@ void SettingsWindow::updateUiFromSettings()
 
     ui->groupBox_Api->setChecked                        (Settings::isApiEnabled());
     ui->lineEdit_ApiPort->setText                       (QString::number(Settings::getApiPort()));
-    ui->checkBox_IsApiAuthEnabled->setChecked           (Settings::isApiAuthEnabled());
     ui->lineEdit_ApiKey->setText                        (Settings::getApiAuthKey());
     ui->spinBox_LoggingLevel->setValue                  (g_debugLevel);
 

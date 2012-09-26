@@ -173,7 +173,6 @@ private slots:
     void onApiKey_EditingFinished();
     void onGenerateNewApiKey_Clicked();
     void onSetApiPort_Clicked();
-    void onIsApiAuthEnabled_Toggled(bool isEnabled);
     void onLoggingLevel_valueChanged(int value);
 
     void setOnOffHotKey(QKeySequence);
