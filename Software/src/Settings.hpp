@@ -199,7 +199,6 @@ signals:
     void debugLevelChanged(int);
     void updateFirmwareMessageShownChanged(bool isShown);
     void connectedDeviceChanged(const SupportedDevices::DeviceType device);
-    void connectedDeviceNameChanged(const QString & deviceName);
     void onOffDeviceKeyChanged(const QKeySequence & keySequence);
     void adalightSerialPortNameChanged(const QString & port);
     void adalightSerialPortBaudRateChanged(const QString & baud);

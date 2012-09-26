@@ -528,14 +528,7 @@ void Settings::setApiKey(const QString & apiKey)
 
 bool Settings::isApiAuthEnabled()
 {
-    return valueMain(Main::Key::Api::IsAuthEnabled).toBool();
-}
-
-void Settings::setIsApiAuthEnabled(bool isEnabled)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    setValueMain(Main::Key::Api::IsAuthEnabled, isEnabled);
-    m_this->apiAuthEnabledChanged(isEnabled);
+    return getApiAuthKey().isEmpty();
 }
 
 bool Settings::isExpertModeEnabled()
@@ -629,7 +622,7 @@ void Settings::setConnectedDeviceName(const QString & deviceName)
     }
 
     setValueMain(Main::Key::ConnectedDevice, deviceName);
-    m_this->connectedDeviceNameChanged(deviceName);
+    m_this->connectedDeviceChanged(m_devicesTypeToNameMap.key(deviceName));
 }
 
 QStringList Settings::getSupportedDevices()
