@@ -185,6 +185,7 @@ private slots:
     void on_pushButton_clicked();
     void MoveUpPlugin();
     void MoveDownPlugin();
+    void on_pushButton_3_clicked();
 
 private:
     void updateTrayAndActionStates();    
@@ -273,3 +274,5 @@ private:
     QList<PyPlugin*> _plugins;
     static bool toPriority(PyPlugin* s1 , PyPlugin* s2 );
 };
+
+

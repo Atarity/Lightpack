@@ -72,7 +72,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     setWindowFlags(Qt::Window |
                    Qt::WindowStaysOnTopHint |
                    Qt::CustomizeWindowHint |
-                   Qt::WindowCloseButtonHint);
+                   Qt::WindowCloseButtonHint | Qt::WindowContextHelpButtonHint);
     setFocus(Qt::OtherFocusReason);
 
     // Check windows reserved simbols in profile input name
@@ -84,14 +84,14 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     m_speedTest = new SpeedTest();
 
-    ui->listWidget->setViewMode(QListView::IconMode);
-    ui->listWidget->setIconSize(QSize(64, 64));
-    ui->listWidget->setMovement(QListView::Static);
-    ui->listWidget->setMaximumWidth(110);
-    ui->listWidget->setMinimumWidth(110);
-    ui->listWidget->setSpacing(12);
-    ui->listWidget->setCurrentRow(0);
-    ui->listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//    ui->listWidget->setViewMode(QListView::IconMode);
+//    ui->listWidget->setIconSize(QSize(64, 64));
+//    ui->listWidget->setMovement(QListView::Static);
+//    ui->listWidget->setMaximumWidth(110);
+//    ui->listWidget->setMinimumWidth(110);
+//    ui->listWidget->setSpacing(12);
+//    ui->listWidget->setCurrentRow(0);
+//    ui->listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 // hide main tabbar
     QTabBar* tabBar=qFindChild<QTabBar*>(ui->tabWidget);
     tabBar->hide();
@@ -104,14 +104,17 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
             SIGNAL(currentRowChanged(int)),
             this, SLOT(changePage(int)));
 
-        labelProfile = new QLabel(statusBar());
-        labelDevice = new QLabel();
-        labelFPS  = new QLabel();
+    labelProfile = new QLabel(statusBar());
+    labelProfile->setStyleSheet("margin-bottom: 5px");
+    labelDevice = new QLabel(statusBar());
+    labelDevice->setStyleSheet("margin-bottom: 5px");
+    labelFPS  = new QLabel(statusBar());
+    labelFPS->setStyleSheet("margin-bottom: 5px");
 
-        statusBar()->setSizeGripEnabled(false);
-        statusBar()->addWidget(labelProfile, 1);
-        statusBar()->addWidget(labelDevice, 1);
-        statusBar()->addWidget(labelFPS, 1);
+    statusBar()->setSizeGripEnabled(false);
+    statusBar()->addWidget(labelProfile, 1);
+    statusBar()->addWidget(labelDevice, 1);
+    statusBar()->addWidget(labelFPS, 1);
 
     // Request firmware version of the device to show message about update the firmware
     QTimer::singleShot(1000, this, SIGNAL(requestFirmwareVersion()));
@@ -228,12 +231,12 @@ void SettingsWindow::connectSignalsSlots()
     // Connect profile signals to this slots    
     connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(editingFinished()) /* or returnPressed() */, this, SLOT(profileRename()));
     connect(ui->comboBox_Profiles, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileSwitch(QString)));
-    connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)), this, SLOT(profileSwitch(QString)));
+//    connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)), this, SLOT(profileSwitch(QString)));
     connect(ui->pushButton_ProfileNew, SIGNAL(clicked()), this, SLOT(profileNew()));
     connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
 
-    connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)), this, SLOT(settingsProfileChanged_UpdateUI(const QString &)));
+//    connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)), this, SLOT(settingsProfileChanged_UpdateUI(const QString &)));
     connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColor_changed(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabled_Toggled(bool)));
     connect(ui->checkBox_SwitchOffAtClosing, SIGNAL(toggled(bool)), this, SLOT(onSwitchOffAtClosing_Toggled(bool)));    
@@ -2140,4 +2143,7 @@ void SettingsWindow::versionsUpdate()
     setFixedSize( sizeHint() );
 }
 
-
+void SettingsWindow::on_pushButton_3_clicked()
+{
+    QCoreApplication::postEvent(ui->horizontalSlider_DeviceSmooth, new QHelpEvent(QEvent::WhatsThis, QPoint(0,0), QCursor::pos()));
+}
