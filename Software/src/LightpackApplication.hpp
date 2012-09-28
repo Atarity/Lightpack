@@ -61,6 +61,7 @@ public:
 signals:
     void clearColorBuffers();
     void postInitialization(); /*!< emits at the end of initializeAll method*/
+
 public slots:
     void setStatusChanged(Backlight::Status);
     void setBacklightChanged(Lightpack::Mode);
@@ -75,6 +76,7 @@ private slots:
     void setColoredLedWidget(bool colored);
     void getConsole();
     void consoleClosing();
+    void handleConnectedDeviceChange(SupportedDevices::DeviceType);
 
 private:
     void processCommandLineArguments();
