@@ -20,10 +20,10 @@ Build process:
 6. Run <b>pythonqt_generator.exe</b> from command-line;
 7. In Qt Creator run qmake for whole <b>PythonQt</b> project to include generated code to solution (right-click to the PythonQt node &rarr; qmake);
 8. Build "src" sub-project (right-click to the src node &rarr; build);
-9. Copy all <b>.a</b> files from <code>\<pyhonqt_builddir>/lib/</code> to <code>\<repo>/software/pythonqt/lib</code>;
+9. Copy all <b>.a</b> files from <code>\<pythonqt_builddir>/lib/</code> to <code>\<repo>/software/pythonqt/lib</code>;
 10. Build whole <b>PythonQt</b>;
-11. Repeat step 8;
-12. (Windows only) Create <code>\<repo>/software/src/src.pri</code> based on <code>\<repo>/software/src/src.pri.original</code> and set Microsoft DirectX SDK path in it. Double chek you escape path slashes to <code>/</code>;
+11. Repeat step 9;
+12. (Windows only) Create <code>\<repo>/software/src/src.pri</code> based on <code>\<repo>/software/src/src.pri.original</code> and set Microsoft DirectX SDK path in it. Make sure you use slashes <code>/</code>, not backslashes <code>\\</code> when defining paths;
 13. Build <b>Lightpack</b> project;
 14. Copy the following Qt libraries, from for example (depends on Qt version), <code>QtSDK/Desktop/Qt/4.7.4/mingw/bin</code> to <code>\<lightpack_builddir>/src/bin/</code>:
  * QtCore4.dll
