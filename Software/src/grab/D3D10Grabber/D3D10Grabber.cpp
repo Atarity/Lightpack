@@ -31,7 +31,6 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <tlhelp32.h>
-#include "syslog/syslog.h"
 #define WINAPI_INLINE WINAPI
 #define DXGI_PRESENT_FUNC_ORD 8
 #define D3D9_PRESENT_FUNC_ORD 17
