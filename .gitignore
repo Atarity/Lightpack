@@ -9,11 +9,6 @@ Firmware/.cproject
 Software/[^.]*Makefile
 Software/res/qrc_[^.]+.cpp
 Software/[^.]+.pro.user
-Lightpack-Software-linux-x86_64-build/
-Lightpack-Software-linux-x86-build/
-Lightpack-Software-win32-build/
-Lightpack-build-desktop[^\/]*/
-Lightpack[^-]+-build-desktop[^\/]*/
 .metadata/
 Software/apiexamples/.+\.pyc
 Software/deb/DEBIAN/md5sums
@@ -22,17 +17,21 @@ Software/[^/\\]+\.deb
 syntax: regexp
 Software/installer/Output/
 syntax: glob
+*-build-desktop*/
+*-Software-*/
+*-build-*/
 Software/installer/*.dll
 Software/installer/*.exe
 Software/PythonQT/lib/
-*.log
+Software/src/src.pri
 generated_cpp/
 Software/bin
 Software/**/bin
 Software/docs
 Firmware/LUFA/Documentation
 Doxyfile
-**/stuff
-**.o
-**.log
+stuff/
+*.o
 *.user
+*.log
+*.tmp
