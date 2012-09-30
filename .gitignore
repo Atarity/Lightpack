@@ -14,8 +14,10 @@ Software/apiexamples/.+\.pyc
 Software/deb/DEBIAN/md5sums
 Software/deb/usr/bin/lightpack
 Software/[^/\\]+\.deb
+
 syntax: regexp
 Software/installer/Output/
+
 syntax: glob
 *-build-desktop*/
 *-Software-*/
@@ -23,6 +25,8 @@ syntax: glob
 Software/installer/*.dll
 Software/installer/*.exe
 Software/PythonQT/lib/
+Software/PythonQT/generator/*.dll
+Software/PythonQT/generator/*.exe
 Software/src/src.pri
 generated_cpp/
 Software/bin
