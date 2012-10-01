@@ -1,0 +1,47 @@
+#------------------------------------------------------------------------------
+# General
+#------------------------------------------------------------------------------
+    win32: {
+        QTDIR = c:/QtSDK/Desktop/Qt/4.8.1/mingw
+        MINGW_RUNTIME_DIR = c:/QtSDK/mingw/bin
+        DIRECTX_SDK_DIR = "C:/Program Files/Microsoft DirectX SDK (June 2010)"
+    }
+
+#------------------------------------------------------------------------------
+# PythonQt
+#------------------------------------------------------------------------------
+
+    # Change this variable to your python version (2.5, 2.6)
+    win32:PYTHON_VERSION=27
+    unix:PYTHON_VERSION=2.7
+
+    win32: {
+        PYTHON_PATH = c:/Python27
+        PYTHON_LIB  = c:/Python27/libs
+    }
+
+#------------------------------------------------------------------------------
+# Warnings
+#------------------------------------------------------------------------------
+    win32: {
+        isEmpty( QTDIR ) {
+            error("QTDIR is empty, please make sure you have correctly defined QTDIR in your build-config.prf")
+        }
+        isEmpty( MINGW_RUNTIME_DIR ) {
+            error("MINGW_RUNTIME_DIR is empty, please make sure you have correctly defined MINGW_RUNTIME_DIR in your build-config.prf file")
+        }
+        isEmpty( DIRECTX_SDK_DIR ) {
+            error("please make sure you have defined DIRECTX_SDK_DIR in your build-config.prf file")
+        }
+        isEmpty( PYTHON_PATH ) {
+            error("PYTHON_PATH is empty, please make sure you have defined PYTHON_PATH in your build-config.prf file")
+        }
+        isEmpty( PYTHON_LIB ) {
+            error("PYTHON_LIB is empty, please make sure you have defined PYTHON_LIB in your build-config.prf file")
+        }
+        CONFIG(debug, debug|release) {
+            DEBUG_EXT = d
+        } else {
+            DEBUG_EXT =
+        }
+    }

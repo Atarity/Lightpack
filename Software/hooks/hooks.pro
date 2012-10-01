@@ -9,18 +9,11 @@ QT       -= core gui
 TARGET = lightpack-hooks
 TEMPLATE = lib
 
-include(../src.pri)
+include(../build-config.prf)
 
-isEmpty( DIRECTX_SDK_DIR ) {
-    error("please make sure you have defined DIRECTX_SDK_DIR in your src.pri file")
-}
 INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
 
-CONFIG(debug, debug | release) {
-    QMAKE_POST_LINK = cp -f debug/lightpack-hooks.dll ../bin
-} else {
-    QMAKE_POST_LINK = cp -f release/lightpack-hooks.dll ../bin
-}
+QMAKE_POST_LINK = cp -f \"$(dir $(DESTDIR))lightpack-hooks.dll\" ../src/bin
 
 LIBS += -lwsock32 -lshlwapi -ladvapi32 -L"$${DIRECTX_SDK_DIR}/Lib/x86" -ldxguid -ld3dx10 -ld3d10 -ldxgi
 QMAKE_LFLAGS +=-Wl,--kill-at,--static
@@ -34,6 +27,6 @@ SOURCES += \
 
 HEADERS += \
     hooks.h \
-    ../grab/D3D10Grabber/D3D10GrabberDefs.hpp \
-    ../defs.h
+    ../common/D3D10GrabberDefs.hpp \
+    ../common/defs.h
 

@@ -39,7 +39,7 @@ TRANSLATIONS = ../res/translations/ru_RU.ts
 RESOURCES    = ../res/LightpackResources.qrc
 RC_FILE      = ../res/Lightpack.rc
 
-include(src.pri)
+include(../build-config.prf)
 
 unix{
     CONFIG    += link_pkgconfig
@@ -59,14 +59,21 @@ win32 {
 
     QMAKE_CFLAGS += -O2
     # Windows version using WinAPI + GDI + DirectX for grab colors
-    isEmpty( DIRECTX_SDK_DIR ) {
-        error("please make sure you have defined DIRECTX_SDK_DIR in your src.pri file")
-    }
+
     INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
     LIBS    += -lwsock32 -lshlwapi -lole32 -L"$${DIRECTX_SDK_DIR}/Lib/x86" -ldxguid -ld3dx10 -ld3d10 -ld3d10_1 -ldxgi
 
     LIBS    += -lpsapi
-    
+
+    QMAKE_POST_LINK = cd $(DESTDIR) && \
+                cp -f \"$${QTDIR}/bin/QtCore$${DEBUG_EXT}4.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/QtXml$${DEBUG_EXT}4.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/QtGui$${DEBUG_EXT}4.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/QtNetwork$${DEBUG_EXT}4.dll\" ./ && \
+                cp -f \"$${MINGW_RUNTIME_DIR}/mingwm10.dll\" ./ && \
+                cp -f \"$${MINGW_RUNTIME_DIR}/libgcc_s_dw2-1.dll\" ./ && \
+                cp -f \"$$PWD/../PythonQt/lib/PythonQt$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$$PWD/../PythonQt/lib/PythonQt_QtAll$${DEBUG_EXT}.dll\" ./
 }
 
 unix:!macx{
@@ -145,7 +152,7 @@ HEADERS += \
     LedDeviceVirtual.hpp \
     ColorButton.hpp \
     grab/WinAPIGrabber.hpp \
-    defs.h \
+    ../common/defs.h \
     enums.hpp     LightpackPluginInterface.hpp     ApiServer.hpp     ApiServerSetColorTask.hpp \
     hidapi/hidapi.h \
     ../../CommonHeaders/LIGHTPACK_HW.h \
@@ -158,7 +165,7 @@ HEADERS += \
     MoodLampManager.hpp \
     LedDeviceManager.hpp \
     SelectWidget.hpp \
-    grab/D3D10Grabber/D3D10GrabberDefs.hpp \
+    ../common/D3D10GrabberDefs.hpp \
     grab/D3D10Grabber/D3D10Grabber.hpp \
     grab/calculations.hpp \
     grab/GrabberBase.hpp \
@@ -194,7 +201,7 @@ include(hotkeys/qkeysequencewidget/qkeysequencewidget.pri)
 #
 # PythonQt
 #
-include (../PythonQt/build/common.prf )
+#include (../PythonQt/build/common.prf )
 include (../PythonQt/build/PythonQt.prf )
 include (../PythonQt/build/PythonQt_QtAll.prf )
 

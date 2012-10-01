@@ -11,11 +11,8 @@ TEMPLATE = lib
 LIBS += -luuid -lwsock32 -lole32 -ladvapi32
 QMAKE_LFLAGS +=-Wl,--kill-at
 
-CONFIG(debug, debug | release) {
-    QMAKE_POST_LINK = cp -f debug/libraryinjector.dll ../bin
-} else {
-    QMAKE_POST_LINK = cp -f release/libraryinjector.dll ../bin
-}
+QMAKE_POST_LINK = cp -f \"$(dir $(DESTDIR))libraryinjector.dll\" ../src/bin
+
 DEFINES += LIBRARYINJECTOR_LIBRARY
 
 

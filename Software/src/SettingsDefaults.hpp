@@ -28,7 +28,7 @@
 #include <QSize>
 #include <QString>
 #include "debug.h"
-#include "defs.h"
+#include "../../common/defs.h"
 #include "enums.hpp"
 
 #ifdef ALIEN_FX_SUPPORTED

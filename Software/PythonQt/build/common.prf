@@ -14,5 +14,5 @@ CONFIG += debug_and_release build_all
 
 # for all debug builds, add "_d" extension to target
 CONFIG(debug, debug|release) {
-  TARGET = $${TARGET}_d 
+  TARGET = $${TARGET}d
 }

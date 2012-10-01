@@ -24,7 +24,7 @@
  */
 
 #include "D3D10Grabber.hpp"
-#include "D3D10GrabberDefs.hpp"
+#include "../../common/D3D10GrabberDefs.hpp"
 
 #ifdef D3D10_GRAB_SUPPORT
 

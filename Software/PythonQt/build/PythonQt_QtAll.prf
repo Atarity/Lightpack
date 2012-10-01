@@ -2,12 +2,5 @@
 
 INCLUDEPATH += $$PWD/../extensions/PythonQt_QtAll
 
-# check if debug or release
-CONFIG(debug, debug|release) {
-  DEBUG_EXT = _d 
-} else {
-  DEBUG_EXT = 
-}
-
 win32::LIBS += $$PWD/../lib/libPythonQt_QtAll$${DEBUG_EXT}.a
 unix::LIBS += -L$$PWD/../lib -lPythonQt_QtAll$${DEBUG_EXT}

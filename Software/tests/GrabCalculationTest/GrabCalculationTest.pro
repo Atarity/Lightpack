@@ -20,4 +20,5 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     ../../src/grab/calculations.hpp \
+    ../../common/defs.h \
     ../../src/enums.hpp

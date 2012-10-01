@@ -30,9 +30,9 @@
 #define WINVER 0x0500
 
 #include<windows.h>
-#include"D3D10GrabberDefs.hpp"
+#include"../../common/D3D10GrabberDefs.hpp"
 #include<QList>
-#include<libraryinjector/ILibraryInjector.h>
+#include<../libraryinjector/ILibraryInjector.h>
 
 class D3D10GrabberWorker: public QObject {
     Q_OBJECT

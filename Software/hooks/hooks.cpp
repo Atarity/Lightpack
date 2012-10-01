@@ -26,12 +26,12 @@
 #define WINAPI_INLINE WINAPI
 #define UINT8 unsigned char
 #include<initguid.h>
-#include"D3D11.h"
-#include"D3DX11tex.h"
-#include"D3D10.h"
-#include"D3DX10tex.h"
-#include"DXGI.h"
-#include"../grab/D3D10Grabber/D3D10GrabberDefs.hpp"
+#include "D3D11.h"
+#include "D3DX11tex.h"
+#include "D3D10.h"
+#include "D3DX10tex.h"
+#include "DXGI.h"
+#include "../common/D3D10GrabberDefs.hpp"
 
 //#define SHARED __attribute__((section ("shared"), shared))
 

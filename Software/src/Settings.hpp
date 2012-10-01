@@ -33,7 +33,7 @@
 
 #include "SettingsDefaults.hpp"
 #include "enums.hpp"
-#include "defs.h"
+#include "../common/defs.h"
 #include "debug.h"
 
 namespace SettingsScope

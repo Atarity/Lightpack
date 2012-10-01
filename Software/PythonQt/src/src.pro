@@ -14,6 +14,10 @@ CONFIG += qt dll
 CONFIG -= flat
 
 include ( ../build/common.prf )  
-include ( ../build/python.prf )  
+include ( ../build/python.prf )
 
 include ( src.pri )  
+
+win32: {
+    QMAKE_POST_LINK = cd $(DESTDIR) && cp -f ./* \"$$PWD/../lib\"
+}
