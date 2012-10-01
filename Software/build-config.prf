@@ -2,9 +2,9 @@
 # General
 #------------------------------------------------------------------------------
     win32: {
-        QTDIR = c:/QtSDK/Desktop/Qt/4.8.1/mingw
-        MINGW_RUNTIME_DIR = c:/QtSDK/mingw/bin
-        DIRECTX_SDK_DIR = "C:/Program Files/Microsoft DirectX SDK (June 2010)"
+        #QTDIR = c:/QtSDK/Desktop/Qt/4.8.1/mingw
+        #MINGW_RUNTIME_DIR = c:/QtSDK/mingw/bin
+        #DIRECTX_SDK_DIR = "C:/Program Files/Microsoft DirectX SDK (June 2010)"
     }
 
 #------------------------------------------------------------------------------
@@ -16,8 +16,8 @@
     unix:PYTHON_VERSION=2.7
 
     win32: {
-        PYTHON_PATH = c:/Python27
-        PYTHON_LIB  = c:/Python27/libs
+        #PYTHON_PATH = c:/Python27
+        #PYTHON_LIB  = c:/Python27/libs
     }
 
 #------------------------------------------------------------------------------
