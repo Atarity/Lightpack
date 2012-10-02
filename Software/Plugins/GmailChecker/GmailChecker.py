@@ -12,7 +12,10 @@ class GmailChecker(BasePlugin.BasePlugin):
         self.timer.setInterval(100)
         self.timer.timeout.connect(self.Timeout)
         self.timerCheck = PythonQt.QtCore.QTimer(None)
-        self.timerCheck.setInterval(60000)
+        time = int(Lightpack.GetSettingMain('GmailChecker/TimeCheck'))
+        if (time == None):
+            time = 1
+        self.timerCheck.setInterval(time * 60000)
         self.timerCheck.connect('timeout()', self.gmail_checker)
         
         self.ledMap = [6,1,2,7,3,4,8,9,10,5]
@@ -36,11 +39,11 @@ class GmailChecker(BasePlugin.BasePlugin):
 
     def author(self):
         """ return the author of the plugin """
-        return "Eraser"
+        return "Eraser <eraser1981@gmail.com>"
 
     def version(self):
         """ return the version of the plugin """
-        return "0.2"
+        return "0.3"
 
     def Timeout(self):
         self.i = self.i+1
@@ -63,7 +66,7 @@ class GmailChecker(BasePlugin.BasePlugin):
     def run(self):
         self.timerCheck.start()
         print "run"
-      
+        
     def stop(self):
         self.timerCheck.stop()
         self.timer.stop()
@@ -80,6 +83,9 @@ class GmailChecker(BasePlugin.BasePlugin):
 
     def changePass(self,password):
         Lightpack.SetSettingMain('GmailChecker/Password',password)
+    
+    def changeTimeCheck(self,time):
+        Lightpack.SetSettingMain('GmailChecker/TimeCheck',time)
         
     def settings(self):
         """ default function """
@@ -96,19 +102,32 @@ class GmailChecker(BasePlugin.BasePlugin):
         box.addWidget(label2)
         editPass = QLineEdit(SettingsBox)
         editPass.setEchoMode(PythonQt.QtGui.QLineEdit.Password)
-#        editPass.setText()Lightpack.GetObfuscatedSettingMain('GmailChecker/Password'))
+        editPass.setText(Lightpack.GetSettingMain('GmailChecker/Password'))
         box.addWidget(editPass)
+        
+        labeltime = QLabel(SettingsBox)
+        labeltime.setText("Check interval (min)")
+        box.addWidget(labeltime)
+        edittime = QLineEdit(SettingsBox)
+        time = Lightpack.GetSettingMain('GmailChecker/TimeCheck')
+        if (time == None):
+            time = 1
+        edittime.setText(time)
+        box.addWidget(edittime)
+        
+        
         box.addSpacing(150)
 
         editAcc.connect('textChanged(QString)', self.changeAcc)
         editPass.connect('textChanged(QString)', self.changePass)
+        edittime.connect('textChanged(QString)', self.changeTimeCheck)
         return 0; 
 
     def gmail_checker(self):
             print "check"
             import imaplib,re
             username = Lightpack.GetSettingMain('GmailChecker/Username')
-            password = Lightpack.GetObfuscatedSettingMain('GmailChecker/Password')
+            password = Lightpack.GetSettingMain('GmailChecker/Password')
             i=imaplib.IMAP4_SSL('imap.gmail.com')
             try:
                     i.login(username,password)
