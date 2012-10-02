@@ -148,7 +148,6 @@ signals:
 
 public slots:
     void enableApiServer(bool isEnabled);
-    void enableApiAuth(bool isEnabled);
     void updateApiPort(int port);
     void updateApiKey(const QString &key);
 

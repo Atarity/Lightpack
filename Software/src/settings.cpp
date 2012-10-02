@@ -507,15 +507,6 @@ QString Settings::getApiAuthKey()
 {
     QString apikey = valueMain(Main::Key::Api::AuthKey).toString();
 
-    if (apikey == "")
-    {
-        qWarning() << Q_FUNC_INFO << "ApiKey is empty, generate new one.";
-
-        apikey = QUuid::createUuid().toString();
-
-        setApiKey(apikey);
-    }
-
     return apikey;
 }
 

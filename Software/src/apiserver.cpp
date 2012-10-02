@@ -181,13 +181,6 @@ void ApiServer::enableApiServer(bool isEnabled)
         stopListening();
 }
 
-void ApiServer::enableApiAuth(bool isEnabled)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
-
-    m_isAuthEnabled = isEnabled;
-}
-
 void ApiServer::updateApiPort(int port)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << port;
@@ -203,6 +196,11 @@ void ApiServer::updateApiKey(const QString &key)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << key;
 
     m_apiAuthKey = key;
+
+    if (key == "")
+        m_isAuthEnabled = false;
+    else
+        m_isAuthEnabled = true;
 }
 
 void ApiServer::incomingConnection(int socketDescriptor)
