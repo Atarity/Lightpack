@@ -14,7 +14,6 @@ Software/apiexamples/.+\.pyc
 Software/deb/DEBIAN/md5sums
 Software/deb/usr/bin/lightpack
 Software/[^/\\]+\.deb
-Software/PythonQT/lib/[^.]+[\.]*
 
 syntax: regexp
 Software/installer/Output/
@@ -33,6 +32,8 @@ Software/bin
 Software/**/bin
 Software/docs
 Firmware/LUFA/Documentation
+Software/PythonQT/lib/*
+!Software/PythonQT/lib/.keep_me
 Doxyfile
 stuff/
 *.o

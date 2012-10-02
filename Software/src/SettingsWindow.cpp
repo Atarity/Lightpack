@@ -70,9 +70,9 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     createActions();
 
     setWindowFlags(Qt::Window |
-                   Qt::WindowStaysOnTopHint |
+//                   Qt::WindowStaysOnTopHint |
                    Qt::CustomizeWindowHint |
-                   Qt::WindowCloseButtonHint | Qt::WindowContextHelpButtonHint);
+                   Qt::WindowCloseButtonHint );
     setFocus(Qt::OtherFocusReason);
 
     // Check windows reserved simbols in profile input name
@@ -231,12 +231,11 @@ void SettingsWindow::connectSignalsSlots()
     // Connect profile signals to this slots    
     connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(editingFinished()) /* or returnPressed() */, this, SLOT(profileRename()));
     connect(ui->comboBox_Profiles, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileSwitch(QString)));
-//    connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)), this, SLOT(profileSwitch(QString)));
+    connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)), this, SLOT(handleProfileLoaded(QString)), Qt::QueuedConnection);
     connect(ui->pushButton_ProfileNew, SIGNAL(clicked()), this, SLOT(profileNew()));
     connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));
 
-//    connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)), this, SLOT(settingsProfileChanged_UpdateUI(const QString &)));
     connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColor_changed(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabled_Toggled(bool)));
     connect(ui->checkBox_SwitchOffAtClosing, SIGNAL(toggled(bool)), this, SLOT(onSwitchOffAtClosing_Toggled(bool)));    
@@ -1253,12 +1252,12 @@ void SettingsWindow::profileSwitch(const QString & configName)
 
     Settings::loadOrCreateProfile(configName);
 
-    this->setFocus(Qt::OtherFocusReason);
+}
+
+void SettingsWindow::handleProfileLoaded(const QString &configName) {
 
     this->labelProfile->setText(tr("Profile: %1").arg(configName));
-    // Update settings
     updateUiFromSettings();
-    emit settingsProfileChanged();
 }
 
 // Slot for switch profiles by tray menu
@@ -1321,7 +1320,6 @@ void SettingsWindow::profileResetToDefaultCurrent()
 
     // Update settings
     updateUiFromSettings();
-    emit settingsProfileChanged();
 }
 
 void SettingsWindow::profileDeleteCurrent()
@@ -1362,7 +1360,6 @@ void SettingsWindow::profileLoadLast()
 
     // Update settings
     updateUiFromSettings();
-    emit settingsProfileChanged();
 }
 
 void SettingsWindow::settingsProfileChanged_UpdateUI(const QString &profileName)

@@ -493,7 +493,7 @@ void LightpackApplication::startGrabManager()
     connect(settings(), SIGNAL(adalightNumberOfLedsChanged(int)), this, SLOT(numberOfLedsChanged(int)));
     connect(settings(), SIGNAL(ardulightNumberOfLedsChanged(int)), this, SLOT(numberOfLedsChanged(int)));
     connect(settings(), SIGNAL(virtualNumberOfLedsChanged(int)), this, SLOT(numberOfLedsChanged(int)));
-    connect(settings(), SIGNAL(profileLoaded(const QString &)), m_grabManager,     SLOT(settingsProfileChanged(const QString &)));
+    connect(settings(), SIGNAL(profileLoaded(const QString &)), m_grabManager,     SLOT(settingsProfileChanged(const QString &)), Qt::QueuedConnection);
     // Connections to signals which will be connected to ILedDevice
     if (!m_noGui)
     {

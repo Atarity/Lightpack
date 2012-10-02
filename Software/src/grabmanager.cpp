@@ -199,11 +199,6 @@ void GrabManager::settingsProfileChanged(const QString &profileName)
     m_minLevelOfSensivity = Settings::getThresholdOfBlack();
 
     setNumberOfLeds(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
-
-    for (int i = 0; i < m_ledWidgets.size(); i++)
-    {
-        m_ledWidgets[i]->settingsProfileChanged();
-    }
 }
 
 void GrabManager::setVisibleLedWidgets(bool state)
@@ -592,13 +587,13 @@ void GrabManager::initLedWidgets(int numberOfLeds)
         connect(ledWidget, SIGNAL(resizeOrMoveStarted()), this, SLOT(pauseWhileResizeOrMoving()));
         connect(ledWidget, SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(resumeAfterResizeOrMoving()));
 
-        // First LED widget using to determine grabbing-monitor in WinAPI version of Grab
+//         First LED widget using to determine grabbing-monitor in WinAPI version of Grab
         connect(ledWidget, SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(firstWidgetPositionChanged()));
 
         m_ledWidgets << ledWidget;
 
         // TODO: Check out this line!
-        // firstWidgetPositionChanged();
+        firstWidgetPositionChanged();
     }
 
     int diff = numberOfLeds - m_ledWidgets.size();

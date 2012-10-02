@@ -59,7 +59,6 @@ public:
     QWidget* getSettingBox();
 
 signals:
-    void settingsProfileChanged();
     void switchOffLeds();
     void switchOnLeds();
     void showLedWidgets(bool visible);
@@ -96,6 +95,7 @@ public slots:
     void backlightOff(); /* using in actions */
     void profilesLoadAll();
     void profileSwitch(const QString & configName);
+    void handleProfileLoaded(const QString & configName);
     void profileSwitchCombobox(QString profile);
     void updateVirtualLedsColors(const QList<QRgb> & colors);
     void requestBacklightStatus();
