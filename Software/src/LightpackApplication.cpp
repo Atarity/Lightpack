@@ -391,7 +391,6 @@ void LightpackApplication::startApiServer()
     connect(this, SIGNAL(clearColorBuffers()), m_apiServer, SIGNAL(clearColorBuffers()));
 
     connect(settings(), SIGNAL(apiServerEnabledChanged(bool)),  m_apiServer, SLOT(enableApiServer(bool)));
-    connect(settings(), SIGNAL(apiAuthEnabledChanged(bool)),    m_apiServer, SLOT(enableApiAuth(bool)));
     connect(settings(), SIGNAL(apiKeyChanged(const QString &)), m_apiServer, SLOT(updateApiKey(const QString &)));
     connect(settings(), SIGNAL(apiPortChanged(int)),            m_apiServer, SLOT(updateApiPort(int)));
 

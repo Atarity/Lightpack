@@ -530,16 +530,6 @@ void SettingsWindow::onApiKey_EditingFinished()
 
     QString apikey = ui->lineEdit_ApiKey->text();
 
-    if (apikey == "")
-    {
-        apikey = Settings::getApiAuthKey();
-
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "ApiKey is empty, return back to" << apikey;
-
-        ui->lineEdit_ApiKey->setText(apikey);
-        return;
-    }
-
     Settings::setApiKey(apikey);
 }
 

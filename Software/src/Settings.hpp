@@ -190,7 +190,6 @@ signals:
     void apiServerEnabledChanged(bool);
     void apiPortChanged(int);
     void apiKeyChanged(const QString &);
-    void apiAuthEnabledChanged(bool);
     void expertModeEnabledChanged(bool);
     void switchOffAtClosingChanged(bool isEnabled);
     void pingDeviceEverySecondEnabledChanged(bool);
