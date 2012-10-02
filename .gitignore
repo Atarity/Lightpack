@@ -39,3 +39,4 @@ stuff/
 *.user
 *.log
 *.tmp
+build-vars.prf
