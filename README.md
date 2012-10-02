@@ -4,7 +4,7 @@ To build whole project for Windows including PythonQt (for plugins) and DirectX 
 * <a href="http://qt-project.org/downloads">Qt SDK</a>
 * <a href="http://python.org/download/">Python 2.7</a>
 * <a href="http://www.microsoft.com/en-us/download/details.aspx?id=6812">Microsoft DirectX SDK</a>
-* POSIX shell utilities <a href="http://www.mingw.org/wiki/MSYS">MSYS for example</a>. Make sure PATH environment variable is set for the utilities (Run > sysdm.cpl > Advanced > Environment Variable > Edit 'Path' system variable, path should points directly on the utilites so utilities is available without any subdirectories)
+* POSIX shell utilities <a href="http://www.mingw.org/wiki/MSYS">MSYS for example</a>. Make sure <code>PATH</code> environment variable is set for the utilities (Run &rarr; sysdm.cpl &rarr; Advanced &rarr; Environment Variable &rarr; Edit <code>PATH</code> system variable (<code>C:\MinGW\msys\1.0\bin;</code> for example), path should points directly on the utilities so utilities is available without any subdirectories)
 
 Build process (for Windows):
 -----------
