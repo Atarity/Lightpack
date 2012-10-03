@@ -84,6 +84,8 @@ namespace Ardulight
 {
 static const QString NumberOfLeds = "Ardulight/NumberOfLeds";
 static const QString ColorSequence = "Ardulight/ColorSequence";
+static const QString Port = "Ardulight/SerialPort";
+static const QString BaudRate = "Ardulight/BaudRate";
 }
 namespace AlienFx
 {
@@ -666,6 +668,33 @@ void Settings::setAdalightSerialPortBaudRate(const QString & baud)
     setValueMain(Main::Key::Adalight::BaudRate, baud);
     m_this->adalightSerialPortBaudRateChanged(baud);
 }
+
+QString Settings::getArdulightSerialPortName()
+{
+    return valueMain(Main::Key::Ardulight::Port).toString();
+}
+
+void Settings::setArdulightSerialPortName(const QString & port)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    setValueMain(Main::Key::Ardulight::Port, port);
+    m_this->ardulightSerialPortNameChanged(port);
+}
+
+QString Settings::getArdulightSerialPortBaudRate()
+{
+    // TODO: validate baudrate reading from settings file
+    return valueMain(Main::Key::Ardulight::BaudRate).toString();
+}
+
+void Settings::setArdulightSerialPortBaudRate(const QString & baud)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    // TODO: validator
+    setValueMain(Main::Key::Ardulight::BaudRate, baud);
+    m_this->ardulightSerialPortBaudRateChanged(baud);
+}
+
 
 QStringList Settings::getSupportedSerialPortBaudRates()
 {

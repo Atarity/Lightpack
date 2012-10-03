@@ -184,7 +184,7 @@ void LedDeviceArdulight::open()
 
     m_ArdulightDevice = new AbstractSerial();
 
-    m_ArdulightDevice->setDeviceName(Settings::getAdalightSerialPortName());
+    m_ArdulightDevice->setDeviceName(Settings::getArdulightSerialPortName());
 
     bool ok = m_ArdulightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
 
@@ -199,7 +199,7 @@ void LedDeviceArdulight::open()
     {
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Serial device" << m_ArdulightDevice->deviceName() << "open";
 
-        ok = m_ArdulightDevice->setBaudRate(Settings::getAdalightSerialPortBaudRate());
+        ok = m_ArdulightDevice->setBaudRate(Settings::getArdulightSerialPortBaudRate());
         if (ok)
         {
             ok = m_ArdulightDevice->setDataBits(AbstractSerial::DataBits8);
@@ -214,7 +214,7 @@ void LedDeviceArdulight::open()
                 qWarning() << Q_FUNC_INFO << "Set data bits 8 fail";
             }
         } else {
-            qWarning() << Q_FUNC_INFO << "Set baud rate" << Settings::getAdalightSerialPortBaudRate() << "fail";
+            qWarning() << Q_FUNC_INFO << "Set baud rate" << Settings::getArdulightSerialPortBaudRate() << "fail";
         }
 
     } else {
