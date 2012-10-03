@@ -211,10 +211,10 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->spinBox_DeviceBrightness, SIGNAL(valueChanged(int)), this, SLOT(onDeviceBrightness_valueChanged(int)));
     connect(ui->spinBox_DeviceColorDepth, SIGNAL(valueChanged(int)), this, SLOT(onDeviceColorDepth_valueChanged(int)));
     connect(ui->comboBox_ConnectedDevice, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceConnectedDevice_currentIndexChanged(QString)));
-    connect(ui->lineEdit_AdalightSerialPort, SIGNAL(editingFinished()), this, SLOT(onDeviceSerialPort_editingFinished()));
-    connect(ui->comboBox_AdalightSerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceSerialPortBaudRate_valueChanged(QString)));
-    connect(ui->lineEdit_ArdulightSerialPort, SIGNAL(editingFinished()), this, SLOT(onDeviceSerialPort_editingFinished()));
-    connect(ui->comboBox_ArdulightSerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceSerialPortBaudRate_valueChanged(QString)));
+    connect(ui->lineEdit_AdalightSerialPort, SIGNAL(editingFinished()), this, SLOT(onAdalightSerialPort_editingFinished()));
+    connect(ui->comboBox_AdalightSerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onAdalightSerialPortBaudRate_valueChanged(QString)));
+    connect(ui->lineEdit_ArdulightSerialPort, SIGNAL(editingFinished()), this, SLOT(onArdulightSerialPort_editingFinished()));
+    connect(ui->comboBox_ArdulightSerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onArdulightSerialPortBaudRate_valueChanged(QString)));
     connect(ui->doubleSpinBox_DeviceGamma, SIGNAL(valueChanged(double)), this, SLOT(onDeviceGammaCorrection_valueChanged(double)));
     connect(ui->horizontalSlider_GammaCorrection, SIGNAL(valueChanged(int)), this, SLOT(onSliderDeviceGammaCorrection_valueChanged(int)));
     connect(ui->checkBox_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), this, SLOT(onDeviceSendDataOnlyIfColorsChanged_toggled(bool)));
@@ -1123,7 +1123,7 @@ void SettingsWindow::onVirtualNumberOfLeds_valueChanged(int value)
     initVirtualLeds(value);
 }
 
-void SettingsWindow::onDeviceSerialPort_editingFinished()
+void SettingsWindow::onAdalightSerialPort_editingFinished()
 {
     QString serialPort = ui->lineEdit_AdalightSerialPort->text();
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << serialPort;
@@ -1134,7 +1134,7 @@ void SettingsWindow::onDeviceSerialPort_editingFinished()
         emit recreateLedDevice();
 }
 
-void SettingsWindow::onDeviceSerialPortBaudRate_valueChanged(QString value)
+void SettingsWindow::onAdalightSerialPortBaudRate_valueChanged(QString value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
@@ -1144,11 +1144,35 @@ void SettingsWindow::onDeviceSerialPortBaudRate_valueChanged(QString value)
         emit recreateLedDevice();
 }
 
+void SettingsWindow::onArdulightSerialPort_editingFinished()
+{
+    QString serialPort = ui->lineEdit_ArdulightSerialPort->text();
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << serialPort;
+
+    Settings::setArdulightSerialPortName(serialPort);
+
+    if (Settings::isConnectedDeviceUsesSerialPort())
+        emit recreateLedDevice();
+}
+
+void SettingsWindow::onArdulightSerialPortBaudRate_valueChanged(QString value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    Settings::setArdulightSerialPortBaudRate(value);
+
+    if (Settings::isConnectedDeviceUsesSerialPort())
+        emit recreateLedDevice();
+}
+
+
 void SettingsWindow::onColorSequence_valueChanged(QString value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setColorSequence(Settings::getConnectedDevice(),value);
+
+    //todo emit change_ColorSequence
 }
 
 void SettingsWindow::onDeviceGammaCorrection_valueChanged(double value)
@@ -1663,7 +1687,9 @@ void SettingsWindow::updateUiFromSettings()
     ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());
     ui->horizontalSlider_DeviceColorDepth->setValue     (Settings::getDeviceColorDepth());
     ui->doubleSpinBox_DeviceGamma->setValue             (Settings::getDeviceGamma());
+    ui->horizontalSlider_GammaCorrection->setValue      (floor((Settings::getDeviceGamma() * 100 + 0.5)));
     ui->lineEdit_AdalightSerialPort->setText            (Settings::getAdalightSerialPortName());
+    ui->lineEdit_ArdulightSerialPort->setText           (Settings::getArdulightSerialPortName());
 
     ui->groupBox_Api->setChecked                        (Settings::isApiEnabled());
     ui->lineEdit_ApiPort->setText                       (QString::number(Settings::getApiPort()));
@@ -1929,15 +1955,17 @@ void SettingsWindow::initSerialPortBaudRateComboBox()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    QString baudrate = Settings::getAdalightSerialPortBaudRate();
-
     ui->comboBox_AdalightSerialPortBaudRate->clear();
-
     // NOTE: This line emit's signal currentIndex_Changed()
     ui->comboBox_AdalightSerialPortBaudRate->addItems(Settings::getSupportedSerialPortBaudRates());
 
-    int index = ui->comboBox_AdalightSerialPortBaudRate->findText(baudrate);
+    ui->comboBox_ArdulightSerialPortBaudRate->clear();
+    // NOTE: This line emit's signal currentIndex_Changed()
+    ui->comboBox_ArdulightSerialPortBaudRate->addItems(Settings::getSupportedSerialPortBaudRates());
 
+
+    QString baudrate = Settings::getAdalightSerialPortBaudRate();
+    int index = ui->comboBox_AdalightSerialPortBaudRate->findText(baudrate);
     if (index < 0)
     {
         qCritical() << Q_FUNC_INFO << "Just another fail. Serial port supported baud rates"
@@ -1945,6 +1973,16 @@ void SettingsWindow::initSerialPortBaudRateComboBox()
         index = 0;
     }
     ui->comboBox_AdalightSerialPortBaudRate->setCurrentIndex(index);
+
+    baudrate = Settings::getArdulightSerialPortBaudRate();
+    index = ui->comboBox_ArdulightSerialPortBaudRate->findText(baudrate);
+    if (index < 0)
+    {
+        qCritical() << Q_FUNC_INFO << "Just another fail. Serial port supported baud rates"
+                    << Settings::getSupportedSerialPortBaudRates() << "doesn't contains baud rate:" << baudrate;
+        index = 0;
+    }
+    ui->comboBox_ArdulightSerialPortBaudRate->setCurrentIndex(index);
 }
 
 void SettingsWindow::adjustSizeAndMoveCenter()
