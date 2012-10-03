@@ -686,6 +686,8 @@ void LightpackApplication::requestBacklightStatus()
 }
 
 void LightpackApplication::handleConnectedDeviceChange(SupportedDevices::DeviceType deviceType) {
-    m_grabManager->setNumberOfLeds(Settings::getNumberOfLeds(deviceType));
     m_ledDeviceManager->recreateLedDevice(deviceType);
+    int numOfLeds = Settings::getNumberOfLeds(deviceType);
+    m_grabManager->setNumberOfLeds(numOfLeds);
+    m_moodlampManager->setNumberOfLeds(numOfLeds);
 }

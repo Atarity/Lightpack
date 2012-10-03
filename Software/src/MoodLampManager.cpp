@@ -111,7 +111,7 @@ void MoodLampManager::setNumberOfLeds(int numberOfLeds)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << numberOfLeds;
 
     initColors(numberOfLeds);
-    updateColors();
+    setCurrentColor(m_rgbSaved);
 }
 
 void MoodLampManager::reset()
