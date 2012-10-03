@@ -24,10 +24,10 @@
  */
 
 #include "D3D10Grabber.hpp"
+#include "../../common/D3D10GrabberDefs.hpp"
 
 #ifdef D3D10_GRAB_SUPPORT
 
-#include "../../common/D3D10GrabberDefs.hpp"
 #include <cstdlib>
 #include <stdio.h>
 #include <tlhelp32.h>

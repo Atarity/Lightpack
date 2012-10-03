@@ -92,10 +92,6 @@ public:
     static void setAdalightSerialPortName(const QString & port);
     static QString getAdalightSerialPortBaudRate();
     static void setAdalightSerialPortBaudRate(const QString & baud);
-    static QString getArdulightSerialPortName();
-    static void setArdulightSerialPortName(const QString & port);
-    static QString getArdulightSerialPortBaudRate();
-    static void setArdulightSerialPortBaudRate(const QString & baud);
     static QStringList getSupportedSerialPortBaudRates();
     static bool isConnectedDeviceUsesSerialPort();
     // [Adalight | Ardulight | Lightpack | ... | Virtual]
@@ -205,8 +201,6 @@ signals:
     void onOffDeviceKeyChanged(const QKeySequence & keySequence);
     void adalightSerialPortNameChanged(const QString & port);
     void adalightSerialPortBaudRateChanged(const QString & baud);
-    void ardulightSerialPortNameChanged(const QString & port);
-    void ardulightSerialPortBaudRateChanged(const QString & baud);
     void lightpackNumberOfLedsChanged(int numberOfLeds);
     void adalightNumberOfLedsChanged(int numberOfLeds);
     void ardulightNumberOfLedsChanged(int numberOfLeds);
