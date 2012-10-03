@@ -95,7 +95,7 @@ macx{
     ICON = ../res/icons/Lightpack.icns
 
     # For build universal binaries (native on Intel and PowerPC)
-    QMAKE_MAC_SDK = /Developer/SDKs/MacOSX10.6.sdk
+    QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
 }
 
 INCLUDEPATH += ./hidapi ./grab ./alienfx ./
