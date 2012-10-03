@@ -904,6 +904,7 @@ void SettingsWindow::showSettings()
     ui->comboBox_LightpackModes->setCurrentIndex((mode == Lightpack::AmbilightMode) ? 0 : 1); // we assume that Lightpack::Mode in same order as comboBox_Modes
     emit showLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && ui->comboBox_LightpackModes->currentIndex()==0);
     this->show();
+    this->activateWindow();
 }
 
 void SettingsWindow::hideSettings()
