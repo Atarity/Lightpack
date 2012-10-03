@@ -142,8 +142,10 @@ private slots:
     void onAdalightNumberOfLeds_valueChanged(int value);
     void onArdulightNumberOfLeds_valueChanged(int value);
     void onVirtualNumberOfLeds_valueChanged(int value);
-    void onDeviceSerialPort_editingFinished();
-    void onDeviceSerialPortBaudRate_valueChanged(QString value);
+    void onAdalightSerialPort_editingFinished();
+    void onAdalightSerialPortBaudRate_valueChanged(QString value);
+    void onArdulightSerialPort_editingFinished();
+    void onArdulightSerialPortBaudRate_valueChanged(QString value);
     void onDeviceGammaCorrection_valueChanged(double value);
     void onSliderDeviceGammaCorrection_valueChanged(int value);
     void onDeviceSendDataOnlyIfColorsChanged_toggled(bool state);

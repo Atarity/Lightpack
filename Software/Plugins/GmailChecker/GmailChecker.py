@@ -43,7 +43,7 @@ class GmailChecker(BasePlugin.BasePlugin):
 
     def version(self):
         """ return the version of the plugin """
-        return "0.3"
+        return "0.4"
 
     def Timeout(self):
         self.i = self.i+1
@@ -59,6 +59,7 @@ class GmailChecker(BasePlugin.BasePlugin):
                      Lightpack.SetColor(self.sessionKey,self.ledMap[idx]-1,0,0,0)        
     
     def runAnimation(self):
+        self.on = Lightpack.GetStatus()
         Lightpack.Lock(self.sessionKey)
         self.i=1
         self.timer.start()
@@ -75,6 +76,8 @@ class GmailChecker(BasePlugin.BasePlugin):
 
     def stopAnimation(self):
         self.timer.stop()
+        if (self.on == 1):
+            Lightpack.SetStatus(self.sessionKey,1)
         Lightpack.UnLock(self.sessionKey)
         self.tick = 0
         
@@ -86,6 +89,12 @@ class GmailChecker(BasePlugin.BasePlugin):
     
     def changeTimeCheck(self,time):
         Lightpack.SetSettingMain('GmailChecker/TimeCheck',time)
+    
+    def changeTimeBegin(self,time):
+        Lightpack.SetSettingMain('GmailChecker/TimeBegin',time)
+    
+    def changeTimeEnd(self,time):
+        Lightpack.SetSettingMain('GmailChecker/TimeEnd',time)
         
     def settings(self):
         """ default function """
@@ -115,16 +124,53 @@ class GmailChecker(BasePlugin.BasePlugin):
         edittime.setText(time)
         box.addWidget(edittime)
         
+        labelbegin = QLabel(SettingsBox)
+        labelbegin.setText("Begin check (hour)")
+        box.addWidget(labelbegin)
+        editbegin = QLineEdit(SettingsBox)
+        time = Lightpack.GetSettingMain('GmailChecker/TimeBegin')
+        if (time == None):
+            time = 0
+        editbegin.setText(time)
+        box.addWidget(editbegin)
+        
+        labelend = QLabel(SettingsBox)
+        labelend.setText("End check (hour)")
+        box.addWidget(labelend)
+        editend = QLineEdit(SettingsBox)
+        time = Lightpack.GetSettingMain('GmailChecker/TimeEnd')
+        if (time == None):
+            time = 0
+        editend.setText(time)
+        box.addWidget(editend)
+        
         
         box.addSpacing(150)
 
         editAcc.connect('textChanged(QString)', self.changeAcc)
         editPass.connect('textChanged(QString)', self.changePass)
         edittime.connect('textChanged(QString)', self.changeTimeCheck)
+        editbegin.connect('textChanged(QString)', self.changeTimeBegin)
+        editend.connect('textChanged(QString)', self.changeTimeEnd)
         return 0; 
 
     def gmail_checker(self):
             print "check"
+            timebegin = int(Lightpack.GetSettingMain('GmailChecker/TimeBegin'))
+            if (timebegin == None):
+                timebegin = 0
+            timeend = int(Lightpack.GetSettingMain('GmailChecker/TimeEnd'))
+            if (timeend == None):
+                timeend = 0
+            import datetime
+            now = datetime.datetime.now()
+            hour = now.hour
+            if (hour < timebegin):
+                self.stopAnimation();
+                return
+            if (hour >= timeend):
+                self.stopAnimation();
+                return
             import imaplib,re
             username = Lightpack.GetSettingMain('GmailChecker/Username')
             password = Lightpack.GetSettingMain('GmailChecker/Password')
