@@ -505,9 +505,9 @@ GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
             break;
     #endif
 
-    #ifdef MAC_OS
+    #ifdef MAC_OS_CG_GRAB_SUPPORT
         case Grab::MacCoreGraphicsGrabber:
-            result = new MacOSGrabber();
+            result = new MacOSGrabber(NULL, &m_colorsNew, &m_ledWidgets);
             break;
     #endif
 

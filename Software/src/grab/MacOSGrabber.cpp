@@ -31,7 +31,8 @@
 #include <ApplicationServices/ApplicationServices.h>
 #include "debug.h"
 
-MacOSGrabber::MacOSGrabber()
+MacOSGrabber::MacOSGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry):
+    TimeredGrabber(parent, grabResult, grabAreasGeometry)
 {
 }
 
@@ -44,22 +45,21 @@ const char * MacOSGrabber::getName()
     return "MacOSGrabber";
 }
 
-void MacOSGrabber::updateGrabScreenFromWidget(QWidget *widget)
+void MacOSGrabber::updateGrabMonitor(QWidget *widget)
 {
     Q_UNUSED(widget);
 }
 
-QList<QRgb> MacOSGrabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
+ GrabResult MacOSGrabber::_grab()
 {
     CGImageRef image = CGDisplayCreateImage(kCGDirectMainDisplay);
-    QList<QRgb> result;
 
     if (image != NULL)
     {
         QPixmap pixmap = QPixmap::fromMacCGImageRef(image);
-
-        for(int i = 0; i < widgets.size(); i++) {
-            result.append(getColor(pixmap, widgets[i]));
+        m_grabResult->clear();
+        foreach(GrabWidget * widget, *m_grabWidgets) {
+            m_grabResult->append( widget->isEnabled() ? getColor(pixmap, widget) : qRgb(0,0,0) );
         }
 
         CGImageRelease(image);
@@ -67,11 +67,9 @@ QList<QRgb> MacOSGrabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
     } else {        
 
         qCritical() << Q_FUNC_INFO << "CGDisplayCreateImage(..) returned NULL";
-
-        for(int i = 0; i < widgets.size(); i++)
-            result.append(0);
+        return GrabResultError;
     }
-    return result;
+    return GrabResultOk;
 }
 
 QRgb MacOSGrabber::getColor(QPixmap pixmap, const QWidget * grabme)

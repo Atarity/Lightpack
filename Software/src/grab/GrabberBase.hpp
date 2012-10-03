@@ -32,7 +32,8 @@
 
 enum GrabResult {
     GrabResultOk,
-    GrabResultFrameNotReady
+    GrabResultFrameNotReady,
+    GrabResultError
 };
 
 /*!

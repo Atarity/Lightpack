@@ -128,7 +128,8 @@ SOURCES += \
     grab/QtGrabber.cpp \
     grab/QtGrabberEachWidget.cpp \
     grab/WinAPIGrabberEachWidget.cpp \
-    grab/D3D9Grabber.cpp
+    grab/D3D9Grabber.cpp \
+    grab/MacOSGrabber.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -174,7 +175,8 @@ HEADERS += \
     grab/QtGrabber.hpp \
     grab/QtGrabberEachWidget.hpp \
     grab/WinAPIGrabberEachWidget.hpp \
-    grab/D3D9Grabber.hpp
+    grab/D3D9Grabber.hpp \
+    grab/MacOSGrabber.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \

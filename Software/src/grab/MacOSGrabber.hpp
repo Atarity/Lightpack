@@ -25,20 +25,26 @@
 
 #pragma once
 
-#include "defs.h"
+#include "../../common/defs.h"
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
 
-#include "IGrabber.hpp"
+#include "TimeredGrabber.hpp"
 
-class MacOSGrabber : public IGrabber
+class MacOSGrabber : public TimeredGrabber
 {
 public:
-    MacOSGrabber();
+    MacOSGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
     ~MacOSGrabber();
-    virtual void updateGrabScreenFromWidget(QWidget *widget);
     virtual QList<QRgb>grabWidgetsColors(QList<GrabWidget *> &widgets);
     virtual const char * getName();
+
+public slots:
+    virtual void updateGrabMonitor(QWidget *widget);
+
+protected:
+    virtual GrabResult _grab();
+
 
 private:
     QRgb getColor(QPixmap pixmap, const QWidget * grabme);
