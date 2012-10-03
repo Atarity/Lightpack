@@ -1663,6 +1663,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());
     ui->horizontalSlider_DeviceColorDepth->setValue     (Settings::getDeviceColorDepth());
     ui->doubleSpinBox_DeviceGamma->setValue             (Settings::getDeviceGamma());
+    ui->horizontalSlider_GammaCorrection->setValue      (floor((Settings::getDeviceGamma() * 100 + 0.5)));
     ui->lineEdit_AdalightSerialPort->setText            (Settings::getAdalightSerialPortName());
 
     ui->groupBox_Api->setChecked                        (Settings::isApiEnabled());
