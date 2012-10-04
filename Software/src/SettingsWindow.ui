@@ -832,7 +832,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                   <number>10</number>
                  </property>
                  <property name="value">
-                  <number>10</number>
+                  <number>1</number>
                  </property>
                 </widget>
                </item>
@@ -2806,11 +2806,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>594</x>
-     <y>454</y>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
      <x>656</x>
-     <y>455</y>
+     <y>426</y>
     </hint>
    </hints>
   </connection>
@@ -2822,11 +2822,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>656</x>
-     <y>455</y>
+     <y>426</y>
     </hint>
     <hint type="destinationlabel">
      <x>594</x>
-     <y>454</y>
+     <y>425</y>
     </hint>
    </hints>
   </connection>
@@ -2837,12 +2837,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>576</x>
-     <y>393</y>
+     <x>594</x>
+     <y>374</y>
     </hint>
     <hint type="destinationlabel">
      <x>656</x>
-     <y>405</y>
+     <y>374</y>
     </hint>
    </hints>
   </connection>
@@ -2854,11 +2854,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>656</x>
-     <y>405</y>
+     <y>374</y>
     </hint>
     <hint type="destinationlabel">
-     <x>576</x>
-     <y>393</y>
+     <x>594</x>
+     <y>374</y>
     </hint>
    </hints>
   </connection>
@@ -2901,12 +2901,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>587</x>
-     <y>343</y>
+     <x>594</x>
+     <y>322</y>
     </hint>
     <hint type="destinationlabel">
      <x>656</x>
-     <y>353</y>
+     <y>323</y>
     </hint>
    </hints>
   </connection>
@@ -2918,11 +2918,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>656</x>
-     <y>353</y>
+     <y>323</y>
     </hint>
     <hint type="destinationlabel">
-     <x>587</x>
-     <y>343</y>
+     <x>594</x>
+     <y>322</y>
     </hint>
    </hints>
   </connection>
@@ -2933,12 +2933,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>510</x>
-     <y>498</y>
+     <x>594</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
      <x>656</x>
-     <y>506</y>
+     <y>477</y>
     </hint>
    </hints>
   </connection>
@@ -2950,11 +2950,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>656</x>
-     <y>506</y>
+     <y>477</y>
     </hint>
     <hint type="destinationlabel">
-     <x>510</x>
-     <y>498</y>
+     <x>594</x>
+     <y>479</y>
     </hint>
    </hints>
   </connection>
@@ -2965,12 +2965,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>205</x>
-     <y>324</y>
+     <x>347</x>
+     <y>477</y>
     </hint>
     <hint type="destinationlabel">
-     <x>267</x>
-     <y>324</y>
+     <x>687</x>
+     <y>475</y>
     </hint>
    </hints>
   </connection>
@@ -2981,12 +2981,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>267</x>
-     <y>324</y>
+     <x>687</x>
+     <y>475</y>
     </hint>
     <hint type="destinationlabel">
-     <x>205</x>
-     <y>324</y>
+     <x>347</x>
+     <y>477</y>
     </hint>
    </hints>
   </connection>
@@ -2998,11 +2998,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>205</x>
-     <y>324</y>
+     <y>295</y>
     </hint>
     <hint type="destinationlabel">
      <x>267</x>
-     <y>324</y>
+     <y>295</y>
     </hint>
    </hints>
   </connection>
@@ -3014,11 +3014,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>267</x>
-     <y>324</y>
+     <y>295</y>
     </hint>
     <hint type="destinationlabel">
      <x>205</x>
-     <y>324</y>
+     <y>295</y>
     </hint>
    </hints>
   </connection>
@@ -3030,11 +3030,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>205</x>
-     <y>313</y>
+     <y>284</y>
     </hint>
     <hint type="destinationlabel">
      <x>267</x>
-     <y>313</y>
+     <y>284</y>
     </hint>
    </hints>
   </connection>
@@ -3046,11 +3046,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>267</x>
-     <y>313</y>
+     <y>284</y>
     </hint>
     <hint type="destinationlabel">
      <x>205</x>
-     <y>313</y>
+     <y>284</y>
     </hint>
    </hints>
   </connection>
