@@ -1390,8 +1390,6 @@ void SettingsWindow::profileLoadLast()
 
     ui->comboBox_Profiles->setCurrentIndex(ui->comboBox_Profiles->findText(Settings::getLastProfileName()));
 
-    profileTraySync();
-
     // Update settings
     updateUiFromSettings();
 }
@@ -1412,7 +1410,6 @@ void SettingsWindow::settingsProfileChanged_UpdateUI(const QString &profileName)
     }
 
     updateUiFromSettings();
-    profileTraySync();
 }
 
 // Syncronize profiles from combobox with tray menu
@@ -1747,6 +1744,7 @@ void SettingsWindow::updateUiFromSettings()
     onMoodLampLiquidMode_Toggled(ui->radioButton_LiquidColorMoodLampMode->isChecked());
     updateExpertModeWidgetsVisibility();
     onGrabberChanged();
+    profileTraySync();
 }
 
 Grab::GrabberType SettingsWindow::getSelectedGrabberType()
