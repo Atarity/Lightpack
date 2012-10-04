@@ -1274,6 +1274,15 @@ void SettingsWindow::profileSwitch(const QString & configName)
 
     ui->comboBox_Profiles->setCurrentIndex(index);
 
+    for(int i=0; i < m_profilesMenu->actions().count(); i++){
+        QAction * action = m_profilesMenu->actions().at(i);
+        if(action->text() != configName)
+            action->setChecked(false);
+        else
+            action->setChecked(true);
+
+    }
+
 
     Settings::loadOrCreateProfile(configName);
 

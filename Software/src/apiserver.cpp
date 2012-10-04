@@ -777,7 +777,7 @@ void ApiServer::clientProcessCommands()
                 int status = -1;
 
                 if (cmdBuffer == CmdSetStatus_On)
-                    status =1;
+                    status = 1;
                 else if (cmdBuffer == CmdSetStatus_Off)
                     status = 0;
 

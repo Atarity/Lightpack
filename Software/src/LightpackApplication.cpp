@@ -207,6 +207,9 @@ void LightpackApplication::startBacklight()
 
     if (m_backlightStatus == Backlight::StatusOff)
         m_ledDeviceManager->switchOffLeds();
+    else
+        m_ledDeviceManager->switchOnLeds();
+
 
     switch (m_backlightStatus)
     {
@@ -501,20 +504,13 @@ void LightpackApplication::startGrabManager()
 
         connect(m_settingsWindow, SIGNAL(showLedWidgets(bool)), this, SLOT(showLedWidgets(bool)));
         connect(m_settingsWindow, SIGNAL(setColoredLedWidget(bool)), this, SLOT(setColoredLedWidget(bool)));
-        connect(m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)), m_ledDeviceManager, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
 
         // GrabManager to this
         connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), m_settingsWindow, SLOT(refreshAmbilightEvaluated(double)));
+    }
 
-        // Connect to MoodLampManager
-        connect(m_grabManager, SIGNAL(updateLedsColors(QList<QRgb>)), m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)));
-        connect(m_moodlampManager, SIGNAL(updateLedsColors(QList<QRgb>)), m_settingsWindow, SIGNAL(updateLedsColors(QList<QRgb>)));
-    }
-    else
-    {
-        connect(m_grabManager, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceManager, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
-        connect(m_moodlampManager, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceManager, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
-    }
+    connect(m_grabManager, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceManager, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
+    connect(m_moodlampManager, SIGNAL(updateLedsColors(const QList<QRgb> &)),    m_ledDeviceManager, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
     connect(m_grabManager, SIGNAL(updateLedsColors(const QList<QRgb> &)), m_pluginInterface, SLOT(updateColors(const QList<QRgb> &)), Qt::QueuedConnection);
     connect(m_moodlampManager, SIGNAL(updateLedsColors(const QList<QRgb> &)), m_pluginInterface, SLOT(updateColors(const QList<QRgb> &)), Qt::QueuedConnection);
     connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), m_pluginInterface, SLOT(refreshAmbilightEvaluated(double)));

@@ -340,6 +340,7 @@ void LedDeviceManager::disconnectSignalSlotsLedDevice()
     disconnect(m_ledDevice, SIGNAL(firmwareVersion(QString)),   this, SIGNAL(firmwareVersion(QString)));
     disconnect(m_ledDevice, SIGNAL(ioDeviceSuccess(bool)),      this, SIGNAL(ioDeviceSuccess(bool)));
     disconnect(m_ledDevice, SIGNAL(openDeviceSuccess(bool)),    this, SIGNAL(openDeviceSuccess(bool)));
+    disconnect(m_ledDevice, SIGNAL(colorsUpdated(QList<QRgb>)), this, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)));
 
     disconnect(this, SIGNAL(ledDeviceOpen()),                   m_ledDevice, SLOT(open()));
     disconnect(this, SIGNAL(ledDeviceSetColors(QList<QRgb>)),   m_ledDevice, SLOT(setColors(QList<QRgb>)));
