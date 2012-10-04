@@ -18,6 +18,7 @@ LightpackPluginInterface::LightpackPluginInterface(QObject *parent) :
     m_backlightStatusResult = Backlight::StatusUnknown;
     initColors(10);
     m_timerLock = new QTimer(this);
+    m_timerLock->start(5000); // check in 5000 ms
     connect(m_timerLock, SIGNAL(timeout()), this, SLOT(timeoutLock()));
 }
 
@@ -39,7 +40,8 @@ void LightpackPluginInterface::timeoutLock()
     else
     {
         if (!lockSessionKeys.isEmpty())
-            UnLock(lockSessionKeys[0]);
+            if (lockSessionKeys[0].indexOf("API", 0) == -1)
+                UnLock(lockSessionKeys[0]);
     }
 }
 
@@ -211,7 +213,6 @@ bool LightpackPluginInterface::Lock(QString sessionKey)
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "lock end";
     lockAlive = true;
-    m_timerLock->start(5000); // check in 5000 ms
     emit ChangeLockStatus (true);
     return true;
 }
@@ -224,7 +225,6 @@ bool LightpackPluginInterface::UnLock(QString sessionKey)
             lockSessionKeys.removeFirst();
             if (lockSessionKeys.count()==0)
             {
-                m_timerLock->stop();
                 emit updateDeviceLockStatus(DeviceLocked::Unlocked, lockSessionKeys);
                 emit ChangeLockStatus(false);
             }
@@ -329,6 +329,7 @@ bool LightpackPluginInterface::SetProfile(QString sessionKey,QString profile)
 
 bool LightpackPluginInterface::SetStatus(QString sessionKey, int status)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << status;
     if (lockSessionKeys.isEmpty()) return false;
     if (lockSessionKeys[0]!=sessionKey) return false;
      Backlight::Status statusSet = Backlight::StatusUnknown;
