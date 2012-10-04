@@ -110,9 +110,8 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     {
         connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(setStatusChanged(Backlight::Status)));
         m_settingsWindow->startBacklight();
-
-    emit postInitialization();
     }
+    emit postInitialization();
 }
 
 #ifdef Q_OS_WIN

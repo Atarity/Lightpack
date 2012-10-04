@@ -87,6 +87,7 @@ private:
 
 private:
     bool m_isLastCommandCompleted;
+    bool m_isColorsSaved;
     Backlight::Status m_backlightStatus;
 
     QList<LedDeviceCommands::Cmd> m_cmdQueue;
