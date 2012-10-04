@@ -116,9 +116,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     statusBar()->addWidget(labelDevice, 1);
     statusBar()->addWidget(labelFPS, 1);
 
-    // Request firmware version of the device to show message about update the firmware
-    QTimer::singleShot(1000, this, SIGNAL(requestFirmwareVersion()));
-
     profilesLoadAll();
 
     initGrabbersRadioButtonsVisibility();
@@ -513,6 +510,7 @@ int SettingsWindow::getLigtpackFirmwareVersionMajor()
 
 void SettingsWindow::onPostInit() {
     updateUiFromSettings();
+    this->requestFirmwareVersion();
 }
 
 void SettingsWindow::onEnableApi_Toggled(bool isEnabled)
