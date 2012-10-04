@@ -31,8 +31,8 @@ namespace Backlight
 {
 enum Status {
     StatusOff = 0,
-    StatusOn = -1,
-    StatusDeviceError = -2,
+    StatusOn = 1,
+    StatusDeviceError = -1,
     // Just for API
     StatusUnknown = -93
 };
