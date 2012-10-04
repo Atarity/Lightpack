@@ -73,7 +73,8 @@ win32 {
                 cp -f \"$${MINGW_RUNTIME_DIR}/mingwm10.dll\" ./ && \
                 cp -f \"$${MINGW_RUNTIME_DIR}/libgcc_s_dw2-1.dll\" ./ && \
                 cp -f \"$$PWD/../PythonQt/lib/PythonQt$${DEBUG_EXT}.dll\" ./ && \
-                cp -f \"$$PWD/../PythonQt/lib/PythonQt_QtAll$${DEBUG_EXT}.dll\" ./
+                cp -f \"$$PWD/../PythonQt/lib/PythonQt_QtAll$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$$PWD\"/../python_binaries_win32/* ./
 }
 
 unix:!macx{
