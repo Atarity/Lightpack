@@ -1406,8 +1406,6 @@ void SettingsWindow::settingsProfileChanged_UpdateUI(const QString &profileName)
     }else{
         ui->pushButton_DeleteProfile->setEnabled(false);
     }
-
-    updateUiFromSettings();
 }
 
 // Syncronize profiles from combobox with tray menu
@@ -1743,6 +1741,7 @@ void SettingsWindow::updateUiFromSettings()
     updateExpertModeWidgetsVisibility();
     onGrabberChanged();
     profileTraySync();
+    settingsProfileChanged_UpdateUI(Settings::getCurrentProfileName());
 }
 
 Grab::GrabberType SettingsWindow::getSelectedGrabberType()

@@ -268,7 +268,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     QString profileLast = getLastProfileName();
 
     // Load last profile
-    m_currentProfile = new QSettings(m_applicationDirPath + "Profiles/" + profileLast + ".ini", QSettings::IniFormat);
+    m_currentProfile = new QSettings(getProfilesPath() + profileLast + ".ini", QSettings::IniFormat);
     m_currentProfile->setIniCodec("UTF-8");
 
     DEBUG_LOW_LEVEL << "Settings file:" << m_currentProfile->fileName();
@@ -294,7 +294,7 @@ QStringList Settings::findAllProfiles()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    QFileInfo setsFile(Settings::getCurrentProfilePath());
+    QFileInfo setsFile(Settings::getProfilesPath());
     QFileInfoList iniFiles = setsFile.absoluteDir().entryInfoList(QStringList("*.ini"));
 
     QStringList settingsFiles;
@@ -315,8 +315,7 @@ void Settings::loadOrCreateProfile(const QString & profileName)
     if (m_currentProfile != NULL)
     {
         // Copy current settings to new one
-        QString profilesDir = QFileInfo(m_currentProfile->fileName()).absoluteDir().absolutePath();
-        QString profileNewPath = profilesDir + "/" + profileName + ".ini";
+        QString profileNewPath = getProfilesPath() + profileName + ".ini";
 
         if (m_currentProfile->fileName() != profileNewPath)
             QFile::copy(m_currentProfile->fileName(), profileNewPath);
@@ -325,7 +324,7 @@ void Settings::loadOrCreateProfile(const QString & profileName)
     }
 
 
-    m_currentProfile = new QSettings(m_applicationDirPath + "Profiles/" + profileName + ".ini", QSettings::IniFormat );
+    m_currentProfile = new QSettings(getProfilesPath() + profileName + ".ini", QSettings::IniFormat );
     m_currentProfile->setIniCodec("UTF-8");
 
     locker.unlock();
@@ -361,7 +360,7 @@ void Settings::renameCurrentProfile(const QString & profileName)
         delete m_currentProfile;
 
         // Update m_currentProfile point to new QSettings with configName
-        m_currentProfile = new QSettings(m_applicationDirPath + "Profiles/" + profileName + ".ini", QSettings::IniFormat );
+        m_currentProfile = new QSettings(getProfilesPath() + profileName + ".ini", QSettings::IniFormat );
         m_currentProfile->setIniCodec("UTF-8");
 
         DEBUG_LOW_LEVEL << "Settings file renamed:" << m_currentProfile->fileName();
@@ -1281,6 +1280,10 @@ double Settings::getValidLedCoef(int ledIndex, const QString & keyCoef)
     coef = Profile::Led::CoefDefault;
     Settings::setValue(Profile::Key::Led::Prefix + QString::number(ledIndex + 1) + "/" + keyCoef, coef);
     return coef;
+}
+
+QString Settings::getProfilesPath() {
+   return m_applicationDirPath + "Profiles/";
 }
 
 //

@@ -55,7 +55,13 @@ public:
     static void removeCurrentProfile();
 
     static QString getCurrentProfileName();
+    /*!
+      use with caution: if there is no profile loaded then it will throw access violation exception
+     \see Settings#getProfilesPath()
+     \return QString path to current profile
+    */
     static QString getCurrentProfilePath();
+    static QString getProfilesPath();
     static QString getApplicationDirPath();
     static QPoint getDefaultPosition(int ledIndex);
 

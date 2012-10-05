@@ -127,7 +127,7 @@ void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType)
         m_grabber->stopGrabbing();
     }
 
-    #ifdef D3D10_GRAB_SUPPORT
+#ifdef D3D10_GRAB_SUPPORT
     if (Settings::isDx1011GrabberEnabled()) {
         if (m_dx1011Grabber == NULL) {
             m_dx1011Grabber = new D3D10Grabber(static_cast<QObject *>(this), &m_colorsNew, &m_ledWidgets);
@@ -137,11 +137,11 @@ void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType)
     }
 #endif
 
-    #ifdef D3D10_GRAB_SUPPORT
+#ifdef D3D10_GRAB_SUPPORT
     m_grabber = Settings::isDx1011GrabberEnabled() ? m_dx1011Grabber : queryGrabber(grabberType);
-    #else
+#else
     m_grabber = queryGrabber(grabberType);
-    #endif
+#endif
     if (isStartNeeded)
         m_grabber->startGrabbing();
     firstWidgetPositionChanged();
