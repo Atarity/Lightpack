@@ -47,7 +47,7 @@ public:
 
     /*!
      \param parent standart Qt-specific owner
-     \param grabResult \code QList to write results of grabbing to
+     \param grabResult \code QList \endcode to write results of grabbing to
      \param grabWidgets List of GrabWidgets
     */
     GrabberBase(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets);

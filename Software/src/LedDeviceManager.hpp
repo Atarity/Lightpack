@@ -31,7 +31,7 @@
 
 /*!
     This class creates \a ILedDevice implementations and manages them after.
-    It is always better way to interact with ILedDevice through \code LedDeviceManager.
+    It is always better way to interact with ILedDevice through \code LedDeviceManager \endcode.
  */
 class LedDeviceManager : public QObject
 {

@@ -39,6 +39,9 @@
 namespace SettingsScope
 {
 
+/*!
+  Provides access to persistent settings.
+*/
 class Settings : public QObject
 {
     Q_OBJECT
