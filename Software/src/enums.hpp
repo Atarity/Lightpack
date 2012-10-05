@@ -113,6 +113,10 @@ enum Devices
 // Configure SettingsWindow Device tab for suitable device options
 namespace DeviceTab
 {
+
+/*!
+\deprecated unused with new GUI
+*/
 enum Options
 {
     NumberOfLeds    = (1 << 0),

@@ -45,7 +45,7 @@ signals:
     /*!
       This signal must be sent at the completion of each command
       (setColors, setTimerOptions, setColorDepth, setSmoothSlowdown, etc.)
-      \param ok is command completed successfully
+      \param \code ok is command completed successfully
     */
     void commandCompleted(bool ok);
     void colorsUpdated(QList<QRgb> colors);
@@ -54,7 +54,13 @@ public slots:
     virtual void open() = 0;
     virtual void setColors(const QList<QRgb> & colors) = 0;
     virtual void switchOffLeds() = 0;
-    virtual void setRefreshDelay(int value) = 0; //!< PWM timer period. only for Lightpack <=5.5
+
+    /*!
+      \obsolete only form compatibility with Lightpack ver.<=5.5 hardware
+      PWM timer period.
+     \param \code value in millis
+    */
+    virtual void setRefreshDelay(int value) = 0;
     virtual void setSmoothSlowdown(int value) = 0;
     virtual void setGamma(double value) = 0;
     virtual void setBrightness(int value) = 0;
@@ -62,7 +68,8 @@ public slots:
     virtual void updateDeviceSettings() = 0;
 
     /*!
-      \deprecated used only for compatibility with Lightpack hw <= 5.5
-     */
+      \obsolete only form compatibility with Lightpack ver.<=5.5 hardware
+     \param \code value bits per channel
+    */
     virtual void setColorDepth(int value) = 0;
 };

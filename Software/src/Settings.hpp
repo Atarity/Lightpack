@@ -57,7 +57,7 @@ public:
     static QString getCurrentProfileName();
     /*!
       use with caution: if there is no profile loaded then it will throw access violation exception
-     \see Settings#getProfilesPath()
+     \see SettingsScope#Settings#getProfilesPath()
      \return QString path to current profile
     */
     static QString getCurrentProfilePath();

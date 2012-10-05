@@ -389,18 +389,15 @@ void SettingsWindow::updateDeviceTabWidgetsVisibility()
     case SupportedDevices::DeviceTypeAdalight:
         ui->groupBox_DeviceSpecificOptions->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceAdalight);
-        setDeviceTabWidgetsVisibility(DeviceTab::Adalight);
         break;
 
     case SupportedDevices::DeviceTypeArdulight:
         ui->groupBox_DeviceSpecificOptions->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceArdulight);
-        setDeviceTabWidgetsVisibility(DeviceTab::Ardulight);
         break;
 
     case SupportedDevices::DeviceTypeAlienFx:
         ui->groupBox_DeviceSpecificOptions->hide();
-        setDeviceTabWidgetsVisibility(DeviceTab::AlienFx);
         break;
 
     case SupportedDevices::DeviceTypeLightpack:
@@ -412,7 +409,6 @@ void SettingsWindow::updateDeviceTabWidgetsVisibility()
     case SupportedDevices::DeviceTypeVirtual:
         ui->groupBox_DeviceSpecificOptions->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceVirtual);
-        setDeviceTabWidgetsVisibility(DeviceTab::Virtual);
         // Sync Virtual Leds count with NumberOfLeds field
         initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::DeviceTypeVirtual));
         break;
@@ -427,45 +423,17 @@ void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << options;
 
-//    ui->groupBox_DeviceBrightness->setVisible(options & DeviceTab::Brightness);
-//    ui->groupBox_DeviceSmoothSlowdown->setVisible(options & DeviceTab::SmoothSlowdown);
-//    ui->groupBox_DeviceRefreshDelay->setVisible((options & DeviceTab::RefreshDelay) && Settings::isExpertModeEnabled());
-
     int majorVersion = getLigtpackFirmwareVersionMajor();
-    if (majorVersion == 4 || majorVersion == 5)
-    {
-        // Show color depth only if lightpack hw4.x or hw5.x
-        ui->label_7->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
-        ui->horizontalSlider_DeviceColorDepth->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
-        ui->spinBox_DeviceColorDepth->setVisible((options & DeviceTab::ColorDepth) && Settings::isExpertModeEnabled());
-    } else {
-        ui->label_7->setVisible(false);
-        ui->horizontalSlider_DeviceColorDepth->setVisible(false);
-        ui->spinBox_DeviceColorDepth->setVisible(false);
-    }
+    bool isShowOldSettings = (majorVersion == 4 || majorVersion == 5) && Settings::isExpertModeEnabled();
 
-    // NumberOfLeds
-//    ui->label_NumberOfLeds->setVisible(options & DeviceTab::NumberOfLeds);
-//    ui->spinBox_NumberOfLeds->setVisible(options & DeviceTab::NumberOfLeds);
+    // Show color depth only if lightpack hw4.x or hw5.x
+    ui->label_DeviceColorDepth->setVisible(isShowOldSettings);
+    ui->horizontalSlider_DeviceColorDepth->setVisible(isShowOldSettings);
+    ui->spinBox_DeviceColorDepth->setVisible(isShowOldSettings);
 
-    // SerialPort
-//    ui->label_SerialPort->setVisible(options & DeviceTab::SerialPort);
-//    ui->lineEdit_SerialPort->setVisible(options & DeviceTab::SerialPort);
-
-    // SerialPortBaudRate
-//    ui->label_SerialPortBaudRate->setVisible(options & DeviceTab::SerialPort);
-//    ui->comboBox_SerialPortBaudRate->setVisible(options & DeviceTab::SerialPort);
-
-    // Gamma
-//    ui->label_GammaCorrection->setVisible((options & DeviceTab::Gamma) && Settings::isExpertModeEnabled());
-//    ui->doubleSpinBox_DeviceGamma->setVisible((options & DeviceTab::Gamma) && Settings::isExpertModeEnabled());
-
-    // Virtual leds
-//    ui->frame_VirtualLeds->setVisible(options & DeviceTab::VirtualLeds);
-
-     // ColorSequence
-//    ui->label_ColorSequence->setVisible(options & DeviceTab::ColorSequence);
-//    ui->comboBox_ColorSequence->setVisible(options & DeviceTab::ColorSequence);
+    ui->label_DeviceRefreshDelay->setVisible(isShowOldSettings);
+    ui->horizontalSlider_DeviceRefreshDelay->setVisible(isShowOldSettings);
+    ui->spinBox_DeviceRefreshDelay->setVisible(isShowOldSettings);
 }
 
 void SettingsWindow::syncLedDeviceWithSettingsWindow()
