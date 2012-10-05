@@ -20,6 +20,10 @@ class GmailChecker(BasePlugin.BasePlugin):
         self.timerCheck.setInterval(time * 60000)
         self.timerCheck.connect('timeout()', self.gmail_checker)
         
+        self.timeranim = PythonQt.QtCore.QTimer(None)
+        self.timeranim.connect('timeout()', self.stopAnimation)
+        
+        
         self.ledMap = [6,1,2,7,3,4,8,9,10,5]
         print "init"
     
@@ -45,7 +49,7 @@ class GmailChecker(BasePlugin.BasePlugin):
 
     def version(self):
         """ return the version of the plugin """
-        return "0.5"
+        return "0.6"
 
     def Timeout(self):
         self.i = self.i+1
@@ -65,6 +69,14 @@ class GmailChecker(BasePlugin.BasePlugin):
         Lightpack.Lock(self.sessionKey)
         self.i=1
         self.timer.start()
+        time = int(Lightpack.GetSettingMain('GmailChecker/TimeAnim'))
+        if (time == None):
+            time = 0
+        if time>0:
+            self.timeranim.setInterval(time * 60000)
+            self.timeranim.start()
+        
+        
 
     def run(self):
         self.timerCheck.start()
@@ -78,6 +90,7 @@ class GmailChecker(BasePlugin.BasePlugin):
 
     def stopAnimation(self):
         self.timer.stop()
+        self.timeranim.stop()
         if (self.on == 1):
             Lightpack.SetStatus(self.sessionKey,1)
         Lightpack.UnLock(self.sessionKey)
@@ -92,8 +105,25 @@ class GmailChecker(BasePlugin.BasePlugin):
     def changeTimeCheck(self,value):
         if (value != ""):
             Lightpack.SetSettingMain('GmailChecker/TimeCheck',value)
+            time = value
         else:
             Lightpack.SetSettingMain('GmailChecker/TimeCheck',1)
+            time = 1
+        self.timerCheck.setInterval(time * 60000)
+        
+
+    def changeTimeAnim(self,value):
+        if (value != ""):
+            Lightpack.SetSettingMain('GmailChecker/TimeAnim',value)
+            time = int(value)
+        else:
+            Lightpack.SetSettingMain('GmailChecker/TimeAnim',0)
+            time = 0
+        if time>0:
+            self.timeranim.setInterval(time * 60000)
+            self.timeranim.start()
+        else:
+            self.timeranim.stop()
     
     def changeTimeBegin(self,value):
         if (value!=""):
@@ -136,6 +166,17 @@ class GmailChecker(BasePlugin.BasePlugin):
         edittime.setText(time)
         box.addWidget(edittime)
         
+        labelanim = QLabel(SettingsBox)
+        labelanim.setText("Animation period (min; 0 - no off animation)")
+        box.addWidget(labelanim)
+        editanim = QLineEdit(SettingsBox)
+        editanim.setValidator(QIntValidator(0, 65536, editanim))
+        time = Lightpack.GetSettingMain('GmailChecker/TimeAnim')
+        if (time == None):
+            time = 0
+        editanim.setText(time)
+        box.addWidget(editanim)
+        
         labelbegin = QLabel(SettingsBox)
         labelbegin.setText("Begin check (hour)")
         box.addWidget(labelbegin)
@@ -170,6 +211,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         editAcc.connect('textChanged(QString)', self.changeAcc)
         editPass.connect('textChanged(QString)', self.changePass)
         edittime.connect('textChanged(QString)', self.changeTimeCheck)
+        editanim.connect('textChanged(QString)', self.changeTimeAnim)
         editbegin.connect('textChanged(QString)', self.changeTimeBegin)
         editend.connect('textChanged(QString)', self.changeTimeEnd)
         pushcheck.connect('clicked()', self.gmail_checker)
@@ -197,10 +239,13 @@ class GmailChecker(BasePlugin.BasePlugin):
             password = Lightpack.GetSettingMain('GmailChecker/Password')
             i=imaplib.IMAP4_SSL('imap.gmail.com')
             try:
-                    i.login(username,password)
-                    x,y=i.status('INBOX','(MESSAGES UNSEEN)')
-                    messages=int(re.search('MESSAGES\s+(\d+)',y[0]).group(1))
-                    self.unseen=int(re.search('UNSEEN\s+(\d+)',y[0]).group(1))
+                i.login(username,password)
+                x,y=i.status('INBOX','(MESSAGES UNSEEN)')
+                messages=int(re.search('MESSAGES\s+(\d+)',y[0]).group(1))
+                cur_unseen=int(re.search('UNSEEN\s+(\d+)',y[0]).group(1))
+                print cur_unseen
+                if self.unseen != cur_unseen:
+                    self.unseen = cur_unseen
                     if self.unseen > 0 :	
                         print "unseen"
                         self.runAnimation()
