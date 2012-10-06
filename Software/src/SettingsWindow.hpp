@@ -187,7 +187,12 @@ private slots:
     void on_pushButton_clicked();
     void MoveUpPlugin();
     void MoveDownPlugin();
-    void on_pushButton_3_clicked();
+
+    void on_pushButton_LightpackSmoothnessHelp_clicked();
+    void on_pushButton_LightpackColorDepthHelp_clicked();
+    void on_pushButton_LightpackRefreshDelayHelp_clicked();
+
+    void on_pushButton_GammaCorrectionHelp_clicked();
 
 private:
     void updateTrayAndActionStates();    
@@ -223,6 +228,7 @@ private:
     void versionsUpdate();
 
     void savePriorityPlugin();
+    void showHelpOf(QObject *object);
 
 
 private:

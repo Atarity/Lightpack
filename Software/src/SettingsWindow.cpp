@@ -423,6 +423,7 @@ void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << options;
 
+#ifdef QT_NO_DEBUG
     int majorVersion = getLigtpackFirmwareVersionMajor();
     bool isShowOldSettings = (majorVersion == 4 || majorVersion == 5) && Settings::isExpertModeEnabled();
 
@@ -430,10 +431,13 @@ void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)
     ui->label_DeviceColorDepth->setVisible(isShowOldSettings);
     ui->horizontalSlider_DeviceColorDepth->setVisible(isShowOldSettings);
     ui->spinBox_DeviceColorDepth->setVisible(isShowOldSettings);
+    ui->pushButton_LightpackColorDepthHelp->setVisible(isShowOldSettings);
 
     ui->label_DeviceRefreshDelay->setVisible(isShowOldSettings);
     ui->horizontalSlider_DeviceRefreshDelay->setVisible(isShowOldSettings);
     ui->spinBox_DeviceRefreshDelay->setVisible(isShowOldSettings);
+    ui->pushButton_LightpackRefreshDelayHelp->setVisible(isShowOldSettings);
+#endif
 }
 
 void SettingsWindow::syncLedDeviceWithSettingsWindow()
@@ -2141,7 +2145,27 @@ void SettingsWindow::versionsUpdate()
     setFixedSize( sizeHint() );
 }
 
-void SettingsWindow::on_pushButton_3_clicked()
+void SettingsWindow::showHelpOf(QObject *object)
 {
-    QCoreApplication::postEvent(ui->horizontalSlider_DeviceSmooth, new QHelpEvent(QEvent::WhatsThis, QPoint(0,0), QCursor::pos()));
+    QCoreApplication::postEvent(object, new QHelpEvent(QEvent::WhatsThis, QPoint(0,0), QCursor::pos()));
+}
+
+void SettingsWindow::on_pushButton_LightpackSmoothnessHelp_clicked()
+{
+    showHelpOf(ui->horizontalSlider_DeviceSmooth);
+}
+
+void SettingsWindow::on_pushButton_LightpackColorDepthHelp_clicked()
+{
+    showHelpOf(ui->horizontalSlider_DeviceColorDepth);
+}
+
+void SettingsWindow::on_pushButton_LightpackRefreshDelayHelp_clicked()
+{
+    showHelpOf(ui->horizontalSlider_DeviceRefreshDelay);
+}
+
+void SettingsWindow::on_pushButton_GammaCorrectionHelp_clicked()
+{
+   showHelpOf(ui->horizontalSlider_GammaCorrection);
 }
