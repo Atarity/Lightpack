@@ -8,23 +8,23 @@ from PythonQt.QtGui import *
 class GmailChecker(BasePlugin.BasePlugin):
     def init(self):
         self.unseen = 0
+        self.ledMap = [6,1,2,7,3,4,8,9,10,5]
+        self.setMap()
         self.on = Lightpack.GetStatus()
         self.sessionKey = Lightpack.GetSessionKey(self.__class__.__name__)
         self.timer = PythonQt.QtCore.QTimer(None)
         self.timer.setInterval(100)
         self.timer.timeout.connect(self.Timeout)
         self.timerCheck = PythonQt.QtCore.QTimer(None)
-        time = int(Lightpack.GetSettingMain('GmailChecker/TimeCheck'))
+        time = Lightpack.GetSettingMain('GmailChecker/TimeCheck')
         if (time == None):
             time = 1
+        else:
+            time = int(time)
         self.timerCheck.setInterval(time * 60000)
         self.timerCheck.connect('timeout()', self.gmail_checker)
-        
         self.timeranim = PythonQt.QtCore.QTimer(None)
         self.timeranim.connect('timeout()', self.stopAnimation)
-        
-        
-        self.ledMap = [6,1,2,7,3,4,8,9,10,5]
         print "init"
     
     def dispose(self):
@@ -49,33 +49,43 @@ class GmailChecker(BasePlugin.BasePlugin):
 
     def version(self):
         """ return the version of the plugin """
-        return "0.6"
+        return "0.7"
 
     def Timeout(self):
-        self.i = self.i+1
-        leds = Lightpack.GetCountLeds()
-        for k  in range (0, leds):
-            idx = (self.i+k) % leds
-            if k < 3 :
-                Lightpack.SetColor(self.sessionKey,self.ledMap[idx]-1,255,0,0)
-            else :
-                if k<6:
-                     Lightpack.SetColor(self.sessionKey,self.ledMap[idx]-1,0,0,128)
-                else:
-                     Lightpack.SetColor(self.sessionKey,self.ledMap[idx]-1,0,0,0)        
+        try:
+            self.i = self.i+1
+            leds = Lightpack.GetCountLeds()
+            for k  in range (0, leds):
+                idx = (self.i+k) % leds
+                if k < 3 :
+                    Lightpack.SetColor(self.sessionKey,self.ledMap[idx]-1,255,0,0)
+                else :
+                    if k<6:
+                         Lightpack.SetColor(self.sessionKey,self.ledMap[idx]-1,0,0,128)
+                    else:
+                         Lightpack.SetColor(self.sessionKey,self.ledMap[idx]-1,0,0,0)   
+        except Exception, e:
+            print e
     
     def runAnimation(self):
-        self.on = Lightpack.GetStatus()
-        Lightpack.Lock(self.sessionKey)
-        self.i=1
-        self.timer.start()
-        time = int(Lightpack.GetSettingMain('GmailChecker/TimeAnim'))
-        if (time == None):
-            time = 0
-        if time>0:
-            self.timeranim.setInterval(time * 60000)
-            self.timeranim.start()
-        
+        try:
+            if self.timer.isActive():
+                return
+            self.on = Lightpack.GetStatus()
+            Lightpack.Lock(self.sessionKey)
+            Lightpack.SetStatus(self.sessionKey,1)
+            self.i=1
+            self.timer.start()
+            time = Lightpack.GetSettingMain('GmailChecker/TimeAnim')
+            if (time == None):
+                time = 0
+            else:
+                time = int(time)
+            if time>0:
+                self.timeranim.setInterval(time * 60000)
+                self.timeranim.start()
+        except Exception, e:
+            print e
         
 
     def run(self):
@@ -89,10 +99,11 @@ class GmailChecker(BasePlugin.BasePlugin):
         print "stop"
 
     def stopAnimation(self):
+        if self.timer.isActive() == False:
+            return
         self.timer.stop()
         self.timeranim.stop()
-        if (self.on == 1):
-            Lightpack.SetStatus(self.sessionKey,1)
+        Lightpack.SetStatus(self.sessionKey,self.on)
         Lightpack.UnLock(self.sessionKey)
         self.tick = 0
         
@@ -136,7 +147,21 @@ class GmailChecker(BasePlugin.BasePlugin):
             Lightpack.SetSettingMain('GmailChecker/TimeEnd',value)
         else:
             Lightpack.SetSettingMain('GmailChecker/TimeEnd',24)
-        
+
+    def changeMap(self,value):
+        Lightpack.SetSettingMain('GmailChecker/LedsMap',value)
+        self.setMap()
+
+    def setMap(self):
+        try:
+            map = Lightpack.GetSettingMain('GmailChecker/LedsMap')
+            self.ledMap = [int(n) for n in map.split(',')]
+            print self.ledMap
+        except Exception, e:
+            print e
+            self.ledMap = [1,2,3,4,5,6,7,8,9,10]
+            
+            
     def settings(self):
         """ default function """
         box = QVBoxLayout(SettingsBox)
@@ -163,6 +188,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         time = Lightpack.GetSettingMain('GmailChecker/TimeCheck')
         if (time == None):
             time = 1
+            self.changeTimeCheck(1)
         edittime.setText(time)
         box.addWidget(edittime)
         
@@ -174,6 +200,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         time = Lightpack.GetSettingMain('GmailChecker/TimeAnim')
         if (time == None):
             time = 0
+            self.changeTimeAnim(0)
         editanim.setText(time)
         box.addWidget(editanim)
         
@@ -185,6 +212,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         time = Lightpack.GetSettingMain('GmailChecker/TimeBegin')
         if (time == None):
             time = 0
+            self.changeTimeBegin(0)
         editbegin.setText(time)
         box.addWidget(editbegin)
         
@@ -196,8 +224,20 @@ class GmailChecker(BasePlugin.BasePlugin):
         time = Lightpack.GetSettingMain('GmailChecker/TimeEnd')
         if (time == None):
             time = 0
+            self.changeTimeEnd(24)
         editend.setText(time)
         box.addWidget(editend)
+        
+        labemap = QLabel(SettingsBox)
+        labemap.setText("Leds map (separator - ',')")
+        box.addWidget(labemap)
+        editmap = QLineEdit(SettingsBox)
+        map = Lightpack.GetSettingMain('GmailChecker/LedsMap')
+        if (map == None):
+            map = "1,2,3,4,5,6,7,8,9,10"
+            self.changeMap(map)
+        editmap.setText(map)
+        box.addWidget(editmap)
         
         self.labelunseen = QLabel(SettingsBox)
         self.labelunseen.setText("Unread messages : "+str(self.unseen))
@@ -214,51 +254,52 @@ class GmailChecker(BasePlugin.BasePlugin):
         editanim.connect('textChanged(QString)', self.changeTimeAnim)
         editbegin.connect('textChanged(QString)', self.changeTimeBegin)
         editend.connect('textChanged(QString)', self.changeTimeEnd)
+        editmap.connect('textChanged(QString)', self.changeMap)
         pushcheck.connect('clicked()', self.gmail_checker)
         return 0; 
 
     def gmail_checker(self):
-            print "check"
-            timebegin = int(Lightpack.GetSettingMain('GmailChecker/TimeBegin'))
-            if (timebegin == None):
-                timebegin = 0
-            timeend = int(Lightpack.GetSettingMain('GmailChecker/TimeEnd'))
-            if (timeend == None):
-                timeend = 0
-            import datetime
-            now = datetime.datetime.now()
-            hour = now.hour
-            if (hour < timebegin):
-                self.stopAnimation();
-                return
-            if (hour >= timeend):
-                self.stopAnimation();
-                return
-            import imaplib,re
-            username = Lightpack.GetSettingMain('GmailChecker/Username')
-            password = Lightpack.GetSettingMain('GmailChecker/Password')
-            i=imaplib.IMAP4_SSL('imap.gmail.com')
-            try:
-                i.login(username,password)
-                x,y=i.status('INBOX','(MESSAGES UNSEEN)')
-                messages=int(re.search('MESSAGES\s+(\d+)',y[0]).group(1))
-                cur_unseen=int(re.search('UNSEEN\s+(\d+)',y[0]).group(1))
-                print cur_unseen
-                if self.unseen != cur_unseen:
-                    self.unseen = cur_unseen
-                    if self.unseen > 0 :	
-                        print "unseen"
-                        self.runAnimation()
-                    else:
-                        print "no mail"
-                        self.stopAnimation()
-                    if (self.labelunseen):   
-                        self.labelunseen.setText("Unread messages : "+str(self.unseen))
-            except Exception, e:
-                print e
-                if (self.labelunseen):    
-                    self.labelunseen.setText("Unread messages : error")
-                return
+        print "check"
+        timebegin = int(Lightpack.GetSettingMain('GmailChecker/TimeBegin'))
+        if (timebegin == None):
+            timebegin = 0
+        timeend = int(Lightpack.GetSettingMain('GmailChecker/TimeEnd'))
+        if (timeend == None):
+            timeend = 0
+        import datetime
+        now = datetime.datetime.now()
+        hour = now.hour
+        if (hour < timebegin):
+            self.stopAnimation();
+            return
+        if (hour >= timeend):
+            self.stopAnimation();
+            return
+        import imaplib,re
+        username = Lightpack.GetSettingMain('GmailChecker/Username')
+        password = Lightpack.GetSettingMain('GmailChecker/Password')
+        i=imaplib.IMAP4_SSL('imap.gmail.com')
+        try:
+            i.login(username,password)
+            x,y=i.status('INBOX','(MESSAGES UNSEEN)')
+            messages=int(re.search('MESSAGES\s+(\d+)',y[0]).group(1))
+            cur_unseen=int(re.search('UNSEEN\s+(\d+)',y[0]).group(1))
+            print cur_unseen
+            if self.unseen != cur_unseen:
+                self.unseen = cur_unseen
+                if self.unseen > 0 :	
+                    print "unseen"
+                    self.runAnimation()
+                else:
+                    print "no mail"
+                    self.stopAnimation()
+                if (self.labelunseen):   
+                    self.labelunseen.setText("Unread messages : "+str(self.unseen))
+        except Exception, e:
+            print e
+            if (self.labelunseen):    
+                self.labelunseen.setText("Unread messages : error")
+            return
             
             
 
