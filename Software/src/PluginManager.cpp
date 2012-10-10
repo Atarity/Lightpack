@@ -92,7 +92,7 @@ void PluginManager::init(LightpackPluginInterface *pluginInterface, QWidget* set
 
     initPython();
 
-    loadPlugins();
+    //loadPlugins();
 }
 
 void PluginManager::reloadPlugins(){
