@@ -8,6 +8,7 @@ from PythonQt.QtGui import *
 class GmailChecker(BasePlugin.BasePlugin):
     def init(self):
         self.unseen = 0
+        self.reminder = False
         self.ledMap = self.defaultMap()
         self.setMap()
         self.on = Lightpack.GetStatus()
@@ -25,14 +26,20 @@ class GmailChecker(BasePlugin.BasePlugin):
         self.timerCheck.connect('timeout()', self.gmail_checker)
         self.timeranim = PythonQt.QtCore.QTimer(None)
         self.timeranim.connect('timeout()', self.stopAnimation)
+        self.timerrem = PythonQt.QtCore.QTimer(None)
+        self.timerrem.connect('timeout()', self.reminderProc)
         print "init"
     
     def dispose(self):
         self.timerCheck.setInterval(0)
         self.timerCheck.stop()
+        self.timerrem.stop()
+        self.timeranim.stop()
         self.timerCheck.disconnect('timeout()', self.gmail_checker)
         del self.timer
+        del self.timeranim
         del self.timerCheck
+        del self.timerrem
         print "dispose"
 
     def name(self):
@@ -49,8 +56,13 @@ class GmailChecker(BasePlugin.BasePlugin):
 
     def version(self):
         """ return the version of the plugin """
-        return "0.8"
+        return "0.9"
 
+    def reminderProc(self):
+        print "reminder"
+        self.reminder = True
+        
+        
     def Timeout(self):
         try:
             self.i = self.i+1
@@ -76,6 +88,7 @@ class GmailChecker(BasePlugin.BasePlugin):
             Lightpack.SetStatus(self.sessionKey,1)
             self.i=1
             self.timer.start()
+            self.timerrem.stop()
             time = Lightpack.GetSettingMain('GmailChecker/TimeAnim')
             if (time == None):
                 time = 0
@@ -84,6 +97,7 @@ class GmailChecker(BasePlugin.BasePlugin):
             if time>0:
                 self.timeranim.setInterval(time * 60000)
                 self.timeranim.start()
+            
         except Exception, e:
             print e
         
@@ -95,6 +109,8 @@ class GmailChecker(BasePlugin.BasePlugin):
     def stop(self):
         self.timerCheck.stop()
         self.timer.stop()
+        self.timeranim.stop()
+        self.timerrem.stop()
         Lightpack.UnLock(self.sessionKey)
         print "stop"
 
@@ -103,6 +119,14 @@ class GmailChecker(BasePlugin.BasePlugin):
             return
         self.timer.stop()
         self.timeranim.stop()
+        time = Lightpack.GetSettingMain('GmailChecker/TimeReminder')
+        if (time == None):
+            time = 0
+        else:
+            time = int(time)
+        if time>0:
+            self.timerrem.setInterval(time * 60000)
+            self.timerrem.start()
         Lightpack.SetStatus(self.sessionKey,self.on)
         Lightpack.UnLock(self.sessionKey)
         self.tick = 0
@@ -136,6 +160,13 @@ class GmailChecker(BasePlugin.BasePlugin):
         else:
             self.timeranim.stop()
     
+    def changeTimeRem(self,value):
+        if (value != ""):
+            Lightpack.SetSettingMain('GmailChecker/TimeReminder',value)
+        else:
+            Lightpack.SetSettingMain('GmailChecker/TimeReminder',0)
+    
+    
     def changeTimeBegin(self,value):
         if (value!=""):
             Lightpack.SetSettingMain('GmailChecker/TimeBegin',value)
@@ -156,7 +187,6 @@ class GmailChecker(BasePlugin.BasePlugin):
         try:
             leds = Lightpack.GetCountLeds()
             map = [int(n+1) for n in range (0, leds)]
-            print self.ledMap
         except Exception, e:
             print e
             map = [1,2,3,4,5,6,7,8,9,10]
@@ -223,12 +253,27 @@ class GmailChecker(BasePlugin.BasePlugin):
         editanim.setText(time)
         box.addWidget(editanim,4,1)
         
+        labelrem = QLabel(SettingsBox)
+        labelrem.setText("Reminder")
+        box.addWidget(labelrem,5,0)
+        labelrem2 = QLabel(SettingsBox)
+        labelrem2.setText("min (0 - off)")
+        box.addWidget(labelrem2,5,2)
+        editrem = QLineEdit(SettingsBox)
+        editrem.setValidator(QIntValidator(0, 65536, editrem))
+        time = Lightpack.GetSettingMain('GmailChecker/TimeReminder')
+        if (time == None):
+            time = 0
+            self.changeTimeRem(0)
+        editrem.setText(time)
+        box.addWidget(editrem,5,1)
+        
         labelbegin = QLabel(SettingsBox)
         labelbegin.setText("Begin check")
-        box.addWidget(labelbegin,5,0)
+        box.addWidget(labelbegin,6,0)
         labelbegin2 = QLabel(SettingsBox)
         labelbegin2.setText("hour")
-        box.addWidget(labelbegin2,5,2)
+        box.addWidget(labelbegin2,6,2)
         editbegin = QLineEdit(SettingsBox)
         editbegin.setValidator(QIntValidator(0, 65536, editbegin))
         time = Lightpack.GetSettingMain('GmailChecker/TimeBegin')
@@ -236,14 +281,14 @@ class GmailChecker(BasePlugin.BasePlugin):
             time = 0
             self.changeTimeBegin(0)
         editbegin.setText(time)
-        box.addWidget(editbegin,5,1)
+        box.addWidget(editbegin,6,1)
         
         labelend = QLabel(SettingsBox)
         labelend.setText("End check")
-        box.addWidget(labelend,6,0)
+        box.addWidget(labelend,7,0)
         labelend2 = QLabel(SettingsBox)
         labelend2.setText("hour")
-        box.addWidget(labelend2,6,2)
+        box.addWidget(labelend2,7,2)
         editend = QLineEdit(SettingsBox)
         editend.setValidator(QIntValidator(0, 65536, editend))
         time = Lightpack.GetSettingMain('GmailChecker/TimeEnd')
@@ -251,18 +296,18 @@ class GmailChecker(BasePlugin.BasePlugin):
             time = 0
             self.changeTimeEnd(24)
         editend.setText(time)
-        box.addWidget(editend,6,1)
+        box.addWidget(editend,7,1)
         
         labemap = QLabel(SettingsBox)
         labemap.setText("Leds map \n(separator - ',')")
-        box.addWidget(labemap,7,0)
+        box.addWidget(labemap,8,0)
         editmap = QLineEdit(SettingsBox)
         map = Lightpack.GetSettingMain('GmailChecker/LedsMap')
         if (map == None):
             map = self.mapToStr(self.defaultMap())
             self.changeMap(map)
         editmap.setText(map)
-        box.addWidget(editmap,7,1,2,2)
+        box.addWidget(editmap,8,1,2,2)
         
         self.labelunseen = QLabel(SettingsBox)
         self.labelunseen.setText("Unread messages : "+str(self.unseen))
@@ -280,6 +325,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         editPass.connect('textChanged(QString)', self.changePass)
         edittime.connect('textChanged(QString)', self.changeTimeCheck)
         editanim.connect('textChanged(QString)', self.changeTimeAnim)
+        editrem.connect('textChanged(QString)', self.changeTimeRem)
         editbegin.connect('textChanged(QString)', self.changeTimeBegin)
         editend.connect('textChanged(QString)', self.changeTimeEnd)
         editmap.connect('textChanged(QString)', self.changeMap)
@@ -313,8 +359,9 @@ class GmailChecker(BasePlugin.BasePlugin):
             messages=int(re.search('MESSAGES\s+(\d+)',y[0]).group(1))
             cur_unseen=int(re.search('UNSEEN\s+(\d+)',y[0]).group(1))
             print cur_unseen
-            if self.unseen != cur_unseen:
+            if ((self.unseen != cur_unseen) or (self.reminder == True)):
                 self.unseen = cur_unseen
+                self.reminder = False
                 if self.unseen > 0 :	
                     print "unseen"
                     self.runAnimation()
