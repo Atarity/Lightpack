@@ -181,7 +181,7 @@ void LedDeviceArdulight::updateDeviceSettings()
 
     setGamma(Settings::getDeviceGamma());
     setBrightness(Settings::getDeviceBrightness());
-    m_colorSequence = Settings::getColorSequence(SupportedDevices::DeviceTypeArdulight);
+    setColorSequence(Settings::getColorSequence(SupportedDevices::DeviceTypeArdulight));
 }
 
 void LedDeviceArdulight::open()

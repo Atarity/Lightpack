@@ -107,8 +107,7 @@ private:
     LightpackPluginInterface *m_pluginInterface;
     PluginManager *m_pluginManager;
     QThread* m_PluginThread;
-    PythonQtScriptingConsole* consolePlugin;
-    // QWidget *consolePlugin;
+    QWidget *consolePlugin;
 
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;

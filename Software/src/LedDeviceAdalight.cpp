@@ -175,7 +175,7 @@ void LedDeviceAdalight::updateDeviceSettings()
 
     setGamma(Settings::getDeviceGamma());
     setBrightness(Settings::getDeviceBrightness());
-    m_colorSequence = Settings::getColorSequence(SupportedDevices::DeviceTypeAdalight);
+    setColorSequence(Settings::getColorSequence(SupportedDevices::DeviceTypeAdalight));
 }
 
 void LedDeviceAdalight::open()

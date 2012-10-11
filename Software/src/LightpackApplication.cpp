@@ -553,20 +553,21 @@ void LightpackApplication::startPluginManager()
 void LightpackApplication::getConsole()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    //    if (consolePlugin == NULL)
-    //    {
-    consolePlugin = m_pluginManager->getConsole(NULL);
-    consolePlugin->setWindowTitle(tr("Plugin console"));
-    connect(consolePlugin,SIGNAL(destroyed()),this,SLOT(consoleClosing()));
-    consolePlugin->setWindowFlags(//Qt::Window |
+    if (consolePlugin)
+        consolePlugin->activateWindow();
+    else
+    {
+        consolePlugin = new QWidget(NULL);
+        m_pluginManager->getConsole(consolePlugin);
+        consolePlugin->setWindowTitle(tr("Plugin console"));
+        consolePlugin->setAttribute( Qt::WA_DeleteOnClose );
+        connect( consolePlugin, SIGNAL(destroyed(QObject*)), this, SLOT(consoleClosing()) );
+        consolePlugin->setWindowFlags(//Qt::Window |
                                   //Qt::WindowStaysOnTopHint |
                                   //Qt::CustomizeWindowHint |
                                   Qt::WindowCloseButtonHint);
-    consolePlugin->show();
-    //    }
-    //    else
-    //        consolePlugin->activateWindow();
-
+        consolePlugin->show();
+    }
 }
 
 void LightpackApplication::consoleClosing()
