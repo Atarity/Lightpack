@@ -56,6 +56,7 @@ public slots:
     void setRefreshDelay(int value);
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);
+    void setColorSequence(QString /*value*/);
     void setGamma(double value);
     void setBrightness(int percent);
     void requestFirmwareVersion();

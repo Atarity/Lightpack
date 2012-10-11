@@ -154,6 +154,11 @@ void LedDeviceLightpack::setSmoothSlowdown(int value)
     emit commandCompleted(ok);
 }
 
+void LedDeviceLightpack::setColorSequence(QString /*value*/)
+{
+    emit commandCompleted(true);
+}
+
 void LedDeviceLightpack::setGamma(double value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;

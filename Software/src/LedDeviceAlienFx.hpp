@@ -48,6 +48,7 @@ public slots:
     void setSmoothSlowdown(int /*value*/);
     void setGamma(double /*value*/);
     void setBrightness(int /*value*/);
+    void setColorSequence(QString /*value*/);
     void requestFirmwareVersion();
     void updateDeviceSettings();
 

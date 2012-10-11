@@ -151,6 +151,7 @@ enum Cmd {
     SetSmoothSlowdown,
     SetGamma,
     SetBrightness,
+    SetColorSequence,
     RequestFirmwareVersion,
     UpdateDeviceSettings
 };

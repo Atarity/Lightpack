@@ -86,6 +86,11 @@ void LedDeviceVirtual::setSmoothSlowdown(int /*value*/)
     emit commandCompleted(true);
 }
 
+void LedDeviceVirtual::setColorSequence(QString /*value*/)
+{
+    emit commandCompleted(true);
+}
+
 void LedDeviceVirtual::setGamma(double value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;

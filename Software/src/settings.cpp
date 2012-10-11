@@ -782,7 +782,7 @@ void Settings::setColorSequence(SupportedDevices::DeviceType device, QString col
             DEBUG_LOW_LEVEL << Q_FUNC_INFO << "ard" << colorSequence;
             break;
     }
-    m_this->colorSequenceChanged(device, colorSequence);
+    m_this->deviceColorSequenceChanged(colorSequence);
 }
 
 QString Settings::getColorSequence(SupportedDevices::DeviceType device)

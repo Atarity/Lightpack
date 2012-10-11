@@ -167,6 +167,12 @@ void LedDeviceAlienFx::setBrightness(int /*value*/)
     emit commandCompleted(true);
 }
 
+void LedDeviceAlienFx::setColorSequence(QString /*value*/)
+{
+    emit commandCompleted(true);
+}
+
+
 void LedDeviceAlienFx::requestFirmwareVersion()
 {
     emit firmwareVersion("unknown (alienfx)");

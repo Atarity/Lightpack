@@ -160,6 +160,15 @@ void LedDeviceArdulight::setBrightness(int percent)
     setColors(m_colorsSaved);
 }
 
+
+void LedDeviceArdulight::setColorSequence(QString value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    m_colorSequence = value;
+    setColors(m_colorsSaved);
+}
+
 void LedDeviceArdulight::requestFirmwareVersion()
 {
     emit firmwareVersion("unknown (ardulight device)");

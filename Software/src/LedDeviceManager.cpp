@@ -181,6 +181,20 @@ void LedDeviceManager::setBrightness(int value)
     }
 }
 
+void LedDeviceManager::setColorSequence(QString value)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << value << "Is last command completed:" << m_isLastCommandCompleted;
+
+    if (m_isLastCommandCompleted)
+    {
+        m_isLastCommandCompleted = false;
+        emit ledDeviceSetColorSequence(value);
+    } else {
+        m_savedColorSequence = value;
+        cmdQueueAppend(LedDeviceCommands::SetColorSequence);
+    }
+}
+
 void LedDeviceManager::requestFirmwareVersion()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "Is last command completed:" << m_isLastCommandCompleted;
@@ -327,6 +341,7 @@ void LedDeviceManager::connectSignalSlotsLedDevice()
     connect(this, SIGNAL(ledDeviceSetSmoothSlowdown(int)),      m_ledDevice, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetGamma(double)),            m_ledDevice, SLOT(setGamma(double)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetBrightness(int)),          m_ledDevice, SLOT(setBrightness(int)), Qt::QueuedConnection);
+    connect(this, SIGNAL(ledDeviceSetColorSequence(QString)),   m_ledDevice, SLOT(setColorSequence(QString)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceRequestFirmwareVersion()),    m_ledDevice, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceUpdateDeviceSettings()),      m_ledDevice, SLOT(updateDeviceSettings()), Qt::QueuedConnection);
 }
@@ -354,6 +369,7 @@ void LedDeviceManager::disconnectSignalSlotsLedDevice()
     disconnect(this, SIGNAL(ledDeviceSetSmoothSlowdown(int)),   m_ledDevice, SLOT(setSmoothSlowdown(int)));
     disconnect(this, SIGNAL(ledDeviceSetGamma(double)),         m_ledDevice, SLOT(setGamma(double)));
     disconnect(this, SIGNAL(ledDeviceSetBrightness(int)),       m_ledDevice, SLOT(setBrightness(int)));
+    disconnect(this, SIGNAL(ledDeviceSetColorSequence(QString)),m_ledDevice, SLOT(setColorSequence(QString)));
     disconnect(this, SIGNAL(ledDeviceRequestFirmwareVersion()), m_ledDevice, SLOT(requestFirmwareVersion()));
     disconnect(this, SIGNAL(ledDeviceUpdateDeviceSettings()),   m_ledDevice, SLOT(updateDeviceSettings()));
 }
@@ -404,6 +420,10 @@ void LedDeviceManager::cmdQueueProcessNext()
 
         case LedDeviceCommands::SetBrightness:
             emit ledDeviceSetBrightness(m_savedBrightness);
+            break;
+
+        case LedDeviceCommands::SetColorSequence:
+            emit ledDeviceSetColorSequence(m_savedColorSequence);
             break;
 
         case LedDeviceCommands::RequestFirmwareVersion:

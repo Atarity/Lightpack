@@ -155,6 +155,14 @@ void LedDeviceAdalight::setBrightness(int percent)
     setColors(m_colorsSaved);
 }
 
+void LedDeviceAdalight::setColorSequence(QString value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    m_colorSequence = value;
+    setColors(m_colorsSaved);
+}
+
 void LedDeviceAdalight::requestFirmwareVersion()
 {
     emit firmwareVersion("unknown (adalight device)");

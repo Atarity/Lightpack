@@ -220,7 +220,6 @@ signals:
     void adalightNumberOfLedsChanged(int numberOfLeds);
     void ardulightNumberOfLedsChanged(int numberOfLeds);
     void virtualNumberOfLedsChanged(int numberOfLeds);
-    void colorSequenceChanged(const SupportedDevices::DeviceType device, const QString &colorSequence);
     void grabSlowdownChanged(int value);
     void backlightEnabledChanged(bool isEnabled);
     void grabAvgColorsEnabledChanged(bool isEnabled);
@@ -231,6 +230,7 @@ signals:
     void deviceSmoothChanged(int value);
     void deviceColorDepthChanged(int value);
     void deviceGammaChanged(double gamma);
+    void deviceColorSequenceChanged(QString value);
     void grabberTypeChanged(const Grab::GrabberType grabMode);
     void dx1011GrabberEnabledChanged(const bool isEnabled);
     void lightpackModeChanged(const Lightpack::Mode mode);

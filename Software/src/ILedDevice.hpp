@@ -64,6 +64,7 @@ public slots:
     virtual void setSmoothSlowdown(int value) = 0;
     virtual void setGamma(double value) = 0;
     virtual void setBrightness(int value) = 0;
+    virtual void setColorSequence(QString value) = 0;
     virtual void requestFirmwareVersion() = 0;
     virtual void updateDeviceSettings() = 0;
 
