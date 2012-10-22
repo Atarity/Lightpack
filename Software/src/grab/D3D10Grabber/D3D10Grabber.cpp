@@ -274,9 +274,13 @@ GrabResult D3D10Grabber::_grab() {
         if( m_memDesc.frameId != m_lastFrameId) {
             m_lastFrameId = m_memDesc.frameId;
             m_grabResult->clear();
-            foreach(QWidget *widget, *m_grabWidgets) {
-                QRect widgetRect = widget->frameGeometry();
-                m_grabResult->append(getColor(widgetRect));
+            foreach(GrabWidget *widget, *m_grabWidgets) {
+                if(widget->isAreaEnabled()) {
+                    QRect widgetRect = widget->frameGeometry();
+                    m_grabResult->append(getColor(widgetRect));
+                } else {
+                    m_grabResult->append(qRgb(0,0,0));
+                }
             }
             result = GrabResultOk;
         } else {

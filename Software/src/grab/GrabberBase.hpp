@@ -37,7 +37,7 @@ enum GrabResult {
 };
 
 /*!
-  Interface which represents each particular grabber. If you want to add a new grabber just add implementation of @code GrabberBase
+  Interface which represents each particular grabber. If you want to add a new grabber just add implementation of \code GrabberBase \endcode
   and modify \a GrabManager
 */
 class GrabberBase : public QObject
@@ -76,7 +76,7 @@ signals:
     void frameGrabAttempted(GrabResult grabResult);
 
 protected:
-    QList<QRgb> *m_grabResult; /*!< @code QList which stores grab result and could be accessed by @code GrabManager */
+    QList<QRgb> *m_grabResult; /*!< \code QList \endcode which stores grab result and could be accessed by \code GrabManager \endcode */
     QList<GrabWidget *> *m_grabWidgets;
     GrabResult m_lastGrabResult;
 

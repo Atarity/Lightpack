@@ -55,7 +55,7 @@ GrabResult QtGrabberEachWidget::_grab()
     m_grabResult->clear();
     foreach(GrabWidget * widget, *m_grabWidgets)
 	{
-        m_grabResult->append( widget->isEnabled() ? getColor(widget) : qRgb(0,0,0) );
+        m_grabResult->append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
     }
     return GrabResultOk;
 }

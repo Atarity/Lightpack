@@ -145,7 +145,7 @@ GrabResult D3D9Grabber::_grab()
     getImageData(m_buf, m_rect);
     m_grabResult->clear();
     foreach(GrabWidget * widget, *m_grabWidgets) {
-        m_grabResult->append( widget->isEnabled() ?
+        m_grabResult->append( widget->isAreaEnabled() ?
                                   getColor(widget->x(), widget->y(), widget->width(), widget->height()) :
                                   qRgb(0,0,0) );
     }

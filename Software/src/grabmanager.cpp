@@ -265,50 +265,18 @@ void GrabManager::handleGrabbedColors()
     int avgR = 0, avgG = 0, avgB = 0;
     int countGrabEnabled = 0;
 
-//    clearColorsNew();
-
-#define PRINT_TIME_SPENT_ON_GRAB 0
-#if PRINT_TIME_SPENT_ON_GRAB
-    QTime t; t.start();
-#endif
-    QList<QRgb> * widgetsColors = new QList<QRgb>();
-//    GrabResult gr = m_grabber->grab();
-//    if(gr == GrabResultOk) {
-//        Q_ASSERT(m_ledWidgets.size() == widgetsColors->size());
-//        for (int i = 0; i < m_ledWidgets.size(); i++)
-//        {
-//            if (m_ledWidgets[i]->isAreaEnabled())
-//            {
-//                QRgb rgb = (*widgetsColors)[i];
-
-//                if (m_avgColorsOnAllLeds)
-//                {
-//                    avgR += qRed(rgb);
-//                    avgG += qGreen(rgb);
-//                    avgB += qBlue(rgb);
-//                    countGrabEnabled++;
-//                } else {
-//                    m_colorsNew[i] = rgb;
-//                }
-//            }else{
-//                m_colorsNew[i] = 0; // off led
-//            }
-//        }
-//    }
-//    delete widgetsColors;
-
-//    if(gr == GrabResultFrameNotReady) {
-//        m_timerGrab->start(5); // check in 5 ms
-//        return;
-//    }
-
-
-#if PRINT_TIME_SPENT_ON_GRAB
-    qDebug() << "Time spent on grab:" << t.elapsed() << "ms";
-#endif
-
     if (m_avgColorsOnAllLeds)
     {
+        for (int i = 0; i < m_ledWidgets.size(); i++)
+        {
+            if (m_ledWidgets[i]->isAreaEnabled())
+            {
+                    avgR += qRed(m_colorsNew[i]);
+                    avgG += qGreen(m_colorsNew[i]);
+                    avgB += qBlue(m_colorsNew[i]);
+                    countGrabEnabled++;
+            }
+        }
         if (countGrabEnabled != 0)
         {
             avgR /= countGrabEnabled;

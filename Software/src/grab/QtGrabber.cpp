@@ -70,7 +70,7 @@ GrabResult QtGrabber::_grab()
 //    }
     m_grabResult->clear();
     foreach(GrabWidget * widget, *m_grabWidgets) {
-        m_grabResult->append( widget->isEnabled() ? getColor(pixmap,widget) : qRgb(0,0,0) );
+        m_grabResult->append( widget->isAreaEnabled() ? getColor(pixmap,widget) : qRgb(0,0,0) );
     }
 
 #if 1

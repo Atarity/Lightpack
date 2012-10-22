@@ -59,7 +59,7 @@ void MacOSGrabber::updateGrabMonitor(QWidget *widget)
         QPixmap pixmap = QPixmap::fromMacCGImageRef(image);
         m_grabResult->clear();
         foreach(GrabWidget * widget, *m_grabWidgets) {
-            m_grabResult->append( widget->isEnabled() ? getColor(pixmap, widget) : qRgb(0,0,0) );
+            m_grabResult->append( widget->isAreaEnabled() ? getColor(pixmap, widget) : qRgb(0,0,0) );
         }
 
         CGImageRelease(image);
