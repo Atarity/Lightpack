@@ -558,7 +558,10 @@ void LightpackApplication::getConsole()
     else
     {
         consolePlugin = new QWidget(NULL);
-        m_pluginManager->getConsole(consolePlugin);
+        QHBoxLayout *layout = new QHBoxLayout(consolePlugin);
+        layout->addWidget(m_pluginManager->getConsole(consolePlugin));
+        layout->setMargin(0);
+        consolePlugin->setLayout(layout);
         consolePlugin->setWindowTitle(tr("Plugin console"));
         consolePlugin->setAttribute( Qt::WA_DeleteOnClose );
         connect( consolePlugin, SIGNAL(destroyed(QObject*)), this, SLOT(consoleClosing()) );
