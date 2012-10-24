@@ -199,7 +199,7 @@ signals:
     void profileLoaded(const QString &);
     void currentProfileNameChanged(const QString &);
     void currentProfileRemoved();
-    void currentProfileInited();
+    void currentProfileInited(const QString &);
     void apiServerEnabledChanged(bool);
     void apiPortChanged(int);
     void apiKeyChanged(const QString &);

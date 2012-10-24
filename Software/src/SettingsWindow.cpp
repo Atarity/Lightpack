@@ -228,7 +228,10 @@ void SettingsWindow::connectSignalsSlots()
     // Connect profile signals to this slots    
     connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(editingFinished()) /* or returnPressed() */, this, SLOT(profileRename()));
     connect(ui->comboBox_Profiles, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileSwitch(QString)));
-    connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)), this, SLOT(handleProfileLoaded(QString)), Qt::QueuedConnection);
+
+    connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)),        this, SLOT(handleProfileLoaded(QString)), Qt::QueuedConnection);
+    connect(Settings::settingsSingleton(), SIGNAL(currentProfileInited(const QString &)), this, SLOT(handleProfileLoaded(QString)), Qt::QueuedConnection);
+
     connect(ui->pushButton_ProfileNew, SIGNAL(clicked()), this, SLOT(profileNew()));
     connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
     connect(ui->pushButton_DeleteProfile, SIGNAL(clicked()), this, SLOT(profileDeleteCurrent()));

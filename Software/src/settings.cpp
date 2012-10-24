@@ -1339,7 +1339,8 @@ void Settings::initCurrentProfile(bool isResetDefault)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "led";
     QMutexLocker locker(&m_mutex);
     m_currentProfile->sync();
-    m_this->currentProfileInited();
+    locker.unlock();
+    m_this->currentProfileInited(getCurrentProfileName());
 }
 
 
