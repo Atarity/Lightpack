@@ -89,6 +89,7 @@ bool D3D10Grabber::m_isInited = false;
 bool D3D10Grabber::m_isStarted = false;
 ILibraryInjector * D3D10Grabber::m_libraryInjector = NULL;
 WCHAR D3D10Grabber::m_hooksLibPath[300];
+bool D3D10Grabber::m_isFrameGrabbedDuringLastSecond = false;
 
 UINT D3D10Grabber::m_lastFrameId;
 
@@ -254,13 +255,16 @@ void D3D10Grabber::stopGrabbing() {
 }
 
 void D3D10Grabber::setGrabInterval(int msec) {
-    m_fallbackGrabber->setGrabInterval(msec);
+    Q_UNUSED(msec);
+    //    m_fallbackGrabber->setGrabInterval(msec);
 }
 
 void D3D10Grabber::grab() {
     if (m_isStarted) {
         m_lastGrabResult = _grab();
         emit frameGrabAttempted(m_lastGrabResult);
+    } else {
+        emit grabberStateChangeRequested(true);
     }
 }
 
@@ -282,13 +286,14 @@ GrabResult D3D10Grabber::_grab() {
                     m_grabResult->append(qRgb(0,0,0));
                 }
             }
+            m_isFrameGrabbedDuringLastSecond = true;
             result = GrabResultOk;
+
         } else {
-            //            result = GrabResultFrameNotReady;
-            result = m_fallbackGrabber->_grab();
+            result = GrabResultFrameNotReady;
         }
     } else {
-        result = m_fallbackGrabber->_grab();
+        result = GrabResultFrameNotReady;
     }
 
     return result;
@@ -330,13 +335,13 @@ void D3D10Grabber::updateGrabMonitor(QWidget *widget) {
         // Get position and resolution of the monitor
         GetMonitorInfo( hMonitor, &m_monitorInfo );
 
-        m_fallbackGrabber->updateGrabMonitor(widget);
+//        m_fallbackGrabber->updateGrabMonitor(widget);
     }
 }
 
-void D3D10Grabber::setFallbackGrabber(GrabberBase *grabber) {
-    m_fallbackGrabber = grabber;
-}
+//void D3D10Grabber::setFallbackGrabber(GrabberBase *grabber) {
+//    m_fallbackGrabber = grabber;
+//}
 
 void D3D10Grabber::infectCleanDxProcesses() {
     if (m_isInited) {

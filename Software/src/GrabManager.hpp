@@ -86,6 +86,7 @@ private slots:
 private:
     GrabberBase *queryGrabber(Grab::GrabberType grabber);
     void initGrabbers();
+    GrabberBase *initGrabber(GrabberBase *grabber);
     void initColorLists(int numberOfLeds);
     void clearColorsNew();
     void clearColorsCurrent();
@@ -94,10 +95,6 @@ private:
 private:
     QList<GrabberBase*> m_grabbers;
     GrabberBase *m_grabber;
-
-    #ifdef D3D10_GRAB_SUPPORT
-    D3D10Grabber *m_dx1011Grabber;
-    #endif
 
     QTimer *m_timerGrab;
     QTimer *m_timerUpdateFPS;
