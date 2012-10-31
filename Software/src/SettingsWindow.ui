@@ -2647,13 +2647,13 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
          <widget class="QLabel" name="label">
           <property name="minimumSize">
            <size>
-            <width>100</width>
-            <height>0</height>
+            <width>0</width>
+            <height>100</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>150</width>
+            <width>16777215</width>
             <height>150</height>
            </size>
           </property>
@@ -2688,6 +2688,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
           <property name="text">
            <string>&lt;h2&gt;Lightpack&lt;/h2&gt;</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
           <property name="margin">
            <number>0</number>
           </property>
@@ -2720,6 +2723,9 @@ p, li { white-space: pre-wrap; }
           <property name="scaledContents">
            <bool>true</bool>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
           <property name="margin">
            <number>0</number>
           </property>
@@ -2751,6 +2757,9 @@ p, li { white-space: pre-wrap; }
           <property name="text">
            <string>Content-appropriate ambient lighting system with USB interface</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
           <property name="wordWrap">
            <bool>false</bool>
           </property>
@@ -2776,6 +2785,9 @@ p, li { white-space: pre-wrap; }
           <property name="text">
            <string notr="true">&lt;a href=&quot;http://lightpack.googlecode.com/&quot;&gt;lightpack.googlecode.com&lt;/a&gt;</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
           <property name="margin">
            <number>0</number>
           </property>
@@ -2784,19 +2796,6 @@ p, li { white-space: pre-wrap; }
           </property>
           <property name="textInteractionFlags">
            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_13">
-          <property name="text">
-           <string notr="true">&lt;a href=&quot;https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=W6VQABKTGW6F4&amp;lc=RU&amp;item_name=Pixelkit%20LLC&amp;currency_code=USD&amp;bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted&quot;&gt;&lt;img src=&quot;:/icons/donate.png&quot;&gt;&lt;/a&gt;</string>
-          </property>
-          <property name="textFormat">
-           <enum>Qt::RichText</enum>
-          </property>
-          <property name="openExternalLinks">
-           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -2840,6 +2839,22 @@ p, li { white-space: pre-wrap; }
            <set>Qt::AlignJustify|Qt::AlignVCenter</set>
           </property>
           <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string notr="true">&lt;a href=&quot;https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=W6VQABKTGW6F4&amp;lc=RU&amp;item_name=Pixelkit%20LLC&amp;currency_code=USD&amp;bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted&quot;&gt;&lt;img src=&quot;:/icons/donate.png&quot;&gt;&lt;/a&gt;</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="openExternalLinks">
            <bool>true</bool>
           </property>
          </widget>
