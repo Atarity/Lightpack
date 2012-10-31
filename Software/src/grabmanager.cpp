@@ -88,7 +88,9 @@ GrabManager::~GrabManager()
     for (int i = 0; i < Grab::GrabbersCount; i++)
         delete m_grabbers[i];
 
+#ifdef D3D10_GRAB_SUPPORT
     delete m_d3d10Grabber;
+#endif
 }
 
 void GrabManager::start(bool isGrabEnabled)
