@@ -88,7 +88,7 @@ GrabManager::~GrabManager()
     for (int i = 0; i < Grab::GrabbersCount; i++)
         delete m_grabbers[i];
 
-//    delete m_grabbersThread;
+    delete m_d3d10Grabber;
 }
 
 void GrabManager::start(bool isGrabEnabled)
@@ -99,11 +99,10 @@ void GrabManager::start(bool isGrabEnabled)
 
     if (m_grabber != NULL) {
         if (isGrabEnabled) {
-//            QMetaObject::invokeMethod(m_grabber, "startGrabbing", Qt::QueuedConnection );
             m_grabber->startGrabbing();
         } else {
             clearColorsCurrent();
-            QMetaObject::invokeMethod(m_grabber, "stopGrabbing", Qt::QueuedConnection );
+            m_grabber->stopGrabbing();
         }
     }
 }
@@ -115,14 +114,44 @@ void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType)
     bool isStartNeeded = false;
     if (m_grabber != NULL) {
         isStartNeeded = m_grabber->isGrabbingStarted();
+#ifdef D3D10_GRAB_SUPPORT
+        isStartNeeded = isStartNeeded || (m_d3d10Grabber != NULL && m_d3d10Grabber->isGrabbingStarted());
+#endif
         m_grabber->stopGrabbing();
     }
 
     m_grabber = queryGrabber(grabberType);
 
-    if (isStartNeeded)
+    if (isStartNeeded) {
+#ifdef D3D10_GRAB_SUPPORT
+        if (Settings::isDx1011GrabberEnabled())
+            m_d3d10Grabber->startGrabbing();
+        else
+            m_grabber->startGrabbing();
+#else
         m_grabber->startGrabbing();
+#endif
+    }
     firstWidgetPositionChanged();
+}
+
+void GrabManager::onGrabberStateChangeRequested(bool isStartRequested) {
+#ifdef D3D10_GRAB_SUPPORT
+    D3D10Grabber *grabber = static_cast<D3D10Grabber *>(sender());
+    if (grabber != m_grabber) {
+        if (isStartRequested) {
+            if (Settings::isDx1011GrabberEnabled()) {
+                m_grabber->stopGrabbing();
+                grabber->startGrabbing();
+            }
+        } else {
+            m_grabber->startGrabbing();
+            grabber->stopGrabbing();
+        }
+    } else {
+        qCritical() << Q_FUNC_INFO << " there is no grabber to take control by some reason";
+    }
+#endif
 }
 
 void GrabManager::onGrabSlowdownChanged(int ms)
@@ -428,27 +457,30 @@ void GrabManager::initGrabbers()
     for (int i = 0; i < Grab::GrabbersCount; i++)
         m_grabbers.append(NULL);
 
-    #ifdef Q_WS_WIN
-        m_grabbers[Grab::GrabberTypeWinAPI] = initGrabber(new WinAPIGrabber(NULL, &m_colorsNew, &m_ledWidgets));
-        m_grabbers[Grab::GrabberTypeD3D9] = initGrabber(new D3D9Grabber(NULL, &m_colorsNew, &m_ledWidgets));
-    #endif
+#ifdef Q_WS_WIN
+    m_grabbers[Grab::GrabberTypeWinAPI] = initGrabber(new WinAPIGrabber(NULL, &m_colorsNew, &m_ledWidgets));
+    m_grabbers[Grab::GrabberTypeD3D9] = initGrabber(new D3D9Grabber(NULL, &m_colorsNew, &m_ledWidgets));
+#endif
 
-    #ifdef Q_WS_X11
-        m_grabbers[Grab::GrabberTypeX11] = initGrabber(new X11Grabber(NULL, &m_colorsNew, &m_ledWidgets));
-    #endif
+#ifdef Q_WS_X11
+    m_grabbers[Grab::GrabberTypeX11] = initGrabber(new X11Grabber(NULL, &m_colorsNew, &m_ledWidgets));
+#endif
 
-    #ifdef MAC_OS_CG_GRAB_SUPPORT
-        m_grabbers[Grab::MacCoreGraphicsGrabber] = initGrabber(new MacOSGrabber(NULL, &m_colorsNew, &m_ledWidgets));
-    #endif
+#ifdef MAC_OS_CG_GRAB_SUPPORT
+    m_grabbers[Grab::MacCoreGraphicsGrabber] = initGrabber(new MacOSGrabber(NULL, &m_colorsNew, &m_ledWidgets));
+#endif
     m_grabbers[Grab::GrabberTypeQtEachWidget] = initGrabber(new QtGrabberEachWidget(NULL, &m_colorsNew, &m_ledWidgets));
     m_grabbers[Grab::GrabberTypeQt] = initGrabber(new QtGrabber(NULL, &m_colorsNew, &m_ledWidgets));
-    #ifdef Q_WS_WIN
-        m_grabbers[Grab::GrabberTypeWinAPIEachWidget] = initGrabber(new WinAPIGrabberEachWidget(NULL, &m_colorsNew, &m_ledWidgets));
-    #endif
-    m_grabbers[Grab::GrabberTypeDX10_11] = initGrabber(new D3D10Grabber(NULL, &m_colorsNew, &m_ledWidgets));
+#ifdef Q_WS_WIN
+    m_grabbers[Grab::GrabberTypeWinAPIEachWidget] = initGrabber(new WinAPIGrabberEachWidget(NULL, &m_colorsNew, &m_ledWidgets));
+#endif
+#ifdef D3D10_GRAB_SUPPORT
+    m_d3d10Grabber = static_cast<D3D10Grabber *>(initGrabber(new D3D10Grabber(NULL, &m_colorsNew, &m_ledWidgets)));
+    connect(m_d3d10Grabber, SIGNAL(grabberStateChangeRequested(bool)), SLOT(onGrabberStateChangeRequested(bool)));
+#endif
 }
 
-GrabberBase * GrabManager::initGrabber(GrabberBase * grabber) {
+GrabberBase *GrabManager::initGrabber(GrabberBase * grabber) {
     QMetaObject::invokeMethod(grabber, "init", Qt::DirectConnection);
     QMetaObject::invokeMethod(grabber, "setGrabInterval", Qt::QueuedConnection, Q_ARG(int, Settings::getGrabSlowdown()));
 //    QMetaObject::invokeMethod(grabber, "startGrabbing", Qt::QueuedConnection);
@@ -458,7 +490,7 @@ GrabberBase * GrabManager::initGrabber(GrabberBase * grabber) {
     return grabber;
 }
 
-GrabberBase * GrabManager::queryGrabber(Grab::GrabberType grabberType)
+GrabberBase *GrabManager::queryGrabber(Grab::GrabberType grabberType)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "grabberType:" << grabberType;
     GrabberBase *result;

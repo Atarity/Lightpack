@@ -73,6 +73,7 @@ public slots:
     void setVisibleLedWidgets(bool state);
     void setColoredLedWidgets(bool state);
     void setWhiteLedWidgets(bool state);
+    void onGrabberStateChangeRequested(bool isStartRequested);
 
 private slots:
     void handleGrabbedColors();
@@ -95,6 +96,10 @@ private:
 private:
     QList<GrabberBase*> m_grabbers;
     GrabberBase *m_grabber;
+
+#ifdef D3D10_GRAB_SUPPORT
+    D3D10Grabber *m_d3d10Grabber;
+#endif
 
     QTimer *m_timerGrab;
     QTimer *m_timerUpdateFPS;

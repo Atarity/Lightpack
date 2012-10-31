@@ -36,28 +36,28 @@ TimeredGrabber::~TimeredGrabber() {
 }
 
 void TimeredGrabber::init() {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(grab()));
     m_timer->setSingleShot(false);
 }
 
 void TimeredGrabber::setGrabInterval(int msec) {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO <<  this->metaObject()->className();
     m_timer->setInterval(msec);
 }
 
 void TimeredGrabber::startGrabbing() {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     m_timer->start();
 }
 
 void TimeredGrabber::stopGrabbing() {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     m_timer->stop();
 }
 
 bool TimeredGrabber::isGrabbingStarted() const {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     return m_timer->isActive();
 }

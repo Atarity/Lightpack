@@ -71,10 +71,11 @@ enum GrabberType {
     GrabberTypeWinAPI,
     GrabberTypeWinAPIEachWidget,
     GrabberTypeD3D9,
-    GrabberTypeDX10_11,
     GrabberTypeMacCoreGraphics,
 
-    GrabbersCount
+    GrabbersCount,
+
+    GrabberTypeDX10_11 //since d3d10 grabber works simultaneously with regular grabber we don't count it as others
 };
 }
 

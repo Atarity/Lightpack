@@ -32,7 +32,7 @@ GrabberBase::GrabberBase(QObject *parent, QList<QRgb> *grabResult, QList<GrabWid
 }
 
 void GrabberBase::grab() {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     m_lastGrabResult = _grab();
     emit frameGrabAttempted(m_lastGrabResult);
 }

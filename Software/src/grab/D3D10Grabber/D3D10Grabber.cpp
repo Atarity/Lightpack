@@ -239,6 +239,12 @@ void D3D10Grabber::init(void) {
 
         FreeRestrictedSD(ptr);
 
+        m_checkIfFrameGrabbedTimer = new QTimer();
+        m_checkIfFrameGrabbedTimer->setSingleShot(false);
+        m_checkIfFrameGrabbedTimer->setInterval(1000);
+        connect(m_checkIfFrameGrabbedTimer, SIGNAL(timeout()), SLOT(handleIfFrameGrabbed()));
+        m_checkIfFrameGrabbedTimer->start();
+
         m_isInited = true;
 
 
@@ -246,20 +252,22 @@ void D3D10Grabber::init(void) {
 }
 
 void D3D10Grabber::startGrabbing() {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     m_isStarted = true;
-//    grab();
 }
 
 void D3D10Grabber::stopGrabbing() {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     m_isStarted = false;
 }
 
 void D3D10Grabber::setGrabInterval(int msec) {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     Q_UNUSED(msec);
-    //    m_fallbackGrabber->setGrabInterval(msec);
 }
 
 void D3D10Grabber::grab() {
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     if (m_isStarted) {
         m_lastGrabResult = _grab();
         emit frameGrabAttempted(m_lastGrabResult);
@@ -269,6 +277,7 @@ void D3D10Grabber::grab() {
 }
 
 GrabResult D3D10Grabber::_grab() {
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     if (!m_isInited) {
         return GrabResultFrameNotReady;
     }
@@ -299,14 +308,26 @@ GrabResult D3D10Grabber::_grab() {
     return result;
 }
 
+void D3D10Grabber::handleIfFrameGrabbed() {
+    if (!m_isFrameGrabbedDuringLastSecond) {
+        if (m_isStarted) {
+            emit grabberStateChangeRequested(false);
+        }
+    } else {
+        m_isFrameGrabbedDuringLastSecond = false;
+    }
+}
+
 D3D10Grabber::~D3D10Grabber() {
     if(m_isInited) {
         m_libraryInjector->Release();
         CoUninitialize();
         freeIPC();
         m_isInited = false;
+        disconnect(this, SLOT(handleIfFrameGrabbed()));
         delete m_worker;
         delete m_workerThread;
+        delete m_checkIfFrameGrabbedTimer;
     }
 }
 
@@ -325,7 +346,7 @@ void D3D10Grabber::freeIPC() {
 }
 
 void D3D10Grabber::updateGrabMonitor(QWidget *widget) {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     if (m_isInited) {
         HMONITOR hMonitor = MonitorFromWindow( widget->winId(), MONITOR_DEFAULTTONEAREST );
 

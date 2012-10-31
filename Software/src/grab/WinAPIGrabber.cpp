@@ -42,11 +42,6 @@ WinAPIGrabber::~WinAPIGrabber()
     delete[] pbPixelsBuff;
 }
 
-const char * WinAPIGrabber::getName()
-{
-    return "WinAPIGrabber";
-}
-
 void WinAPIGrabber::freeDCs()
 {
     if (hScreenDC)

@@ -64,7 +64,7 @@ public slots:
     virtual void updateGrabMonitor(QWidget * firstWidget);
     virtual void startGrabbing();
     virtual void stopGrabbing();
-    virtual bool isGrabbingStarted() const { return true; }
+    virtual bool isGrabbingStarted() const { return m_isStarted; }
     virtual void setGrabInterval(int msec);
     virtual void grab();
 
@@ -72,11 +72,13 @@ public slots:
 
 private slots:
     void infectCleanDxProcesses(void);
+    void handleIfFrameGrabbed();
 
 private:
     bool initIPC(LPSECURITY_ATTRIBUTES lpsa);
     void freeIPC();
     QRgb getColor(QRect &widgetRect);
+    QTimer *m_checkIfFrameGrabbedTimer;
 
     static HANDLE m_sharedMem;
     static HANDLE m_mutex;
