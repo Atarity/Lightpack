@@ -21,7 +21,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
 
     def version(self):
         """ return the version of the plugin """
-        return "0.1"
+        return "0.2"
         
 
     def run(self):
@@ -29,69 +29,222 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         return 0;
         
 
-    def settings(self):
-        box = QVBoxLayout(SettingsBox)
-        self.label = QLabel(SettingsBox)
-        self.label.setText('Select preset')
-        box.addWidget(self.label)
+    def settings(self,parent):
+        box = QVBoxLayout(parent)
+        label = QLabel(parent)
+        label.setText('Select preset')
+        box.addWidget(label)
+        self.comboPreset = QComboBox(parent)
+        self.comboPreset.addItem('a')
+        self.comboPreset.addItem('b')
+        self.comboPreset.addItem('c')
+        self.comboPreset.addItem('d')
+        self.comboPreset.addItem('e')
+        self.comboPreset.addItem('f')
+        box.addWidget(self.comboPreset)
         
-        pushcheck =  QPushButton(SettingsBox)
-        pushcheck.text = 'Calculate'
-        box.addWidget(pushcheck)
+        self.preview = QLabel(parent)
+        self.preview.setPixmap(QPixmap("Plugins/ZoneCalculator/res/a.png"))
+        box.addWidget(self.preview)
+        
+        pushcalc =  QPushButton(parent)
+        pushcalc.text = 'Calculate'
+        box.addWidget(pushcalc)
 
-        spacer = QWidget(SettingsBox)
+        spacer = QWidget(parent)
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         box.addWidget(spacer)
 
-        pushcheck.connect('clicked()', self.calculate)
-        
-        
+        pushcalc.connect('clicked()', self.calculate)
+        self.comboPreset.connect('currentIndexChanged(int)', self.combo_activateInput)
         return 0;
         
+
+    def combo_activateInput(self): 
+        preset=unicode(self.comboPreset.currentText)
+        print preset
+        self.preview.setPixmap(QPixmap("Plugins/ZoneCalculator/res/"+preset+".png"))
+        
+        
     def calculate(self):
-        print "check"
-        
         Lightpack.Lock(self.sessionKey)
-        screen = Lightpack.GetScreenSize()
-        if (self.label):    
-            self.label.setText(str(screen.width())+"x"+str(screen.height()))
-        count = Lightpack.GetCountLeds()
-        cube = 150
+        preset=unicode(self.comboPreset.currentText)
+        print preset
         
-        wint = (screen.width()-cube*4)/3
-        hint = (screen.height()-cube*3)/2
+        self.screen = Lightpack.GetScreenSize()
+        self.list = Lightpack.GetLeds()
+        self.count = Lightpack.GetCountLeds()
+        self.cube = 150
         
+        if preset=="a":
+            self.presetA()
+        if preset=="b":
+            self.presetB()
+        if preset=="c":
+            self.presetC()
+        if preset=="d":
+            self.presetD()
+        if preset=="e":
+            self.presetE()
+        if preset=="f":
+            self.presetF()
         
-        list = Lightpack.GetLeds()
-       
-        
-        list[0].setX(cube+wint)        
-        list[0].setY(screen.height()-cube)        
-        list[1].setX(0)        
-        list[1].setY(screen.height()-cube)        
-        list[2].setX(0)        
-        list[2].setY(cube+hint)        
-        list[3].setX(0)        
-        list[3].setY(0)        
-        list[4].setX(cube+wint)        
-        list[4].setY(0)        
-        list[5].setX(2*(cube+wint))        
-        list[5].setY(0)        
-        list[6].setX(screen.width()-cube)        
-        list[6].setY(0)        
-        list[7].setX(screen.width()-cube)        
-        list[7].setY(cube+hint)        
-        list[8].setX(screen.width()-cube)        
-        list[8].setY(screen.height()-cube)        
-        list[9].setX(2*(cube+wint))        
-        list[9].setY(screen.height()-cube)        
-        
-        for rect in list:
-            rect.setWidth(cube)
-            rect.setHeight(cube)
+        for rect in self.list:
+            rect.setWidth(self.cube)
+            rect.setHeight(self.cube)
             
-        Lightpack.SetLeds(self.sessionKey,list)
-        
+        Lightpack.SetLeds(self.sessionKey,self.list)
         Lightpack.UnLock(self.sessionKey)
 
+    def presetA(self):
+        wint = (self.screen.width()-self.cube*6)/5
+        hint = (self.screen.height()-self.cube*3)/2
+        
+        self.list[0].setX(0)        
+        self.list[0].setY(self.screen.height()-self.cube)        
+        self.list[1].setX(0)        
+        self.list[1].setY(self.cube+hint)        
+        self.list[2].setX(0)        
+        self.list[2].setY(0)        
+        self.list[3].setX(self.cube+wint)        
+        self.list[3].setY(0)        
+        self.list[4].setX(2*(self.cube+wint))        
+        self.list[4].setY(0)        
+        self.list[5].setX(3*(self.cube+wint))        
+        self.list[5].setY(0)        
+        self.list[6].setX(4*(self.cube+wint))        
+        self.list[6].setY(0)        
+        self.list[7].setX(self.screen.width()-self.cube)        
+        self.list[7].setY(0)        
+        self.list[8].setX(self.screen.width()-self.cube)        
+        self.list[8].setY(self.cube+hint)        
+        self.list[9].setX(self.screen.width()-self.cube)        
+        self.list[9].setY(self.screen.height()-self.cube)        
+        
+        return
+    
+    def presetB(self):
+        wint = (self.screen.width()-self.cube*4)/3
+        hint = (self.screen.height()-self.cube*4)/3
+        
+        self.list[0].setX(0)        
+        self.list[0].setY(self.screen.height()-self.cube)
+        self.list[1].setX(0)
+        self.list[1].setY(2*(self.cube+hint))
+        self.list[2].setX(0)
+        self.list[2].setY(self.cube+hint)
+        self.list[3].setX(0)
+        self.list[3].setY(0)        
+        self.list[4].setX(self.cube+wint)        
+        self.list[4].setY(0)        
+        self.list[5].setX(2*(self.cube+wint))        
+        self.list[5].setY(0)        
+        self.list[6].setX(self.screen.width()-self.cube)        
+        self.list[6].setY(0)        
+        self.list[7].setX(self.screen.width()-self.cube)        
+        self.list[7].setY(self.cube+hint)        
+        self.list[8].setX(self.screen.width()-self.cube)        
+        self.list[8].setY(2*(self.cube+hint))        
+        self.list[9].setX(self.screen.width()-self.cube)        
+        self.list[9].setY(self.screen.height()-self.cube)        
+        return
+    
+    def presetC(self):
+        wint = (self.screen.width()-self.cube*4)/3
+        hint = (self.screen.height()-self.cube*3)/2
+        
+        self.list[0].setX(self.cube+wint)
+        self.list[0].setY(self.screen.height()-self.cube)
+        self.list[1].setX(0)
+        self.list[1].setY(self.screen.height()-self.cube)
+        self.list[2].setX(0)
+        self.list[2].setY(self.cube+hint)
+        self.list[3].setX(0)
+        self.list[3].setY(0)
+        self.list[4].setX(self.cube+wint)
+        self.list[4].setY(0)
+        self.list[5].setX(2*(self.cube+wint))
+        self.list[5].setY(0)
+        self.list[6].setX(self.screen.width()-self.cube)
+        self.list[6].setY(0)
+        self.list[7].setX(self.screen.width()-self.cube)
+        self.list[7].setY(self.cube+hint)
+        self.list[8].setX(self.screen.width()-self.cube)
+        self.list[8].setY(self.screen.height()-self.cube)
+        self.list[9].setX(2*(self.cube+wint))
+        self.list[9].setY(self.screen.height()-self.cube)
 
+    def presetD(self):
+        hint = (self.screen.height()-self.cube*5)/4
+        
+        self.list[0].setX(0)
+        self.list[0].setY(self.screen.height()-self.cube)
+        self.list[1].setX(0)
+        self.list[1].setY(3*(self.cube+hint))
+        self.list[2].setX(0)
+        self.list[2].setY(2*(self.cube+hint))
+        self.list[3].setX(0)
+        self.list[3].setY(self.cube+hint)
+        self.list[4].setX(0)
+        self.list[4].setY(0)
+        self.list[5].setX(self.screen.width()-self.cube)
+        self.list[5].setY(0)
+        self.list[6].setX(self.screen.width()-self.cube)
+        self.list[6].setY(self.cube+hint)
+        self.list[7].setX(self.screen.width()-self.cube)
+        self.list[7].setY(2*(self.cube+hint))
+        self.list[8].setX(self.screen.width()-self.cube)
+        self.list[8].setY(3*(self.cube+hint))
+        self.list[9].setX(self.screen.width()-self.cube)
+        self.list[9].setY(self.screen.height()-self.cube)
+        return
+
+    def presetE(self):
+        wint = (self.screen.width()-self.cube*5)/4
+        
+        self.list[0].setX(0)
+        self.list[0].setY(0)
+        self.list[1].setX(self.cube+wint)
+        self.list[1].setY(0)
+        self.list[2].setX(2*(self.cube+wint))
+        self.list[2].setY(0)
+        self.list[3].setX(3*(self.cube+wint))
+        self.list[3].setY(0)
+        self.list[4].setX(self.screen.width()-self.cube)
+        self.list[4].setY(0)
+        self.list[5].setX(0)
+        self.list[5].setY(self.screen.height()-self.cube)
+        self.list[6].setX(self.cube+wint)
+        self.list[6].setY(self.screen.height()-self.cube)
+        self.list[7].setX(2*(self.cube+wint))
+        self.list[7].setY(self.screen.height()-self.cube)
+        self.list[8].setX(3*(self.cube+wint))
+        self.list[8].setY(self.screen.height()-self.cube)
+        self.list[9].setX(self.screen.width()-self.cube)
+        self.list[9].setY(self.screen.height()-self.cube)
+        return
+
+    def presetF(self):
+        wint = (self.screen.width()-self.cube*10)/9
+        
+        self.list[0].setX(0)
+        self.list[0].setY(0)
+        self.list[1].setX(self.cube+wint)
+        self.list[1].setY(0)
+        self.list[2].setX(2*(self.cube+wint))
+        self.list[2].setY(0)
+        self.list[3].setX(3*(self.cube+wint))
+        self.list[3].setY(0)
+        self.list[4].setX(4*(self.cube+wint))
+        self.list[4].setY(0)
+        self.list[5].setX(5*(self.cube+wint))
+        self.list[5].setY(0)
+        self.list[6].setX(6*(self.cube+wint))
+        self.list[6].setY(0)
+        self.list[7].setX(7*(self.cube+wint))
+        self.list[7].setY(0)
+        self.list[8].setX(8*(self.cube+wint))
+        self.list[8].setY(0)
+        self.list[9].setX(self.screen.width()-self.cube)
+        self.list[9].setY(0)
+        return
