@@ -71,11 +71,13 @@ void PyPlugin::stop(){
     emit executed();
 }
 
-void  PyPlugin::getSettings()
+void  PyPlugin::getSettings(QObject* parent)
 {
     emit aboutToExecute();
+    QVariantList list;
+    list.append((QVariant::fromValue(parent)));
     QVariant ret;
-    ret =  _plugin.call("settings", QVariantList());
+    ret =  _plugin.call("settings", list);
     emit executed();
 }
 

@@ -29,14 +29,13 @@ private:
     PythonQtObjectPtr  *mainContext;
     QMap<QString, PyPlugin*> _plugins;
     LightpackPluginInterface *_pluginInterface;
-    QWidget *_settingsBox;
 
     void initPython();
     void deinitPython();
     void dropPlugins();
 
 public:
-    void init(LightpackPluginInterface *pluginInterface, QWidget* settingsBox);
+    void init(LightpackPluginInterface *pluginInterface);
     void loadPlugins();
     QList<PyPlugin*> getPluginList();
     PyPlugin* getPlugin(const QString& name_);

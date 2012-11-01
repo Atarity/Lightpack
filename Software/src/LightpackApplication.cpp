@@ -529,11 +529,7 @@ void LightpackApplication::startPluginManager()
     m_PluginThread = new QThread();
     QWidget* settingsBox = NULL;
 
-    if (!m_noGui)
-        settingsBox = m_settingsWindow->getSettingBox();
-
-    m_pluginManager->init(m_pluginInterface,settingsBox);
-
+    m_pluginManager->init(m_pluginInterface);
 
     if (!m_noGui)
     {

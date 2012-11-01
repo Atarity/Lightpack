@@ -43,7 +43,6 @@ void PluginManager::initPython()
         mainContext->evalFile(":/plugin/BasePlugin.py");
 
         mainContext->addObject("Lightpack", _pluginInterface);
-        mainContext->addObject("SettingsBox", _settingsBox);
 
         // -----------------------------------------------------------------
         // Alternative 1: make CustomObject known and use decorators for wrapping:
@@ -83,12 +82,11 @@ void PluginManager::deinitPython()
     delete mainContext;
 }
 
-void PluginManager::init(LightpackPluginInterface *pluginInterface, QWidget* settingsBox)
+void PluginManager::init(LightpackPluginInterface *pluginInterface)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     _pluginInterface = pluginInterface;
-    _settingsBox = settingsBox;
 
     initPython();
 

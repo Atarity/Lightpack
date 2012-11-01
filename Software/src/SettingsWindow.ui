@@ -218,7 +218,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -2168,7 +2168,21 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
            <attribute name="title">
             <string>Plugin settings</string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_2"/>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QTabWidget" name="tabPluginsSettings">
+              <property name="currentIndex">
+               <number>-1</number>
+              </property>
+              <property name="usesScrollButtons">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
           <widget class="QWidget" name="tabInfoPlugin">
            <attribute name="title">

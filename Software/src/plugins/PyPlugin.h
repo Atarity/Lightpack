@@ -22,7 +22,7 @@ class PyPlugin : public QObject{
         bool isEnabled();
         int getPriority();
 
-        void getSettings();
+        void getSettings(QObject* parent);
 	
 	public slots:
         void init();

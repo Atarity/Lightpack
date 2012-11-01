@@ -95,7 +95,9 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 // hide main tabbar
     QTabBar* tabBar=qFindChild<QTabBar*>(ui->tabWidget);
     tabBar->hide();
-
+// hide plugin settings tabbar
+    tabBar=qFindChild<QTabBar*>(ui->tabPluginsSettings);
+    tabBar->hide();
 // hide device options tabbar
     tabBar=qFindChild<QTabBar*>(ui->tabDevices);
     tabBar->hide();
@@ -1975,11 +1977,6 @@ void SettingsWindow::adjustSizeAndMoveCenter()
     resize(minimumSize());
 }
 
-QWidget* SettingsWindow::getSettingBox()
-{
-    return ui->tabSettingsPlugin;
-}
-
 bool SettingsWindow::toPriority(PyPlugin* s1 ,PyPlugin* s2 )
 {
     return s1->getPriority() > s2->getPriority();
@@ -2003,6 +2000,11 @@ void SettingsWindow::updatePlugin(QList<PyPlugin*> plugins)
             item->setCheckState(Qt::Checked);
         else
             item->setCheckState(Qt::Unchecked);
+
+        QWidget *test = new QWidget();
+        ui->tabPluginsSettings->addTab(test,plugin->getName());
+        _plugins[index]->getSettings(test);
+
         ui->list_Plugins->addItem(item);
         }
     if (_plugins.count()>0)
@@ -2039,15 +2041,15 @@ void SettingsWindow::pluginSwitch(int index)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
 
-    qDeleteAll( ui->tabSettingsPlugin->findChildren<QWidget*>() );
-    delete  ui->tabSettingsPlugin->layout();
+    //qDeleteAll( ui->tabSettingsPlugin->findChildren<QWidget*>() );
+    //delete  ui->tabSettingsPlugin->layout();
     if (_plugins.count()-1 < index) return;
     if (_plugins[index]->isEnabled())
     {
         if (ui->tabPlugin->indexOf(ui->tabSettingsPlugin) < 0)
             ui->tabPlugin->insertTab(0,ui->tabSettingsPlugin, tr("Plugin settings"));
-        //ui->tabPlugin->setCurrentIndex(0);
-        _plugins[index]->getSettings();
+        ui->tabPlugin->setCurrentIndex(0);
+        ui->tabPluginsSettings->setCurrentIndex(index);
     }
     else
     {
@@ -2058,6 +2060,7 @@ void SettingsWindow::pluginSwitch(int index)
     ui->label_PluginVersion->setText(_plugins[index]->getVersion());
     ui->tb_PluginDescription->setText(_plugins[index]->getDescription());
     ui->label_PluginIcon->setPixmap(_plugins[index]->getIcon().pixmap(50,50));
+
 }
 
 void SettingsWindow::viewPluginConsole()
@@ -2070,8 +2073,11 @@ void SettingsWindow::on_pushButton_clicked()
      foreach(PyPlugin* plugin, _plugins){
          plugin->stop();
      }
-    qDeleteAll( ui->tabSettingsPlugin->findChildren<QWidget*>() );
-    delete  ui->tabSettingsPlugin->layout();
+     for (int i = ui->tabPluginsSettings->count()-1;i>=0;i--)
+         ui->tabPluginsSettings->removeTab(i);
+
+    //qDeleteAll( ui->tabSettingsPlugin->findChildren<QWidget*>() );
+    //delete  ui->tabSettingsPlugin->layout();
     ui->list_Plugins->clear();
     _plugins.clear();
     ui->pushButton->setEnabled(false);
