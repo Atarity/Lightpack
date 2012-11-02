@@ -98,6 +98,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 // hide plugin settings tabbar
     tabBar=qFindChild<QTabBar*>(ui->tabPluginsSettings);
     tabBar->hide();
+    ui->tabPluginsSettings->setDocumentMode(true);
 // hide device options tabbar
     tabBar=qFindChild<QTabBar*>(ui->tabDevices);
     tabBar->hide();
@@ -880,6 +881,14 @@ void SettingsWindow::showSettings()
     emit showLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && ui->comboBox_LightpackModes->currentIndex()==0);
     this->show();
     this->activateWindow();
+
+    if (_plugins.count()>0)
+    {
+        int index =ui->list_Plugins->currentItem()->data(Qt::UserRole).toUInt();
+        pluginSwitch(index);
+    }
+    else
+        pluginSwitch(-1);
 }
 
 void SettingsWindow::hideSettings()
@@ -2012,6 +2021,9 @@ void SettingsWindow::updatePlugin(QList<PyPlugin*> plugins)
         ui->list_Plugins->setCurrentRow(0);
         pluginSwitch(0);
     }
+    else
+        pluginSwitch(-1);
+
     ui->pushButton->setEnabled(true);
 
 
@@ -2040,6 +2052,16 @@ void SettingsWindow::on_list_Plugins_clicked(QListWidgetItem *current)
 void SettingsWindow::pluginSwitch(int index)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
+
+    if (index == -1)
+    {
+        ui->label_PluginName->setText("");
+        ui->label_PluginAuthor->setText("");
+        ui->label_PluginVersion->setText("");
+        ui->tb_PluginDescription->setText("");
+        ui->label_PluginIcon->setPixmap(QIcon(":/plugin/Plugin.png").pixmap(50,50));
+        return;
+    }
 
     //qDeleteAll( ui->tabSettingsPlugin->findChildren<QWidget*>() );
     //delete  ui->tabSettingsPlugin->layout();
