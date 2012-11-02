@@ -282,7 +282,8 @@ void SettingsWindow::connectSignalsSlots()
     connect(m_keySequenceWidget, SIGNAL(keySequenceCleared()), this, SLOT(clearOnOffHotKey()));
 
     //Plugins
-    connect(ui->list_Plugins,SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(on_list_Plugins_clicked(QListWidgetItem*)));
+//    connected during setupUi by name:
+//    connect(ui->list_Plugins,SIGNAL(currentRowChanged(int)),this,SLOT(on_list_Plugins_itemClicked(QListWidgetItem *)));
     connect(ui->pushButton_ConsolePlugin,SIGNAL(clicked()),this,SLOT(viewPluginConsole()));
     connect(ui->pushButton_UpPriority, SIGNAL(clicked()), this, SLOT(MoveUpPlugin()));
     connect(ui->pushButton_DownPriority, SIGNAL(clicked()), this, SLOT(MoveDownPlugin()));
@@ -2031,22 +2032,22 @@ void SettingsWindow::updatePlugin(QList<PyPlugin*> plugins)
 
 }
 
-void SettingsWindow::on_list_Plugins_clicked(QListWidgetItem *current)
+void SettingsWindow::on_list_Plugins_itemClicked(QListWidgetItem* current)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-        bool isEnabled = true;
+    bool isEnabled = true;
 
-        if (current->checkState() == Qt::Checked)
-           isEnabled = true;
-        else
-           isEnabled = false;
+    if (current->checkState() == Qt::Checked)
+       isEnabled = true;
+    else
+       isEnabled = false;
 
-        int index =current->data(Qt::UserRole).toUInt();
-        if (_plugins[index]->isEnabled() != isEnabled)
-            _plugins[index]->setEnabled(isEnabled);
+    int index =current->data(Qt::UserRole).toUInt();
+    if (_plugins[index]->isEnabled() != isEnabled)
+        _plugins[index]->setEnabled(isEnabled);
 
-        pluginSwitch(index);
+    pluginSwitch(index);
 }
 
 void SettingsWindow::pluginSwitch(int index)

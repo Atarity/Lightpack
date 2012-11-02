@@ -183,7 +183,7 @@ private slots:
     void pluginSwitch(int index);
     void viewPluginConsole();
 
-    void on_list_Plugins_clicked(QListWidgetItem* current);
+    void on_list_Plugins_itemClicked(QListWidgetItem*);
     void on_pushButton_clicked();
     void MoveUpPlugin();
     void MoveDownPlugin();
