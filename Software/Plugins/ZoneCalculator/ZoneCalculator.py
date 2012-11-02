@@ -5,6 +5,7 @@ from PythonQt.QtGui import *
 class ZoneCalculator(BasePlugin.BasePlugin):
     def init(self):
         self.sessionKey = Lightpack.GetSessionKey(self.__class__.__name__)
+        self.resdir = Lightpack.GetPluginsDir()+"/ZoneCalculator/res/"
         return
         
     def name(self):
@@ -17,11 +18,11 @@ class ZoneCalculator(BasePlugin.BasePlugin):
 
     def author(self):
         """ return the author of the plugin """
-        return "Eraser"
+        return "Eraser <eraser1981@gmail.com>"
 
     def version(self):
         """ return the version of the plugin """
-        return "0.2"
+        return "0.3"
         
 
     def run(self):
@@ -44,7 +45,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         box.addWidget(self.comboPreset)
         
         self.preview = QLabel(parent)
-        self.preview.setPixmap(QPixmap("Plugins/ZoneCalculator/res/a.png"))
+        self.preview.setPixmap(QPixmap(self.resdir+"a.png"))
         box.addWidget(self.preview)
         
         pushcalc =  QPushButton(parent)
@@ -63,7 +64,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
     def combo_activateInput(self): 
         preset=unicode(self.comboPreset.currentText)
         print preset
-        self.preview.setPixmap(QPixmap("Plugins/ZoneCalculator/res/"+preset+".png"))
+        self.preview.setPixmap(QPixmap(self.resdir+preset+".png"))
         
         
     def calculate(self):
