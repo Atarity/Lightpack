@@ -48,6 +48,7 @@ public:
      int GetBacklight();
 
 // Settings
+     QString GetPluginsDir();
      void SetSettingProfile(QString key, QVariant value);
      QVariant GetSettingProfile(QString key);
      void SetSettingMain(QString key, QVariant value);

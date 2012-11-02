@@ -516,6 +516,11 @@ int LightpackPluginInterface::GetBacklight()
     }
 }
 
+QString LightpackPluginInterface::GetPluginsDir()
+{
+    return  QString(Settings::getApplicationDirPath() + "Plugins");
+}
+
 // TODO: settings (global or profile?)
 void LightpackPluginInterface::SetSettingProfile(QString key, QVariant value)
 {
