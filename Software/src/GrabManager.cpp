@@ -168,6 +168,12 @@ void GrabManager::onThresholdOfBlackChanged(int value)
     m_minLevelOfSensivity = value;
 }
 
+void GrabManager::onTurnOnAtLevelOfSensivity(bool value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+    m_TurnOnAtLevelOfSensivity = value;
+}
+
 void GrabManager::onGrabAvgColorsEnabledChanged(bool state)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
@@ -206,6 +212,7 @@ void GrabManager::settingsProfileChanged(const QString &profileName)
     m_isSendDataOnlyIfColorsChanged = Settings::isSendDataOnlyIfColorsChanges();
     m_avgColorsOnAllLeds = Settings::isGrabAvgColorsEnabled();
     m_minLevelOfSensivity = Settings::getThresholdOfBlack();
+    m_TurnOnAtLevelOfSensivity = Settings::getTurnOnAtLevelOfSensivity();
 
     setNumberOfLeds(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
 }
@@ -326,7 +333,10 @@ void GrabManager::handleGrabbedColors()
 
         if (avg <= m_minLevelOfSensivity)
         {
-            m_colorsNew[i] = 0;
+            if (m_TurnOnAtLevelOfSensivity)
+                m_colorsNew[i] = qRgb(m_minLevelOfSensivity, m_minLevelOfSensivity, m_minLevelOfSensivity);
+            else
+                m_colorsNew[i] = 0;
         }
     }
 

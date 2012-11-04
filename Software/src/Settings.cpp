@@ -132,6 +132,7 @@ static const QString IsAvgColorsEnabled = "Grab/IsAvgColorsEnabled";
 static const QString IsSendDataOnlyIfColorsChanges = "Grab/IsSendDataOnlyIfColorsChanges";
 static const QString Slowdown = "Grab/Slowdown";
 static const QString MinimumLevelOfSensitivity = "Grab/MinimumLevelOfSensitivity";
+static const QString TurnOnAtLevelOfSensitivity = "Grab/TurnOnAtLevelOfSensitivity";
 static const QString IsDx1011GrabberEnabled = "Grab/IsDX1011GrabberEnabled";
 }
 // [MoodLamp]
@@ -858,6 +859,18 @@ void Settings::setThresholdOfBlack(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::Grab::MinimumLevelOfSensitivity, value);
     m_this->thresholdOfBlackChanged(value);
+}
+
+bool Settings::getTurnOnAtLevelOfSensivity()
+{
+    return value(Profile::Key::Grab::TurnOnAtLevelOfSensitivity).toBool();
+}
+
+void Settings::setTurnOnAtLevelOfSensivity(bool value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    setValue(Profile::Key::Grab::TurnOnAtLevelOfSensitivity, value);
+    m_this->turnOnAtLevelOfSensitivityChanged(value);
 }
 
 int Settings::getDeviceRefreshDelay()
