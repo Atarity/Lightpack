@@ -112,6 +112,7 @@ protected:
 
 private slots:
     void onLightpackModes_Activated(int index);
+    void onLightpackModeChanged(Lightpack::Mode);
     void onMoodLampColor_changed(QColor color);
     void onMoodLampSpeed_valueChanged(int value);
     void onMoodLampLiquidMode_Toggled(bool isConstantColor);
@@ -127,6 +128,7 @@ private slots:
     void quit(); /* using in actions */
 
     void toggleBacklight();
+    void toggleBacklightMode();
     void nextProfile();
     void prevProfile();
 

@@ -235,6 +235,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(Settings::settingsSingleton(), SIGNAL(currentProfileInited(const QString &)), this, SLOT(handleProfileLoaded(QString)), Qt::QueuedConnection);
 
     connect(Settings::settingsSingleton(), SIGNAL(hotkeyChanged(QString,QKeySequence,QKeySequence)), this, SLOT(onHotkeyChanged(QString,QKeySequence,QKeySequence)));
+    connect(Settings::settingsSingleton(), SIGNAL(lightpackModeChanged(Lightpack::Mode)), this, SLOT(onLightpackModeChanged(Lightpack::Mode)));
 
     connect(ui->pushButton_ProfileNew, SIGNAL(clicked()), this, SLOT(profileNew()));
     connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
@@ -703,6 +704,17 @@ void SettingsWindow::prevProfile()
     int newIndex = (curIndex == 0) ? profiles.count() - 1 : curIndex - 1;
 
     Settings::loadOrCreateProfile(profiles[newIndex]);
+}
+
+void SettingsWindow::toggleBacklightMode()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    using namespace Lightpack;
+
+    Mode curMode = Settings::getLightpackMode();
+
+    Settings::setLightpackMode(curMode == AmbilightMode ? MoodLampMode : AmbilightMode );
 }
 
 void SettingsWindow::updateTrayAndActionStates()
@@ -1660,18 +1672,7 @@ void SettingsWindow::updateUiFromSettings()
     this->labelDevice->setText(tr("Device: %1").arg(Settings::getConnectedDeviceName()));
 
     Lightpack::Mode mode = Settings::getLightpackMode();
-    switch (mode)
-    {
-    case Lightpack::AmbilightMode:
-        ui->comboBox_LightpackModes->setCurrentIndex(AmbilightModeIndex);
-        break;
-    case Lightpack::MoodLampMode:
-        ui->comboBox_LightpackModes->setCurrentIndex(MoodLampModeIndex);
-        break;
-    default:
-        qCritical() << "Invalid value! mode =" << mode;
-        break;
-    }
+    onLightpackModeChanged(mode);
 
     int index = ui->comboBox_AdalightColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
     if (index < 0)
@@ -1750,7 +1751,6 @@ void SettingsWindow::updateUiFromSettings()
         ui->radioButton_GrabQt->setChecked(true);
     }
 
-    onLightpackModes_Activated(ui->comboBox_LightpackModes->currentIndex());
     onMoodLampLiquidMode_Toggled(ui->radioButton_LiquidColorMoodLampMode->isChecked());
     updateExpertModeWidgetsVisibility();
     onGrabberChanged();
@@ -1828,6 +1828,7 @@ void SettingsWindow::setupHotkeys()
     hotkeysTable->setColumnCount(3);
     hotkeysTable->setHorizontalHeaderLabels(headerLabels);
     registerHotkey(tr("toggleBacklight"), tr("On/Off lights"), Settings::getHotkey("toggleBacklight").toString());
+    registerHotkey(tr("toggleBacklightMode"), tr("Switch between \"Capture mode\" and mood lamp mode"), Settings::getHotkey("toggleBacklightMode").toString());
     registerHotkey(tr("nextProfile"), tr("Activate next profile"), Settings::getHotkey("nextProfile").toString());
     registerHotkey(tr("prevProfile"), tr("Activate previous profile"), Settings::getHotkey("prevProfile").toString());
     m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("Action not selected"), this);
@@ -1838,6 +1839,7 @@ void SettingsWindow::setupHotkeys()
     hotkeysTable->resizeRowsToContents();
     ui->groupBox_HotKeys->layout()->addWidget(m_keySequenceWidget);
 
+    ui->tableWidget_Hotkeys->selectRow(0);
 }
 
 void SettingsWindow::on_tableWidget_Hotkeys_itemSelectionChanged()
@@ -1913,10 +1915,19 @@ void SettingsWindow::onLightpackModes_Activated(int index)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
 
-    switch (index)
+    using namespace Lightpack;
+
+    Settings::setLightpackMode(index == AmbilightModeIndex ? AmbilightMode : MoodLampMode);
+}
+
+void SettingsWindow::onLightpackModeChanged(Lightpack::Mode mode)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
+
+    switch (mode)
     {
-    case AmbilightModeIndex:
-        Settings::setLightpackMode(Lightpack::AmbilightMode);
+    case Lightpack::AmbilightMode:
+        ui->comboBox_LightpackModes->setCurrentIndex(AmbilightModeIndex);
         ui->stackedWidget_LightpackModes->setCurrentIndex(AmbilightModeIndex);
         emit showLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && this->isVisible());
         if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
@@ -1926,8 +1937,8 @@ void SettingsWindow::onLightpackModes_Activated(int index)
         }
         break;
 
-    case MoodLampModeIndex:
-        Settings::setLightpackMode(Lightpack::MoodLampMode);
+    case Lightpack::MoodLampMode:
+        ui->comboBox_LightpackModes->setCurrentIndex(MoodLampModeIndex);
         ui->stackedWidget_LightpackModes->setCurrentIndex(MoodLampModeIndex);
         emit showLedWidgets(false);
         if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
