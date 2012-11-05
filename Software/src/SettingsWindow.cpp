@@ -1799,8 +1799,13 @@ bool SettingsWindow::isDx1011CaptureEnabled() {
 // Hotkeys slots and functions.
 // ----------------------------------------------------------------------------
 
-void SettingsWindow::registerHotkey(const QString &actionName, const QString &description, const QString &hotkey)
+void SettingsWindow::registerHotkey(const QString &slotName, const QString &description, const QString &hotkey)
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << slotName << hotkey;
+    if(!(slotName.startsWith("1") && slotName.endsWith("()"))) {
+        qCritical("use SLOT() macro");
+    }
+    QString actionName = slotName.mid(1, slotName.length() - 3);
     QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
     int newRow = hotkeysTable->rowCount();
     hotkeysTable->setRowCount(newRow + 1);
@@ -1824,18 +1829,18 @@ void SettingsWindow::setupHotkeys()
     QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
 
     //to speed up initialization disable sorting while adding new items
-    hotkeysTable->setSortingEnabled(false);
+//    hotkeysTable->setSortingEnabled(false);
     hotkeysTable->setColumnCount(3);
     hotkeysTable->setHorizontalHeaderLabels(headerLabels);
-    registerHotkey(tr("toggleBacklight"), tr("On/Off lights"), Settings::getHotkey("toggleBacklight").toString());
-    registerHotkey(tr("toggleBacklightMode"), tr("Switch between \"Capture mode\" and mood lamp mode"), Settings::getHotkey("toggleBacklightMode").toString());
-    registerHotkey(tr("nextProfile"), tr("Activate next profile"), Settings::getHotkey("nextProfile").toString());
-    registerHotkey(tr("prevProfile"), tr("Activate previous profile"), Settings::getHotkey("prevProfile").toString());
+    registerHotkey(SLOT(toggleBacklight()), tr("On/Off lights"), Settings::getHotkey("toggleBacklight").toString());
+    registerHotkey(SLOT(toggleBacklightMode()), tr("Switch between \"Capture mode\" and mood lamp mode"), Settings::getHotkey("toggleBacklightMode").toString());
+    registerHotkey(SLOT(nextProfile()), tr("Activate next profile"), Settings::getHotkey("nextProfile").toString());
+    registerHotkey(SLOT(prevProfile()), tr("Activate previous profile"), Settings::getHotkey("prevProfile").toString());
     m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("Action not selected"), this);
     m_isHotkeySelectionChanging = false;
     connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onKeySequenceChanged(QKeySequence)));
 
-    hotkeysTable->setSortingEnabled(true);
+//    hotkeysTable->setSortingEnabled(true);
     hotkeysTable->resizeRowsToContents();
     ui->groupBox_HotKeys->layout()->addWidget(m_keySequenceWidget);
 
