@@ -103,7 +103,7 @@ INCLUDEPATH += ./hidapi ./grab ./alienfx ./
 
 SOURCES += \
     LightpackApplication.cpp  main.cpp   SettingsWindow.cpp  Settings.cpp \
-      grabmanager.cpp  GrabWidget.cpp  GrabConfigWidget.cpp \
+      GrabWidget.cpp  GrabConfigWidget.cpp \
     SpeedTest.cpp \
     LedDeviceLightpack.cpp \
     LedDeviceAlienFx.cpp \
@@ -130,7 +130,8 @@ SOURCES += \
     grab/QtGrabberEachWidget.cpp \
     grab/WinAPIGrabberEachWidget.cpp \
     grab/D3D9Grabber.cpp \
-    grab/MacOSGrabber.cpp
+    grab/MacOSGrabber.cpp \
+    GrabManager.cpp
 
 HEADERS += \
     LightpackApplication.hpp \

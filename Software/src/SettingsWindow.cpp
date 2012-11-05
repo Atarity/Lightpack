@@ -189,6 +189,7 @@ void SettingsWindow::connectSignalsSlots()
 
     connect(ui->spinBox_GrabSlowdown, SIGNAL(valueChanged(int)), this, SLOT(onGrabSlowdown_valueChanged(int)));
     connect(ui->spinBox_GrabMinLevelOfSensitivity, SIGNAL(valueChanged(int)), this, SLOT(onGrabMinLevelOfSensivity_valueChanged(int)));
+    connect(ui->checkBox_turnOnAtLevelOfSensitivity, SIGNAL(toggled(bool)), this, SLOT(onTurnOnAtLevelOfSensitivity_toggled(bool)));
     connect(ui->checkBox_GrabIsAvgColors, SIGNAL(toggled(bool)), this, SLOT(onGrabIsAvgColors_toggled(bool)));
 
     connect(ui->groupBox_GrabShowGrabWidgets, SIGNAL(toggled(bool)), this, SLOT( onShowLedWidgets_Toggled(bool)));
@@ -373,6 +374,7 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
     // Minimum level of sensitivity for ambilight mode
     ui->label_MinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
     ui->spinBox_GrabMinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
+    ui->checkBox_turnOnAtLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
     ui->groupBox_HotKeys->setVisible(Settings::isExpertModeEnabled());
 
     ui->pushButton_ConsolePlugin->setVisible(Settings::isExpertModeEnabled());
@@ -764,6 +766,9 @@ void SettingsWindow::initGrabbersRadioButtonsVisibility()
 #ifndef D3D9_GRAB_SUPPORT
     ui->radioButton_GrabD3D9->setVisible(false);
 #endif
+#ifndef D3D10_GRAB_SUPPORT
+    ui->checkBox_EnableDx1011Capture->setVisible(false);
+#endif
 #ifndef X11_GRAB_SUPPORT
     ui->radioButton_GrabX11->setVisible(false);
 #endif
@@ -1030,6 +1035,13 @@ void SettingsWindow::onGrabMinLevelOfSensivity_valueChanged(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
     Settings::setThresholdOfBlack(value);
+}
+
+void SettingsWindow::onTurnOnAtLevelOfSensitivity_toggled(bool value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+
+    Settings::setTurnOnAtLevelOfSensivity(value);
 }
 
 void SettingsWindow::onGrabIsAvgColors_toggled(bool state)
@@ -1675,6 +1687,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsEnabled());
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
     ui->spinBox_GrabMinLevelOfSensitivity->setValue     (Settings::getThresholdOfBlack());
+    ui->checkBox_turnOnAtLevelOfSensitivity->setChecked (Settings::getTurnOnAtLevelOfSensivity());
 
     // Check the selected moodlamp mode (setChecked(false) not working to select another)
     ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());

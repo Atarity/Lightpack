@@ -125,6 +125,8 @@ public:
     static void setSendDataOnlyIfColorsChanges(bool isEnabled);
     static int getThresholdOfBlack();
     static void setThresholdOfBlack(int value);
+    static bool getTurnOnAtLevelOfSensivity();
+    static void setTurnOnAtLevelOfSensivity(bool value);
     // [Device]
     static int getDeviceRefreshDelay();
     static void setDeviceRefreshDelay(int value);
@@ -225,6 +227,7 @@ signals:
     void grabAvgColorsEnabledChanged(bool isEnabled);
     void sendDataOnlyIfColorsChangesChanged(bool isEnabled);
     void thresholdOfBlackChanged(int value);
+    void turnOnAtLevelOfSensitivityChanged(bool value);
     void deviceRefreshDelayChanged(int value);
     void deviceBrightnessChanged(int value);
     void deviceSmoothChanged(int value);
