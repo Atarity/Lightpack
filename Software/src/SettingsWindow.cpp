@@ -746,6 +746,9 @@ void SettingsWindow::initGrabbersRadioButtonsVisibility()
 #ifndef D3D9_GRAB_SUPPORT
     ui->radioButton_GrabD3D9->setVisible(false);
 #endif
+#ifndef D3D10_GRAB_SUPPORT
+    ui->checkBox_EnableDx1011Capture->setVisible(false);
+#endif
 #ifndef X11_GRAB_SUPPORT
     ui->radioButton_GrabX11->setVisible(false);
 #endif
