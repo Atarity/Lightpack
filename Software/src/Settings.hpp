@@ -95,8 +95,8 @@ public:
     static QString getConnectedDeviceName();
     static void setConnectedDeviceName(const QString & deviceName);
     static QStringList getSupportedDevices();
-    static QKeySequence getOnOffDeviceKey();
-    static void setOnOffDeviceKey(const QKeySequence & keySequence);
+    static QKeySequence getHotkey(const QString &actionName);
+    static void setHotkey(const QString &actionName, const QKeySequence &keySequence);
     static QString getAdalightSerialPortName();
     static void setAdalightSerialPortName(const QString & port);
     static QString getAdalightSerialPortBaudRate();
@@ -211,7 +211,7 @@ signals:
     void debugLevelChanged(int);
     void updateFirmwareMessageShownChanged(bool isShown);
     void connectedDeviceChanged(const SupportedDevices::DeviceType device);
-    void onOffDeviceKeyChanged(const QKeySequence & keySequence);
+    void hotkeyChanged(const QString &actionName, const QKeySequence & newKeySequence, const QKeySequence &oldKeySequence);
     void adalightSerialPortNameChanged(const QString & port);
     void adalightSerialPortBaudRateChanged(const QString & baud);
     void ardulightSerialPortNameChanged(const QString & port);

@@ -119,8 +119,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     statusBar()->addWidget(labelDevice, 1);
     statusBar()->addWidget(labelFPS, 1);
 
-    profilesLoadAll();
-
     initGrabbersRadioButtonsVisibility();
     initLanguages();
     initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::DeviceTypeVirtual));
@@ -129,7 +127,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     setupHotkeys();
 
-    profileLoadLast();
+    updateUiFromSettings();
 
     loadTranslation(Settings::getLanguage());
 
@@ -203,7 +201,7 @@ void SettingsWindow::connectSignalsSlots()
     // Main options
     connect(ui->comboBox_LightpackModes, SIGNAL(activated(int)), this, SLOT(onLightpackModes_Activated(int)));
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
-    connect(ui->pushButton_EnableDisableDevice, SIGNAL(clicked()), this, SLOT(switchBacklightOnOff()));
+    connect(ui->pushButton_EnableDisableDevice, SIGNAL(clicked()), this, SLOT(toggleBacklight()));
 
     // Device options
     connect(ui->spinBox_DeviceRefreshDelay, SIGNAL(valueChanged(int)), this, SLOT(onDeviceRefreshDelay_valueChanged(int)));
@@ -234,6 +232,8 @@ void SettingsWindow::connectSignalsSlots()
 
     connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)),        this, SLOT(handleProfileLoaded(QString)), Qt::QueuedConnection);
     connect(Settings::settingsSingleton(), SIGNAL(currentProfileInited(const QString &)), this, SLOT(handleProfileLoaded(QString)), Qt::QueuedConnection);
+
+    connect(Settings::settingsSingleton(), SIGNAL(hotkeyChanged(QString,QKeySequence,QKeySequence)), this, SLOT(onHotkeyChanged(QString,QKeySequence,QKeySequence)));
 
     connect(ui->pushButton_ProfileNew, SIGNAL(clicked()), this, SLOT(profileNew()));
     connect(ui->pushButton_ProfileResetToDefault, SIGNAL(clicked()), this, SLOT(profileResetToDefaultCurrent()));
@@ -277,10 +277,6 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->spinBox_LoggingLevel, SIGNAL(valueChanged(int)), this, SLOT(onLoggingLevel_valueChanged(int)));
     connect(ui->checkBox_PingDeviceEverySecond, SIGNAL(toggled(bool)), this, SLOT(onPingDeviceEverySecond_Toggled(bool)));
 
-    // HotKeys
-    connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(setOnOffHotKey(QKeySequence)));
-    connect(m_keySequenceWidget, SIGNAL(keySequenceCleared()), this, SLOT(clearOnOffHotKey()));
-
     //Plugins
 //    connected during setupUi by name:
 //    connect(ui->list_Plugins,SIGNAL(currentRowChanged(int)),this,SLOT(on_list_Plugins_itemClicked(QListWidgetItem *)));
@@ -309,8 +305,8 @@ void SettingsWindow::changeEvent(QEvent *e)
 
         m_profilesMenu->setTitle(tr("&Profiles"));
 
-        m_keySequenceWidget->setNoneText(tr("Undefined key"));
-        m_keySequenceWidget->setShortcutName(tr("On/Off light:"));
+//        m_keySequenceWidget->setNoneText(tr("Undefined key"));
+//        m_keySequenceWidget->setShortcutName(tr("On/Off light:"));
 
         if (m_trayIcon!=NULL)
         switch (m_backlightStatus)
@@ -626,7 +622,7 @@ void SettingsWindow::backlightOff()
     startBacklight();
 }
 
-void SettingsWindow::switchBacklightOnOff()
+void SettingsWindow::toggleBacklight()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -681,6 +677,30 @@ void SettingsWindow::startBacklight()
         m_deviceLockModule = "";
 
     updateTrayAndActionStates();
+}
+
+void SettingsWindow::nextProfile()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    QStringList profiles = Settings::findAllProfiles();
+    QString profile = Settings::getCurrentProfileName();
+
+    int curIndex = profiles.indexOf(profile);
+    int newIndex = (curIndex == profiles.count() - 1) ? 0 : curIndex + 1;
+
+    Settings::loadOrCreateProfile(profiles[newIndex]);
+}
+
+void SettingsWindow::prevProfile()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    QStringList profiles = Settings::findAllProfiles();
+    QString profile = Settings::getCurrentProfileName();
+
+    int curIndex = profiles.indexOf(profile);
+    int newIndex = (curIndex == 0) ? profiles.count() - 1 : curIndex - 1;
+
+    Settings::loadOrCreateProfile(profiles[newIndex]);
 }
 
 void SettingsWindow::updateTrayAndActionStates()
@@ -1369,16 +1389,6 @@ void SettingsWindow::profilesLoadAll()
     }
 }
 
-void SettingsWindow::profileLoadLast()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    ui->comboBox_Profiles->setCurrentIndex(ui->comboBox_Profiles->findText(Settings::getLastProfileName()));
-
-    // Update settings
-    updateUiFromSettings();
-}
-
 void SettingsWindow::settingsProfileChanged_UpdateUI(const QString &profileName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -1630,6 +1640,10 @@ void SettingsWindow::updateUiFromSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    profilesLoadAll();
+
+    ui->comboBox_Profiles->setCurrentIndex(ui->comboBox_Profiles->findText(Settings::getCurrentProfileName()));
+
     this->labelProfile->setText(tr("Profile: %1").arg(Settings::getCurrentProfileName()));
     this->labelDevice->setText(tr("Device: %1").arg(Settings::getConnectedDeviceName()));
 
@@ -1772,26 +1786,89 @@ bool SettingsWindow::isDx1011CaptureEnabled() {
 // Hotkeys slots and functions.
 // ----------------------------------------------------------------------------
 
-void SettingsWindow::setOnOffHotKey(QKeySequence keySequence)
+void SettingsWindow::registerHotkey(const QString &actionName, const QString &description, const QString &hotkey)
 {
-    GlobalShortcutManager::instance()->clear();
-    GlobalShortcutManager::instance()->connect(keySequence, this, SLOT(switchBacklightOnOff()));
-    Settings::setOnOffDeviceKey(keySequence);
-}
+    QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
+    int newRow = hotkeysTable->rowCount();
+    hotkeysTable->setRowCount(newRow + 1);
+    QTableWidgetItem *actionItem = new QTableWidgetItem(actionName);
+    hotkeysTable->setItem(newRow, 0, actionItem);
+    QTableWidgetItem *descriptionItem = new QTableWidgetItem(description);
+    hotkeysTable->setItem(newRow, 1, descriptionItem);
+    QTableWidgetItem *hotkeyItem = new QTableWidgetItem(hotkey);
+    hotkeysTable->setItem(newRow, 2, hotkeyItem);
 
-void SettingsWindow::clearOnOffHotKey()
-{
-    GlobalShortcutManager::instance()->clear();
-    Settings::setOnOffDeviceKey(QKeySequence());
+    GlobalShortcutManager::instance()->connect(QKeySequence(hotkey), this, getSlotName(actionName).toAscii().data() );
 }
 
 void SettingsWindow::setupHotkeys()
 {
-    m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("On/Off light:"), this);
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    QStringList headerLabels;
+    headerLabels.append(tr("Action name"));
+    headerLabels.append(tr("Description"));
+    headerLabels.append(tr("Hotkey"));
+    QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
+
+    //to speed up initialization disable sorting while adding new items
+    hotkeysTable->setSortingEnabled(false);
+    hotkeysTable->setColumnCount(3);
+    hotkeysTable->setHorizontalHeaderLabels(headerLabels);
+    registerHotkey(tr("toggleBacklight"), tr("On/Off lights"), Settings::getHotkey("toggleBacklight").toString());
+    registerHotkey(tr("nextProfile"), tr("Activate next profile"), Settings::getHotkey("nextProfile").toString());
+    registerHotkey(tr("prevProfile"), tr("Activate previous profile"), Settings::getHotkey("prevProfile").toString());
+    m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("Action not selected"), this);
+    m_isHotkeySelectionChanging = false;
+    connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onKeySequenceChanged(QKeySequence)));
+
+    hotkeysTable->setSortingEnabled(true);
+    hotkeysTable->resizeRowsToContents();
     ui->groupBox_HotKeys->layout()->addWidget(m_keySequenceWidget);
 
-    m_keySequenceWidget->setKeySequence(Settings::getOnOffDeviceKey());
-    GlobalShortcutManager::instance()->connect(Settings::getOnOffDeviceKey(), this, SLOT(switchBacklightOnOff()));
+}
+
+void SettingsWindow::on_tableWidget_Hotkeys_itemSelectionChanged()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_isHotkeySelectionChanging = true;
+    QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
+    int selectedRow = hotkeysTable->currentRow();
+    m_keySequenceWidget->setShortcutName(hotkeysTable->item(selectedRow,1)->text());
+    m_keySequenceWidget->setKeySequence(QKeySequence(hotkeysTable->item(selectedRow,2)->text()));
+    m_isHotkeySelectionChanging = false;
+}
+
+void SettingsWindow::onKeySequenceChanged(const QKeySequence &sequence)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    if(!m_isHotkeySelectionChanging) {
+        QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
+        int selectedRow = hotkeysTable->currentRow();
+        QString actionName = hotkeysTable->item(selectedRow, 0)->text();
+
+        Settings::setHotkey(actionName, sequence);
+    }
+}
+
+QString SettingsWindow::getSlotName(const QString &actionName)
+{
+    return "1" + actionName + "()";
+}
+
+void SettingsWindow::onHotkeyChanged(const QString &actionName, const QKeySequence &sequence, const QKeySequence &oldKeySequence)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    QString slotName = getSlotName(actionName);
+    QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
+    for(int i=0; i<hotkeysTable->rowCount(); i++) {
+        if (hotkeysTable->item(i, 0)->text().compare(actionName) == 0) {
+            hotkeysTable->item(i, 2)->setText(sequence.toString());
+            break;
+        }
+    }
+
+    GlobalShortcutManager::instance()->disconnect(oldKeySequence, this, slotName.toAscii().data() );
+    GlobalShortcutManager::instance()->connect(sequence, this, slotName.toAscii().data() );
 }
 
 // ----------------------------------------------------------------------------

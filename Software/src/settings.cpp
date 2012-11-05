@@ -62,7 +62,7 @@ static const QString SupportedDevices = "SupportedDevices";
 // [Hotkeys]
 namespace Hotkeys
 {
-static const QString OnOffDeviceKey = "HotKeys/OnOffDeviceKey";
+static const QString SettingsPrefix = "HotKeys/";
 }
 
 // [API]
@@ -231,7 +231,6 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::IsUpdateFirmwareMessageShown, Main::IsUpdateFirmwareMessageShown);
     setNewOptionMain(Main::Key::ConnectedDevice,        Main::ConnectedDeviceDefault);
     setNewOptionMain(Main::Key::SupportedDevices,       Main::SupportedDevices, true /* always rewrite this information to main config */);
-    setNewOptionMain(Main::Key::Hotkeys::OnOffDeviceKey,Main::HotKeys::OnOffDeviceKeyDefault);
     setNewOptionMain(Main::Key::Api::IsEnabled,         Main::Api::IsEnabledDefault);
     setNewOptionMain(Main::Key::Api::Port,              Main::Api::PortDefault);
     setNewOptionMain(Main::Key::Api::IsAuthEnabled,     Main::Api::IsAuthEnabledDefault);
@@ -622,24 +621,28 @@ QStringList Settings::getSupportedDevices()
     return Main::SupportedDevices.split(',');
 }
 
-QKeySequence Settings::getOnOffDeviceKey()
+QKeySequence Settings::getHotkey(const QString &actionName)
 {
-    if( valueMain(Main::Key::Hotkeys::OnOffDeviceKey) == "Undefined") {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    QString key = Main::Key::Hotkeys::SettingsPrefix + actionName;
+    if( !m_mainConfig->contains(key)) {
         return QKeySequence();
     }
-    QKeySequence returnSequence = QKeySequence( valueMain(Main::Key::Hotkeys::OnOffDeviceKey).toString() );
+    QKeySequence returnSequence = QKeySequence( valueMain(key).toString() );
     return returnSequence;
 }
 
-void Settings::setOnOffDeviceKey(const QKeySequence &keySequence)
+void Settings::setHotkey(const QString &actionName, const QKeySequence &keySequence)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    QString key = Main::Key::Hotkeys::SettingsPrefix + actionName;
+    QKeySequence oldKeySequence = getHotkey(actionName);
     if( keySequence.isEmpty() ) {
-        setValueMain(Main::Key::Hotkeys::OnOffDeviceKey, Main::HotKeys::OnOffDeviceKeyDefault);
+        setValueMain(key, Main::HotKeys::HotkeyDefault);
     } else {
-        setValueMain(Main::Key::Hotkeys::OnOffDeviceKey, keySequence.toString());
+        setValueMain(key, keySequence.toString());
     }
-    m_this->onOffDeviceKeyChanged(keySequence);
+    m_this->hotkeyChanged(actionName, keySequence, oldKeySequence);
 }
 
 QString Settings::getAdalightSerialPortName()

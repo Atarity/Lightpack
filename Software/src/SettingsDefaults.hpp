@@ -77,7 +77,7 @@ static const QString SupportedDevices = SUPPORTED_DEVICES; /* comma separated va
 // [HotKeys]
 namespace HotKeys
 {
-static const QString OnOffDeviceKeyDefault = "Undefined";
+static const QString HotkeyDefault = "Undefined";
 }
 
 // [API]

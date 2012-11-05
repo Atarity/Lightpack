@@ -126,7 +126,9 @@ private slots:
 
     void quit(); /* using in actions */
 
-    void switchBacklightOnOff();
+    void toggleBacklight();
+    void nextProfile();
+    void prevProfile();
 
     void onGrabberChanged();
     void onGrabSlowdown_valueChanged(int value);
@@ -177,9 +179,6 @@ private slots:
     void onSetApiPort_Clicked();
     void onLoggingLevel_valueChanged(int value);
 
-    void setOnOffHotKey(QKeySequence);
-    void clearOnOffHotKey();
-
     void pluginSwitch(int index);
     void viewPluginConsole();
 
@@ -193,6 +192,9 @@ private slots:
     void on_pushButton_LightpackRefreshDelayHelp_clicked();
 
     void on_pushButton_GammaCorrectionHelp_clicked();
+    void on_tableWidget_Hotkeys_itemSelectionChanged();
+    void onKeySequenceChanged(const QKeySequence &sequence);
+    void onHotkeyChanged(const QString &actionName, const QKeySequence &sequence, const QKeySequence &oldKeySequence);
 
 private:
     void updateTrayAndActionStates();    
@@ -208,7 +210,6 @@ private:
     void createActions();
     void updateUiFromSettings();
 
-    void profileLoadLast();
     void profileTraySync();
 
     void initLanguages();
@@ -223,12 +224,14 @@ private:
     void adjustSizeAndMoveCenter();
 
     void setupHotkeys();
+    void registerHotkey(const QString &actionName, const QString &description, const QString &hotkey);
 
     void setFirmwareVersion(const QString &firmwareVersion);
     void versionsUpdate();
 
     void savePriorityPlugin();
     void showHelpOf(QObject *object);
+    QString getSlotName(const QString &actionName);
 
 
 private:
@@ -253,6 +256,7 @@ private:
     QAction *m_settingsAction;
     QAction *m_quitAction;
 
+    bool m_isHotkeySelectionChanging;
     QSystemTrayIcon *m_trayIcon;
     QMenu *m_trayIconMenu;
     QMenu *m_profilesMenu;
