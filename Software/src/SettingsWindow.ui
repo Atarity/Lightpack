@@ -72,6 +72,12 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
         <height>16777208</height>
        </size>
       </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
       <property name="verticalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
@@ -108,14 +114,14 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <property name="gridSize">
        <size>
         <width>107</width>
-        <height>90</height>
+        <height>100</height>
        </size>
       </property>
       <property name="viewMode">
        <enum>QListView::IconMode</enum>
       </property>
       <property name="uniformItemSizes">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="selectionRectVisible">
        <bool>true</bool>
@@ -123,6 +129,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <item>
        <property name="text">
         <string>Mode</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
        </property>
        <property name="background">
         <brush brushstyle="NoBrush">
@@ -145,6 +154,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <property name="text">
         <string>Device</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
+       </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
          <normaloff>:/icons/device.png</normaloff>:/icons/device.png</iconset>
@@ -156,6 +168,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <item>
        <property name="text">
         <string>Profiles</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
        </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
@@ -169,6 +184,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <property name="text">
         <string>Plugins</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
+       </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
          <normaloff>:/icons/plugins.png</normaloff>:/icons/plugins.png</iconset>
@@ -181,6 +199,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <property name="text">
         <string>Experimental</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
+       </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
          <normaloff>:/icons/nerd2.png</normaloff>:/icons/nerd2.png</iconset>
@@ -192,6 +213,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <item>
        <property name="text">
         <string>About</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
        </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
@@ -218,7 +242,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -2741,7 +2765,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>35</height>
+            <height>20</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -2783,7 +2807,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;software &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -2810,7 +2834,7 @@ p, li { white-space: pre-wrap; }
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>25</height>
+            <height>20</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -2838,7 +2862,7 @@ p, li { white-space: pre-wrap; }
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>25</height>
+            <height>20</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -2898,7 +2922,57 @@ p, li { white-space: pre-wrap; }
            </size>
           </property>
           <property name="text">
-           <string>&lt;small&gt;THIS PROGRAM IS DISTRIBUTED &quot;AS IS&quot;. NO WARRANTY OF ANY KIND IS EXPRESSED OR IMPLIED. YOU USE AT YOUR OWN RISK. THE AUTHOR WILL NOT BE LIABLE FOR DATA LOSS, DAMAGES, LOSS OF PROFITS OR ANY OTHER KIND OF LOSS WHILE USING OR MISUSING THIS SOFTWARE.&lt;/small&gt;</string>
+           <string>This program is distributed &amp;laquo;as is&amp;raquo; and it source code is under &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL license&lt;/a&gt;. No warranty of any kind is expressed or implied. You use at your own risk. The authors will not be liable for data loss, damages, loss of profits or any other kind of loss while using or misusing this software.</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::AutoText</enum>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="Line" name="line_2">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>10</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>10</height>
+           </size>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>&lt;b&gt;We put lights in right order:&lt;/b&gt;&lt;br&gt;Timur Sattarov, Mikhail Shatohin, Andrey Isupov&lt;br&gt;&lt;br&gt;&lt;b&gt;Special thanks to:&lt;/b&gt;&lt;br&gt; Andrey Burkov, Vasiliy Fomin, Daria Orton, Nikolay Kudashev, Alexey Yakovlev, Mikhail Karpelyanskiy, Phillip Burgess, Dirk Heinke, Mikhail Sannikov</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -2910,8 +2984,14 @@ p, li { white-space: pre-wrap; }
         </item>
         <item>
          <widget class="QLabel" name="label_13">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>100</height>
+           </size>
+          </property>
           <property name="text">
-           <string notr="true">&lt;a href=&quot;https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=W6VQABKTGW6F4&amp;lc=RU&amp;item_name=Pixelkit%20LLC&amp;currency_code=USD&amp;bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted&quot;&gt;&lt;img src=&quot;:/icons/donate.png&quot;&gt;&lt;/a&gt;</string>
+           <string notr="true">&lt;a href=&quot;https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=W6VQABKTGW6F4&amp;lc=RU&amp;item_name=Yes,%20we%20like%20your%20products%20and%20would%20like%20to%20make%20it%20better!&amp;currency_code=USD&amp;bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted&quot;&gt;&lt;img src=&quot;:/icons/donate.png&quot;&gt;&lt;/a&gt;</string>
           </property>
           <property name="textFormat">
            <enum>Qt::RichText</enum>
