@@ -72,6 +72,12 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
         <height>16777208</height>
        </size>
       </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
       <property name="verticalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
@@ -108,14 +114,14 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <property name="gridSize">
        <size>
         <width>107</width>
-        <height>90</height>
+        <height>100</height>
        </size>
       </property>
       <property name="viewMode">
        <enum>QListView::IconMode</enum>
       </property>
       <property name="uniformItemSizes">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="selectionRectVisible">
        <bool>true</bool>
@@ -123,6 +129,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <item>
        <property name="text">
         <string>Mode</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
        </property>
        <property name="background">
         <brush brushstyle="NoBrush">
@@ -145,6 +154,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <property name="text">
         <string>Device</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
+       </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
          <normaloff>:/icons/device.png</normaloff>:/icons/device.png</iconset>
@@ -156,6 +168,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <item>
        <property name="text">
         <string>Profiles</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
        </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
@@ -169,6 +184,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <property name="text">
         <string>Plugins</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
+       </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
          <normaloff>:/icons/plugins.png</normaloff>:/icons/plugins.png</iconset>
@@ -181,6 +199,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <property name="text">
         <string>Experimental</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
+       </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
          <normaloff>:/icons/nerd2.png</normaloff>:/icons/nerd2.png</iconset>
@@ -192,6 +213,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <item>
        <property name="text">
         <string>About</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignHCenter|AlignTop</set>
        </property>
        <property name="icon">
         <iconset resource="../res/LightpackResources.qrc">
@@ -218,7 +242,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
