@@ -66,6 +66,8 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     Settings::Initialize(m_applicationDirPath, m_isDebugLevelObtainedFromCmdArgs);
 
+    m_isSettingsWindowActive = false;
+
     if (!m_noGui)
     {
         checkSystemTrayAvailability();
@@ -228,15 +230,19 @@ void LightpackApplication::startBacklight()
         break;
     }
 }
-
 void LightpackApplication::onFocusChanged(QWidget *old, QWidget *now)
 {
+    Q_UNUSED(now);
     Q_UNUSED(old);
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    if(now != NULL && m_settingsWindow->isActiveWindow()) {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << (this->activeWindow() != NULL ? this->activeWindow()->metaObject()->className() : "null");
+    if(!m_isSettingsWindowActive && (this->activeWindow() == m_settingsWindow)) {
         m_settingsWindow->focusIn();
+        m_isSettingsWindowActive = true;
     } else {
-        m_settingsWindow->focusOut();
+        if(m_isSettingsWindowActive && (this->activeWindow() == NULL)) {
+            m_settingsWindow->focusOut();
+            m_isSettingsWindowActive = false;
+        }
     }
 }
 
