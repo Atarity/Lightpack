@@ -77,6 +77,7 @@ private slots:
     void getConsole();
     void consoleClosing();
     void handleConnectedDeviceChange(SupportedDevices::DeviceType);
+    void onFocusChanged(QWidget *, QWidget *);
 
 private:
     void processCommandLineArguments();

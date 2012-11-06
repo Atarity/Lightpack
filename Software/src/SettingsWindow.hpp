@@ -105,6 +105,8 @@ public slots:
 
     void updatePlugin(QList<PyPlugin*> plugins);
 
+    void focusIn();
+    void focusOut();
 
 protected:
     virtual void changeEvent(QEvent *e);

@@ -61,7 +61,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 
-    m_trayIcon = NULL;
+    m_trayIcon = NULL   ;
 
     ui->setupUi(this);
 
@@ -347,6 +347,20 @@ void SettingsWindow::closeEvent(QCloseEvent *event)
         hideSettings();
         event->ignore();
     }
+}
+
+void SettingsWindow::focusIn()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    if (ui->groupBox_GrabShowGrabWidgets->isChecked()) {
+        emit showLedWidgets(true);
+    }
+}
+
+void SettingsWindow::focusOut()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    emit showLedWidgets(false);
 }
 
 void SettingsWindow::onSwitchOffAtClosing_Toggled(bool isEnabled)

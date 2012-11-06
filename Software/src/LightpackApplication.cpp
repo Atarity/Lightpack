@@ -78,6 +78,7 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 //        m_settingsWindow->profileSwitch(Settings::getCurrentProfileName());
         // Process messages from another instances in SettingsWindow
         connect(this, SIGNAL(messageReceived(QString)), m_settingsWindow, SLOT(processMessage(QString)));
+        connect(this, SIGNAL(focusChanged(QWidget*,QWidget*)), this, SLOT(onFocusChanged(QWidget*,QWidget*)));
     }
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
@@ -225,6 +226,17 @@ void LightpackApplication::startBacklight()
     default:
         qWarning() << Q_FUNC_INFO << "status contains crap =" << m_backlightStatus;
         break;
+    }
+}
+
+void LightpackApplication::onFocusChanged(QWidget *old, QWidget *now)
+{
+    Q_UNUSED(old);
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    if(now != NULL && m_settingsWindow->isActiveWindow()) {
+        m_settingsWindow->focusIn();
+    } else {
+        m_settingsWindow->focusOut();
     }
 }
 
