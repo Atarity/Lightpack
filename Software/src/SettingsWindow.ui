@@ -87,9 +87,6 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <property name="showDropIndicator" stdset="0">
        <bool>false</bool>
       </property>
-      <property name="alternatingRowColors">
-       <bool>false</bool>
-      </property>
       <property name="iconSize">
        <size>
         <width>64</width>
@@ -111,17 +108,23 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <property name="isWrapping" stdset="0">
        <bool>true</bool>
       </property>
-      <property name="gridSize">
-       <size>
-        <width>107</width>
-        <height>100</height>
-       </size>
+      <property name="layoutMode">
+       <enum>QListView::SinglePass</enum>
+      </property>
+      <property name="spacing">
+       <number>20</number>
       </property>
       <property name="viewMode">
        <enum>QListView::IconMode</enum>
       </property>
+      <property name="modelColumn">
+       <number>0</number>
+      </property>
       <property name="uniformItemSizes">
        <bool>false</bool>
+      </property>
+      <property name="batchSize">
+       <number>100</number>
       </property>
       <property name="selectionRectVisible">
        <bool>true</bool>
