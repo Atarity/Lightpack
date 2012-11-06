@@ -352,7 +352,7 @@ void SettingsWindow::closeEvent(QCloseEvent *event)
 void SettingsWindow::focusIn()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    if (ui->groupBox_GrabShowGrabWidgets->isChecked()) {
+    if (ui->groupBox_GrabShowGrabWidgets->isChecked() && ui->comboBox_LightpackModes->currentIndex() == AmbilightModeIndex) {
         emit showLedWidgets(true);
     }
 }
