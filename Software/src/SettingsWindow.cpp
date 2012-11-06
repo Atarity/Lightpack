@@ -70,7 +70,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     createActions();
 
     setWindowFlags(Qt::Window |
-//                   Qt::WindowStaysOnTopHint |
                    Qt::CustomizeWindowHint |
                    Qt::WindowCloseButtonHint );
     setFocus(Qt::OtherFocusReason);
@@ -1837,6 +1836,7 @@ void SettingsWindow::setupHotkeys()
     registerHotkey(SLOT(nextProfile()), tr("Activate next profile"), Settings::getHotkey("nextProfile").toString());
     registerHotkey(SLOT(prevProfile()), tr("Activate previous profile"), Settings::getHotkey("prevProfile").toString());
     m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("Action not selected"), this);
+    m_keySequenceWidget->setClearButtonIcon(QIcon(":/icons/profile_delete.png"));
     m_isHotkeySelectionChanging = false;
     connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onKeySequenceChanged(QKeySequence)));
 
