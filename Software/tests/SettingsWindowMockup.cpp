@@ -23,62 +23,62 @@
  *
  */
 
-#include "SettingsWindowLittleVersion.hpp"
+#include "SettingsWindowMockup.hpp"
 
-void SettingsWindowLittleVersion::requestBacklightStatus()
+void SettingsWindowMockup::requestBacklightStatus()
 {
     emit resultBacklightStatus(m_status);
     m_isDone = true;
 }
 
-void SettingsWindowLittleVersion::setLedColors(QList<QRgb> colors)
+void SettingsWindowMockup::setLedColors(QList<QRgb> colors)
 {
     m_colors = colors;
     m_isDone = true;
 }
 
-void SettingsWindowLittleVersion::setSmooth(int value)
+void SettingsWindowMockup::setSmooth(int value)
 {
     m_smooth = value;
     m_isDone = true;
 }
 
-void SettingsWindowLittleVersion::setGamma(double value)
+void SettingsWindowMockup::setGamma(double value)
 {
     m_gamma = value;
     m_isDone = true;
 }
 
-void SettingsWindowLittleVersion::setBrightness(int value)
+void SettingsWindowMockup::setBrightness(int value)
 {
     m_brightness = value;
     m_isDone = true;
 }
 
-void SettingsWindowLittleVersion::setProfile(QString profile)
+void SettingsWindowMockup::setProfile(QString profile)
 {
     m_profile = profile;
     m_isDone = true;
 }
 
-void SettingsWindowLittleVersion::setStatus(Backlight::Status status)
+void SettingsWindowMockup::setStatus(Backlight::Status status)
 {
     m_status = status;
     m_isDone = true;
 }
 
-void SettingsWindowLittleVersion::onApiServer_ErrorOnStartListening(QString /*errorMessage*/)
+void SettingsWindowMockup::onApiServer_ErrorOnStartListening(QString /*errorMessage*/)
 {
     m_isErrorCallbackWorksFine = true;
     m_isDone = true;
 }
 
-void SettingsWindowLittleVersion::setIsEnabledApiAuth(bool isEnabled)
+void SettingsWindowMockup::setIsEnabledApiAuth(bool isEnabled)
 {
     emit enableApiAuth(isEnabled);
 }
 
-void SettingsWindowLittleVersion::setApiKey(const QString & apiKey)
+void SettingsWindowMockup::setApiKey(const QString & apiKey)
 {
     emit updateApiKey(apiKey);
 }

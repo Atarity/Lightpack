@@ -28,35 +28,17 @@
 #include <QtTest/QtTest>
 #include <QRgb>
 #include <QRect>
-#include "../../src/enums.hpp"
-#include "../../src/grab/calculations.hpp"
+#include "enums.hpp"
+#include "calculations.hpp"
 
 class GrabCalculationTest : public QObject
 {
     Q_OBJECT
     
 public:
-    GrabCalculationTest();
+    GrabCalculationTest(){}
     
 private Q_SLOTS:
     void testCase1();
 };
 
-GrabCalculationTest::GrabCalculationTest()
-{
-}
-
-void GrabCalculationTest::testCase1()
-{
-    QRgb result;
-    unsigned char buf[16];
-    memset(buf, 0xfa, 16);
-    QVERIFY2(Grab::Calculations::calculateAvgColor(&result, buf, Grab::BufferFormatArgb, 16, QRect(0,0,4,1)) == 0, "Failure. calculateAvgColor returned wrong errorcode");
-    QCOMPARE(result, qRgb(0xfa,0xfa,0xfa));
-    QVERIFY2(Grab::Calculations::calculateAvgColor(&result, buf, Grab::BufferFormatAbgr, 16, QRect(0,0,4,1)) == 0, "Failure. calculateAvgColor returned wrong errorcode");
-    QCOMPARE(result, qRgb(0xfa,0xfa,0xfa));
-}
-
-QTEST_APPLESS_MAIN(GrabCalculationTest)
-
-#include "tst_GrabCalculationTest.moc"

@@ -29,11 +29,11 @@
 #include <QRgb>
 #include "enums.hpp"
 
-class SettingsWindowLittleVersion : public QObject
+class SettingsWindowMockup : public QObject
 {
     Q_OBJECT
 public:
-    SettingsWindowLittleVersion(QObject *parent) : QObject(parent)
+    SettingsWindowMockup(QObject *parent) : QObject(parent)
     {
         m_status = Backlight::StatusOff;
         m_smooth = -1;
