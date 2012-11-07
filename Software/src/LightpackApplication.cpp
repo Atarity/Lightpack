@@ -423,10 +423,6 @@ void LightpackApplication::startApiServer()
     {
         connect(m_apiServer, SIGNAL(errorOnStartListening(QString)), m_settingsWindow, SLOT(onApiServer_ErrorOnStartListening(QString)));
     }
-    else
-    {
-        connect(m_apiServer, SIGNAL(requestBacklightStatus()),       this, SLOT(requestBacklightStatus()));
-    }
 
     connect(m_ledDeviceManager, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), m_pluginInterface,    SLOT(updateColors(QList<QRgb>)), Qt::QueuedConnection);
 

@@ -24,7 +24,7 @@ public:
      bool SetStatus(QString sessionKey, int status);
      bool SetColors(QString sessionKey, int r, int g, int b);
      bool SetColor(QString sessionKey, int ind,int r, int g, int b);
-     bool SetGamma(QString sessionKey, int gamma);
+     bool SetGamma(QString sessionKey, double gamma);
      bool SetBrightness(QString sessionKey, int brightness);
      bool SetSmooth(QString sessionKey, int smooth);
      bool SetProfile(QString sessionKey, QString profile);

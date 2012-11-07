@@ -326,10 +326,10 @@ void ApiServer::clientProcessCommands()
             API_DEBUG_OUT << CmdGetStatus;
 
             int status = lightpack->GetStatus();
-            if (status==1) result = CmdResultStatus_On;
-            if (status==0) result = CmdResultStatus_Off;
-            if (status==-1) result =  CmdResultStatus_DeviceError;
-            if (status==-2) result =  CmdResultStatus_Unknown;
+            if (status== 1) result = CmdResultStatus_On;
+            if (status== 0) result = CmdResultStatus_Off;
+            if (status==-1) result = CmdResultStatus_DeviceError;
+            if (status==-2) result = CmdResultStatus_Unknown;
         }
         else if (cmdBuffer == CmdGetStatusAPI)
         {
@@ -444,7 +444,7 @@ void ApiServer::clientProcessCommands()
             bool res = lightpack->UnLock(sessionKey);
             if (!res)
             {
-                result = CmdResultLock_Busy;
+                result = CmdResultUnlock_NotLocked;
             } else {
                 result = CmdResultUnlock_Success;
             }

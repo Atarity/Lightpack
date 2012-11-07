@@ -77,21 +77,21 @@ void LightpackPluginInterface::updatePlugin(QList<PyPlugin*> plugins)
 
 void LightpackPluginInterface::resultBacklightStatus(Backlight::Status status)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << status;
-    m_isRequestBacklightStatusDone = true;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << status;
     m_backlightStatusResult = status;
+    m_isRequestBacklightStatusDone = true;
     switch (m_backlightStatusResult)
     {
-    case Backlight::StatusOn:
-        emit ChangeStatus(1);
-        break;
-    case Backlight::StatusOff:
-        emit ChangeStatus(0);
-        break;
-    case Backlight::StatusDeviceError:
-    default:
-        emit ChangeStatus(-1);
-        break;
+        case Backlight::StatusOn:
+            emit ChangeStatus(1);
+            break;
+        case Backlight::StatusOff:
+            emit ChangeStatus(0);
+            break;
+        case Backlight::StatusDeviceError:
+        default:
+            emit ChangeStatus(-1);
+            break;
     }
 }
 
@@ -219,7 +219,7 @@ bool LightpackPluginInterface::Lock(QString sessionKey)
 
 bool LightpackPluginInterface::UnLock(QString sessionKey)
 {
-    if (lockSessionKeys.isEmpty()) return true;
+    if (lockSessionKeys.isEmpty()) return false;
         if (lockSessionKeys[0]==sessionKey)
         {
             lockSessionKeys.removeFirst();
@@ -278,7 +278,7 @@ bool LightpackPluginInterface::SetColor(QString sessionKey, int ind,int r, int g
     return true;
 }
 
-bool LightpackPluginInterface::SetGamma(QString sessionKey, int gamma)
+bool LightpackPluginInterface::SetGamma(QString sessionKey, double gamma)
 {
     if (lockSessionKeys.isEmpty()) return false;
     if (lockSessionKeys[0]!=sessionKey) return false;
@@ -438,18 +438,18 @@ int LightpackPluginInterface::GetStatus()
         {
             switch (m_backlightStatusResult)
             {
-            case Backlight::StatusOn:
-                return 1;
-                break;
-            case Backlight::StatusOff:
-                return 0;
-                break;
-            case Backlight::StatusDeviceError:
-                return -1;
-                break;
-            default:
-                return -2;
-                break;
+                case Backlight::StatusOn:
+                    return 1;
+                    break;
+                case Backlight::StatusOff:
+                    return 0;
+                    break;
+                case Backlight::StatusDeviceError:
+                    return -1;
+                    break;
+                default:
+                    return -2;
+                    break;
             }
         } else {
             m_isRequestBacklightStatusDone = true;
