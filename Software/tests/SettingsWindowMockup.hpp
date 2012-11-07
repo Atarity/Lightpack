@@ -42,7 +42,6 @@ public:
 signals:
     void resultBacklightStatus(Backlight::Status status);
     void enableApiServer(bool isEnabled);
-    void enableApiAuth(bool isEnabled);
     void updateApiPort(int port);
     void updateApiKey(QString key);
 public slots:

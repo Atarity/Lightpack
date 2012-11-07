@@ -73,11 +73,6 @@ void SettingsWindowMockup::onApiServer_ErrorOnStartListening(QString /*errorMess
     m_isDone = true;
 }
 
-void SettingsWindowMockup::setIsEnabledApiAuth(bool isEnabled)
-{
-    emit enableApiAuth(isEnabled);
-}
-
 void SettingsWindowMockup::setApiKey(const QString & apiKey)
 {
     emit updateApiKey(apiKey);

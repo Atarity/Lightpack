@@ -88,7 +88,7 @@ private:
 private:
     ApiServer *m_apiServer;
     QThread *m_apiServerThread;
-    LightpackPluginInterface *interfaceApi;
+    LightpackPluginInterface *m_interfaceApi;
     SettingsWindowMockup *m_little;
 
     QTcpSocket * m_socket;
