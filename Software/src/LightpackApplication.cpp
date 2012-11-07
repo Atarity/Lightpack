@@ -542,7 +542,6 @@ void LightpackApplication::startPluginManager()
     consolePlugin = NULL;
     m_pluginManager = new PluginManager(NULL);
     m_PluginThread = new QThread();
-    QWidget* settingsBox = NULL;
 
     m_pluginManager->init(m_pluginInterface);
 
@@ -557,9 +556,6 @@ void LightpackApplication::startPluginManager()
 
     m_pluginManager->moveToThread(m_PluginThread);
     m_PluginThread->start();
-
-
-    // getConsole();
 
 }
 void LightpackApplication::getConsole()
@@ -577,10 +573,7 @@ void LightpackApplication::getConsole()
         consolePlugin->setWindowTitle(tr("Plugin console"));
         consolePlugin->setAttribute( Qt::WA_DeleteOnClose );
         connect( consolePlugin, SIGNAL(destroyed(QObject*)), this, SLOT(consoleClosing()) );
-        consolePlugin->setWindowFlags(//Qt::Window |
-                                  //Qt::WindowStaysOnTopHint |
-                                  //Qt::CustomizeWindowHint |
-                                  Qt::WindowCloseButtonHint);
+        consolePlugin->setWindowFlags(Qt::WindowCloseButtonHint);
         consolePlugin->show();
     }
 }

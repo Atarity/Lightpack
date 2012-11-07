@@ -128,8 +128,6 @@ void PluginManager::loadPlugins(){
                                         QDir::NoDotAndDotDot); //Получаем список папок
 
     foreach(QString pluginDir, lstDirs){
-        DEBUG_LOW_LEVEL << pluginDir;
-
         QString fileName = path+"/"+pluginDir+"/"+pluginDir+".py";
         QString plugin = QFileInfo (fileName).baseName ();
         //add python plugin to file to path
@@ -139,8 +137,6 @@ void PluginManager::loadPlugins(){
         if (!file.exists()) continue;
         file.open(QIODevice::ReadOnly);
         mainContext->evalScript(file.readAll());
-
-        DEBUG_LOW_LEVEL << plugin;
 
         //get plugin info
         QString pluginConstructor = plugin + "()\n";
@@ -156,19 +152,11 @@ void PluginManager::loadPlugins(){
             continue;
         }
 
-
         PyPlugin* p = new PyPlugin(pyPluginObj, NULL);
         DEBUG_LOW_LEVEL <<p->getName()<<  p->getAuthor() << p->getDescription() << p->getVersion();
-        //            connect(p, SIGNAL(aboutToExecute()), this, SLOT(aboutToExecutePlugin()));
-        //            connect(p, SIGNAL(executed()), this, SLOT(cleanUp()));
         connect(p, SIGNAL(executed()), this, SIGNAL(pluginExecuted()));
         _plugins[plugin] = p;
 
-
-
-        //  QThread* m_PluginThread = new QThread();
-        //p->moveToThread(m_PluginThread);
-        // m_PluginThread->start();
     }
 
     _pluginInterface->updatePlugin(_plugins.values());
@@ -197,7 +185,6 @@ QList<PyPlugin*> PluginManager::getPluginList(){
 PythonQtScriptingConsole* PluginManager::getConsole(QWidget* parent_){
     PythonQtScriptingConsole* pyconsole = new PythonQtScriptingConsole(parent_, *mainContext);
     pyconsole->appendCommandPrompt();
-    //connect(this, SIGNAL(pluginExecuted()), pyconsole, SLOT(externalUpdate()));
     pyconsole->show();
     return pyconsole;
 }
