@@ -201,6 +201,8 @@ private slots:
     void onKeySequenceChanged(const QKeySequence &sequence);
     void onHotkeyChanged(const QString &actionName, const QKeySequence &sequence, const QKeySequence &oldKeySequence);
 
+    void on_pushButton_AllPluginsHelp_clicked();
+
 private:
     void updateTrayAndActionStates();    
     void updateExpertModeWidgetsVisibility();
@@ -295,5 +297,3 @@ private:
     QList<PyPlugin*> _plugins;
     static bool toPriority(PyPlugin* s1 , PyPlugin* s2 );
 };
-
-

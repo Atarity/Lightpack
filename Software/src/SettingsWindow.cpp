@@ -108,6 +108,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     initPixmapCache();
 
     m_labelStatusIcon = new QLabel(statusBar());
+    m_labelStatusIcon->setStyleSheet("margin: 2px; margin-right: 5px");
     m_labelStatusIcon->setPixmap(Settings::isBacklightEnabled() ? *(m_pixmapCache["on16"]) : *(m_pixmapCache["off16"]));
     labelProfile = new QLabel(statusBar());
     labelProfile->setStyleSheet("margin-bottom: 5px");
@@ -117,10 +118,10 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     labelFPS->setStyleSheet("margin-bottom: 5px");
 
     statusBar()->setSizeGripEnabled(false);
-    statusBar()->addWidget(m_labelStatusIcon, 1);
     statusBar()->addWidget(labelProfile, 4);
     statusBar()->addWidget(labelDevice, 4);
     statusBar()->addWidget(labelFPS, 4);
+    statusBar()->addWidget(m_labelStatusIcon, 0);
 
     initGrabbersRadioButtonsVisibility();
     initLanguages();
@@ -2332,6 +2333,11 @@ void SettingsWindow::on_pushButton_LightpackColorDepthHelp_clicked()
 void SettingsWindow::on_pushButton_LightpackRefreshDelayHelp_clicked()
 {
     showHelpOf(ui->horizontalSlider_DeviceRefreshDelay);
+}
+
+void SettingsWindow::on_pushButton_AllPluginsHelp_clicked()
+{
+   showHelpOf(ui->label_AllPlugins);
 }
 
 void SettingsWindow::on_pushButton_GammaCorrectionHelp_clicked()
