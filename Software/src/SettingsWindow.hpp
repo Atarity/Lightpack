@@ -218,6 +218,7 @@ private:
     void profileTraySync();
 
     void initLanguages();
+    void initPixmapCache();
 
     void openFile(const QString &filePath);
 
@@ -266,9 +267,12 @@ private:
     QMenu *m_trayIconMenu;
     QMenu *m_profilesMenu;
 
+    QLabel *m_labelStatusIcon;
     QLabel *labelProfile;
     QLabel *labelDevice;
     QLabel *labelFPS;
+
+    QCache<QString, QPixmap> m_pixmapCache;
 
     enum TrayMessages
     {

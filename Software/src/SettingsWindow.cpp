@@ -105,7 +105,10 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     connect(ui->listWidget,
             SIGNAL(currentRowChanged(int)),
             this, SLOT(changePage(int)));
+    initPixmapCache();
 
+    m_labelStatusIcon = new QLabel(statusBar());
+    m_labelStatusIcon->setPixmap(Settings::isBacklightEnabled() ? *(m_pixmapCache["on16"]) : *(m_pixmapCache["off16"]));
     labelProfile = new QLabel(statusBar());
     labelProfile->setStyleSheet("margin-bottom: 5px");
     labelDevice = new QLabel(statusBar());
@@ -114,9 +117,10 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     labelFPS->setStyleSheet("margin-bottom: 5px");
 
     statusBar()->setSizeGripEnabled(false);
-    statusBar()->addWidget(labelProfile, 1);
-    statusBar()->addWidget(labelDevice, 1);
-    statusBar()->addWidget(labelFPS, 1);
+    statusBar()->addWidget(m_labelStatusIcon, 1);
+    statusBar()->addWidget(labelProfile, 4);
+    statusBar()->addWidget(labelDevice, 4);
+    statusBar()->addWidget(labelFPS, 4);
 
     initGrabbersRadioButtonsVisibility();
     initLanguages();
@@ -739,41 +743,46 @@ void SettingsWindow::updateTrayAndActionStates()
     switch (m_backlightStatus)
     {
     case Backlight::StatusOn:
-        ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
+        ui->pushButton_EnableDisableDevice->setIcon(QIcon(*m_pixmapCache["off16"]));
         ui->pushButton_EnableDisableDevice->setText("  " + tr("Turn lights OFF"));
         m_switchOnBacklightAction->setEnabled(false);
         m_switchOffBacklightAction->setEnabled(true);
 
         if (m_deviceLockStatus == DeviceLocked::Api)
         {
-            m_trayIcon->setIcon(QIcon(":/icons/lock.png"));
+            m_labelStatusIcon->setPixmap(*m_pixmapCache["lock16"]);
+            m_trayIcon->setIcon(QIcon(*m_pixmapCache["lock16"]));
             m_trayIcon->setToolTip(tr("Device locked via API"));
         } else
         if (m_deviceLockStatus == DeviceLocked::Plugin)
         {
-            m_trayIcon->setIcon(QIcon(":/icons/lock.png"));
+            m_labelStatusIcon->setPixmap(*m_pixmapCache["lock16"]);
+            m_trayIcon->setIcon(QIcon(*m_pixmapCache["lock16"]));
             m_trayIcon->setToolTip(tr("Device locked via Plugin")+" ("+m_deviceLockModule+")");
         } else {
-            m_trayIcon->setIcon(QIcon(":/icons/on.png"));
+            m_labelStatusIcon->setPixmap(*m_pixmapCache["on16"]);
+            m_trayIcon->setIcon(QIcon(*m_pixmapCache["on16"]));
             m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
         }
         break;
 
     case Backlight::StatusOff:
-        ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/on.png"));
+        m_labelStatusIcon->setPixmap(*m_pixmapCache["off16"]);
+        ui->pushButton_EnableDisableDevice->setIcon(QIcon(*m_pixmapCache["on16"]));
         ui->pushButton_EnableDisableDevice->setText("  " + tr("Turn lights ON"));
         m_switchOnBacklightAction->setEnabled(true);
         m_switchOffBacklightAction->setEnabled(false);
-        m_trayIcon->setIcon(QIcon(":/icons/off.png"));
+        m_trayIcon->setIcon(QIcon(*m_pixmapCache["off16"]));
         m_trayIcon->setToolTip(tr("Disabled"));
         break;
 
     case Backlight::StatusDeviceError:
-        ui->pushButton_EnableDisableDevice->setIcon(QIcon(":/icons/off.png"));
+        m_labelStatusIcon->setPixmap(*m_pixmapCache["error16"]);
+        ui->pushButton_EnableDisableDevice->setIcon(QIcon(*m_pixmapCache["off16"]));
         ui->pushButton_EnableDisableDevice->setText("  " + tr("Turn lights OFF"));
         m_switchOnBacklightAction->setEnabled(false);
         m_switchOffBacklightAction->setEnabled(true);
-        m_trayIcon->setIcon(QIcon(":/icons/error.png"));
+        m_trayIcon->setIcon(QIcon(*m_pixmapCache["error16"]));
         m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
         break;
     default:
@@ -1460,6 +1469,14 @@ void SettingsWindow::profileTraySync()
         m_profilesMenu->addAction(profileAction);
         connect(profileAction, SIGNAL(triggered()), this, SLOT(profileTraySwitch()));
     }
+}
+
+void SettingsWindow::initPixmapCache()
+{
+    m_pixmapCache.insert("lock16", new QPixmap(QPixmap(":/icons/lock.png").scaledToWidth(16, Qt::SmoothTransformation)) );
+    m_pixmapCache.insert("on16", new QPixmap(QPixmap(":/icons/on.png").scaledToWidth(16, Qt::SmoothTransformation)) );
+    m_pixmapCache.insert("off16", new QPixmap(QPixmap(":/icons/off.png").scaledToWidth(16, Qt::SmoothTransformation)) );
+    m_pixmapCache.insert("error16", new QPixmap(QPixmap(":/icons/error.png").scaledToWidth(16, Qt::SmoothTransformation)) );
 }
 
 // ----------------------------------------------------------------------------
