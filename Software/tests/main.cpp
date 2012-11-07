@@ -2,18 +2,33 @@
 #include <QtTest/QtTest>
 #include "LightpackApiTest.hpp"
 #include "GrabCalculationTest.hpp"
+#include <iostream>
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
     QTEST_DISABLE_KEYPAD_NAVIGATION
+    QApplication app(argc, argv);
 
-    GrabCalculationTest grabCalculationTest;
-    QTest::qExec(&grabCalculationTest, argc, argv);
+    QList<QObject *> tests;
+    QStringList summary;
 
-    LightpackApiTest lightpackApiTest;
-    QTest::qExec(&lightpackApiTest, argc, argv);
+    tests.append(new GrabCalculationTest());
+    tests.append(new LightpackApiTest());
 
 
-    return 1;
+    for(int i=0; i < tests.size(); i++) {
+        if (QTest::qExec(tests[i], argc, argv)) {
+            summary << QString(tests[i]->metaObject()->className()).append("\tFAILED");
+        } else {
+            summary << QString(tests[i]->metaObject()->className()).append("\tPASSED");
+        }
+        delete tests[i];
+    }
+
+    for (int i = 0; i < summary.size(); ++i)
+        cout << endl << summary.at(i).toLocal8Bit().constData() << endl;
+
+    return 0;
 }
