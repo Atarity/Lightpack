@@ -2011,7 +2011,8 @@ void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
         // Liquid color mode
         ui->pushButton_SelectColor->setEnabled(false);
         ui->horizontalSlider_MoodLampSpeed->setEnabled(true);
-        ui->label_MoodLampSpeed->setEnabled(true);
+        ui->label_slowMoodLampSpeed->setEnabled(true);
+        ui->label_fastMoodLampSpeed->setEnabled(true);
         // Switch off smooth if liquid mode enabled
         // this helps normal work liquid mode on hw5 and hw4 lightpacks
         emit updateSmoothSlowdown(0);
@@ -2019,7 +2020,8 @@ void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
         // Constant color mode
         ui->pushButton_SelectColor->setEnabled(true);
         ui->horizontalSlider_MoodLampSpeed->setEnabled(false);
-        ui->label_MoodLampSpeed->setEnabled(false);
+        ui->label_slowMoodLampSpeed->setEnabled(false);
+        ui->label_fastMoodLampSpeed->setEnabled(false);
         emit updateSmoothSlowdown(Settings::getDeviceSmooth());
     }
 }

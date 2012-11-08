@@ -251,7 +251,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -611,11 +611,11 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
           <widget class="QWidget" name="page_2">
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
               <item>
                <widget class="QRadioButton" name="radioButton_ConstantColorMoodLampMode">
                 <property name="text">
-                 <string>Constant color</string>
+                 <string>Constant color:</string>
                 </property>
                 <property name="checkable">
                  <bool>true</bool>
@@ -651,44 +651,36 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
              </layout>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButton_LiquidColorMoodLampMode">
-              <property name="text">
-               <string>Liquid color</string>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <property name="spacing">
+               <number>3</number>
               </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QGridLayout" name="gridLayout_4">
-              <item row="1" column="1">
-               <widget class="QLabel" name="label_MoodLampSpeed">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
+              <item>
+               <widget class="QRadioButton" name="radioButton_LiquidColorMoodLampMode">
                 <property name="text">
-                 <string>Speed:</string>
-                </property>
-                <property name="buddy">
-                 <cstring>horizontalSlider_MoodLampSpeed</cstring>
+                 <string>Changable with rate:</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <spacer name="horizontalSpacer_12">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+              <item>
+               <widget class="QLabel" name="label_slowMoodLampSpeed">
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
                 </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Preferred</enum>
+                <property name="styleSheet">
+                 <string notr="true">margin-bottom:0.4em; margin-left:0.5em</string>
                 </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>10</height>
-                 </size>
+                <property name="text">
+                 <string>Slow</string>
                 </property>
-               </spacer>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+               </widget>
               </item>
-              <item row="2" column="1">
+              <item>
                <widget class="QSlider" name="horizontalSlider_MoodLampSpeed">
                 <property name="enabled">
                  <bool>false</bool>
@@ -701,6 +693,24 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_fastMoodLampSpeed">
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">margin-bottom:0.4em;</string>
+                </property>
+                <property name="text">
+                 <string>Fast</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
                 </property>
                </widget>
               </item>
@@ -938,6 +948,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
             <width>16777215</width>
             <height>280</height>
            </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">margin-top: 9px;</string>
           </property>
           <property name="title">
            <string>Device-specific options</string>
@@ -3158,15 +3171,12 @@ p, li { white-space: pre-wrap; }
   <tabstop>tabWidget</tabstop>
   <tabstop>pushButton_EnableDisableDevice</tabstop>
   <tabstop>checkBox_GrabIsAvgColors</tabstop>
-  <tabstop>radioButton_ConstantColorMoodLampMode</tabstop>
   <tabstop>pushButton_ProfileNew</tabstop>
   <tabstop>pushButton_ProfileResetToDefault</tabstop>
   <tabstop>pushButton_DeleteProfile</tabstop>
   <tabstop>commandLinkButton_OpenSettings</tabstop>
   <tabstop>comboBox_Language</tabstop>
   <tabstop>groupBox_Api</tabstop>
-  <tabstop>pushButton_SelectColor</tabstop>
-  <tabstop>radioButton_LiquidColorMoodLampMode</tabstop>
   <tabstop>comboBox_LightpackModes</tabstop>
   <tabstop>spinBox_GrabSlowdown</tabstop>
   <tabstop>spinBox_GrabMinLevelOfSensitivity</tabstop>
