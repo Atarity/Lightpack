@@ -117,15 +117,6 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <property name="viewMode">
        <enum>QListView::IconMode</enum>
       </property>
-      <property name="modelColumn">
-       <number>0</number>
-      </property>
-      <property name="uniformItemSizes">
-       <bool>false</bool>
-      </property>
-      <property name="batchSize">
-       <number>100</number>
-      </property>
       <property name="selectionRectVisible">
        <bool>true</bool>
       </property>
@@ -364,7 +355,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
         <item row="2" column="0">
          <widget class="QStackedWidget" name="stackedWidget_LightpackModes">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="page">
            <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -511,26 +502,11 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
              </layout>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_GrabShowGrabWidgets">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <weight>50</weight>
-                <bold>false</bold>
-               </font>
-              </property>
+             <widget class="QGroupBox" name="groupBox_2">
               <property name="title">
-               <string>Show grab widgets</string>
+               <string>Grab widgets appearance</string>
               </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_13">
+              <layout class="QVBoxLayout" name="verticalLayout_16">
                <item>
                 <widget class="QRadioButton" name="radioButton_Colored">
                  <property name="text">
@@ -542,19 +518,6 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_11">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
                 <widget class="QRadioButton" name="radioButton_White">
                  <property name="text">
                   <string>White</string>
@@ -562,17 +525,11 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_9">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                <widget class="QRadioButton" name="radioButton_GrabWidgetsDontShow">
+                 <property name="text">
+                  <string>Do not show</string>
                  </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -3180,9 +3137,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>comboBox_LightpackModes</tabstop>
   <tabstop>spinBox_GrabSlowdown</tabstop>
   <tabstop>spinBox_GrabMinLevelOfSensitivity</tabstop>
-  <tabstop>groupBox_GrabShowGrabWidgets</tabstop>
-  <tabstop>radioButton_Colored</tabstop>
-  <tabstop>radioButton_White</tabstop>
   <tabstop>tabPlugin</tabstop>
  </tabstops>
  <resources>

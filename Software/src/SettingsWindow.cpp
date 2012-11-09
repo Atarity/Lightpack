@@ -83,22 +83,22 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     m_speedTest = new SpeedTest();
 
-//    ui->listWidget->setViewMode(QListView::IconMode);
-//    ui->listWidget->setIconSize(QSize(64, 64));
-//    ui->listWidget->setMovement(QListView::Static);
-//    ui->listWidget->setMaximumWidth(110);
-//    ui->listWidget->setMinimumWidth(110);
-//    ui->listWidget->setSpacing(12);
-//    ui->listWidget->setCurrentRow(0);
-//    ui->listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-// hide main tabbar
+    //    ui->listWidget->setViewMode(QListView::IconMode);
+    //    ui->listWidget->setIconSize(QSize(64, 64));
+    //    ui->listWidget->setMovement(QListView::Static);
+    //    ui->listWidget->setMaximumWidth(110);
+    //    ui->listWidget->setMinimumWidth(110);
+    //    ui->listWidget->setSpacing(12);
+    //    ui->listWidget->setCurrentRow(0);
+    //    ui->listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // hide main tabbar
     QTabBar* tabBar=qFindChild<QTabBar*>(ui->tabWidget);
     tabBar->hide();
-// hide plugin settings tabbar
+    // hide plugin settings tabbar
     tabBar=qFindChild<QTabBar*>(ui->tabPluginsSettings);
     tabBar->hide();
     ui->tabPluginsSettings->setDocumentMode(true);
-// hide device options tabbar
+    // hide device options tabbar
     tabBar=qFindChild<QTabBar*>(ui->tabDevices);
     tabBar->hide();
 
@@ -150,14 +150,14 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     onGrabberChanged();
 
 
-    adjustSizeAndMoveCenter();   
+    adjustSizeAndMoveCenter();
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
 
 void SettingsWindow::changePage(int page)
 {
-      DEBUG_LOW_LEVEL << Q_FUNC_INFO << page;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << page;
     if (page > ui->tabWidget->count()-1)
         ui->tabWidget->setCurrentIndex(page-1);
     else
@@ -196,9 +196,9 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->checkBox_turnOnAtLevelOfSensitivity, SIGNAL(toggled(bool)), this, SLOT(onTurnOnAtLevelOfSensitivity_toggled(bool)));
     connect(ui->checkBox_GrabIsAvgColors, SIGNAL(toggled(bool)), this, SLOT(onGrabIsAvgColors_toggled(bool)));
 
-    connect(ui->groupBox_GrabShowGrabWidgets, SIGNAL(toggled(bool)), this, SLOT( onShowLedWidgets_Toggled(bool)));
-    connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), this, SLOT(onSetColoredLedWidgets()));
-    connect(ui->radioButton_White, SIGNAL(toggled(bool)), this, SLOT(onSetWhiteLedWidgets()));
+    connect(ui->radioButton_GrabWidgetsDontShow, SIGNAL(toggled(bool)), this, SLOT( onDontShowLedWidgets_Toggled(bool)));
+    connect(ui->radioButton_Colored, SIGNAL(toggled(bool)), this, SLOT(onSetColoredLedWidgets(bool)));
+    connect(ui->radioButton_White, SIGNAL(toggled(bool)), this, SLOT(onSetWhiteLedWidgets(bool)));
 
     connect(ui->radioButton_LiquidColorMoodLampMode, SIGNAL(toggled(bool)), this, SLOT(onMoodLampLiquidMode_Toggled(bool)));
     connect(ui->horizontalSlider_MoodLampSpeed, SIGNAL(valueChanged(int)), this, SLOT(onMoodLampSpeed_valueChanged(int)));
@@ -231,7 +231,7 @@ void SettingsWindow::connectSignalsSlots()
     // Open Settings file
     connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openCurrentProfile()));
 
-    // Connect profile signals to this slots    
+    // Connect profile signals to this slots
     connect(ui->comboBox_Profiles->lineEdit(), SIGNAL(editingFinished()) /* or returnPressed() */, this, SLOT(profileRename()));
     connect(ui->comboBox_Profiles, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileSwitch(QString)));
 
@@ -247,7 +247,7 @@ void SettingsWindow::connectSignalsSlots()
 
     connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColor_changed(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabled_Toggled(bool)));
-    connect(ui->checkBox_SwitchOffAtClosing, SIGNAL(toggled(bool)), this, SLOT(onSwitchOffAtClosing_Toggled(bool)));    
+    connect(ui->checkBox_SwitchOffAtClosing, SIGNAL(toggled(bool)), this, SLOT(onSwitchOffAtClosing_Toggled(bool)));
 
     // Dev tab
     connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
@@ -284,8 +284,8 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->checkBox_PingDeviceEverySecond, SIGNAL(toggled(bool)), this, SLOT(onPingDeviceEverySecond_Toggled(bool)));
 
     //Plugins
-//    connected during setupUi by name:
-//    connect(ui->list_Plugins,SIGNAL(currentRowChanged(int)),this,SLOT(on_list_Plugins_itemClicked(QListWidgetItem *)));
+    //    connected during setupUi by name:
+    //    connect(ui->list_Plugins,SIGNAL(currentRowChanged(int)),this,SLOT(on_list_Plugins_itemClicked(QListWidgetItem *)));
     connect(ui->pushButton_ConsolePlugin,SIGNAL(clicked()),this,SLOT(viewPluginConsole()));
     connect(ui->pushButton_UpPriority, SIGNAL(clicked()), this, SLOT(MoveUpPlugin()));
     connect(ui->pushButton_DownPriority, SIGNAL(clicked()), this, SLOT(MoveDownPlugin()));
@@ -311,25 +311,25 @@ void SettingsWindow::changeEvent(QEvent *e)
 
         m_profilesMenu->setTitle(tr("&Profiles"));
 
-//        m_keySequenceWidget->setNoneText(tr("Undefined key"));
-//        m_keySequenceWidget->setShortcutName(tr("On/Off light:"));
+        //        m_keySequenceWidget->setNoneText(tr("Undefined key"));
+        //        m_keySequenceWidget->setShortcutName(tr("On/Off light:"));
 
         if (m_trayIcon!=NULL)
-        switch (m_backlightStatus)
-        {
-        case Backlight::StatusOn:
-            m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
-            break;
-        case Backlight::StatusOff:
-            m_trayIcon->setToolTip(tr("Disabled"));
-            break;
-        case Backlight::StatusDeviceError:
-            m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
-            break;
-        default:
-            qWarning() << Q_FUNC_INFO << "m_backlightStatus contains crap =" << m_backlightStatus;
-            break;
-        }
+            switch (m_backlightStatus)
+            {
+            case Backlight::StatusOn:
+                m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+                break;
+            case Backlight::StatusOff:
+                m_trayIcon->setToolTip(tr("Disabled"));
+                break;
+            case Backlight::StatusDeviceError:
+                m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
+                break;
+            default:
+                qWarning() << Q_FUNC_INFO << "m_backlightStatus contains crap =" << m_backlightStatus;
+                break;
+            }
 
         setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
@@ -357,7 +357,7 @@ void SettingsWindow::closeEvent(QCloseEvent *event)
 void SettingsWindow::focusIn()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    if (ui->groupBox_GrabShowGrabWidgets->isChecked() && ui->comboBox_LightpackModes->currentIndex() == AmbilightModeIndex) {
+    if (ui->radioButton_GrabWidgetsDontShow->isChecked() && ui->comboBox_LightpackModes->currentIndex() == AmbilightModeIndex) {
         emit showLedWidgets(true);
     }
 }
@@ -384,7 +384,7 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
     if(Settings::isExpertModeEnabled()) {
         if (ui->tabWidget->indexOf(ui->tabExperimental) < 0)
             ui->tabWidget->insertTab(4,ui->tabExperimental, tr("Dev tab"));
-            ui->listWidget->setItemHidden(ui->listWidget->item(4),false);
+        ui->listWidget->setItemHidden(ui->listWidget->item(4),false);
     } else {
         ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabExperimental));
         ui->listWidget->setItemHidden(ui->listWidget->item(4),true);
@@ -473,9 +473,9 @@ void SettingsWindow::syncLedDeviceWithSettingsWindow()
 
 void SettingsWindow::setMaximumNumberOfLeds(MaximumNumberOfLeds::Devices maximumNumberOfLeds)
 {
-//    DEBUG_LOW_LEVEL << Q_FUNC_INFO << maximumNumberOfLeds;
+    //    DEBUG_LOW_LEVEL << Q_FUNC_INFO << maximumNumberOfLeds;
 
-//    ui->spinBox_NumberOfLeds->setMaximum(maximumNumberOfLeds);
+    //    ui->spinBox_NumberOfLeds->setMaximum(maximumNumberOfLeds);
 }
 
 int SettingsWindow::getLigtpackFirmwareVersionMajor()
@@ -528,26 +528,26 @@ void SettingsWindow::onApiKey_EditingFinished()
 
 void SettingsWindow::onSetApiPort_Clicked()
 {
-     DEBUG_LOW_LEVEL << Q_FUNC_INFO << ui->lineEdit_ApiPort->text();
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << ui->lineEdit_ApiPort->text();
 
-     bool ok;
-     int port = ui->lineEdit_ApiPort->text().toInt(&ok);
+    bool ok;
+    int port = ui->lineEdit_ApiPort->text().toInt(&ok);
 
-     if (ok)
-     {
+    if (ok)
+    {
         Settings::setApiPort(port);
         emit updateApiPort(port);
 
         ui->lineEdit_ApiPort->setStyleSheet(this->styleSheet());
         ui->lineEdit_ApiPort->setToolTip("");
-     } else {
-         QString errorMessage = "Convert to 'int' fail";
+    } else {
+        QString errorMessage = "Convert to 'int' fail";
 
-         ui->lineEdit_ApiPort->setStyleSheet("background-color:red;");
-         ui->lineEdit_ApiPort->setToolTip(errorMessage);
+        ui->lineEdit_ApiPort->setStyleSheet("background-color:red;");
+        ui->lineEdit_ApiPort->setToolTip(errorMessage);
 
-         qWarning() << Q_FUNC_INFO << errorMessage << "port:" << ui->lineEdit_ApiPort->text();
-     }
+        qWarning() << Q_FUNC_INFO << errorMessage << "port:" << ui->lineEdit_ApiPort->text();
+    }
 }
 
 void SettingsWindow::onGenerateNewApiKey_Clicked()
@@ -601,9 +601,9 @@ void SettingsWindow::setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status, 
 void SettingsWindow::onDx1011CaptureEnabledChanged(bool isEnabled) {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
 
-    #ifdef D3D10_GRAB_SUPPORT
+#ifdef D3D10_GRAB_SUPPORT
     Settings::setDx1011GrabberEnabled(isEnabled);
-    #endif
+#endif
 }
 void SettingsWindow::setModeChanged(Lightpack::Mode mode)
 {
@@ -620,7 +620,7 @@ void SettingsWindow::setBacklightStatus(Backlight::Status status)
     {
         m_backlightStatus = status;
         emit backlightStatusChanged(m_backlightStatus);
-    }   
+    }
 
     startBacklight();
 }
@@ -675,23 +675,23 @@ void SettingsWindow::startBacklight()
 
     if(ui->list_Plugins->count()>0)
     {
-            int count = ui->list_Plugins->count();
-            for(int index = 0; index < count; index++)
+        int count = ui->list_Plugins->count();
+        for(int index = 0; index < count; index++)
+        {
+            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "check session key";
+            QListWidgetItem * item = ui->list_Plugins->item(index);
+            int indexPlugin =item->data(Qt::UserRole).toUInt();
+            QString key = _plugins[indexPlugin]->getSessionKey();
+            if (m_deviceLockKey.contains(key))
             {
-                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "check session key";
-                QListWidgetItem * item = ui->list_Plugins->item(index);
-                int indexPlugin =item->data(Qt::UserRole).toUInt();
-                QString key = _plugins[indexPlugin]->getSessionKey();
-                if (m_deviceLockKey.contains(key))
-                {
-                    if (m_deviceLockStatus != DeviceLocked::Api  && m_deviceLockKey.indexOf(key)==0)
-                         m_deviceLockModule = _plugins[indexPlugin]->getName();
-                     if (Settings::isExpertModeEnabled())
-                         item->setText(_plugins[indexPlugin]->getName()+" (Lock)");
-                }
-                else
-                    item->setText(_plugins[indexPlugin]->getName());
+                if (m_deviceLockStatus != DeviceLocked::Api  && m_deviceLockKey.indexOf(key)==0)
+                    m_deviceLockModule = _plugins[indexPlugin]->getName();
+                if (Settings::isExpertModeEnabled())
+                    item->setText(_plugins[indexPlugin]->getName()+" (Lock)");
             }
+            else
+                item->setText(_plugins[indexPlugin]->getName());
+        }
     }
 
     if (m_deviceLockKey.count()==0)
@@ -755,16 +755,16 @@ void SettingsWindow::updateTrayAndActionStates()
             m_trayIcon->setIcon(QIcon(*m_pixmapCache["lock16"]));
             m_trayIcon->setToolTip(tr("Device locked via API"));
         } else
-        if (m_deviceLockStatus == DeviceLocked::Plugin)
-        {
-            m_labelStatusIcon->setPixmap(*m_pixmapCache["lock16"]);
-            m_trayIcon->setIcon(QIcon(*m_pixmapCache["lock16"]));
-            m_trayIcon->setToolTip(tr("Device locked via Plugin")+" ("+m_deviceLockModule+")");
-        } else {
-            m_labelStatusIcon->setPixmap(*m_pixmapCache["on16"]);
-            m_trayIcon->setIcon(QIcon(*m_pixmapCache["on16"]));
-            m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
-        }
+            if (m_deviceLockStatus == DeviceLocked::Plugin)
+            {
+                m_labelStatusIcon->setPixmap(*m_pixmapCache["lock16"]);
+                m_trayIcon->setIcon(QIcon(*m_pixmapCache["lock16"]));
+                m_trayIcon->setToolTip(tr("Device locked via Plugin")+" ("+m_deviceLockModule+")");
+            } else {
+                m_labelStatusIcon->setPixmap(*m_pixmapCache["on16"]);
+                m_trayIcon->setIcon(QIcon(*m_pixmapCache["on16"]));
+                m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+            }
         break;
 
     case Backlight::StatusOff:
@@ -903,8 +903,8 @@ void SettingsWindow::onPingDeviceEverySecond_Toggled(bool state)
     Settings::setPingDeviceEverySecond(state);
 
     // Force update colors on device for start ping device
-//    m_grabManager->reset();
-//    m_moodlampManager->reset();
+    //    m_grabManager->reset();
+    //    m_moodlampManager->reset();
 }
 
 void SettingsWindow::processMessage(const QString &message)
@@ -937,11 +937,10 @@ void SettingsWindow::showSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    Lightpack::Mode mode = Settings::getLightpackMode();
-    ui->comboBox_LightpackModes->setCurrentIndex((mode == Lightpack::AmbilightMode) ? 0 : 1); // we assume that Lightpack::Mode in same order as comboBox_Modes
-    emit showLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && ui->comboBox_LightpackModes->currentIndex()==0);
     this->show();
     this->activateWindow();
+
+    onLightpackModeChanged(Settings::getLightpackMode());
 
     if (_plugins.count()>0)
     {
@@ -974,7 +973,7 @@ void SettingsWindow::ledDeviceOpenSuccess(bool isSuccess)
         // Device just connected and for updating colors
         // we should reset previous saved states
         //m_grabManager->reset();
-       // m_moodlampManager->reset();
+        // m_moodlampManager->reset();
     }
 
     ledDeviceCallSuccess(isSuccess);
@@ -1028,7 +1027,7 @@ void SettingsWindow::ledDeviceFirmwareVersionResult(const QString & fwVersion)
         }
     }
 
-   this->setFirmwareVersion(aboutDialogFirmwareString);
+    this->setFirmwareVersion(aboutDialogFirmwareString);
 
     updateDeviceTabWidgetsVisibility();
 }
@@ -1132,7 +1131,7 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
     updateDeviceTabWidgetsVisibility();
 
     // Update number of leds for current selected device
-//    ui->spinBox_NumberOfLeds->setValue(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
+    //    ui->spinBox_NumberOfLeds->setValue(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
 
     int index = ui->comboBox_AdalightColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
     if (index < 0)
@@ -1281,7 +1280,7 @@ void SettingsWindow::openCurrentProfile()
 
 void SettingsWindow::profileRename()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;       
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     QString configName = ui->comboBox_Profiles->currentText().trimmed();
     ui->comboBox_Profiles->lineEdit()->setText(configName);
@@ -1723,7 +1722,7 @@ void SettingsWindow::updateUiFromSettings()
 
     // Check the selected moodlamp mode (setChecked(false) not working to select another)
     ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
-    ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());    
+    ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());
     ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
     ui->horizontalSlider_MoodLampSpeed->setValue        (Settings::getMoodLampSpeed());
 
@@ -1745,9 +1744,9 @@ void SettingsWindow::updateUiFromSettings()
     ui->lineEdit_ApiKey->setText                        (Settings::getApiAuthKey());
     ui->spinBox_LoggingLevel->setValue                  (g_debugLevel);
 
-    #ifdef D3D10_GRAB_SUPPORT
+#ifdef D3D10_GRAB_SUPPORT
     ui->checkBox_EnableDx1011Capture->setChecked        (Settings::isDx1011GrabberEnabled());
-    #endif
+#endif
 
     switch (Settings::getGrabberType())
     {
@@ -1860,7 +1859,7 @@ void SettingsWindow::setupHotkeys()
     QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
 
     //to speed up initialization disable sorting while adding new items
-//    hotkeysTable->setSortingEnabled(false);
+    //    hotkeysTable->setSortingEnabled(false);
     hotkeysTable->setColumnCount(3);
     hotkeysTable->setHorizontalHeaderLabels(headerLabels);
     registerHotkey(SLOT(toggleBacklight()), tr("On/Off lights"), Settings::getHotkey("toggleBacklight").toString());
@@ -1872,7 +1871,7 @@ void SettingsWindow::setupHotkeys()
     m_isHotkeySelectionChanging = false;
     connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onKeySequenceChanged(QKeySequence)));
 
-//    hotkeysTable->setSortingEnabled(true);
+    //    hotkeysTable->setSortingEnabled(true);
     hotkeysTable->resizeRowsToContents();
     ui->groupBox_HotKeys->layout()->addWidget(m_keySequenceWidget);
 
@@ -1941,7 +1940,7 @@ void SettingsWindow::quit()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "trayIcon->hide();";
 
     if (m_trayIcon!=NULL)
-    m_trayIcon->hide();
+        m_trayIcon->hide();
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "QApplication::quit();";
 
@@ -1966,7 +1965,7 @@ void SettingsWindow::onLightpackModeChanged(Lightpack::Mode mode)
     case Lightpack::AmbilightMode:
         ui->comboBox_LightpackModes->setCurrentIndex(AmbilightModeIndex);
         ui->stackedWidget_LightpackModes->setCurrentIndex(AmbilightModeIndex);
-        emit showLedWidgets(ui->groupBox_GrabShowGrabWidgets->isChecked() && this->isVisible());
+        emit showLedWidgets(!ui->radioButton_GrabWidgetsDontShow->isChecked() && this->isVisible());
         if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
         {
             // Restore smooth slowdown value
@@ -2005,7 +2004,7 @@ void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
 
-    Settings::setMoodLampLiquidMode(checked);    
+    Settings::setMoodLampLiquidMode(checked);
     if (Settings::isMoodLampLiquidMode())
     {
         // Liquid color mode
@@ -2026,22 +2025,24 @@ void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
     }
 }
 
- void SettingsWindow::onShowLedWidgets_Toggled(bool checked)
- {
-     DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
-     emit showLedWidgets(checked);
- }
-
- void SettingsWindow::onSetColoredLedWidgets()
- {
-     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-     emit setColoredLedWidget(true);
- }
-
- void SettingsWindow::onSetWhiteLedWidgets()
+void SettingsWindow::onDontShowLedWidgets_Toggled(bool checked)
 {
-      DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-     emit setColoredLedWidget(false);
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
+    emit showLedWidgets(!checked);
+}
+
+void SettingsWindow::onSetColoredLedWidgets(bool checked)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    if (checked)
+        emit setColoredLedWidget(true);
+}
+
+void SettingsWindow::onSetWhiteLedWidgets(bool checked)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    if (checked)
+        emit setColoredLedWidget(false);
 }
 
 void SettingsWindow::initConnectedDeviceComboBox()
@@ -2156,7 +2157,7 @@ void SettingsWindow::updatePlugin(QList<PyPlugin*> plugins)
         _plugins[index]->getSettings(test);
 
         ui->list_Plugins->addItem(item);
-        }
+    }
     if (_plugins.count()>0)
     {
         ui->list_Plugins->setCurrentRow(0);
@@ -2179,9 +2180,9 @@ void SettingsWindow::on_list_Plugins_itemClicked(QListWidgetItem* current)
     bool isEnabled = true;
 
     if (current->checkState() == Qt::Checked)
-       isEnabled = true;
+        isEnabled = true;
     else
-       isEnabled = false;
+        isEnabled = false;
 
     int index =current->data(Qt::UserRole).toUInt();
     if (_plugins[index]->isEnabled() != isEnabled)
@@ -2233,11 +2234,11 @@ void SettingsWindow::viewPluginConsole()
 
 void SettingsWindow::on_pushButton_clicked()
 {
-     foreach(PyPlugin* plugin, _plugins){
-         plugin->stop();
-     }
-     for (int i = ui->tabPluginsSettings->count()-1;i>=0;i--)
-         ui->tabPluginsSettings->removeTab(i);
+    foreach(PyPlugin* plugin, _plugins){
+        plugin->stop();
+    }
+    for (int i = ui->tabPluginsSettings->count()-1;i>=0;i--)
+        ui->tabPluginsSettings->removeTab(i);
 
     //qDeleteAll( ui->tabSettingsPlugin->findChildren<QWidget*>() );
     //delete  ui->tabSettingsPlugin->layout();
@@ -2249,13 +2250,13 @@ void SettingsWindow::on_pushButton_clicked()
 
 void SettingsWindow::MoveUpPlugin() {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-   int k= ui->list_Plugins->currentRow();
-   if (k==0) return;
-   int n = k-1;
-   QListWidgetItem* pItem = ui->list_Plugins->takeItem(k);
-   ui->list_Plugins->insertItem(n, pItem);
-   ui->list_Plugins->setCurrentRow(n);
-   savePriorityPlugin();
+    int k= ui->list_Plugins->currentRow();
+    if (k==0) return;
+    int n = k-1;
+    QListWidgetItem* pItem = ui->list_Plugins->takeItem(k);
+    ui->list_Plugins->insertItem(n, pItem);
+    ui->list_Plugins->setCurrentRow(n);
+    savePriorityPlugin();
 
 }
 void SettingsWindow::MoveDownPlugin() {
@@ -2299,14 +2300,14 @@ void SettingsWindow::versionsUpdate()
 
 #ifdef GIT_REVISION
     versionsTemplate = versionsTemplate.arg(
-            QApplication::applicationVersion(),
-            GIT_REVISION,
-            fimwareVersion );
+                QApplication::applicationVersion(),
+                GIT_REVISION,
+                fimwareVersion );
 #else
     versionsTemplate = versionsTemplate.arg(
-            QApplication::applicationVersion(),
-            "unknown",
-            fimwareVersion );
+                QApplication::applicationVersion(),
+                "unknown",
+                fimwareVersion );
     versionsTemplate.remove(QRegExp(" \\([^()]+unknown[^()]+\\)"));
 #endif
 
@@ -2339,10 +2340,10 @@ void SettingsWindow::on_pushButton_LightpackRefreshDelayHelp_clicked()
 
 void SettingsWindow::on_pushButton_AllPluginsHelp_clicked()
 {
-   showHelpOf(ui->label_AllPlugins);
+    showHelpOf(ui->label_AllPlugins);
 }
 
 void SettingsWindow::on_pushButton_GammaCorrectionHelp_clicked()
 {
-   showHelpOf(ui->horizontalSlider_GammaCorrection);
+    showHelpOf(ui->horizontalSlider_GammaCorrection);
 }

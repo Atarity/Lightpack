@@ -159,9 +159,9 @@ private slots:
     void onColorSequence_valueChanged(QString value);
     void onDx1011CaptureEnabledChanged(bool isEnabled);
 
-    void onShowLedWidgets_Toggled(bool checked);
-    void onSetColoredLedWidgets();
-    void onSetWhiteLedWidgets();
+    void onDontShowLedWidgets_Toggled(bool checked);
+    void onSetColoredLedWidgets(bool checked);
+    void onSetWhiteLedWidgets(bool checked);
 
     void openCurrentProfile();
 
