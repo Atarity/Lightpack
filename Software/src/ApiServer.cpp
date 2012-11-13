@@ -405,7 +405,7 @@ void ApiServer::clientProcessCommands()
 
             QRect screen = lightpack->GetScreenSize();
 
-            result = QString("%1%2,%3\r\n").arg(CmdResultScreenSize).arg(screen.width()).arg(screen.height());
+            result = QString("%1%2,%3,%4,%5\r\n").arg(CmdResultScreenSize).arg(screen.x()).arg(screen.y()).arg(screen.width()).arg(screen.height());
         }
         else if (cmdBuffer == CmdGetBacklight)
         {
@@ -1046,7 +1046,7 @@ void ApiServer::initHelpMessage()
     m_helpMessage += formatHelp(
                 CmdGetScreenSize,
                 "Get size screen",
-                formatHelp(CmdResultScreenSize + QString("1024,768"))
+                formatHelp(CmdResultScreenSize + QString("0,0,1024,768"))
                 );
     m_helpMessage += formatHelp(
                 CmdGetBacklight,
