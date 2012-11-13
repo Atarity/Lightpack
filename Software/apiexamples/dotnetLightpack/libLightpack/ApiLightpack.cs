@@ -329,7 +329,7 @@ namespace libLightpack
             {
                 list = list[1].Split(',');
             }
-            return  new Size(Convert.ToInt32(list[0]),Convert.ToInt32(list[1]));
+            return new Size(Convert.ToInt32(list[2]) - Convert.ToInt32(list[0]),Convert.ToInt32(list[3])-Convert.ToInt32(list[1]));
 	    }
 
         public List<Rectangle> GetLeds()
