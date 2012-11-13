@@ -242,7 +242,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -907,7 +907,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">margin-top: 9px;</string>
+           <string notr="true"/>
           </property>
           <property name="title">
            <string>Device-specific options</string>
