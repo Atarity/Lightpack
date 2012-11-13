@@ -1028,6 +1028,32 @@ void ApiServer::initHelpMessage()
                 "Get count leds of the current profile",
                 formatHelp(CmdResultCountLeds + QString("10"))
                 );
+    m_helpMessage += formatHelp(
+                CmdGetLeds,
+                "Get curent rect areas. Format: \"N-X,Y,W,H;\", where N - number of area, X,Y - position, H,W-size.",
+                formatHelp(CmdResultLeds + QString("1-0,0,100,100;2-0,200,100,100;"))
+                );
+    m_helpMessage += formatHelp(
+                CmdGetColors,
+                "Get curent color leds. Format: \"N-R,G,B;\", where N - number of led, R, G, B - red, green and blue color components.",
+                formatHelp(CmdResultGetColors + QString("1-0,120,200;2-0,234,23;"))
+                );
+    m_helpMessage += formatHelp(
+                CmdGetFPS,
+                "Get FPS grabing",
+                formatHelp(CmdResultFPS + QString("25.57"))
+                );
+    m_helpMessage += formatHelp(
+                CmdGetScreenSize,
+                "Get size screen",
+                formatHelp(CmdResultScreenSize + QString("1024,768"))
+                );
+    m_helpMessage += formatHelp(
+                CmdGetBacklight,
+                "Get mode of the current profile",
+                formatHelp(CmdResultBacklight_Ambilight) +
+                formatHelp(CmdResultBacklight_Moodlamp)
+                );
 
     // Set-commands
 
@@ -1042,6 +1068,13 @@ void ApiServer::initHelpMessage()
                 "Set colors on several LEDs. Format: \"N-R,G,B;\", where N - number of led, R, G, B - red, green and blue color components. Works only on locking time (see lock).",
                 formatHelp(CmdSetColor + QString("1-255,255,30;")) +
                 formatHelp(CmdSetColor + QString("1-255,255,30;2-12,12,12;3-1,2,3;")),
+                helpCmdSetResults);
+
+    m_helpMessage += formatHelp(
+                CmdSetLeds,
+                "Set areas on several LEDs. Format: \"N-X,Y,W,H;\", where N - number of led, X,Y - position, H,W-size. Works only on locking time (see lock).",
+                formatHelp(CmdSetLeds + QString("1-0,0,100,100;")) +
+                formatHelp(CmdSetLeds + QString("1-0,0,100,100;2-0,100,100,100;3-100,0,100,100;")),
                 helpCmdSetResults);
 
     m_helpMessage += formatHelp(
@@ -1078,11 +1111,31 @@ void ApiServer::initHelpMessage()
                 helpCmdSetResults);
 
     m_helpMessage += formatHelp(
+                CmdNewProfile,
+                QString("Create new profile. Works only on locking time (see lock)."),
+                formatHelp(CmdNewProfile + QString("16x9")) +
+                helpCmdSetResults);
+
+    m_helpMessage += formatHelp(
+                CmdDeleteProfile,
+                QString("Delete profile. Works only on locking time (see lock)."),
+                formatHelp(CmdDeleteProfile + QString("16x9")) +
+                helpCmdSetResults);
+
+    m_helpMessage += formatHelp(
                 CmdSetStatus,
                 QString("Set backlight status. Works only on locking time (see lock)."),
                 formatHelp(CmdSetStatus + QString(CmdSetStatus_On)) +
                 formatHelp(CmdSetStatus + QString(CmdSetStatus_Off)),
                 helpCmdSetResults);
+
+    m_helpMessage += formatHelp(
+                CmdSetBacklight,
+                QString("Set backlight mode. Works only on locking time (see lock)."),
+                formatHelp(CmdSetBacklight + QString(CmdSetBacklight_Ambilight)) +
+                formatHelp(CmdSetBacklight + QString(CmdSetBacklight_Moodlamp)),
+                helpCmdSetResults);
+
 
     m_helpMessage += formatHelp(CmdHelpShort, "Short version of this help");
 
