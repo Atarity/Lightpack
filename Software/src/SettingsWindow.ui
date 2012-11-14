@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>560</width>
+    <width>608</width>
     <height>599</height>
    </rect>
   </property>
@@ -787,7 +787,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
           </property>
           <property name="minimumSize">
            <size>
-            <width>50</width>
+            <width>60</width>
             <height>0</height>
            </size>
           </property>
@@ -837,7 +837,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
           </property>
           <property name="maximumSize">
            <size>
-            <width>50</width>
+            <width>60</width>
             <height>16777215</height>
            </size>
           </property>
@@ -864,7 +864,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
            </sizepolicy>
           </property>
           <property name="whatsThis">
-           <string>&lt;h4&gt;Gamma correction&lt;/h4&gt; gamma correction gamma correction</string>
+           <string>&lt;h4&gt;Gamma correction&lt;/h4&gt; Mechanism used to compencate non-linear difference between light emitted by LED and light we try to get&lt;br/&gt;Recommended value: 2.00</string>
           </property>
           <property name="minimum">
            <number>5</number>
@@ -905,9 +905,6 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
             <width>16777215</width>
             <height>280</height>
            </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
           </property>
           <property name="title">
            <string>Device-specific options</string>
@@ -985,13 +982,13 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>50</width>
+                   <width>60</width>
                    <height>0</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>45</width>
+                   <width>60</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -1115,7 +1112,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>45</width>
+                   <width>60</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -1175,13 +1172,13 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>50</width>
+                   <width>60</width>
                    <height>0</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>45</width>
+                   <width>60</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -1206,13 +1203,13 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>50</width>
+                   <width>60</width>
                    <height>0</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>45</width>
+                   <width>60</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -1469,13 +1466,13 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>50</width>
+                   <width>60</width>
                    <height>0</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>45</width>
+                   <width>60</width>
                    <height>16777215</height>
                   </size>
                  </property>
