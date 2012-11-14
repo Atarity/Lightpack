@@ -74,6 +74,11 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
                    Qt::WindowCloseButtonHint );
     setFocus(Qt::OtherFocusReason);
 
+#ifdef Q_OS_LINUX
+    ui->listWidget->setSpacing(0);
+    ui->listWidget->setGridSize(QSize(115, 85));
+#endif
+
     // Check windows reserved simbols in profile input name
     QRegExpValidator *validatorProfileName = new QRegExpValidator(QRegExp("[^<>:\"/\\|?*]*"), this);
     ui->comboBox_Profiles->lineEdit()->setValidator(validatorProfileName);
