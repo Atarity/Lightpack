@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Lightpack"
-#define MyAppVersion "5.8.6-1"
+#define MyAppVersion "5.9.0"
 #define MyAppPublisher "Lightpack"
 #define MyAppURL "http://code.google.com/p/lightpack/"
 #define MyAppExeName "Lightpack.exe"
@@ -49,12 +49,34 @@ Name: "startupicon"; Description: "{cm:CreateStartupIcon}"; GroupDescription: "{
 
 [Files]
 Source: "Lightpack.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "mingwm10.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Lightpack.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "LightpackMain.conf"; DestDir: "{app}"; Flags: ignoreversion; Check: IsPortableInstall
+Source: "PythonQt.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "PythonQt_QtAll.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "LightpackMain.conf"; DestDir: "{app}"; Flags: ignoreversion; Check: IsPortableInstall
+Source: "QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_bsddb.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_ctypes.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_ctypes_test.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_elementtree.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_hashlib.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_msi.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_multiprocessing.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_socket.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_sqlite3.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_ssl.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_testcapi.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_tkinter.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bz2.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "libraryinjector.dll"; DestDir: "{app}"; Flags: 32bit regserver ignoreversion
+Source: "lightpack-hooks.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "mingwm10.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "python27.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "python27.zip"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
