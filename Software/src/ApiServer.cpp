@@ -168,6 +168,7 @@ void ApiServer::firstStart()
 
     if (Settings::isApiEnabled())
     {
+        updateApiKey(Settings::getApiAuthKey());
         startListening();
     }
 }
@@ -210,7 +211,7 @@ void ApiServer::incomingConnection(int socketDescriptor)
     client->setSocketDescriptor(socketDescriptor);
 
     ClientInfo cs;
-    cs.isAuthorized = false;
+    cs.isAuthorized = !m_isAuthEnabled;
     cs.sessionKey = "API"+lightpack->GetSessionKey("API")+QString(m_clients.count());
 
     m_clients.insert(client, cs);
