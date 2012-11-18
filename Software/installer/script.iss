@@ -28,14 +28,14 @@ SetupIconFile=Lightpack.ico
 Compression=lzma/Max
 SolidCompression=true
 AppCopyright=Lightpack
-AppVerName=5.8.6.1
+AppVerName=5.9.0
 UninstallDisplayName={cm:UninstallName}
 UninstallDisplayIcon={app}\Lightpack.exe
 VersionInfoDescription=Lightpack is a monitor light device used for presence effect strengthening. 
 AppMutex=LightpackAppMutex
-VersionInfoVersion=5.8.6.1
+VersionInfoVersion=5.9.0
 VersionInfoProductName=Lightpack
-VersionInfoProductVersion=5.8.6.1
+VersionInfoProductVersion=5.9.0
 Uninstallable=IsNormalInstall
 
 [Languages]
