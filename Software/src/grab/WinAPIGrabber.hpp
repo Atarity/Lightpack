@@ -45,9 +45,6 @@ public:
 protected:
     virtual GrabResult _grab();
 
-signals:
-//    void frameGrabAttempted(GrabResult grabResult);
-
 public slots:
     virtual void updateGrabMonitor(QWidget *widget);
 private:

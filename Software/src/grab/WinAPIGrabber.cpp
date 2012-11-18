@@ -161,7 +161,7 @@ QRgb WinAPIGrabber::getColor(const QRect &widgetRect)
     }
 
     RECT rcMonitor = monitorInfo.rcMonitor;
-    QRect monitorRect = QRect( QPoint(rcMonitor.left, rcMonitor.top), QPoint(rcMonitor.right, rcMonitor.bottom));
+    QRect monitorRect = QRect( QPoint(rcMonitor.left, rcMonitor.top), QPoint(rcMonitor.right-1, rcMonitor.bottom-1));
 
     QRect clippedRect = monitorRect.intersected(widgetRect);
 
