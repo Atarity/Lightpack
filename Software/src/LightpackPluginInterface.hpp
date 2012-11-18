@@ -23,6 +23,7 @@ public:
      bool UnLock(QString sessionKey);
      bool SetStatus(QString sessionKey, int status);
      bool SetColors(QString sessionKey, int r, int g, int b);
+     bool SetFrame(QString sessionKey, QList<QColor> colors);
      bool SetColor(QString sessionKey, int ind,int r, int g, int b);
      bool SetGamma(QString sessionKey, double gamma);
      bool SetBrightness(QString sessionKey, int brightness);

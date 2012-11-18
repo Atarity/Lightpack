@@ -265,6 +265,21 @@ bool LightpackPluginInterface::SetColors(QString sessionKey, int r, int g, int b
     return true;
 }
 
+bool LightpackPluginInterface::SetFrame(QString sessionKey, QList<QColor> colors)
+{
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
+    lockAlive = true;
+    int availSize = colors.size() < m_setColors.size() ? colors.size() : m_setColors.size();
+    for (int i = 0; i < availSize; i++)
+    {
+            m_setColors[i] = colors[i].rgb();
+    }
+    m_curColors = m_setColors;
+    emit updateLedsColors(m_setColors);
+    return true;
+}
+
 bool LightpackPluginInterface::SetColor(QString sessionKey, int ind,int r, int g, int b)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << sessionKey;
