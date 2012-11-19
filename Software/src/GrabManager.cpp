@@ -159,7 +159,10 @@ void GrabManager::onGrabberStateChangeRequested(bool isStartRequested) {
 void GrabManager::onGrabSlowdownChanged(int ms)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << ms;
-    //emit(slowdownChanged(ms));
+    if (m_grabber)
+        m_grabber->setGrabInterval(ms);
+    else
+        qWarning() << Q_FUNC_INFO << "trying to change grab slowdown while there is no grabber";
 }
 
 void GrabManager::onThresholdOfBlackChanged(int value)
@@ -513,6 +516,8 @@ GrabberBase *GrabManager::queryGrabber(Grab::GrabberType grabberType)
         qCritical() << Q_FUNC_INFO << "unsupported for the platform grabber type: " << grabberType << ", using QtGrabber";
         result = m_grabbers[Grab::GrabberTypeQt];
     }
+
+    result->setGrabInterval(Settings::getGrabSlowdown());
 
     return result;
 }
