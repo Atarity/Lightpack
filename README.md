@@ -11,8 +11,8 @@ This private Lightpack software repo is for R&amp;D
 ####Build process:
 
 1. Set all paths in `<repo>/software/build-vars.prf` (`<repo>/software/build-vars.prf.original` is example of such config)
-2. Open **PythonQt** project with Qt Creator: `<repo>/sofware/pythonqt/pythonqt.pro` and build the project, this will build <b>generator** sub-project and generate code for further build, and it will be stopped with error, don't worry, it only needs to run <code>qmake</code> to include generated code to the project
-3. Make sure you ran <code>qmake</code> against whole project and build **PythonQt** one more time
+2. Open **PythonQt** project with Qt Creator: `<repo>/sofware/pythonqt/pythonqt.pro` and build the project, this will build `generator` sub-project and generate code for further build, and it will be stopped with error, don't worry, it only needs to run `qmake` to include generated code to the project
+3. Make sure you ran `qmake` against whole project and build **PythonQt** one more time
 4. Close **PythonQt**, normally it will not be needed anymore, build **Lightpack** project
 
 ---
@@ -29,6 +29,6 @@ You will need the following packages, usually all of them are in distro's reposi
 
 ####Build process:
 1. Set version of python in `<repo>/Software/build-vars.prf` (`<repo>/Software/build-vars.prf.original` is example of such config)
-2. Make sure you have QTDIR environment variable set
+2. Make sure you have `QTDIR` environment variable set
 3. Go to `<repo>/Software/PythonQt` and run `build.sh`
 4. Build **Lightpack** project
