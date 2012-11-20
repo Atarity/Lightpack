@@ -7,15 +7,29 @@
 
 if [ -e "deb/usr/bin/Lightpack" ];
 then
-	echo "Renaming 'deb/usr/bin/Lightpack' to 'deb/usr/bin/lightpack'."
-	mv deb/usr/bin/Lightpack deb/usr/bin/lightpack
+	echo "Renaming 'deb/usr/local/bin/Lightpack' to 'deb/usr/local/bin/lightpack'."
+	mv deb/usr/local/bin/Lightpack deb/usr/local/bin/lightpack
 fi
 
-if [ ! -e "deb/usr/bin/lightpack" ];
+if [ ! -e "deb/usr/local/bin/lightpack" ];
 then
-	echo "File 'deb/usr/bin/lightpack' not found."
+	echo "File 'deb/usr/local/bin/lightpack' not found."
 	exit 1
 fi
+
+if [ ! -e "deb/usr/local/lib/lightpack/libPythonQt.so.1" ];
+then
+	echo "File 'deb/usr/local/lib/lightpack/libPythonQt.so.1' not found."
+	exit 1
+fi
+
+if [ ! -e "deb/usr/local/lib/lightpack/libPythonQt_QtAll.so.1" ];
+then
+	echo "File 'deb/usr/local/lib/lightpack/libPythonQt_QtAll.so.1' not found."
+	exit 1
+fi
+
+
 
 if [ -x "`which md5deep 2>/dev/null`" ]; 
 then

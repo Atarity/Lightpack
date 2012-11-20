@@ -1,0 +1,2 @@
+#!/bin/sh
+LD_LIBRARY_PATH=/usr/local/lib/lightpack /usr/local/lib/lightpack/lightpack
