@@ -12,7 +12,6 @@ Software/[^.]+.pro.user
 .metadata/
 Software/apiexamples/.+\.pyc
 Software/deb/DEBIAN/md5sums
-Software/deb/usr/bin/lightpack
 Software/[^/\\]+\.deb
 
 syntax: regexp
@@ -24,16 +23,17 @@ syntax: glob
 *-build-*/
 Software/installer/*.dll
 Software/installer/*.exe
-Software/PythonQT/generator/*.dll
-Software/PythonQT/generator/*.exe
+Software/PythonQt/generator/*.dll
+Software/PythonQt/generator/*.exe
 Software/src/src.pri
 generated_cpp/
 Software/bin
 Software/**/bin
 Software/docs
 Firmware/LUFA/Documentation
-Software/PythonQT/lib/*
-!Software/PythonQT/lib/.keep_me
+Software/deb/usr/lib/*
+Software/PythonQt/lib/*
+!Software/PythonQt/lib/.keep_me
 Doxyfile
 stuff/
 *.o
