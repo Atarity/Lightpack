@@ -3,7 +3,7 @@ Version: 5.9.0
 Architecture: i386
 Maintainer: Mike Shatohin <brunql@gmail.com>
 Installed-Size: 1030
-Depends: libqtcore4 (>= 4.6), libqtgui4 (>= 4.6), libqt4-network (>= 4.6), libusb-1.0-0 (>= 2:1.0.6-1), python (>=2.7)
+Depends: libqtcore4 (>= 4.6), libqtgui4 (>= 4.6), libqt4-network (>= 4.6), libusb-1.0-0 (>= 2:1.0.6-1), libpython2.7
 Section: electronics
 Priority: optional
 Homepage: http://code.google.com/p/lightpack/

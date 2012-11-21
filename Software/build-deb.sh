@@ -5,27 +5,28 @@
 # Created on: 25.12.11
 #
 
-if [ -e "deb/usr/bin/Lightpack" ];
+if [ -e "deb/usr/lib/lightpack/Lightpack" ];
 then
-	echo "Renaming 'deb/usr/local/bin/Lightpack' to 'deb/usr/local/bin/lightpack'."
-	mv deb/usr/local/bin/Lightpack deb/usr/local/bin/lightpack
+	echo "Renaming 'deb/usr/lib/lightpack/Lightpack' to 'deb/usr/lib/lightpack/lightpack'."
+	mv deb/usr/lib/lightpack/Lightpack deb/usr/lib/lightpack/lightpack
 fi
 
-if [ ! -e "deb/usr/local/bin/lightpack" ];
+
+if [ ! -e "deb/usr/lib/lightpack" ];
 then
-	echo "File 'deb/usr/local/bin/lightpack' not found."
+	echo "File 'deb/usr/lib/lightpack' not found."
 	exit 1
 fi
 
-if [ ! -e "deb/usr/local/lib/lightpack/libPythonQt.so.1" ];
+if [ ! -e "deb/usr/lib/lightpack/libPythonQt.so.1" ];
 then
-	echo "File 'deb/usr/local/lib/lightpack/libPythonQt.so.1' not found."
+	echo "File 'deb/usr/lib/lightpack/libPythonQt.so.1' not found."
 	exit 1
 fi
 
-if [ ! -e "deb/usr/local/lib/lightpack/libPythonQt_QtAll.so.1" ];
+if [ ! -e "deb/usr/lib/lightpack/libPythonQt_QtAll.so.1" ];
 then
-	echo "File 'deb/usr/local/lib/lightpack/libPythonQt_QtAll.so.1' not found."
+	echo "File 'deb/usr/lib/lightpack/libPythonQt_QtAll.so.1' not found."
 	exit 1
 fi
 
