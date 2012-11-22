@@ -242,7 +242,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -543,7 +543,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                </font>
               </property>
               <property name="text">
-               <string>AVG color on all LEDs</string>
+               <string>Average color on all LEDs</string>
               </property>
               <property name="checked">
                <bool>false</bool>
@@ -879,7 +879,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
            <enum>Qt::Horizontal</enum>
           </property>
           <property name="tickPosition">
-           <enum>QSlider::TicksAbove</enum>
+           <enum>QSlider::NoTicks</enum>
           </property>
           <property name="tickInterval">
            <number>100</number>
@@ -2179,11 +2179,11 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
          </layout>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayout_14" rowstretch="1,0" columnstretch="1,0,0">
+         <layout class="QGridLayout" name="gridLayout_14" rowstretch="1,0,0,0" columnstretch="1,0">
           <property name="sizeConstraint">
            <enum>QLayout::SetMinimumSize</enum>
           </property>
-          <item row="0" column="0" rowspan="2">
+          <item row="0" column="0" rowspan="4">
            <widget class="QListWidget" name="list_Plugins">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -2221,7 +2221,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
             </property>
             <property name="icon">
              <iconset resource="../res/LightpackResources.qrc">
-              <normaloff>:/icons/arrow_up.png</normaloff>:/icons/arrow_up.png</iconset>
+              <normaloff>:/icons/arrow_up_gray.png</normaloff>:/icons/arrow_up_gray.png</iconset>
             </property>
            </widget>
           </item>
@@ -2232,19 +2232,23 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
             </property>
             <property name="icon">
              <iconset resource="../res/LightpackResources.qrc">
-              <normaloff>:/icons/arrow_down.png</normaloff>:/icons/arrow_down.png</iconset>
+              <normaloff>:/icons/arrow_down_gray.png</normaloff>:/icons/arrow_down_gray.png</iconset>
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
+          <item row="3" column="1">
            <widget class="QPushButton" name="pushButton_ConsolePlugin">
             <property name="text">
-             <string>Plugin Console</string>
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/LightpackResources.qrc">
+              <normaloff>:/icons/console_gray.png</normaloff>:/icons/console_gray.png</iconset>
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="pushButton">
+          <item row="2" column="1">
+           <widget class="QPushButton" name="pushButton_ReloadPlugins">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>

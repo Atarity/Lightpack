@@ -2171,7 +2171,7 @@ void SettingsWindow::updatePlugin(QList<PyPlugin*> plugins)
     else
         pluginSwitch(-1);
 
-    ui->pushButton->setEnabled(true);
+    ui->pushButton_ReloadPlugins->setEnabled(true);
 
 
     startBacklight();
@@ -2237,7 +2237,7 @@ void SettingsWindow::viewPluginConsole()
     emit getPluginConsole();
 }
 
-void SettingsWindow::on_pushButton_clicked()
+void SettingsWindow::on_pushButton_ReloadPlugins_clicked()
 {
     foreach(PyPlugin* plugin, _plugins){
         plugin->stop();
@@ -2249,7 +2249,7 @@ void SettingsWindow::on_pushButton_clicked()
     //delete  ui->tabSettingsPlugin->layout();
     ui->list_Plugins->clear();
     _plugins.clear();
-    ui->pushButton->setEnabled(false);
+    ui->pushButton_ReloadPlugins->setEnabled(false);
     emit reloadPlugins();
 }
 

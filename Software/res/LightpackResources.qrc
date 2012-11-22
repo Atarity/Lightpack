@@ -31,6 +31,9 @@
         <file>icons/refresh.png</file>
         <file>icons/donate.png</file>
         <file>icons/help.png</file>
+        <file>icons/arrow_down_gray.png</file>
+        <file>icons/arrow_up_gray.png</file>
+        <file>icons/console_gray.png</file>
     </qresource>
     <qresource prefix="/plugin">
         <file alias="BasePlugin.py">python/BasePlugin.py</file>
