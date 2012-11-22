@@ -13,6 +13,17 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 #    Software changelog
 ===================================================================================
 -----------------------------------------------------------------------------------
+Version sw5.9.1
+---------------
+November 22, 2012
+
+* New UI
+* Added embedded python plugins
+* Extended plugins interface
+* Grabbing in DirectX 10/11 applications
+* New option "Color sequence"
+* Improved hotkeys
+* Many minor fixes and improvements
 
 Version sw5.8.6
 ---------------

@@ -1,5 +1,5 @@
-This package was debianized by Mike Shatohin <brunql@gmail.com> on
-Sat, 24 Dec 2011 23:00:00 +0400.
+This package was debianized by Timur Sattarov <tim.helloworld@gmail.com>
+Nov, 22 Dec 2012 15:00:00 +0400.
 
 Copyright:
 
@@ -24,5 +24,5 @@ License:
 On Debian systems, the complete text of the GNU General
 Public License can be found in `/usr/share/common-licenses/GPL'.
 
-The Debian packaging is (C) 2011, Mike Shatohin <brunql@gmail.com> and
+The Debian packaging is (C) 2012, Timur Sattarov <tim.helloworld@gmail.com>
 is licensed under the GPL, see above.
