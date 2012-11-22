@@ -66,9 +66,9 @@ class Animate(BasePlugin.BasePlugin):
 
     def run(self):
         self.on = Lightpack.GetStatus()
-        Lightpack.Lock(self.sessionKey)
-        Lightpack.SetStatus(self.sessionKey,1)
-        self.runAnimation()
+        if Lightpack.Lock(self.sessionKey) :
+            Lightpack.SetStatus(self.sessionKey,1)
+            self.runAnimation()
         print "run"
         
     def stop(self):

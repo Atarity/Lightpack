@@ -6,7 +6,7 @@ import math, random
 from PythonQt.QtGui import *
 
 
-class Animate2(BasePlugin.BasePlugin):
+class YAAnimate(BasePlugin.BasePlugin):
     def init(self):
         self.on = Lightpack.GetStatus()
         self.sessionKey = Lightpack.GetSessionKey(self.__class__.__name__)
@@ -29,7 +29,7 @@ class Animate2(BasePlugin.BasePlugin):
  
     def description(self):
         """ return a short description of the plugin """
-        return "Simple animation"
+        return "Yet another simple animation"
 
     def author(self):
         """ return the author of the plugin """
@@ -45,7 +45,7 @@ class Animate2(BasePlugin.BasePlugin):
             self.lastFrame
             newFrame = self.lastFrame
             leds = Lightpack.GetCountLeds()
-            att = 0.75
+            att = 0.95
             for k  in range (0, leds):
                 if random.randrange(100) < 10 :
                     r = random.randrange(255)
@@ -69,7 +69,7 @@ class Animate2(BasePlugin.BasePlugin):
             for k  in range (0, Lightpack.GetCountLeds()):
                 self.lastFrame.append( QColor(0,0,0))
             self.i=1
-            self.timeranim.setInterval(600)
+            self.timeranim.setInterval(200)
             self.timeranim.start()
             
         except Exception, e:
@@ -78,9 +78,9 @@ class Animate2(BasePlugin.BasePlugin):
 
     def run(self):
         self.on = Lightpack.GetStatus()
-        Lightpack.Lock(self.sessionKey)
-        Lightpack.SetStatus(self.sessionKey,1)
-        self.runAnimation()
+        if Lightpack.Lock(self.sessionKey) :
+            Lightpack.SetStatus(self.sessionKey,1)
+            self.runAnimation()
         print "run"
         
     def stop(self):
