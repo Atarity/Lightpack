@@ -203,6 +203,10 @@ void D3D10Grabber::init(void) {
         //        hr = InitComSecurity();
         //        hr = CoCreateInstanceAsAdmin(NULL, CLSID_ILibraryInjector, IID_ILibraryInjector, reinterpret_cast<void **>(&m_libraryInjector));
         hr = CoCreateInstance(CLSID_ILibraryInjector, NULL, CLSCTX_INPROC_SERVER, IID_ILibraryInjector, reinterpret_cast<void **>(&m_libraryInjector));
+        if (FAILED(hr)) {
+            qCritical() << Q_FUNC_INFO << "Can't create libraryinjector. D3D10Grabber wasn't initialised. Please try to register server: regsvr32 libraryinjector.dll";
+            return;
+        }
 
         SECURITY_ATTRIBUTES sa;
         SECURITY_DESCRIPTOR sd;
@@ -212,7 +216,7 @@ void D3D10Grabber::init(void) {
         // build a restricted security descriptor
         ptr = BuildRestrictedSD(&sd);
         if (!ptr) {
-    //        syslog(LOG_ERR, "BuildRestrictedSD() failed");
+            qCritical() << Q_FUNC_INFO << "Can't create security descriptor. D3D10Grabber wasn't initialised.";
             return;
         }
 
@@ -222,6 +226,7 @@ void D3D10Grabber::init(void) {
 
         if (!initIPC(NULL)) {
             freeIPC();
+            qCritical() << Q_FUNC_INFO << "Can't init interprocess communication mechanism. D3D10Grabber wasn't initialised.";
             return;
         }
         m_processesScanAndInfectTimer = new QTimer(this);
@@ -320,7 +325,8 @@ void D3D10Grabber::handleIfFrameGrabbed() {
 
 D3D10Grabber::~D3D10Grabber() {
     if(m_isInited) {
-        m_libraryInjector->Release();
+        if (m_libraryInjector)
+            m_libraryInjector->Release();
         CoUninitialize();
         freeIPC();
         m_isInited = false;
