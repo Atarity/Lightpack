@@ -6,6 +6,7 @@
 #define MyAppPublisher "Lightpack"
 #define MyAppURL "http://code.google.com/p/lightpack/"
 #define MyAppExeName "Lightpack.exe"
+#define UserSettingsDirName "{%USERPROFILE|{app}}\Lightpack"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -48,34 +49,35 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 Name: "startupicon"; Description: "{cm:CreateStartupIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "Lightpack.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/Lightpack.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Lightpack.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "PythonQt.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "PythonQt_QtAll.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_bsddb.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_ctypes.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_ctypes_test.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_elementtree.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_hashlib.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_msi.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_multiprocessing.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_socket.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_sqlite3.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_ssl.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_testcapi.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_tkinter.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bz2.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/PythonQt.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/PythonQt_QtAll.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_bsddb.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_ctypes.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_ctypes_test.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_elementtree.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_hashlib.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_msi.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_multiprocessing.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_socket.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_sqlite3.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_ssl.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_testcapi.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/_tkinter.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/bz2.pyd"; DestDir: "{app}"; Flags: ignoreversion
 Source: "gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "libraryinjector.dll"; DestDir: "{app}"; Flags: 32bit regserver ignoreversion
-Source: "lightpack-hooks.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "mingwm10.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "python27.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "python27.zip"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/libraryinjector.dll"; DestDir: "{app}"; Flags: 32bit regserver ignoreversion
+Source: "content/lightpack-hooks.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/mingwm10.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/python27.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/python27.zip"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/Plugins/*"; DestDir: "{#UserSettingsDirName}\Plugins"; Flags: onlyifdoesntexist createallsubdirs recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
