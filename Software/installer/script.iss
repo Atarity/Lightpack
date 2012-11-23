@@ -36,21 +36,20 @@ AppMutex=LightpackAppMutex
 VersionInfoVersion=5.9.1
 VersionInfoProductName=Lightpack
 VersionInfoProductVersion=5.9.1
-Uninstallable=IsNormalInstall
+Uninstallable=true
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; Check: IsNormalInstall
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1; Check: IsNormalInstall
-Name: "startupicon"; Description: "{cm:CreateStartupIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; Check: IsNormalInstall
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
+Name: "startupicon"; Description: "{cm:CreateStartupIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
 Source: "Lightpack.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Lightpack.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "LightpackMain.conf"; DestDir: "{app}"; Flags: ignoreversion; Check: IsPortableInstall
 Source: "PythonQt.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PythonQt_QtAll.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -80,12 +79,12 @@ Source: "python27.zip"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Check: IsNormalInstall
-Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"; Check: IsNormalInstall
-Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; Check: IsNormalInstall
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; Check: IsNormalInstall
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon; Check: IsNormalInstall
-Name: "{commonstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: startupicon; Check: IsNormalInstall
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
+Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
+Name: "{commonstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: startupicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
@@ -107,149 +106,3 @@ english.UninstallName =Lightpack (remove only)
 ; Docs link name
 russian.OpenWiki =Открыть страницу с документацией
 english.OpenWiki =Open documentation
-
-; Portable install form name
-russian.InstallTypeForm_Caption =Тип установки
-english.InstallTypeForm_Caption =Install type
-
-; Protable form description
-russian.InstallTypeForm_Description =Выберите режим установки
-english.InstallTypeForm_Description =Please choose install type
-
-; Radiobuttons
-russian.NormalInstallRadioButton_Caption =Обычная установка (рекомендуется)
-english.NormalInstallRadioButton_Caption =Typical install (recommended)
-russian.PortableInstallRadioButton_Caption =Портативная установка
-english.PortableInstallRadioButton_Caption =Portable install
-
-; Radiobuttons descriptions
-russian.PortableInstallLabel_Caption1 =Версия для установки на переносные носители.
-russian.PortableInstallLabel_Caption2 =Все настройки хранятся в папке с программой.
-english.PortableInstallLabel_Caption1 =Version for install on removable devices. 
-english.PortableInstallLabel_Caption2 =All settings are located in the program folder.
-
-[Code]
-var
-  InstallTypePage: TWizardPage;
-    NormalInstallRadio: TRadioButton;
-    PortableInstallRadio: TRadioButton;    
-    PortableInstallLabel1: TLabel;    
-    PortableInstallLabel2: TLabel;  
-  
-  procedure  PortableRadioOnClick(Sender: TObject);
-    begin    
-    PortableInstallLabel1.Enabled := True;
-    PortableInstallLabel2.Enabled := True;
-    end;
-  
-  procedure  NormalRadioOnClick(Sender: TObject);
-    begin    
-    PortableInstallLabel1.Enabled := False;
-    PortableInstallLabel2.Enabled := False;
-    end;
-    
-    procedure InitializeWizard;    
-    begin
-      InstallTypePage := CreateCustomPage( wpWelcome, ExpandConstant('{cm:InstallTypeForm_Caption}'), ExpandConstant('{cm:InstallTypeForm_Description}') );
-      WizardForm.NextButton.Enabled := True;
-      { NormalInstallRadio }
-      NormalInstallRadio := TRadioButton.Create(InstallTypePage); 
-      with NormalInstallRadio do
-      begin
-        Parent := InstallTypePage.Surface; 
-        Caption := ExpandConstant('{cm:NormalInstallRadioButton_Caption}'); 
-        Left := ScaleX(0); 
-        Top := ScaleY(40); 
-        Width := ScaleX(InstallTypePage.SurfaceWidth); 
-        Height := ScaleY(20); 
-        Checked := True;
-        OnClick := @NormalRadioOnClick;
-      end;   
-    
-      { PortableInstallRadio }
-      PortableInstallRadio := TRadioButton.Create(InstallTypePage); 
-      with PortableInstallRadio do
-      begin
-        Parent := InstallTypePage.Surface; 
-        Caption := ExpandConstant('{cm:PortableInstallRadioButton_Caption}'); 
-        Left := ScaleX(0); 
-        Top := ScaleY(70); 
-        Width := ScaleX(InstallTypePage.SurfaceWidth); 
-        Height := ScaleY(20); 
-        OnClick := @PortableRadioOnClick;
-      end;     
-    
-      { PortableInstallLabel1 }
-      PortableInstallLabel1 := TLabel.Create(InstallTypePage); 
-       with PortableInstallLabel1 do
-      begin
-        Parent := InstallTypePage.Surface; 
-         Caption := ExpandConstant('{cm:PortableInstallLabel_Caption1}'); 
-        Left := ScaleX(20); 
-        Top := ScaleY(90); 
-        Width := ScaleX(InstallTypePage.SurfaceWidth); 
-        Height := ScaleY(20); 
-        Enabled := False;
-      end;   
-    
-      { PortableInstallLabel2 }
-      PortableInstallLabel2 := TLabel.Create(InstallTypePage); 
-      with PortableInstallLabel2 do
-      begin
-        Parent := InstallTypePage.Surface; 
-        Caption := ExpandConstant('{cm:PortableInstallLabel_Caption2}'); 
-        Left := ScaleX(20); 
-        Top := ScaleY(105); 
-        Width := ScaleX(InstallTypePage.SurfaceWidth); 
-        Height := ScaleY(20); 
-        Enabled := False;
-      end;      
-    end; 
-    
-    function IsPortableInstall : Boolean;
-    begin
-      Result := PortableInstallRadio.Checked;
-    end;
-  
-  function IsNormalInstall : Boolean;
-    begin
-      Result := NormalInstallRadio.Checked;
-    end;
-     
-    
-    function ShouldSkipPage(CurPageID: Integer): Boolean;
-    var
-      ResultCode: Boolean;     
-    begin            
-      If PortableInstallRadio.Checked then
-      begin
-        case CurPageID of
-          wpSelectTasks:
-            ResultCode := True;
-          wpSelectProgramGroup:
-            ResultCode := True;            
-        end;        
-      end;
-      Result := ResultCode;
-    end;      
-    
-    procedure CurPageChanged(CurPageID: Integer);
-    begin
-      If PortableInstallRadio.Checked then
-      begin
-        case CurPageID of
-          wpSelectDir:
-            WizardForm.DirEdit.Text := 'C:\Lightpack\';            
-        end;
-      end;
-      If NormalInstallRadio.Checked then
-      begin
-        case CurPageID of
-          wpSelectDir:
-            WizardForm.DirEdit.Text := ExpandConstant('{pf}\{#MyAppName}');            
-        end;        
-      end;
-    end;
-end.
-
- 
