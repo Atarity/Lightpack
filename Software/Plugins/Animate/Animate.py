@@ -1,8 +1,7 @@
-import imaplib
-
 import BasePlugin
 import PythonQt
 import math
+import random
 from PythonQt.QtGui import *
 
 
@@ -12,7 +11,9 @@ class Animate(BasePlugin.BasePlugin):
         self.sessionKey = Lightpack.GetSessionKey(self.__class__.__name__)
         self.timeranim = PythonQt.QtCore.QTimer(None)
         self.timeranim.timeout.connect(self.Timeout)
+        self.ledMap = [1,2,3,6,7,8,9,10,4,5]
         leds = Lightpack.GetCountLeds()
+        random.seed()
         print "init"
 
     def dispose(self):
@@ -41,24 +42,26 @@ class Animate(BasePlugin.BasePlugin):
     def Timeout(self):
         try:
             self.i = self.i+1
-            frame=[]
             leds = Lightpack.GetCountLeds()
             for k  in range (0, leds):
-                t = self.i/3 + int(k / 8)*8 + (k % 8 if (k % 16 < 8) else (7- k%8 ))
-                r = int((math.sin(t/10)+1)*127)
-                g = int((math.cos(t/10)+1)*127)
-                b = int((math.cos(1.3 + t/10)+1)*127)
-                frame.append(QColor(r,g,b))
-            Lightpack.SetFrame(self.sessionKey, frame)
+                t = float(self.i/4 - k*2)/10
+                r = int((math.sin(t)+1)*127)
+                g = int((math.cos(t*0.7)+1)*127)
+                b = int((math.cos(1.3 + t*0.9)+1)*127)
+                self.lastFrame[self.ledMap[k]-1]=QColor(r,g,b)
+            Lightpack.SetFrame(self.sessionKey, self.lastFrame)
             self.i += 1
         except Exception, e:
             print e
     
     def runAnimation(self):
         try:
-            self.i=1
+            self.i=Lightpack.GetCountLeds()*2 + random.randrange(20000)
             self.timeranim.setInterval(70)
             self.timeranim.start()
+            self.lastFrame=[]
+            for k in range(0, Lightpack.GetCountLeds()):
+                self.lastFrame.append(QColor(0,0,0))
             
         except Exception, e:
             print e

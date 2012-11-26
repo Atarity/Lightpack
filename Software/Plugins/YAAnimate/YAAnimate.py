@@ -1,5 +1,3 @@
-import imaplib
-
 import BasePlugin
 import PythonQt
 import math, random
