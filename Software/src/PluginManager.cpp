@@ -71,7 +71,7 @@ void PluginManager::initPython()
     }
     catch (...)
     {
-
+        qWarning() << Q_FUNC_INFO << "exception occured while initializing python";
     }
 
 }
@@ -159,12 +159,16 @@ void PluginManager::loadPlugins(){
 
     }
 
+    for(QMap<QString, PyPlugin*>::iterator it = _plugins.begin(); it != _plugins.end(); ++it){
+        PyPlugin* p = it.value();
+        p->init();
+    }
+
     _pluginInterface->updatePlugin(_plugins.values());
     emit updatePlugin(_plugins.values());
 
     for(QMap<QString, PyPlugin*>::iterator it = _plugins.begin(); it != _plugins.end(); ++it){
         PyPlugin* p = it.value();
-        p->init();
         if (p->isEnabled())
             p->execute();
     }
