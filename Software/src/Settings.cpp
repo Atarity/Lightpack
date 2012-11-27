@@ -239,12 +239,16 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::Api::AuthKey,           QUuid::createUuid().toString());
 
     // Serial device configuration
-    setNewOptionMain(Main::Key::Adalight::Port,       Main::Adalight::PortDefault);
-    setNewOptionMain(Main::Key::Adalight::BaudRate,   Main::Adalight::BaudRateDefault);
+    setNewOptionMain(Main::Key::Adalight::Port,             Main::Adalight::PortDefault);
+    setNewOptionMain(Main::Key::Adalight::BaudRate,         Main::Adalight::BaudRateDefault);
     setNewOptionMain(Main::Key::Adalight::NumberOfLeds,     Main::Adalight::NumberOfLedsDefault);
-    setNewOptionMain(Main::Key::Adalight::ColorSequence,     Main::Adalight::ColorSequence);
+    setNewOptionMain(Main::Key::Adalight::ColorSequence,    Main::Adalight::ColorSequence);
+
+    setNewOptionMain(Main::Key::Ardulight::Port,            Main::Ardulight::PortDefault);
+    setNewOptionMain(Main::Key::Ardulight::BaudRate,        Main::Ardulight::BaudRateDefault);
     setNewOptionMain(Main::Key::Ardulight::NumberOfLeds,    Main::Ardulight::NumberOfLedsDefault);
-    setNewOptionMain(Main::Key::Ardulight::ColorSequence,     Main::Ardulight::ColorSequence);
+    setNewOptionMain(Main::Key::Ardulight::ColorSequence,   Main::Ardulight::ColorSequence);
+
     setNewOptionMain(Main::Key::AlienFx::NumberOfLeds,      Main::AlienFx::NumberOfLedsDefault);
     setNewOptionMain(Main::Key::Lightpack::NumberOfLeds,    Main::Lightpack::NumberOfLedsDefault);
     setNewOptionMain(Main::Key::Virtual::NumberOfLeds,      Main::Virtual::NumberOfLedsDefault);

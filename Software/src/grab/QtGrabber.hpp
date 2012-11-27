@@ -39,7 +39,6 @@ public:
     ~QtGrabber();
     virtual const char * getName();
     virtual void updateGrabMonitor( QWidget * widget );
-    //virtual GrabResult grabWidgetsColors(QList<GrabWidget *> &widgets, QList<QRgb> * widgetsColors);
 
 protected:
     virtual GrabResult _grab();

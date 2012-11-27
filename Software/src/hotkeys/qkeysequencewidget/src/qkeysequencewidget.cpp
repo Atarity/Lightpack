@@ -243,6 +243,16 @@ QIcon QKeySequenceWidget::clearButtonIcon() const
     return d_ptr->clearButton->icon();
 }
 
+/*!
+    Set shortcut button minimum width.
+    \return QIcon object
+    \sa setClearButtonIcon
+ */
+void QKeySequenceWidget::setShortcutButtonMinWidth(const int width)
+{
+    d_ptr->shortcutButton->setMinimumWidth(width);
+}
+
 // connection internal signals & slots
 void QKeySequenceWidget::_connectingSlots()
 { 

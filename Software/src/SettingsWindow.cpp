@@ -197,7 +197,7 @@ void SettingsWindow::connectSignalsSlots()
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "tr";
 
     connect(ui->spinBox_GrabSlowdown, SIGNAL(valueChanged(int)), this, SLOT(onGrabSlowdown_valueChanged(int)));
-    connect(ui->spinBox_GrabMinLevelOfSensitivity, SIGNAL(valueChanged(int)), this, SLOT(onGrabMinLevelOfSensivity_valueChanged(int)));
+    connect(ui->spinBox_luminosityThreshold, SIGNAL(valueChanged(int)), this, SLOT(onGrabMinLevelOfSensivity_valueChanged(int)));
     connect(ui->checkBox_turnOnAtLevelOfSensitivity, SIGNAL(toggled(bool)), this, SLOT(onTurnOnAtLevelOfSensitivity_toggled(bool)));
     connect(ui->checkBox_GrabIsAvgColors, SIGNAL(toggled(bool)), this, SLOT(onGrabIsAvgColors_toggled(bool)));
 
@@ -255,8 +255,6 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->checkBox_SwitchOffAtClosing, SIGNAL(toggled(bool)), this, SLOT(onSwitchOffAtClosing_Toggled(bool)));
 
     // Dev tab
-    connect(ui->pushButton_StartTests, SIGNAL(clicked()), this, SLOT(startTestsClick()));
-
     connect(ui->checkBox_EnableDx1011Capture, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
     connect(ui->radioButton_GrabQt, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
     connect(ui->radioButton_GrabQt_EachWidget, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
@@ -396,8 +394,8 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
     }
 
     // Minimum level of sensitivity for ambilight mode
-    ui->label_MinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
-    ui->spinBox_GrabMinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
+//    ui->label_MinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
+//    ui->spinBox_GrabMinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
     ui->checkBox_turnOnAtLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
     ui->groupBox_HotKeys->setVisible(Settings::isExpertModeEnabled());
 
@@ -416,27 +414,27 @@ void SettingsWindow::updateDeviceTabWidgetsVisibility()
     switch (connectedDevice)
     {
     case SupportedDevices::DeviceTypeAdalight:
-        ui->groupBox_DeviceSpecificOptions->show();
+        ui->groupBox_DeviceSpecificSettings->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceAdalight);
         break;
 
     case SupportedDevices::DeviceTypeArdulight:
-        ui->groupBox_DeviceSpecificOptions->show();
+        ui->groupBox_DeviceSpecificSettings->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceArdulight);
         break;
 
     case SupportedDevices::DeviceTypeAlienFx:
-        ui->groupBox_DeviceSpecificOptions->hide();
+        ui->groupBox_DeviceSpecificSettings->hide();
         break;
 
     case SupportedDevices::DeviceTypeLightpack:
-        ui->groupBox_DeviceSpecificOptions->show();
+        ui->groupBox_DeviceSpecificSettings->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceLightpack);
         setDeviceTabWidgetsVisibility(DeviceTab::Lightpack);
         break;
 
     case SupportedDevices::DeviceTypeVirtual:
-        ui->groupBox_DeviceSpecificOptions->show();
+        ui->groupBox_DeviceSpecificSettings->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceVirtual);
         // Sync Virtual Leds count with NumberOfLeds field
         initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::DeviceTypeVirtual));
@@ -1565,14 +1563,8 @@ void SettingsWindow::loadTranslation(const QString & language)
 
 void SettingsWindow::startTestsClick()
 {
-    QString saveText = ui->pushButton_StartTests->text();
-    ui->pushButton_StartTests->setText("Please wait...");
-    ui->pushButton_StartTests->repaint(); // update right now
-
     // While testing this function freezes GUI
     m_speedTest->start();
-
-    ui->pushButton_StartTests->setText(saveText);
 }
 
 // ----------------------------------------------------------------------------
@@ -1722,7 +1714,7 @@ void SettingsWindow::updateUiFromSettings()
 
     ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsEnabled());
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
-    ui->spinBox_GrabMinLevelOfSensitivity->setValue     (Settings::getThresholdOfBlack());
+    ui->spinBox_luminosityThreshold->setValue           (Settings::getThresholdOfBlack());
     ui->checkBox_turnOnAtLevelOfSensitivity->setChecked (Settings::getTurnOnAtLevelOfSensivity());
 
     // Check the selected moodlamp mode (setChecked(false) not working to select another)
@@ -1873,6 +1865,7 @@ void SettingsWindow::setupHotkeys()
     registerHotkey(SLOT(prevProfile()), tr("Activate previous profile"), Settings::getHotkey("prevProfile").toString());
     m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("Action not selected"), this);
     m_keySequenceWidget->setClearButtonIcon(QIcon(":/icons/profile_delete.png"));
+    m_keySequenceWidget->setShortcutButtonMinWidth(100);
     m_isHotkeySelectionChanging = false;
     connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onKeySequenceChanged(QKeySequence)));
 
@@ -2153,15 +2146,17 @@ void SettingsWindow::updatePlugin(QList<PyPlugin*> plugins)
         item->setData(Qt::UserRole, index);
         item->setIcon(plugin->getIcon());
         if (plugin->isEnabled())
+        {
             item->setCheckState(Qt::Checked);
+        }
         else
             item->setCheckState(Qt::Unchecked);
 
         QWidget *test = new QWidget();
         ui->tabPluginsSettings->addTab(test,plugin->getName());
         _plugins[index]->getSettings(test);
-
         ui->list_Plugins->addItem(item);
+        QApplication::processEvents(QEventLoop::AllEvents, 1000);
     }
     if (_plugins.count()>0)
     {
@@ -2172,7 +2167,6 @@ void SettingsWindow::updatePlugin(QList<PyPlugin*> plugins)
         pluginSwitch(-1);
 
     ui->pushButton_ReloadPlugins->setEnabled(true);
-
 
     startBacklight();
 
