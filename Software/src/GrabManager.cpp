@@ -343,7 +343,7 @@ void GrabManager::handleGrabbedColors()
         if (dv > 0)
         {
             if (m_isMinimumLuminosityEnabled)
-                m_colorsNew[i] = LightpackMath::withChromaHSV(LightpackMath::withValueHSV(rgb, m_luminosityThreshold), c - dv*dv*dv);
+                m_colorsNew[i] = LightpackMath::withChromaHSV(LightpackMath::withValueHSV(rgb, m_luminosityThreshold), c - dv*dv);
             else
                 m_colorsNew[i] = 0;
         }
