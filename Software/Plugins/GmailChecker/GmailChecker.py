@@ -207,12 +207,17 @@ class GmailChecker(BasePlugin.BasePlugin):
     def settings(self,parent):
         """ default function """
         box = QGridLayout(parent)
-        #box.setSpacing(5)
+        #box.setSpacing(5)        
+        box.setColumnStretch(0, 2)        
+        box.setColumnStretch(1, 1)
+        box.setColumnStretch(2, 2)
+        box.setColumnStretch(3, 1) # empty column
         label = QLabel(parent)
         label.setText("Account")
         box.addWidget(label,1,0)
         editAcc = QLineEdit(parent)
         editAcc.setText(Lightpack.GetSettingMain('GmailChecker/Username'))
+        editAcc.setPlaceholderText('evil.genius')
         box.addWidget(editAcc,1,1,1,2)
         
         label2 = QLabel(parent)
@@ -220,11 +225,12 @@ class GmailChecker(BasePlugin.BasePlugin):
         box.addWidget(label2,2,0)
         editPass = QLineEdit(parent)
         editPass.setEchoMode(PythonQt.QtGui.QLineEdit.Password)
-        editPass.setText(Lightpack.GetSettingMain('GmailChecker/Password'))
+        editPass.setText(Lightpack.GetSettingMain('GmailChecker/Password'))        
+        #editPass.setFixedWidth(200) #we can use this for layout if needed
         box.addWidget(editPass,2,1,1,2)
         
         labeltime = QLabel(parent)
-        labeltime.setText("Check interval")
+        labeltime.setText("Check every")
         box.addWidget(labeltime,3,0)
         labeltime2 = QLabel(parent)
         labeltime2.setText("min")
@@ -239,10 +245,10 @@ class GmailChecker(BasePlugin.BasePlugin):
         box.addWidget(edittime,3,1)
         
         labelanim = QLabel(parent)
-        labelanim.setText("Animation period")
+        labelanim.setText("Run animation for")
         box.addWidget(labelanim,4,0)
         labelanim2 = QLabel(parent)
-        labelanim2.setText("min (0 - no off animation)")
+        labelanim2.setText("min (0 — no animation)")
         box.addWidget(labelanim2,4,2)
         editanim = QLineEdit(parent)
         editanim.setValidator(QIntValidator(0, 65536, editanim))
@@ -257,7 +263,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         labelrem.setText("Reminder")
         box.addWidget(labelrem,5,0)
         labelrem2 = QLabel(parent)
-        labelrem2.setText("min (0 - off)")
+        labelrem2.setText("min (0 — OFF)")
         box.addWidget(labelrem2,5,2)
         editrem = QLineEdit(parent)
         editrem.setValidator(QIntValidator(0, 65536, editrem))
@@ -269,13 +275,14 @@ class GmailChecker(BasePlugin.BasePlugin):
         box.addWidget(editrem,5,1)
         
         labelbegin = QLabel(parent)
-        labelbegin.setText("Begin check")
+        labelbegin.setText("Start checking at")
         box.addWidget(labelbegin,6,0)
         labelbegin2 = QLabel(parent)
         labelbegin2.setText("hour")
         box.addWidget(labelbegin2,6,2)
         editbegin = QLineEdit(parent)
         editbegin.setValidator(QIntValidator(0, 65536, editbegin))
+        editbegin.setPlaceholderText('0')
         time = Lightpack.GetSettingMain('GmailChecker/TimeBegin')
         if (time == None):
             time = 0
@@ -284,13 +291,14 @@ class GmailChecker(BasePlugin.BasePlugin):
         box.addWidget(editbegin,6,1)
         
         labelend = QLabel(parent)
-        labelend.setText("End check")
+        labelend.setText("End checking at")
         box.addWidget(labelend,7,0)
         labelend2 = QLabel(parent)
         labelend2.setText("hour")
         box.addWidget(labelend2,7,2)
         editend = QLineEdit(parent)
         editend.setValidator(QIntValidator(0, 65536, editend))
+        editend.setPlaceholderText('24')
         time = Lightpack.GetSettingMain('GmailChecker/TimeEnd')
         if (time == None):
             time = 0
@@ -299,7 +307,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         box.addWidget(editend,7,1)
         
         labemap = QLabel(parent)
-        labemap.setText("Leds map \n(separator - ',')")
+        labemap.setText("LEDs sequence map")
         box.addWidget(labemap,8,0)
         editmap = QLineEdit(parent)
         map = Lightpack.GetSettingMain('GmailChecker/LedsMap')
@@ -307,18 +315,24 @@ class GmailChecker(BasePlugin.BasePlugin):
             map = self.mapToStr(self.defaultMap())
             self.changeMap(map)
         editmap.setText(map)
-        box.addWidget(editmap,8,1,2,2)
+        editmap.setPlaceholderText('1,2,3,4,5,6,7,8,9,10')
+        box.addWidget(editmap,8,1,1,2)
+        
+        spacerA = QWidget(parent)
+        spacerA.setFixedSize(20,20)
+        #spacerA.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        box.addWidget(spacerA,9,0)
         
         self.labelunseen = QLabel(parent)
-        self.labelunseen.setText("Unread messages : "+str(self.unseen))
+        self.labelunseen.setText("Unread messages: "+str(self.unseen))
         box.addWidget(self.labelunseen,10,0,1,2)
         pushcheck =  QPushButton(parent)
         pushcheck.text = 'Check now'
         box.addWidget(pushcheck,10,2)
         
-        spacer = QWidget(parent)
-        spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        box.addWidget(spacer)
+        spacerB = QWidget(parent)
+        spacerB.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        box.addWidget(spacerB,11,0)
         
         
         editAcc.connect('textChanged(QString)', self.changeAcc)
