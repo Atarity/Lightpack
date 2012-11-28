@@ -27,6 +27,7 @@
 #include "GrabManager.hpp"
 #include <QtCore/qmath.h>
 #include "debug.h"
+#include "LightpackMath.hpp"
 
 using namespace SettingsScope;
 
@@ -153,6 +154,8 @@ void GrabManager::onGrabberStateChangeRequested(bool isStartRequested) {
     } else {
         qCritical() << Q_FUNC_INFO << " there is no grabber to take control by some reason";
     }
+#else
+    Q_UNUSED(isStartRequested)
 #endif
 }
 
@@ -165,16 +168,16 @@ void GrabManager::onGrabSlowdownChanged(int ms)
         qWarning() << Q_FUNC_INFO << "trying to change grab slowdown while there is no grabber";
 }
 
-void GrabManager::onThresholdOfBlackChanged(int value)
+void GrabManager::onLuminosityThresholdChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-    m_minLevelOfSensivity = value;
+    m_luminosityThreshold = value;
 }
 
-void GrabManager::onTurnOnAtLevelOfSensivity(bool value)
+void GrabManager::onMinimumLuminosityEnabledChanged(bool value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-    m_TurnOnAtLevelOfSensivity = value;
+    m_isMinimumLuminosityEnabled = value;
 }
 
 void GrabManager::onGrabAvgColorsEnabledChanged(bool state)
@@ -211,11 +214,12 @@ void GrabManager::reset()
 void GrabManager::settingsProfileChanged(const QString &profileName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    Q_UNUSED(profileName)
 
     m_isSendDataOnlyIfColorsChanged = Settings::isSendDataOnlyIfColorsChanges();
     m_avgColorsOnAllLeds = Settings::isGrabAvgColorsEnabled();
-    m_minLevelOfSensivity = Settings::getThresholdOfBlack();
-    m_TurnOnAtLevelOfSensivity = Settings::getTurnOnAtLevelOfSensivity();
+    m_luminosityThreshold = Settings::getLuminosityThreshold();
+    m_isMinimumLuminosityEnabled = Settings::isMinimumLuminosityEnabled();
 
     setNumberOfLeds(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
 }
@@ -328,16 +332,16 @@ void GrabManager::handleGrabbedColors()
         m_colorsNew[i] = qRgb(r, g, b);
     }
 
-    // Check minimum level of sensivity
+    // Apply dead-zone or set minimum luminosity
     for (int i = 0; i < m_ledWidgets.size(); i++)
     {
         QRgb rgb = m_colorsNew[i];
-        int avg = round((qRed(rgb) + qGreen(rgb) + qBlue(rgb)) / 3.0);
+        int v =  LightpackMath::calcVOfHSV(rgb);
 
-        if (avg <= m_minLevelOfSensivity)
+        if (v <= m_luminosityThreshold)
         {
-            if (m_TurnOnAtLevelOfSensivity)
-                m_colorsNew[i] = qRgb(m_minLevelOfSensivity, m_minLevelOfSensivity, m_minLevelOfSensivity);
+            if (m_isMinimumLuminosityEnabled)
+                m_colorsNew[i] = qRgb(m_luminosityThreshold, m_luminosityThreshold, m_luminosityThreshold);
             else
                 m_colorsNew[i] = 0;
         }

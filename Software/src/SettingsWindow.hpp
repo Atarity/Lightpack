@@ -136,8 +136,8 @@ private slots:
 
     void onGrabberChanged();
     void onGrabSlowdown_valueChanged(int value);
-    void onGrabMinLevelOfSensivity_valueChanged(int value);
-    void onTurnOnAtLevelOfSensitivity_toggled(bool value);
+    void onLuminosityThreshold_valueChanged(int value);
+    void onMinimumLumosity_toggled(bool value);
     void onGrabIsAvgColors_toggled(bool state);
 
     void onDeviceRefreshDelay_valueChanged(int value);

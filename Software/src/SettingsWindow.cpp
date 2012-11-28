@@ -197,8 +197,8 @@ void SettingsWindow::connectSignalsSlots()
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "tr";
 
     connect(ui->spinBox_GrabSlowdown, SIGNAL(valueChanged(int)), this, SLOT(onGrabSlowdown_valueChanged(int)));
-    connect(ui->spinBox_luminosityThreshold, SIGNAL(valueChanged(int)), this, SLOT(onGrabMinLevelOfSensivity_valueChanged(int)));
-    connect(ui->checkBox_turnOnAtLevelOfSensitivity, SIGNAL(toggled(bool)), this, SLOT(onTurnOnAtLevelOfSensitivity_toggled(bool)));
+    connect(ui->spinBox_LuminosityThreshold, SIGNAL(valueChanged(int)), this, SLOT(onLuminosityThreshold_valueChanged(int)));
+    connect(ui->radioButton_MinimumLuminosity, SIGNAL(toggled(bool)), this, SLOT(onMinimumLumosity_toggled(bool)));
     connect(ui->checkBox_GrabIsAvgColors, SIGNAL(toggled(bool)), this, SLOT(onGrabIsAvgColors_toggled(bool)));
 
     connect(ui->radioButton_GrabWidgetsDontShow, SIGNAL(toggled(bool)), this, SLOT( onDontShowLedWidgets_Toggled(bool)));
@@ -396,8 +396,8 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
     // Minimum level of sensitivity for ambilight mode
 //    ui->label_MinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
 //    ui->spinBox_GrabMinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
-    ui->checkBox_turnOnAtLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
-    ui->groupBox_HotKeys->setVisible(Settings::isExpertModeEnabled());
+//    ui->checkBox_turnOnAtLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
+//    ui->groupBox_HotKeys->setVisible(Settings::isExpertModeEnabled());
 
     ui->pushButton_ConsolePlugin->setVisible(Settings::isExpertModeEnabled());
 
@@ -1067,18 +1067,18 @@ void SettingsWindow::onGrabSlowdown_valueChanged(int value)
     Settings::setGrabSlowdown(value);
 }
 
-void SettingsWindow::onGrabMinLevelOfSensivity_valueChanged(int value)
+void SettingsWindow::onLuminosityThreshold_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    Settings::setThresholdOfBlack(value);
+    Settings::setLuminosityThreshold(value);
 }
 
-void SettingsWindow::onTurnOnAtLevelOfSensitivity_toggled(bool value)
+void SettingsWindow::onMinimumLumosity_toggled(bool value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    Settings::setTurnOnAtLevelOfSensivity(value);
+    Settings::setMinimumLuminosityEnabled(value);
 }
 
 void SettingsWindow::onGrabIsAvgColors_toggled(bool state)
@@ -1714,8 +1714,8 @@ void SettingsWindow::updateUiFromSettings()
 
     ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsEnabled());
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
-    ui->spinBox_luminosityThreshold->setValue           (Settings::getThresholdOfBlack());
-    ui->checkBox_turnOnAtLevelOfSensitivity->setChecked (Settings::getTurnOnAtLevelOfSensivity());
+    ui->spinBox_LuminosityThreshold->setValue           (Settings::getLuminosityThreshold());
+    ui->radioButton_MinimumLuminosity->setChecked       (Settings::isMinimumLuminosityEnabled());
 
     // Check the selected moodlamp mode (setChecked(false) not working to select another)
     ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());

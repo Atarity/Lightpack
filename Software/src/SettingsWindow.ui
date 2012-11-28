@@ -242,7 +242,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -278,14 +278,14 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
           <widget class="QWidget" name="page">
            <layout class="QVBoxLayout" name="verticalLayout_12">
             <item>
-             <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0">
-              <item row="0" column="2">
-               <widget class="QLabel" name="label_GrabFrequency_txt_fps">
+             <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0">
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_GrabFrequency_value">
                 <property name="text">
-                 <string>fps</string>
+                 <string notr="true">0</string>
                 </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <property name="margin">
+                 <number>3</number>
                 </property>
                 <property name="textInteractionFlags">
                  <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
@@ -342,23 +342,29 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="label_SlowdownGrab_txt_ms">
-                <property name="text">
-                 <string>ms</string>
+              <item row="2" column="0">
+               <widget class="QCheckBox" name="checkBox_GrabIsAvgColors">
+                <property name="font">
+                 <font>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
                 </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <property name="text">
+                 <string>Average color on all LEDs</string>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_GrabFrequency_value">
+              <item row="0" column="2">
+               <widget class="QLabel" name="label_GrabFrequency_txt_fps">
                 <property name="text">
-                 <string notr="true">0</string>
+                 <string>fps</string>
                 </property>
-                <property name="margin">
-                 <number>3</number>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                 </property>
                 <property name="textInteractionFlags">
                  <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
@@ -387,26 +393,13 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="0" colspan="3">
-               <widget class="QCheckBox" name="checkBox_turnOnAtLevelOfSensitivity">
+              <item row="1" column="2">
+               <widget class="QLabel" name="label_SlowdownGrab_txt_ms">
                 <property name="text">
-                 <string>Turn on LED at minimum level of sensitivity</string>
+                 <string>ms</string>
                 </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QCheckBox" name="checkBox_GrabIsAvgColors">
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Average color on all LEDs</string>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                 </property>
                </widget>
               </item>
@@ -419,22 +412,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_4">
                <item row="7" column="0">
-                <widget class="QRadioButton" name="radioButton_luminosityDeadZone">
+                <widget class="QRadioButton" name="radioButton_LuminosityDeadZone">
                  <property name="text">
                   <string>Dead-zone</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QSlider" name="horizontalSlider_luminosityThreshold">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -462,14 +442,17 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                 </widget>
                </item>
                <item row="6" column="0">
-                <widget class="QRadioButton" name="radioButton_luminosityMinimumLevel">
+                <widget class="QRadioButton" name="radioButton_MinimumLuminosity">
                  <property name="text">
                   <string>Minimum luminosity level</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
                <item row="4" column="3">
-                <widget class="QSpinBox" name="spinBox_luminosityThreshold">
+                <widget class="QSpinBox" name="spinBox_LuminosityThreshold">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -486,7 +469,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                   <number>0</number>
                  </property>
                  <property name="maximum">
-                  <number>100</number>
+                  <number>255</number>
                  </property>
                  <property name="value">
                   <number>0</number>
@@ -513,6 +496,22 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                  </property>
                  <property name="flat">
                   <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QSlider" name="horizontalSlider_LuminosityThreshold">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="maximum">
+                  <number>255</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -3371,7 +3370,7 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>223</x>
+     <x>233</x>
      <y>46</y>
     </hint>
     <hint type="destinationlabel">
@@ -3391,7 +3390,7 @@ p, li { white-space: pre-wrap; }
      <y>46</y>
     </hint>
     <hint type="destinationlabel">
-     <x>223</x>
+     <x>233</x>
      <y>46</y>
     </hint>
    </hints>
@@ -3553,6 +3552,38 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>195</x>
      <y>68</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_LuminosityThreshold</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_LuminosityThreshold</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>393</x>
+     <y>289</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>492</x>
+     <y>292</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_LuminosityThreshold</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSlider_LuminosityThreshold</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>480</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>301</x>
+     <y>297</y>
     </hint>
    </hints>
   </connection>

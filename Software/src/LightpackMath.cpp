@@ -24,6 +24,7 @@
  */
 
 #include "LightpackMath.hpp"
+#include <algorithm>
 #include "debug.h"
 
 void LightpackMath::gammaCorrection(double gamma, const QList<QRgb> &colors, QList<StructRgb> &result, int colorDepth /* = 256 */)
@@ -74,4 +75,10 @@ void LightpackMath::maxCorrection(int max, QList<StructRgb> & result)
         if (result[i].g > max) result[i].g = max;
         if (result[i].b > max) result[i].b = max;
     }
+}
+
+int LightpackMath::calcVOfHSV(QRgb rgb)
+{
+    using namespace std;
+    return max( max( qRed(rgb), qGreen(rgb)), qBlue(rgb));
 }

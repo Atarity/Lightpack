@@ -122,6 +122,7 @@ void MoodLampManager::reset()
 void MoodLampManager::settingsProfileChanged(const QString &profileName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    Q_UNUSED(profileName)
 
     m_isLiquidMode = Settings::isMoodLampLiquidMode();
     m_liquidModeSpeed = Settings::getMoodLampSpeed();

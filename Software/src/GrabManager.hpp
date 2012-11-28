@@ -65,8 +65,8 @@ public:
 public slots:
     void onGrabberTypeChanged(const Grab::GrabberType grabberType);
     void onGrabSlowdownChanged(int ms);
-    void onThresholdOfBlackChanged(int value);
-    void onTurnOnAtLevelOfSensivity(bool value);
+    void onLuminosityThresholdChanged(int value);
+    void onMinimumLuminosityEnabledChanged(bool value);
     void onGrabAvgColorsEnabledChanged(bool state);
     void onSendDataOnlyIfColorsEnabledChanged(bool state);
     void start(bool isGrabEnabled);
@@ -120,8 +120,8 @@ private:
     bool m_isPauseGrabWhileResizeOrMoving;
     bool m_isSendDataOnlyIfColorsChanged;
     bool m_avgColorsOnAllLeds;
-    int m_minLevelOfSensivity;
-    bool m_TurnOnAtLevelOfSensivity;
+    int m_luminosityThreshold;
+    bool m_isMinimumLuminosityEnabled;
 
     // Store last grabbing time in milliseconds
     double m_fpsMs;

@@ -123,10 +123,10 @@ public:
     static void setGrabAvgColorsEnabled(bool isEnabled);
     static bool isSendDataOnlyIfColorsChanges();
     static void setSendDataOnlyIfColorsChanges(bool isEnabled);
-    static int getThresholdOfBlack();
-    static void setThresholdOfBlack(int value);
-    static bool getTurnOnAtLevelOfSensivity();
-    static void setTurnOnAtLevelOfSensivity(bool value);
+    static int getLuminosityThreshold();
+    static void setLuminosityThreshold(int value);
+    static bool isMinimumLuminosityEnabled();
+    static void setMinimumLuminosityEnabled(bool value);
     // [Device]
     static int getDeviceRefreshDelay();
     static void setDeviceRefreshDelay(int value);
@@ -226,8 +226,8 @@ signals:
     void backlightEnabledChanged(bool isEnabled);
     void grabAvgColorsEnabledChanged(bool isEnabled);
     void sendDataOnlyIfColorsChangesChanged(bool isEnabled);
-    void thresholdOfBlackChanged(int value);
-    void turnOnAtLevelOfSensitivityChanged(bool value);
+    void luminosityThresholdChanged(int value);
+    void minimumLuminosityEnabledChanged(bool value);
     void deviceRefreshDelayChanged(int value);
     void deviceBrightnessChanged(int value);
     void deviceSmoothChanged(int value);

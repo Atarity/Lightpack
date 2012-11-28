@@ -131,8 +131,8 @@ static const QString Grabber = "Grab/Grabber";
 static const QString IsAvgColorsEnabled = "Grab/IsAvgColorsEnabled";
 static const QString IsSendDataOnlyIfColorsChanges = "Grab/IsSendDataOnlyIfColorsChanges";
 static const QString Slowdown = "Grab/Slowdown";
-static const QString MinimumLevelOfSensitivity = "Grab/MinimumLevelOfSensitivity";
-static const QString TurnOnAtLevelOfSensitivity = "Grab/TurnOnAtLevelOfSensitivity";
+static const QString LuminosityThreshold = "Grab/LuminosityThreshold";
+static const QString IsMinimumLuminosityEnabled = "Grab/IsMinimumLuminosityEnabled";
 static const QString IsDx1011GrabberEnabled = "Grab/IsDX1011GrabberEnabled";
 }
 // [MoodLamp]
@@ -856,28 +856,28 @@ void Settings::setSendDataOnlyIfColorsChanges(bool isEnabled)
     m_this->sendDataOnlyIfColorsChangesChanged(isEnabled);
 }
 
-int Settings::getThresholdOfBlack()
+int Settings::getLuminosityThreshold()
 {
-    return value(Profile::Key::Grab::MinimumLevelOfSensitivity).toInt();
+    return value(Profile::Key::Grab::LuminosityThreshold).toInt();
 }
 
-void Settings::setThresholdOfBlack(int value)
+void Settings::setLuminosityThreshold(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    setValue(Profile::Key::Grab::MinimumLevelOfSensitivity, value);
-    m_this->thresholdOfBlackChanged(value);
+    setValue(Profile::Key::Grab::LuminosityThreshold, value);
+    m_this->luminosityThresholdChanged(value);
 }
 
-bool Settings::getTurnOnAtLevelOfSensivity()
+bool Settings::isMinimumLuminosityEnabled()
 {
-    return value(Profile::Key::Grab::TurnOnAtLevelOfSensitivity).toBool();
+    return value(Profile::Key::Grab::IsMinimumLuminosityEnabled).toBool();
 }
 
-void Settings::setTurnOnAtLevelOfSensivity(bool value)
+void Settings::setMinimumLuminosityEnabled(bool value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    setValue(Profile::Key::Grab::TurnOnAtLevelOfSensitivity, value);
-    m_this->turnOnAtLevelOfSensitivityChanged(value);
+    setValue(Profile::Key::Grab::IsMinimumLuminosityEnabled, value);
+    m_this->minimumLuminosityEnabledChanged(value);
 }
 
 int Settings::getDeviceRefreshDelay()
@@ -1321,7 +1321,7 @@ void Settings::initCurrentProfile(bool isResetDefault)
     setNewOption(Profile::Key::Grab::IsAvgColorsEnabled, Profile::Grab::IsAvgColorsEnabledDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::IsSendDataOnlyIfColorsChanges, Profile::Grab::IsSendDataOnlyIfColorsChangesDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::Slowdown,      Profile::Grab::SlowdownDefault, isResetDefault);
-    setNewOption(Profile::Key::Grab::MinimumLevelOfSensitivity, Profile::Grab::MinimumLevelOfSensitivityDefault, isResetDefault);
+    setNewOption(Profile::Key::Grab::LuminosityThreshold, Profile::Grab::MinimumLevelOfSensitivityDefault, isResetDefault);
     // [MoodLamp]
     setNewOption(Profile::Key::MoodLamp::IsLiquidMode,  Profile::MoodLamp::IsLiquidMode, isResetDefault);
     setNewOption(Profile::Key::MoodLamp::Color,         Profile::MoodLamp::ColorDefault, isResetDefault);

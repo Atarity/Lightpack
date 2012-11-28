@@ -505,8 +505,8 @@ void LightpackApplication::startGrabManager()
     connect(settings(), SIGNAL(grabberTypeChanged(const Grab::GrabberType &)), m_grabManager, SLOT(onGrabberTypeChanged(const Grab::GrabberType &)), Qt::QueuedConnection);
     connect(settings(), SIGNAL(grabSlowdownChanged(int)), m_grabManager, SLOT(onGrabSlowdownChanged(int)), Qt::QueuedConnection);
     connect(settings(), SIGNAL(grabAvgColorsEnabledChanged(bool)), m_grabManager, SLOT(onGrabAvgColorsEnabledChanged(bool)), Qt::QueuedConnection);
-    connect(settings(), SIGNAL(thresholdOfBlackChanged(int)), m_grabManager, SLOT(onThresholdOfBlackChanged(int)), Qt::QueuedConnection);
-    connect(settings(), SIGNAL(turnOnAtLevelOfSensitivityChanged(bool)), m_grabManager, SLOT(onTurnOnAtLevelOfSensivity(bool)), Qt::QueuedConnection);
+    connect(settings(), SIGNAL(luminosityThresholdChanged(int)), m_grabManager, SLOT(onLuminosityThresholdChanged(int)), Qt::QueuedConnection);
+    connect(settings(), SIGNAL(minimumLuminosityEnabledChanged(bool)), m_grabManager, SLOT(onMinimumLuminosityEnabledChanged(bool)), Qt::QueuedConnection);
 
     connect(settings(), SIGNAL(lightpackNumberOfLedsChanged(int)), this, SLOT(numberOfLedsChanged(int)));
     connect(settings(), SIGNAL(adalightNumberOfLedsChanged(int)),  this, SLOT(numberOfLedsChanged(int)));

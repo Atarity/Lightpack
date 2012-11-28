@@ -36,7 +36,7 @@ public:
     static void gammaCorrection(double gamma, const QList<QRgb> & colors, QList<StructRgb> & result, int colorDepth = 256);
     static void brightnessCorrection(int brightness, QList<StructRgb> & result);
     static void maxCorrection(int max, QList<StructRgb> & result);
-
+    static int calcVOfHSV(const QRgb rgb);
 
     // Convert ASCII char '5' to 5
     static inline char getDigit(const char d)
@@ -51,5 +51,6 @@ public:
     {
         return qrand() % val;
     }
+
 };
 
