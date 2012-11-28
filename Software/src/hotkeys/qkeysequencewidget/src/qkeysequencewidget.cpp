@@ -224,6 +224,15 @@ QString QKeySequenceWidget::noneText() const
 }
 
 /*!
+    Set Clear button's tooltip
+ */
+void QKeySequenceWidget::setClearButtonToolTip(const QString &text)
+{
+    if (d_ptr->clearButton != NULL)
+        d_ptr->clearButton->setToolTip(text);
+}
+
+/*!
     Set custom icon for clear buttom.
     \param icon QIcon object
     \sa clearButtonIcon

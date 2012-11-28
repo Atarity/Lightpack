@@ -203,6 +203,8 @@ private slots:
 
     void on_pushButton_AllPluginsHelp_clicked();
 
+    void on_pushButton_lumosityThresholdHelp_clicked();
+
 private:
     void updateTrayAndActionStates();    
     void updateExpertModeWidgetsVisibility();
@@ -297,3 +299,4 @@ private:
     QList<PyPlugin*> _plugins;
     static bool toPriority(PyPlugin* s1 , PyPlugin* s2 );
 };
+

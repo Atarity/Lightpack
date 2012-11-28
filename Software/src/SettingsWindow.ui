@@ -120,6 +120,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
       <property name="selectionRectVisible">
        <bool>true</bool>
       </property>
+      <property name="currentRow">
+       <number>0</number>
+      </property>
       <item>
        <property name="text">
         <string>Mode</string>
@@ -242,7 +245,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -506,6 +509,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="whatsThis">
+                  <string>&lt;h4&gt;Luminosity threshold&lt;/h4&gt;Configures either minimum luminosity which will be kept even on dark scenes or dead-zone so everything below the threshold treats as black</string>
                  </property>
                  <property name="maximum">
                   <number>255</number>
@@ -2397,6 +2403,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
           </item>
           <item row="0" column="1">
            <widget class="QPushButton" name="pushButton_UpPriority">
+            <property name="toolTip">
+             <string>Increase priority</string>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -2408,6 +2417,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
           </item>
           <item row="1" column="1">
            <widget class="QPushButton" name="pushButton_DownPriority">
+            <property name="toolTip">
+             <string>Decrease priority</string>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -2419,6 +2431,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
           </item>
           <item row="3" column="1">
            <widget class="QPushButton" name="pushButton_ConsolePlugin">
+            <property name="toolTip">
+             <string>Open python console</string>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -2435,6 +2450,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>Reload plugins</string>
             </property>
             <property name="text">
              <string/>

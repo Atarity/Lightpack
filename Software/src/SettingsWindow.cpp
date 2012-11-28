@@ -1865,6 +1865,7 @@ void SettingsWindow::setupHotkeys()
     registerHotkey(SLOT(prevProfile()), tr("Activate previous profile"), Settings::getHotkey("prevProfile").toString());
     m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("Action not selected"), this);
     m_keySequenceWidget->setClearButtonIcon(QIcon(":/icons/profile_delete.png"));
+    m_keySequenceWidget->setClearButtonToolTip(tr("Reset hotkey of selected command"));
     m_keySequenceWidget->setShortcutButtonMinWidth(100);
     m_isHotkeySelectionChanging = false;
     connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onKeySequenceChanged(QKeySequence)));
@@ -2345,4 +2346,9 @@ void SettingsWindow::on_pushButton_AllPluginsHelp_clicked()
 void SettingsWindow::on_pushButton_GammaCorrectionHelp_clicked()
 {
     showHelpOf(ui->horizontalSlider_GammaCorrection);
+}
+
+void SettingsWindow::on_pushButton_lumosityThresholdHelp_clicked()
+{
+    showHelpOf(ui->horizontalSlider_LuminosityThreshold);
 }

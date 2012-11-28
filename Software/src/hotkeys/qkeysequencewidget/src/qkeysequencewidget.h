@@ -119,6 +119,7 @@ public Q_SLOTS:
     void setShortcutName(const QString &text);
     void setClearButtonIcon(const QIcon& icon);
     void setClearButtonShow(QKeySequenceWidget::ClearButtonShow show);
+    void setClearButtonToolTip(const QString &toolTip);
     void setShortcutButtonMinWidth(const int width);
 };
 
