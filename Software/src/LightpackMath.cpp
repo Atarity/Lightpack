@@ -127,9 +127,7 @@ QRgb LightpackMath::withChromaHSV(const QRgb rgb, int chroma)
         return qRgb(currentMax, currentMax, currentMax);
 
 
-    double m = double(chroma)/currentChroma;
-
-    if (m > 1) m = m * (-1);
+    double m = 1 - double(chroma)/currentChroma;
 
     int r = qRed(rgb)   + (currentMax - qRed(rgb))*m;
     int g = qGreen(rgb) + (currentMax - qGreen(rgb))*m;

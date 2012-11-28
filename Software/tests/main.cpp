@@ -2,6 +2,7 @@
 #include <QtTest/QtTest>
 #include "LightpackApiTest.hpp"
 #include "GrabCalculationTest.hpp"
+#include "lightpackmathtest.hpp"
 #include <iostream>
 
 using namespace std;
@@ -15,6 +16,7 @@ int main(int argc, char *argv[])
     QStringList summary;
 
     tests.append(new GrabCalculationTest());
+    tests.append(new LightpackMathTest());
     tests.append(new LightpackApiTest());
 
 
