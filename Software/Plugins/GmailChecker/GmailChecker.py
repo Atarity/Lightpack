@@ -48,7 +48,7 @@ class GmailChecker(BasePlugin.BasePlugin):
  
     def description(self):
         """ return a short description of the plugin """
-        return "Check Google mail account"
+        return "This plugin will check your Google account for new mail. If there are unseen messages it run Lightpack animation to notice you.<br /><br /> IT'S STRICKTLY RECOMMENDED TO USE YOUR <b>APPLICATION PASSWORD</b> INSTEAD OF YOUR MAIN GMAIL PASSWORD FOR AUTHORIZATION!<br /><br /> You can generate app password in your Google account settings (account &rarr; security &rarr; authorizing applications and sites). This password will be stored at main.conf file in Lightpack profile folder.<br /><br /> You can use LEDs map property to adjust your LEDs sequense for properly animation."
 
     def author(self):
         """ return the author of the plugin """
@@ -225,7 +225,8 @@ class GmailChecker(BasePlugin.BasePlugin):
         box.addWidget(label2,2,0)
         editPass = QLineEdit(parent)
         editPass.setEchoMode(PythonQt.QtGui.QLineEdit.Password)
-        editPass.setText(Lightpack.GetSettingMain('GmailChecker/Password'))        
+        editPass.setText(Lightpack.GetSettingMain('GmailChecker/Password'))
+        editPass.setPlaceholderText('application password only')        
         #editPass.setFixedWidth(200) #we can use this for layout if needed
         box.addWidget(editPass,2,1,1,2)
         
