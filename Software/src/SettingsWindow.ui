@@ -242,7 +242,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -2016,6 +2016,12 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                 <iconset resource="../res/LightpackResources.qrc">
                  <normaloff>:/icons/profile_new.png</normaloff>:/icons/profile_new.png</iconset>
                </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
                <property name="checkable">
                 <bool>false</bool>
                </property>
@@ -2040,7 +2046,13 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                </property>
                <property name="icon">
                 <iconset resource="../res/LightpackResources.qrc">
-                 <normaloff>:/icons/profile_reset.png</normaloff>:/icons/profile_reset.png</iconset>
+                 <normaloff>:/icons/arrow_down_gray.png</normaloff>:/icons/arrow_down_gray.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
                </property>
                <property name="checkable">
                 <bool>false</bool>
@@ -2067,6 +2079,12 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                <property name="icon">
                 <iconset resource="../res/LightpackResources.qrc">
                  <normaloff>:/icons/profile_delete.png</normaloff>:/icons/profile_delete.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
                </property>
                <property name="checkable">
                 <bool>false</bool>
