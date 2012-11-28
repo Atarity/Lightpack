@@ -53,7 +53,7 @@ static const QString ProfileLast = "ProfileLast";
 static const QString Language = "Language";
 static const QString DebugLevel = "DebugLevel";
 static const QString IsExpertModeEnabled = "IsExpertModeEnabled";
-static const QString IsSwitchOffAtClosing = "IsSwitchOffAtClosing";
+static const QString IsKeepLightsOnAfterExit = "IsKeepLightsOnAfterExit";
 static const QString IsPingDeviceEverySecond = "IsPingDeviceEverySecond";
 static const QString IsUpdateFirmwareMessageShown = "IsUpdateFirmwareMessageShown";
 static const QString ConnectedDevice = "ConnectedDevice";
@@ -227,7 +227,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::Language,               Main::LanguageDefault);
     setNewOptionMain(Main::Key::DebugLevel,             Main::DebugLevelDefault);
     setNewOptionMain(Main::Key::IsExpertModeEnabled,    Main::IsExpertModeEnabledDefault);
-    setNewOptionMain(Main::Key::IsSwitchOffAtClosing,   Main::IsSwitchOffAtClosingDefault);
+    setNewOptionMain(Main::Key::IsKeepLightsOnAfterExit,   Main::IsKeepLightsOnAfterExit);
     setNewOptionMain(Main::Key::IsPingDeviceEverySecond,Main::IsPingDeviceEverySecond);
     setNewOptionMain(Main::Key::IsUpdateFirmwareMessageShown, Main::IsUpdateFirmwareMessageShown);
     setNewOptionMain(Main::Key::ConnectedDevice,        Main::ConnectedDeviceDefault);
@@ -539,16 +539,16 @@ void Settings::setExpertModeEnabled(bool isEnabled)
     m_this->expertModeEnabledChanged(isEnabled);
 }
 
-bool Settings::isSwitchOffAtClosing()
+bool Settings::isKeepLightsOnAfterExit()
 {
-    return valueMain(Main::Key::IsSwitchOffAtClosing).toBool();
+    return valueMain(Main::Key::IsKeepLightsOnAfterExit).toBool();
 }
 
-void Settings::setSwitchOffAtClosing(bool isEnabled)
+void Settings::setKeepLightsOnAfterExit(bool isEnabled)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    setValueMain(Main::Key::IsSwitchOffAtClosing, isEnabled);
-    m_this->switchOffAtClosingChanged(isEnabled);
+    setValueMain(Main::Key::IsKeepLightsOnAfterExit, isEnabled);
+    m_this->keepLightsOnAfterExitChanged(isEnabled);
 }
 
 bool Settings::isPingDeviceEverySecond()

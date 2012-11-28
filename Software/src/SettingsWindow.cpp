@@ -252,7 +252,7 @@ void SettingsWindow::connectSignalsSlots()
 
     connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColor_changed(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabled_Toggled(bool)));
-    connect(ui->checkBox_SwitchOffAtClosing, SIGNAL(toggled(bool)), this, SLOT(onSwitchOffAtClosing_Toggled(bool)));
+    connect(ui->checkBox_KeepLightsOnAfterExit, SIGNAL(toggled(bool)), this, SLOT(onKeepLightsAfterExit_Toggled(bool)));
 
     // Dev tab
     connect(ui->checkBox_EnableDx1011Capture, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
@@ -371,9 +371,9 @@ void SettingsWindow::focusOut()
     emit showLedWidgets(false);
 }
 
-void SettingsWindow::onSwitchOffAtClosing_Toggled(bool isEnabled)
+void SettingsWindow::onKeepLightsAfterExit_Toggled(bool isEnabled)
 {
-    Settings::setSwitchOffAtClosing(isEnabled);
+    Settings::setKeepLightsOnAfterExit(isEnabled);
 }
 
 void SettingsWindow::onExpertModeEnabled_Toggled(bool isEnabled)
@@ -1709,7 +1709,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
 
     ui->checkBox_SendDataOnlyIfColorsChanges->setChecked(Settings::isSendDataOnlyIfColorsChanges());
-    ui->checkBox_SwitchOffAtClosing->setChecked         (Settings::isSwitchOffAtClosing());
+    ui->checkBox_KeepLightsOnAfterExit->setChecked      (Settings::isKeepLightsOnAfterExit());
     ui->checkBox_PingDeviceEverySecond->setChecked      (Settings::isPingDeviceEverySecond());
 
     ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsEnabled());
@@ -1926,7 +1926,7 @@ void SettingsWindow::onHotkeyChanged(const QString &actionName, const QKeySequen
 
 void SettingsWindow::quit()
 {
-    if (ui->checkBox_SwitchOffAtClosing->isChecked())
+    if (!ui->checkBox_KeepLightsOnAfterExit->isChecked())
     {
         // Process all currently pending signals (which may include updating the color signals)
         QApplication::processEvents(QEventLoop::AllEvents, 1000);

@@ -84,8 +84,8 @@ public:
     static void setIsApiAuthEnabled(bool isEnabled);
     static bool isExpertModeEnabled();
     static void setExpertModeEnabled(bool isEnabled);
-    static bool isSwitchOffAtClosing();
-    static void setSwitchOffAtClosing(bool isEnabled);
+    static bool isKeepLightsOnAfterExit();
+    static void setKeepLightsOnAfterExit(bool isEnabled);
     static bool isPingDeviceEverySecond();
     static void setPingDeviceEverySecond(bool isEnabled);
     static bool isUpdateFirmwareMessageShown();
@@ -206,7 +206,7 @@ signals:
     void apiPortChanged(int);
     void apiKeyChanged(const QString &);
     void expertModeEnabledChanged(bool);
-    void switchOffAtClosingChanged(bool isEnabled);
+    void keepLightsOnAfterExitChanged(bool isEnabled);
     void pingDeviceEverySecondEnabledChanged(bool);
 
     void languageChanged(const QString &);

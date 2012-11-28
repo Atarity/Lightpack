@@ -242,7 +242,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -841,7 +841,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
          </widget>
         </item>
         <item row="9" column="0">
-         <widget class="QCheckBox" name="checkBox_SwitchOffAtClosing">
+         <widget class="QCheckBox" name="checkBox_KeepLightsOnAfterExit">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -3270,7 +3270,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>comboBox_ConnectedDevice</tabstop>
   <tabstop>horizontalSlider_DeviceBrightness</tabstop>
   <tabstop>horizontalSlider_GammaCorrection</tabstop>
-  <tabstop>checkBox_SwitchOffAtClosing</tabstop>
+  <tabstop>checkBox_KeepLightsOnAfterExit</tabstop>
   <tabstop>spinBox_DeviceBrightness</tabstop>
   <tabstop>doubleSpinBox_DeviceGamma</tabstop>
   <tabstop>horizontalSlider_DeviceSmooth</tabstop>
