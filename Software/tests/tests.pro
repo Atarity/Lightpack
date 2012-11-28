@@ -36,7 +36,9 @@ SOURCES += \
     ../src/grab/calculations.cpp \
     SettingsWindowMockup.cpp \
     main.cpp \
-    GrabCalculationTest.cpp
+    GrabCalculationTest.cpp \
+    lightpackmathtest.cpp \
+    ../src/LightpackMath.cpp
 
 HEADERS += \
     ../src/grab/calculations.hpp \
@@ -50,7 +52,9 @@ HEADERS += \
     ../src/LightpackPluginInterface.hpp \
     SettingsWindowMockup.hpp \
     GrabCalculationTest.hpp \
-    LightpackApiTest.hpp
+    LightpackApiTest.hpp \
+    lightpackmathtest.hpp \
+    ../src/LightpackMath.hpp
 
 
 #

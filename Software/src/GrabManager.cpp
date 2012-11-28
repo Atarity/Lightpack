@@ -336,12 +336,14 @@ void GrabManager::handleGrabbedColors()
     for (int i = 0; i < m_ledWidgets.size(); i++)
     {
         QRgb rgb = m_colorsNew[i];
-        int v =  LightpackMath::calcVOfHSV(rgb);
+        int v =  LightpackMath::getValueHSV(rgb);
+        int c =  LightpackMath::getChromaHSV(rgb);
+        int dv = m_luminosityThreshold - v;
 
-        if (v <= m_luminosityThreshold)
+        if (dv > 0)
         {
             if (m_isMinimumLuminosityEnabled)
-                m_colorsNew[i] = qRgb(m_luminosityThreshold, m_luminosityThreshold, m_luminosityThreshold);
+                m_colorsNew[i] = LightpackMath::withChromaHSV(LightpackMath::withValueHSV(rgb, m_luminosityThreshold), c - dv*dv*dv);
             else
                 m_colorsNew[i] = 0;
         }

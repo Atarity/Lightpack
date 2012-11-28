@@ -77,8 +77,56 @@ void LightpackMath::maxCorrection(int max, QList<StructRgb> & result)
     }
 }
 
-int LightpackMath::calcVOfHSV(QRgb rgb)
+int LightpackMath::getValueHSV(const QRgb rgb)
 {
-    using namespace std;
-    return max( max( qRed(rgb), qGreen(rgb)), qBlue(rgb));
+    return LightpackMath::max(rgb);
+}
+
+int LightpackMath::max(const QRgb rgb)
+{
+    return std::max( std::max( qRed(rgb), qGreen(rgb)), qBlue(rgb));
+}
+
+int LightpackMath::min(const QRgb rgb)
+{
+    return std::min( std::min( qRed(rgb), qGreen(rgb)), qBlue(rgb));
+}
+
+int LightpackMath::getChromaHSV(const QRgb rgb)
+{
+    return LightpackMath::max(rgb) - LightpackMath::min(rgb);
+}
+
+QRgb LightpackMath::withValueHSV(const QRgb rgb, int value)
+{
+
+    int currentValue = LightpackMath::getValueHSV(rgb);
+
+    if (currentValue == 0) {
+       return qRgb(value, value, value);
+    }
+
+    double m = double(value)/currentValue;
+    return qRgb(round(qRed(rgb)*m), round(qGreen(rgb)*m), round(qBlue(rgb)*m));
+
+}
+
+QRgb LightpackMath::withChromaHSV(const QRgb rgb, int chroma)
+{
+    int currentChroma = LightpackMath::getChromaHSV(rgb);
+
+    if (currentChroma == 0) {
+       return rgb;
+    }
+
+    if (chroma < 0) chroma = 0;
+
+    int currentMax = LightpackMath::max(rgb);
+
+    double m = double(chroma)/currentChroma;
+
+    int r = qRed(rgb)   + (currentMax - qRed(rgb))*m;
+    int g = qGreen(rgb) + (currentMax - qGreen(rgb))*m;
+    int b = qBlue(rgb)  + (currentMax - qBlue(rgb))*m;
+    return qRgb(r,g,b);
 }
