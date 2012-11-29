@@ -37,6 +37,7 @@ void PluginManager::initPython()
         mainContext = new PythonQtObjectPtr(PythonQt::self()->getMainModule());
 
         mainContext->evalScript(QString("import sys\n"));
+        mainContext->evalScript(QString("sys.path.append('%1')\n").arg(Settings::getApplicationDirPath() + "Plugins/site-packages"));
         mainContext->evalScript("sys.path.append(':/plugin')\n");
         mainContext->evalScript("sys.path.append('./python')\n");
         //load base plugin class
@@ -125,7 +126,7 @@ void PluginManager::loadPlugins(){
 
     QStringList lstDirs = dir.entryList(QDir::Dirs |
                                         QDir::AllDirs |
-                                        QDir::NoDotAndDotDot); //Получаем список папок
+                                        QDir::NoDotAndDotDot); //Get directories
 
     foreach(QString pluginDir, lstDirs){
         QString fileName = path+"/"+pluginDir+"/"+pluginDir+".py";
@@ -193,5 +194,3 @@ PythonQtScriptingConsole* PluginManager::getConsole(QWidget* parent_){
     pyconsole->show();
     return pyconsole;
 }
-
-
