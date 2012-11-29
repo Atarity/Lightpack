@@ -6,7 +6,6 @@ LightpackMathTest::LightpackMathTest(QObject *parent) :
     QObject(parent)
 {
 }
-
 void LightpackMathTest::testCase1()
 {
     QVERIFY2( LightpackMath::getValueHSV(qRgb(215,122,0)) == 215, "getValueHSV() is incorrect");

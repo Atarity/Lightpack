@@ -9,9 +9,7 @@ class LightpackMathTest : public QObject
 public:
     explicit LightpackMathTest(QObject *parent = 0);
     
-signals:
-    
-public slots:
+private slots:
     void testCase1();
 };
 
