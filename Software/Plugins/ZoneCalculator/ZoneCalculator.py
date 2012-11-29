@@ -5,6 +5,7 @@ from PythonQt.QtGui import *
 class ZoneCalculator(BasePlugin.BasePlugin):
     def init(self):
         self.sessionKey = Lightpack.GetSessionKey(self.__class__.__name__)
+        print self.sessionKey
         self.resdir = Lightpack.GetPluginsDir()+"/ZoneCalculator/res/"
         return
         
@@ -22,7 +23,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
 
     def version(self):
         """ return the version of the plugin """
-        return "0.3"
+        return "0.4"
         
 
     def run(self):
@@ -42,6 +43,8 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         self.comboPreset.addItem('d')
         self.comboPreset.addItem('e')
         self.comboPreset.addItem('f')
+        self.comboPreset.addItem('pi')
+        self.comboPreset.addItem('r')
         box.addWidget(self.comboPreset)
         
         self.preview = QLabel(parent)
@@ -68,9 +71,9 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         
         
     def calculate(self):
+        self.sessionKey = Lightpack.GetSessionKey(self.__class__.__name__)
         Lightpack.Lock(self.sessionKey)
         preset=unicode(self.comboPreset.currentText)
-        print preset
         
         self.screen = Lightpack.GetScreenSize()
         self.list = Lightpack.GetLeds()
@@ -89,6 +92,10 @@ class ZoneCalculator(BasePlugin.BasePlugin):
             self.presetE()
         if preset=="f":
             self.presetF()
+        if preset=="pi":
+            self.presetP()
+        if preset=="r":
+            self.presetR()
         
         for rect in self.list:
             rect.setWidth(self.cube)
@@ -98,9 +105,9 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         Lightpack.UnLock(self.sessionKey)
 
     def presetA(self):
+        print "PresetA begin"
         wint = (self.screen.width()-self.cube*6)/5
         hint = (self.screen.height()-self.cube*3)/2
-        
         self.list[0].setX(0)        
         self.list[0].setY(self.screen.height()-self.cube)        
         self.list[1].setX(0)        
@@ -121,7 +128,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         self.list[8].setY(self.cube+hint)        
         self.list[9].setX(self.screen.width()-self.cube)        
         self.list[9].setY(self.screen.height()-self.cube)        
-        
+        print "PresetA end"
         return
     
     def presetB(self):
@@ -249,3 +256,70 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         self.list[9].setX(self.screen.width()-self.cube)
         self.list[9].setY(0)
         return
+
+    def presetP(self):
+        print "PresetP begin"
+        sw = self.screen.width()
+        sh = self.screen.height()
+        c = Lightpack.GetCountLeds()
+        x = (2*sh+sw)/(c+2)
+        w = sw/x
+        h = sh/x
+        
+        self.cube = x
+        
+        for i in range(c):
+            print i
+            sx = 0
+            sy = 0
+            if i<h:
+                sx = 0
+                sy = sh-(i+1)*x
+            if i>=h and i<h+w-1:
+                sx = (i-h+1)*x
+                sy = 0
+            if i>=h+w-1:
+                sx = sw-x
+                sy = (i-h-w+2)*x
+            self.list[i].setX(sx)        
+            self.list[i].setY(sy)        
+        
+       
+        print "PresetP end"
+        return
+    
+    def presetR(self):
+        sw = self.screen.width()
+        sh = self.screen.height()
+        c = Lightpack.GetCountLeds()
+        x = (2*sh+2*sw)/(c+4)
+        w = sw/x
+        h = sh/x
+        
+        self.cube = x
+        
+        for i in range(c):
+            print i
+            sx = 0
+            sy = 0
+            if i<w/2-1:
+                sx = sh/2 - i*x
+                sy = sh-x
+            if i>=w/2-1 and i<w/2+h-1:
+                sx = 0
+                sy = sh-(i-w/2+2)*x
+            if i>=w/2+h-1 and i<w/2+h+w-2:
+                sx = (i-(w/2+h-2))*x
+                sy = 0
+            if i>=w/2+h+w-2 and i<w/2+h+w+h-3:
+                sx = sw-x
+                sy = (i-(w/2+h+w-2)+1)*x
+            if i>=w/2+h+w+h-3:
+                sx = sw-x*(i-(w/2+h+w+h-4))
+                sy = sh-x
+            self.list[i].setX(sx)        
+            self.list[i].setY(sy)        
+        
+        return
+        
+    
