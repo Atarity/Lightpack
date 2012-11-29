@@ -13,6 +13,8 @@
 
 using namespace SettingsScope;
 
+const QString SitePackagesDir = "site-packages";
+
 PluginManager::PluginManager(QObject *parent) :
     QObject(parent)
 {
@@ -37,7 +39,7 @@ void PluginManager::initPython()
         mainContext = new PythonQtObjectPtr(PythonQt::self()->getMainModule());
 
         mainContext->evalScript(QString("import sys\n"));
-        mainContext->evalScript(QString("sys.path.append('%1')\n").arg(Settings::getApplicationDirPath() + "Plugins/site-packages"));
+        mainContext->evalScript(QString("sys.path.append('%1')\n").arg(Settings::getApplicationDirPath() + "Plugins/" + SitePackagesDir));
         mainContext->evalScript("sys.path.append(':/plugin')\n");
         mainContext->evalScript("sys.path.append('./python')\n");
         //load base plugin class
@@ -129,6 +131,8 @@ void PluginManager::loadPlugins(){
                                         QDir::NoDotAndDotDot); //Get directories
 
     foreach(QString pluginDir, lstDirs){
+        if (pluginDir.compare(SitePackagesDir) == 0)
+            continue;
         QString fileName = path+"/"+pluginDir+"/"+pluginDir+".py";
         QString plugin = QFileInfo (fileName).baseName ();
         //add python plugin to file to path
@@ -149,7 +153,7 @@ void PluginManager::loadPlugins(){
 
         QMap<QString, PyPlugin*>::iterator found = _plugins.find(plugin);
         if(found != _plugins.end()){
-            DEBUG_LOW_LEVEL << "Already load a plugin named " << plugin << " !";
+            DEBUG_LOW_LEVEL << "Already loaded a plugin named " << plugin << " !";
             continue;
         }
 
