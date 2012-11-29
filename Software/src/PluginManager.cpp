@@ -159,12 +159,13 @@ void PluginManager::loadPlugins(){
 
     }
 
+    _pluginInterface->updatePlugin(_plugins.values());
+
     for(QMap<QString, PyPlugin*>::iterator it = _plugins.begin(); it != _plugins.end(); ++it){
         PyPlugin* p = it.value();
         p->init();
     }
 
-    _pluginInterface->updatePlugin(_plugins.values());
     emit updatePlugin(_plugins.values());
 
     for(QMap<QString, PyPlugin*>::iterator it = _plugins.begin(); it != _plugins.end(); ++it){
