@@ -48,7 +48,7 @@ class GmailChecker(BasePlugin.BasePlugin):
  
     def description(self):
         """ return a short description of the plugin """
-        return "This plugin will check your Google account for new mail. If there are unseen messages it run Lightpack animation to notice you.<br /><br /> IT'S STRICKTLY RECOMMENDED TO USE YOUR <b>APPLICATION PASSWORD</b> INSTEAD OF YOUR MAIN GMAIL PASSWORD FOR AUTHORIZATION!<br /><br /> You can generate app password in your Google account settings (account &rarr; security &rarr; authorizing applications and sites). This password will be stored at main.conf file in Lightpack profile folder.<br /><br /> You can use LEDs map property to adjust your LEDs sequense for properly animation."
+        return "This plugin will check your Google account for new mail. If there are unseen messages it run Lightpack animation to notice you.<br /><br /> IT'S STRICKTLY RECOMMENDED TO USE YOUR <b>APPLICATION PASSWORD</b> INSTEAD OF YOUR MAIN GMAIL PASSWORD FOR AUTHORIZATION!<br /><br /> You can generate app password in your Google account settings (account &rarr; security &rarr; authorizing applications and sites). This password will be stored at <b>main.conf</b> file in Lightpack profile folder <b>as plain text</b>.<br /><br /> You can use LEDs map property to adjust your LEDs sequense for properly animation."
 
     def author(self):
         """ return the author of the plugin """
