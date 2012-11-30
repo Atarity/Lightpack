@@ -261,10 +261,10 @@ class GmailChecker(BasePlugin.BasePlugin):
         box.addWidget(editanim,4,1)
         
         labelrem = QLabel(parent)
-        labelrem.setText("Reminder")
+        labelrem.setText("Remind me every")
         box.addWidget(labelrem,5,0)
         labelrem2 = QLabel(parent)
-        labelrem2.setText("min (0 — OFF)")
+        labelrem2.setText("min (0 — do not remind me)")
         box.addWidget(labelrem2,5,2)
         editrem = QLineEdit(parent)
         editrem.setValidator(QIntValidator(0, 65536, editrem))
@@ -282,7 +282,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         labelbegin2.setText("hour")
         box.addWidget(labelbegin2,6,2)
         editbegin = QLineEdit(parent)
-        editbegin.setValidator(QIntValidator(0, 65536, editbegin))
+        editbegin.setValidator(QIntValidator(0, 24, editbegin))
         editbegin.setPlaceholderText('0')
         time = Lightpack.GetSettingMain('GmailChecker/TimeBegin')
         if (time == None):
@@ -298,7 +298,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         labelend2.setText("hour")
         box.addWidget(labelend2,7,2)
         editend = QLineEdit(parent)
-        editend.setValidator(QIntValidator(0, 65536, editend))
+        editend.setValidator(QIntValidator(0, 24, editend))
         editend.setPlaceholderText('24')
         time = Lightpack.GetSettingMain('GmailChecker/TimeEnd')
         if (time == None):
