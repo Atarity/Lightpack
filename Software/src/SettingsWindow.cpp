@@ -1766,7 +1766,7 @@ void SettingsWindow::updateUiFromSettings()
         break;
 #endif
 #ifdef MAC_OS_CG_GRAB_SUPPORT
-    case Grab::MacCoreGraphicsGrabber:
+    case Grab::GrabberTypeMacCoreGraphics:
         ui->radioButton_GrabMacCoreGraphics->setChecked(true);
         break;
 #endif
@@ -1807,7 +1807,7 @@ Grab::GrabberType SettingsWindow::getSelectedGrabberType()
 #endif
 #ifdef MAC_OS_CG_GRAB_SUPPORT
     if (ui->radioButton_GrabMacCoreGraphics->isChecked()) {
-        return Grab::MacCoreGraphicsGrabber;
+        return Grab::GrabberTypeMacCoreGraphics;
     }
 #endif
 

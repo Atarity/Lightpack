@@ -970,7 +970,7 @@ Grab::GrabberType Settings::getGrabberType()
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
     if (strGrabber == Profile::Value::GrabberType::MacCoreGraphics)
-        return Grab::MacCoreGraphicsGrabber;
+        return Grab::GrabberTypeMacCoreGraphics;
 #endif
 
     qWarning() << Q_FUNC_INFO << Profile::Key::Grab::Grabber << "contains invalid value:" << strGrabber << ", reset it to default:" << Profile::Grab::GrabberDefaultString;
@@ -1016,7 +1016,7 @@ void Settings::setGrabberType(Grab::GrabberType grabberType)
 #endif
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
-    case Grab::MacCoreGraphicsGrabber:
+    case Grab::GrabberTypeMacCoreGraphics:
         strGrabber = Profile::Value::GrabberType::MacCoreGraphics;
         break;
 #endif

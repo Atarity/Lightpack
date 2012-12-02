@@ -44,7 +44,7 @@
 #   define GRABMODE_DEFAULT         ::Grab::GrabberTypeX11
 #   define GRABMODE_DEFAULT_STR     "X11"
 #elif defined(MAC_OS_CG_GRAB_SUPPORT)
-#   define GRABMODE_DEFAULT         ::Grab::MacCoreGraphicsGrabber
+#   define GRABMODE_DEFAULT         ::Grab::GrabberTypeMacCoreGraphics
 #   define GRABMODE_DEFAULT_STR     "MacCoreGraphics"
 #else
 #   define GRABMODE_DEFAULT         ::Grab::QtGrabber
