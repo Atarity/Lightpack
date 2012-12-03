@@ -6,7 +6,7 @@ This private Lightpack software repo is for R&amp;D
 * [Qt SDK](http://qt-project.org/downloads)
 * [Python 2.7](http://python.org/download)
 * [Microsoft DirectX SDK](http://www.microsoft.com/en-us/download/details.aspx?id=6812)
-* POSIX shell utilities [MSYS for example](http://www.mingw.org/wiki/MSYS). Make sure `PATH` environment variable is set for the utilities (Run &rarr; sysdm.cpl &rarr; Advanced &rarr; Environment Variable &rarr; Edit `PATH` system variable (`C:\MinGW\msys\1.0\bin;` for example), path should points directly on the utilities so utilities is available without any subdirectories)
+* POSIX shell utilities [MSYS for example](http://www.mingw.org/wiki/MSYS). Make sure `PATH` environment variable is set for the utilities (Run &rarr; sysdm.cpl &rarr; Advanced &rarr; Environment Variable &rarr; Edit `PATH` system variable (`C:\MinGW\msys\1.0\bin;` for example), path should points directly on the utilities so utilities are available without any subdirectories)
 
 ####Build process:
 
