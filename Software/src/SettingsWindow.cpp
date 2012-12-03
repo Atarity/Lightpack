@@ -75,6 +75,8 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
                    Qt::WindowCloseButtonHint );
     setFocus(Qt::OtherFocusReason);
 
+    setupHotkeys();
+
 #ifdef Q_OS_LINUX
     ui->listWidget->setSpacing(0);
     ui->listWidget->setGridSize(QSize(115, 85));
@@ -128,6 +130,8 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     statusBar()->addWidget(labelDevice, 4);
     statusBar()->addWidget(labelFPS, 4);
     statusBar()->addWidget(m_labelStatusIcon, 0);
+
+    updateStatusBar();
 
     initGrabbersRadioButtonsVisibility();
     initLanguages();
@@ -241,7 +245,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->comboBox_Profiles, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileSwitch(QString)));
 
     connect(Settings::settingsSingleton(), SIGNAL(profileLoaded(const QString &)),        this, SLOT(handleProfileLoaded(QString)), Qt::QueuedConnection);
-    connect(Settings::settingsSingleton(), SIGNAL(currentProfileInited(const QString &)), this, SLOT(handleProfileLoaded(QString)), Qt::QueuedConnection);
+    connect(Settings::settingsSingleton(), SIGNAL(currentProfileInited(const QString &)), this, SLOT(handleConnectedDeviceChange(SupportedDevices::DeviceType)), Qt::QueuedConnection);
 
     connect(Settings::settingsSingleton(), SIGNAL(hotkeyChanged(QString,QKeySequence,QKeySequence)), this, SLOT(onHotkeyChanged(QString,QKeySequence,QKeySequence)));
     connect(Settings::settingsSingleton(), SIGNAL(lightpackModeChanged(Lightpack::Mode)), this, SLOT(onLightpackModeChanged(Lightpack::Mode)));
@@ -340,6 +344,8 @@ void SettingsWindow::changeEvent(QEvent *e)
 
         ui->comboBox_Language->setItemText(0, tr("System default"));
 
+        updateStatusBar();
+
         updateTrayAndActionStates();
 
         break;
@@ -405,6 +411,12 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
 
     // Update device tab widgets depending on the connected device
     updateDeviceTabWidgetsVisibility();
+}
+
+void SettingsWindow::updateStatusBar() {
+    this->labelProfile->setText(tr("Profile: %1").arg(Settings::getCurrentProfileName()));
+    this->labelDevice->setText(tr("Device: %1").arg(Settings::getConnectedDeviceName()));
+    this->labelFPS->setText(tr("FPS: %1").arg(""));
 }
 
 void SettingsWindow::updateDeviceTabWidgetsVisibility()
@@ -1143,7 +1155,6 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
         index = 0;
     ui->comboBox_AdalightColorSequence->setCurrentIndex(index);
 
-    this->labelDevice->setText(tr("Device: %1").arg(value));
     emit recreateLedDevice();
 }
 
@@ -1347,6 +1358,11 @@ void SettingsWindow::profileSwitch(const QString & configName)
 void SettingsWindow::handleProfileLoaded(const QString &configName) {
 
     this->labelProfile->setText(tr("Profile: %1").arg(configName));
+    updateUiFromSettings();
+}
+
+void SettingsWindow::handleConnectedDeviceChange(const SupportedDevices::DeviceType deviceType) {
+    this->labelDevice->setText(tr("Device: %1").arg(Settings::getConnectedDeviceName()));
     updateUiFromSettings();
 }
 
@@ -1696,9 +1712,6 @@ void SettingsWindow::updateUiFromSettings()
     profilesLoadAll();
 
     ui->comboBox_Profiles->setCurrentIndex(ui->comboBox_Profiles->findText(Settings::getCurrentProfileName()));
-
-    this->labelProfile->setText(tr("Profile: %1").arg(Settings::getCurrentProfileName()));
-    this->labelDevice->setText(tr("Device: %1").arg(Settings::getConnectedDeviceName()));
 
     Lightpack::Mode mode = Settings::getLightpackMode();
     onLightpackModeChanged(mode);

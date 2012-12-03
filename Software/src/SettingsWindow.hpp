@@ -96,6 +96,7 @@ public slots:
     void profilesLoadAll();
     void profileSwitch(const QString & configName);
     void handleProfileLoaded(const QString & configName);
+    void handleConnectedDeviceChange(const SupportedDevices::DeviceType deviceType);
     void profileSwitchCombobox(QString profile);
     void updateVirtualLedsColors(const QList<QRgb> & colors);
     void requestBacklightStatus();
@@ -218,6 +219,7 @@ private:
 
     void createActions();
     void updateUiFromSettings();
+    void updateStatusBar();
 
     void profileTraySync();
 

@@ -696,4 +696,5 @@ void LightpackApplication::handleConnectedDeviceChange(SupportedDevices::DeviceT
     int numOfLeds = Settings::getNumberOfLeds(deviceType);
     m_grabManager->setNumberOfLeds(numOfLeds);
     m_moodlampManager->setNumberOfLeds(numOfLeds);
+    m_settingsWindow->handleConnectedDeviceChange(deviceType);
 }
