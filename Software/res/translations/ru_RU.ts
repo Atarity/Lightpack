@@ -157,16 +157,6 @@
         <translation>Высокая</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1097"/>
-        <source>&lt;h4&gt;Refresh delay&lt;/h4&gt; PWM timer period</source>
-        <translation type="unfinished">&lt;h4&gt;Период обновления PWM&lt;/h4&gt; Задаёт периодичность обновления ШИМ. При малых значениях возможна потеря связи с устройством</translation>
-    </message>
-    <message>
-        <location filename="../../src/SettingsWindow.ui" line="1277"/>
-        <source>&lt;h4&gt;Smoothness&lt;/h4&gt; defines how many steps will be color changed in</source>
-        <translation type="unfinished">&lt;h4&gt;Плавность переходов&lt;/h4&gt; Определяет во сколько шагов будет происходить смена цвета</translation>
-    </message>
-    <message>
         <location filename="../../src/SettingsWindow.ui" line="1995"/>
         <source>Profile</source>
         <translation>Профиль</translation>
@@ -212,7 +202,7 @@
         <translation>Показывать дополнительные настройки</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3063"/>
+        <location filename="../../src/SettingsWindow.ui" line="3064"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -225,12 +215,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Софт версии &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревизия &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), прошивка &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3196"/>
+        <location filename="../../src/SettingsWindow.ui" line="3197"/>
         <source>This program is distributed &amp;laquo;as is&amp;raquo;. It source code is under &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL license&lt;/a&gt;. No warranty of any kind is expressed or implied. The authors will not be liable for data loss, damages, loss of profits or any other kind of loss while using or misusing this software. All content, such as icons, plugins, bitmaps etc. is under &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA&lt;/a&gt; if otherwise is not noticed. &lt;br /&gt;&lt;br /&gt;This software build with &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; cross-platform framework, use &lt;a href=&quot;http://python.org/&quot;&gt;Python 2.7&lt;/a&gt;, &lt;a href=&quot;http://pythonqt.sourceforge.net/&quot;&gt;PythonQt&lt;/a&gt; and &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; icon set by P.J. Onori as a third-party licensed products.</source>
         <translation>Это программное обеспечение распространяется &amp;laquo;как есть&amp;raquo; под открытой лицензией &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL&lt;/a&gt;. Авторы не несут отвественности за утерянные вами данные, нанесённый ущёрб или недополученную выгоду в результате использования этого ПО. Весь контент не являющийся частью исходного кода (иконки, битмапы, плагины и т.д.) покрываются лицензией &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/deed.ru&quot;&gt;CC-BY-SA&lt;/a&gt;, если не указано иного.&lt;br /&gt;&lt;br /&gt;Это ПО построено на базе фреймворка &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; и использует &lt;a href=&quot;http://python.org/&quot;&gt;Python 2.7&lt;/a&gt;, &lt;a href=&quot;http://pythonqt.sourceforge.net/&quot;&gt;PythonQt&lt;/a&gt;, набор иконок &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; в качестве лицензируемых продуктов третих лиц.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3251"/>
+        <location filename="../../src/SettingsWindow.ui" line="3252"/>
         <source>&lt;b&gt;We put lights in right order:&lt;/b&gt;&lt;br&gt;Timur Sattarov, Mikhail Shatohin, Andrey Isupov&lt;br&gt;&lt;br&gt;&lt;b&gt;Special thanks to:&lt;/b&gt;&lt;br&gt; Andrey Burkov, Vasiliy Fomin, Daria Orton, Nikolay Kudashev, Alexey Yakovlev, Mikhail Karpelyanskiy, Phillip Burgess, Dirk Heinke, Mikhail Sannikov</source>
         <translation>&lt;b&gt;Цвета на свои места расставляли:&lt;/b&gt;&lt;br&gt;Тимур Саттаров, Михаил Шатохин, Андрей Исупов&lt;br&gt;&lt;br&gt;&lt;b&gt;Особые благодарности:&lt;/b&gt;&lt;br&gt;Андрей Бурков, Василий Фомин, Даша Ортон, Николай Кудашев, Алексей Яковлев, Михаил Карпелянский, Филипп Бёрджес, Дирк Хейнеке, Михаил Санников</translation>
     </message>
@@ -241,36 +231,72 @@ p, li { white-space: pre-wrap; }
         <translation>Плагины</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2493"/>
+        <location filename="../../src/SettingsWindow.ui" line="430"/>
+        <source>Scene luminosity threshold:</source>
+        <translation>Порог освещённости сцены:</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="514"/>
+        <source>&lt;h4&gt;Scene luminosity threshold&lt;/h4&gt; It works in two ways: You can adjust &lt;b&gt;minimum luminosity level&lt;/b&gt; for soft and gentle light in the dark scenes or you can adjust &lt;b&gt;dead-zone&lt;/b&gt; luminosity grabbing which ignores small non-black objects on black backgrounds and turning lights OFF in the dark scenes. This is eye-saving vs. eye-killing options which works mutually. We &lt;b&gt;recommend&lt;/b&gt; to use threshold for minimum luminosity level.</source>
+        <translation>&lt;h4&gt;Порг освещённости сцены&lt;/h4&gt; Регулирует две взаимоисключающие настройки: В качестве &lt;b&gt;минимального уровня освещённости&lt;/b&gt;  обеспечивает мягкую подсветку даже в самых тёмных сценах, либо позволяет установить &lt;b&gt;мёртвую зону&lt;/b&gt; освещённости ниже которой мелкие нечёрные объекты будут игнорироваться во время анализа и сцена будет считаться абсолютно чёрной, а светодиоды отключаться. В первом случае порог освещённости будет беречь ваши глаза, во втором мёртвая зона будет их насиловать. Мы строго советуем первый вариант.</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="1008"/>
+        <source>&lt;h4&gt;Gamma correction&lt;/h4&gt; It controls the level of saturation. The effect is clearly detectable in a video in screen grabbing mode&lt;br/&gt;Recommended value: 2.00</source>
+        <translation>&lt;h4&gt;Гамма-коррекция&lt;/h4&gt; Регулирует степень насыщения каждого цвета после его анализа. Эффект хорошо заметен в фильмах.&lt;br/&gt;Рекомендованное занчение: 2.00</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="1097"/>
+        <source>&lt;h4&gt;Refresh delay&lt;/h4&gt; This setting’s values are inversely proportional to the PWM’s frequency. It&apos;s affects to performance.</source>
+        <translation>&lt;h4&gt;Период обновления ШИМ&lt;/4&gt; Значение настройки обратно пропорционально частоте широтно-импульсной модуляции (ШИМ). Влияет на производительность.</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="1153"/>
+        <source>&lt;h4&gt;Color depth&lt;/h4&gt; Number of colors per channel, one RGB LED uses 3 channels (value in power of 3).</source>
+        <translation>&lt;h4&gt;Глубина цвета&lt;/h4&gt;Число цветов на каждый канал. Один RGB-светодиод использует 3 канала, поэтому общее кол-во цветов равно значению настройки в степени 3.</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="1277"/>
+        <source>&lt;h4&gt;Smoothness&lt;/h4&gt; It defines how many steps will be color changed in</source>
+        <translation>&lt;h4&gt;Плавность&lt;/h4&gt; Настройка определяет количество цветов, необходимое для перехода между исходным и результирующим.</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="2323"/>
+        <source>
+&lt;h4&gt;Plugins&lt;/h4&gt; Here you can manage your plugins which stores in you profile folder. Plugins work in priority of order &amp;mdash; first plugin in the list has the highest priority. You can increase or decrease priority of any plugin in list.</source>
+        <translation>&lt;h4&gt;Плагины&lt;/h4&gt; В этом разделе вы можете управлять всеми установленными плагинами, которые хранятся в папке профиля.Несколько включенных плагинов работают согласно их приоритету, который вы можете увеличивать и понижать.</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="2494"/>
         <location filename="../../src/SettingsWindow.cpp" line="2214"/>
         <source>Plugin settings</source>
         <translation>Настройки плагина</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2519"/>
+        <location filename="../../src/SettingsWindow.ui" line="2520"/>
         <source>Info</source>
         <translation>О плагине</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2543"/>
+        <location filename="../../src/SettingsWindow.ui" line="2544"/>
         <source>Version:</source>
         <translation>Версия:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2571"/>
+        <location filename="../../src/SettingsWindow.ui" line="2572"/>
         <source>Name:</source>
         <translation>Имя:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2581"/>
-        <location filename="../../src/SettingsWindow.ui" line="2588"/>
-        <location filename="../../src/SettingsWindow.ui" line="2595"/>
-        <location filename="../../src/SettingsWindow.ui" line="2630"/>
+        <location filename="../../src/SettingsWindow.ui" line="2582"/>
+        <location filename="../../src/SettingsWindow.ui" line="2589"/>
+        <location filename="../../src/SettingsWindow.ui" line="2596"/>
+        <location filename="../../src/SettingsWindow.ui" line="2631"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2620"/>
+        <location filename="../../src/SettingsWindow.ui" line="2621"/>
         <source>Author:</source>
         <translation>Автор:</translation>
     </message>
@@ -281,38 +307,38 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="212"/>
-        <location filename="../../src/SettingsWindow.ui" line="2964"/>
+        <location filename="../../src/SettingsWindow.ui" line="2965"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2771"/>
+        <location filename="../../src/SettingsWindow.ui" line="2772"/>
         <source>Key (authorization disabled if empty):</source>
         <translation>Ключ авторизации (авторизация отключена если в поле пусто):</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3029"/>
+        <location filename="../../src/SettingsWindow.ui" line="3030"/>
         <source>&lt;h2&gt;Lightpack&lt;/h2&gt;</source>
         <translation>&lt;h2&gt;Лайтпак&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3107"/>
+        <location filename="../../src/SettingsWindow.ui" line="3108"/>
         <source>Content-appropriate ambient lighting system with USB interface</source>
         <translation>USB-подсветка монитора для усиления эффекта присутствия</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="197"/>
-        <location filename="../../src/SettingsWindow.ui" line="2661"/>
+        <location filename="../../src/SettingsWindow.ui" line="2662"/>
         <source>Experimental</source>
         <translation>Лаборатория</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2752"/>
+        <location filename="../../src/SettingsWindow.ui" line="2753"/>
         <source>Copy and paste this key into the application using the API, for authorization on the server</source>
         <translation>Скопируйте и вставьте этот ключ в приложение, использующее API, для авторизации на сервере</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2733"/>
+        <location filename="../../src/SettingsWindow.ui" line="2734"/>
         <source>Generate</source>
         <translation>Сгенерировать</translation>
     </message>
@@ -342,11 +368,6 @@ p, li { white-space: pre-wrap; }
         <translation>&quot;Мёртвая&quot; зона</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="430"/>
-        <source>Luminosity threshold:</source>
-        <translation>Порог освещённости сцены:</translation>
-    </message>
-    <message>
         <location filename="../../src/SettingsWindow.ui" line="440"/>
         <source>Luminosity threshold is used for:</source>
         <translation>Порог освещённости используется как:</translation>
@@ -355,11 +376,6 @@ p, li { white-space: pre-wrap; }
         <location filename="../../src/SettingsWindow.ui" line="450"/>
         <source>Minimum luminosity level</source>
         <translation>Минимальный уровень освещённости</translation>
-    </message>
-    <message>
-        <location filename="../../src/SettingsWindow.ui" line="514"/>
-        <source>&lt;h4&gt;Luminosity threshold&lt;/h4&gt;Configures either minimum luminosity which will be kept even on dark scenes or dead-zone so everything below the threshold treats as black</source>
-        <translation type="unfinished">&lt;h4&gt;Порог освещённости&lt;/h4&gt; Задаёт либо минимальный уровень освещённости, который будет поддерживаться даже на тёмных сценах, либо &quot;мёртвую&quot; зону, порог которой определяет уровень, ниже которого всё считается чёрным</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="530"/>
@@ -397,19 +413,9 @@ p, li { white-space: pre-wrap; }
         <translation>Общая яркость:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="1008"/>
-        <source>&lt;h4&gt;Gamma correction&lt;/h4&gt; Mechanism used to compencate non-linear difference between light emitted by LED and light we try to get&lt;br/&gt;Recommended value: 2.00</source>
-        <translation type="unfinished">&lt;h4&gt;Гамма-коррекция&lt;/h4&gt; Механизм для компенсации нелинейности яркости светодиодов</translation>
-    </message>
-    <message>
         <location filename="../../src/SettingsWindow.ui" line="1051"/>
         <source>Device-specific settings</source>
         <translation>Настройки устройства</translation>
-    </message>
-    <message>
-        <location filename="../../src/SettingsWindow.ui" line="1153"/>
-        <source>&lt;h4&gt;Color depth&lt;/h4&gt; number of colors per channel, one RGB LED uses 3 channels.&lt;b&gt;affect only to Lightpack &lt;=5.0&lt;/b&gt;</source>
-        <translation type="unfinished">&lt;h4&gt;Глубина цвета&lt;/h4&gt;Определяет количество градаций цвета на один канал, один RGB светодиод использует 3 канала</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1213"/>
@@ -427,72 +433,67 @@ p, li { white-space: pre-wrap; }
         <translation>%</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2323"/>
-        <source>&lt;h4&gt;Plugins&lt;/h4&gt; Here you can manage your plugins. Plugins work in priority of order - first plugin in the list has the highest priority.</source>
-        <translation type="unfinished">&lt;h4&gt;Плагины&lt;/h4&gt;Плагины работают с различным приоритетом, приоритет соответствует положению в списке - первый в списке плагин обладает максимальным приоритетом.</translation>
-    </message>
-    <message>
-        <location filename="../../src/SettingsWindow.ui" line="2329"/>
+        <location filename="../../src/SettingsWindow.ui" line="2330"/>
         <source>All plugins:</source>
         <translation>Доступные плагины:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2413"/>
+        <location filename="../../src/SettingsWindow.ui" line="2414"/>
         <source>Increase priority</source>
         <translation>Повысить приоритет</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2427"/>
+        <location filename="../../src/SettingsWindow.ui" line="2428"/>
         <source>Decrease priority</source>
         <translation>Снизить приоритет</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2441"/>
+        <location filename="../../src/SettingsWindow.ui" line="2442"/>
         <source>Open python console</source>
         <translation>Открыть консоль Python</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2461"/>
+        <location filename="../../src/SettingsWindow.ui" line="2462"/>
         <source>Reload plugins</source>
         <translation>Перезагрузить плагины</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2670"/>
+        <location filename="../../src/SettingsWindow.ui" line="2671"/>
         <source>This tab is used for experimental and not stable features. Any tuning with all these controls provide inevetible plane crash, miscarrige or nuclear disaster. Use it on your own risk.</source>
         <translation>В этом разделе собраны эксперементальные настройки которые могут повлиять на стабильность работы программы. Лучше оставить в покое те из них, назначение которых вам неизвестно. Если всё-таки вы что-то сломали, то удалите соответствующий профиль, или исправьте его вручную.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2695"/>
+        <location filename="../../src/SettingsWindow.ui" line="2696"/>
         <source>Enable server (API via sockets)</source>
         <translation>Включить сервер (API через сокеты)</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2723"/>
+        <location filename="../../src/SettingsWindow.ui" line="2724"/>
         <source>Port:</source>
         <translation>Порт:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2790"/>
+        <location filename="../../src/SettingsWindow.ui" line="2791"/>
         <source>Capture source</source>
         <translation>Источник захвата</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2889"/>
+        <location filename="../../src/SettingsWindow.ui" line="2890"/>
         <source>Enable capturing in DirectX 10/11 applications</source>
         <translation>Включить захват в приложениях DirectX 10/11</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2905"/>
+        <location filename="../../src/SettingsWindow.ui" line="2906"/>
         <source>Logging level</source>
         <translation>Детализация лога</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2924"/>
+        <location filename="../../src/SettingsWindow.ui" line="2925"/>
         <source>Ping Lightpack device every second</source>
         <translation>Проверять доступность Лайтпака каждую секунду</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2931"/>
+        <location filename="../../src/SettingsWindow.ui" line="2932"/>
         <source>Send data only if colors changes</source>
         <translation>Посылать данные только при изменении</translation>
     </message>

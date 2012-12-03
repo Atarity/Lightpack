@@ -427,7 +427,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                   <string notr="true">margin-top:0px;</string>
                  </property>
                  <property name="text">
-                  <string>Luminosity threshold:</string>
+                  <string>Scene luminosity threshold:</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -511,7 +511,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                   </sizepolicy>
                  </property>
                  <property name="whatsThis">
-                  <string>&lt;h4&gt;Luminosity threshold&lt;/h4&gt;Configures either minimum luminosity which will be kept even on dark scenes or dead-zone so everything below the threshold treats as black</string>
+                  <string>&lt;h4&gt;Scene luminosity threshold&lt;/h4&gt; It works in two ways: You can adjust &lt;b&gt;minimum luminosity level&lt;/b&gt; for soft and gentle light in the dark scenes or you can adjust &lt;b&gt;dead-zone&lt;/b&gt; luminosity grabbing which ignores small non-black objects on black backgrounds and turning lights OFF in the dark scenes. This is eye-saving vs. eye-killing options which works mutually. We &lt;b&gt;recommend&lt;/b&gt; to use threshold for minimum luminosity level.</string>
                  </property>
                  <property name="maximum">
                   <number>255</number>
@@ -1005,7 +1005,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
            </sizepolicy>
           </property>
           <property name="whatsThis">
-           <string>&lt;h4&gt;Gamma correction&lt;/h4&gt; Mechanism used to compencate non-linear difference between light emitted by LED and light we try to get&lt;br/&gt;Recommended value: 2.00</string>
+           <string>&lt;h4&gt;Gamma correction&lt;/h4&gt; It controls the level of saturation. The effect is clearly detectable in a video in screen grabbing mode&lt;br/&gt;Recommended value: 2.00</string>
           </property>
           <property name="minimum">
            <number>5</number>
@@ -1094,7 +1094,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                <item row="7" column="0">
                 <widget class="QSlider" name="horizontalSlider_DeviceRefreshDelay">
                  <property name="whatsThis">
-                  <string>&lt;h4&gt;Refresh delay&lt;/h4&gt; PWM timer period</string>
+                  <string>&lt;h4&gt;Refresh delay&lt;/h4&gt; This setting’s values are inversely proportional to the PWM’s frequency. It's affects to performance.</string>
                  </property>
                  <property name="minimum">
                   <number>64</number>
@@ -1150,7 +1150,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                <item row="3" column="0">
                 <widget class="QSlider" name="horizontalSlider_DeviceColorDepth">
                  <property name="whatsThis">
-                  <string>&lt;h4&gt;Color depth&lt;/h4&gt; number of colors per channel, one RGB LED uses 3 channels.&lt;b&gt;affect only to Lightpack &lt;=5.0&lt;/b&gt;</string>
+                  <string>&lt;h4&gt;Color depth&lt;/h4&gt; Number of colors per channel, one RGB LED uses 3 channels (value in power of 3).</string>
                  </property>
                  <property name="minimum">
                   <number>32</number>
@@ -1274,7 +1274,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
                <item row="5" column="0">
                 <widget class="QSlider" name="horizontalSlider_DeviceSmooth">
                  <property name="whatsThis">
-                  <string>&lt;h4&gt;Smoothness&lt;/h4&gt; defines how many steps will be color changed in</string>
+                  <string>&lt;h4&gt;Smoothness&lt;/h4&gt; It defines how many steps will be color changed in</string>
                  </property>
                  <property name="minimum">
                   <number>0</number>
@@ -2320,7 +2320,8 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
              </size>
             </property>
             <property name="whatsThis">
-             <string>&lt;h4&gt;Plugins&lt;/h4&gt; Here you can manage your plugins. Plugins work in priority of order - first plugin in the list has the highest priority.</string>
+             <string>
+&lt;h4&gt;Plugins&lt;/h4&gt; Here you can manage your plugins which stores in you profile folder. Plugins work in priority of order &amp;mdash; first plugin in the list has the highest priority. You can increase or decrease priority of any plugin in list.</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin-top:0px;</string>
