@@ -112,16 +112,16 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
             this, SLOT(changePage(int)));
     initPixmapCache();
 
+
     m_labelStatusIcon = new QLabel(statusBar());
-    m_labelStatusIcon->setStyleSheet("margin: 2px; margin-right: 5px");
+    m_labelStatusIcon->setStyleSheet("margin-right: .5em");
     m_labelStatusIcon->setPixmap(Settings::isBacklightEnabled() ? *(m_pixmapCache["on16"]) : *(m_pixmapCache["off16"]));
     labelProfile = new QLabel(statusBar());
-    labelProfile->setStyleSheet("margin-bottom: 5px");
+    labelProfile->setStyleSheet("margin-left:1em");
     labelDevice = new QLabel(statusBar());
-    labelDevice->setStyleSheet("margin-bottom: 5px");
     labelFPS  = new QLabel(statusBar());
-    labelFPS->setStyleSheet("margin-bottom: 5px");
 
+    statusBar()->setStyleSheet("QStatusBar{border-top: 1px solid; border-color: palette(midlight);} QLabel{margin:0.2em}");
     statusBar()->setSizeGripEnabled(false);
     statusBar()->addWidget(labelProfile, 4);
     statusBar()->addWidget(labelDevice, 4);

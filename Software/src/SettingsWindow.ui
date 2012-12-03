@@ -2921,7 +2921,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
         <item>
          <widget class="QCheckBox" name="checkBox_PingDeviceEverySecond">
           <property name="text">
-           <string>Ping lightpack device every second</string>
+           <string>Ping Lightpack device every second</string>
           </property>
          </widget>
         </item>
