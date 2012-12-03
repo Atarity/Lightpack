@@ -57,7 +57,8 @@ const unsigned SettingsWindow::MoodLampModeIndex  = 1;
 SettingsWindow::SettingsWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::SettingsWindow),
-    m_deviceFirmwareVersion(DeviceFirmvareVersionUndef)
+    m_deviceFirmwareVersion(DeviceFirmvareVersionUndef),
+    m_keySequenceWidget(NULL)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 
@@ -134,7 +135,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     initConnectedDeviceComboBox();
     initSerialPortBaudRateComboBox();
 
-    setupHotkeys();
+//    setupHotkeys();
 
     updateUiFromSettings();
 
@@ -153,7 +154,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     m_lightpackMode = Settings::getLightpackMode();
 
     onGrabberChanged();
-
 
     adjustSizeAndMoveCenter();
 
@@ -335,6 +335,8 @@ void SettingsWindow::changeEvent(QEvent *e)
             }
 
         setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+
+        this->setupHotkeys();
 
         ui->comboBox_Language->setItemText(0, tr("System default"));
 
@@ -1141,7 +1143,7 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
         index = 0;
     ui->comboBox_AdalightColorSequence->setCurrentIndex(index);
 
-    this->labelDevice->setText(tr("Device:")+value);
+    this->labelDevice->setText(tr("Device: %1").arg(value));
     emit recreateLedDevice();
 }
 
@@ -1849,11 +1851,18 @@ void SettingsWindow::registerHotkey(const QString &slotName, const QString &desc
 void SettingsWindow::setupHotkeys()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
+
+    if(hotkeysTable->rowCount() > 0) {
+        hotkeysTable->clearContents();
+        hotkeysTable->setRowCount(0);
+    }
+
     QStringList headerLabels;
     headerLabels.append(tr("Action name"));
     headerLabels.append(tr("Description"));
     headerLabels.append(tr("Hotkey"));
-    QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
+
 
     //to speed up initialization disable sorting while adding new items
     //    hotkeysTable->setSortingEnabled(false);
@@ -1863,7 +1872,10 @@ void SettingsWindow::setupHotkeys()
     registerHotkey(SLOT(toggleBacklightMode()), tr("Switch between \"Capture mode\" and mood lamp mode"), Settings::getHotkey("toggleBacklightMode").toString());
     registerHotkey(SLOT(nextProfile()), tr("Activate next profile"), Settings::getHotkey("nextProfile").toString());
     registerHotkey(SLOT(prevProfile()), tr("Activate previous profile"), Settings::getHotkey("prevProfile").toString());
-    m_keySequenceWidget = new QKeySequenceWidget(tr("Undefined key"), tr("Action not selected"), this);
+    if(!m_keySequenceWidget)
+        m_keySequenceWidget = new QKeySequenceWidget("","",this);
+    m_keySequenceWidget->setNoneText(tr("Undefined key"));
+    m_keySequenceWidget->setShortcutName(tr("Action not selected"));
     m_keySequenceWidget->setClearButtonIcon(QIcon(":/icons/profile_delete.png"));
     m_keySequenceWidget->setClearButtonToolTip(tr("Reset hotkey of selected command"));
     m_keySequenceWidget->setShortcutButtonMinWidth(100);
@@ -1880,12 +1892,15 @@ void SettingsWindow::setupHotkeys()
 void SettingsWindow::on_tableWidget_Hotkeys_itemSelectionChanged()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    m_isHotkeySelectionChanging = true;
-    QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
-    int selectedRow = hotkeysTable->currentRow();
-    m_keySequenceWidget->setShortcutName(hotkeysTable->item(selectedRow,1)->text());
-    m_keySequenceWidget->setKeySequence(QKeySequence(hotkeysTable->item(selectedRow,2)->text()));
-    m_isHotkeySelectionChanging = false;
+    if(m_keySequenceWidget) {
+        m_isHotkeySelectionChanging = true;
+        QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
+        int selectedRow = hotkeysTable->currentRow();
+        int rowCount = hotkeysTable->rowCount();
+        m_keySequenceWidget->setShortcutName(hotkeysTable->item(selectedRow,1)->text());
+        m_keySequenceWidget->setKeySequence(QKeySequence(hotkeysTable->item(selectedRow,2)->text()));
+        m_isHotkeySelectionChanging = false;
+    }
 }
 
 void SettingsWindow::onKeySequenceChanged(const QKeySequence &sequence)
