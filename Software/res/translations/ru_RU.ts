@@ -202,7 +202,12 @@
         <translation>Показывать дополнительные настройки</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3064"/>
+        <location filename="../../src/SettingsWindow.ui" line="2906"/>
+        <source>Logging level:</source>
+        <translation>Детализация логирования:</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="3077"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -215,12 +220,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Софт версии &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревизия &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), прошивка &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3197"/>
+        <location filename="../../src/SettingsWindow.ui" line="3210"/>
         <source>This program is distributed &amp;laquo;as is&amp;raquo;. It source code is under &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL license&lt;/a&gt;. No warranty of any kind is expressed or implied. The authors will not be liable for data loss, damages, loss of profits or any other kind of loss while using or misusing this software. All content, such as icons, plugins, bitmaps etc. is under &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA&lt;/a&gt; if otherwise is not noticed. &lt;br /&gt;&lt;br /&gt;This software build with &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; cross-platform framework, use &lt;a href=&quot;http://python.org/&quot;&gt;Python 2.7&lt;/a&gt;, &lt;a href=&quot;http://pythonqt.sourceforge.net/&quot;&gt;PythonQt&lt;/a&gt; and &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; icon set by P.J. Onori as a third-party licensed products.</source>
         <translation>Это программное обеспечение распространяется &amp;laquo;как есть&amp;raquo; под открытой лицензией &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL&lt;/a&gt;. Авторы не несут отвественности за утерянные вами данные, нанесённый ущёрб или недополученную выгоду в результате использования этого ПО. Весь контент не являющийся частью исходного кода (иконки, битмапы, плагины и т.д.) покрываются лицензией &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/deed.ru&quot;&gt;CC-BY-SA&lt;/a&gt;, если не указано иного.&lt;br /&gt;&lt;br /&gt;Это ПО построено на базе фреймворка &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; и использует &lt;a href=&quot;http://python.org/&quot;&gt;Python 2.7&lt;/a&gt;, &lt;a href=&quot;http://pythonqt.sourceforge.net/&quot;&gt;PythonQt&lt;/a&gt;, набор иконок &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; в качестве лицензируемых продуктов третих лиц.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3252"/>
+        <location filename="../../src/SettingsWindow.ui" line="3265"/>
         <source>&lt;b&gt;We put lights in right order:&lt;/b&gt;&lt;br&gt;Timur Sattarov, Mikhail Shatohin, Andrey Isupov&lt;br&gt;&lt;br&gt;&lt;b&gt;Special thanks to:&lt;/b&gt;&lt;br&gt; Andrey Burkov, Vasiliy Fomin, Daria Orton, Nikolay Kudashev, Alexey Yakovlev, Mikhail Karpelyanskiy, Phillip Burgess, Dirk Heinke, Mikhail Sannikov</source>
         <translation>&lt;b&gt;Цвета на свои места расставляли:&lt;/b&gt;&lt;br&gt;Тимур Саттаров, Михаил Шатохин, Андрей Исупов&lt;br&gt;&lt;br&gt;&lt;b&gt;Особые благодарности:&lt;/b&gt;&lt;br&gt;Андрей Бурков, Василий Фомин, Даша Ортон, Николай Кудашев, Алексей Яковлев, Михаил Карпелянский, Филипп Бёрджес, Дирк Хейнеке, Михаил Санников</translation>
     </message>
@@ -307,7 +312,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="212"/>
-        <location filename="../../src/SettingsWindow.ui" line="2965"/>
+        <location filename="../../src/SettingsWindow.ui" line="2978"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
@@ -317,12 +322,12 @@ p, li { white-space: pre-wrap; }
         <translation>Ключ авторизации (авторизация отключена если в поле пусто):</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3030"/>
+        <location filename="../../src/SettingsWindow.ui" line="3043"/>
         <source>&lt;h2&gt;Lightpack&lt;/h2&gt;</source>
         <translation>&lt;h2&gt;Лайтпак&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3108"/>
+        <location filename="../../src/SettingsWindow.ui" line="3121"/>
         <source>Content-appropriate ambient lighting system with USB interface</source>
         <translation>USB-подсветка монитора для усиления эффекта присутствия</translation>
     </message>
@@ -483,17 +488,12 @@ p, li { white-space: pre-wrap; }
         <translation>Включить захват в приложениях DirectX 10/11</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2906"/>
-        <source>Logging level</source>
-        <translation>Детализация лога</translation>
-    </message>
-    <message>
-        <location filename="../../src/SettingsWindow.ui" line="2925"/>
+        <location filename="../../src/SettingsWindow.ui" line="2938"/>
         <source>Ping Lightpack device every second</source>
         <translation>Проверять доступность Лайтпака каждую секунду</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2932"/>
+        <location filename="../../src/SettingsWindow.ui" line="2945"/>
         <source>Send data only if colors changes</source>
         <translation>Посылать данные только при изменении</translation>
     </message>
@@ -561,7 +561,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="419"/>
         <source>FPS: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Кадр/c: %1</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="765"/>

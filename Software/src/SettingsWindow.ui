@@ -245,7 +245,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -2903,7 +2903,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
           <item>
            <widget class="QLabel" name="label_LoggingLevel">
             <property name="text">
-             <string>Logging level</string>
+             <string>Logging level:</string>
             </property>
             <property name="buddy">
              <cstring>spinBox_LoggingLevel</cstring>
@@ -2916,6 +2916,19 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
              <number>3</number>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
