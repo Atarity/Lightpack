@@ -63,11 +63,6 @@
         <translation>Частота захвата:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="367"/>
-        <source>fps</source>
-        <translation>к/с</translation>
-    </message>
-    <message>
         <location filename="../../src/SettingsWindow.ui" line="402"/>
         <source>ms</source>
         <translation>мс</translation>
@@ -142,34 +137,24 @@
         <translation>Профили</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="530"/>
-        <source>Grab widgets appearance</source>
-        <translation type="unfinished">Внешний вид областей захвата</translation>
-    </message>
-    <message>
         <location filename="../../src/SettingsWindow.ui" line="553"/>
         <source>Do not show</source>
-        <translation type="unfinished">Не показывать области захвата</translation>
+        <translation>Не показывать области захвата</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="569"/>
         <source>Constant color:</source>
-        <translation type="unfinished">Постоянный цвет:</translation>
-    </message>
-    <message>
-        <location filename="../../src/SettingsWindow.ui" line="612"/>
-        <source>Changable with rate:</source>
-        <translation type="unfinished">Перетекающий со скоростью:</translation>
+        <translation>Постоянный цвет:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="627"/>
         <source>Slow</source>
-        <translation type="unfinished"> </translation>
+        <translation>Низкая</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="661"/>
         <source>Fast</source>
-        <translation type="unfinished"> </translation>
+        <translation>Высокая</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1097"/>
@@ -233,17 +218,21 @@
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;software &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Софт версии &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревизия &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), прошивка &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="3196"/>
-        <source>This program is distributed &amp;laquo;as is&amp;raquo; and it source code is under &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL license&lt;/a&gt;. No warranty of any kind is expressed or implied. You use at your own risk. The authors will not be liable for data loss, damages, loss of profits or any other kind of loss while using or misusing this software.</source>
-        <translation type="unfinished"></translation>
+        <source>This program is distributed &amp;laquo;as is&amp;raquo;. It source code is under &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL license&lt;/a&gt;. No warranty of any kind is expressed or implied. The authors will not be liable for data loss, damages, loss of profits or any other kind of loss while using or misusing this software. All content, such as icons, plugins, bitmaps etc. is under &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA&lt;/a&gt; if otherwise is not noticed. &lt;br /&gt;&lt;br /&gt;This software build with &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; cross-platform framework, use &lt;a href=&quot;http://python.org/&quot;&gt;Python 2.7&lt;/a&gt;, &lt;a href=&quot;http://pythonqt.sourceforge.net/&quot;&gt;PythonQt&lt;/a&gt; and &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; icon set by P.J. Onori as a third-party licensed products.</source>
+        <translation>Это программное обеспечение распространяется &amp;laquo;как есть&amp;raquo; под открытой лицензией &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL&lt;/a&gt;. Авторы не несут отвественности за утерянные вами данные, нанесённый ущёрб или недополученную выгоду в результате использования этого ПО. Весь контент не являющийся частью исходного кода (иконки, битмапы, плагины и т.д.) покрываются лицензией &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/deed.ru&quot;&gt;CC-BY-SA&lt;/a&gt;, если не указано иного.&lt;br /&gt;&lt;br /&gt;Это ПО построено на базе фреймворка &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; и использует &lt;a href=&quot;http://python.org/&quot;&gt;Python 2.7&lt;/a&gt;, &lt;a href=&quot;http://pythonqt.sourceforge.net/&quot;&gt;PythonQt&lt;/a&gt;, набор иконок &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; в качестве лицензируемых продуктов третих лиц.</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="3251"/>
         <source>&lt;b&gt;We put lights in right order:&lt;/b&gt;&lt;br&gt;Timur Sattarov, Mikhail Shatohin, Andrey Isupov&lt;br&gt;&lt;br&gt;&lt;b&gt;Special thanks to:&lt;/b&gt;&lt;br&gt; Andrey Burkov, Vasiliy Fomin, Daria Orton, Nikolay Kudashev, Alexey Yakovlev, Mikhail Karpelyanskiy, Phillip Burgess, Dirk Heinke, Mikhail Sannikov</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Цвета на свои места расставляли:&lt;/b&gt;&lt;br&gt;Тимур Саттаров, Михаил Шатохин, Андрей Исупов&lt;br&gt;&lt;br&gt;&lt;b&gt;Особые благодарности:&lt;/b&gt;&lt;br&gt;Андрей Бурков, Василий Фомин, Даша Ортон, Николай Кудашев, Алексей Яковлев, Михаил Карпелянский, Филипп Бёрджес, Дирк Хейнеке, Михаил Санников</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="182"/>
@@ -299,7 +288,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2771"/>
         <source>Key (authorization disabled if empty):</source>
-        <translation type="unfinished">Ключ авторизации (авторизация отключена если ключ пустой):</translation>
+        <translation>Ключ авторизации (авторизация отключена если в поле пусто):</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="3029"/>
@@ -330,37 +319,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.ui" line="313"/>
         <source>Grab delay:</source>
-        <translation type="unfinished">Задержка захвата:</translation>
+        <translation>Захватывать каждые:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="357"/>
         <source>Average color on all LEDs</source>
-        <translation type="unfinished">Средний цвет на все светодиоды</translation>
+        <translation>Средний цвет на все светодиоды</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="367"/>
+        <source>FPS</source>
+        <translation>к/с</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="414"/>
         <source>Eyes care settings</source>
-        <translation type="unfinished">Снижение утомляемости глаз</translation>
+        <translation>Забота о глазах</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="420"/>
         <source>Dead-zone</source>
-        <translation type="unfinished">&quot;мёртвая&quot; зона</translation>
+        <translation>&quot;Мёртвая&quot; зона</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="430"/>
         <source>Luminosity threshold:</source>
-        <translation type="unfinished">Порог освещённости:</translation>
+        <translation>Порог освещённости сцены:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="440"/>
         <source>Luminosity threshold is used for:</source>
-        <translation type="unfinished">Порог освещённости используется как:</translation>
+        <translation>Порог освещённости используется как:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="450"/>
         <source>Minimum luminosity level</source>
-        <translation type="unfinished">Минимальный уровень освещённости</translation>
+        <translation>Минимальный уровень освещённости</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="514"/>
@@ -368,29 +362,39 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">&lt;h4&gt;Порог освещённости&lt;/h4&gt; Задаёт либо минимальный уровень освещённости, который будет поддерживаться даже на тёмных сценах, либо &quot;мёртвую&quot; зону, порог которой определяет уровень, ниже которого всё считается чёрным</translation>
     </message>
     <message>
+        <location filename="../../src/SettingsWindow.ui" line="530"/>
+        <source>Appearance of grab widgets</source>
+        <translation>Внешний вид виджетов</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="612"/>
+        <source>Change color with rate:</source>
+        <translation>Скорость изменения цвета:</translation>
+    </message>
+    <message>
         <location filename="../../src/SettingsWindow.ui" line="802"/>
         <source>Screen grabbing</source>
-        <translation type="unfinished">Захват экрана</translation>
+        <translation>Захват экрана</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="807"/>
         <source>Mood lamp</source>
-        <translation type="unfinished">Простая подсветка</translation>
+        <translation>Простая подсветка</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="815"/>
         <source>Mode:</source>
-        <translation type="unfinished">Режим:</translation>
+        <translation>Режим:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="872"/>
         <source>Keep lights ON after exit</source>
-        <translation type="unfinished">Оставить подсветку включённой после выхода из программы</translation>
+        <translation>Оставить подсветку включённой после выхода</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="898"/>
         <source>Overall brightness:</source>
-        <translation type="unfinished">Общая яркостость:</translation>
+        <translation>Общая яркость:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1008"/>
@@ -400,7 +404,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1051"/>
         <source>Device-specific settings</source>
-        <translation type="unfinished">Настройки устройства</translation>
+        <translation>Настройки устройства</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1153"/>
@@ -410,17 +414,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1213"/>
         <source>Refresh delay (Lightpack 5 and below):</source>
-        <translation type="unfinished">Период обновления ШИМ (Лайтпак 5 и ниже):</translation>
+        <translation>Период обновления ШИМ (Лайтпак 5 и ниже):</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1305"/>
         <source>Color depth (Lightpack 5 and below):</source>
-        <translation type="unfinished">Глубина цвета (Лайтпак 5 и ниже):</translation>
+        <translation>Глубина цвета (Лайтпак 5 и ниже):</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1969"/>
         <source>%</source>
-        <translation type="unfinished">%</translation>
+        <translation>%</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2323"/>
@@ -430,37 +434,37 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2329"/>
         <source>All plugins:</source>
-        <translation type="unfinished">Доступные плагины:</translation>
+        <translation>Доступные плагины:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2413"/>
         <source>Increase priority</source>
-        <translation type="unfinished">Увеличить приоритет</translation>
+        <translation>Повысить приоритет</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2427"/>
         <source>Decrease priority</source>
-        <translation type="unfinished">Уменьшить приоритет</translation>
+        <translation>Снизить приоритет</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2441"/>
         <source>Open python console</source>
-        <translation type="unfinished">Открыть консоль Python</translation>
+        <translation>Открыть консоль Python</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2461"/>
         <source>Reload plugins</source>
-        <translation type="unfinished">Перезагрузить плагины</translation>
+        <translation>Перезагрузить плагины</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2670"/>
         <source>This tab is used for experimental and not stable features. Any tuning with all these controls provide inevetible plane crash, miscarrige or nuclear disaster. Use it on your own risk.</source>
-        <translation>В этом разделе находятся эксперемнтальные или настройки которые могут отразиться на стабильности работы системы. Используйте их с осторожностью.</translation>
+        <translation>В этом разделе собраны эксперементальные настройки которые могут повлиять на стабильность работы программы. Лучше оставить в покое те из них, назначение которых вам неизвестно. Если всё-таки вы что-то сломали, то удалите соответствующий профиль, или исправьте его вручную.</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2695"/>
         <source>Enable server (API via sockets)</source>
-        <translation type="unfinished">Включить сервер (API через сокеты)</translation>
+        <translation>Включить сервер (API через сокеты)</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2723"/>
@@ -483,14 +487,14 @@ p, li { white-space: pre-wrap; }
         <translation>Детализация лога</translation>
     </message>
     <message>
+        <location filename="../../src/SettingsWindow.ui" line="2924"/>
+        <source>Ping Lightpack device every second</source>
+        <translation>Проверять доступность Лайтпака каждую секунду</translation>
+    </message>
+    <message>
         <location filename="../../src/SettingsWindow.ui" line="2931"/>
         <source>Send data only if colors changes</source>
         <translation>Посылать данные только при изменении</translation>
-    </message>
-    <message>
-        <location filename="../../src/SettingsWindow.ui" line="2924"/>
-        <source>Ping lightpack device every second</source>
-        <translation>Проверять каждую секунду состояние устройства</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="310"/>
@@ -588,37 +592,37 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="1853"/>
         <source>Action name</source>
-        <translation type="unfinished">Действие</translation>
+        <translation>Действие</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="1854"/>
         <source>Description</source>
-        <translation type="unfinished">Описание</translation>
+        <translation>Описание</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="1855"/>
         <source>Hotkey</source>
-        <translation type="unfinished">Хоткей</translation>
+        <translation>Хоткей</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="1862"/>
         <source>On/Off lights</source>
-        <translation type="unfinished">Вкл/выкл подсветку</translation>
+        <translation>Вкл/выкл подсветку</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="1863"/>
         <source>Switch between &quot;Capture mode&quot; and mood lamp mode</source>
-        <translation type="unfinished">Переключение между режимами &quot;захват&quot; и &quot;лава-лампа&quot;</translation>
+        <translation>Переключение между режимами &quot;захват&quot; и &quot;обычный&quot;</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="1864"/>
         <source>Activate next profile</source>
-        <translation type="unfinished">Переключиться на следующий профиль</translation>
+        <translation>Следующий профиль</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="1865"/>
         <source>Activate previous profile</source>
-        <translation type="unfinished">Переключиться на предыдущий профиль</translation>
+        <translation>Предыдущий профиль</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="1866"/>
@@ -628,12 +632,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="1866"/>
         <source>Action not selected</source>
-        <translation type="unfinished">Действие не выбрано</translation>
+        <translation>Действие не выбрано</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="1868"/>
         <source>Reset hotkey of selected command</source>
-        <translation type="unfinished">Сбросить сочетание клавиш для текущей команды</translation>
+        <translation>Сбросить сочетание клавиш</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="759"/>
@@ -664,7 +668,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="1051"/>
         <source>FPS: </source>
-        <translation>FPS: </translation>
+        <translation>Кадр/с: </translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="885"/>

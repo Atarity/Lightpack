@@ -245,7 +245,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -364,7 +364,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
               <item row="0" column="2">
                <widget class="QLabel" name="label_GrabFrequency_txt_fps">
                 <property name="text">
-                 <string>fps</string>
+                 <string>FPS</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -527,7 +527,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
             <item>
              <widget class="QGroupBox" name="groupBox_2">
               <property name="title">
-               <string>Grab widgets appearance</string>
+               <string>Appearance of grab widgets</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_16">
                <item>
@@ -609,7 +609,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
               <item>
                <widget class="QRadioButton" name="radioButton_LiquidColorMoodLampMode">
                 <property name="text">
-                 <string>Changable with rate:</string>
+                 <string>Change color with rate:</string>
                 </property>
                </widget>
               </item>
@@ -718,7 +718,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
             </property>
             <property name="minimumSize">
              <size>
-              <width>150</width>
+              <width>165</width>
               <height>0</height>
              </size>
             </property>
@@ -2921,7 +2921,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
         <item>
          <widget class="QCheckBox" name="checkBox_PingDeviceEverySecond">
           <property name="text">
-           <string>Ping lightpack device every second</string>
+           <string>Ping Lightpack device every second</string>
           </property>
          </widget>
         </item>
@@ -3193,7 +3193,7 @@ p, li { white-space: pre-wrap; }
            </font>
           </property>
           <property name="text">
-           <string>This program is distributed &amp;laquo;as is&amp;raquo; and it source code is under &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL license&lt;/a&gt;. No warranty of any kind is expressed or implied. You use at your own risk. The authors will not be liable for data loss, damages, loss of profits or any other kind of loss while using or misusing this software.</string>
+           <string>This program is distributed &amp;laquo;as is&amp;raquo;. It source code is under &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL license&lt;/a&gt;. No warranty of any kind is expressed or implied. The authors will not be liable for data loss, damages, loss of profits or any other kind of loss while using or misusing this software. All content, such as icons, plugins, bitmaps etc. is under &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA&lt;/a&gt; if otherwise is not noticed. &lt;br /&gt;&lt;br /&gt;This software build with &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; cross-platform framework, use &lt;a href=&quot;http://python.org/&quot;&gt;Python 2.7&lt;/a&gt;, &lt;a href=&quot;http://pythonqt.sourceforge.net/&quot;&gt;PythonQt&lt;/a&gt; and &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; icon set by P.J. Onori as a third-party licensed products.</string>
           </property>
           <property name="textFormat">
            <enum>Qt::AutoText</enum>
