@@ -51,7 +51,7 @@ const QString SettingsWindow::DeviceFirmvareVersionUndef = "undef";
 const QString SettingsWindow::LightpackDownloadsPageUrl = "http://code.google.com/p/lightpack/downloads/list";
 
 // Indexes of supported modes listed in ui->comboBox_Modes and ui->stackedWidget_Modes
-const unsigned SettingsWindow::AmbilightModeIndex = 0;
+const unsigned SettingsWindow::GrabModeIndex = 0;
 const unsigned SettingsWindow::MoodLampModeIndex  = 1;
 
 SettingsWindow::SettingsWindow(QWidget *parent) :
@@ -316,6 +316,8 @@ void SettingsWindow::changeEvent(QEvent *e)
         m_settingsAction->setText(tr("&Settings"));
         m_quitAction->setText(tr("&Quit"));
 
+        ui->comboBox_LightpackModes->setCurrentIndex(Settings::getLightpackMode() == Lightpack::MoodLampMode ? MoodLampModeIndex : GrabModeIndex);
+
         m_profilesMenu->setTitle(tr("&Profiles"));
 
         //        m_keySequenceWidget->setNoneText(tr("Undefined key"));
@@ -368,7 +370,7 @@ void SettingsWindow::closeEvent(QCloseEvent *event)
 void SettingsWindow::focusIn()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    if (!ui->radioButton_GrabWidgetsDontShow->isChecked() && ui->comboBox_LightpackModes->currentIndex() == AmbilightModeIndex) {
+    if (!ui->radioButton_GrabWidgetsDontShow->isChecked() && ui->comboBox_LightpackModes->currentIndex() == GrabModeIndex) {
         emit showLedWidgets(true);
     }
 }
@@ -1980,7 +1982,7 @@ void SettingsWindow::onLightpackModes_Activated(int index)
 
     using namespace Lightpack;
 
-    Settings::setLightpackMode(index == AmbilightModeIndex ? AmbilightMode : MoodLampMode);
+    Settings::setLightpackMode(index == GrabModeIndex ? AmbilightMode : MoodLampMode);
 }
 
 void SettingsWindow::onLightpackModeChanged(Lightpack::Mode mode)
@@ -1990,8 +1992,8 @@ void SettingsWindow::onLightpackModeChanged(Lightpack::Mode mode)
     switch (mode)
     {
     case Lightpack::AmbilightMode:
-        ui->comboBox_LightpackModes->setCurrentIndex(AmbilightModeIndex);
-        ui->stackedWidget_LightpackModes->setCurrentIndex(AmbilightModeIndex);
+        ui->comboBox_LightpackModes->setCurrentIndex(GrabModeIndex);
+        ui->stackedWidget_LightpackModes->setCurrentIndex(GrabModeIndex);
         emit showLedWidgets(!ui->radioButton_GrabWidgetsDontShow->isChecked() && this->isVisible());
         if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
         {

@@ -291,7 +291,7 @@ private:
     QString m_deviceFirmwareVersion;
     static const QString DeviceFirmvareVersionUndef;
     static const QString LightpackDownloadsPageUrl;
-    static const unsigned AmbilightModeIndex;
+    static const unsigned GrabModeIndex;
     static const unsigned MoodLampModeIndex;
 
     QKeySequenceWidget *m_keySequenceWidget;
