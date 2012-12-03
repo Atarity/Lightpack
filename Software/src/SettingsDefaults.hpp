@@ -134,7 +134,7 @@ static const int SlowdownMin = 1;
 static const int SlowdownDefault = 50;
 static const int SlowdownMax = 1000;
 static const int MinimumLevelOfSensitivityMin = 1;
-static const int MinimumLevelOfSensitivityDefault = 3;
+static const int MinimumLevelOfSensitivityDefault = 20;
 static const int MinimumLevelOfSensitivityMax = 50;
 }
 // [MoodLamp]
