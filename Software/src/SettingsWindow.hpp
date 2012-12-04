@@ -106,8 +106,8 @@ public slots:
 
     void updatePlugin(QList<PyPlugin*> plugins);
 
-    void focusIn();
-    void focusOut();
+    void onFocus();
+    void onBlur();
 
 protected:
     virtual void changeEvent(QEvent *e);
@@ -212,7 +212,6 @@ private:
     void updateDeviceTabWidgetsVisibility();
     void setDeviceTabWidgetsVisibility(DeviceTab::Options options);
     void syncLedDeviceWithSettingsWindow();
-    void setMaximumNumberOfLeds(MaximumNumberOfLeds::Devices maximumNumberOfLeds);
     MaximumNumberOfLeds::Devices getLightpackMaximumNumberOfLeds();
     int getLigtpackFirmwareVersionMajor();
 

@@ -91,14 +91,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     m_speedTest = new SpeedTest();
 
-    //    ui->listWidget->setViewMode(QListView::IconMode);
-    //    ui->listWidget->setIconSize(QSize(64, 64));
-    //    ui->listWidget->setMovement(QListView::Static);
-    //    ui->listWidget->setMaximumWidth(110);
-    //    ui->listWidget->setMinimumWidth(110);
-    //    ui->listWidget->setSpacing(12);
-    //    ui->listWidget->setCurrentRow(0);
-    //    ui->listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // hide main tabbar
     QTabBar* tabBar=qFindChild<QTabBar*>(ui->tabWidget);
     tabBar->hide();
@@ -138,8 +130,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::DeviceTypeVirtual));
     initConnectedDeviceComboBox();
     initSerialPortBaudRateComboBox();
-
-//    setupHotkeys();
 
     updateUiFromSettings();
 
@@ -320,9 +310,6 @@ void SettingsWindow::changeEvent(QEvent *e)
 
         m_profilesMenu->setTitle(tr("&Profiles"));
 
-        //        m_keySequenceWidget->setNoneText(tr("Undefined key"));
-        //        m_keySequenceWidget->setShortcutName(tr("On/Off light:"));
-
         if (m_trayIcon!=NULL)
             switch (m_backlightStatus)
             {
@@ -367,7 +354,7 @@ void SettingsWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-void SettingsWindow::focusIn()
+void SettingsWindow::onFocus()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     if (!ui->radioButton_GrabWidgetsDontShow->isChecked() && ui->comboBox_LightpackModes->currentIndex() == GrabModeIndex) {
@@ -375,7 +362,7 @@ void SettingsWindow::focusIn()
     }
 }
 
-void SettingsWindow::focusOut()
+void SettingsWindow::onBlur()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     emit showLedWidgets(false);
@@ -403,19 +390,14 @@ void SettingsWindow::updateExpertModeWidgetsVisibility()
         ui->listWidget->setItemHidden(ui->listWidget->item(4),true);
     }
 
-    // Minimum level of sensitivity for ambilight mode
-//    ui->label_MinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
-//    ui->spinBox_GrabMinLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
-//    ui->checkBox_turnOnAtLevelOfSensitivity->setVisible(Settings::isExpertModeEnabled());
-//    ui->groupBox_HotKeys->setVisible(Settings::isExpertModeEnabled());
-
     ui->pushButton_ConsolePlugin->setVisible(Settings::isExpertModeEnabled());
 
-    // Update device tab widgets depending on the connected device
     updateDeviceTabWidgetsVisibility();
 }
 
 void SettingsWindow::updateStatusBar() {
+    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+
     this->labelProfile->setText(tr("Profile: %1").arg(Settings::getCurrentProfileName()));
     this->labelDevice->setText(tr("Device: %1").arg(Settings::getConnectedDeviceName()));
     this->labelFPS->setText(tr("FPS: %1").arg(""));
@@ -488,13 +470,6 @@ void SettingsWindow::syncLedDeviceWithSettingsWindow()
     emit updateBrightness(Settings::getDeviceBrightness());
     emit updateSmoothSlowdown(Settings::getDeviceSmooth());
     emit updateGamma(Settings::getDeviceGamma());
-}
-
-void SettingsWindow::setMaximumNumberOfLeds(MaximumNumberOfLeds::Devices maximumNumberOfLeds)
-{
-    //    DEBUG_LOW_LEVEL << Q_FUNC_INFO << maximumNumberOfLeds;
-
-    //    ui->spinBox_NumberOfLeds->setMaximum(maximumNumberOfLeds);
 }
 
 int SettingsWindow::getLigtpackFirmwareVersionMajor()
@@ -687,6 +662,17 @@ void SettingsWindow::toggleBacklight()
     startBacklight();
 }
 
+void SettingsWindow::toggleBacklightMode()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    using namespace Lightpack;
+
+    Mode curMode = Settings::getLightpackMode();
+
+    Settings::setLightpackMode(curMode == AmbilightMode ? MoodLampMode : AmbilightMode );
+}
+
 void SettingsWindow::startBacklight()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "m_backlightStatus =" << m_backlightStatus
@@ -743,16 +729,6 @@ void SettingsWindow::prevProfile()
     Settings::loadOrCreateProfile(profiles[newIndex]);
 }
 
-void SettingsWindow::toggleBacklightMode()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    using namespace Lightpack;
-
-    Mode curMode = Settings::getLightpackMode();
-
-    Settings::setLightpackMode(curMode == AmbilightMode ? MoodLampMode : AmbilightMode );
-}
 
 void SettingsWindow::updateTrayAndActionStates()
 {
@@ -1067,6 +1043,10 @@ void SettingsWindow::refreshAmbilightEvaluated(double updateResultMs)
     this->labelFPS->setText(tr("FPS: ")+QString::number(hz,'f', 2) );
 }
 
+// ----------------------------------------------------------------------------
+// UI handlers
+// ----------------------------------------------------------------------------
+
 void SettingsWindow::onGrabberChanged()
 {
     Grab::GrabberType grabberType = getSelectedGrabberType();
@@ -1160,7 +1140,6 @@ void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
     emit recreateLedDevice();
 }
 
-
 void SettingsWindow::onLightpackNumberOfLeds_valueChanged(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
@@ -1235,7 +1214,6 @@ void SettingsWindow::onArdulightSerialPortBaudRate_valueChanged(QString value)
         emit recreateLedDevice();
 }
 
-
 void SettingsWindow::onColorSequence_valueChanged(QString value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
@@ -1262,6 +1240,103 @@ void SettingsWindow::onSliderDeviceGammaCorrection_valueChanged(int value)
     emit updateGamma(Settings::getDeviceGamma());
 }
 
+void SettingsWindow::onLightpackModes_Activated(int index)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
+
+    using namespace Lightpack;
+
+    Settings::setLightpackMode(index == GrabModeIndex ? AmbilightMode : MoodLampMode);
+}
+
+void SettingsWindow::onLightpackModeChanged(Lightpack::Mode mode)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
+
+    switch (mode)
+    {
+    case Lightpack::AmbilightMode:
+        ui->comboBox_LightpackModes->setCurrentIndex(GrabModeIndex);
+        ui->stackedWidget_LightpackModes->setCurrentIndex(GrabModeIndex);
+        emit showLedWidgets(!ui->radioButton_GrabWidgetsDontShow->isChecked() && this->isVisible());
+        if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
+        {
+            // Restore smooth slowdown value
+            emit updateSmoothSlowdown(Settings::getDeviceSmooth());
+        }
+        break;
+
+    case Lightpack::MoodLampMode:
+        ui->comboBox_LightpackModes->setCurrentIndex(MoodLampModeIndex);
+        ui->stackedWidget_LightpackModes->setCurrentIndex(MoodLampModeIndex);
+        emit showLedWidgets(false);
+        if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
+        {
+            // Switch off smooth if moodlamp liquid mode
+            emit updateSmoothSlowdown(0);
+        }
+        break;
+    }
+    backlightStatusChanged(m_backlightStatus);
+    m_lightpackMode = Settings::getLightpackMode();
+}
+
+void SettingsWindow::onMoodLampColor_changed(QColor color)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << color;
+    Settings::setMoodLampColor(color);
+}
+
+void SettingsWindow::onMoodLampSpeed_valueChanged(int value)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
+    Settings::setMoodLampSpeed(value);
+}
+
+void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
+
+    Settings::setMoodLampLiquidMode(checked);
+    if (Settings::isMoodLampLiquidMode())
+    {
+        // Liquid color mode
+        ui->pushButton_SelectColor->setEnabled(false);
+        ui->horizontalSlider_MoodLampSpeed->setEnabled(true);
+        ui->label_slowMoodLampSpeed->setEnabled(true);
+        ui->label_fastMoodLampSpeed->setEnabled(true);
+        // Switch off smooth if liquid mode enabled
+        // this helps normal work liquid mode on hw5 and hw4 lightpacks
+        emit updateSmoothSlowdown(0);
+    } else {
+        // Constant color mode
+        ui->pushButton_SelectColor->setEnabled(true);
+        ui->horizontalSlider_MoodLampSpeed->setEnabled(false);
+        ui->label_slowMoodLampSpeed->setEnabled(false);
+        ui->label_fastMoodLampSpeed->setEnabled(false);
+        emit updateSmoothSlowdown(Settings::getDeviceSmooth());
+    }
+}
+
+void SettingsWindow::onDontShowLedWidgets_Toggled(bool checked)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
+    emit showLedWidgets(!checked);
+}
+
+void SettingsWindow::onSetColoredLedWidgets(bool checked)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    if (checked)
+        emit setColoredLedWidget(true);
+}
+
+void SettingsWindow::onSetWhiteLedWidgets(bool checked)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    if (checked)
+        emit setColoredLedWidget(false);
+}
 
 void SettingsWindow::onDeviceSendDataOnlyIfColorsChanged_toggled(bool state)
 {
@@ -1363,12 +1438,6 @@ void SettingsWindow::handleProfileLoaded(const QString &configName) {
     updateUiFromSettings();
 }
 
-void SettingsWindow::handleConnectedDeviceChange(const SupportedDevices::DeviceType deviceType) {
-    this->labelDevice->setText(tr("Device: %1").arg(Settings::getConnectedDeviceName()));
-    updateUiFromSettings();
-}
-
-// Slot for switch profiles by tray menu
 void SettingsWindow::profileTraySwitch()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -1474,7 +1543,6 @@ void SettingsWindow::settingsProfileChanged_UpdateUI(const QString &profileName)
     }
 }
 
-// Syncronize profiles from combobox with tray menu
 void SettingsWindow::profileTraySync()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -1494,12 +1562,19 @@ void SettingsWindow::profileTraySync()
     }
 }
 
+// ----------------------------------------------------------------------------
+
 void SettingsWindow::initPixmapCache()
 {
     m_pixmapCache.insert("lock16", new QPixmap(QPixmap(":/icons/lock.png").scaledToWidth(16, Qt::SmoothTransformation)) );
     m_pixmapCache.insert("on16", new QPixmap(QPixmap(":/icons/on.png").scaledToWidth(16, Qt::SmoothTransformation)) );
     m_pixmapCache.insert("off16", new QPixmap(QPixmap(":/icons/off.png").scaledToWidth(16, Qt::SmoothTransformation)) );
     m_pixmapCache.insert("error16", new QPixmap(QPixmap(":/icons/error.png").scaledToWidth(16, Qt::SmoothTransformation)) );
+}
+
+void SettingsWindow::handleConnectedDeviceChange(const SupportedDevices::DeviceType deviceType) {
+    this->labelDevice->setText(tr("Device: %1").arg(Settings::getConnectedDeviceName()));
+    updateUiFromSettings();
 }
 
 // ----------------------------------------------------------------------------
@@ -1976,104 +2051,6 @@ void SettingsWindow::quit()
     QApplication::quit();
 }
 
-void SettingsWindow::onLightpackModes_Activated(int index)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
-
-    using namespace Lightpack;
-
-    Settings::setLightpackMode(index == GrabModeIndex ? AmbilightMode : MoodLampMode);
-}
-
-void SettingsWindow::onLightpackModeChanged(Lightpack::Mode mode)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
-
-    switch (mode)
-    {
-    case Lightpack::AmbilightMode:
-        ui->comboBox_LightpackModes->setCurrentIndex(GrabModeIndex);
-        ui->stackedWidget_LightpackModes->setCurrentIndex(GrabModeIndex);
-        emit showLedWidgets(!ui->radioButton_GrabWidgetsDontShow->isChecked() && this->isVisible());
-        if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
-        {
-            // Restore smooth slowdown value
-            emit updateSmoothSlowdown(Settings::getDeviceSmooth());
-        }
-        break;
-
-    case Lightpack::MoodLampMode:
-        ui->comboBox_LightpackModes->setCurrentIndex(MoodLampModeIndex);
-        ui->stackedWidget_LightpackModes->setCurrentIndex(MoodLampModeIndex);
-        emit showLedWidgets(false);
-        if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
-        {
-            // Switch off smooth if moodlamp liquid mode
-            emit updateSmoothSlowdown(0);
-        }
-        break;
-    }
-    backlightStatusChanged(m_backlightStatus);
-    m_lightpackMode = Settings::getLightpackMode();
-}
-
-void SettingsWindow::onMoodLampColor_changed(QColor color)
-{
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << color;
-    Settings::setMoodLampColor(color);
-}
-
-void SettingsWindow::onMoodLampSpeed_valueChanged(int value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-    Settings::setMoodLampSpeed(value);
-}
-
-void SettingsWindow::onMoodLampLiquidMode_Toggled(bool checked)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
-
-    Settings::setMoodLampLiquidMode(checked);
-    if (Settings::isMoodLampLiquidMode())
-    {
-        // Liquid color mode
-        ui->pushButton_SelectColor->setEnabled(false);
-        ui->horizontalSlider_MoodLampSpeed->setEnabled(true);
-        ui->label_slowMoodLampSpeed->setEnabled(true);
-        ui->label_fastMoodLampSpeed->setEnabled(true);
-        // Switch off smooth if liquid mode enabled
-        // this helps normal work liquid mode on hw5 and hw4 lightpacks
-        emit updateSmoothSlowdown(0);
-    } else {
-        // Constant color mode
-        ui->pushButton_SelectColor->setEnabled(true);
-        ui->horizontalSlider_MoodLampSpeed->setEnabled(false);
-        ui->label_slowMoodLampSpeed->setEnabled(false);
-        ui->label_fastMoodLampSpeed->setEnabled(false);
-        emit updateSmoothSlowdown(Settings::getDeviceSmooth());
-    }
-}
-
-void SettingsWindow::onDontShowLedWidgets_Toggled(bool checked)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << checked;
-    emit showLedWidgets(!checked);
-}
-
-void SettingsWindow::onSetColoredLedWidgets(bool checked)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    if (checked)
-        emit setColoredLedWidget(true);
-}
-
-void SettingsWindow::onSetWhiteLedWidgets(bool checked)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    if (checked)
-        emit setColoredLedWidget(false);
-}
-
 void SettingsWindow::initConnectedDeviceComboBox()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -2317,7 +2294,6 @@ void SettingsWindow::setFirmwareVersion(const QString &firmwareVersion)
     this->fimwareVersion = firmwareVersion;
     versionsUpdate();
 }
-
 
 void SettingsWindow::versionsUpdate()
 {

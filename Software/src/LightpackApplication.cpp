@@ -236,11 +236,11 @@ void LightpackApplication::onFocusChanged(QWidget *old, QWidget *now)
     Q_UNUSED(old);
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << (this->activeWindow() != NULL ? this->activeWindow()->metaObject()->className() : "null");
     if(!m_isSettingsWindowActive && (this->activeWindow() == m_settingsWindow)) {
-        m_settingsWindow->focusIn();
+        m_settingsWindow->onFocus();
         m_isSettingsWindowActive = true;
     } else {
         if(m_isSettingsWindowActive && (this->activeWindow() == NULL)) {
-            m_settingsWindow->focusOut();
+            m_settingsWindow->onBlur();
             m_isSettingsWindowActive = false;
         }
     }
