@@ -5,10 +5,10 @@ from PythonQt.QtGui import *
 class ZoneCalculator(BasePlugin.BasePlugin):
     def init(self):
         self.sessionKey = Lightpack.GetSessionKey(self.__class__.__name__)
-        print self.sessionKey
+        self.log(self.sessionKey)
         self.resdir = Lightpack.GetPluginsDir()+"/ZoneCalculator/res/"
         return
-        
+
     def name(self):
         """ return the name of the plugin """
         return self.__class__.__name__
@@ -24,18 +24,16 @@ class ZoneCalculator(BasePlugin.BasePlugin):
     def version(self):
         """ return the version of the plugin """
         return "0.4"
-        
 
     def run(self):
-        print self.name()
-        return 0;
-        
+        self.log('run')
+        return 0
 
     def settings(self,parent):
-        box = QVBoxLayout(parent)
+        box = QGridLayout(parent)
         label = QLabel(parent)
         label.setText('Select preset')
-        box.addWidget(label)
+        box.addWidget(label, 0, 1)
         self.comboPreset = QComboBox(parent)
         self.comboPreset.addItem('a')
         self.comboPreset.addItem('b')
@@ -45,41 +43,70 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         self.comboPreset.addItem('f')
         self.comboPreset.addItem('pi')
         self.comboPreset.addItem('r')
-        box.addWidget(self.comboPreset)
-        
+        box.addWidget(self.comboPreset,0,2)
+
         self.preview = QLabel(parent)
         self.preview.setPixmap(QPixmap(self.resdir+"a.png"))
-        box.addWidget(self.preview)
-        
+        box.addWidget(self.preview,1,1,1,2)
+
+        groupBox = QGroupBox(parent)
+        groupBox.setTitle('Count direction')
+        groupVBox =  QVBoxLayout()
+        groupBox.setLayout(groupVBox)
+        groupBox.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        box.addWidget(groupBox, 2, 1, 1, 2)
+
+        self.rbDirCw = QRadioButton(parent)
+        self.rbDirCw.setText('Clock-wise')
+        self.rbDirCw.setChecked(True)
+        groupVBox.addWidget(self.rbDirCw)
+
+        self.rbDirCcw = QRadioButton(parent)
+        self.rbDirCcw.setText('Counter clock-wise')
+        groupVBox.addWidget(self.rbDirCcw)
+
+        label = QLabel(parent)
+        label.setText('Start count from:')
+        box.addWidget(label, 3,1) 
+
+        self.sbCountFrom = QSpinBox(parent)
+        self.sbCountFrom.setMinimum(1)
+        self.sbCountFrom.setMaximum(255)
+        box.addWidget(self.sbCountFrom, 3, 2)
+
         pushcalc =  QPushButton(parent)
         pushcalc.text = 'Calculate'
-        box.addWidget(pushcalc)
+        box.addWidget(pushcalc,4,1,1,2,4)
 
         spacer = QWidget(parent)
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        box.addWidget(spacer)
+        spacer.setFixedWidth(1)
+        box.addWidget(spacer,5,1)
 
         pushcalc.connect('clicked()', self.calculate)
         self.comboPreset.connect('currentIndexChanged(int)', self.combo_activateInput)
-        return 0;
-        
+        box.setColumnStretch(0,2)
+        box.setColumnStretch(1,1)
+        box.setColumnStretch(2,1)
+        box.setColumnStretch(3,2)
 
-    def combo_activateInput(self): 
+        return 0
+
+    def combo_activateInput(self):
         preset=unicode(self.comboPreset.currentText)
-        print preset
+        self.log(preset)
         self.preview.setPixmap(QPixmap(self.resdir+preset+".png"))
-        
-        
+
     def calculate(self):
         self.sessionKey = Lightpack.GetSessionKey(self.__class__.__name__)
         Lightpack.Lock(self.sessionKey)
         preset=unicode(self.comboPreset.currentText)
-        
+
         self.screen = Lightpack.GetScreenSize()
         self.list = Lightpack.GetLeds()
         self.count = Lightpack.GetCountLeds()
         self.cube = 150
-        
+
         if preset=="a":
             self.presetA()
         if preset=="b":
@@ -96,71 +123,71 @@ class ZoneCalculator(BasePlugin.BasePlugin):
             self.presetP()
         if preset=="r":
             self.presetR()
-        
+
         for rect in self.list:
             rect.setWidth(self.cube)
             rect.setHeight(self.cube)
-            
+
         Lightpack.SetLeds(self.sessionKey,self.list)
         Lightpack.UnLock(self.sessionKey)
 
     def presetA(self):
-        print "PresetA begin"
+        self.log("PresetA begin")
         wint = (self.screen.width()-self.cube*6)/5
         hint = (self.screen.height()-self.cube*3)/2
-        self.list[0].setX(0)        
-        self.list[0].setY(self.screen.height()-self.cube)        
-        self.list[1].setX(0)        
-        self.list[1].setY(self.cube+hint)        
-        self.list[2].setX(0)        
-        self.list[2].setY(0)        
-        self.list[3].setX(self.cube+wint)        
-        self.list[3].setY(0)        
-        self.list[4].setX(2*(self.cube+wint))        
-        self.list[4].setY(0)        
-        self.list[5].setX(3*(self.cube+wint))        
-        self.list[5].setY(0)        
-        self.list[6].setX(4*(self.cube+wint))        
-        self.list[6].setY(0)        
-        self.list[7].setX(self.screen.width()-self.cube)        
-        self.list[7].setY(0)        
-        self.list[8].setX(self.screen.width()-self.cube)        
-        self.list[8].setY(self.cube+hint)        
-        self.list[9].setX(self.screen.width()-self.cube)        
-        self.list[9].setY(self.screen.height()-self.cube)        
-        print "PresetA end"
+        self.list[0].setX(0)
+        self.list[0].setY(self.screen.height()-self.cube)
+        self.list[1].setX(0)
+        self.list[1].setY(self.cube+hint)
+        self.list[2].setX(0)
+        self.list[2].setY(0)
+        self.list[3].setX(self.cube+wint)
+        self.list[3].setY(0)
+        self.list[4].setX(2*(self.cube+wint))
+        self.list[4].setY(0)
+        self.list[5].setX(3*(self.cube+wint))
+        self.list[5].setY(0)
+        self.list[6].setX(4*(self.cube+wint))
+        self.list[6].setY(0)
+        self.list[7].setX(self.screen.width()-self.cube)
+        self.list[7].setY(0)
+        self.list[8].setX(self.screen.width()-self.cube)
+        self.list[8].setY(self.cube+hint)
+        self.list[9].setX(self.screen.width()-self.cube)
+        self.list[9].setY(self.screen.height()-self.cube)
+        self.log("PresetA end")
         return
-    
+
     def presetB(self):
         wint = (self.screen.width()-self.cube*4)/3
         hint = (self.screen.height()-self.cube*4)/3
-        
-        self.list[0].setX(0)        
+
+        self.list[0].setX(0)
         self.list[0].setY(self.screen.height()-self.cube)
         self.list[1].setX(0)
         self.list[1].setY(2*(self.cube+hint))
         self.list[2].setX(0)
         self.list[2].setY(self.cube+hint)
         self.list[3].setX(0)
-        self.list[3].setY(0)        
-        self.list[4].setX(self.cube+wint)        
-        self.list[4].setY(0)        
-        self.list[5].setX(2*(self.cube+wint))        
-        self.list[5].setY(0)        
-        self.list[6].setX(self.screen.width()-self.cube)        
-        self.list[6].setY(0)        
-        self.list[7].setX(self.screen.width()-self.cube)        
-        self.list[7].setY(self.cube+hint)        
-        self.list[8].setX(self.screen.width()-self.cube)        
-        self.list[8].setY(2*(self.cube+hint))        
-        self.list[9].setX(self.screen.width()-self.cube)        
-        self.list[9].setY(self.screen.height()-self.cube)        
+        self.list[3].setY(0)
+        self.list[4].setX(self.cube+wint)
+        self.list[4].setY(0)
+        self.list[5].setX(2*(self.cube+wint))
+        self.list[5].setY(0)
+        self.list[6].setX(self.screen.width()-self.cube)
+        self.list[6].setY(0)
+        self.list[7].setX(self.screen.width()-self.cube)
+        self.list[7].setY(self.cube+hint)
+        self.list[8].setX(self.screen.width()-self.cube)
+        self.list[8].setY(2*(self.cube+hint))
+        self.list[9].setX(self.screen.width()-self.cube)
+        self.list[9].setY(self.screen.height()-self.cube)
         return
-    
+
     def presetC(self):
         wint = (self.screen.width()-self.cube*4)/3
         hint = (self.screen.height()-self.cube*3)/2
-        
+
         self.list[0].setX(self.cube+wint)
         self.list[0].setY(self.screen.height()-self.cube)
         self.list[1].setX(0)
@@ -184,7 +211,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
 
     def presetD(self):
         hint = (self.screen.height()-self.cube*5)/4
-        
+
         self.list[0].setX(0)
         self.list[0].setY(self.screen.height()-self.cube)
         self.list[1].setX(0)
@@ -209,7 +236,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
 
     def presetE(self):
         wint = (self.screen.width()-self.cube*5)/4
-        
+
         self.list[0].setX(0)
         self.list[0].setY(0)
         self.list[1].setX(self.cube+wint)
@@ -234,7 +261,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
 
     def presetF(self):
         wint = (self.screen.width()-self.cube*10)/9
-        
+
         self.list[0].setX(0)
         self.list[0].setY(0)
         self.list[1].setX(self.cube+wint)
@@ -257,37 +284,59 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         self.list[9].setY(0)
         return
 
+    def calcListIndex(self,i,listSize):
+        return (i + self.sbCountFrom.value - 1) % listSize
+
     def presetP(self):
-        print "PresetP begin"
+        self.log("PresetP begin")
         sw = self.screen.width()
         sh = self.screen.height()
         c = Lightpack.GetCountLeds()
         x = (2*sh+sw)/(c+2)
         w = sw/x
         h = sh/x
-        
+        startFrom = self.sbCountFrom.value
+
         self.cube = x
-        
-        for i in range(c):
-            print i
-            sx = 0
-            sy = 0
-            if i<h:
+        if self.rbDirCw.isChecked():
+            for i in range(c):
+                self.log(str(i))
                 sx = 0
-                sy = sh-(i+1)*x
-            if i>=h and i<h+w-1:
-                sx = (i-h+1)*x
                 sy = 0
-            if i>=h+w-1:
-                sx = sw-x
-                sy = (i-h-w+2)*x
-            self.list[i].setX(sx)        
-            self.list[i].setY(sy)        
-        
-       
-        print "PresetP end"
+                if i<h:
+                    sx = 0
+                    sy = sh-(i+1)*x
+                if i>=h and i<h+w-1:
+                    sx = (i-h+1)*x
+                    sy = 0
+                if i>=h+w-1:
+                    sx = sw-x
+                    sy = (i-h-w+2)*x
+                idx = self.calcListIndex(i,c)
+                self.list[idx].setX(sx)
+                self.list[idx].setY(sy)
+
+        else:
+            for i in range(c):
+                self.log(str(i))
+                sx = 0
+                sy = 0
+                if i<h:
+                    sx = sw-x
+                    sy = sh-(i+1)*x
+                if i>=h and i<h+w-1:
+                    sx = sw - (i-h+1)*x
+                    sy = 0
+                if i>=h+w-1:
+                    sx = 0
+                    sy = (i-h-w+2)*x
+                idx = self.calcListIndex(i,c)
+                self.list[idx].setX(sx)
+                self.list[idx].setY(sy)
+
+        self.log("PresetP end")
         return
-    
+
     def presetR(self):
         sw = self.screen.width()
         sh = self.screen.height()
@@ -295,11 +344,11 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         x = (2*sh+2*sw)/(c+4)
         w = sw/x
         h = sh/x
-        
+
         self.cube = x
-        
+
         for i in range(c):
-            print i
+            self.log(str(i))
             sx = 0
             sy = 0
             if i<w/2-1:
@@ -317,9 +366,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
             if i>=w/2+h+w+h-3:
                 sx = sw-x*(i-(w/2+h+w+h-4))
                 sy = sh-x
-            self.list[i].setX(sx)        
-            self.list[i].setY(sy)        
-        
+            self.list[i].setX(sx)
+            self.list[i].setY(sy)
+
         return
-        
-    
