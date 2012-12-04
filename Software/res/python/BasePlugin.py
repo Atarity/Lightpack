@@ -19,16 +19,19 @@ class BasePlugin(object):
     def version(self):
         """ return the version of the plugin """
         return ""
-        
 
     def run(self):
         """ default function start"""
-        return 0;
+        return 0
 
     def stop(self):
         """ default function stop"""
-        return 0;
+        return 0
 
     def settings(self):
         """ setting interface function """
-        return 0;
+        return 0
+
+    def log(self, msg):
+        """ writes message to console """
+        print self.name() + ': ' + msg
