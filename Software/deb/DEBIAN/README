@@ -1,8 +1,7 @@
-The Debian Package lightpack
+The Debian Package prismatik
 ----------------------------
 
-Lightpack is a very simple implementation of the backlight for any computer (lightpack.googlecode.com). 
-A couple of simple printed circuit boards, controller, led drivers, a few LEDs and lightpack is ready! 
+Prismatik (formerly Lightpack) is a software part of simple implementation of the backlight for any computer and supports such devices as Adalight, Ardulight and Lightpack (lightpack.googlecode.com). 
 
 Configuration program lives in the tray, without interfering with habitual work and watching movies.   
 
@@ -18,6 +17,5 @@ Main features:
 Please let us know if you find mistakes, bugs or errors.
 
 Post new issue : http://code.google.com/p/lightpack/issues/list
-Ask questions  : https://groups.google.com/group/lightpack
 
- -- Mike Shatohin <brunql@gmail.com>  Sat, 24 Dec 2011 23:00:00 +0400
+ -- Timur Sattarov <tim.helloworld@gmail.com>  Wed, 5 Dec 2012 22:00:00 +0400

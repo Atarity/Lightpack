@@ -10,7 +10,7 @@
  trap err_handler 1 2 3 15 ERR
  function err_handler {
  local exit_status=${1:-$?}
- logger -s -p "syslog.err" -t "lightpack.deb" "lightpack.deb script '$0' error code $exit_status (line $BASH_LINENO: '$BASH_COMMAND')"
+ logger -s -p "syslog.err" -t "prismatik.deb" "prismatik.deb script '$0' error code $exit_status (line $BASH_LINENO: '$BASH_COMMAND')"
  exit $exit_status
  }
 

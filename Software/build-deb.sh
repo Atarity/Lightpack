@@ -5,28 +5,28 @@
 # Created on: 25.12.11
 #
 
-if [ -e "deb/usr/lib/lightpack/Lightpack" ];
+if [ -e "deb/usr/lib/prismatik/Prismatik" ];
 then
-	echo "Renaming 'deb/usr/lib/lightpack/Lightpack' to 'deb/usr/lib/lightpack/lightpack'."
-	mv deb/usr/lib/lightpack/Lightpack deb/usr/lib/lightpack/lightpack
+	echo "Renaming 'deb/usr/lib/prismatik/Prismatik' to 'deb/usr/lib/prismatik/prismatik'."
+	mv deb/usr/lib/prismatik/Prismatik deb/usr/lib/prismatik/prismatik
 fi
 
 
-if [ ! -e "deb/usr/lib/lightpack" ];
+if [ ! -e "deb/usr/lib/prismatik" ];
 then
-	echo "File 'deb/usr/lib/lightpack' not found."
+	echo "File 'deb/usr/lib/prismatik' not found."
 	exit 1
 fi
 
-if [ ! -e "deb/usr/lib/lightpack/libPythonQt.so.1" ];
+if [ ! -e "deb/usr/lib/prismatik/libPythonQt.so.1" ];
 then
-	echo "File 'deb/usr/lib/lightpack/libPythonQt.so.1' not found."
+	echo "File 'deb/usr/lib/prismatik/libPythonQt.so.1' not found."
 	exit 1
 fi
 
-if [ ! -e "deb/usr/lib/lightpack/libPythonQt_QtAll.so.1" ];
+if [ ! -e "deb/usr/lib/prismatik/libPythonQt_QtAll.so.1" ];
 then
-	echo "File 'deb/usr/lib/lightpack/libPythonQt_QtAll.so.1' not found."
+	echo "File 'deb/usr/lib/prismatik/libPythonQt_QtAll.so.1' not found."
 	exit 1
 fi
 
