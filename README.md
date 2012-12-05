@@ -1,6 +1,15 @@
 Lightpack project with Prismatik flavour
 ---------
 
+**Table of content:** <br />
+&nbsp;&nbsp;[Short description] (https://github.com/Atarity/Lightpack#lightpack-project-with-prismatik-flavour) <br />
+&nbsp;&nbsp;[Useful URLs] (https://github.com/Atarity/Lightpack#useful-urls) <br />
+&nbsp;&nbsp;[Build Prismatik with Windows] (https://github.com/Atarity/Lightpack#prismatik-build-instructions-for-windows) <br />
+&nbsp;&nbsp;[Build with Linux] (https://github.com/Atarity/Lightpack#build-instructions-for-linux) <br />
+&nbsp;&nbsp;[Build with OS X] (https://github.com/Atarity/Lightpack#build-instructions-for-os-x) <br />
+&nbsp;&nbsp;[Lightpack Firmware building] (https://github.com/Atarity/Lightpack#lightpack-firmware-building) <br />
+
+
 **Lightpack** is an fully open-source and simple hardware implementation of the backlight for any computer. It's USB content-driving ambient lighting system.
 
 **Prismatik** is an open-source software we buid to control Lightpack device. It grabs screen, analize picture,
@@ -87,3 +96,20 @@ You will need the following packages, usually all of them are in distro's reposi
 3. Building **PythonQt**: go to `<repo>/Software/PythonQt` in repo master branch and sequently run `qmake` and `make all`
 4. Copy libs we build at step 3 from folder **"lib"** into `/usr/lib/`
 5. Build **Prismatik** project 
+
+---
+
+###Fimware building instructions
+1. Install [AVR GCC Toolchain] (http://avr-eclipse.sourceforge.net/wiki/index.php/The_AVR_GCC_Toolchain)
+2. Install **dfu-programmer** for firmware upload with `$ sudo apt-get install dfu-programmer`
+3. Install [Eclipse IDE] (http://www.eclipse.org/downloads/) for C/C++ Developers
+4. Install [AVR Eclipse Plugin] (http://avr-eclipse.sourceforge.net/wiki/index.php/Plugin_Download)
+5. Create new "Makefile project from existing code"
+ * Set "Existing Code Location" to "Lightpack/Firmware/"
+ * Set "Project Name" to "Lightpack"
+ * Choose AVR-GCC Toolchain and press "finish"
+6. Reboot device to bootloader and type `$ cd Lightpack/Firmware/`, then `$ make dfu`
+
+--
+Please let us know if you find mistakes, bugs or errors.<br />
+Post new issue : http://code.google.com/p/lightpack/issues/list
