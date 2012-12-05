@@ -109,7 +109,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
 
     m_labelStatusIcon = new QLabel(statusBar());
-    m_labelStatusIcon->setStyleSheet("margin-right: .5em");
+    m_labelStatusIcon->setStyleSheet("QLabel{margin-right: .5em}");
     m_labelStatusIcon->setPixmap(Settings::isBacklightEnabled() ? *(m_pixmapCache["on16"]) : *(m_pixmapCache["off16"]));
     labelProfile = new QLabel(statusBar());
     labelProfile->setStyleSheet("margin-left:1em");
@@ -785,6 +785,7 @@ void SettingsWindow::updateTrayAndActionStates()
         qWarning() << Q_FUNC_INFO << "m_backlightStatus = " << m_backlightStatus;
         break;
     }
+    m_labelStatusIcon->setToolTip(m_trayIcon->toolTip());
 }
 
 void SettingsWindow::initGrabbersRadioButtonsVisibility()
