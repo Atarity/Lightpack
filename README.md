@@ -57,7 +57,7 @@ You will need the following packages, usually all of them are in distro's reposi
 ---
 
 ###Build instructions for OS X
-####Prerequisistes:
+####Prerequisites:
 * Qt SDK (4.8.3+)
 * MacOSX 10.7.sdk
 * Qt libs (macports.org)
