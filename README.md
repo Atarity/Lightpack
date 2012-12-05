@@ -7,7 +7,7 @@ Lightpack project with Prismatik flavour
 &nbsp;&nbsp;[Build Prismatik with Windows] (https://github.com/Atarity/Lightpack#prismatik-build-instructions-for-windows) <br />
 &nbsp;&nbsp;[Build with Linux] (https://github.com/Atarity/Lightpack#build-instructions-for-linux) <br />
 &nbsp;&nbsp;[Build with OS X] (https://github.com/Atarity/Lightpack#build-instructions-for-os-x) <br />
-&nbsp;&nbsp;[Lightpack Firmware building] (https://github.com/Atarity/Lightpack#lightpack-firmware-building) <br />
+&nbsp;&nbsp;[Lightpack Firmware building] (https://github.com/Atarity/Lightpack#fimware-building-instructions) <br />
 
 
 **Lightpack** is an fully open-source and simple hardware implementation of the backlight for any computer. It's USB content-driving ambient lighting system.
@@ -110,6 +110,7 @@ You will need the following packages, usually all of them are in distro's reposi
  * Choose AVR-GCC Toolchain and press "finish"
 6. Reboot device to bootloader and type `$ cd Lightpack/Firmware/`, then `$ make dfu`
 
---
+---
+
 Please let us know if you find mistakes, bugs or errors.<br />
 Post new issue : http://code.google.com/p/lightpack/issues/list
