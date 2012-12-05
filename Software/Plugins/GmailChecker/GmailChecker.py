@@ -28,7 +28,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         self.timeranim.connect('timeout()', self.stopAnimation)
         self.timerrem = PythonQt.QtCore.QTimer(None)
         self.timerrem.connect('timeout()', self.reminderProc)
-        print "init"
+        self.log("init")
     
     def dispose(self):
         self.timerCheck.setInterval(0)
@@ -40,7 +40,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         del self.timeranim
         del self.timerCheck
         del self.timerrem
-        print "dispose"
+        self.log("dispose")
 
     def name(self):
         """ return the name of the plugin """
@@ -59,7 +59,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         return "0.9"
 
     def reminderProc(self):
-        print "reminder"
+        self.log("reminder")
         self.reminder = True
         
         
@@ -77,7 +77,7 @@ class GmailChecker(BasePlugin.BasePlugin):
                     else:
                          Lightpack.SetColor(self.sessionKey,self.ledMap[idx]-1,0,0,0)   
         except Exception, e:
-            print e
+            self.log(str(e))
     
     def runAnimation(self):
         try:
@@ -99,12 +99,12 @@ class GmailChecker(BasePlugin.BasePlugin):
                 self.timeranim.start()
             
         except Exception, e:
-            print e
+            self.log(str(e))
         
 
     def run(self):
         self.timerCheck.start()
-        print "run"
+        self.log("run")
         
     def stop(self):
         self.timerCheck.stop()
@@ -112,7 +112,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         self.timeranim.stop()
         self.timerrem.stop()
         Lightpack.UnLock(self.sessionKey)
-        print "stop"
+        self.log("stop")
 
     def stopAnimation(self):
         if self.timer.isActive() == False:
@@ -188,7 +188,7 @@ class GmailChecker(BasePlugin.BasePlugin):
             leds = Lightpack.GetCountLeds()
             map = [int(n+1) for n in range (0, leds)]
         except Exception, e:
-            print e
+            self.log(str(e))
             map = [1,2,3,4,5,6,7,8,9,10]
         return map
     
@@ -199,9 +199,9 @@ class GmailChecker(BasePlugin.BasePlugin):
         try:
             map = Lightpack.GetSettingMain('GmailChecker/LedsMap')
             self.ledMap = [int(n) for n in map.split(',')]
-            print self.ledMap
+            self.log(str(self.ledMap))
         except Exception, e:
-            print e
+            self.log(str(e))
             self.ledMap = self.defaultMap()     
             
     def settings(self,parent):
@@ -348,7 +348,7 @@ class GmailChecker(BasePlugin.BasePlugin):
         return 0; 
 
     def gmail_checker(self):
-        print "check"
+        self.log("check")
         timebegin = int(Lightpack.GetSettingMain('GmailChecker/TimeBegin'))
         if (timebegin == None):
             timebegin = 0
@@ -373,20 +373,20 @@ class GmailChecker(BasePlugin.BasePlugin):
             x,y=i.status('INBOX','(MESSAGES UNSEEN)')
             messages=int(re.search('MESSAGES\s+(\d+)',y[0]).group(1))
             cur_unseen=int(re.search('UNSEEN\s+(\d+)',y[0]).group(1))
-            print cur_unseen
+            self.log(str(cur_unseen))
             if ((self.unseen != cur_unseen) or (self.reminder == True)):
                 self.unseen = cur_unseen
                 self.reminder = False
-                if self.unseen > 0 :	
-                    print "unseen"
+                if self.unseen > 0 :
+                    self.log("unseen")
                     self.runAnimation()
                 else:
-                    print "no mail"
+                    self.log("no mail")
                     self.stopAnimation()
                 if (self.labelunseen):   
                     self.labelunseen.setText("Unread messages : "+str(self.unseen))
         except Exception, e:
-            print e
+            self.log(str(e))
             if (self.labelunseen):    
                 self.labelunseen.setText("Unread messages : error")
             return

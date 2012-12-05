@@ -14,14 +14,14 @@ class Animate(BasePlugin.BasePlugin):
         self.ledMap = [1,2,3,6,7,8,9,10,4,5]
         leds = Lightpack.GetCountLeds()
         random.seed()
-        print "init"
+        self.log( "init")
 
     def dispose(self):
         self.timeranim.stop()
         del self.timeranim
         Lightpack.SetStatus(self.sessionKey,self.on)
         Lightpack.UnLock(self.sessionKey)
-        print "dispose"
+        self.log( "dispose")
 
     def name(self):
         """ return the name of the plugin """
@@ -29,7 +29,7 @@ class Animate(BasePlugin.BasePlugin):
  
     def description(self):
         """ return a short description of the plugin """
-        return "Simple animation for Lightpack devices only"
+        return "Simple animation"
 
     def author(self):
         """ return the author of the plugin """
@@ -52,7 +52,7 @@ class Animate(BasePlugin.BasePlugin):
             Lightpack.SetFrame(self.sessionKey, self.lastFrame)
             self.i += 1
         except Exception, e:
-            print e
+            self.log(str( e))
     
     def runAnimation(self):
         try:
@@ -64,7 +64,7 @@ class Animate(BasePlugin.BasePlugin):
                 self.lastFrame.append(QColor(0,0,0))
             
         except Exception, e:
-            print e
+            self.log(str(e))
         
 
     def run(self):
@@ -72,12 +72,12 @@ class Animate(BasePlugin.BasePlugin):
         if Lightpack.Lock(self.sessionKey) :
             Lightpack.SetStatus(self.sessionKey,1)
             self.runAnimation()
-        print "run"
+        self.log("run")
         
     def stop(self):
         self.timeranim.stop()
         Lightpack.UnLock(self.sessionKey)
-        print "stop"
+        self.log("stop")
 
     def settings(self):
         """ default function """
