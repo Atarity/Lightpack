@@ -29,7 +29,7 @@ class Animate(BasePlugin.BasePlugin):
  
     def description(self):
         """ return a short description of the plugin """
-        return "Simple animation"
+        return "Simple animation for Lightpack devices only"
 
     def author(self):
         """ return the author of the plugin """
