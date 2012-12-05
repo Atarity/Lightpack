@@ -94,6 +94,9 @@ private:
 
     virtual void commitData(QSessionManager &sessionManager);
 
+public:
+    QMutex m_mutex;
+
 private:
     SettingsWindow *m_settingsWindow;
     ApiServer *m_apiServer;

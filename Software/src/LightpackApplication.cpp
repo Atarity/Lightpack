@@ -692,9 +692,11 @@ void LightpackApplication::requestBacklightStatus()
 }
 
 void LightpackApplication::handleConnectedDeviceChange(SupportedDevices::DeviceType deviceType) {
-    m_ledDeviceManager->recreateLedDevice(deviceType);
+    QMutexLocker locker(&m_mutex);
     int numOfLeds = Settings::getNumberOfLeds(deviceType);
     m_grabManager->setNumberOfLeds(numOfLeds);
     m_moodlampManager->setNumberOfLeds(numOfLeds);
+    m_ledDeviceManager->recreateLedDevice(deviceType);
     m_settingsWindow->handleConnectedDeviceChange(deviceType);
+    locker.unlock();
 }

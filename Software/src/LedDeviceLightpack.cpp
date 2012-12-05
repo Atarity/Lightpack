@@ -25,6 +25,7 @@
  */
 
 #include "LedDeviceLightpack.hpp"
+#include "LightpackApplication.hpp"
 
 #include <unistd.h>
 
@@ -69,6 +70,14 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
 #if 0
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 #endif
+    if (colors.count() > MaximumLedsCount) {
+        qWarning() << Q_FUNC_INFO << "data size is greater than max leds count";
+
+        // skip command with wrong data size
+        return;
+    }
+
+    QMutexLocker locker(&getLightpackApp()->m_mutex);
 
     resizeColorsBuffer(colors.count());
 
@@ -97,6 +106,8 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
         m_writeBuffer[buffIndex++] = (color.g & 0x000F);
         m_writeBuffer[buffIndex++] = (color.b & 0x000F);
     }
+
+    locker.unlock();
 
     bool ok = writeBufferToDeviceWithCheck(CMD_UPDATE_LEDS);
 
