@@ -36,12 +36,12 @@
 #define VER_FILEVERSION_STR         VERSION_STR "\0"
 #define VER_PRODUCTVERSION_STR      VER_FILEVERSION_STR
 
-#define VER_PRODUCTNAME_STR         "Lightpack"
-#define VER_COMPANYNAME_STR         "Lightpack"
+#define VER_PRODUCTNAME_STR         "Prismatik"
+#define VER_COMPANYNAME_STR         "Pixelkit LLC"
 #define VER_FILEDESCRIPTION_STR     "lightpack.googlecode.com"
-#define VER_INTERNALNAME_STR        "Lightpack"
-#define VER_LEGALCOPYRIGHT_STR      "Copyleft © 2012 Lightpack"
-#define VER_ORIGINALFILENAME_STR    "Lightpack_sw" VERSION_STR ".exe"
+#define VER_INTERNALNAME_STR        "Prismatik"
+#define VER_LEGALCOPYRIGHT_STR      "Copyleft (c) 2012 Prismatik"
+#define VER_ORIGINALFILENAME_STR    "Prismatik_sw" VERSION_STR ".exe"
 
 
 // Lightpack API version

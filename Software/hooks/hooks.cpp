@@ -303,7 +303,7 @@ HOOKSDLL_API BOOL APIENTRY DllMain(HINSTANCE hModule, DWORD fdwReason, LPVOID lp
         GetModuleFileNameA(hProc, executableName, sizeof (executableName));
         PathStripPathA(executableName);
 
-        hEventSrc = RegisterEventSourceW(NULL, L"Lightpack hooks");
+        hEventSrc = RegisterEventSourceW(NULL, L"Prismatik hooks");
 
         if (NULL == (hMutex = OpenMutexW(SYNCHRONIZE, false, D3D10GRABBER_MUTEX_MEM_NAME))) {
             reportLog(EVENTLOG_ERROR_TYPE, L"error occured while opening mutex 0x%x", GetLastError());

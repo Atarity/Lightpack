@@ -492,7 +492,7 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD fdwReason, LPVOID lpvReserved)
     {
         case DLL_PROCESS_ATTACH:
         {
-            hEventSrc = RegisterEventSourceW(NULL, L"Lightpack");
+            hEventSrc = RegisterEventSourceW(NULL, L"Prismatik");
             comObjectsCount = locksCount = 0;
 
             // We don't need to do any thread initialization

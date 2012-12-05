@@ -6,7 +6,7 @@
 # Project created by QtCreator 2010-04-28T19:08:13
 # -------------------------------------------------
 
-TARGET      = Lightpack
+TARGET      = Prismatik
 DESTDIR     = bin
 TEMPLATE    = app
 QT         += network

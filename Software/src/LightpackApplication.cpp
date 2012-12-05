@@ -52,8 +52,8 @@ LightpackApplication::LightpackApplication(int &argc, char **argv)
 
 void LightpackApplication::initializeAll(const QString & appDirPath)
 {
-    setApplicationName("Lightpack");
-    setOrganizationName("Lightpack");
+    setApplicationName("Prismatik");
+    setOrganizationName("Pixelkit LLC");
     setApplicationVersion(VERSION_STR);
     setQuitOnLastWindowClosed(false);
 
@@ -302,7 +302,7 @@ void LightpackApplication::processCommandLineArguments()
 void LightpackApplication::printHelpMessage() const
 {
     fprintf(stderr, "\n");
-    fprintf(stderr, "Project  : Lightpack \n");
+    fprintf(stderr, "Project  : Prismatik \n");
     fprintf(stderr, "Author   : Mike Shatohin \n");
     fprintf(stderr, "Version  : %s\n", VERSION_STR);
 #ifdef GIT_REVISION
@@ -337,9 +337,9 @@ void LightpackApplication::printVersionsSoftwareQtOS() const
     if (g_debugLevel > 0)
     {
 #       ifdef GIT_REVISION
-        qDebug() << "Lightpack:" << VERSION_STR << "rev." << GIT_REVISION;
+        qDebug() << "Prismatik:" << VERSION_STR << "rev." << GIT_REVISION;
 #       else
-        qDebug() << "Lightpack:" << VERSION_STR;
+        qDebug() << "Prismatik:" << VERSION_STR;
 #       endif
 
         qDebug() << "Build with Qt verison:" << QT_VERSION_STR;
@@ -393,7 +393,7 @@ void LightpackApplication::checkSystemTrayAvailability() const
 
     if (QSystemTrayIcon::isSystemTrayAvailable() == false)
     {
-        QMessageBox::critical(0, "Lightpack", "I couldn't detect any system tray on this system.");
+        QMessageBox::critical(0, "Prismatik", "I couldn't detect any system tray on this system.");
         qFatal("%s %s", Q_FUNC_INFO, "I couldn't detect any system tray on this system.");
     }
 }

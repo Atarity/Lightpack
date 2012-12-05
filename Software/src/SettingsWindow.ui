@@ -24,7 +24,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string notr="true">Lightpack</string>
+   <string notr="true">Prismatik</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../res/LightpackResources.qrc">

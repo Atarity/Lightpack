@@ -76,7 +76,7 @@ DEFINE_GUID(IID_ILibraryInjector  , 0x029587ad, 0x87f3, 0x4623, 0x94, 0x1f, 0xe3
 // CLSID_ILibraryInjector = {FC9D8F66-7B9A-47b7-8C5B-830BFF0E48C9}
 DEFINE_GUID(CLSID_ILibraryInjector, 0xfc9d8f66, 0x7b9a, 0x47b7, 0x8c, 0x5b, 0x83, 0x0b, 0xff, 0x0e, 0x48, 0xc9);
 
-const WCHAR lightpackHooksDllName[] = L"lightpack-hooks.dll";
+const WCHAR lightpackHooksDllName[] = L"prismatik-hooks.dll";
 
 using namespace std;
 

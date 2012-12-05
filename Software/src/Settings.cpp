@@ -218,7 +218,7 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     if (m_applicationDirPath.lastIndexOf('/') != m_applicationDirPath.length() - 1)
         m_applicationDirPath += "/";
 
-    m_mainConfig = new QSettings(m_applicationDirPath + "LightpackMain.conf", QSettings::IniFormat);
+    m_mainConfig = new QSettings(m_applicationDirPath + "main.conf", QSettings::IniFormat);
     m_mainConfig->setIniCodec("UTF-8");
 
     // TODO: if version < Main::Value::MainConfigVersion then clear lightpack main config file

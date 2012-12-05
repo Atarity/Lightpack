@@ -52,7 +52,7 @@ QString getApplicationDirectoryPath(const char * firstCmdArgument)
     QFileInfo fileInfo(firstCmdArgument);
     QString appDirPath = fileInfo.absoluteDir().absolutePath();
 
-    QString lightpackMainConfPath = appDirPath + "/LightpackMain.conf";
+    QString lightpackMainConfPath = appDirPath + "/main.conf";
 
     cout << lightpackMainConfPath.toStdString() << endl;
 
@@ -71,9 +71,9 @@ QString getApplicationDirectoryPath(const char * firstCmdArgument)
         cout << "Unportable version" << endl;
 
 #       ifdef Q_WS_WIN
-        appDirPath = QDir::homePath() + "/Lightpack";
+        appDirPath = QDir::homePath() + "/Prismatik";
 #       else
-        appDirPath = QDir::homePath() + "/.Lightpack";
+        appDirPath = QDir::homePath() + "/.Prismatik";
 #       endif
 
         QDir dir(appDirPath);
@@ -108,15 +108,15 @@ void openLogsFile(const QString & appDirPath)
         }
     }
 
-    QString logFilePath = logsDirPath + "/Lightpack.0.log";
+    QString logFilePath = logsDirPath + "/Prismatik.0.log";
 
-    QStringList logFiles = logsDir.entryList(QStringList("Lightpack.?.log"), QDir::Files, QDir::Name);
+    QStringList logFiles = logsDir.entryList(QStringList("Prismatik.?.log"), QDir::Files, QDir::Name);
 
     for (int i = logFiles.count() - 1; i >= 0; i--)
     {
         QString num = logFiles[i].split('.').at(1);
-        QString from = logsDirPath + "/" + QString("Lightpack.") + num + ".log";
-        QString to = logsDirPath + "/" + QString("Lightpack.") + QString::number(num.toInt() + 1) + ".log";
+        QString from = logsDirPath + "/" + QString("Prismatik.") + num + ".log";
+        QString to = logsDirPath + "/" + QString("Prismatik.") + QString::number(num.toInt() + 1) + ".log";
 
         if (i >= StoreLogsLaunches - 1)
         {
@@ -141,7 +141,7 @@ void openLogsFile(const QString & appDirPath)
         m_logStream.setDevice(logFile);
         m_logStream << endl;
         m_logStream << QDateTime::currentDateTime().date().toString("yyyy_MM_dd") << " ";
-        m_logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Lightpack sw" << VERSION_STR << endl;
+        m_logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Prismatik " << VERSION_STR << endl;
     } else {
         cerr << "Failed to open logs file: '" << logFilePath.toStdString() << "'. Exit." << endl;
         exit(LightpackApplication::OpenLogsFail_ErrorCode);

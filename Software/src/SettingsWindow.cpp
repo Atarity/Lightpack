@@ -327,7 +327,7 @@ void SettingsWindow::changeEvent(QEvent *e)
                 break;
             }
 
-        setWindowTitle(tr("Lightpack: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+        setWindowTitle(tr("Prismatik: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
         this->setupHotkeys();
 
@@ -493,7 +493,7 @@ int SettingsWindow::getLigtpackFirmwareVersionMajor()
 
     int majorVersion = (int)version;
 
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Lightpack major version:" << majorVersion;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Prismatik major version:" << majorVersion;
 
     return majorVersion;
 }
@@ -909,7 +909,7 @@ void SettingsWindow::processMessage(const QString &message)
 
     if (m_trayIcon==NULL) return;
     m_trayMessage = Tray_AnotherInstanceMessage;
-    m_trayIcon->showMessage(tr("Lightpack"), tr("Application already running"));
+    m_trayIcon->showMessage(tr("Prismatik"), tr("Application already running"));
 }
 
 // ----------------------------------------------------------------------------
@@ -1532,7 +1532,7 @@ void SettingsWindow::settingsProfileChanged_UpdateUI(const QString &profileName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    setWindowTitle(tr("Lightpack: %1").arg(profileName));
+    setWindowTitle(tr("Prismatik: %1").arg(profileName));
 
     if (m_backlightStatus == Backlight::StatusOn && m_trayIcon!=NULL)
         m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(profileName));
