@@ -16,7 +16,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
 
     def description(self):
         """ return a short description of the plugin """
-        return "Zone Calculator"
+        return "It calculates grabbing-zones size and location in semi-automatic mode. You can chose location rules from 2 types. With LED strips you can use data direction with <b>CW/CCW</b> radios and start point with <b>first widget index</b> spinbox.<br /><br /> This plugin can be useful in case of huge grab-zones allocation required with LED strips etc.<br /><br /> You can use <a href=\"http://sanya.tarhelyszolgaltato.eu/\">advanced web-based calculator</a> from our user Major Sandor."
 
     def author(self):
         """ return the author of the plugin """
@@ -36,18 +36,12 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         label.setText('Select preset')
         box.addWidget(label, 0, 1)
         self.comboPreset = QComboBox(parent)
-        self.comboPreset.addItem('a')
-        self.comboPreset.addItem('b')
-        self.comboPreset.addItem('c')
-        self.comboPreset.addItem('d')
-        self.comboPreset.addItem('e')
-        self.comboPreset.addItem('f')
-        self.comboPreset.addItem('pi')
-        self.comboPreset.addItem('r')
+        self.comboPreset.addItem('3-edges')
+        self.comboPreset.addItem('4-edges')
         box.addWidget(self.comboPreset,0,2)
 
         self.preview = QLabel(parent)
-        self.preview.setPixmap(QPixmap(self.resdir+"a.png"))
+        self.preview.setPixmap(QPixmap(self.resdir+"3-edges.png"))
         box.addWidget(self.preview,1,1,1,2)
 
         groupBox = QGroupBox(parent)
@@ -58,16 +52,16 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         box.addWidget(groupBox, 2, 1, 1, 2)
 
         self.rbDirCw = QRadioButton(parent)
-        self.rbDirCw.setText('Clock-wise')
+        self.rbDirCw.setText('Clockwise')
         self.rbDirCw.setChecked(True)
         groupVBox.addWidget(self.rbDirCw)
 
         self.rbDirCcw = QRadioButton(parent)
-        self.rbDirCcw.setText('Counter clock-wise')
+        self.rbDirCcw.setText('Counterclockwise')
         groupVBox.addWidget(self.rbDirCcw)
 
         label = QLabel(parent)
-        label.setText('Start count from:')
+        label.setText('First widget index:')
         box.addWidget(label, 3,1) 
 
         self.sbCountFrom = QSpinBox(parent)
@@ -108,21 +102,9 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         self.count = Lightpack.GetCountLeds()
         self.cube = 150
 
-        if preset=="a":
-            self.presetA()
-        if preset=="b":
-            self.presetB()
-        if preset=="c":
-            self.presetC()
-        if preset=="d":
-            self.presetD()
-        if preset=="e":
-            self.presetE()
-        if preset=="f":
-            self.presetF()
-        if preset=="pi":
+        if preset=="3-edges":
             self.presetP()
-        if preset=="r":
+        if preset=="4-edges":
             self.presetRM()
 
         for rect in self.list:
