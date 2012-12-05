@@ -1,5 +1,6 @@
 import BasePlugin
 import PythonQt
+import math
 from PythonQt.QtGui import *
 
 class ZoneCalculator(BasePlugin.BasePlugin):
@@ -122,7 +123,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         if preset=="pi":
             self.presetP()
         if preset=="r":
-            self.presetR()
+            self.presetRM()
 
         for rect in self.list:
             rect.setWidth(self.cube)
@@ -284,8 +285,8 @@ class ZoneCalculator(BasePlugin.BasePlugin):
         self.list[9].setY(0)
         return
 
-    def calcListIndex(self,i,listSize):
-        return (i + self.sbCountFrom.value - 1) % listSize
+    def calcListIndex(self,i):
+        return (i + self.sbCountFrom.value - 1) % self.count
 
     def presetP(self):
         self.log("PresetP begin")
@@ -312,7 +313,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
                 if i>=h+w-1:
                     sx = sw-x
                     sy = (i-h-w+2)*x
-                idx = self.calcListIndex(i,c)
+                idx = self.calcListIndex(i)
                 self.list[idx].setX(sx)
                 self.list[idx].setY(sy)
 
@@ -330,7 +331,7 @@ class ZoneCalculator(BasePlugin.BasePlugin):
                 if i>=h+w-1:
                     sx = 0
                     sy = (i-h-w+2)*x
-                idx = self.calcListIndex(i,c)
+                idx = self.calcListIndex(i)
                 self.list[idx].setX(sx)
                 self.list[idx].setY(sy)
 
@@ -347,26 +348,112 @@ class ZoneCalculator(BasePlugin.BasePlugin):
 
         self.cube = x
 
-        for i in range(c):
-            self.log(str(i))
-            sx = 0
-            sy = 0
-            if i<w/2-1:
-                sx = sh/2 - i*x
-                sy = sh-x
-            if i>=w/2-1 and i<w/2+h-1:
+        if self.rbDirCw.isChecked():
+            for i in range(c):
+                self.log(str(i))
                 sx = 0
-                sy = sh-(i-w/2+2)*x
-            if i>=w/2+h-1 and i<w/2+h+w-2:
-                sx = (i-(w/2+h-2))*x
                 sy = 0
-            if i>=w/2+h+w-2 and i<w/2+h+w+h-3:
-                sx = sw-x
-                sy = (i-(w/2+h+w-2)+1)*x
-            if i>=w/2+h+w+h-3:
-                sx = sw-x*(i-(w/2+h+w+h-4))
-                sy = sh-x
-            self.list[i].setX(sx)
-            self.list[i].setY(sy)
+                if i<w/2 :
+                    sx = sw/2 - (i+1)*x
+                    sy = sh-x
+                if i>=w/2 and i<w/2+h-1:
+                    sx = 0
+                    sy = sh-(i-w/2+2)*x
+                if i>=w/2+h-1 and i<w/2+h+w-1:
+                    sx = (i-(w/2+h-2))*x
+                    sy = 0
+                if i>=w/2+h+w-1 and i<w/2+h+h+w-2:
+                    sx = sw-x
+                    sy = (i-(w/2+h+w-1)+1)*x
+                if i>=w/2+h+h+w-2:
+                    sx = sw-x*(i-(w/2+h+w+h-4))
+                    sy = sh-x
+                idx = self.calcListIndex(i)
+                self.list[idx].setX(sx)
+                self.list[idx].setY(sy)
 
+        else:
+            for i in range(c):
+                self.log(str(i))
+                sx = 0
+                sy = 0
+                if i<w/2:
+                    sx = sw/2 + i*x
+                    sy = sh-x
+                if i>=w/2 and i<w/2+h-1:
+                    sx = sw-x
+                    sy = sh-(i-w/2+2)*x
+                if i>=w/2+h-1 and i<w/2+h+w-1:
+                    sx = sw - (i-(w/2+h-2))*x
+                    sy = 0
+                if i>=w/2+h+w-1 and i<w/2+h+w+h-2:
+                    sx = 0
+                    sy = (i-(w/2+h+w-2))*x
+                if i>=w/2+h+w+h-2:
+                    sx = x*(i-(w/2+h+w+h-4))
+                    sy = sh-x
+                idx = self.calcListIndex(i)
+                self.list[idx].setX(sx)
+                self.list[idx].setY(sy)
+
+        return
+
+    def rotate(self, x, y, dirCw):
+        dirMul = -1 if dirCw else 1
+        nx = int(round(x * math.cos(math.pi/2) + dirMul * y * math.sin(math.pi/2)))
+        ny = int(round(dirMul * (-x) * math.sin(math.pi/2) + y * math.cos(math.pi/2)))
+        return nx,ny
+
+    def presetRM(self):
+        sw = self.screen.width()
+        sh = self.screen.height()
+        c = Lightpack.GetCountLeds()
+        x = int(round((2*sh+2*sw)/float(c+6)))
+        w = sw/x
+        h = sh/x
+        if h < 3:
+            h = 3
+            w = c/2 - h + 2
+            x = sh/h
+        dirCw = self.rbDirCw.isChecked()
+
+        self.cube = x
+        oh = (sh - h*x)
+        ow = (sw - w*x)
+       
+        if dirCw:
+            ox = -1
+            oy = 0
+        else:
+            ox = 0
+            oy = 1
+
+        dx = int(round(ox * ( x + ow/float(w-1))))
+        dy = int(round(oy * ( x + oh/float(h-1))))
+
+        if dirCw:
+            sx = -dx
+            sy = sh-x
+        else:
+            sx = 0
+            sy = sh-x-dy 
+
+        eps = x/10
+
+        for i in range(c):
+            idx = self.calcListIndex(i)
+            self.log('i={}, idx={}'.format(i, idx))
+            if (dx > 0 and sx+dx+x >= sw+eps) or (dx < 0 and sx+dx < -eps) or (dy > 0 and sy+dy+x >= sh+eps) or (dy < 0 and sy+dy < -eps):
+                self.log('rotating ox={}, oy={}, sx={}, sy={}'.format(ox,oy,sx,sy))
+                (ox,oy) = self.rotate(ox, oy, dirCw)
+                self.log('rotated ox={}, oy={}, sx={}, sy={}'.format(ox,oy,sx,sy))
+
+            dx = int(round(ox * ( x + ow/float(w-1))))
+            dy = int(round(oy * ( x + oh/float(h-1))))
+            self.log('dx={}, dy={}, sx={}, sy={}'.format(dx,dy,sx,sy))
+            sx+=dx
+            sy+=dy
+
+            self.list[idx].setX(sx)
+            self.list[idx].setY(sy)
         return
