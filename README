@@ -1,4 +1,3 @@
-
     _/        _/            _/          _/                                    _/      
    _/              _/_/_/  _/_/_/    _/_/_/_/  _/_/_/      _/_/_/    _/_/_/  _/  _/   
   _/        _/  _/    _/  _/    _/    _/      _/    _/  _/    _/  _/        _/_/      
@@ -10,18 +9,21 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
                         lightpack.googlecode.com
 
 
-Lightpack is a very simple implementation of the backlight for any computer. 
-A couple of simple printed circuit boards, controller, led drivers, a few LEDs and lightpack is ready! 
+Lightpack is an fully open-source and simple implementation of the backlight for any computer. 
+A couple of homemade printed circuit boards, controller, LED drivers, a few LEDs and Lightpack is ready!
 
-Configuration program lives in the tray, without interfering with habitual work and watching movies.   
+Prismatik is an open-source software we buid to control Lightpack device. It grabs screen, analize picture,
+calculate resulting colors and provide soft and gentle lighting with Lightpack device. Moreother, you can 
+hadle another devices with Prismatik such as Adalight, Ardulight or even Alienware LightFX system.
+
+Configured program lives in the tray, without interfering with habitual work and watching movies.   
 
 Main features:
 
-  * Open source and hardware (GPLv3)
+  * Fully open-source under GPLv3 (hardware, software, firmware)
   * Cross-platform GUI (Qt)
-  * USB Human Interface Device (no need to install any drivers)
+  * USB HID (no need to install any drivers)
   * The device is simple to build (Do-It-Yourself) 
-
 
 Please let us know if you find mistakes, bugs or errors.
 
