@@ -31,9 +31,7 @@
     <normaloff>:/icons/settings.png</normaloff>:/icons/settings.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">QLabel {margin-top:0.4em}
-QCheckBox {margin-top:.5em; margin-bottom:.5em}
-QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
+   <string notr="true"/>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -245,7 +243,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -825,6 +823,9 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="styleSheet">
+        <string notr="true">QComboBox {margin-bottom:0.4em; padding-left: 0.3em}</string>
+       </property>
        <attribute name="title">
         <string>Device</string>
        </attribute>
@@ -1069,7 +1070,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
               </size>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <property name="documentMode">
               <bool>true</bool>
@@ -3009,7 +3010,7 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap resource="../res/LightpackResources.qrc">:/icons/Lightpack.png</pixmap>
+           <pixmap resource="../res/LightpackResources.qrc">:/icons/Prismatik-pixmap.png</pixmap>
           </property>
           <property name="scaledContents">
            <bool>false</bool>
@@ -3040,13 +3041,50 @@ QRadioButton {margin-top:.2em; margin-bottom:.2em}</string>
            </size>
           </property>
           <property name="text">
-           <string>&lt;h2&gt;Lightpack&lt;/h2&gt;</string>
+           <string>&lt;h2&gt;Prismatik&lt;/h2&gt;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
           <property name="margin">
            <number>0</number>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Open-source software from team made &lt;b&gt;Lightpack&lt;/b&gt; &amp;mdash; content-appropriate ambient lighting system with USB interface</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
           </property>
           <property name="textInteractionFlags">
            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
@@ -3091,40 +3129,6 @@ p, li { white-space: pre-wrap; }
           </property>
           <property name="openExternalLinks">
            <bool>true</bool>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_3">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Content-appropriate ambient lighting system with USB interface</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="wordWrap">
-           <bool>false</bool>
           </property>
           <property name="textInteractionFlags">
            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>

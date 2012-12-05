@@ -1,4 +1,4 @@
-IDI_ICON1               ICON    DISCARDABLE     "icons/Lightpack.ico"
+IDI_ICON1               ICON    DISCARDABLE     "icons/Prismatik.ico"
 
 #include <windows.h>
 #include "../src/version.h"
