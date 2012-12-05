@@ -1,4 +1,4 @@
-This is Lightpack project main description
+Lightpack project with Prismatik flavour
 ---------
 
 **Lightpack** is an fully open-source and simple hardware implementation of the backlight for any computer. It's USB content-driving ambient lighting system.
