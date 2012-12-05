@@ -82,7 +82,7 @@ You will need the following packages, usually all of them are in distro's reposi
 
 ####Build process:
 1. Download and unpack 4.8.3+ **Qt SDK** from www.qt-project.org
-2. Configure and build **Qt** with sequence of commands: `./con?gure -opensource -nomake examples -nomake tests —no-webkit`, then `make -j 4`, and `make install`. It will take some time
+2. Configure and build **Qt** with sequence of commands: `./configure -opensource -nomake examples -nomake tests ï¿½no-webkit`, then `make -j 4`, and `make install`. It will take some time
 3. Building **PythonQt**: go to `/Software/PythonQt` in repo master branch and sequently run `qmake` and `make all`
 4. Copy libs we build at step 3 from folder **"lib"** into `/usr/lib/`
 5. Build **Prismatik** project 
