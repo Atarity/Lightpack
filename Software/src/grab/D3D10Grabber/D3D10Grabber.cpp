@@ -550,6 +550,7 @@ QList<DWORD> * getDxProcessesIDs(QList<DWORD> * processes) {
     DWORD cbNeeded;
     DWORD cProcesses;
     char debug_buf[255];
+    WCHAR executableName[MAX_PATH];
     unsigned int i;
 
     //     Get the list of process identifiers.
@@ -573,6 +574,17 @@ QList<DWORD> * getDxProcessesIDs(QList<DWORD> * processes) {
                                     FALSE, aProcesses[i] );
             if (NULL == hProcess)
                 goto nextProcess;
+
+            GetModuleFileNameExW(hProcess, 0, executableName, sizeof (executableName));
+            PathStripPathW(executableName);
+
+            ::WideCharToMultiByte(CP_ACP, 0, executableName, -1, debug_buf, 255, NULL, NULL);
+            DEBUG_MID_LEVEL << Q_FUNC_INFO << debug_buf;
+
+            if (!wcsicmp(executableName, L"dwm.exe")) {
+                DEBUG_MID_LEVEL << Q_FUNC_INFO << "skipping dwm.exe";
+                goto nextProcess;
+            }
 
             // Get a list of all the modules in this process.
 

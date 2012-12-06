@@ -241,8 +241,6 @@ HRESULT WINAPI MyPresent(IDXGISwapChain * sc, UINT b, UINT c) {
 
     if (!desc.Windowed) {
         ID3D10Texture2D* pD3D10BackBuffer;
-        //        GUID iid_texture2d = {0x9B7E4C04, 0x342C, 0x4106,
-        //            {0xA1, 0x9F, 0x4F, 0x27, 0x04, 0xF6, 0x89, 0xF0}};
         HRESULT hr = sc->GetBuffer(0, IID_ID3D10Texture2D, reinterpret_cast<LPVOID*> (&pD3D10BackBuffer));
 //        reportLog(EVENTLOG_INFORMATION_TYPE, L"sc->GetBuffer returned %x", hr);
 
@@ -333,7 +331,6 @@ HOOKSDLL_API BOOL APIENTRY DllMain(HINSTANCE hModule, DWORD fdwReason, LPVOID lp
         
         UnmapViewOfFile(pMemMapReadOnly);
 
-        //        __asm__("int $3");
         memDesc.frameId = 0;
         HANDLE process = GetCurrentProcess();
         reportLog(EVENTLOG_INFORMATION_TYPE, L"Current process 0x%x", process);

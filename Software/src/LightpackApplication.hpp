@@ -76,7 +76,7 @@ private slots:
     void setColoredLedWidget(bool colored);
     void getConsole();
     void consoleClosing();
-    void handleConnectedDeviceChange(SupportedDevices::DeviceType);
+    void handleConnectedDeviceChange(const SupportedDevices::DeviceType);
     void onFocusChanged(QWidget *, QWidget *);
 
 private:

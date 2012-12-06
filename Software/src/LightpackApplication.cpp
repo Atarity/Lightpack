@@ -443,7 +443,7 @@ void LightpackApplication::startLedDeviceManager()
     m_ledDeviceManager = new LedDeviceManager();
     m_LedDeviceManagerThread = new QThread();
 
-    connect(settings(), SIGNAL(connectedDeviceChanged(const SupportedDevices::DeviceType)), this, SLOT(handleConnectedDeviceChange(SupportedDevices::DeviceType)), Qt::DirectConnection);
+    connect(settings(), SIGNAL(connectedDeviceChanged(const SupportedDevices::DeviceType)), this, SLOT(handleConnectedDeviceChange(const SupportedDevices::DeviceType)), Qt::DirectConnection);
 //    connect(settings(), SIGNAL(adalightSerialPortNameChanged(QString)),               m_ledDeviceManager, SLOT(recreateLedDevice()), Qt::DirectConnection);
 //    connect(settings(), SIGNAL(adalightSerialPortBaudRateChanged(QString)),           m_ledDeviceManager, SLOT(recreateLedDevice()), Qt::DirectConnection);
 //    connect(m_settingsWindow, SIGNAL(updateLedsColors(const QList<QRgb> &)),          m_ledDeviceManager, SLOT(setColors(QList<QRgb>)), Qt::QueuedConnection);
@@ -691,7 +691,7 @@ void LightpackApplication::requestBacklightStatus()
     m_pluginInterface->resultBacklightStatus(m_backlightStatus);
 }
 
-void LightpackApplication::handleConnectedDeviceChange(SupportedDevices::DeviceType deviceType) {
+void LightpackApplication::handleConnectedDeviceChange(const SupportedDevices::DeviceType deviceType) {
     QMutexLocker locker(&m_mutex);
     int numOfLeds = Settings::getNumberOfLeds(deviceType);
     m_grabManager->setNumberOfLeds(numOfLeds);
