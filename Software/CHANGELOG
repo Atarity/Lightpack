@@ -23,7 +23,7 @@ November 22, 2012
 * Grabbing in DirectX 10/11 applications
 * New option "Color sequence" for SPI-based devices
 * Up to 255 grab-zones
-* HSV to HSL
+* HSL to HSV
 * Scene luminosity level option group
 * Improved hotkeys
 * Many minor fixes and improvements
