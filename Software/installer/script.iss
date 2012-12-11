@@ -48,7 +48,8 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 Name: "startupicon"; Description: "{cm:CreateStartupIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "content/Prismatik.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/below_win7/Prismatik.exe"; DestDir: "{app}"; OnlyBelowVersion: 6.1.7600; Flags: ignoreversion
+Source: "content/Prismatik.exe"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: ignoreversion
 Source: "Prismatik.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/PythonQt.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/PythonQt_QtAll.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -71,8 +72,8 @@ Source: "content/_tkinter.pyd"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/bz2.pyd"; DestDir: "{app}"; Flags: ignoreversion
 Source: "gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/libraryinjector.dll"; DestDir: "{app}"; Flags: 32bit regserver ignoreversion
-Source: "content/prismatik-hooks.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/libraryinjector.dll"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: 32bit regserver ignoreversion
+Source: "content/prismatik-hooks.dll"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: ignoreversion
 Source: "content/mingwm10.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/python27.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/python27.zip"; DestDir: "{app}"; Flags: ignoreversion
