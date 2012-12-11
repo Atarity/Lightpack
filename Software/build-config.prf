@@ -24,3 +24,6 @@ include( build-vars.prf )
             DEBUG_EXT =
         }
     }
+
+HEADERS += \
+    ../common/BufferFormat.h

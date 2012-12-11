@@ -6,7 +6,8 @@
 
 QT       -= core gui
 
-TARGET = libraryinjector
+DESTDIR  = bin
+TARGET   = libraryinjector
 TEMPLATE = lib
 LIBS += -luuid -lwsock32 -lole32 -ladvapi32
 QMAKE_LFLAGS +=-Wl,--kill-at

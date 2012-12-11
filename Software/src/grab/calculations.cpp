@@ -66,6 +66,32 @@ namespace Grab {
                 }
                 break;
 
+            case BufferFormatRgba:
+                for(int currentY = 0; currentY < rect.height(); currentY++) {
+                    int index = pitch * (rect.y()+currentY) + rect.x()*bytesPerPixel;
+                    for(int currentX = 0; currentX < rect.width(); currentX += 4) {
+                        b += buffer[index+1] + buffer[index + 5] + buffer[index + 9 ] + buffer[index + 13];
+                        g += buffer[index+2] + buffer[index + 6] + buffer[index + 10] + buffer[index + 14];
+                        r += buffer[index+3] + buffer[index + 7] + buffer[index + 11] + buffer[index + 15];
+                        count += 4;
+                        index += bytesPerPixel * 4;
+                    }
+
+                }
+                break;
+            case BufferFormatBgra:
+                for(int currentY = 0; currentY < rect.height(); currentY++) {
+                    int index = pitch * (rect.y()+currentY) + rect.x()*bytesPerPixel;
+                    for(int currentX = 0; currentX < rect.width(); currentX += 4) {
+                        r += buffer[index+1] + buffer[index + 5] + buffer[index + 9 ] + buffer[index + 13];
+                        g += buffer[index+2] + buffer[index + 6] + buffer[index + 10] + buffer[index + 14];
+                        b += buffer[index+3] + buffer[index + 7] + buffer[index + 11] + buffer[index + 15];
+                        count += 4;
+                        index += bytesPerPixel * 4;
+                    }
+
+                }
+                break;
             default:
                 return -1;
                 break;

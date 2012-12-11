@@ -33,6 +33,7 @@
 #include <tlhelp32.h>
 #define WINAPI_INLINE WINAPI
 #define DXGI_PRESENT_FUNC_ORD 8
+#define D3D9_SCPRESENT_FUNC_ORD 3
 #define D3D9_PRESENT_FUNC_ORD 17
 typedef uint8_t UINT8;
 
@@ -56,17 +57,12 @@ typedef uint8_t UINT8;
 #include"D3D10_1.h"
 #include"D3D10.h"
 #include "d3d9.h"
-//#include"D3DX10tex.h"
-
 #include"debug.h"
 #include"math.h"
 #include <qapplication.h>
 #include "LightpackApplication.hpp"
-#include "objidl.h"
 #include "sddl.h"
 #include "psapi.h"
-#include "winsock2.h"
-#include "ws2tcpip.h"
 #include "shlwapi.h"
 #include "initguid.h"
 #include "calculations.hpp"
@@ -89,9 +85,13 @@ bool D3D10Grabber::m_isInited = false;
 bool D3D10Grabber::m_isStarted = false;
 ILibraryInjector * D3D10Grabber::m_libraryInjector = NULL;
 WCHAR D3D10Grabber::m_hooksLibPath[300];
+WCHAR D3D10Grabber::m_systemrootPath[300];
 bool D3D10Grabber::m_isFrameGrabbedDuringLastSecond = false;
 
 UINT D3D10Grabber::m_lastFrameId;
+
+LPWSTR pwstrExcludeProcesses[]={L"skype.exe", L"chrome.exe", L"firefox.exe"};
+#define SIZEOF_ARRAY(a) (sizeof(a)/sizeof(a[0]))
 
 /*!
   We are not allowed to create DXGIFactory inside of Dll, so determine SwapChain->Present vtbl location here.
@@ -101,11 +101,14 @@ UINT D3D10Grabber::m_lastFrameId;
 */
 UINT GetDxgiPresentOffset(HWND hWnd);
 
+UINT GetD3D9PresentOffset(HWND hWnd);
+UINT GetD3D9SCPresentOffset(HWND hWnd);
+
 BOOL SetPrivilege(HANDLE hToken, LPCTSTR szPrivName, BOOL fEnable);
 
 BOOL AcquirePrivileges();
 
-QList<DWORD> * getDxProcessesIDs(QList<DWORD> * processes);
+QList<DWORD> * getDxProcessesIDs(QList<DWORD> * processes, const WCHAR *wstrSystemRootPath);
 
 PVOID BuildRestrictedSD(PSECURITY_DESCRIPTOR pSD);
 
@@ -114,7 +117,7 @@ PVOID BuildRestrictedSD(PSECURITY_DESCRIPTOR pSD);
 VOID FreeRestrictedSD(PVOID ptr);
 
 D3D10GrabberWorker::D3D10GrabberWorker(QObject *parent, LPSECURITY_ATTRIBUTES lpsa) : QObject(parent) {
-    if (NULL == (m_frameGrabbedEvent = CreateEventW(lpsa, false, false, D3D10GRABBER_FRAMEGRABBED_EVENT_NAME))) {
+    if (NULL == (m_frameGrabbedEvent = CreateEventW(lpsa, false, false, HOOKSGRABBER_FRAMEGRABBED_EVENT_NAME))) {
         qCritical() << Q_FUNC_INFO << "unable to create frameGrabbedEvent";
     }
 }
@@ -146,37 +149,43 @@ bool D3D10Grabber::initIPC(LPSECURITY_ATTRIBUTES lpsa) {
     sockaddr_in localhost;
     in_addr adr;
 
-    m_sharedMem = CreateFileMappingW(INVALID_HANDLE_VALUE, lpsa, PAGE_READWRITE, 0, D3D10GRABBER_SHARED_MEM_SIZE, D3D10GRABBER_SHARED_MEM_NAME );
+    m_sharedMem = CreateFileMappingW(INVALID_HANDLE_VALUE, lpsa, PAGE_READWRITE, 0, HOOKSGRABBER_SHARED_MEM_SIZE, HOOKSGRABBER_SHARED_MEM_NAME );
     if(!m_sharedMem) {
-        m_sharedMem = OpenFileMappingW(GENERIC_READ | GENERIC_WRITE, false, D3D10GRABBER_SHARED_MEM_NAME);
+        m_sharedMem = OpenFileMappingW(GENERIC_READ | GENERIC_WRITE, false, HOOKSGRABBER_SHARED_MEM_NAME);
         if(!m_sharedMem) {
             qCritical() << Q_FUNC_INFO << "couldn't create memory mapped file. error code " << GetLastError();
             return false;
         }
     }
 
-    m_memMap = MapViewOfFile(m_sharedMem, FILE_MAP_READ, 0, 0, D3D10GRABBER_SHARED_MEM_SIZE );
+    m_memMap = MapViewOfFile(m_sharedMem, FILE_MAP_READ, 0, 0, HOOKSGRABBER_SHARED_MEM_SIZE );
     if(!m_memMap) {
         qCritical() << Q_FUNC_INFO << "couldn't create map view. error code " << GetLastError();
         freeIPC();
         return false;
     }
 
-    PVOID memMap = MapViewOfFile(m_sharedMem, FILE_MAP_WRITE, 0, 0, D3D10GRABBER_SHARED_MEM_SIZE );
+    PVOID memMap = MapViewOfFile(m_sharedMem, FILE_MAP_WRITE, 0, 0, HOOKSGRABBER_SHARED_MEM_SIZE );
     if(!memMap) {
         qWarning() << Q_FUNC_INFO << "couldn't clear shared memory. error code " << GetLastError();
     } else {
         memset(&m_memDesc, 0, sizeof(m_memDesc));
-        m_memDesc.frameId = D3D10GRABBER_BLANK_FRAME_ID;
+        m_memDesc.frameId = HOOKSGRABBER_BLANK_FRAME_ID;
 
+        m_memDesc.d3d9PresentFuncOffset = GetD3D9PresentOffset(getLightpackApp()->getMainWindowHandle());
+        m_memDesc.d3d9SCPresentFuncOffset = GetD3D9SCPresentOffset(getLightpackApp()->getMainWindowHandle());
         m_memDesc.dxgiPresentFuncOffset = GetDxgiPresentOffset(getLightpackApp()->getMainWindowHandle());
+
+        //converting logLevel from our app's level to EventLog's level
+        m_memDesc.logLevel =  Debug::HighLevel - g_debugLevel;
+
         memcpy(memMap, &m_memDesc, sizeof(m_memDesc));
         UnmapViewOfFile(memMap);
     }
 
-    m_mutex = CreateMutexW(lpsa, false, D3D10GRABBER_MUTEX_MEM_NAME);
+    m_mutex = CreateMutexW(lpsa, false, HOOKSGRABBER_MUTEX_MEM_NAME);
     if(!m_mutex) {
-        m_mutex = OpenMutexW(SYNCHRONIZE, false, D3D10GRABBER_MUTEX_MEM_NAME);
+        m_mutex = OpenMutexW(SYNCHRONIZE, false, HOOKSGRABBER_MUTEX_MEM_NAME);
         if(!m_mutex) {
             qCritical() << Q_FUNC_INFO << "couldn't create mutex. error code " << GetLastError();
             freeIPC();
@@ -198,6 +207,8 @@ void D3D10Grabber::init(void) {
         GetCurrentDirectoryW(sizeof(m_hooksLibPath)/2, m_hooksLibPath);
         wcscat(m_hooksLibPath, L"\\");
         wcscat(m_hooksLibPath, lightpackHooksDllName);
+
+        GetWindowsDirectoryW(m_systemrootPath, sizeof(m_systemrootPath));
 
         hr = CoInitialize(0);
         //        hr = InitComSecurity();
@@ -288,7 +299,7 @@ GrabResult D3D10Grabber::_grab() {
     }
     GrabResult result;
     memcpy(&m_memDesc, m_memMap, sizeof(m_memDesc));
-    if( m_memDesc.frameId != D3D10GRABBER_BLANK_FRAME_ID) {
+    if( m_memDesc.frameId != HOOKSGRABBER_BLANK_FRAME_ID) {
         if( m_memDesc.frameId != m_lastFrameId) {
             m_lastFrameId = m_memDesc.frameId;
             m_grabResult->clear();
@@ -373,7 +384,7 @@ void D3D10Grabber::updateGrabMonitor(QWidget *widget) {
 void D3D10Grabber::infectCleanDxProcesses() {
     if (m_isInited) {
         QList<DWORD> processes = QList<DWORD>();
-        getDxProcessesIDs(&processes);
+        getDxProcessesIDs(&processes, m_systemrootPath);
         foreach (DWORD procId, processes) {
             m_libraryInjector->Inject(procId, m_hooksLibPath);
         }
@@ -425,9 +436,9 @@ UINT GetDxgiPresentOffset(HWND hwnd) {
         return NULL;
     }
 
-    intptr_t *pvtbl = reinterpret_cast<intptr_t *>(pSc);
 
-    intptr_t presentFuncPtr = *pvtbl + sizeof(void *) * DXGI_PRESENT_FUNC_ORD;
+    uintptr_t * pvtbl = reinterpret_cast<uintptr_t*>(pSc);
+    uintptr_t presentFuncPtr = *pvtbl + sizeof(void *)*DXGI_PRESENT_FUNC_ORD;
 
     char buf[100];
     sprintf(buf, "presentFuncPtr=%x", presentFuncPtr);
@@ -448,11 +459,150 @@ UINT GetDxgiPresentOffset(HWND hwnd) {
     return presentFuncOffset;
 }
 
+typedef IDirect3D9 * WINAPI (*Direct3DCreate9Func)(UINT SDKVersion);
+UINT GetD3D9PresentOffset(HWND hWnd){
+    IDirect3D9 *pD3D = NULL;
+    HINSTANCE hD3d9 = LoadLibrary(L"d3d9.dll");
+    Direct3DCreate9Func createDev = reinterpret_cast<Direct3DCreate9Func>(GetProcAddress(hD3d9, "Direct3DCreate9"));
+    pD3D = createDev(D3D_SDK_VERSION);
+    if ( !pD3D)
+    {
+        qCritical() << "Test_DirectX9 Direct3DCreate9(%d) call FAILED" << D3D_SDK_VERSION ;
+        return NULL;
+    }
+
+    // step 3: Get IDirect3DDevice9
+    D3DDISPLAYMODE d3ddm;
+    HRESULT hRes = pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm );
+    if (FAILED(hRes))
+    {
+        qCritical() << QString("Test_DirectX9 GetAdapterDisplayMode failed. 0x%x").arg( hRes);
+        return NULL;
+    }
+
+    D3DPRESENT_PARAMETERS d3dpp;
+    ZeroMemory( &d3dpp, sizeof(d3dpp));
+    d3dpp.Windowed = true;
+    d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+    d3dpp.BackBufferFormat = d3ddm.Format;
+
+    IDirect3DDevice9 *pD3DDevice;
+    hRes = pD3D->CreateDevice(
+        D3DADAPTER_DEFAULT,
+        D3DDEVTYPE_HAL,	// the device we suppose any app would be using.
+        hWnd,
+        D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_DISABLE_DRIVER_MANAGEMENT,
+        &d3dpp, &pD3DDevice);
+    if (FAILED(hRes))
+    {
+        qCritical() << QString("Test_DirectX9 CreateDevice failed. 0x%x").arg(hRes);
+        return NULL;
+    }
+
+    IDirect3DSwapChain9 *pD3DSwapChain;
+    hRes = pD3DDevice->GetSwapChain( 0, &pD3DSwapChain);
+    if (FAILED(hRes))
+    {
+        qCritical() << QString("Test_DirectX9 GetSwapChain failed. 0x%x").arg(hRes);
+        return NULL;
+    }
+    else
+    {
+        uintptr_t * pvtbl = *((uintptr_t**)(pD3DDevice));
+        uintptr_t presentFuncPtr = pvtbl[D3D9_PRESENT_FUNC_ORD];
+        char buf[100];
+        sprintf(buf, "presentFuncPtr=%x", presentFuncPtr);
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << buf;
+
+        UINT presentFuncOffset = (presentFuncPtr - reinterpret_cast<UINT>(hD3d9));
+
+        sprintf(buf, "presentFuncOffset=%x", presentFuncOffset);
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << buf;
+
+
+        pD3DSwapChain->Release();
+        pD3DDevice->Release();
+        pD3D->Release();
+
+        return presentFuncOffset;
+    }
+}
+
+UINT GetD3D9SCPresentOffset(HWND hWnd){
+    IDirect3D9 *pD3D = NULL;
+    HINSTANCE hD3d9 = LoadLibrary(L"d3d9.dll");
+    Direct3DCreate9Func createDev = reinterpret_cast<Direct3DCreate9Func>(GetProcAddress(hD3d9, "Direct3DCreate9"));
+    pD3D = createDev(D3D_SDK_VERSION);
+    if ( !pD3D)
+    {
+        qCritical() << "Test_DirectX9 Direct3DCreate9(%d) call FAILED" << D3D_SDK_VERSION ;
+        return NULL;
+    }
+
+    // step 3: Get IDirect3DDevice9
+    D3DDISPLAYMODE d3ddm;
+    HRESULT hRes = pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm );
+    if (FAILED(hRes))
+    {
+        qCritical() << QString("Test_DirectX9 GetAdapterDisplayMode failed. 0x%x").arg( hRes);
+        return NULL;
+    }
+
+    D3DPRESENT_PARAMETERS d3dpp;
+    ZeroMemory( &d3dpp, sizeof(d3dpp));
+    d3dpp.Windowed = true;
+    d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+    d3dpp.BackBufferFormat = d3ddm.Format;
+
+    IDirect3DDevice9 *pD3DDevice;
+    hRes = pD3D->CreateDevice(
+        D3DADAPTER_DEFAULT,
+        D3DDEVTYPE_HAL,	// the device we suppose any app would be using.
+        hWnd,
+        D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_DISABLE_DRIVER_MANAGEMENT,
+        &d3dpp, &pD3DDevice);
+    if (FAILED(hRes))
+    {
+        qCritical() << QString("Test_DirectX9 CreateDevice failed. 0x%x").arg(hRes);
+        return NULL;
+    }
+
+    IDirect3DSwapChain9 *pD3DSwapChain;
+    hRes = pD3DDevice->GetSwapChain( 0, &pD3DSwapChain);
+    if (FAILED(hRes))
+    {
+        qCritical() << QString("Test_DirectX9 GetSwapChain failed. 0x%x").arg(hRes);
+        return NULL;
+    }
+    else
+    {
+        uintptr_t * pvtbl = *((uintptr_t**)(pD3DSwapChain));
+        uintptr_t presentFuncPtr = pvtbl[D3D9_SCPRESENT_FUNC_ORD];
+        char buf[100];
+        sprintf(buf, "presentFuncPtr=%x", presentFuncPtr);
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << buf;
+
+        void *pD3d9 = reinterpret_cast<void *>(hD3d9);
+        UINT presentFuncOffset = (presentFuncPtr - reinterpret_cast<UINT>(pD3d9));
+
+        sprintf(buf, "presentFuncOffset=%x", presentFuncOffset);
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << buf;
+
+
+        pD3DSwapChain->Release();
+        pD3DDevice->Release();
+        pD3D->Release();
+
+        return presentFuncOffset;
+    }
+}
+
+
 QRgb D3D10Grabber::getColor(QRect &widgetRect)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << Debug::toString(widgetRect);
 
-    unsigned char * pbPixelsBuff = reinterpret_cast<unsigned char *>(m_memMap) + sizeof(D3D10GRABBER_SHARED_MEM_DESC);
+    unsigned char * pbPixelsBuff = reinterpret_cast<unsigned char *>(m_memMap) + sizeof(HOOKSGRABBER_SHARED_MEM_DESC);
 
     if (pbPixelsBuff == NULL)
     {
@@ -489,7 +639,7 @@ QRgb D3D10Grabber::getColor(QRect &widgetRect)
 
     QRgb result;
 
-    if (Calculations::calculateAvgColor(&result, pbPixelsBuff, BufferFormatAbgr, m_memDesc.rowPitch, preparedRect) == 0) {
+    if (Calculations::calculateAvgColor(&result, pbPixelsBuff, m_memDesc.format, m_memDesc.rowPitch, preparedRect) == 0) {
         return result;
     } else {
         return qRgb(0,0,0);
@@ -543,7 +693,7 @@ BOOL AcquirePrivileges() {
     return FALSE;
 }
 
-QList<DWORD> * getDxProcessesIDs(QList<DWORD> * processes) {
+QList<DWORD> * getDxProcessesIDs(QList<DWORD> * processes, const WCHAR *wstrSystemRootPath) {
 
     DWORD aProcesses[1024];
     HMODULE hMods[1024];
@@ -576,30 +726,36 @@ QList<DWORD> * getDxProcessesIDs(QList<DWORD> * processes) {
                 goto nextProcess;
 
             GetModuleFileNameExW(hProcess, 0, executableName, sizeof (executableName));
+
+            if (wcsstr(executableName, wstrSystemRootPath) != NULL) {
+                goto nextProcess;
+            }
+
             PathStripPathW(executableName);
 
             ::WideCharToMultiByte(CP_ACP, 0, executableName, -1, debug_buf, 255, NULL, NULL);
             DEBUG_MID_LEVEL << Q_FUNC_INFO << debug_buf;
 
-            if (!wcsicmp(executableName, L"dwm.exe")) {
-                DEBUG_MID_LEVEL << Q_FUNC_INFO << "skipping dwm.exe";
-                goto nextProcess;
+            for (int k=0; k < SIZEOF_ARRAY(pwstrExcludeProcesses); k++) {
+                if (wcsicmp(executableName, pwstrExcludeProcesses[k])== 0) {
+                    DEBUG_MID_LEVEL << Q_FUNC_INFO << "skipping " << pwstrExcludeProcesses;
+                    goto nextProcess;
+                }
             }
 
             // Get a list of all the modules in this process.
 
             if( EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded))
             {
-                bool isDxgiPresent = false;
+                bool isDXPresent = false;
                 for ( int j = 0; j < (cbNeeded / sizeof(HMODULE)); j++ )
                 {
                     TCHAR szModName[MAX_PATH];
 
-                    // Get the full path to the module's file.
-
                     if ( GetModuleFileNameEx( hProcess, hMods[j], szModName,
                                               sizeof(szModName) / sizeof(TCHAR)))
                     {
+
                         PathStripPathW(szModName);
                         ::WideCharToMultiByte(CP_ACP, 0, szModName, -1, debug_buf, 255, NULL, NULL);
                         DEBUG_HIGH_LEVEL << Q_FUNC_INFO << debug_buf;
@@ -607,12 +763,13 @@ QList<DWORD> * getDxProcessesIDs(QList<DWORD> * processes) {
                         if(wcsicmp(szModName, lightpackHooksDllName) == 0) {
                             goto nextProcess;
                         } else {
-                            if (wcsicmp(szModName, L"dxgi.dll") == 0)
-                                isDxgiPresent = true;
+                            if (wcsicmp(szModName, L"d3d9.dll") == 0 ||
+                                wcsicmp(szModName, L"dxgi.dll") == 0 )
+                                isDXPresent = true;
                         }
                     }
                 }
-                if (isDxgiPresent)
+                if (isDXPresent)
                     processes->append(aProcesses[i]);
 
             }

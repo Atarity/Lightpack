@@ -68,8 +68,6 @@ public slots:
     virtual void setGrabInterval(int msec);
     virtual void grab();
 
-//    void setFallbackGrabber(GrabberBase * grabber);
-
 private slots:
     void infectCleanDxProcesses(void);
     void handleIfFrameGrabbed();
@@ -87,13 +85,14 @@ private:
     D3D10GrabberWorker *m_worker;
     QThread * m_workerThread;
 //    GrabberBase * m_fallbackGrabber;
-    D3D10GRABBER_SHARED_MEM_DESC m_memDesc;
+    HOOKSGRABBER_SHARED_MEM_DESC m_memDesc;
     static UINT m_lastFrameId;
     static MONITORINFO m_monitorInfo;
     static QTimer * m_processesScanAndInfectTimer;
     static bool m_isInited;
     static ILibraryInjector * m_libraryInjector;
     static WCHAR m_hooksLibPath[300];
+    static WCHAR m_systemrootPath[300];
     static bool m_isFrameGrabbedDuringLastSecond;
 };
 

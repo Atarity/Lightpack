@@ -59,10 +59,6 @@ enum Mode {
 
 namespace Grab
 {
-enum BufferFormat {
-    BufferFormatArgb,
-    BufferFormatAbgr
-};
 
 enum GrabberType {
     GrabberTypeQt,

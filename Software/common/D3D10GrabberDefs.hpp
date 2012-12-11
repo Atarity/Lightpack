@@ -26,33 +26,28 @@
 
 #pragma once
 
-#define D3D10GRABBER_SHARED_MEM_NAME L"Lightpack.D3D10Grabber.SharedMem"
+#include "BufferFormat.h"
+
+#define HOOKSGRABBER_SHARED_MEM_NAME L"Lightpack.D3D10Grabber.SharedMem"
 #define MB (1024*1024)
-#define D3D10GRABBER_SHARED_MEM_SIZE (50*MB)
-#define D3D10GRABBER_MUTEX_MEM_NAME L"Lightpack.D3D10Grabber.Mutex"
-#define D3D10GRABBER_FRAMEGRABBED_EVENT_NAME L"Lightpack.D3D10Grabber.Event.FrameGrabbed"
-#define D3D10GRABBER_PIPE_NAME L"\\\\.\\pipe\\Lightpack.D3D10Grabber"
+#define HOOKSGRABBER_SHARED_MEM_SIZE (50*MB)
+#define HOOKSGRABBER_MUTEX_MEM_NAME L"Lightpack.D3D10Grabber.Mutex"
+#define HOOKSGRABBER_FRAMEGRABBED_EVENT_NAME L"Lightpack.D3D10Grabber.Event.FrameGrabbed"
+#define HOOKSGRABBER_PIPE_NAME L"\\\\.\\pipe\\Lightpack.D3D10Grabber"
 
-#define D3D10GRABBER_BLANK_FRAME_ID 0xffffffff
+#define HOOKSGRABBER_BLANK_FRAME_ID 0xffffffff
 
-struct D3D10GRABBER_SHARED_MEM_DESC {
+struct HOOKSGRABBER_SHARED_MEM_DESC {
+    UINT d3d9PresentFuncOffset;
+    UINT d3d9SCPresentFuncOffset;
     UINT dxgiPresentFuncOffset;
     UINT width;
     UINT height;
     UINT rowPitch;
+    BufferFormat format;
     UINT frameId;
-    UINT verboseDebug;
+    UINT logLevel;
 };
 
-enum D3D10GRABBER_PIPE_MSG_TYPE {
-    D3D10GRABBER_PIPE_MSG_QUIT,
-    D3D10GRABBER_PIPE_MSG_FRAMEGRABBED
-};
 
-struct D3D10GRABBER_PIPE_MSG {
-    D3D10GRABBER_PIPE_MSG_TYPE  msgType;
-    UINT                        from;
-    UINT                        to;
-};
-
-#define D3D10GRABBER_SHARED_MEM_DATA_SIZE (D3D10GRABBER_SHARED_MEM_SIZE - sizeof(D3D10GRABBER_SHARED_MEM_DESC))
+#define HOOKSGRABBER_SHARED_MEM_DATA_SIZE (HOOKSGRABBER_SHARED_MEM_SIZE - sizeof(HOOKSGRABBER_SHARED_MEM_DESC))

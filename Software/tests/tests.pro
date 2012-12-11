@@ -25,7 +25,7 @@ RCC_DIR     = stuff
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-INCLUDEPATH += ../src/ ../src/grab
+INCLUDEPATH += ../src/ ../src/grab ../hooks
 SOURCES += \
     LightpackApiTest.cpp \
     ../src/ApiServerSetColorTask.cpp \
@@ -38,7 +38,12 @@ SOURCES += \
     main.cpp \
     GrabCalculationTest.cpp \
     lightpackmathtest.cpp \
-    ../src/LightpackMath.cpp
+    ../src/LightpackMath.cpp \
+    HooksTest.cpp \
+    ../hooks/ProxyFuncJmp.cpp \
+    ../hooks/hooksutils.cpp \
+    ../hooks/ProxyFuncVFTable.cpp \
+    ../hooks/Logger.cpp
 
 HEADERS += \
     ../src/grab/calculations.hpp \
@@ -54,7 +59,13 @@ HEADERS += \
     GrabCalculationTest.hpp \
     LightpackApiTest.hpp \
     lightpackmathtest.hpp \
-    ../src/LightpackMath.hpp
+    ../src/LightpackMath.hpp \
+    HooksTest.h \
+    ../hooks/ProxyFuncJmp.hpp \
+    ../hooks/ProxyFunc.hpp \
+    ../hooks/hooksutils.h \
+    ../hooks/ProxyFuncVFTable.hpp \
+    ../hooks/Logger.hpp
 
 
 #

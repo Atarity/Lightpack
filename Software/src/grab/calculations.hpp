@@ -28,7 +28,7 @@
 #include "QRect"
 #include "QRgb"
 #include "QList"
-#include "../enums.hpp"
+#include "../common/BufferFormat.h"
 
 namespace Grab {
     namespace Calculations {

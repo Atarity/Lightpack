@@ -123,7 +123,7 @@ static ULONG STDMETHODCALLTYPE LibraryInjector_Release(LibraryInjector * this) {
 
 static HRESULT STDMETHODCALLTYPE LibraryInjector_Inject(LibraryInjector * this, DWORD ProcessId, LPWSTR ModulePath) {
     char CodePage[4096] ={
-        0x90,                                     // nop (to replace with int 3h)
+        0x90,                                     // nop (to replace with int 3h - 0xCC)
         0xC7, 0x04, 0xE4, 0x00, 0x00, 0x00, 0x00, // mov DWORD PTR [esp], 0h | DLLName to inject (DWORD)
         0xB8, 0x00, 0x00, 0x00, 0x00,             // mov eax, LoadLibProc
         0xFF, 0xD0,                               // call eax
@@ -135,20 +135,24 @@ static HRESULT STDMETHODCALLTYPE LibraryInjector_Inject(LibraryInjector * this, 
 #define LOAD_LIB_OFFSET 9
 #define EXIT_THREAD_OFFSET 19
 #define SIZE_OF_CODE 25
+    reportLog(EVENTLOG_INFORMATION_TYPE, L"injecting library...");
     if(AcquirePrivilege()) {
         HMODULE hKernel32 = GetModuleHandle(L"kernel32.dll");
 
         HANDLE Process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, ProcessId);
 
         if (Process == NULL) {
+            reportLog(EVENTLOG_ERROR_TYPE, L"couldn't open process");
             return S_FALSE;
         }
 
         int sizeofCP = wcslen(ModulePath)*2 + SIZE_OF_CODE + 1;
         LPVOID Memory = VirtualAllocEx(Process, 0, sizeofCP, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 
-        if (!Memory)
+        if (!Memory) {
+            reportLog(EVENTLOG_ERROR_TYPE, L"couldn't allocate memory");
             return S_FALSE;
+        }
 
         LPWSTR *DLLName;
         DWORD *LoadLibProc, *LibNameArg, *ExitThreadProc;
@@ -164,17 +168,25 @@ static HRESULT STDMETHODCALLTYPE LibraryInjector_Inject(LibraryInjector * this, 
         *LibNameArg = (DWORD) (Memory + SIZE_OF_CODE); // need to do this: *EBX = *EBX + (Section)
         ////////////////////////////
 
-        WriteProcessMemory(Process, Memory, CodePage, sizeofCP, 0);
+        if(!WriteProcessMemory(Process, Memory, CodePage, sizeofCP, 0)) {
+            reportLog(EVENTLOG_ERROR_TYPE, L"couldn't write loading library code");
+            return S_FALSE;
+        }
 
         HANDLE hThread = CreateRemoteThread(Process, 0, 0, (LPTHREAD_START_ROUTINE) Memory, 0, 0, 0);
         //    HANDLE hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CodePage, 0, 0, 0);
-        if (!hThread)
+        if (!hThread) {
+            reportLog(EVENTLOG_ERROR_TYPE, L"couldn't create remote thread");
             return S_FALSE;
+        } else {
+            reportLog(EVENTLOG_INFORMATION_TYPE, L"library injected successfully");
+        }
         WaitForSingleObject(hThread, INFINITE);
         CloseHandle(hThread);
 
         return S_OK;
     } else {
+        reportLog(EVENTLOG_ERROR_TYPE, L"couldn't acquire privileges to inject");
         return S_FALSE;
     }
 }
@@ -492,7 +504,7 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD fdwReason, LPVOID lpvReserved)
     {
         case DLL_PROCESS_ATTACH:
         {
-            hEventSrc = RegisterEventSourceW(NULL, L"Prismatik");
+            hEventSrc = RegisterEventSourceW(NULL, L"Prismatik-libraryinjector");
             comObjectsCount = locksCount = 0;
 
             // We don't need to do any thread initialization
