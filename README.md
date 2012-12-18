@@ -99,7 +99,7 @@ You will need the following packages, usually all of them are in distro's reposi
 
 ---
 
-###Fimware building instructions
+###Fimware build instructions
 1. Install [AVR GCC Toolchain] (http://avr-eclipse.sourceforge.net/wiki/index.php/The_AVR_GCC_Toolchain)
 2. Install **dfu-programmer** for firmware upload with `$ sudo apt-get install dfu-programmer`
 3. Install [Eclipse IDE] (http://www.eclipse.org/downloads/) for C/C++ Developers
