@@ -202,22 +202,22 @@
         <translation>Показывать дополнительные настройки</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2907"/>
+        <location filename="../../src/SettingsWindow.ui" line="2910"/>
         <source>Logging level:</source>
         <translation>Детализация логирования:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3044"/>
+        <location filename="../../src/SettingsWindow.ui" line="3047"/>
         <source>&lt;h2&gt;Prismatik&lt;/h2&gt;</source>
         <translation>&lt;h2&gt;Призматик&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3078"/>
+        <location filename="../../src/SettingsWindow.ui" line="3081"/>
         <source>Open-source software from team made &lt;b&gt;Lightpack&lt;/b&gt; &amp;mdash; content-appropriate ambient lighting system with USB interface</source>
         <translation type="unfinished">Открытый софт от команды создавшей &lt;b&gt;Лайтпак&lt;/b&gt; &amp;mdash; USB-подсветку монитора для усиления эффекта присутствия</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3115"/>
+        <location filename="../../src/SettingsWindow.ui" line="3118"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -230,12 +230,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Софт версии &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревизия &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), прошивка &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3214"/>
+        <location filename="../../src/SettingsWindow.ui" line="3217"/>
         <source>This program is distributed &amp;laquo;as is&amp;raquo;. It source code is under &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL license&lt;/a&gt;. No warranty of any kind is expressed or implied. The authors will not be liable for data loss, damages, loss of profits or any other kind of loss while using or misusing this software. All content, such as icons, plugins, bitmaps etc. is under &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA&lt;/a&gt; if otherwise is not noticed. &lt;br /&gt;&lt;br /&gt;This software build with &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; cross-platform framework, use &lt;a href=&quot;http://python.org/&quot;&gt;Python 2.7&lt;/a&gt;, &lt;a href=&quot;http://pythonqt.sourceforge.net/&quot;&gt;PythonQt&lt;/a&gt; and &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; icon set by P.J. Onori as a third-party licensed products.</source>
         <translation>Это программное обеспечение распространяется &amp;laquo;как есть&amp;raquo; под открытой лицензией &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL&lt;/a&gt;. Авторы не несут отвественности за утерянные вами данные, нанесённый ущёрб или недополученную выгоду в результате использования этого ПО. Весь контент не являющийся частью исходного кода (иконки, битмапы, плагины и т.д.) покрываются лицензией &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/deed.ru&quot;&gt;CC-BY-SA&lt;/a&gt;, если не указано иного.&lt;br /&gt;&lt;br /&gt;Это ПО построено на базе фреймворка &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; и использует &lt;a href=&quot;http://python.org/&quot;&gt;Python 2.7&lt;/a&gt;, &lt;a href=&quot;http://pythonqt.sourceforge.net/&quot;&gt;PythonQt&lt;/a&gt;, набор иконок &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; в качестве лицензируемых продуктов третих лиц.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="3269"/>
+        <location filename="../../src/SettingsWindow.ui" line="3272"/>
         <source>&lt;b&gt;We put lights in right order:&lt;/b&gt;&lt;br&gt;Timur Sattarov, Mikhail Shatohin, Andrey Isupov&lt;br&gt;&lt;br&gt;&lt;b&gt;Special thanks to:&lt;/b&gt;&lt;br&gt; Andrey Burkov, Vasiliy Fomin, Daria Orton, Nikolay Kudashev, Alexey Yakovlev, Mikhail Karpelyanskiy, Phillip Burgess, Dirk Heinke, Mikhail Sannikov</source>
         <translation>&lt;b&gt;Цвета на свои места расставляли:&lt;/b&gt;&lt;br&gt;Тимур Саттаров, Михаил Шатохин, Андрей Исупов&lt;br&gt;&lt;br&gt;&lt;b&gt;Особые благодарности:&lt;/b&gt;&lt;br&gt;Андрей Бурков, Василий Фомин, Даша Ортон, Николай Кудашев, Алексей Яковлев, Михаил Карпелянский, Филипп Бёрджес, Дирк Хейнеке, Михаил Санников</translation>
     </message>
@@ -283,7 +283,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2495"/>
-        <location filename="../../src/SettingsWindow.cpp" line="2222"/>
+        <location filename="../../src/SettingsWindow.cpp" line="2224"/>
         <source>Plugin settings</source>
         <translation>Настройки плагина</translation>
     </message>
@@ -322,12 +322,12 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="210"/>
-        <location filename="../../src/SettingsWindow.ui" line="2979"/>
+        <location filename="../../src/SettingsWindow.ui" line="2982"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2773"/>
+        <location filename="../../src/SettingsWindow.ui" line="2776"/>
         <source>Key (authorization disabled if empty):</source>
         <translation>Ключ авторизации (авторизация отключена если в поле пусто):</translation>
     </message>
@@ -341,17 +341,17 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="195"/>
-        <location filename="../../src/SettingsWindow.ui" line="2663"/>
+        <location filename="../../src/SettingsWindow.ui" line="2666"/>
         <source>Experimental</source>
         <translation>Лаборатория</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2754"/>
+        <location filename="../../src/SettingsWindow.ui" line="2757"/>
         <source>Copy and paste this key into the application using the API, for authorization on the server</source>
         <translation>Скопируйте и вставьте этот ключ в приложение, использующее API, для авторизации на сервере</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2735"/>
+        <location filename="../../src/SettingsWindow.ui" line="2738"/>
         <source>Generate</source>
         <translation>Сгенерировать</translation>
     </message>
@@ -471,67 +471,67 @@ p, li { white-space: pre-wrap; }
         <translation>Перезагрузить плагины</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2672"/>
+        <location filename="../../src/SettingsWindow.ui" line="2675"/>
         <source>This tab is used for experimental and not stable features. Any tuning with all these controls provide inevetible plane crash, miscarrige or nuclear disaster. Use it on your own risk.</source>
         <translation>В этом разделе собраны эксперементальные настройки которые могут повлиять на стабильность работы программы. Лучше оставить в покое те из них, назначение которых вам неизвестно. Если всё-таки вы что-то сломали, то удалите соответствующий профиль, или исправьте его вручную.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2697"/>
+        <location filename="../../src/SettingsWindow.ui" line="2700"/>
         <source>Enable server (API via sockets)</source>
         <translation>Включить сервер (API через сокеты)</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2725"/>
+        <location filename="../../src/SettingsWindow.ui" line="2728"/>
         <source>Port:</source>
         <translation>Порт:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2792"/>
+        <location filename="../../src/SettingsWindow.ui" line="2795"/>
         <source>Capture source</source>
         <translation>Источник захвата</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2891"/>
+        <location filename="../../src/SettingsWindow.ui" line="2894"/>
         <source>Enable capturing in DirectX 10/11 applications</source>
         <translation>Включить захват в приложениях DirectX 10/11</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2939"/>
+        <location filename="../../src/SettingsWindow.ui" line="2942"/>
         <source>Ping Lightpack device every second</source>
         <translation>Проверять доступность Лайтпака каждую секунду</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2946"/>
+        <location filename="../../src/SettingsWindow.ui" line="2949"/>
         <source>Send data only if colors changes</source>
         <translation>Посылать данные только при изменении</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="304"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1674"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1676"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="305"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1678"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1680"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="306"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1687"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1689"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="307"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1691"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1693"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="311"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1683"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1685"/>
         <source>&amp;Profiles</source>
         <translation>&amp;Профили</translation>
     </message>
@@ -555,10 +555,8 @@ p, li { white-space: pre-wrap; }
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="330"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1535"/>
         <source>Lightpack: %1</source>
-        <translation>Лайтпак: %1</translation>
+        <translation type="obsolete">Лайтпак: %1</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="334"/>
@@ -599,58 +597,69 @@ p, li { white-space: pre-wrap; }
         <translation>Профиль: %1</translation>
     </message>
     <message>
+        <location filename="../../src/SettingsWindow.cpp" line="330"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1535"/>
+        <source>Prismatik: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../src/SettingsWindow.cpp" line="402"/>
         <location filename="../../src/SettingsWindow.cpp" line="1577"/>
         <source>Device: %1</source>
         <translation>Устройство: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1953"/>
+        <location filename="../../src/SettingsWindow.cpp" line="912"/>
+        <source>Prismatik</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.cpp" line="1955"/>
         <source>Action name</source>
         <translation>Действие</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1954"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1956"/>
         <source>Description</source>
         <translation>Описание</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1955"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1957"/>
         <source>Hotkey</source>
         <translation>Хоткей</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1962"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1964"/>
         <source>On/Off lights</source>
         <translation>Вкл/выкл подсветку</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1963"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1965"/>
         <source>Switch between &quot;Capture mode&quot; and mood lamp mode</source>
         <translation>Переключение между режимами &quot;захват&quot; и &quot;обычный&quot;</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1964"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1966"/>
         <source>Activate next profile</source>
         <translation>Следующий профиль</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1965"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1967"/>
         <source>Activate previous profile</source>
         <translation>Предыдущий профиль</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1968"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1970"/>
         <source>Undefined key</source>
         <translation>Не задано</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1969"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1971"/>
         <source>Action not selected</source>
         <translation>Действие не выбрано</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1971"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1973"/>
         <source>Reset hotkey of selected command</source>
         <translation>Сбросить сочетание клавиш</translation>
     </message>
@@ -661,7 +670,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1092"/>
-        <location filename="../../src/SettingsWindow.cpp" line="912"/>
         <source>Lightpack</source>
         <translation>Лайтпак</translation>
     </message>
