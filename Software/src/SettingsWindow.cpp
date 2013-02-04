@@ -1811,6 +1811,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
     ui->spinBox_LuminosityThreshold->setValue           (Settings::getLuminosityThreshold());
     ui->radioButton_MinimumLuminosity->setChecked       (Settings::isMinimumLuminosityEnabled());
+    ui->radioButton_LuminosityDeadZone->setChecked      (!Settings::isMinimumLuminosityEnabled());
 
     // Check the selected moodlamp mode (setChecked(false) not working to select another)
     ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
