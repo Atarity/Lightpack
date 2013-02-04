@@ -25,7 +25,7 @@ void HooksTest::jmpHookTestCase() {
                                                                -6 because length of injected code is 6*/
     memcpy(procHookedMockup+3, &relativeAdr, sizeof(relativeAdr));
 
-    ProxyFuncJmp *test = new ProxyFuncJmp(procMockup+1, (void *)substAdr);
+    ProxyFuncJmp *test = new ProxyFuncJmp(procMockup+1, (void *)substAdr, Logger::getInstance());
     QVERIFY2(!test->isHookInstalled(),"Hook shouldn't be installed");
     QVERIFY2(test->init(), "init crashed");
     QVERIFY2(test->installHook(), "installHook crashed 1");
@@ -58,7 +58,7 @@ void HooksTest::vfTableHookTestCase() {
 
     memcpy(procHookedMockup+1, &substAdr, sizeof(substAdr));
 
-    ProxyFuncVFTable *test = new ProxyFuncVFTable(procMockup+1, (void *)substAdr);
+    ProxyFuncVFTable *test = new ProxyFuncVFTable(procMockup+1, (void *)substAdr, Logger::getInstance());
     QVERIFY2(!test->isHookInstalled(),"Hook shouldn't be installed");
     QVERIFY2(test->init(), "init crashed");
     QVERIFY2(test->installHook(), "installHook crashed 1");
