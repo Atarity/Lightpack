@@ -1938,7 +1938,9 @@ void SettingsWindow::registerHotkey(const QString &slotName, const QString &desc
     QTableWidgetItem *hotkeyItem = new QTableWidgetItem(hotkey);
     hotkeysTable->setItem(newRow, 2, hotkeyItem);
 
-    GlobalShortcutManager::instance()->connect(QKeySequence(hotkey), this, getSlotName(actionName).toAscii().data() );
+    QKeySequence keySeq = QKeySequence(hotkey);
+    GlobalShortcutManager::instance()->disconnect(keySeq, this, slotName.toAscii().data() );
+    GlobalShortcutManager::instance()->connect(keySeq, this, getSlotName(actionName).toAscii().data() );
 }
 
 void SettingsWindow::setupHotkeys()
