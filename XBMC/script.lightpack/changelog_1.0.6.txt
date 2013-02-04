@@ -1,0 +1,23 @@
+﻿1.0.6
+ - del empty profile
+
+1.0.5
+ - add on/off lightpack for default/video/audio
+ - add enable/disable Notification
+ - translate Notification
+
+1.0.4
+ - add service.plugin function
+
+1.0.3
+ - bug fix
+
+1.0.2
+ - support new API 1.2
+
+1.0.1
+ - change for new API
+ - add Russia translation
+
+1.0.0
+ - Initial version

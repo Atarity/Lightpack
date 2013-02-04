@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.lightpack" name="Lightpack"
-       version="1.0.5" date="07.11.2011"
+       version="1.0.6" date="04.02.2013"
        provider-name="Eraser">
   <requires>
     <import addon="xbmc.python" version="1.0"/>
