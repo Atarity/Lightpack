@@ -26,10 +26,10 @@
 
 #pragma once
 
-#include "ILedDevice.hpp"
-#include "StructRgb.hpp"
+#include "AbstractLedDevice.hpp"
+#include "colorspace_types.h"
 
-class LedDeviceVirtual : public ILedDevice
+class LedDeviceVirtual : public AbstractLedDevice
 {
     Q_OBJECT
 public:
@@ -46,15 +46,8 @@ public slots:
     void setGamma(double value);
     void setBrightness(int value);
     void requestFirmwareVersion();
-    void updateDeviceSettings();
 
 private:
     void resizeColorsBuffer(int buffSize);
 
-private:
-    double m_gamma;
-    int m_brightness;
-
-    QList<QRgb> m_colorsSaved;
-    QList<StructRgb> m_colorsBuffer;
 };

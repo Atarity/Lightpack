@@ -53,7 +53,7 @@ LFX2GETLIGHTDESC lfxGetLightDescriptionFunction;
 LFX2LIGHT lfxLightFunction;
 
 LedDeviceAlienFx::LedDeviceAlienFx(QObject *parent) :
-        ILedDevice(parent)
+        AbstractLedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -152,18 +152,6 @@ void LedDeviceAlienFx::setColorDepth(int /*value*/)
 
 void LedDeviceAlienFx::setSmoothSlowdown(int /*value*/)
 {
-    emit commandCompleted(true);
-}
-
-void LedDeviceAlienFx::setGamma(double /*value*/)
-{
-    // TODO
-    emit commandCompleted(true);
-}
-
-void LedDeviceAlienFx::setBrightness(int /*value*/)
-{
-    // TODO
     emit commandCompleted(true);
 }
 

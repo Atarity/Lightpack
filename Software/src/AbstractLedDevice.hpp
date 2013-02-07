@@ -1,5 +1,5 @@
 /*
- * ILedDevice.hpp
+ * AbstractLedDevice.hpp
  *
  *  Created on: 17.04.2011
  *      Author: Timur Sattarov && Mike Shatohin
@@ -27,15 +27,24 @@
 #pragma once
 
 #include <QtGui>
+#include "colorspace_types.h"
+
+/*!
+  White balance adjustment
+*/
+struct WBAdjustment {
+    double red, green, blue;
+};
+
 /*!
     Abstract class representing any LED device.
     \a LedDeviceManager
 */
-class ILedDevice : public QObject
+class AbstractLedDevice : public QObject
 {
     Q_OBJECT
 public:
-    ILedDevice(QObject * parent) : QObject(parent) {}
+    AbstractLedDevice(QObject * parent) : QObject(parent) {}
 
 signals:
     void openDeviceSuccess(bool isSuccess);
@@ -62,15 +71,33 @@ public slots:
     */
     virtual void setRefreshDelay(int value) = 0;
     virtual void setSmoothSlowdown(int value) = 0;
-    virtual void setGamma(double value) = 0;
-    virtual void setBrightness(int value) = 0;
+    virtual void setGamma(double value);
+    virtual void setBrightness(int value);
     virtual void setColorSequence(QString value) = 0;
+    virtual void setLuminosityThreshold(int value);
+    virtual void setMinimumLuminosityThresholdEnabled(bool value);
+    virtual void updateWBAdjustments();
     virtual void requestFirmwareVersion() = 0;
-    virtual void updateDeviceSettings() = 0;
+    virtual void updateDeviceSettings();
 
     /*!
       \obsolete only form compatibility with Lightpack ver.<=5.5 hardware
      \param value bits per channel
     */
     virtual void setColorDepth(int value) = 0;
+
+protected:
+    virtual void applyColorModifications(const QList<QRgb> & inColors, QList<StructRgb> & outColors);
+
+protected:
+    QString m_colorSequence;
+    double m_gamma;
+    int m_brightness;
+    int m_luminosityThreshold;
+    bool m_isMinimumLuminosityEnabled;
+
+    QList<WBAdjustment> m_wbAdjustments;
+
+    QList<QRgb> m_colorsSaved;
+    QList<StructRgb> m_colorsBuffer;
 };

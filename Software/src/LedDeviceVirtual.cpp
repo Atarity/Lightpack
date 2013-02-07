@@ -2,7 +2,7 @@
  * LightpackVirtual.cpp
  *
  *  Created on: 06.09.2011
- *      Author: Mike Shatohin (brunql)
+ *      Author: Mike Shatohin (brunql), Timur Sattarov
  *     Project: Lightpack
  *
  *  Lightpack is very simple implementation of the backlight for a laptop
@@ -32,7 +32,7 @@
 
 using namespace SettingsScope;
 
-LedDeviceVirtual::LedDeviceVirtual(QObject * parent) : ILedDevice(parent)
+LedDeviceVirtual::LedDeviceVirtual(QObject * parent) : AbstractLedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -48,12 +48,11 @@ void LedDeviceVirtual::setColors(const QList<QRgb> & colors)
 
     resizeColorsBuffer(colors.count());
 
-    LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer);
-    LightpackMath::brightnessCorrection(m_brightness, m_colorsBuffer);
+    applyColorModifications(colors, m_colorsBuffer);
 
     for (int i = 0; i < m_colorsBuffer.count(); i++)
     {
-        callbackColors.append(qRgb(m_colorsBuffer[i].r, m_colorsBuffer[i].g, m_colorsBuffer[i].b));
+        callbackColors.append(qRgb(m_colorsBuffer[i].r>>4, m_colorsBuffer[i].g>>4, m_colorsBuffer[i].b>>4));
     }
 
     emit colorsUpdated(callbackColors);
@@ -113,13 +112,6 @@ void LedDeviceVirtual::requestFirmwareVersion()
     emit commandCompleted(true);
 }
 
-void LedDeviceVirtual::updateDeviceSettings()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    setGamma(Settings::getDeviceGamma());
-    setBrightness(Settings::getDeviceBrightness());
-}
 
 void LedDeviceVirtual::open()
 {

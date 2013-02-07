@@ -168,18 +168,6 @@ void GrabManager::onGrabSlowdownChanged(int ms)
         qWarning() << Q_FUNC_INFO << "trying to change grab slowdown while there is no grabber";
 }
 
-void GrabManager::onLuminosityThresholdChanged(int value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-    m_luminosityThreshold = value;
-}
-
-void GrabManager::onMinimumLuminosityEnabledChanged(bool value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-    m_isMinimumLuminosityEnabled = value;
-}
-
 void GrabManager::onGrabAvgColorsEnabledChanged(bool state)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
@@ -218,8 +206,6 @@ void GrabManager::settingsProfileChanged(const QString &profileName)
 
     m_isSendDataOnlyIfColorsChanged = Settings::isSendDataOnlyIfColorsChanges();
     m_avgColorsOnAllLeds = Settings::isGrabAvgColorsEnabled();
-    m_luminosityThreshold = Settings::getLuminosityThreshold();
-    m_isMinimumLuminosityEnabled = Settings::isMinimumLuminosityEnabled();
 
     setNumberOfLeds(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
 }
@@ -316,38 +302,21 @@ void GrabManager::handleGrabbedColors()
         }
     }
 
-    // White balance
-    for (int i = 0; i < m_ledWidgets.size(); i++)
-    {
-        QRgb rgb = m_colorsNew[i];
+//    // White balance
+//    for (int i = 0; i < m_ledWidgets.size(); i++)
+//    {
+//        QRgb rgb = m_colorsNew[i];
 
-        unsigned r = qRed(rgb)   * m_ledWidgets[i]->getCoefRed();
-        unsigned g = qGreen(rgb) * m_ledWidgets[i]->getCoefGreen();
-        unsigned b = qBlue(rgb)  * m_ledWidgets[i]->getCoefBlue();
+//        unsigned r = qRed(rgb)   * m_ledWidgets[i]->getCoefRed();
+//        unsigned g = qGreen(rgb) * m_ledWidgets[i]->getCoefGreen();
+//        unsigned b = qBlue(rgb)  * m_ledWidgets[i]->getCoefBlue();
 
-        if (r > 0xff) r = 0xff;
-        if (g > 0xff) g = 0xff;
-        if (b > 0xff) b = 0xff;
+//        if (r > 0xff) r = 0xff;
+//        if (g > 0xff) g = 0xff;
+//        if (b > 0xff) b = 0xff;
 
-        m_colorsNew[i] = qRgb(r, g, b);
-    }
-
-    // Apply dead-zone or set minimum luminosity
-    for (int i = 0; i < m_ledWidgets.size(); i++)
-    {
-        QRgb rgb = m_colorsNew[i];
-        int v =  LightpackMath::getValueHSV(rgb);
-        int c =  LightpackMath::getChromaHSV(rgb);
-        int dv = m_luminosityThreshold - v;
-
-        if (dv > 0)
-        {
-            if (m_isMinimumLuminosityEnabled)
-                m_colorsNew[i] = LightpackMath::withValueHSV(LightpackMath::withChromaHSV(rgb, c - dv*dv), m_luminosityThreshold);
-            else
-                m_colorsNew[i] = 0;
-        }
-    }
+//        m_colorsNew[i] = qRgb(r, g, b);
+//    }
 
     for (int i = 0; i < m_ledWidgets.size(); i++)
     {

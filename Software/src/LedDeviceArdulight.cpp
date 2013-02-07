@@ -32,7 +32,7 @@
 
 using namespace SettingsScope;
 
-LedDeviceArdulight::LedDeviceArdulight(QObject * parent) : ILedDevice(parent)
+LedDeviceArdulight::LedDeviceArdulight(QObject * parent) : AbstractLedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -63,9 +63,14 @@ void LedDeviceArdulight::setColors(const QList<QRgb> & colors)
 
     resizeColorsBuffer(colors.count());
 
-    LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer);
-    LightpackMath::brightnessCorrection(m_brightness, m_colorsBuffer);
-    LightpackMath::maxCorrection(254,m_colorsBuffer);
+    applyColorModifications(colors, m_colorsBuffer);
+
+    for(int i=0; i < m_colorsBuffer.count(); i++) {
+        m_colorsBuffer[i].r = m_colorsBuffer[i].r << 4;
+        m_colorsBuffer[i].g = m_colorsBuffer[i].g << 4;
+        m_colorsBuffer[i].b = m_colorsBuffer[i].b << 4;
+        LightpackMath::maxCorrection(254, m_colorsBuffer[i]);
+    }
 
     m_writeBuffer.clear();
     m_writeBuffer.append(m_writeBufferHeader);
@@ -144,23 +149,6 @@ void LedDeviceArdulight::setSmoothSlowdown(int /*value*/)
     emit commandCompleted(true);
 }
 
-void LedDeviceArdulight::setGamma(double value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    m_gamma = value;
-    setColors(m_colorsSaved);
-}
-
-void LedDeviceArdulight::setBrightness(int percent)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << percent;
-
-    m_brightness = percent;
-    setColors(m_colorsSaved);
-}
-
-
 void LedDeviceArdulight::setColorSequence(QString value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
@@ -237,7 +225,7 @@ bool LedDeviceArdulight::writeBuffer(const QByteArray & buff)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "Hex:" << buff.toHex();
 
-    if (m_ArdulightDevice->isOpen() == false)
+    if (m_ArdulightDevice == NULL || m_ArdulightDevice->isOpen() == false)
         return false;
 
     int bytesWritten = m_ArdulightDevice->write(buff);

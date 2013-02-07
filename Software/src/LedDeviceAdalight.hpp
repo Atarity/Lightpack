@@ -26,11 +26,11 @@
 
 #pragma once
 
-#include "ILedDevice.hpp"
-#include "StructRgb.hpp"
+#include "AbstractLedDevice.hpp"
+#include "colorspace_types.h"
 #include "abstractserial.h"
 
-class LedDeviceAdalight : public ILedDevice
+class LedDeviceAdalight : public AbstractLedDevice
 {
     Q_OBJECT
 public:
@@ -44,8 +44,6 @@ public slots:
     void setRefreshDelay(int /*value*/);
     void setColorDepth(int /*value*/);
     void setSmoothSlowdown(int /*value*/);
-    void setGamma(double /*value*/);
-    void setBrightness(int /*value*/);
     void setColorSequence(QString value);
     void requestFirmwareVersion();
     void updateDeviceSettings();
@@ -60,11 +58,4 @@ private:
 
     QByteArray m_writeBufferHeader;
     QByteArray m_writeBuffer;
-
-    double m_gamma;
-    int m_brightness;
-    QString m_colorSequence;
-
-    QList<QRgb> m_colorsSaved;
-    QList<StructRgb> m_colorsBuffer;
 };

@@ -243,7 +243,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -470,7 +470,7 @@
                   <number>0</number>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>100</number>
                  </property>
                  <property name="value">
                   <number>0</number>
@@ -512,7 +512,7 @@
                   <string>&lt;h4&gt;Scene luminosity threshold&lt;/h4&gt; It works in two ways: You can adjust &lt;b&gt;minimum luminosity level&lt;/b&gt; for soft and gentle light in the dark scenes or you can adjust &lt;b&gt;dead-zone&lt;/b&gt; luminosity grabbing which ignores small non-black objects on black backgrounds and turning lights OFF in the dark scenes. This is eye-saving vs. eye-killing options which works mutually. We &lt;b&gt;recommend&lt;/b&gt; to use threshold for minimum luminosity level.</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>100</number>
                  </property>
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>

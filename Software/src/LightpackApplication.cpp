@@ -475,6 +475,11 @@ void LightpackApplication::startLedDeviceManager()
     connect(settings(), SIGNAL(deviceGammaChanged(double)),         m_ledDeviceManager, SLOT(setGamma(double)), Qt::QueuedConnection);
     connect(settings(), SIGNAL(deviceBrightnessChanged(int)),       m_ledDeviceManager, SLOT(setBrightness(int)), Qt::QueuedConnection);
     connect(settings(), SIGNAL(deviceColorSequenceChanged(QString)),m_ledDeviceManager, SLOT(setColorSequence(QString)), Qt::QueuedConnection);
+    connect(settings(), SIGNAL(luminosityThresholdChanged(int))      ,m_ledDeviceManager, SLOT(setLuminosityThreshold(int)), Qt::QueuedConnection);
+    connect(settings(), SIGNAL(minimumLuminosityEnabledChanged(bool)),m_ledDeviceManager, SLOT(setMinimumLuminosityEnabled(bool)), Qt::QueuedConnection);
+    connect(settings(), SIGNAL(ledCoefBlueChanged(int,double))  ,m_ledDeviceManager, SLOT(updateWBAdjustments()), Qt::QueuedConnection);
+    connect(settings(), SIGNAL(ledCoefRedChanged(int,double))   ,m_ledDeviceManager, SLOT(updateWBAdjustments()), Qt::QueuedConnection);
+    connect(settings(), SIGNAL(ledCoefGreenChanged(int,double)) ,m_ledDeviceManager, SLOT(updateWBAdjustments()), Qt::QueuedConnection);
 
     connect(m_settingsWindow, SIGNAL(requestFirmwareVersion()),       m_ledDeviceManager, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
 //    connect(settingsObj, SIGNAL(settingsProfileChanged()),       m_ledDeviceManager, SLOT(updateDeviceSettings()), Qt::QueuedConnection);
@@ -505,8 +510,6 @@ void LightpackApplication::startGrabManager()
     connect(settings(), SIGNAL(grabberTypeChanged(const Grab::GrabberType &)), m_grabManager, SLOT(onGrabberTypeChanged(const Grab::GrabberType &)), Qt::QueuedConnection);
     connect(settings(), SIGNAL(grabSlowdownChanged(int)), m_grabManager, SLOT(onGrabSlowdownChanged(int)), Qt::QueuedConnection);
     connect(settings(), SIGNAL(grabAvgColorsEnabledChanged(bool)), m_grabManager, SLOT(onGrabAvgColorsEnabledChanged(bool)), Qt::QueuedConnection);
-    connect(settings(), SIGNAL(luminosityThresholdChanged(int)), m_grabManager, SLOT(onLuminosityThresholdChanged(int)), Qt::QueuedConnection);
-    connect(settings(), SIGNAL(minimumLuminosityEnabledChanged(bool)), m_grabManager, SLOT(onMinimumLuminosityEnabledChanged(bool)), Qt::QueuedConnection);
 
     connect(settings(), SIGNAL(lightpackNumberOfLedsChanged(int)), this, SLOT(numberOfLedsChanged(int)));
     connect(settings(), SIGNAL(adalightNumberOfLedsChanged(int)),  this, SLOT(numberOfLedsChanged(int)));
@@ -633,6 +636,7 @@ void LightpackApplication::numberOfLedsChanged(int numOfLeds)
     m_grabManager->setNumberOfLeds(numOfLeds);
     m_moodlampManager->setNumberOfLeds(numOfLeds);
     m_pluginInterface->setNumberOfLeds(numOfLeds);
+    m_ledDeviceManager->updateWBAdjustments();
 }
 
 void LightpackApplication::settingsChanged()

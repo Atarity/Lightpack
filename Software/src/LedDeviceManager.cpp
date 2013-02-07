@@ -182,6 +182,34 @@ void LedDeviceManager::setBrightness(int value)
     }
 }
 
+void LedDeviceManager::setLuminosityThreshold(int value)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << value << "Is last command completed:" << m_isLastCommandCompleted;
+
+    if (m_isLastCommandCompleted)
+    {
+        m_isLastCommandCompleted = false;
+        emit ledDeviceSetLuminosityThreshold(value);
+    } else {
+        m_savedLuminosityThreshold = value;
+        cmdQueueAppend(LedDeviceCommands::SetLuminosityThreshold);
+    }
+}
+
+void LedDeviceManager::setMinimumLuminosityEnabled(bool value)
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << value << "Is last command completed:" << m_isLastCommandCompleted;
+
+    if (m_isLastCommandCompleted)
+    {
+        m_isLastCommandCompleted = false;
+        emit ledDeviceSetMinimumLuminosityEnabled(value);
+    } else {
+        m_savedIsMinimumLuminosityEnabled = value;
+        cmdQueueAppend(LedDeviceCommands::SetMinimumLuminosityEnabled);
+    }
+}
+
 void LedDeviceManager::setColorSequence(QString value)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << value << "Is last command completed:" << m_isLastCommandCompleted;
@@ -219,6 +247,19 @@ void LedDeviceManager::updateDeviceSettings()
         emit ledDeviceUpdateDeviceSettings();
     } else {
         cmdQueueAppend(LedDeviceCommands::UpdateDeviceSettings);
+    }
+}
+
+void LedDeviceManager::updateWBAdjustments()
+{
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << "Is last command completed:" << m_isLastCommandCompleted;
+
+    if (m_isLastCommandCompleted)
+    {
+        m_isLastCommandCompleted = false;
+        emit ledDeviceUpdateWBAdjustments();
+    } else {
+        cmdQueueAppend(LedDeviceCommands::UpdateWBAdjustments);
     }
 }
 
@@ -265,11 +306,11 @@ void LedDeviceManager::initLedDevice()
 
         connectSignalSlotsLedDevice();
     }
-
+    emit ledDeviceUpdateDeviceSettings();
     emit ledDeviceOpen();
 }
 
-ILedDevice * LedDeviceManager::createLedDevice(SupportedDevices::DeviceType deviceType)
+AbstractLedDevice * LedDeviceManager::createLedDevice(SupportedDevices::DeviceType deviceType)
 {    
 
     if (deviceType == SupportedDevices::DeviceTypeAlienFx){
@@ -285,28 +326,28 @@ ILedDevice * LedDeviceManager::createLedDevice(SupportedDevices::DeviceType devi
 
     case SupportedDevices::DeviceTypeLightpack:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::LightpackDevice";
-        return (ILedDevice *)new LedDeviceLightpack();
+        return (AbstractLedDevice *)new LedDeviceLightpack();
 
     case SupportedDevices::DeviceTypeAlienFx:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::AlienFxDevice";
 
 #       ifdef Q_WS_WIN
-        return (ILedDevice *)new LedDeviceAlienFx();
+        return (AbstractLedDevice *)new LedDeviceAlienFx();
 #       else
         break;
 #       endif /* Q_WS_WIN */
 
     case SupportedDevices::DeviceTypeAdalight:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::AdalightDevice";
-        return (ILedDevice *)new LedDeviceAdalight();
+        return (AbstractLedDevice *)new LedDeviceAdalight();
 
     case SupportedDevices::DeviceTypeArdulight:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::ArdulightDevice";
-        return (ILedDevice *)new LedDeviceArdulight();
+        return (AbstractLedDevice *)new LedDeviceArdulight();
 
     case SupportedDevices::DeviceTypeVirtual:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::VirtualDevice";
-        return (ILedDevice *)new LedDeviceVirtual();
+        return (AbstractLedDevice *)new LedDeviceVirtual();
 
     default:
         break;
@@ -343,7 +384,10 @@ void LedDeviceManager::connectSignalSlotsLedDevice()
     connect(this, SIGNAL(ledDeviceSetGamma(double)),            m_ledDevice, SLOT(setGamma(double)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetBrightness(int)),          m_ledDevice, SLOT(setBrightness(int)), Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceSetColorSequence(QString)),   m_ledDevice, SLOT(setColorSequence(QString)), Qt::QueuedConnection);
+    connect(this, SIGNAL(ledDeviceSetLuminosityThreshold(int))      ,m_ledDevice, SLOT(setLuminosityThreshold(int)));
+    connect(this, SIGNAL(ledDeviceSetMinimumLuminosityEnabled(bool)),m_ledDevice, SLOT(setMinimumLuminosityThresholdEnabled(bool)));
     connect(this, SIGNAL(ledDeviceRequestFirmwareVersion()),    m_ledDevice, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
+    connect(this, SIGNAL(ledDeviceUpdateWBAdjustments()),       m_ledDevice, SLOT(updateWBAdjustments()),  Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceUpdateDeviceSettings()),      m_ledDevice, SLOT(updateDeviceSettings()), Qt::QueuedConnection);
 }
 
@@ -371,6 +415,8 @@ void LedDeviceManager::disconnectSignalSlotsLedDevice()
     disconnect(this, SIGNAL(ledDeviceSetGamma(double)),         m_ledDevice, SLOT(setGamma(double)));
     disconnect(this, SIGNAL(ledDeviceSetBrightness(int)),       m_ledDevice, SLOT(setBrightness(int)));
     disconnect(this, SIGNAL(ledDeviceSetColorSequence(QString)),m_ledDevice, SLOT(setColorSequence(QString)));
+    disconnect(this, SIGNAL(ledDeviceSetLuminosityThreshold(int))      ,m_ledDevice, SLOT(setLuminosityThreshold(int)));
+    disconnect(this, SIGNAL(ledDeviceSetMinimumLuminosityEnabled(bool)),m_ledDevice, SLOT(setMinimumLuminosityThresholdEnabled(bool)));
     disconnect(this, SIGNAL(ledDeviceRequestFirmwareVersion()), m_ledDevice, SLOT(requestFirmwareVersion()));
     disconnect(this, SIGNAL(ledDeviceUpdateDeviceSettings()),   m_ledDevice, SLOT(updateDeviceSettings()));
 }
@@ -400,7 +446,8 @@ void LedDeviceManager::cmdQueueProcessNext()
             break;
 
         case LedDeviceCommands::SetColors:
-            emit ledDeviceSetColors(m_savedColors);
+            if (m_isColorsSaved)
+                emit ledDeviceSetColors(m_savedColors);
             break;
 
         case LedDeviceCommands::SetRefreshDelay:
@@ -427,12 +474,24 @@ void LedDeviceManager::cmdQueueProcessNext()
             emit ledDeviceSetColorSequence(m_savedColorSequence);
             break;
 
+        case LedDeviceCommands::SetLuminosityThreshold:
+            emit ledDeviceSetLuminosityThreshold(m_savedLuminosityThreshold);
+            break;
+
+        case LedDeviceCommands::SetMinimumLuminosityEnabled:
+            emit ledDeviceSetMinimumLuminosityEnabled(m_savedIsMinimumLuminosityEnabled);
+            break;
+
         case LedDeviceCommands::RequestFirmwareVersion:
             emit ledDeviceRequestFirmwareVersion();
             break;
 
         case LedDeviceCommands::UpdateDeviceSettings:
             emit ledDeviceUpdateDeviceSettings();
+            break;
+
+        case LedDeviceCommands::UpdateWBAdjustments:
+            emit ledDeviceUpdateWBAdjustments();
             break;
 
         default:

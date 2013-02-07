@@ -864,7 +864,7 @@ int Settings::getLuminosityThreshold()
 void Settings::setLuminosityThreshold(int value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    setValue(Profile::Key::Grab::LuminosityThreshold, value);
+    setValue(Profile::Key::Grab::LuminosityThreshold, getValidLuminosityThreshold(value));
     m_this->luminosityThresholdChanged(value);
 }
 
@@ -1258,6 +1258,15 @@ int Settings::getValidMoodLampSpeed(int value)
         value = Profile::MoodLamp::SpeedMin;
     else if (value > Profile::MoodLamp::SpeedMax)
         value = Profile::MoodLamp::SpeedMax;
+    return value;
+}
+
+int Settings::getValidLuminosityThreshold(int value)
+{
+    if (value < Profile::Grab::MinimumLevelOfSensitivityMin)
+        value = Profile::Grab::MinimumLevelOfSensitivityMin;
+    else if (value > Profile::Grab::MinimumLevelOfSensitivityMax)
+        value = Profile::Grab::MinimumLevelOfSensitivityMax;
     return value;
 }
 

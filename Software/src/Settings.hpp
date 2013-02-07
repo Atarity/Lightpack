@@ -179,6 +179,7 @@ private:
     static double getValidDeviceGamma(double value);
     static int getValidGrabSlowdown(int value);
     static int getValidMoodLampSpeed(int value);
+    static int getValidLuminosityThreshold(int value);
     static void setValidLedCoef(int ledIndex, const QString & keyCoef, double coef);
     static double getValidLedCoef(int ledIndex, const QString & keyCoef);
 

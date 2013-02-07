@@ -28,20 +28,26 @@
 #include <QList>
 #include <QRgb>
 #include <cmath>
-#include "StructRgb.hpp"
+#include "colorspace_types.h"
 
 class LightpackMath
 {
 public:
-    static void gammaCorrection(double gamma, const QList<QRgb> & colors, QList<StructRgb> & result, int colorDepth = 256);
-    static void brightnessCorrection(int brightness, QList<StructRgb> & result);
-    static void maxCorrection(int max, QList<StructRgb> & result);
+    static void gammaCorrection(double gamma, StructRgb &);
+    static void brightnessCorrection(unsigned int brightness, StructRgb &);
+    static void maxCorrection(unsigned int max, StructRgb &);
     static int getValueHSV(const QRgb rgb);
     static int getChromaHSV(const QRgb rgb);
     static int max(const QRgb);
     static int min(const QRgb);
     static QRgb withValueHSV(const QRgb, int);
     static QRgb withChromaHSV(const QRgb, int);
+    static StructXyz toXyz(const StructRgb &);
+    static StructXyz toXyz(const StructLab &);
+    static StructLab toLab(const StructRgb &);
+    static StructLab toLab(const StructXyz &);
+    static StructRgb toRgb(const StructXyz &);
+    static StructRgb toRgb(const StructLab &);
 
     // Convert ASCII char '5' to 5
     static inline char getDigit(const char d)

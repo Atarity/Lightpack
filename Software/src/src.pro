@@ -132,7 +132,8 @@ SOURCES += \
     grab/WinAPIGrabberEachWidget.cpp \
     grab/D3D9Grabber.cpp \
     grab/MacOSGrabber.cpp \
-    GrabManager.cpp
+    GrabManager.cpp \
+    AbstractLedDevice.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -148,7 +149,6 @@ HEADERS += \
     SpeedTest.hpp \
     alienfx/LFXDecl.h \
     alienfx/LFX2.h \
-    ILedDevice.hpp \    
     LedDeviceLightpack.hpp \
     LedDeviceAlienFx.hpp \
     LedDeviceAdalight.hpp \
@@ -163,7 +163,6 @@ HEADERS += \
     ../../CommonHeaders/COMMANDS.h \
     ../../CommonHeaders/USB_ID.h \
     LightpackMath.hpp \
-    StructRgb.hpp \
     PluginManager.hpp \
     plugins/PyPlugin.h \    
     MoodLampManager.hpp \
@@ -179,7 +178,9 @@ HEADERS += \
     grab/QtGrabberEachWidget.hpp \
     grab/WinAPIGrabberEachWidget.hpp \
     grab/D3D9Grabber.hpp \
-    grab/MacOSGrabber.hpp
+    grab/MacOSGrabber.hpp \
+    colorspace_types.h \
+    AbstractLedDevice.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \

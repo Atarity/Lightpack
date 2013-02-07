@@ -27,7 +27,7 @@
 
 #include <QtGui>
 
-#include "ILedDevice.hpp"
+#include "AbstractLedDevice.hpp"
 #include "TimeEvaluations.hpp"
 #include "LightpackMath.hpp"
 
@@ -42,7 +42,7 @@
 #define WRITE_BUFFER_INDEX_COMMAND      1
 #define WRITE_BUFFER_INDEX_DATA_START   2
 
-class LedDeviceLightpack : public ILedDevice
+class LedDeviceLightpack : public AbstractLedDevice
 {
     Q_OBJECT
 public:
@@ -57,8 +57,6 @@ public slots:
     void setColorDepth(int value);
     void setSmoothSlowdown(int value);
     void setColorSequence(QString /*value*/);
-    void setGamma(double value);
-    void setBrightness(int percent);
     void requestFirmwareVersion();
     void updateDeviceSettings();
 
@@ -80,12 +78,6 @@ private:
 
     unsigned char m_readBuffer[65];    /* 0-ReportID, 1..65-data */
     unsigned char m_writeBuffer[65];   /* 0-ReportID, 1..65-data */
-
-    double m_gamma;
-    int m_brightness;    
-
-    QList<QRgb> m_colorsSaved;
-    QList<StructRgb> m_colorsBuffer;
 
     QTimer *m_timerPingDevice;
 

@@ -149,8 +149,11 @@ enum Cmd {
     SetSmoothSlowdown,
     SetGamma,
     SetBrightness,
+    SetLuminosityThreshold,
+    SetMinimumLuminosityEnabled,
     SetColorSequence,
     RequestFirmwareVersion,
+    UpdateWBAdjustments,
     UpdateDeviceSettings
 };
 }

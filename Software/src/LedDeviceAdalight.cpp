@@ -32,7 +32,7 @@
 
 using namespace SettingsScope;
 
-LedDeviceAdalight::LedDeviceAdalight(QObject * parent) : ILedDevice(parent)
+LedDeviceAdalight::LedDeviceAdalight(QObject * parent) : AbstractLedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -60,8 +60,7 @@ void LedDeviceAdalight::setColors(const QList<QRgb> & colors)
 
     resizeColorsBuffer(colors.count());
 
-    LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer);
-    LightpackMath::brightnessCorrection(m_brightness, m_colorsBuffer);
+    applyColorModifications(colors, m_colorsBuffer);
 
     m_writeBuffer.clear();
     m_writeBuffer.append(m_writeBufferHeader);
@@ -137,22 +136,6 @@ void LedDeviceAdalight::setColorDepth(int /*value*/)
 void LedDeviceAdalight::setSmoothSlowdown(int /*value*/)
 {
     emit commandCompleted(true);
-}
-
-void LedDeviceAdalight::setGamma(double value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    m_gamma = value;
-    setColors(m_colorsSaved);
-}
-
-void LedDeviceAdalight::setBrightness(int percent)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << percent;
-
-    m_brightness = percent;
-    setColors(m_colorsSaved);
 }
 
 void LedDeviceAdalight::setColorSequence(QString value)
@@ -231,7 +214,7 @@ bool LedDeviceAdalight::writeBuffer(const QByteArray & buff)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "Hex:" << buff.toHex();
 
-    if (m_AdalightDevice->isOpen() == false)
+    if (m_AdalightDevice == NULL || m_AdalightDevice->isOpen() == false)
         return false;
 
     int bytesWritten = m_AdalightDevice->write(buff);

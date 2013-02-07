@@ -865,7 +865,7 @@ void SettingsWindow::updateVirtualLedsColors(const QList<QRgb> & colors)
 
     if (colors.count() != m_labelsGrabbedColors.count())
     {
-        qCritical() << Q_FUNC_INFO << "Fail: colors.count()" << colors.count() << "!=" << "m_labelsGrabbedColors.count()" << m_labelsGrabbedColors.count() << "."
+        qWarning() << Q_FUNC_INFO << "colors.count()" << colors.count() << "!=" << "m_labelsGrabbedColors.count()" << m_labelsGrabbedColors.count() << "."
                     << "Cancel updating virtual colors.";
         return;
     }

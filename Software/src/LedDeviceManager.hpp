@@ -27,7 +27,7 @@
 #pragma once
 
 #include "enums.hpp"
-#include "ILedDevice.hpp"
+#include "AbstractLedDevice.hpp"
 
 /*!
     This class creates \a ILedDevice implementations and manages them after.
@@ -55,8 +55,11 @@ signals:
     void ledDeviceSetSmoothSlowdown(int value);
     void ledDeviceSetGamma(double value);
     void ledDeviceSetBrightness(int value);
+    void ledDeviceSetLuminosityThreshold(int value);
+    void ledDeviceSetMinimumLuminosityEnabled(bool);
     void ledDeviceSetColorSequence(QString value);
     void ledDeviceRequestFirmwareVersion();
+    void ledDeviceUpdateWBAdjustments();
     void ledDeviceUpdateDeviceSettings();
 
 public slots:
@@ -71,8 +74,11 @@ public slots:
     void setSmoothSlowdown(int value);
     void setGamma(double value);
     void setBrightness(int value);
+    void setLuminosityThreshold(int value);
+    void setMinimumLuminosityEnabled(bool value);
     void setColorSequence(QString value);
     void requestFirmwareVersion();
+    void updateWBAdjustments();
     void updateDeviceSettings();
 
 private slots:
@@ -80,7 +86,7 @@ private slots:
 
 private:    
     void initLedDevice();
-    ILedDevice * createLedDevice(SupportedDevices::DeviceType deviceType);
+    AbstractLedDevice * createLedDevice(SupportedDevices::DeviceType deviceType);
     void connectSignalSlotsLedDevice();
     void disconnectSignalSlotsLedDevice();
     void cmdQueueAppend(LedDeviceCommands::Cmd);
@@ -100,9 +106,11 @@ private:
     int m_savedSmoothSlowdown;
     double m_savedGamma;
     int m_savedBrightness;
+    int m_savedLuminosityThreshold;
+    bool m_savedIsMinimumLuminosityEnabled;
     QString m_savedColorSequence;
 
-    QList<ILedDevice *> m_ledDevices;
-    ILedDevice *m_ledDevice;
+    QList<AbstractLedDevice *> m_ledDevices;
+    AbstractLedDevice *m_ledDevice;
     QThread *m_ledDeviceThread;
 };

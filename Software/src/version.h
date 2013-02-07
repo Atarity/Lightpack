@@ -27,10 +27,10 @@
 #pragma once
 
 // Current version of Lightpack software
-#define VERSION_STR     "5.9.1"
+#define VERSION_STR     "5.9.2"
 
 // Resource defines using in Lightpack.rc
-#define VER_FILEVERSION             5,9,1,0
+#define VER_FILEVERSION             5,9,2,0
 #define VER_PRODUCTVERSION          VER_FILEVERSION
 
 #define VER_FILEVERSION_STR         VERSION_STR "\0"
@@ -40,7 +40,7 @@
 #define VER_COMPANYNAME_STR         "Pixelkit LLC"
 #define VER_FILEDESCRIPTION_STR     "lightpack.googlecode.com"
 #define VER_INTERNALNAME_STR        "Prismatik"
-#define VER_LEGALCOPYRIGHT_STR      "Copyleft (c) 2012 Prismatik"
+#define VER_LEGALCOPYRIGHT_STR      "Copyleft (c) 2013 Prismatik"
 #define VER_ORIGINALFILENAME_STR    "Prismatik_sw" VERSION_STR ".exe"
 
 

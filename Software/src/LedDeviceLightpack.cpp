@@ -39,7 +39,7 @@ const int LedDeviceLightpack::PingDeviceInterval = 1000;
 const int LedDeviceLightpack::MaximumLedsCount = MaximumNumberOfLeds::Lightpack6;
 
 LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
-    ILedDevice(parent)
+    AbstractLedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
@@ -84,8 +84,7 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
     // Save colors for showing changes of the brightness
     m_colorsSaved = colors;
 
-    LightpackMath::gammaCorrection(m_gamma, colors, m_colorsBuffer, 4096 /* 12-bit result */);
-    LightpackMath::brightnessCorrection(m_brightness, m_colorsBuffer);
+    applyColorModifications(colors, m_colorsBuffer);
 
     // First write_buffer[0] == 0x00 - ReportID, i have problems with using it
     // Second byte of usb buffer is command (write_buffer[1] == CMD_UPDATE_LEDS, see below)
@@ -168,30 +167,6 @@ void LedDeviceLightpack::setSmoothSlowdown(int value)
 void LedDeviceLightpack::setColorSequence(QString /*value*/)
 {
     emit commandCompleted(true);
-}
-
-void LedDeviceLightpack::setGamma(double value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    m_gamma = value;
-
-    if (Settings::isBacklightEnabled())
-        setColors(m_colorsSaved);
-    else
-        commandCompleted(true);
-}
-
-void LedDeviceLightpack::setBrightness(int percent)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << percent;
-
-    m_brightness = percent;
-
-    if (Settings::isBacklightEnabled())
-        setColors(m_colorsSaved);
-    else
-        commandCompleted(true);
 }
 
 void LedDeviceLightpack::requestFirmwareVersion()

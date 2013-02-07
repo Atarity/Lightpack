@@ -30,9 +30,9 @@
 
 #ifdef Q_WS_WIN
 
-#include "ILedDevice.hpp"
+#include "AbstractLedDevice.hpp"
 
-class LedDeviceAlienFx : public ILedDevice
+class LedDeviceAlienFx : public AbstractLedDevice
 {
     Q_OBJECT
 public:
@@ -46,8 +46,6 @@ public slots:
     void setRefreshDelay(int /*value*/);
     void setColorDepth(int /*value*/);
     void setSmoothSlowdown(int /*value*/);
-    void setGamma(double /*value*/);
-    void setBrightness(int /*value*/);
     void setColorSequence(QString /*value*/);
     void requestFirmwareVersion();
     void updateDeviceSettings();
