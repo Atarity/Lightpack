@@ -17,7 +17,7 @@ HEADERS +=                \
 SOURCES +=                \
   PythonQt_QtAll.cpp
 
-CONFIG += uitools
+LIBS += -lQtUiTools
 QT += webkit gui svg sql network xml xmlpatterns opengl
 #QT += phonon 
 

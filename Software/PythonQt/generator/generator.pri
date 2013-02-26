@@ -69,4 +69,7 @@ win32-msvc.net {
 mac {
     contains(QT_CONFIG, x86):contains(QT_CONFIG, ppc):CONFIG += x86 ppc
     CONFIG -= precompile_header
+QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.7
+QMAKE_CXXFLAGS_X86_64 = $$QMAKE_CFLAGS_X86_64
+
 }

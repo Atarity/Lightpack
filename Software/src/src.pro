@@ -42,7 +42,7 @@ RC_FILE      = ../res/Lightpack.rc
 
 include(../build-config.prf)
 
-unix{
+unix:!macx{
     CONFIG    += link_pkgconfig
     PKGCONFIG += libusb-1.0
 }
@@ -93,11 +93,13 @@ macx{
             -framework Carbon \
             -framework CoreFoundation \
             -framework ApplicationServices \
-            -framework OpenGL
+            -framework OpenGL \
+            -L/opt/local/lib -lusb-1.0
+
     ICON = ../res/icons/Lightpack.icns
 
     # For build universal binaries (native on Intel and PowerPC)
-    QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk
+    QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
 }
 
 INCLUDEPATH += ./hidapi ./grab ./alienfx ./
