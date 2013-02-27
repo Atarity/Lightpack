@@ -1961,7 +1961,7 @@ void SettingsWindow::setupHotkeys()
 
 
     //to speed up initialization disable sorting while adding new items
-    //    hotkeysTable->setSortingEnabled(false);
+        hotkeysTable->setSortingEnabled(false);
     hotkeysTable->setColumnCount(3);
     hotkeysTable->setHorizontalHeaderLabels(headerLabels);
     registerHotkey(SLOT(toggleBacklight()), tr("On/Off lights"), Settings::getHotkey("toggleBacklight").toString());
@@ -1978,7 +1978,7 @@ void SettingsWindow::setupHotkeys()
     m_isHotkeySelectionChanging = false;
     connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onKeySequenceChanged(QKeySequence)));
 
-    //    hotkeysTable->setSortingEnabled(true);
+        hotkeysTable->setSortingEnabled(true);
     hotkeysTable->resizeRowsToContents();
     ui->groupBox_HotKeys->layout()->addWidget(m_keySequenceWidget);
 
@@ -2028,6 +2028,7 @@ void SettingsWindow::onHotkeyChanged(const QString &actionName, const QKeySequen
         }
     }
 
+    GlobalShortcutManager::instance()->connect(QKeySequence(), this, slotName.toAscii().data() );
     GlobalShortcutManager::instance()->disconnect(oldKeySequence, this, slotName.toAscii().data() );
     GlobalShortcutManager::instance()->connect(sequence, this, slotName.toAscii().data() );
 }

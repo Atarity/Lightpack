@@ -423,6 +423,7 @@ void QKeySequenceWidgetPrivate::startRecording()
     shortcutButton->setDown(true);
 
     shortcutButton->grabKeyboard();
+    shortcutButton->setFocus();
 
     inputTimeout.stop();
     inputTimeout.start(3000);   // Give three seconds penality to input.
