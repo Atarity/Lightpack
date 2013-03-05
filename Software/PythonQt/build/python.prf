@@ -8,8 +8,8 @@ macx {
   LIBS += -F/System/Library/Frameworks -framework Python
 } else:win32 {
 
-  win32:INCLUDEPATH += c:/Python27/include $$PWD/../src
-  win32:LIBS += c:/Python27/libs/libpython27.a
+  win32:INCLUDEPATH += $${PYTHON_PATH}/include $$PWD/../src
+  win32:LIBS += $${PYTHON_LIB}/libpython27.a
 
 } else:unix {
   # on linux, python-config is used to autodetect Python.
