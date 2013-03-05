@@ -42,6 +42,7 @@ LedDeviceArdulight::LedDeviceArdulight(QObject * parent) : AbstractLedDevice(par
     m_writeBufferHeader.append((char)255);
 
     m_colorSequence = Settings::getColorSequence(SupportedDevices::DeviceTypeArdulight);
+    m_ArdulightDevice = NULL;
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
 }
@@ -52,6 +53,7 @@ LedDeviceArdulight::~LedDeviceArdulight()
         m_ArdulightDevice->close();
 
     delete m_ArdulightDevice;
+    m_ArdulightDevice = NULL;
 }
 
 void LedDeviceArdulight::setColors(const QList<QRgb> & colors)
