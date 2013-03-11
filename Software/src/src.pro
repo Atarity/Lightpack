@@ -73,6 +73,7 @@ win32 {
                 cp -f \"$${QTDIR}/bin/QtNetwork$${DEBUG_EXT}4.dll\" ./ && \
                 cp -f \"$${MINGW_RUNTIME_DIR}/mingwm10.dll\" ./ && \
                 cp -f \"$${MINGW_RUNTIME_DIR}/libgcc_s_dw2-1.dll\" ./ && \
+                cp -f \"$${MINGW_RUNTIME_DIR}/libstdc++-6.dll\" ./ && \
                 cp -f \"$$PWD/../PythonQt/lib/PythonQt$${DEBUG_EXT}.dll\" ./ && \
                 cp -f \"$$PWD/../PythonQt/lib/PythonQt_QtAll$${DEBUG_EXT}.dll\" ./ && \
                 cp -f \"$$PWD\"/../python_binaries_win32/* ./
