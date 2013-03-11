@@ -31,7 +31,7 @@
     <normaloff>:/icons/settings.png</normaloff>:/icons/settings.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">QMainWindow[style=QWindowsVistaStyle]{}</string>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -2495,7 +2495,16 @@
             <string>Plugin settings</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_2">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
              <number>0</number>
             </property>
             <item>
@@ -2715,7 +2724,7 @@
               </sizepolicy>
              </property>
              <property name="inputMask">
-              <string notr="true">D999; </string>
+              <string notr="true">D999</string>
              </property>
             </widget>
            </item>

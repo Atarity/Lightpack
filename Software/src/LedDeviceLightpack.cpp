@@ -202,6 +202,7 @@ void LedDeviceLightpack::updateDeviceSettings()
     setSmoothSlowdown(Settings::getDeviceSmooth());
     setGamma(Settings::getDeviceGamma());
     setBrightness(Settings::getDeviceBrightness());
+    setLuminosityThreshold(Settings::getLuminosityThreshold());
 
     requestFirmwareVersion();
 }

@@ -145,7 +145,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     emit backlightStatusChanged(m_backlightStatus);
 
     m_deviceLockStatus = DeviceLocked::Unlocked;
-    m_lightpackMode = Settings::getLightpackMode();
 
     onGrabberChanged();
 
@@ -576,13 +575,13 @@ void SettingsWindow::setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status, 
     {
         syncLedDeviceWithSettingsWindow();
 
-        if (m_lightpackMode == Lightpack::MoodLampMode && ui->radioButton_LiquidColorMoodLampMode->isChecked())
+        if (Settings::getLightpackMode() == Lightpack::MoodLampMode && ui->radioButton_LiquidColorMoodLampMode->isChecked())
         {
             // Switch off smooth if moodlamp liquid mode
             emit updateSmoothSlowdown(0);
         }
     } else {
-        if (m_lightpackMode == Lightpack::MoodLampMode && ui->radioButton_LiquidColorMoodLampMode->isChecked())
+        if (Settings::getLightpackMode() == Lightpack::MoodLampMode && ui->radioButton_LiquidColorMoodLampMode->isChecked())
         {
             // Restore smooth slowdown value before change control to API
             emit updateSmoothSlowdown(Settings::getDeviceSmooth());
@@ -1279,7 +1278,6 @@ void SettingsWindow::onLightpackModeChanged(Lightpack::Mode mode)
         break;
     }
     backlightStatusChanged(m_backlightStatus);
-    m_lightpackMode = Settings::getLightpackMode();
 }
 
 void SettingsWindow::onMoodLampColor_changed(QColor color)

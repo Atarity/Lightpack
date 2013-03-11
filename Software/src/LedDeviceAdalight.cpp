@@ -160,6 +160,7 @@ void LedDeviceAdalight::updateDeviceSettings()
     setGamma(Settings::getDeviceGamma());
     setBrightness(Settings::getDeviceBrightness());
     setColorSequence(Settings::getColorSequence(SupportedDevices::DeviceTypeAdalight));
+    setLuminosityThreshold(Settings::getLuminosityThreshold());
 }
 
 void LedDeviceAdalight::open()

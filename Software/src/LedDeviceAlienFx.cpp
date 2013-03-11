@@ -174,6 +174,7 @@ void LedDeviceAlienFx::updateDeviceSettings()
     // TODO
     setGamma(Settings::getDeviceGamma());
     setBrightness(Settings::getDeviceBrightness());
+    setLuminosityThreshold(Settings::getLuminosityThreshold());
 }
 
 void LedDeviceAlienFx::open()

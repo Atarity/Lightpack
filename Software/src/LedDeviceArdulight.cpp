@@ -172,6 +172,7 @@ void LedDeviceArdulight::updateDeviceSettings()
     setGamma(Settings::getDeviceGamma());
     setBrightness(Settings::getDeviceBrightness());
     setColorSequence(Settings::getColorSequence(SupportedDevices::DeviceTypeArdulight));
+    setLuminosityThreshold(Settings::getLuminosityThreshold());
 }
 
 void LedDeviceArdulight::open()

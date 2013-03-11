@@ -252,7 +252,6 @@ private:
     DeviceLocked::DeviceLockStatus m_deviceLockStatus;
     QList<QString> m_deviceLockKey;
     QString m_deviceLockModule;
-    Lightpack::Mode m_lightpackMode;
 
     SpeedTest *m_speedTest;
 
