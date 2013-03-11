@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Prismatik"
-#define MyAppVersion "5.9.1"
+#define MyAppVersion "5.9.3"
 #define MyAppPublisher "Pixelkit LLC"
 #define MyAppURL "http://code.google.com/p/lightpack/"
 #define MyAppExeName "Prismatik.exe"
@@ -33,9 +33,9 @@ UninstallDisplayName={cm:UninstallName}
 UninstallDisplayIcon={app}\Prismatik.exe
 VersionInfoDescription=Prismatik is a monitor light device used for presence effect strengthening. 
 AppMutex=LightpackAppMutex
-VersionInfoVersion=5.9.1
+VersionInfoVersion=5.9.3
 VersionInfoProductName=Prismatik
-VersionInfoProductVersion=5.9.1
+VersionInfoProductVersion=5.9.3
 Uninstallable=true
 
 [Languages]
@@ -72,6 +72,7 @@ Source: "content/_tkinter.pyd"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/bz2.pyd"; DestDir: "{app}"; Flags: ignoreversion
 Source: "gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/libstdc++-6.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/libraryinjector.dll"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: 32bit regserver ignoreversion
 Source: "content/prismatik-hooks.dll"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: ignoreversion
 Source: "content/mingwm10.dll"; DestDir: "{app}"; Flags: ignoreversion
