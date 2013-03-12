@@ -30,9 +30,8 @@
 # -------------------------------------------------
 
 TEMPLATE = subdirs
-SUBDIRS = src tests
+SUBDIRS = src
 win32 {
-    SUBDIRS += libraryinjector \
-               hooks
+    SUBDIRS +=
 
 }

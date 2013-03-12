@@ -1,9 +1,9 @@
 This package was debianized by Timur Sattarov <tim.helloworld@gmail.com>
-Wed, 5 Dec 2012 22:00:00 +0400
+Tue, 12 Mar 2013 16:45:00 +0400
 
 Copyright:
 
-    Copyright (C) 2012 Mike Shatohin, Timur Sattarov
+    Copyright (C) 2013 Mike Shatohin, Timur Sattarov
 
 License:
 
@@ -24,5 +24,5 @@ License:
 On Debian systems, the complete text of the GNU General
 Public License can be found in `/usr/share/common-licenses/GPL'.
 
-The Debian packaging is (C) 2012, Timur Sattarov <tim.helloworld@gmail.com>
+The Debian packaging is (C) 2013, Timur Sattarov <tim.helloworld@gmail.com>
 is licensed under the GPL, see above.
