@@ -97,10 +97,11 @@ macx{
             -framework OpenGL \
             -L/opt/local/lib -lusb-1.0
 
-    ICON = ../res/icons/Lightpack.icns
+    ICON = ../res/icons/Prismatik.icns
 
     # For build universal binaries (native on Intel and PowerPC)
     QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
+    QMAKE_POST_LINK = $$PWD/mac_post_link.sh $(DESTDIR) $$PWD
 }
 
 INCLUDEPATH += ./hidapi ./grab ./alienfx ./

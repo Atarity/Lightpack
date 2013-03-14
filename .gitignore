@@ -41,4 +41,6 @@ stuff/
 *.user
 *.log
 *.tmp
+*.dmg
+Software/dmg/contents
 build-vars.prf
