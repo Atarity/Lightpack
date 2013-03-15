@@ -31,7 +31,4 @@
 
 TEMPLATE = subdirs
 SUBDIRS = src
-win32 {
-    SUBDIRS +=
-
-}
+win32:SUBDIRS += libraryinjector hooks tests

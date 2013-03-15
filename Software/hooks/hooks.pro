@@ -57,4 +57,3 @@ HEADERS += \
     ../common/BufferFormat.h \
     msvcstub.h \
     D3D9FrameGrabber.hpp
-
