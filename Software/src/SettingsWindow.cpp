@@ -192,6 +192,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->spinBox_GrabSlowdown, SIGNAL(valueChanged(int)), this, SLOT(onGrabSlowdown_valueChanged(int)));
     connect(ui->spinBox_LuminosityThreshold, SIGNAL(valueChanged(int)), this, SLOT(onLuminosityThreshold_valueChanged(int)));
     connect(ui->radioButton_MinimumLuminosity, SIGNAL(toggled(bool)), this, SLOT(onMinimumLumosity_toggled(bool)));
+    connect(ui->radioButton_LuminosityDeadZone, SIGNAL(toggled(bool)), this, SLOT(onMinimumLumosity_toggled(bool)));
     connect(ui->checkBox_GrabIsAvgColors, SIGNAL(toggled(bool)), this, SLOT(onGrabIsAvgColors_toggled(bool)));
 
     connect(ui->radioButton_GrabWidgetsDontShow, SIGNAL(toggled(bool)), this, SLOT( onDontShowLedWidgets_Toggled(bool)));
@@ -295,10 +296,13 @@ void SettingsWindow::changeEvent(QEvent *e)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << e->type();
 
+    int currentPage = 0;
+    QListWidgetItem * item = NULL;
     QMainWindow::changeEvent(e);
     switch (e->type()) {
     case QEvent::LanguageChange:
 
+        currentPage = ui->listWidget->currentRow();
         ui->retranslateUi(this);
         m_switchOnBacklightAction->setText(tr("&Turn on"));
         m_switchOffBacklightAction->setText(tr("&Turn off"));
@@ -329,6 +333,12 @@ void SettingsWindow::changeEvent(QEvent *e)
         setWindowTitle(tr("Prismatik: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
         this->setupHotkeys();
+
+        ui->listWidget->addItem("dirty hack");
+        item = ui->listWidget->takeItem(ui->listWidget->count()-1);
+        delete item;
+        ui->listWidget->setCurrentRow(currentPage);
+
 
         ui->comboBox_Language->setItemText(0, tr("System default"));
 
@@ -1808,6 +1818,8 @@ void SettingsWindow::updateUiFromSettings()
     ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsEnabled());
     ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
     ui->spinBox_LuminosityThreshold->setValue           (Settings::getLuminosityThreshold());
+
+    // Check the selected moodlamp mode (setChecked(false) not working to select another)
     ui->radioButton_MinimumLuminosity->setChecked       (Settings::isMinimumLuminosityEnabled());
     ui->radioButton_LuminosityDeadZone->setChecked      (!Settings::isMinimumLuminosityEnabled());
 
