@@ -1084,7 +1084,7 @@ void SettingsWindow::onMinimumLumosity_toggled(bool value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
 
-    Settings::setMinimumLuminosityEnabled(value);
+    Settings::setMinimumLuminosityEnabled(ui->radioButton_MinimumLuminosity->isChecked());
 }
 
 void SettingsWindow::onGrabIsAvgColors_toggled(bool state)
