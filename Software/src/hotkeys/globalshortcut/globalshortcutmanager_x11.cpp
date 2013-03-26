@@ -283,8 +283,9 @@ private:
 		failed = false;
 		XErrorHandler savedErrorHandler = XSetErrorHandler(XGrabErrorHandler);
 		WId w = QX11Info::appRootWindow();
+	    Display *display = QX11Info::display();
 		foreach(long mask_mod, X11KeyTriggerManager::ignModifiersList()) {
-			XGrabKey(QX11Info::display(), code, mod | mask_mod, w, False, GrabModeAsync, GrabModeAsync);
+			XGrabKey(display, code, mod | mask_mod, w, False, GrabModeAsync, GrabModeAsync);
 			GrabbedKey grabbedKey;
 			grabbedKey.code = code;
 			grabbedKey.mod  = mod | mask_mod;
@@ -318,8 +319,11 @@ public:
 	{
 		X11KeyTriggerManager::instance()->removeTrigger(this);
 
-		foreach(GrabbedKey key, grabbedKeys_)
-			XUngrabKey(QX11Info::display(), key.code, key.mod, QX11Info::appRootWindow());
+        foreach(GrabbedKey key, grabbedKeys_) {
+            Display *display = QX11Info::display();
+            Qt::HANDLE handle = QX11Info::appRootWindow();
+            XUngrabKey(display, key.code, key.mod, handle);
+        }
 	}
 
 	void activate()

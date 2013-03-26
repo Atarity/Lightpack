@@ -314,7 +314,13 @@ void Settings::loadOrCreateProfile(const QString & profileName)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << profileName;
 
+
     QMutexLocker locker(&m_mutex);
+    QString fn = m_currentProfile->fileName();
+
+    if (m_currentProfile != NULL
+        && fn.compare(getProfilesPath() + profileName + ".ini") == 0)
+        return; //nothing to change, profile is already loaded
 
     if (m_currentProfile != NULL)
     {
@@ -338,6 +344,7 @@ void Settings::loadOrCreateProfile(const QString & profileName)
     DEBUG_LOW_LEVEL << "Settings file:" << m_currentProfile->fileName();
 
     m_mainConfig->setValue(Main::Key::ProfileLast, profileName);
+    locker.unlock();
     m_this->profileLoaded(profileName);
 }
 

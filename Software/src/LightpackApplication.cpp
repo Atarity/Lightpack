@@ -102,18 +102,21 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     startApiServer();
 
-    startGrabManager();
+    initGrabManager();
 
     startPluginManager();
 
-    this->settingsChanged();
-    startBacklight();
 
     if (!m_noGui)
     {
         connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(setStatusChanged(Backlight::Status)));
         m_settingsWindow->startBacklight();
     }
+
+    this->settingsChanged();
+
+    handleConnectedDeviceChange(settings()->getConnectedDevice());
+
     emit postInitialization();
 }
 
@@ -501,7 +504,7 @@ void LightpackApplication::startLedDeviceManager()
 
 }
 
-void LightpackApplication::startGrabManager()
+void LightpackApplication::initGrabManager()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     m_grabManager = new GrabManager(NULL);

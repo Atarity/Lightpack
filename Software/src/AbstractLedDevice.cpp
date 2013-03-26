@@ -57,6 +57,7 @@ void AbstractLedDevice::updateWBAdjustments() {
         wbAdjustment.blue  = Settings::getLedCoefBlue(i);
         m_wbAdjustments.append(wbAdjustment);
     }
+    setColors(m_colorsSaved);
 }
 
 void AbstractLedDevice::updateDeviceSettings()

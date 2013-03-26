@@ -86,7 +86,7 @@ private:
     void checkSystemTrayAvailability() const;
     void startApiServer();
     void startLedDeviceManager();
-    void startGrabManager();
+    void initGrabManager();
     void startPluginManager();
     void startBacklight();
     void connectApiServerAndLedDeviceSignalsSlots();

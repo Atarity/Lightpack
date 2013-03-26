@@ -42,20 +42,23 @@ LedDeviceVirtual::LedDeviceVirtual(QObject * parent) : AbstractLedDevice(parent)
 
 void LedDeviceVirtual::setColors(const QList<QRgb> & colors)
 {
-    m_colorsSaved = colors;
-
-    QList<QRgb> callbackColors;
-
-    resizeColorsBuffer(colors.count());
-
-    applyColorModifications(colors, m_colorsBuffer);
-
-    for (int i = 0; i < m_colorsBuffer.count(); i++)
+    if(colors.size()> 0)
     {
-        callbackColors.append(qRgb(m_colorsBuffer[i].r>>4, m_colorsBuffer[i].g>>4, m_colorsBuffer[i].b>>4));
-    }
+        m_colorsSaved = colors;
 
-    emit colorsUpdated(callbackColors);
+        QList<QRgb> callbackColors;
+
+        resizeColorsBuffer(colors.count());
+
+        applyColorModifications(colors, m_colorsBuffer);
+
+        for (int i = 0; i < m_colorsBuffer.count(); i++)
+        {
+            callbackColors.append(qRgb(m_colorsBuffer[i].r>>4, m_colorsBuffer[i].g>>4, m_colorsBuffer[i].b>>4));
+        }
+
+        emit colorsUpdated(callbackColors);
+    }
     emit commandCompleted(true);
 }
 

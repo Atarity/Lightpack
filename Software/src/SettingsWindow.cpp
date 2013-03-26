@@ -131,8 +131,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     initConnectedDeviceComboBox();
     initSerialPortBaudRateComboBox();
 
-    updateUiFromSettings();
-
     loadTranslation(Settings::getLanguage());
 
     if (Settings::isBacklightEnabled())
@@ -145,8 +143,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     emit backlightStatusChanged(m_backlightStatus);
 
     m_deviceLockStatus = DeviceLocked::Unlocked;
-
-    onGrabberChanged();
 
     adjustSizeAndMoveCenter();
 
@@ -875,7 +871,7 @@ void SettingsWindow::updateVirtualLedsColors(const QList<QRgb> & colors)
     if (colors.count() != m_labelsGrabbedColors.count())
     {
         qWarning() << Q_FUNC_INFO << "colors.count()" << colors.count() << "!=" << "m_labelsGrabbedColors.count()" << m_labelsGrabbedColors.count() << "."
-                    << "Cancel updating virtual colors.";
+                    << "Cancel updating virtual colors." << sender();
         return;
     }
 
@@ -944,8 +940,6 @@ void SettingsWindow::showSettings()
 
     this->show();
     this->activateWindow();
-
-    onLightpackModeChanged(Settings::getLightpackMode());
 
     if (_plugins.count()>0)
     {
@@ -1261,7 +1255,7 @@ void SettingsWindow::onLightpackModes_Activated(int index)
 
 void SettingsWindow::onLightpackModeChanged(Lightpack::Mode mode)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << mode << ui->comboBox_LightpackModes->currentIndex();
 
     switch (mode)
     {
@@ -2064,6 +2058,8 @@ void SettingsWindow::quit()
         m_trayIcon->hide();
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "QApplication::quit();";
+
+    GlobalShortcutManager::clear();
 
     QApplication::quit();
 }
