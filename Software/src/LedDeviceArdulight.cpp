@@ -169,10 +169,9 @@ void LedDeviceArdulight::updateDeviceSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    setGamma(Settings::getDeviceGamma());
-    setBrightness(Settings::getDeviceBrightness());
+    AbstractLedDevice::updateDeviceSettings();
     setColorSequence(Settings::getColorSequence(SupportedDevices::DeviceTypeArdulight));
-    setLuminosityThreshold(Settings::getLuminosityThreshold());
+
 }
 
 void LedDeviceArdulight::open()

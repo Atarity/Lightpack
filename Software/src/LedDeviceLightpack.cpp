@@ -197,12 +197,10 @@ void LedDeviceLightpack::updateDeviceSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    AbstractLedDevice::updateDeviceSettings();
     setRefreshDelay(Settings::getDeviceRefreshDelay());
     setColorDepth(Settings::getDeviceColorDepth());
     setSmoothSlowdown(Settings::getDeviceSmooth());
-    setGamma(Settings::getDeviceGamma());
-    setBrightness(Settings::getDeviceBrightness());
-    setLuminosityThreshold(Settings::getLuminosityThreshold());
 
     requestFirmwareVersion();
 }

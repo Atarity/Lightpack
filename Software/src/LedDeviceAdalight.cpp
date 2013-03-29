@@ -157,10 +157,8 @@ void LedDeviceAdalight::updateDeviceSettings()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    setGamma(Settings::getDeviceGamma());
-    setBrightness(Settings::getDeviceBrightness());
+    AbstractLedDevice::updateDeviceSettings();
     setColorSequence(Settings::getColorSequence(SupportedDevices::DeviceTypeAdalight));
-    setLuminosityThreshold(Settings::getLuminosityThreshold());
 }
 
 void LedDeviceAdalight::open()

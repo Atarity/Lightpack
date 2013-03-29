@@ -167,16 +167,6 @@ void LedDeviceAlienFx::requestFirmwareVersion()
     emit commandCompleted(true);
 }
 
-void LedDeviceAlienFx::updateDeviceSettings()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    // TODO
-    setGamma(Settings::getDeviceGamma());
-    setBrightness(Settings::getDeviceBrightness());
-    setLuminosityThreshold(Settings::getLuminosityThreshold());
-}
-
 void LedDeviceAlienFx::open()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;

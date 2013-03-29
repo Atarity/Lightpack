@@ -48,7 +48,6 @@ public slots:
     void setSmoothSlowdown(int /*value*/);
     void setColorSequence(QString /*value*/);
     void requestFirmwareVersion();
-    void updateDeviceSettings();
 
 private:
     HINSTANCE m_hLfxLibrary;
