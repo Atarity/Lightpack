@@ -114,7 +114,7 @@ protected:
     virtual void closeEvent(QCloseEvent *event);
 
 private slots:
-    void onLightpackModes_Activated(int index);
+    void onLightpackModes_currentIndexChanged(int index);
     void onLightpackModeChanged(Lightpack::Mode);
     void onMoodLampColor_changed(QColor color);
     void onMoodLampSpeed_valueChanged(int value);

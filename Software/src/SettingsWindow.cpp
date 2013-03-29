@@ -199,7 +199,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->horizontalSlider_MoodLampSpeed, SIGNAL(valueChanged(int)), this, SLOT(onMoodLampSpeed_valueChanged(int)));
 
     // Main options
-    connect(ui->comboBox_LightpackModes, SIGNAL(activated(int)), this, SLOT(onLightpackModes_Activated(int)));
+    connect(ui->comboBox_LightpackModes, SIGNAL(currentIndexChanged(int)), this, SLOT(onLightpackModes_currentIndexChanged(int)));
     connect(ui->comboBox_Language, SIGNAL(activated(QString)), this, SLOT(loadTranslation(QString)));
     connect(ui->pushButton_EnableDisableDevice, SIGNAL(clicked()), this, SLOT(toggleBacklight()));
 
@@ -1244,13 +1244,13 @@ void SettingsWindow::onSliderDeviceGammaCorrection_valueChanged(int value)
     emit updateGamma(Settings::getDeviceGamma());
 }
 
-void SettingsWindow::onLightpackModes_Activated(int index)
+void SettingsWindow::onLightpackModes_currentIndexChanged(int index)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << index << sender();
 
     using namespace Lightpack;
-
-    Settings::setLightpackMode(index == GrabModeIndex ? AmbilightMode : MoodLampMode);
+    if (index >= 0)
+        Settings::setLightpackMode(index == GrabModeIndex ? AmbilightMode : MoodLampMode);
 }
 
 void SettingsWindow::onLightpackModeChanged(Lightpack::Mode mode)
@@ -1265,7 +1265,7 @@ void SettingsWindow::onLightpackModeChanged(Lightpack::Mode mode)
         emit showLedWidgets(!ui->radioButton_GrabWidgetsDontShow->isChecked() && this->isVisible());
         if (ui->radioButton_LiquidColorMoodLampMode->isChecked())
         {
-            // Restore smooth slowdown value
+//             Restore smooth slowdown value
             emit updateSmoothSlowdown(Settings::getDeviceSmooth());
         }
         break;
@@ -2311,8 +2311,6 @@ void SettingsWindow::setFirmwareVersion(const QString &firmwareVersion)
 void SettingsWindow::versionsUpdate()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    ui->retranslateUi(this);
 
     // Save templete for construct version string
     QString versionsTemplate = ui->labelVersions->text();
