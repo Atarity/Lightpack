@@ -34,14 +34,14 @@ namespace LightpackMath
     const float refY = 100.000;
     const float refZ = 108.883;
 
-    char valid(double x)
+    template<typename A, typename T>
+    T withinRange(A x, T min, T max)
     {
-        char result;
-        x = round(x);
-        if (x < -128)
-            result = -128;
-        else if (x > 127)
-            result = 127;
+        T result;
+        if (x < min)
+            result = min;
+        else if (x > max)
+            result = max;
         else
             result = x;
         return result;
@@ -115,6 +115,7 @@ namespace LightpackMath
 
 
         double m = 1 - double(chroma)/currentChroma;
+
 
         int r = qRed(rgb)   + (currentMax - qRed(rgb))*m;
         int g = qGreen(rgb) + (currentMax - qGreen(rgb))*m;
@@ -228,8 +229,8 @@ namespace LightpackMath
 
         StructLab result;
         result.l = round((116 * y) - 16);
-        result.a = valid(500 * ( x - y ));
-        result.b = valid(200 * ( y - z ));
+        result.a = withinRange<double, char>(round(500 * ( x - y )), -128, 127);
+        result.b = withinRange<double, char>(round(200 * ( y - z )), -128, 127);
 
         return result;
     }
@@ -262,13 +263,9 @@ namespace LightpackMath
         else
             b = 12.92 * b;
 
-        if (r > 1.0) r = 1;
-        if (g > 1.0) g = 1;
-        if (b > 1.0) b = 1;
-
-        if (r < 0) r = 0;
-        if (g < 0) g = 0;
-        if (b < 0) b = 0;
+        r = withinRange<double, double>(r, 0, 1);
+        g = withinRange<double, double>(g, 0, 1);
+        b = withinRange<double, double>(b, 0, 1);
 
         StructRgb eRgb;
 
