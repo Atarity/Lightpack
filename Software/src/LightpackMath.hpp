@@ -30,27 +30,27 @@
 #include <cmath>
 #include "colorspace_types.h"
 
-class LightpackMath
+namespace LightpackMath
 {
-public:
-    static void gammaCorrection(double gamma, StructRgb &);
-    static void brightnessCorrection(unsigned int brightness, StructRgb &);
-    static void maxCorrection(unsigned int max, StructRgb &);
-    static int getValueHSV(const QRgb rgb);
-    static int getChromaHSV(const QRgb rgb);
-    static int max(const QRgb);
-    static int min(const QRgb);
-    static QRgb withValueHSV(const QRgb, int);
-    static QRgb withChromaHSV(const QRgb, int);
-    static StructXyz toXyz(const StructRgb &);
-    static StructXyz toXyz(const StructLab &);
-    static StructLab toLab(const StructRgb &);
-    static StructLab toLab(const StructXyz &);
-    static StructRgb toRgb(const StructXyz &);
-    static StructRgb toRgb(const StructLab &);
+    void gammaCorrection(double gamma, StructRgb &);
+    void brightnessCorrection(unsigned int brightness, StructRgb &);
+    void maxCorrection(unsigned int max, StructRgb &);
+    int getValueHSV(const QRgb rgb);
+    int getChromaHSV(const QRgb rgb);
+    int max(const QRgb);
+    int min(const QRgb);
+    QRgb withValueHSV(const QRgb, int);
+    QRgb withChromaHSV(const QRgb, int);
+    StructRgb avgColor(const QList<StructRgb> &);
+    StructXyz toXyz(const StructRgb &);
+    StructXyz toXyz(const StructLab &);
+    StructLab toLab(const StructRgb &);
+    StructLab toLab(const StructXyz &);
+    StructRgb toRgb(const StructXyz &);
+    StructRgb toRgb(const StructLab &);
 
     // Convert ASCII char '5' to 5
-    static inline char getDigit(const char d)
+    inline char getDigit(const char d)
     {
         if (isdigit(d))
             return (d - '0');
@@ -58,10 +58,10 @@ public:
             return -1;
     }
 
-    static inline int rand(int val)
+    inline int rand(int val)
     {
         return qrand() % val;
     }
 
-};
+}
 
