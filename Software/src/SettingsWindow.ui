@@ -243,7 +243,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -3291,7 +3291,7 @@ p, li { white-space: pre-wrap; }
            </size>
           </property>
           <property name="text">
-           <string notr="true">&lt;a href=&quot;https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=W6VQABKTGW6F4&amp;lc=RU&amp;item_name=Yes,%20we%20like%20your%20products%20and%20would%20like%20to%20make%20it%20better!&amp;currency_code=USD&amp;bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted&quot;&gt;&lt;img src=&quot;:/icons/donate.png&quot;&gt;&lt;/a&gt;</string>
+           <string notr="true">&lt;a href=&quot;https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=W6VQABKTGW6F4&amp;lc=US&amp;item_name=Yes,%20we%20like%20your%20products%20and%20would%20like%20to%20make%20it%20better!&amp;currency_code=USD&amp;bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted&quot;&gt;&lt;img src=&quot;:/icons/donate.png&quot;&gt;&lt;/a&gt;</string>
           </property>
           <property name="textFormat">
            <enum>Qt::RichText</enum>
