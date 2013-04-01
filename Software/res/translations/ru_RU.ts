@@ -36,7 +36,7 @@
 <context>
     <name>LightpackApplication</name>
     <message>
-        <location filename="../../src/LightpackApplication.cpp" line="573"/>
+        <location filename="../../src/LightpackApplication.cpp" line="576"/>
         <source>Plugin console</source>
         <translation>консоль Python</translation>
     </message>
@@ -44,7 +44,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../../src/LedDeviceLightpack.cpp" line="212"/>
+        <location filename="../../src/LedDeviceLightpack.cpp" line="187"/>
         <source>read device fail</source>
         <translation>устройство не отвечает</translation>
     </message>
@@ -202,6 +202,12 @@
         <translation>Показывать дополнительные настройки</translation>
     </message>
     <message>
+        <location filename="../../src/SettingsWindow.ui" line="2894"/>
+        <source>Enable DX hooking</source>
+        <translatorcomment>Включить перехват DX API</translatorcomment>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="../../src/SettingsWindow.ui" line="2910"/>
         <source>Logging level:</source>
         <translation>Детализация логирования:</translation>
@@ -283,7 +289,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2495"/>
-        <location filename="../../src/SettingsWindow.cpp" line="2224"/>
+        <location filename="../../src/SettingsWindow.cpp" line="2226"/>
         <source>Plugin settings</source>
         <translation>Настройки плагина</translation>
     </message>
@@ -316,7 +322,7 @@ p, li { white-space: pre-wrap; }
         <translation>Автор:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="386"/>
+        <location filename="../../src/SettingsWindow.cpp" line="385"/>
         <source>Dev tab</source>
         <translation>Отладка</translation>
     </message>
@@ -330,14 +336,6 @@ p, li { white-space: pre-wrap; }
         <location filename="../../src/SettingsWindow.ui" line="2776"/>
         <source>Key (authorization disabled if empty):</source>
         <translation>Ключ авторизации (авторизация отключена если в поле пусто):</translation>
-    </message>
-    <message>
-        <source>&lt;h2&gt;Lightpack&lt;/h2&gt;</source>
-        <translation type="obsolete">&lt;h2&gt;Лайтпак&lt;/h2&gt;</translation>
-    </message>
-    <message>
-        <source>Content-appropriate ambient lighting system with USB interface</source>
-        <translation type="obsolete">USB-подсветка монитора для усиления эффекта присутствия</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="195"/>
@@ -491,11 +489,6 @@ p, li { white-space: pre-wrap; }
         <translation>Источник захвата</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2894"/>
-        <source>Enable capturing in DirectX 10/11 applications</source>
-        <translation>Включить захват в приложениях DirectX 10/11</translation>
-    </message>
-    <message>
         <location filename="../../src/SettingsWindow.ui" line="2942"/>
         <source>Ping Lightpack device every second</source>
         <translation>Проверять доступность Лайтпака каждую секунду</translation>
@@ -506,165 +499,161 @@ p, li { white-space: pre-wrap; }
         <translation>Посылать данные только при изменении</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="304"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1676"/>
+        <location filename="../../src/SettingsWindow.cpp" line="303"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1674"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="305"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1680"/>
+        <location filename="../../src/SettingsWindow.cpp" line="304"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1678"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="306"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1689"/>
+        <location filename="../../src/SettingsWindow.cpp" line="305"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1687"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="307"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1693"/>
+        <location filename="../../src/SettingsWindow.cpp" line="306"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1691"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="311"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1685"/>
+        <location filename="../../src/SettingsWindow.cpp" line="310"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1683"/>
         <source>&amp;Profiles</source>
         <translation>&amp;Профили</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="317"/>
-        <location filename="../../src/SettingsWindow.cpp" line="761"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1538"/>
+        <location filename="../../src/SettingsWindow.cpp" line="316"/>
+        <location filename="../../src/SettingsWindow.cpp" line="760"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1536"/>
         <source>Enabled profile: %1</source>
         <translation>Включен профиль: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="320"/>
-        <location filename="../../src/SettingsWindow.cpp" line="772"/>
+        <location filename="../../src/SettingsWindow.cpp" line="319"/>
+        <location filename="../../src/SettingsWindow.cpp" line="771"/>
         <source>Disabled</source>
         <translation>Выключен</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="323"/>
-        <location filename="../../src/SettingsWindow.cpp" line="782"/>
+        <location filename="../../src/SettingsWindow.cpp" line="322"/>
+        <location filename="../../src/SettingsWindow.cpp" line="781"/>
         <source>Error with connection device, verbose in logs</source>
         <translation>Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <source>Lightpack: %1</source>
-        <translation type="obsolete">Лайтпак: %1</translation>
-    </message>
-    <message>
-        <location filename="../../src/SettingsWindow.cpp" line="334"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1590"/>
+        <location filename="../../src/SettingsWindow.cpp" line="333"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1588"/>
         <source>System default</source>
         <translation>По умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="403"/>
+        <location filename="../../src/SettingsWindow.cpp" line="402"/>
         <source>FPS: %1</source>
         <translation>Кадр/c: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="743"/>
-        <location filename="../../src/SettingsWindow.cpp" line="778"/>
+        <location filename="../../src/SettingsWindow.cpp" line="742"/>
+        <location filename="../../src/SettingsWindow.cpp" line="777"/>
         <source>Turn lights OFF</source>
         <translation>Выключить подсветку</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="757"/>
+        <location filename="../../src/SettingsWindow.cpp" line="756"/>
         <source>Device locked via Plugin</source>
         <translation>Устройство находится под управлением плагина</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="768"/>
+        <location filename="../../src/SettingsWindow.cpp" line="767"/>
         <source>Turn lights ON</source>
         <translation>Включить подсветку</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="912"/>
+        <location filename="../../src/SettingsWindow.cpp" line="911"/>
         <source>Application already running</source>
         <translation>Приложение уже запущено</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="401"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1438"/>
+        <location filename="../../src/SettingsWindow.cpp" line="400"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1436"/>
         <source>Profile: %1</source>
         <translation>Профиль: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="330"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1535"/>
+        <location filename="../../src/SettingsWindow.cpp" line="329"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1533"/>
         <source>Prismatik: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="402"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1577"/>
+        <location filename="../../src/SettingsWindow.cpp" line="401"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1575"/>
         <source>Device: %1</source>
         <translation>Устройство: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="912"/>
+        <location filename="../../src/SettingsWindow.cpp" line="911"/>
         <source>Prismatik</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1955"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1956"/>
         <source>Action name</source>
         <translation>Действие</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1956"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1957"/>
         <source>Description</source>
         <translation>Описание</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1957"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1958"/>
         <source>Hotkey</source>
         <translation>Хоткей</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1964"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1965"/>
         <source>On/Off lights</source>
         <translation>Вкл/выкл подсветку</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1965"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1966"/>
         <source>Switch between &quot;Capture mode&quot; and mood lamp mode</source>
         <translation>Переключение между режимами &quot;захват&quot; и &quot;обычный&quot;</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1966"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1967"/>
         <source>Activate next profile</source>
         <translation>Следующий профиль</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1967"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1968"/>
         <source>Activate previous profile</source>
         <translation>Предыдущий профиль</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1970"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1971"/>
         <source>Undefined key</source>
         <translation>Не задано</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1971"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1972"/>
         <source>Action not selected</source>
         <translation>Действие не выбрано</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1973"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1974"/>
         <source>Reset hotkey of selected command</source>
         <translation>Сбросить сочетание клавиш</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="751"/>
+        <location filename="../../src/SettingsWindow.cpp" line="750"/>
         <source>Device locked via API</source>
         <translation>Устройство заблокировано через API</translation>
     </message>
@@ -674,22 +663,22 @@ p, li { white-space: pre-wrap; }
         <translation>Лайтпак</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1013"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1012"/>
         <source>update firmware</source>
         <translation>обновить прошивку</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1020"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1019"/>
         <source>Lightpack firmware update</source>
         <translation>Обновление прошивки Лайтпака</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1020"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1019"/>
         <source>Click on this message to open lightpack downloads page</source>
         <translation>Нажмите на это сообщение чтобы перейти на страницу скачивания прошивок</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1044"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1043"/>
         <source>FPS: </source>
         <translation>Кадр/с: </translation>
     </message>
@@ -699,7 +688,7 @@ p, li { white-space: pre-wrap; }
         <translation>Устройство:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1473"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1471"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
     </message>

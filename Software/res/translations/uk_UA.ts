@@ -35,7 +35,7 @@
 <context>
     <name>LightpackApplication</name>
     <message>
-        <location filename="../../src/LightpackApplication.cpp" line="573"/>
+        <location filename="../../src/LightpackApplication.cpp" line="576"/>
         <source>Plugin console</source>
         <translation>Консоль додатку</translation>
     </message>
@@ -43,7 +43,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../../src/LedDeviceLightpack.cpp" line="212"/>
+        <location filename="../../src/LedDeviceLightpack.cpp" line="187"/>
         <source>read device fail</source>
         <translation>пристрій не відповідає</translation>
     </message>
@@ -382,7 +382,7 @@
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2495"/>
-        <location filename="../../src/SettingsWindow.cpp" line="2224"/>
+        <location filename="../../src/SettingsWindow.cpp" line="2226"/>
         <source>Plugin settings</source>
         <translation>Налаштування додатка</translation>
     </message>
@@ -451,8 +451,8 @@
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2894"/>
-        <source>Enable capturing in DirectX 10/11 applications</source>
-        <translation>Активувати захоплення і додатках DirectX 10/11</translation>
+        <source>Enable DX hooking</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2910"/>
@@ -503,191 +503,191 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="304"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1676"/>
+        <location filename="../../src/SettingsWindow.cpp" line="303"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1674"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Увімкнути</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="305"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1680"/>
+        <location filename="../../src/SettingsWindow.cpp" line="304"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1678"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Вимкнути</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="306"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1689"/>
+        <location filename="../../src/SettingsWindow.cpp" line="305"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1687"/>
         <source>&amp;Settings</source>
         <translation>&amp;Налаштування</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="307"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1693"/>
+        <location filename="../../src/SettingsWindow.cpp" line="306"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1691"/>
         <source>&amp;Quit</source>
         <translation>Ви&amp;хід</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="311"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1685"/>
+        <location filename="../../src/SettingsWindow.cpp" line="310"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1683"/>
         <source>&amp;Profiles</source>
         <translation>&amp;Профілі</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="317"/>
-        <location filename="../../src/SettingsWindow.cpp" line="761"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1538"/>
+        <location filename="../../src/SettingsWindow.cpp" line="316"/>
+        <location filename="../../src/SettingsWindow.cpp" line="760"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1536"/>
         <source>Enabled profile: %1</source>
         <translation>Активний профіль: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="320"/>
-        <location filename="../../src/SettingsWindow.cpp" line="772"/>
+        <location filename="../../src/SettingsWindow.cpp" line="319"/>
+        <location filename="../../src/SettingsWindow.cpp" line="771"/>
         <source>Disabled</source>
         <translation>Вимкнено</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="323"/>
-        <location filename="../../src/SettingsWindow.cpp" line="782"/>
+        <location filename="../../src/SettingsWindow.cpp" line="322"/>
+        <location filename="../../src/SettingsWindow.cpp" line="781"/>
         <source>Error with connection device, verbose in logs</source>
         <translation>Помилка при підключенні до пристрою, подробиці у звіті</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="330"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1535"/>
+        <location filename="../../src/SettingsWindow.cpp" line="329"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1533"/>
         <source>Prismatik: %1</source>
         <translation>Prismatik: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="334"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1590"/>
+        <location filename="../../src/SettingsWindow.cpp" line="333"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1588"/>
         <source>System default</source>
         <translation>Типова для системи</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="386"/>
+        <location filename="../../src/SettingsWindow.cpp" line="385"/>
         <source>Dev tab</source>
         <translation>Вкладка розробника</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="401"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1438"/>
+        <location filename="../../src/SettingsWindow.cpp" line="400"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1436"/>
         <source>Profile: %1</source>
         <translation>Профіль: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="402"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1577"/>
+        <location filename="../../src/SettingsWindow.cpp" line="401"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1575"/>
         <source>Device: %1</source>
         <translation>Пристрій: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="403"/>
+        <location filename="../../src/SettingsWindow.cpp" line="402"/>
         <source>FPS: %1</source>
         <translation>FPS: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="743"/>
-        <location filename="../../src/SettingsWindow.cpp" line="778"/>
+        <location filename="../../src/SettingsWindow.cpp" line="742"/>
+        <location filename="../../src/SettingsWindow.cpp" line="777"/>
         <source>Turn lights OFF</source>
         <translation>Вимкнути лампи</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="751"/>
+        <location filename="../../src/SettingsWindow.cpp" line="750"/>
         <source>Device locked via API</source>
         <translation>Пристрій заблоковано через API</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="757"/>
+        <location filename="../../src/SettingsWindow.cpp" line="756"/>
         <source>Device locked via Plugin</source>
         <translation>Пристрій заблоковано через додаток</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="768"/>
+        <location filename="../../src/SettingsWindow.cpp" line="767"/>
         <source>Turn lights ON</source>
         <translation>Увімкнути лампи</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="912"/>
+        <location filename="../../src/SettingsWindow.cpp" line="911"/>
         <source>Prismatik</source>
         <translation>Prismatik</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="912"/>
+        <location filename="../../src/SettingsWindow.cpp" line="911"/>
         <source>Application already running</source>
         <translation>Програма вже завантажена</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1013"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1012"/>
         <source>update firmware</source>
         <translation>оновити мікропрограму</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1020"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1019"/>
         <source>Lightpack firmware update</source>
         <translation>Оновлення мікропрограми Lightpack</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1020"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1019"/>
         <source>Click on this message to open lightpack downloads page</source>
         <translation>Для відкриття сторінки завантаження lightpack натисніть це повідомлення.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1044"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1043"/>
         <source>FPS: </source>
         <translation>FPS: </translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1473"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1471"/>
         <source>New profile</source>
         <translation>Новий профіль</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1955"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1956"/>
         <source>Action name</source>
         <translation>Назва дії</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1956"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1957"/>
         <source>Description</source>
         <translation>Опис</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1957"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1958"/>
         <source>Hotkey</source>
         <translation>Гаряча клавіша</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1964"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1965"/>
         <source>On/Off lights</source>
         <translation>Увімкнути/Вимкнути лампи</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1965"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1966"/>
         <source>Switch between &quot;Capture mode&quot; and mood lamp mode</source>
         <translation>Переключатись між режимами</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1966"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1967"/>
         <source>Activate next profile</source>
         <translation>Активувати наступний профіль</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1967"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1968"/>
         <source>Activate previous profile</source>
         <translation>Активувати попередній профіль</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1970"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1971"/>
         <source>Undefined key</source>
         <translation>Клавіша не назначена</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1971"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1972"/>
         <source>Action not selected</source>
         <translation>Дія не обрана</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1973"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1974"/>
         <source>Reset hotkey of selected command</source>
         <translation>Скинути клавішу для вибраної команди</translation>
     </message>

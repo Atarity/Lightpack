@@ -243,7 +243,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -2498,16 +2498,7 @@
             <string>Plugin settings</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_2">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
+            <property name="margin">
              <number>0</number>
             </property>
             <item>
@@ -2727,7 +2718,7 @@
               </sizepolicy>
              </property>
              <property name="inputMask">
-              <string notr="true">D999</string>
+              <string notr="true">D999; </string>
              </property>
             </widget>
            </item>
@@ -2903,7 +2894,7 @@
            <item>
             <widget class="QCheckBox" name="checkBox_EnableDx1011Capture">
              <property name="text">
-              <string>Enable capturing in DirectX 10/11 applications</string>
+              <string>Enable DX hooking</string>
              </property>
              <property name="icon">
               <iconset resource="../res/LightpackResources.qrc">
