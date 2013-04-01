@@ -79,7 +79,6 @@ void AbstractLedDevice::applyColorModifications(const QList<QRgb> &inColors, QLi
 
     bool isApplyWBAdjustments = m_wbAdjustments.count() == inColors.count();
 
-    StructLab avgColor;
     for(int i = 0; i < inColors.count(); i++) {
 
         //renormalize to 12bit
@@ -95,11 +94,11 @@ void AbstractLedDevice::applyColorModifications(const QList<QRgb> &inColors, QLi
         }
 
         LightpackMath::gammaCorrection(m_gamma, outColors[i]);
+    }
 
-        //calculate final avgColor only once
-        if (i==0)
-            avgColor = LightpackMath::toLab(LightpackMath::avgColor(outColors));
+    StructLab avgColor = LightpackMath::toLab(LightpackMath::avgColor(outColors));
 
+    for (int i = 0; i < outColors.count(); ++i) {
         StructLab lab = LightpackMath::toLab(outColors[i]);
         int dl = m_luminosityThreshold - lab.l;
         if (dl > 0) {
