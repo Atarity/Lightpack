@@ -12,6 +12,16 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 #    Software changelog
 ===================================================================================
 -----------------------------------------------------------------------------------
+Version 5.9.4
+---------------
+April 1, 2013
+
+* Average color behind luminosity threshold
+* Fix wrong lightpack mode selection after loading
+* Fix threshold mode selection
+* Fix sidebar inaccessibility after retranslation
+* Other fixes
+
 Versoin sw5.9.3
 ---------------
 March 12, 2013

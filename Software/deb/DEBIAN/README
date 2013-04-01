@@ -12,10 +12,10 @@ Main features:
 	* Cross-platform software (Qt)
 	* Supports multiple devices
 	* Native screen grabbers
-	* API over TCP/IP
+	* API over TCP/IP and Python
 
 Please let us know if you find mistakes, bugs or errors.
 
 Post new issue : http://code.google.com/p/lightpack/issues/list
 
- -- Timur Sattarov <tim.helloworld@gmail.com>  Wed, 5 Dec 2012 22:00:00 +0400
+ -- Timur Sattarov <tim.helloworld@gmail.com>  Mon, 1 Apr 2013 16:04:00 +0400

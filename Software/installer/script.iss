@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Prismatik"
-#define MyAppVersion "5.9.3"
+#define MyAppVersion "5.9.4"
 #define MyAppPublisher "Pixelkit LLC"
 #define MyAppURL "http://code.google.com/p/lightpack/"
 #define MyAppExeName "Prismatik.exe"
@@ -33,9 +33,9 @@ UninstallDisplayName={cm:UninstallName}
 UninstallDisplayIcon={app}\Prismatik.exe
 VersionInfoDescription=Prismatik is a monitor light device used for presence effect strengthening. 
 AppMutex=LightpackAppMutex
-VersionInfoVersion=5.9.3
+VersionInfoVersion={#MyAppVersion}
 VersionInfoProductName=Prismatik
-VersionInfoProductVersion=5.9.3
+VersionInfoProductVersion={#MyAppVersion}
 Uninstallable=true
 
 [Languages]
