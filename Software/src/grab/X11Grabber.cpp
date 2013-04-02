@@ -65,8 +65,8 @@ const char * X11Grabber::getName()
 void X11Grabber::updateGrabMonitor(QWidget *widget)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
-    updateScreenAndAllocateMemory = true;
-    screen = QApplication::desktop()->screenNumber( widget );
+//    updateScreenAndAllocateMemory = true;
+//    screen = QApplication::desktop()->screenNumber( widget );
 }
 
 QList<QRgb> X11Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets)

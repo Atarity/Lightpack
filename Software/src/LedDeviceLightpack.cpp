@@ -127,10 +127,13 @@ void LedDeviceLightpack::switchOffLeds()
             m_colorsSaved[i] = 0;
     }
 
-    setColors(m_colorsSaved);
-
-    // Stop ping device if switchOffLeds() signal comes
     m_timerPingDevice->stop();
+
+    memset(m_writeBuffer, 0, sizeof(m_writeBuffer));
+    bool ok = writeBufferToDeviceWithCheck(CMD_UPDATE_LEDS);
+
+    emit commandCompleted(ok);
+    // Stop ping device if switchOffLeds() signal comes
 }
 
 void LedDeviceLightpack::setRefreshDelay(int value)

@@ -121,7 +121,17 @@ void LedDeviceAdalight::switchOffLeds()
     for (int i = 0; i < count; i++)
         m_colorsSaved << 0;
 
-    setColors(m_colorsSaved);
+    m_writeBuffer.clear();
+    m_writeBuffer.append(m_writeBufferHeader);
+
+    for (int i = 0; i < count; i++) {
+        m_writeBuffer.append((char)0)
+                     .append((char)0)
+                     .append((char)0);
+    }
+
+    bool ok = writeBuffer(m_writeBuffer);
+    emit commandCompleted(ok);
 }
 
 void LedDeviceAdalight::setRefreshDelay(int /*value*/)

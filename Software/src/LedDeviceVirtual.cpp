@@ -67,10 +67,11 @@ void LedDeviceVirtual::switchOffLeds()
     int count = m_colorsSaved.count();
     m_colorsSaved.clear();
 
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < count; i++) {
         m_colorsSaved << 0;
-
-    setColors(m_colorsSaved);
+    }
+    emit colorsUpdated(m_colorsSaved);
+    emit commandCompleted(true);
 }
 
 void LedDeviceVirtual::setRefreshDelay(int /*value*/)
