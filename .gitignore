@@ -25,6 +25,7 @@ Software/installer/*.dll
 Software/installer/*.exe
 Software/PythonQt/generator/*.dll
 Software/PythonQt/generator/*.exe
+Software/python_binaries_win32/
 Software/update_locales.bat
 Software/src/src.pri
 generated_cpp/
