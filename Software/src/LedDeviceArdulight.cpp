@@ -196,13 +196,15 @@ void LedDeviceArdulight::open()
 
     m_ArdulightDevice->setDeviceName(Settings::getArdulightSerialPortName());
 
-    bool ok = m_ArdulightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+    m_ArdulightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+    bool ok = m_ArdulightDevice->isOpen();
 
     // Ubuntu 10.04: on every second attempt to open the device leads to failure
     if (ok == false)
     {
         // Try one more time
-        ok = m_ArdulightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+        m_ArdulightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+        ok = m_ArdulightDevice->isOpen();
     }
 
     if (ok)

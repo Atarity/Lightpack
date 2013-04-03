@@ -173,7 +173,7 @@ void LedDeviceAdalight::updateDeviceSettings()
 
 void LedDeviceAdalight::open()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << sender();
 
     m_gamma = Settings::getDeviceGamma();
     m_brightness = Settings::getDeviceBrightness();
@@ -182,13 +182,15 @@ void LedDeviceAdalight::open()
 
     m_AdalightDevice->setDeviceName(Settings::getAdalightSerialPortName());
 
-    bool ok = m_AdalightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+    m_AdalightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+    bool ok = m_AdalightDevice->isOpen();
 
     // Ubuntu 10.04: on every second attempt to open the device leads to failure
     if (ok == false)
     {
         // Try one more time
-        ok = m_AdalightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+        m_AdalightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+        ok = m_AdalightDevice->isOpen();
     }
 
     if (ok)
