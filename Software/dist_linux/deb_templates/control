@@ -1,8 +1,8 @@
 Package: prismatik
-Version: 5.9.4
-Architecture: i386
+Version: ${version} 
+Architecture: ${arch} 
 Maintainer: Timur Sattarov <tim.helloworld@gmail.com>
-Installed-Size: 1030
+Installed-Size: ${size}
 Depends: libqtcore4 (>= 4.6), libqtgui4 (>= 4.6), libqt4-network (>= 4.6), libusb-1.0-0 (>= 2:1.0.6-1), libpython2.7
 Conflicts: lightpack
 Replaces: lightpack

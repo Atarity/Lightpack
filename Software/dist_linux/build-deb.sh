@@ -5,6 +5,17 @@
 # Created on: 25.12.11
 #
 
+
+if [ -z $2 ];
+then
+    echo "usage: $0 <version> <arch>"
+    exit 1
+fi
+
+perl prepare_deb.pl $1 $2 || exit 1;
+
+chmod a+x deb/DEBIAN/control || exit 1;
+
 if [ -e "deb/usr/lib/prismatik/Prismatik" ];
 then
 	echo "Renaming 'deb/usr/lib/prismatik/Prismatik' to 'deb/usr/lib/prismatik/prismatik'."
