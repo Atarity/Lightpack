@@ -5,8 +5,8 @@ test -z "$1" && echo "usage: $0 <version>" && exit 1
 VOLUME_NAME="Prismatik $1"
 DMG_TEMP_NAME="temp.dmg"
 DMG_NAME="Prismatik.$1.dmg"
-SRC_FOLDER="dmg/contents"
-LAYOUT_FILE="dmg/dsstore"
+SRC_FOLDER="contents"
+LAYOUT_FILE="dsstore"
 APP_PATH="$SRC_FOLDER/Prismatik.app/Contents/MacOS"
 
 if [ ! -L "$SRC_FOLDER/Applications" ]; then
