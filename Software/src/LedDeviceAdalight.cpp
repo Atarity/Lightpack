@@ -178,7 +178,10 @@ void LedDeviceAdalight::open()
     m_gamma = Settings::getDeviceGamma();
     m_brightness = Settings::getDeviceBrightness();
 
-    m_AdalightDevice = new AbstractSerial();
+    if (m_AdalightDevice != NULL)
+        m_AdalightDevice->close();
+    else
+        m_AdalightDevice = new AbstractSerial();
 
     m_AdalightDevice->setDeviceName(Settings::getAdalightSerialPortName());
 

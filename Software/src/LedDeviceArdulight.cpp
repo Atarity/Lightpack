@@ -192,7 +192,10 @@ void LedDeviceArdulight::open()
     m_gamma = Settings::getDeviceGamma();
     m_brightness = Settings::getDeviceBrightness();
 
-    m_ArdulightDevice = new AbstractSerial();
+    if (m_ArdulightDevice != NULL)
+        m_ArdulightDevice->close();
+    else
+        m_ArdulightDevice = new AbstractSerial();
 
     m_ArdulightDevice->setDeviceName(Settings::getArdulightSerialPortName());
 
