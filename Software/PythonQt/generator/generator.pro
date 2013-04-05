@@ -11,6 +11,7 @@ win32: {
                 cp -f \"$${QTDIR}/bin/QtXml4.dll\" \"$$PWD\" && \
                 cp -f \"$${MINGW_RUNTIME_DIR}/mingwm10.dll\" \"$$PWD\" && \
                 cp -f \"$${MINGW_RUNTIME_DIR}/libgcc_s_dw2-1.dll\" \"$$PWD\" && \
+                cp -f \"$${MINGW_RUNTIME_DIR}/libstdc++-6.dll\" \"$$PWD\" && \
                 cp -f \"$(DESTDIR_TARGET)\" \"$$PWD\" && \
                 cd \"$$PWD\" && \
                 $(TARGET)

@@ -34,6 +34,6 @@ include (../../generated_cpp/com_trolltech_qt_network/com_trolltech_qt_network.p
 #include (../../generated_cpp/com_trolltech_qt_xmlpatterns/com_trolltech_qt_xmlpatterns.pri)
 #include (../../generated_cpp/com_trolltech_qt_phonon/com_trolltech_qt_phonon.pri)
 
-win32: {
-    QMAKE_POST_LINK = cd $(DESTDIR) && cp -f ./* \"$$PWD/../../lib\"
-}
+#win32: {
+#    QMAKE_POST_LINK = cd $(DESTDIR) && cp -f ./* \"$$PWD/../../lib\"
+#}

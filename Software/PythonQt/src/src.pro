@@ -18,6 +18,6 @@ include ( ../build/python.prf )
 
 include ( src.pri )  
 
-win32: {
-    QMAKE_POST_LINK = cd $(DESTDIR) && cp -f ./* \"$$PWD/../lib\"
-}
+#win32: {
+#    QMAKE_POST_LINK = cd $(DESTDIR) && cp -f ./* \"$$PWD/../lib\"
+#}
