@@ -45,3 +45,7 @@ stuff/
 *.dmg
 Software/dmg/contents
 build-vars.prf
+Makefile*
+debug/
+release/
+Software/dist_windows/content
