@@ -737,6 +737,11 @@ bool Settings::isConnectedDeviceUsesSerialPort()
 void Settings::setNumberOfLeds(SupportedDevices::DeviceType device, int numberOfLeds)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    if(getNumberOfLeds(device) == numberOfLeds)
+        //nothing to do
+        return;
+
     QString key = m_devicesTypeToKeyNumberOfLedsMap.value(device);
 
     if (key == "")

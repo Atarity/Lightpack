@@ -182,7 +182,7 @@ void GrabManager::onSendDataOnlyIfColorsEnabledChanged(bool state)
 
 void GrabManager::setNumberOfLeds(int numberOfLeds)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << numberOfLeds;    
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << numberOfLeds;
 
     initColorLists(numberOfLeds);
     initLedWidgets(numberOfLeds);
