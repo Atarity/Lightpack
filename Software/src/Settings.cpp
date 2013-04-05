@@ -316,19 +316,19 @@ void Settings::loadOrCreateProfile(const QString & profileName)
 
 
     QMutexLocker locker(&m_mutex);
-    QString fn = m_currentProfile->fileName();
+    QString currentProfileFileName = m_currentProfile != NULL ? m_currentProfile->fileName() : NULL;
 
-    if (m_currentProfile != NULL
-        && fn.compare(getProfilesPath() + profileName + ".ini") == 0)
+    if (currentProfileFileName != NULL
+        && currentProfileFileName.compare(getProfilesPath() + profileName + ".ini") == 0)
         return; //nothing to change, profile is already loaded
 
-    if (m_currentProfile != NULL)
+    if (currentProfileFileName != NULL)
     {
         // Copy current settings to new one
         QString profileNewPath = getProfilesPath() + profileName + ".ini";
 
-        if (m_currentProfile->fileName() != profileNewPath)
-            QFile::copy(m_currentProfile->fileName(), profileNewPath);
+        if (currentProfileFileName != profileNewPath)
+            QFile::copy(currentProfileFileName, profileNewPath);
 
         delete m_currentProfile;
     }
