@@ -1841,10 +1841,6 @@ void SettingsWindow::updateUiFromSettings()
     ui->lineEdit_ApiKey->setText                        (Settings::getApiAuthKey());
     ui->spinBox_LoggingLevel->setValue                  (g_debugLevel);
 
-#ifdef D3D10_GRAB_SUPPORT
-    ui->checkBox_EnableDx1011Capture->setChecked        (Settings::isDx1011GrabberEnabled());
-#endif
-
     switch (Settings::getGrabberType())
     {
 #ifdef WINAPI_GRAB_SUPPORT
@@ -1877,6 +1873,10 @@ void SettingsWindow::updateUiFromSettings()
     default:
         ui->radioButton_GrabQt->setChecked(true);
     }
+
+#ifdef D3D10_GRAB_SUPPORT
+    ui->checkBox_EnableDx1011Capture->setChecked(Settings::isDx1011GrabberEnabled());
+#endif
 
     onMoodLampLiquidMode_Toggled(ui->radioButton_LiquidColorMoodLampMode->isChecked());
     updateExpertModeWidgetsVisibility();
