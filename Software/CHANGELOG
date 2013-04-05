@@ -11,7 +11,17 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 ===================================================================================
 #    Software changelog
 ===================================================================================
------------------------------------------------------------------------------------
+
+Version 5.9.5
+---------------
+April 5, 2013
+
+* Fixed issue #314, Prismatik doesn't work with Adalight. 
+* Fixed wrong grabber after loading
+* Fixed wrong leds count after Prismatik is started
+* Fixed crash when deleting profiles
+* Fixed build process of PythonQt
+
 Version 5.9.4
 ---------------
 April 1, 2013
