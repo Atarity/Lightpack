@@ -102,9 +102,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     tabBar=qFindChild<QTabBar*>(ui->tabDevices);
     tabBar->hide();
 
-    connect(ui->listWidget,
-            SIGNAL(currentRowChanged(int)),
-            this, SLOT(changePage(int)));
     initPixmapCache();
 
 
@@ -185,6 +182,7 @@ void SettingsWindow::connectSignalsSlots()
     }
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "tr";
 
+    connect(ui->listWidget, SIGNAL(currentRowChanged(int)), this, SLOT(changePage(int)));
     connect(ui->spinBox_GrabSlowdown, SIGNAL(valueChanged(int)), this, SLOT(onGrabSlowdown_valueChanged(int)));
     connect(ui->spinBox_LuminosityThreshold, SIGNAL(valueChanged(int)), this, SLOT(onLuminosityThreshold_valueChanged(int)));
     connect(ui->radioButton_MinimumLuminosity, SIGNAL(toggled(bool)), this, SLOT(onMinimumLumosity_toggled(bool)));
@@ -1523,11 +1521,16 @@ void SettingsWindow::profilesLoadAll()
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "found profiles:" << profiles;
 
+
+    disconnect(ui->comboBox_Profiles, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileSwitch(QString)));
+
     for (int i = 0; i < profiles.count(); i++)
     {
         if (ui->comboBox_Profiles->findText(profiles.at(i)) == -1)
             ui->comboBox_Profiles->addItem(profiles.at(i));
     }
+
+    connect(ui->comboBox_Profiles, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileSwitch(QString)));
 }
 
 void SettingsWindow::settingsProfileChanged_UpdateUI(const QString &profileName)

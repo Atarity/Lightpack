@@ -117,6 +117,7 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     handleConnectedDeviceChange(settings()->getConnectedDevice());
 
+
     emit postInitialization();
 }
 
