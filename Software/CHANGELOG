@@ -12,6 +12,13 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 #    Software changelog
 ===================================================================================
 
+Version 5.9.6
+---------------
+April 8, 2013
+
+* Fixed issue #317, Last used profile isn't saved
+* Fixed flickering with Adalight devices
+
 Version 5.9.5
 ---------------
 April 5, 2013
