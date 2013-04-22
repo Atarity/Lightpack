@@ -9,7 +9,7 @@ if ($#ARGV != 1) {
             ,"deb_templates/copyright" => "deb/DEBIAN/copyright"
  );
 
-$size = (split(/\t/,`du -hs deb`))[0]; 
+$size = (split(/\t/,`du -s deb`))[0]; 
 
 %vars = (
              "\\\$\\{timestamp\\}" => `date -u`
