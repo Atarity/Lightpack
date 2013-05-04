@@ -46,6 +46,8 @@ public slots:
     void setGamma(double value);
     void setBrightness(int value);
     void requestFirmwareVersion();
+    int maxLedsCount() { return 255;}
+
 
 private:
     void resizeColorsBuffer(int buffSize);

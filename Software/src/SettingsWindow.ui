@@ -243,7 +243,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -1144,7 +1144,7 @@
                   <number>1</number>
                  </property>
                  <property name="maximum">
-                  <number>10</number>
+                  <number>20</number>
                  </property>
                  <property name="value">
                   <number>1</number>
@@ -1192,7 +1192,7 @@
                   <number>1</number>
                  </property>
                  <property name="maximum">
-                  <number>10</number>
+                  <number>20</number>
                  </property>
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
@@ -2498,7 +2498,16 @@
             <string>Plugin settings</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_2">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
              <number>0</number>
             </property>
             <item>
@@ -2718,7 +2727,7 @@
               </sizepolicy>
              </property>
              <property name="inputMask">
-              <string notr="true">D999; </string>
+              <string notr="true">D999</string>
              </property>
             </widget>
            </item>

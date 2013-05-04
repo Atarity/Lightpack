@@ -33,14 +33,17 @@ void AbstractLedDevice::setGamma(double value) {
     m_gamma = value;
     setColors(m_colorsSaved);
 }
+
 void AbstractLedDevice::setBrightness(int value) {
     m_brightness = value;
     setColors(m_colorsSaved);
 }
+
 void AbstractLedDevice::setLuminosityThreshold(int value) {
     m_luminosityThreshold = value;
     setColors(m_colorsSaved);
 }
+
 void AbstractLedDevice::setMinimumLuminosityThresholdEnabled(bool value) {
     m_isMinimumLuminosityEnabled = value;
     setColors(m_colorsSaved);

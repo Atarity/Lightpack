@@ -176,7 +176,8 @@ HEADERS += \
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \
-    GrabConfigWidget.ui
+    GrabConfigWidget.ui \
+    ../SettingsWizard.ui
 
 #
 #   QSerialDevice
@@ -189,3 +190,7 @@ FORMS += SettingsWindow.ui \
 # QtSingleApplication
 #
 include(qtsingleapplication/src/qtsingleapplication.pri)
+
+
+OTHER_FILES += \
+    test.qml

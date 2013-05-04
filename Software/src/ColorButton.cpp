@@ -19,12 +19,10 @@ ColorButton::~ColorButton()
 void ColorButton::setColor(QColor color)
 {
     QSize size = this->iconSize();
-//    size.setHeight(size.height() * 2.0 / 3.0);
 
     QImage image(size, QImage::Format_ARGB32);
     QPainter paint(&image);
     paint.fillRect(QRect(0, 0, size.width(), size.height()), color);
-//    paint.drawRect(QRect(0, 0, size.width()-1, size.height()-1));
 
     QIcon icon(QPixmap::fromImage(image));
     this->setIcon(icon);

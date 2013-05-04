@@ -59,22 +59,24 @@ public slots:
     void setColorSequence(QString /*value*/);
     void requestFirmwareVersion();
     void updateDeviceSettings();
+    int maxLedsCount() { return m_devices.size() * kLedsPerDevice;}
 
 private: 
     bool readDataFromDevice();
-    bool writeBufferToDevice(int command);
+    bool writeBufferToDevice(int command, hid_device *phid_device);
     bool tryToReopenDevice();
     bool readDataFromDeviceWithCheck();
-    bool writeBufferToDeviceWithCheck(int command);    
+    bool writeBufferToDeviceWithCheck(int command, hid_device *phid_device);
     void resizeColorsBuffer(int buffSize);
-    void closeDevice();
+    void closeDevices();
 
 private slots:
     void restartPingDevice(bool isSuccess);
     void timerPingDeviceTimeout();
 
 private:
-    hid_device *m_hidDevice;
+    QList<hid_device*> m_devices;
+//    hid_device *m_hidDevice;
 
     unsigned char m_readBuffer[65];    /* 0-ReportID, 1..65-data */
     unsigned char m_writeBuffer[65];   /* 0-ReportID, 1..65-data */
@@ -82,5 +84,5 @@ private:
     QTimer *m_timerPingDevice;
 
     static const int PingDeviceInterval;
-    static const int MaximumLedsCount;
+    static const int kLedsPerDevice;
 };
