@@ -184,7 +184,8 @@ HEADERS += \
     grab/D3D9Grabber.hpp \
     grab/MacOSGrabber.hpp \
     colorspace_types.h \
-    AbstractLedDevice.hpp
+    AbstractLedDevice.hpp \
+    SettingsWizard.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \

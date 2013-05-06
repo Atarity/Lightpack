@@ -35,6 +35,8 @@
 #include "version.h"
 #include "debug.h"
 
+#include "SettingsWizard.hpp"
+
 #ifdef Q_WS_WIN
 #include <windows.h>
 #endif
@@ -196,6 +198,10 @@ int main(int argc, char **argv)
     QString appDirPath = getApplicationDirectoryPath(argv[0]);
 
     LightpackApplication lightpackApp(argc, argv);
+
+    SettingsWizard wiz;
+
+    wiz.run();
 
     if (lightpackApp.isRunning())
     {        
