@@ -9,7 +9,7 @@
 TARGET      = Prismatik
 DESTDIR     = bin
 TEMPLATE    = app
-QT         += network
+QT         += network widgets
 
 # QMake and GCC produce a lot of stuff
 OBJECTS_DIR = stuff
@@ -101,7 +101,6 @@ macx{
 
     # For build universal binaries (native on Intel and PowerPC)
     QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
-    QMAKE_POST_LINK = $$PWD/mac_post_link.sh $(DESTDIR) $$PWD
 }
 
 INCLUDEPATH += ./hidapi ./grab ./alienfx ./
@@ -117,14 +116,11 @@ SOURCES += \
     LedDeviceVirtual.cpp \
     ColorButton.cpp \
     grab/WinAPIGrabber.cpp \
-    LightpackPluginInterface.cpp \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
     LightpackMath.cpp \
     MoodLampManager.cpp \
-    PluginManager.cpp \
     LedDeviceManager.cpp \
-    plugins/PyPlugin.cpp \
     SelectWidget.cpp \
     grab/D3D10Grabber/D3D10Grabber.cpp \
     grab/GrabberBase.cpp \
@@ -137,7 +133,8 @@ SOURCES += \
     grab/D3D9Grabber.cpp \
     grab/MacOSGrabber.cpp \
     GrabManager.cpp \
-    AbstractLedDevice.cpp
+    AbstractLedDevice.cpp \
+    LightpackPluginInterface.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -161,7 +158,7 @@ HEADERS += \
     ColorButton.hpp \
     grab/WinAPIGrabber.hpp \
     ../common/defs.h \
-    enums.hpp     LightpackPluginInterface.hpp     ApiServer.hpp     ApiServerSetColorTask.hpp \
+    enums.hpp         ApiServer.hpp     ApiServerSetColorTask.hpp \
     hidapi/hidapi.h \
     ../../CommonHeaders/LIGHTPACK_HW.h \
     ../../CommonHeaders/COMMANDS.h \
@@ -185,7 +182,8 @@ HEADERS += \
     grab/MacOSGrabber.hpp \
     colorspace_types.h \
     AbstractLedDevice.hpp \
-    SettingsWizard.hpp
+    SettingsWizard.hpp \
+    LightpackPluginInterface.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \
@@ -202,17 +200,3 @@ unix:include(qserialdevice/unix/ttylocker.pri)
 # QtSingleApplication
 #
 include(qtsingleapplication/src/qtsingleapplication.pri)
-
-#
-# Hotkeys based on PSI and QKeySequenceWidget
-#
-include(hotkeys/globalshortcut/globalshortcut.pri)
-include(hotkeys/qkeysequencewidget/qkeysequencewidget.pri)
-
-#
-# PythonQt
-#
-#include (../PythonQt/build/common.prf )
-include (../PythonQt/build/PythonQt.prf )
-include (../PythonQt/build/PythonQt_QtAll.prf )
-

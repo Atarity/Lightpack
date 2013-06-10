@@ -4,9 +4,7 @@
 #include "Settings.hpp"
 #include "version.h"
 #include "debug.h"
-
-#include <plugins/PyPlugin.h>
-
+#include <QtWidgets/QApplication>
 using namespace SettingsScope;
 
 const int LightpackPluginInterface::SignalWaitTimeoutMs = 1000; // 1 second
@@ -64,15 +62,13 @@ void LightpackPluginInterface::setNumberOfLeds(int numberOfLeds)
     initColors(numberOfLeds);
 }
 
-void LightpackPluginInterface::updatePlugin(QList<PyPlugin*> plugins)
+void LightpackPluginInterface::updatePlugin()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     if (!lockSessionKeys.isEmpty())
         UnLock(lockSessionKeys[0]);
     lockSessionKeys.clear();
     //emit updateDeviceLockStatus(DeviceLocked::Unlocked, lockSessionKeys);
-    _plugins = plugins;
-
 }
 
 void LightpackPluginInterface::resultBacklightStatus(Backlight::Status status)
@@ -130,35 +126,10 @@ QString LightpackPluginInterface::Version()
     return API_VERSION;
 }
 
-PyPlugin* LightpackPluginInterface::findName(QString name)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << name;
-    foreach(PyPlugin* plugin, _plugins){
-        if (plugin->getName() == name)
-            return plugin;
-    }
-
-    return NULL;
-}
-
-PyPlugin* LightpackPluginInterface::findSessionKey(QString sessionKey)
-{
-    foreach(PyPlugin* plugin, _plugins){
-        if (plugin->getSessionKey() == sessionKey)
-            return plugin;
-    }
-
-    return NULL;
-}
-
-
 // TODO identification plugin locked
 QString LightpackPluginInterface::GetSessionKey(QString module)
 {
     if (module=="API") return "Lock";
-    PyPlugin* plugin = findName(module);
-    if (plugin == NULL) return "";
-    return plugin->getSessionKey();
 }
 
 int LightpackPluginInterface::CheckLock(QString sessionKey)
@@ -185,30 +156,7 @@ bool LightpackPluginInterface::Lock(QString sessionKey)
     }
     else
     {
-          PyPlugin* plugin = findSessionKey(sessionKey);
-          if (plugin == NULL) return false;
-
-              foreach (QString key,lockSessionKeys)
-              {
-                  if (key.indexOf("API", 0) != -1) break;
-
-                         PyPlugin* pluginLock = findSessionKey(key);
-                         if (pluginLock == NULL) return false;
-                         DEBUG_LOW_LEVEL << Q_FUNC_INFO << lockSessionKeys.indexOf(key);
-                         if (plugin->getPriority() > pluginLock->getPriority())
-                             lockSessionKeys.insert(lockSessionKeys.indexOf(key),sessionKey);
-                         DEBUG_LOW_LEVEL << Q_FUNC_INFO << lockSessionKeys.indexOf(sessionKey);
-
-              }
-              if (!lockSessionKeys.contains(sessionKey))
-              {
-                  DEBUG_LOW_LEVEL << Q_FUNC_INFO << "add to end";
-                  lockSessionKeys.insert(lockSessionKeys.count(),sessionKey);
-              }
-              if (lockSessionKeys[0].indexOf("API", 0) != -1)
-                  emit updateDeviceLockStatus(DeviceLocked::Api,lockSessionKeys);
-              else
-                  emit updateDeviceLockStatus(DeviceLocked::Plugin, lockSessionKeys);
+        return false;
     }
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "lock end";

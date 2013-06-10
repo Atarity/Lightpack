@@ -26,7 +26,7 @@
 
 #pragma once
 
-#include <QWidget>
+//#include <QtWidgets/QWidget>
 #include "GrabConfigWidget.hpp"
 
 namespace Ui {

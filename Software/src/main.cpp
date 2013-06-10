@@ -152,26 +152,26 @@ void openLogsFile(const QString & appDirPath)
     qDebug() << "Logs file:" << logFilePath;
 }
 
-void messageHandler(QtMsgType type, const char *msg)
+void messageHandler(QtMsgType type, const QMessageLogContext &ctx, const QString &msg)
 {
     QMutexLocker locker(&m_mutex);
 
     QString out = QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") + " ";
     switch (type) {
     case QtDebugMsg:
-        out.append("Debug: " + QString::fromLocal8Bit(msg));
+        out.append("Debug: " + msg);
         cout << out.toStdString() << endl;
         break;
     case QtWarningMsg:
-        out.append("Warning: " + QString::fromLocal8Bit(msg));
+        out.append("Warning: " + msg);
         cerr << out.toStdString() << endl;
         break;
     case QtCriticalMsg:
-        out.append("Critical: " + QString::fromLocal8Bit(msg));
+        out.append("Critical: " + msg);
         cerr << out.toStdString() << endl;
         break;
     case QtFatalMsg:
-        cerr << "Fatal: " << msg << endl;
+        cerr << "Fatal: " << msg.toStdString() << endl;
         cerr.flush();
 
         m_logStream << "Fatal: " << msg << endl;
@@ -193,15 +193,11 @@ int main(int argc, char **argv)
     CreateMutex(NULL, FALSE, L"LightpackAppMutex");
 #   endif
     // Using locale codec for console output in messageHandler(..) function ( cout << qstring.toStdString() )
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
+    QTextCodec::setCodecForLocale(QTextCodec::codecForLocale());
 
     QString appDirPath = getApplicationDirectoryPath(argv[0]);
 
     LightpackApplication lightpackApp(argc, argv);
-
-    SettingsWizard wiz;
-
-    wiz.run();
 
     if (lightpackApp.isRunning())
     {        
@@ -216,7 +212,7 @@ int main(int argc, char **argv)
 
     openLogsFile(appDirPath);
 
-    qInstallMsgHandler(messageHandler);
+    qInstallMessageHandler(messageHandler);
 
     lightpackApp.initializeAll(appDirPath);
 

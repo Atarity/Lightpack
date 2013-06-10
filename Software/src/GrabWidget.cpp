@@ -26,6 +26,7 @@
 
 
 #include <QtGui>
+#include <QtWidgets/QDesktopWidget>
 #include <QTextItem>
 #include "GrabWidget.hpp"
 #include "ui_GrabWidget.h"

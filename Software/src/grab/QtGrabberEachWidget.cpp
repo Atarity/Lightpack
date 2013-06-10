@@ -26,7 +26,8 @@
 #include "QtGrabberEachWidget.hpp"
 
 #ifdef QT_GRAB_SUPPORT
-#include <QtGui>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QDesktopWidget>
 #include "debug.h"
 
 QtGrabberEachWidget::QtGrabberEachWidget(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)

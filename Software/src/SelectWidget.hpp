@@ -1,8 +1,9 @@
 #ifndef SELECTWIDGET_HPP
 #define SELECTWIDGET_HPP
 
-#include <QWidget>
-#include <QtGui>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QListWidget>
 
         class SelectWidget: public QWidget {
             Q_OBJECT

@@ -38,8 +38,4 @@
         <file>icons/Prismatik.png</file>
         <file>icons/Prismatik-pixmap.png</file>
     </qresource>
-    <qresource prefix="/plugin">
-        <file alias="BasePlugin.py">python/BasePlugin.py</file>
-        <file alias="Plugin.png">python/plugin.png</file>
-    </qresource>
 </RCC>

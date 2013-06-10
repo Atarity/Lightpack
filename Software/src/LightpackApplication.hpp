@@ -30,8 +30,6 @@
 #include "SettingsWindow.hpp"
 #include "ApiServer.hpp"
 #include "LedDeviceManager.hpp"
-#include "LightpackPluginInterface.hpp"
-#include "PluginManager.hpp"
 
 #define getLightpackApp() static_cast<LightpackApplication *>(QCoreApplication::instance())
 
@@ -74,8 +72,6 @@ private slots:
     void numberOfLedsChanged(int);
     void showLedWidgets(bool visible);
     void setColoredLedWidget(bool colored);
-    void getConsole();
-    void consoleClosing();
     void handleConnectedDeviceChange(const SupportedDevices::DeviceType);
     void onFocusChanged(QWidget *, QWidget *);
 
@@ -109,7 +105,6 @@ private:
     QThread *m_moodlampManagerThread;
 
     LightpackPluginInterface *m_pluginInterface;
-    PluginManager *m_pluginManager;
     QThread* m_PluginThread;
     QWidget *consolePlugin;
 

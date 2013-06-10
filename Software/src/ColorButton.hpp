@@ -3,7 +3,7 @@
 #ifndef CB_H
 #define CB_H
 
-#include <QtGui>
+#include <QtWidgets/QPushButton>
 
 class ColorButton : public QPushButton
 {

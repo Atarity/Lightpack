@@ -24,11 +24,11 @@
  */
 
 #include "QtGrabber.hpp"
-
 #ifdef QT_GRAB_SUPPORT
 
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QDesktopWidget>
 #include "debug.h"
-#include <QtGui>
 
 QtGrabber::QtGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
     : TimeredGrabber(parent, grabResult, grabAreasGeometry)

@@ -31,8 +31,8 @@
 #ifdef X11_GRAB_SUPPORT
 
 
-#include <QApplication>
-#include <QDesktopWidget>
+//#include <QApplication>
+//#include <QDesktopWidget>
 #include <QPixmap>
 #include <QImage>
 

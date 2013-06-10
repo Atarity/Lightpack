@@ -26,8 +26,9 @@
 
 #include "LightpackApplication.hpp"
 #include "LedDeviceLightpack.hpp"
-#include "LightpackPluginInterface.hpp"
 #include "version.h"
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QHBoxLayout>
 
 #include <unistd.h>
 #include <stdio.h>
@@ -103,9 +104,6 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     startApiServer();
 
     initGrabManager();
-
-    startPluginManager();
-
 
     if (!m_noGui)
     {
@@ -540,55 +538,6 @@ void LightpackApplication::initGrabManager()
     connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), m_pluginInterface, SLOT(refreshAmbilightEvaluated(double)));
     connect(m_grabManager,SIGNAL(changeScreen(QRect)),m_pluginInterface,SLOT(refreshScreenRect(QRect)));
 
-}
-
-void LightpackApplication::startPluginManager()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    consolePlugin = NULL;
-    m_pluginManager = new PluginManager(NULL);
-    m_PluginThread = new QThread();
-
-    m_pluginManager->init(m_pluginInterface);
-
-    if (!m_noGui)
-    {
-        connect(m_settingsWindow,SIGNAL(reloadPlugins()),m_pluginManager,SLOT(reloadPlugins()));
-        connect(m_pluginManager,SIGNAL(updatePlugin(QList<PyPlugin*>)),m_settingsWindow,SLOT(updatePlugin(QList<PyPlugin*>)), Qt::QueuedConnection);
-        connect(m_settingsWindow,SIGNAL(getPluginConsole()),this,SLOT(getConsole()));
-    }
-
-    m_pluginManager->loadPlugins();
-
-    m_pluginManager->moveToThread(m_PluginThread);
-    m_PluginThread->start();
-
-}
-void LightpackApplication::getConsole()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    if (consolePlugin)
-        consolePlugin->activateWindow();
-    else
-    {
-        consolePlugin = new QWidget(NULL);
-        QHBoxLayout *layout = new QHBoxLayout(consolePlugin);
-        layout->addWidget(m_pluginManager->getConsole(consolePlugin));
-        layout->setMargin(0);
-        consolePlugin->setLayout(layout);
-        consolePlugin->setWindowTitle(tr("Plugin console"));
-        consolePlugin->setAttribute( Qt::WA_DeleteOnClose );
-        connect( consolePlugin, SIGNAL(destroyed(QObject*)), this, SLOT(consoleClosing()) );
-        consolePlugin->setWindowFlags(Qt::WindowCloseButtonHint);
-        consolePlugin->show();
-    }
-}
-
-void LightpackApplication::consoleClosing()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    consolePlugin = NULL;
 }
 
 void LightpackApplication::connectApiServerAndLedDeviceSignalsSlots()

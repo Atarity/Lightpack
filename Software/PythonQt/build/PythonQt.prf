@@ -1,8 +1,0 @@
-# profile for non-mevis users to link to PythonQt
-
-include ( python.prf )
-
-INCLUDEPATH += $$PWD/../src
-
-win32::LIBS += $$PWD/../lib/libPythonQt$${DEBUG_EXT}.a
-unix::LIBS += -L$$PWD/../lib -lPythonQt$${DEBUG_EXT}

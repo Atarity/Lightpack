@@ -25,6 +25,9 @@
  */
 
 #include <QtAlgorithms>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QDesktopWidget>
 
 #include "SettingsWindow.hpp"
 #include "ui_SettingsWindow.h"
@@ -35,11 +38,6 @@
 #include "LedDeviceManager.hpp"
 #include "enums.hpp"
 #include "debug.h"
-
-#include "plugins/PyPlugin.h"
-
-#include "hotkeys/qkeysequencewidget/src/qkeysequencewidget.h"
-#include "hotkeys/globalshortcut/globalshortcutmanager.h"
 
 using namespace SettingsScope;
 
@@ -57,8 +55,7 @@ const unsigned SettingsWindow::MoodLampModeIndex  = 1;
 SettingsWindow::SettingsWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::SettingsWindow),
-    m_deviceFirmwareVersion(DeviceFirmvareVersionUndef),
-    m_keySequenceWidget(NULL)
+    m_deviceFirmwareVersion(DeviceFirmvareVersionUndef)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "thread id: " << this->thread()->currentThreadId();
 
@@ -75,8 +72,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
                    Qt::WindowCloseButtonHint );
     setFocus(Qt::OtherFocusReason);
 
-    setupHotkeys();
-
 #ifdef Q_OS_LINUX
     ui->listWidget->setSpacing(0);
     ui->listWidget->setGridSize(QSize(115, 85));
@@ -92,14 +87,14 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     m_speedTest = new SpeedTest();
 
     // hide main tabbar
-    QTabBar* tabBar=qFindChild<QTabBar*>(ui->tabWidget);
+    QTabBar* tabBar=ui->tabWidget->findChild<QTabBar*>();
     tabBar->hide();
     // hide plugin settings tabbar
-    tabBar=qFindChild<QTabBar*>(ui->tabPluginsSettings);
+    tabBar=ui->tabPluginsSettings->findChild<QTabBar*>();
     tabBar->hide();
     ui->tabPluginsSettings->setDocumentMode(true);
     // hide device options tabbar
-    tabBar=qFindChild<QTabBar*>(ui->tabDevices);
+    tabBar=ui->tabDevices->findChild<QTabBar*>();
     tabBar->hide();
 
     initPixmapCache();
@@ -325,8 +320,6 @@ void SettingsWindow::changeEvent(QEvent *e)
             }
 
         setWindowTitle(tr("Prismatik: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
-
-        this->setupHotkeys();
 
         ui->listWidget->addItem("dirty hack");
         item = ui->listWidget->takeItem(ui->listWidget->count()-1);
@@ -681,27 +674,6 @@ void SettingsWindow::startBacklight()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "m_backlightStatus =" << m_backlightStatus
                     << "m_deviceLockStatus =" << m_deviceLockStatus;
 
-    if(ui->list_Plugins->count()>0)
-    {
-        int count = ui->list_Plugins->count();
-        for(int index = 0; index < count; index++)
-        {
-            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "check session key";
-            QListWidgetItem * item = ui->list_Plugins->item(index);
-            int indexPlugin =item->data(Qt::UserRole).toUInt();
-            QString key = _plugins[indexPlugin]->getSessionKey();
-            if (m_deviceLockKey.contains(key))
-            {
-                if (m_deviceLockStatus != DeviceLocked::Api  && m_deviceLockKey.indexOf(key)==0)
-                    m_deviceLockModule = _plugins[indexPlugin]->getName();
-                if (Settings::isExpertModeEnabled())
-                    item->setText(_plugins[indexPlugin]->getName()+" (Lock)");
-            }
-            else
-                item->setText(_plugins[indexPlugin]->getName());
-        }
-    }
-
     if (m_deviceLockKey.count()==0)
         m_deviceLockModule = "";
 
@@ -938,14 +910,6 @@ void SettingsWindow::showSettings()
 
     this->show();
     this->activateWindow();
-
-    if (_plugins.count()>0)
-    {
-        int index =ui->list_Plugins->currentItem()->data(Qt::UserRole).toUInt();
-        pluginSwitch(index);
-    }
-    else
-        pluginSwitch(-1);
 }
 
 void SettingsWindow::hideSettings()
@@ -1926,121 +1890,6 @@ bool SettingsWindow::isDx1011CaptureEnabled() {
 }
 
 // ----------------------------------------------------------------------------
-// Hotkeys slots and functions.
-// ----------------------------------------------------------------------------
-
-void SettingsWindow::registerHotkey(const QString &slotName, const QString &description, const QString &hotkey)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << slotName << hotkey;
-    if(!(slotName.startsWith("1") && slotName.endsWith("()"))) {
-        qCritical("use SLOT() macro");
-    }
-    QString actionName = slotName.mid(1, slotName.length() - 3);
-    QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
-    int newRow = hotkeysTable->rowCount();
-    hotkeysTable->setRowCount(newRow + 1);
-    QTableWidgetItem *actionItem = new QTableWidgetItem(actionName);
-    hotkeysTable->setItem(newRow, 0, actionItem);
-    QTableWidgetItem *descriptionItem = new QTableWidgetItem(description);
-    hotkeysTable->setItem(newRow, 1, descriptionItem);
-    QTableWidgetItem *hotkeyItem = new QTableWidgetItem(hotkey);
-    hotkeysTable->setItem(newRow, 2, hotkeyItem);
-
-    QKeySequence keySeq = QKeySequence(hotkey);
-    GlobalShortcutManager::instance()->disconnect(keySeq, this, slotName.toAscii().data() );
-    GlobalShortcutManager::instance()->connect(keySeq, this, getSlotName(actionName).toAscii().data() );
-}
-
-void SettingsWindow::setupHotkeys()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
-
-    if(hotkeysTable->rowCount() > 0) {
-        hotkeysTable->clearContents();
-        hotkeysTable->setRowCount(0);
-    }
-
-    QStringList headerLabels;
-    headerLabels.append(tr("Action name"));
-    headerLabels.append(tr("Description"));
-    headerLabels.append(tr("Hotkey"));
-
-
-    //to speed up initialization disable sorting while adding new items
-        hotkeysTable->setSortingEnabled(false);
-    hotkeysTable->setColumnCount(3);
-    hotkeysTable->setHorizontalHeaderLabels(headerLabels);
-    registerHotkey(SLOT(toggleBacklight()), tr("On/Off lights"), Settings::getHotkey("toggleBacklight").toString());
-    registerHotkey(SLOT(toggleBacklightMode()), tr("Switch between \"Capture mode\" and mood lamp mode"), Settings::getHotkey("toggleBacklightMode").toString());
-    registerHotkey(SLOT(nextProfile()), tr("Activate next profile"), Settings::getHotkey("nextProfile").toString());
-    registerHotkey(SLOT(prevProfile()), tr("Activate previous profile"), Settings::getHotkey("prevProfile").toString());
-    if(!m_keySequenceWidget)
-        m_keySequenceWidget = new QKeySequenceWidget("","",this);
-    m_keySequenceWidget->setNoneText(tr("Undefined key"));
-    m_keySequenceWidget->setShortcutName(tr("Action not selected"));
-    m_keySequenceWidget->setClearButtonIcon(QIcon(":/icons/profile_delete.png"));
-    m_keySequenceWidget->setClearButtonToolTip(tr("Reset hotkey of selected command"));
-    m_keySequenceWidget->setShortcutButtonMinWidth(100);
-    m_isHotkeySelectionChanging = false;
-    connect(m_keySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onKeySequenceChanged(QKeySequence)));
-
-        hotkeysTable->setSortingEnabled(true);
-    hotkeysTable->resizeRowsToContents();
-    ui->groupBox_HotKeys->layout()->addWidget(m_keySequenceWidget);
-
-    ui->tableWidget_Hotkeys->selectRow(0);
-}
-
-void SettingsWindow::on_tableWidget_Hotkeys_itemSelectionChanged()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    if(m_keySequenceWidget) {
-        m_isHotkeySelectionChanging = true;
-        QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
-        int selectedRow = hotkeysTable->currentRow();
-        int rowCount = hotkeysTable->rowCount();
-        m_keySequenceWidget->setShortcutName(hotkeysTable->item(selectedRow,1)->text());
-        m_keySequenceWidget->setKeySequence(QKeySequence(hotkeysTable->item(selectedRow,2)->text()));
-        m_isHotkeySelectionChanging = false;
-    }
-}
-
-void SettingsWindow::onKeySequenceChanged(const QKeySequence &sequence)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    if(!m_isHotkeySelectionChanging) {
-        QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
-        int selectedRow = hotkeysTable->currentRow();
-        QString actionName = hotkeysTable->item(selectedRow, 0)->text();
-
-        Settings::setHotkey(actionName, sequence);
-    }
-}
-
-QString SettingsWindow::getSlotName(const QString &actionName)
-{
-    return "1" + actionName + "()";
-}
-
-void SettingsWindow::onHotkeyChanged(const QString &actionName, const QKeySequence &sequence, const QKeySequence &oldKeySequence)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    QString slotName = getSlotName(actionName);
-    QTableWidget *hotkeysTable = ui->tableWidget_Hotkeys;
-    for(int i=0; i<hotkeysTable->rowCount(); i++) {
-        if (hotkeysTable->item(i, 0)->text().compare(actionName) == 0) {
-            hotkeysTable->item(i, 2)->setText(sequence.toString());
-            break;
-        }
-    }
-
-    GlobalShortcutManager::instance()->connect(QKeySequence(), this, slotName.toAscii().data() );
-    GlobalShortcutManager::instance()->disconnect(oldKeySequence, this, slotName.toAscii().data() );
-    GlobalShortcutManager::instance()->connect(sequence, this, slotName.toAscii().data() );
-}
-
-// ----------------------------------------------------------------------------
 // Quit application
 // ----------------------------------------------------------------------------
 
@@ -2061,8 +1910,6 @@ void SettingsWindow::quit()
         m_trayIcon->hide();
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "QApplication::quit();";
-
-    GlobalShortcutManager::clear();
 
     QApplication::quit();
 }
@@ -2150,159 +1997,6 @@ void SettingsWindow::adjustSizeAndMoveCenter()
     resize(minimumSize());
 }
 
-bool SettingsWindow::toPriority(PyPlugin* s1 ,PyPlugin* s2 )
-{
-    return s1->getPriority() > s2->getPriority();
-}
-
-void SettingsWindow::updatePlugin(QList<PyPlugin*> plugins)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-
-    _plugins = plugins;
-    // sort priority
-    qSort(_plugins.begin() , _plugins.end(), SettingsWindow::toPriority );
-    ui->list_Plugins->clear();
-    foreach(PyPlugin* plugin, _plugins){
-        int index = _plugins.indexOf(plugin);
-        QListWidgetItem *item = new QListWidgetItem(plugin->getName());
-        item->setData(Qt::UserRole, index);
-        item->setIcon(plugin->getIcon());
-        if (plugin->isEnabled())
-        {
-            item->setCheckState(Qt::Checked);
-        }
-        else
-            item->setCheckState(Qt::Unchecked);
-
-        QWidget *test = new QWidget();
-        ui->tabPluginsSettings->addTab(test,plugin->getName());
-        _plugins[index]->getSettings(test);
-        ui->list_Plugins->addItem(item);
-        QApplication::processEvents(QEventLoop::AllEvents, 1000);
-    }
-    if (_plugins.count()>0)
-    {
-        ui->list_Plugins->setCurrentRow(0);
-        pluginSwitch(0);
-    }
-    else
-        pluginSwitch(-1);
-
-    ui->pushButton_ReloadPlugins->setEnabled(true);
-
-    startBacklight();
-
-}
-
-void SettingsWindow::on_list_Plugins_itemClicked(QListWidgetItem* current)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    bool isEnabled = true;
-
-    if (current->checkState() == Qt::Checked)
-        isEnabled = true;
-    else
-        isEnabled = false;
-
-    int index =current->data(Qt::UserRole).toUInt();
-    if (_plugins[index]->isEnabled() != isEnabled)
-        _plugins[index]->setEnabled(isEnabled);
-
-    pluginSwitch(index);
-}
-
-void SettingsWindow::pluginSwitch(int index)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
-
-    if (index == -1)
-    {
-        ui->label_PluginName->setText("");
-        ui->label_PluginAuthor->setText("");
-        ui->label_PluginVersion->setText("");
-        ui->tb_PluginDescription->setText("");
-        ui->label_PluginIcon->setPixmap(QIcon(":/plugin/Plugin.png").pixmap(50,50));
-        return;
-    }
-
-    //qDeleteAll( ui->tabSettingsPlugin->findChildren<QWidget*>() );
-    //delete  ui->tabSettingsPlugin->layout();
-    if (_plugins.count()-1 < index) return;
-    if (_plugins[index]->isEnabled())
-    {
-        if (ui->tabPlugin->indexOf(ui->tabSettingsPlugin) < 0)
-            ui->tabPlugin->insertTab(0,ui->tabSettingsPlugin, tr("Plugin settings"));
-        ui->tabPlugin->setCurrentIndex(0);
-        ui->tabPluginsSettings->setCurrentIndex(index);
-    }
-    else
-    {
-        ui->tabPlugin->removeTab(ui->tabPlugin->indexOf(ui->tabSettingsPlugin));
-    }
-    ui->label_PluginName->setText(_plugins[index]->getName());
-    ui->label_PluginAuthor->setText(_plugins[index]->getAuthor());
-    ui->label_PluginVersion->setText(_plugins[index]->getVersion());
-    ui->tb_PluginDescription->setText(_plugins[index]->getDescription());
-    ui->label_PluginIcon->setPixmap(_plugins[index]->getIcon().pixmap(50,50));
-
-}
-
-void SettingsWindow::viewPluginConsole()
-{
-    emit getPluginConsole();
-}
-
-void SettingsWindow::on_pushButton_ReloadPlugins_clicked()
-{
-    foreach(PyPlugin* plugin, _plugins){
-        plugin->stop();
-    }
-    for (int i = ui->tabPluginsSettings->count()-1;i>=0;i--)
-        ui->tabPluginsSettings->removeTab(i);
-
-    //qDeleteAll( ui->tabSettingsPlugin->findChildren<QWidget*>() );
-    //delete  ui->tabSettingsPlugin->layout();
-    ui->list_Plugins->clear();
-    _plugins.clear();
-    ui->pushButton_ReloadPlugins->setEnabled(false);
-    emit reloadPlugins();
-}
-
-void SettingsWindow::MoveUpPlugin() {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    int k= ui->list_Plugins->currentRow();
-    if (k==0) return;
-    int n = k-1;
-    QListWidgetItem* pItem = ui->list_Plugins->takeItem(k);
-    ui->list_Plugins->insertItem(n, pItem);
-    ui->list_Plugins->setCurrentRow(n);
-    savePriorityPlugin();
-
-}
-void SettingsWindow::MoveDownPlugin() {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    int k= ui->list_Plugins->currentRow();
-    if (k==ui->list_Plugins->count()-1) return;
-    int n = k+1;
-    QListWidgetItem* pItem = ui->list_Plugins->takeItem(k);
-    ui->list_Plugins->insertItem(n, pItem);
-    ui->list_Plugins->setCurrentRow(n);
-    savePriorityPlugin();
-}
-
-void SettingsWindow::savePriorityPlugin()
-{
-    int count = ui->list_Plugins->count();
-    for(int index = 0; index < count; index++)
-    {
-        QListWidgetItem * item = ui->list_Plugins->item(index);
-        int indexPlugin =item->data(Qt::UserRole).toUInt();
-        _plugins[indexPlugin]->setPriority(count - index);
-    }
-}
 void SettingsWindow::setFirmwareVersion(const QString &firmwareVersion)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -2356,11 +2050,6 @@ void SettingsWindow::on_pushButton_LightpackColorDepthHelp_clicked()
 void SettingsWindow::on_pushButton_LightpackRefreshDelayHelp_clicked()
 {
     showHelpOf(ui->horizontalSlider_DeviceRefreshDelay);
-}
-
-void SettingsWindow::on_pushButton_AllPluginsHelp_clicked()
-{
-    showHelpOf(ui->label_AllPlugins);
 }
 
 void SettingsWindow::on_pushButton_GammaCorrectionHelp_clicked()

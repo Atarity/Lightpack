@@ -1,5 +1,6 @@
 #include "SelectWidget.hpp"
-
+#include <QtWidgets/QScrollBar>
+#include <QResizeEvent>
 SelectWidget::SelectWidget() {
    list = new QListWidget(this);
    upButton = new QPushButton(this);
