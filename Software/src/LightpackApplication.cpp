@@ -85,7 +85,6 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     }
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
-    qRegisterMetaType< QList<QRgb> >("QList<PyPlugin*>");
     qRegisterMetaType< QList<QRgb> >("QList<QString>");
     qRegisterMetaType<Lightpack::Mode>("Lightpack::Mode");
     qRegisterMetaType<Backlight::Status>("Backlight::Status");

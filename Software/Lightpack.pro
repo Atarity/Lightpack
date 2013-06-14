@@ -30,5 +30,6 @@
 # -------------------------------------------------
 
 TEMPLATE = subdirs
-SUBDIRS = src
+SUBDIRS = src \
+    grab
 win32:SUBDIRS += libraryinjector hooks tests
