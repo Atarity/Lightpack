@@ -37,7 +37,7 @@
 #include "X11Grabber.hpp"
 #include "MacOSGrabber.hpp"
 #include "D3D9Grabber.hpp"
-#include "D3D10Grabber/D3D10Grabber.hpp"
+#include "D3D10Grabber.hpp"
 
 #include "enums.hpp"
 

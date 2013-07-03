@@ -1,10 +1,10 @@
 /*
- * QtGrabber.hpp
+ * MacOSGrabber.hpp
  *
- *  Created on: 25.07.11
+ *  Created on: 01.10.11
  *     Project: Lightpack
  *
- *  Copyright (c) 2011 Timur Sattarov, Mike Shatohin
+ *  Copyright (c) 2011 Timur Sattarov, Nikolay Kudashov, Mike Shatohin
  *
  *  Lightpack a USB content-driving ambient lighting system
  *
@@ -25,30 +25,30 @@
 
 #pragma once
 
+#include "../common/defs.h"
+
+#ifdef MAC_OS_CG_GRAB_SUPPORT
+
 #include "TimeredGrabber.hpp"
-#include "enums.hpp"
 
-#ifdef QT_GRAB_SUPPORT
-
-using namespace Grab;
-
-class QtGrabber : public TimeredGrabber
+class MacOSGrabber : public TimeredGrabber
 {
 public:
-    QtGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
-    ~QtGrabber();
+    MacOSGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
+    ~MacOSGrabber();
+//    virtual QList<QRgb>grabWidgetsColors(QList<GrabWidget *> &widgets);
     virtual const char * getName();
-    virtual void updateGrabMonitor( QWidget * widget );
+
+public slots:
+    virtual void updateGrabMonitor(QWidget *widget);
 
 protected:
     virtual GrabResult _grab();
 
+
 private:
     QRgb getColor(QPixmap pixmap, const QWidget * grabme);
     QRgb getColor(QPixmap pixmap, int x, int y, int width, int height);
-
-    QRect screenres;
-    int screen;
 };
 
-#endif // QT_GRAB_SUPPORT
+#endif // MAC_OS_CG_GRAB_SUPPORT

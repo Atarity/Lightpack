@@ -24,11 +24,11 @@
  */
 
 #include "D3D9Grabber.hpp"
-#include <QApplication>
-#include <qdesktopwidget.h>
 
 #ifdef D3D9_GRAB_SUPPORT
 
+#include <QApplication>
+#include <qdesktopwidget.h>
 #include "debug.h"
 #include "cmath"
 #define BYTES_PER_PIXEL 4

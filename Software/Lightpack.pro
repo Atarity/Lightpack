@@ -30,6 +30,7 @@
 # -------------------------------------------------
 
 TEMPLATE = subdirs
-SUBDIRS = src \
-    grab
+CONFIG += ordered
+SUBDIRS = grab \
+    src
 win32:SUBDIRS += libraryinjector hooks tests

@@ -1,10 +1,10 @@
 /*
- * D3D9Grabber.hpp
+ * QtGrabber.hpp
  *
- *  Created on: 19.09.2011
+ *  Created on: 25.07.11
  *     Project: Lightpack
  *
- *  Copyright (c) 2011 Timur Sattarov
+ *  Copyright (c) 2011 Timur Sattarov, Mike Shatohin
  *
  *  Lightpack a USB content-driving ambient lighting system
  *
@@ -26,43 +26,29 @@
 #pragma once
 
 #include "TimeredGrabber.hpp"
-#include "enums.hpp"
+#include "../src/enums.hpp"
 
-#ifdef D3D9_GRAB_SUPPORT
-
-#include <d3d9.h>
+#ifdef QT_GRAB_SUPPORT
 
 using namespace Grab;
 
-class D3D9Grabber : public TimeredGrabber
+class QtGrabber : public TimeredGrabber
 {
 public:
-    D3D9Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
-    ~D3D9Grabber();
+    QtGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
+    ~QtGrabber();
     virtual const char * getName();
-    virtual void updateGrabMonitor( QWidget * ){}
+    virtual void updateGrabMonitor( QWidget * widget );
 
 protected:
     virtual GrabResult _grab();
 
 private:
-    LPDIRECT3D9 m_d3D;
-    LPDIRECT3DDEVICE9 m_d3Device;
-    LPDIRECT3DSURFACE9 m_surface;
-    D3DDISPLAYMODE m_displayMode;
-    D3DPRESENT_PARAMETERS m_presentParams;
-    int m_bufLength;
-    BYTE * m_buf;
-    RECT m_rect;
-private:
-    BYTE * expandBuffer(BYTE * buf, int newLength);
-    BYTE * getImageData(BYTE *, RECT &);
-    RECT getEffectiveRect(QList<GrabWidget *> &widgets);
-    int getBufLength(const RECT &rect);
-    QRgb getColor(int x, int y, int width, int height);
-    void clipRect(RECT *rect, D3DSURFACE_DESC *surfaceDesc);
+    QRgb getColor(QPixmap pixmap, const QWidget * grabme);
+    QRgb getColor(QPixmap pixmap, int x, int y, int width, int height);
 
-
+    QRect screenres;
+    int screen;
 };
 
-#endif // D3D9_GRAB_SUPPORT
+#endif // QT_GRAB_SUPPORT

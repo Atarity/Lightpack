@@ -11,24 +11,26 @@ TARGET = grab
 TEMPLATE = lib
 CONFIG += staticlib
 
+INCLUDEPATH += ./include
+
 HEADERS += \
-    D3D9Grabber.hpp \
-    calculations.hpp \
-    D3D10Grabber/D3D10Grabber.hpp \
-    X11Grabber.hpp \
-    WinAPIGrabberEachWidget.hpp \
-    WinAPIGrabber.hpp \
-    TimeredGrabber.hpp \
-    QtGrabberEachWidget.hpp \
-    QtGrabber.hpp \
-    MacOSGrabber.hpp \
-    IGrabber.hpp \
-    GrabberBase.hpp
+    include/D3D9Grabber.hpp \
+    include/calculations.hpp \
+    include/D3D10Grabber.hpp \
+    include/X11Grabber.hpp \
+    include/WinAPIGrabberEachWidget.hpp \
+    include/WinAPIGrabber.hpp \
+    include/TimeredGrabber.hpp \
+    include/QtGrabberEachWidget.hpp \
+    include/QtGrabber.hpp \
+    include/MacOSGrabber.hpp \
+    include/IGrabber.hpp \
+    include/GrabberBase.hpp
 
 SOURCES += \
     D3D9Grabber.cpp \
     calculations.cpp \
-    D3D10Grabber/D3D10Grabber.cpp \
+    D3D10Grabber.cpp \
     X11Grabber.cpp \
     WinAPIGrabberEachWidget.cpp \
     WinAPIGrabber.cpp \

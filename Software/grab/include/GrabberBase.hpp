@@ -28,7 +28,7 @@
 #include <QColor>
 #include <QTimer>
 #include "../common/defs.h"
-#include "GrabWidget.hpp"
+#include "../src/GrabWidget.hpp"
 
 enum GrabResult {
     GrabResultOk,

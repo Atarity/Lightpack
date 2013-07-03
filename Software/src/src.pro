@@ -7,6 +7,7 @@
 # -------------------------------------------------
 
 TARGET      = Prismatik
+PRE_TARGETDEPS += ../grab/bin/libgrab.a
 DESTDIR     = bin
 TEMPLATE    = app
 QT         += network widgets
@@ -42,11 +43,12 @@ RC_FILE      = ../res/Lightpack.rc
 
 include(../build-config.prf)
 
+LIBS    += -L../grab/bin -lgrab
+
 unix:!macx{
     CONFIG    += link_pkgconfig
     PKGCONFIG += libusb-1.0
 }
-
 win32 {
     # Windows version using WinAPI for HID
     LIBS    += -lhid -lusbcamd -lsetupapi
@@ -103,7 +105,7 @@ macx{
     QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
 }
 
-INCLUDEPATH += ./hidapi ./grab ./alienfx ./
+INCLUDEPATH += ./hidapi ./grab ./alienfx ../grab/include ./
 
 SOURCES += \
     LightpackApplication.cpp  main.cpp   SettingsWindow.cpp  Settings.cpp \
@@ -115,23 +117,12 @@ SOURCES += \
     LedDeviceArdulight.cpp \
     LedDeviceVirtual.cpp \
     ColorButton.cpp \
-    grab/WinAPIGrabber.cpp \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
     LightpackMath.cpp \
     MoodLampManager.cpp \
     LedDeviceManager.cpp \
     SelectWidget.cpp \
-    grab/D3D10Grabber/D3D10Grabber.cpp \
-    grab/GrabberBase.cpp \
-    grab/calculations.cpp \
-    grab/TimeredGrabber.cpp \
-    grab/X11Grabber.cpp \
-    grab/QtGrabber.cpp \
-    grab/QtGrabberEachWidget.cpp \
-    grab/WinAPIGrabberEachWidget.cpp \
-    grab/D3D9Grabber.cpp \
-    grab/MacOSGrabber.cpp \
     GrabManager.cpp \
     AbstractLedDevice.cpp \
     LightpackPluginInterface.cpp
@@ -156,7 +147,6 @@ HEADERS += \
     LedDeviceArdulight.hpp \
     LedDeviceVirtual.hpp \
     ColorButton.hpp \
-    grab/WinAPIGrabber.hpp \
     ../common/defs.h \
     enums.hpp         ApiServer.hpp     ApiServerSetColorTask.hpp \
     hidapi/hidapi.h \
@@ -170,16 +160,6 @@ HEADERS += \
     LedDeviceManager.hpp \
     SelectWidget.hpp \
     ../common/D3D10GrabberDefs.hpp \
-    grab/D3D10Grabber/D3D10Grabber.hpp \
-    grab/calculations.hpp \
-    grab/GrabberBase.hpp \
-    grab/TimeredGrabber.hpp \
-    grab/X11Grabber.hpp \
-    grab/QtGrabber.hpp \
-    grab/QtGrabberEachWidget.hpp \
-    grab/WinAPIGrabberEachWidget.hpp \
-    grab/D3D9Grabber.hpp \
-    grab/MacOSGrabber.hpp \
     colorspace_types.h \
     AbstractLedDevice.hpp \
     SettingsWizard.hpp \

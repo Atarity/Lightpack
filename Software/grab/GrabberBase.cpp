@@ -24,7 +24,7 @@
  */
 
 #include "GrabberBase.hpp"
-#include "debug.h"
+#include "../src/debug.h"
 
 GrabberBase::GrabberBase(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets) : QObject(parent) {
     m_grabResult = grabResult;

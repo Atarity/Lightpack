@@ -26,7 +26,7 @@
 #pragma once
 
 #include "TimeredGrabber.hpp"
-#include "enums.hpp"
+#include "../src/enums.hpp"
 
 #ifdef D3D9_GRAB_SUPPORT
 

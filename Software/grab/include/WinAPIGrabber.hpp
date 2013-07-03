@@ -26,7 +26,7 @@
 #pragma once
 
 #include "TimeredGrabber.hpp"
-#include "enums.hpp"
+#include "../src/enums.hpp"
 #ifdef WINAPI_GRAB_SUPPORT
 
 #define WINVER 0x0500 /* Windows2000 for MonitorFromWindow(..) func */

@@ -1,10 +1,10 @@
 /*
- * WinAPIGrabber.hpp
+ * X11Grabber.hpp
  *
- *  Created on: 25.07.11
+ *  Created on: 25.06.11
  *     Project: Lightpack
  *
- *  Copyright (c) 2011 Timur Sattarov, Mike Shatohin
+ *  Copyright (c) 2011 Andrey Isupov, Timur Sattarov, Mike Shatohin
  *
  *  Lightpack a USB content-driving ambient lighting system
  *
@@ -26,49 +26,46 @@
 #pragma once
 
 #include "TimeredGrabber.hpp"
-#include "enums.hpp"
-#ifdef WINAPI_GRAB_SUPPORT
+#include "../src/enums.hpp"
 
-#define WINVER 0x0500 /* Windows2000 for MonitorFromWindow(..) func */
+#ifdef X11_GRAB_SUPPORT
 
-#include <windows.h>
+
+//#include <QApplication>
+//#include <QDesktopWidget>
+#include <QPixmap>
+#include <QImage>
+
+#include <qtextstream.h>
+
+#include "../src/debug.h"
+
+struct X11GrabberData;
 
 using namespace Grab;
 
-class WinAPIGrabber : public TimeredGrabber
+class X11Grabber : public TimeredGrabber
 {
-    Q_OBJECT
 public:
-    WinAPIGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
-    ~WinAPIGrabber();
+    X11Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
+    ~X11Grabber();
+    virtual const char * getName();
+    virtual void updateGrabMonitor( QWidget * widget );
+    virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
 
 protected:
     virtual GrabResult _grab();
 
-public slots:
-    virtual void updateGrabMonitor(QWidget *widget);
 private:
     void captureScreen();
-    void freeDCs();
     QRgb getColor(const QWidget * grabme);
-    QRgb getColor(const QRect &widgetRect);
+    QRgb getColor(int x, int y, int width, int height);
 
 private:
-    HMONITOR hMonitor;
-    MONITORINFO monitorInfo;
+    bool updateScreenAndAllocateMemory;
+    int screen;
+    QRect screenres;
 
-    // Size of screen in pixels, initialize in captureScreen() using in getColor()
-    unsigned screenWidth;
-    unsigned screenHeight;
-
-    // Captured screen buffer, contains actual RGB data in reversed order
-    BYTE * pbPixelsBuff;
-    unsigned pixelsBuffSize;
-    unsigned bytesPerPixel;
-
-    HDC hScreenDC;
-    HDC hMemDC;
-    HBITMAP hBitmap;
-
+    X11GrabberData *d;
 };
-#endif // WINAPI_GRAB_SUPPORT
+#endif // X11_GRAB_SUPPORT

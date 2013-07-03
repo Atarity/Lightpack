@@ -26,7 +26,7 @@
 #pragma once
 
 #include "TimeredGrabber.hpp"
-#include "enums.hpp"
+#include "../src/enums.hpp"
 
 #ifdef WINAPI_GRAB_SUPPORT
 

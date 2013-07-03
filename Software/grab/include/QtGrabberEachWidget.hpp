@@ -1,7 +1,7 @@
 /*
- * QtGrabber.hpp
+ * QtGrabberEachWidget.hpp
  *
- *  Created on: 25.07.11
+ *  Created on: 22.11.11
  *     Project: Lightpack
  *
  *  Copyright (c) 2011 Timur Sattarov, Mike Shatohin
@@ -26,17 +26,17 @@
 #pragma once
 
 #include "TimeredGrabber.hpp"
-#include "enums.hpp"
+#include "../src/enums.hpp"
 
 #ifdef QT_GRAB_SUPPORT
 
 using namespace Grab;
 
-class QtGrabber : public TimeredGrabber
+class QtGrabberEachWidget : public TimeredGrabber
 {
 public:
-    QtGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
-    ~QtGrabber();
+    QtGrabberEachWidget(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
+    ~QtGrabberEachWidget();
     virtual const char * getName();
     virtual void updateGrabMonitor( QWidget * widget );
 
@@ -44,11 +44,7 @@ protected:
     virtual GrabResult _grab();
 
 private:
-    QRgb getColor(QPixmap pixmap, const QWidget * grabme);
-    QRgb getColor(QPixmap pixmap, int x, int y, int width, int height);
-
-    QRect screenres;
-    int screen;
+    QRgb getColor(const QWidget * w);
 };
 
 #endif // QT_GRAB_SUPPORT
