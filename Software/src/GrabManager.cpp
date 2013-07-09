@@ -33,10 +33,12 @@
 #include <QtWidgets/QDesktopWidget>
 using namespace SettingsScope;
 
+#ifdef D3D10_GRAB_SUPPORT
 HWND GetMainWindowHandle()
 {
     return getLightpackApp()->getMainWindowHandle();
 }
+#endif
 
 GrabManager::GrabManager(QWidget *parent) : QObject(parent)
 {

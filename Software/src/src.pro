@@ -10,7 +10,10 @@ TARGET      = Prismatik
 PRE_TARGETDEPS += ../grab/bin/libgrab.a
 DESTDIR     = bin
 TEMPLATE    = app
-QT         += network widgets serialport
+QT         += network widgets
+win32 {
+    QT += serialport
+}
 
 # QMake and GCC produce a lot of stuff
 OBJECTS_DIR = stuff
@@ -47,8 +50,10 @@ LIBS    += -L../grab/bin -lgrab
 
 unix:!macx{
     CONFIG    += link_pkgconfig
-    PKGCONFIG += libusb-1.0
+    PKGCONFIG += libusb-1.0 \
+                 Qt5SerialPort
 }
+
 win32 {
     # Windows version using WinAPI for HID
     LIBS    += -lhid -lusbcamd -lsetupapi
