@@ -29,6 +29,8 @@
 #include "version.h"
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QHBoxLayout>
+#include "ApiServer.hpp"
+#include "LightpackPluginInterface.hpp"
 
 #include <unistd.h>
 #include <stdio.h>
@@ -122,7 +124,7 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 HWND LightpackApplication::getMainWindowHandle() {
     // to get HWND sometimes needed to activate window
 //    winFocus(m_settingsWindow, true);
-    return m_settingsWindow->winId();
+    return reinterpret_cast<HWND>(m_settingsWindow->winId());
 }
 
 bool LightpackApplication::winEventFilter ( MSG * msg, long * result ) {

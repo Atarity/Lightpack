@@ -10,7 +10,7 @@ TARGET      = Prismatik
 PRE_TARGETDEPS += ../grab/bin/libgrab.a
 DESTDIR     = bin
 TEMPLATE    = app
-QT         += network widgets
+QT         += network widgets serialport
 
 # QMake and GCC produce a lot of stuff
 OBJECTS_DIR = stuff
@@ -55,6 +55,10 @@ win32 {
     # For QSerialDevice
     LIBS    += -luuid -ladvapi32
 
+    QMAKE_LIBDIR += "$${DIRECTX_SDK_DIR}/Lib/x86"
+
+    LIBS    += -lwsock32 -lshlwapi -lole32 -ldxguid -ld3dx10 -ld3d10 -ld3d10_1 -ldxgi
+
     SOURCES += hidapi/windows/hid.c
 
     #DX9 grab
@@ -63,8 +67,7 @@ win32 {
     QMAKE_CFLAGS += -O2
     # Windows version using WinAPI + GDI + DirectX for grab colors
 
-    INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
-    LIBS    += -lwsock32 -lshlwapi -lole32 -L"$${DIRECTX_SDK_DIR}/Lib/x86" -ldxguid -ld3dx10 -ld3d10 -ld3d10_1 -ldxgi
+    LIBS    += -lwsock32 -lshlwapi -lole32
 
     LIBS    += -lpsapi
 
@@ -172,9 +175,9 @@ FORMS += SettingsWindow.ui \
 #
 #   QSerialDevice
 #
-include(qserialdevice/qserialdevice/qserialdevice.pri)
-include(qserialdevice/qserialdeviceenumerator/qserialdeviceenumerator.pri)
-unix:include(qserialdevice/unix/ttylocker.pri)
+#include(qserialdevice/qserialdevice/qserialdevice.pri)
+#include(qserialdevice/qserialdeviceenumerator/qserialdeviceenumerator.pri)
+#unix:include(qserialdevice/unix/ttylocker.pri)
 
 #
 # QtSingleApplication

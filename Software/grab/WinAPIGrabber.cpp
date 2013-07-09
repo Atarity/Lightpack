@@ -25,10 +25,10 @@
 
 #include"WinAPIGrabber.hpp"
 #ifdef WINAPI_GRAB_SUPPORT
-#include"debug.h"
+#include"../src/debug.h"
 #include<cmath>
 #include"calculations.hpp"
-#include"enums.hpp"
+#include"../src/enums.hpp"
 
 WinAPIGrabber::WinAPIGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
     : TimeredGrabber(parent, grabResult, grabAreasGeometry)
@@ -56,7 +56,7 @@ void WinAPIGrabber::freeDCs()
 
 void WinAPIGrabber::updateGrabMonitor(QWidget *widget)
 {
-    HMONITOR hMonitorNew = MonitorFromWindow(widget->winId(), MONITOR_DEFAULTTONEAREST);
+    HMONITOR hMonitorNew = MonitorFromWindow(reinterpret_cast<HWND>(widget->winId()), MONITOR_DEFAULTTONEAREST);
     if (hMonitor != hMonitorNew) {
         hMonitor = hMonitorNew;
 

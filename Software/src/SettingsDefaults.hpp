@@ -47,7 +47,7 @@
 #   define GRABMODE_DEFAULT         ::Grab::GrabberTypeMacCoreGraphics
 #   define GRABMODE_DEFAULT_STR     "MacCoreGraphics"
 #else
-#   define GRABMODE_DEFAULT         ::Grab::QtGrabber
+#   define GRABMODE_DEFAULT         ::Grab::GrabberTypeQt
 #   define GRABMODE_DEFAULT_STR     "Qt"
 #endif
 

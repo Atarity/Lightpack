@@ -29,7 +29,7 @@
 
 #include <QApplication>
 #include <qdesktopwidget.h>
-#include "debug.h"
+#include "../src/debug.h"
 #include "cmath"
 #define BYTES_PER_PIXEL 4
 

@@ -4,12 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += gui
+QT       += widgets
 
 DESTDIR = bin
 TARGET = grab
 TEMPLATE = lib
 CONFIG += staticlib
+
+include(../build-config.prf)
 
 INCLUDEPATH += ./include
 
@@ -39,3 +41,7 @@ SOURCES += \
     QtGrabber.cpp \
     MacOSGrabber.cpp \
     GrabberBase.cpp
+
+win32 {
+    INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
+}

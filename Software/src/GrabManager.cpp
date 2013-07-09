@@ -28,9 +28,15 @@
 #include <QtCore/qmath.h>
 #include "debug.h"
 #include "LightpackMath.hpp"
+#include "LightpackApplication.hpp"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
 using namespace SettingsScope;
+
+HWND GetMainWindowHandle()
+{
+    return getLightpackApp()->getMainWindowHandle();
+}
 
 GrabManager::GrabManager(QWidget *parent) : QObject(parent)
 {
@@ -466,8 +472,9 @@ void GrabManager::initGrabbers()
     m_grabbers[Grab::GrabberTypeWinAPIEachWidget] = initGrabber(new WinAPIGrabberEachWidget(NULL, &m_colorsNew, &m_ledWidgets));
 #endif
 #ifdef D3D10_GRAB_SUPPORT
-    m_d3d10Grabber = static_cast<D3D10Grabber *>(initGrabber(new D3D10Grabber(NULL, &m_colorsNew, &m_ledWidgets)));
+    m_d3d10Grabber = static_cast<D3D10Grabber *>(initGrabber(new D3D10Grabber(NULL, &m_colorsNew, &m_ledWidgets, GetMainWindowHandle)));
     connect(m_d3d10Grabber, SIGNAL(grabberStateChangeRequested(bool)), SLOT(onGrabberStateChangeRequested(bool)));
+    connect(getLightpackApp(), SIGNAL(postInitialization()), m_d3d10Grabber,  SLOT(init()));
 #endif
 }
 

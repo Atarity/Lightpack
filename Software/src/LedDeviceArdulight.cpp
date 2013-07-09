@@ -195,29 +195,29 @@ void LedDeviceArdulight::open()
     if (m_ArdulightDevice != NULL)
         m_ArdulightDevice->close();
     else
-        m_ArdulightDevice = new AbstractSerial();
+        m_ArdulightDevice = new QSerialPort();
 
-    m_ArdulightDevice->setDeviceName(Settings::getArdulightSerialPortName());
+    m_ArdulightDevice->setPortName(Settings::getArdulightSerialPortName());
 
-    m_ArdulightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+    m_ArdulightDevice->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
     bool ok = m_ArdulightDevice->isOpen();
 
     // Ubuntu 10.04: on every second attempt to open the device leads to failure
     if (ok == false)
     {
         // Try one more time
-        m_ArdulightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+        m_ArdulightDevice->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
         ok = m_ArdulightDevice->isOpen();
     }
 
     if (ok)
     {
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Serial device" << m_ArdulightDevice->deviceName() << "open";
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Serial device" << m_ArdulightDevice->portName() << "open";
 
         ok = m_ArdulightDevice->setBaudRate(Settings::getArdulightSerialPortBaudRate());
         if (ok)
         {
-            ok = m_ArdulightDevice->setDataBits(AbstractSerial::DataBits8);
+            ok = m_ArdulightDevice->setDataBits(QSerialPort::Data8);
             if (ok)
             {
                 DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Baud rate  :" << m_ArdulightDevice->baudRate();
@@ -233,7 +233,7 @@ void LedDeviceArdulight::open()
         }
 
     } else {
-        qWarning() << Q_FUNC_INFO << "Serial device" << m_ArdulightDevice->deviceName() << "open fail";
+        qWarning() << Q_FUNC_INFO << "Serial device" << m_ArdulightDevice->portName() << "open fail";
     }
 
     emit openDeviceSuccess(ok);

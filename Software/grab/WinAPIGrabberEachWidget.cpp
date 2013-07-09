@@ -26,7 +26,7 @@
 #include "WinAPIGrabberEachWidget.hpp"
 
 #ifdef WINAPI_GRAB_SUPPORT
-#include "debug.h"
+#include "../src/debug.h"
 #include <cmath>
 
 WinAPIGrabberEachWidget::WinAPIGrabberEachWidget(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
@@ -48,7 +48,7 @@ const char * WinAPIGrabberEachWidget::getName()
 
 void WinAPIGrabberEachWidget::updateGrabMonitor(QWidget *widget)
 {
-    hMonitor = MonitorFromWindow( widget->winId(), MONITOR_DEFAULTTONEAREST );
+    hMonitor = MonitorFromWindow( reinterpret_cast<HWND>(widget->winId()), MONITOR_DEFAULTTONEAREST );
     isBufferNeedsResize = true;
 }
 

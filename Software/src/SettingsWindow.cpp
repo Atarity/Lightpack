@@ -1966,7 +1966,7 @@ void SettingsWindow::initSerialPortBaudRateComboBox()
     ui->comboBox_ArdulightSerialPortBaudRate->addItems(Settings::getSupportedSerialPortBaudRates());
 
 
-    QString baudrate = Settings::getAdalightSerialPortBaudRate();
+    QString baudrate = QString(Settings::getAdalightSerialPortBaudRate());
     int index = ui->comboBox_AdalightSerialPortBaudRate->findText(baudrate);
     if (index < 0)
     {

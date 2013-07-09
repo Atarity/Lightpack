@@ -26,12 +26,14 @@
 
 #pragma once
 
-#include <QtSingleApplication>
 #include "SettingsWindow.hpp"
-#include "ApiServer.hpp"
 #include "LedDeviceManager.hpp"
+#include <QtSingleApplication>
 
 #define getLightpackApp() static_cast<LightpackApplication *>(QCoreApplication::instance())
+
+class LightpackPluginInterface;
+class ApiServer;
 
 class LightpackApplication : public QtSingleApplication
 {

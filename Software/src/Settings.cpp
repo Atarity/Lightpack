@@ -669,10 +669,10 @@ void Settings::setAdalightSerialPortName(const QString & port)
     m_this->adalightSerialPortNameChanged(port);
 }
 
-QString Settings::getAdalightSerialPortBaudRate()
+int Settings::getAdalightSerialPortBaudRate()
 {
     // TODO: validate baudrate reading from settings file
-    return valueMain(Main::Key::Adalight::BaudRate).toString();
+    return valueMain(Main::Key::Adalight::BaudRate).toInt();
 }
 
 void Settings::setAdalightSerialPortBaudRate(const QString & baud)
@@ -695,10 +695,10 @@ void Settings::setArdulightSerialPortName(const QString & port)
     m_this->ardulightSerialPortNameChanged(port);
 }
 
-QString Settings::getArdulightSerialPortBaudRate()
+int Settings::getArdulightSerialPortBaudRate()
 {
     // TODO: validate baudrate reading from settings file
-    return valueMain(Main::Key::Ardulight::BaudRate).toString();
+    return valueMain(Main::Key::Ardulight::BaudRate).toInt();
 }
 
 void Settings::setArdulightSerialPortBaudRate(const QString & baud)

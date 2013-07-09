@@ -99,11 +99,11 @@ public:
     static void setHotkey(const QString &actionName, const QKeySequence &keySequence);
     static QString getAdalightSerialPortName();
     static void setAdalightSerialPortName(const QString & port);
-    static QString getAdalightSerialPortBaudRate();
+    static int getAdalightSerialPortBaudRate();
     static void setAdalightSerialPortBaudRate(const QString & baud);
     static QString getArdulightSerialPortName();
     static void setArdulightSerialPortName(const QString & port);
-    static QString getArdulightSerialPortBaudRate();
+    static int getArdulightSerialPortBaudRate();
     static void setArdulightSerialPortBaudRate(const QString & baud);
     static QStringList getSupportedSerialPortBaudRates();
     static bool isConnectedDeviceUsesSerialPort();

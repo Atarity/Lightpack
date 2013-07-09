@@ -27,12 +27,14 @@
 
 #include<GrabberBase.hpp>
 #ifdef D3D10_GRAB_SUPPORT
-#define WINVER 0x0500
+//#define WINVER 0x0500
 
 #include<windows.h>
 #include"../../common/D3D10GrabberDefs.hpp"
 #include<QList>
 #include<../libraryinjector/ILibraryInjector.h>
+
+typedef HWND (*GetHwndCallback_t)();
 
 class D3D10GrabberWorker: public QObject {
     Q_OBJECT
@@ -52,7 +54,7 @@ class D3D10Grabber : public GrabberBase
 
     Q_OBJECT
 public:
-    D3D10Grabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets);
+    D3D10Grabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets, GetHwndCallback_t getHwndCb);
     ~D3D10Grabber();
 
     void init(void);
@@ -94,6 +96,7 @@ private:
     static WCHAR m_hooksLibPath[300];
     static WCHAR m_systemrootPath[300];
     static bool m_isFrameGrabbedDuringLastSecond;
+    static GetHwndCallback_t m_getHwndCb;
 };
 
 #endif

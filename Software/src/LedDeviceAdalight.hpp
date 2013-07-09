@@ -28,7 +28,7 @@
 
 #include "AbstractLedDevice.hpp"
 #include "colorspace_types.h"
-#include "abstractserial.h"
+#include <QSerialPort>
 
 class LedDeviceAdalight : public AbstractLedDevice
 {
@@ -54,7 +54,7 @@ private:
     void reinitBufferHeader(int ledsCount);
 
 private:
-    AbstractSerial *m_AdalightDevice;
+    QSerialPort *m_AdalightDevice;
 
     QByteArray m_writeBufferHeader;
     QByteArray m_writeBuffer;

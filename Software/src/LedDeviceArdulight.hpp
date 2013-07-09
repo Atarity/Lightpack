@@ -28,7 +28,7 @@
 
 #include "AbstractLedDevice.hpp"
 #include "colorspace_types.h"
-#include "abstractserial.h"
+#include <QSerialPort>
 
 class LedDeviceArdulight : public AbstractLedDevice
 {
@@ -53,7 +53,7 @@ private:
     void resizeColorsBuffer(int buffSize);
 
 private:
-    AbstractSerial *m_ArdulightDevice;
+    QSerialPort *m_ArdulightDevice;
 
     QByteArray m_writeBufferHeader;
     QByteArray m_writeBuffer;

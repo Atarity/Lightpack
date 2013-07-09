@@ -35,7 +35,6 @@
 #define DXGI_PRESENT_FUNC_ORD 8
 #define D3D9_SCPRESENT_FUNC_ORD 3
 #define D3D9_PRESENT_FUNC_ORD 17
-typedef uint8_t UINT8;
 
 #define __in
 #define __out
@@ -57,10 +56,9 @@ typedef uint8_t UINT8;
 #include"D3D10_1.h"
 #include"D3D10.h"
 #include "d3d9.h"
-#include"debug.h"
+#include"../src/debug.h"
 #include"math.h"
-#include <qapplication.h>
-#include "LightpackApplication.hpp"
+#include <QThread>
 #include "sddl.h"
 #include "psapi.h"
 #include "shlwapi.h"
@@ -87,6 +85,8 @@ ILibraryInjector * D3D10Grabber::m_libraryInjector = NULL;
 WCHAR D3D10Grabber::m_hooksLibPath[300];
 WCHAR D3D10Grabber::m_systemrootPath[300];
 bool D3D10Grabber::m_isFrameGrabbedDuringLastSecond = false;
+
+GetHwndCallback_t D3D10Grabber::m_getHwndCb = NULL;
 
 UINT D3D10Grabber::m_lastFrameId;
 
@@ -172,9 +172,9 @@ bool D3D10Grabber::initIPC(LPSECURITY_ATTRIBUTES lpsa) {
         memset(&m_memDesc, 0, sizeof(m_memDesc));
         m_memDesc.frameId = HOOKSGRABBER_BLANK_FRAME_ID;
 
-        m_memDesc.d3d9PresentFuncOffset = GetD3D9PresentOffset(getLightpackApp()->getMainWindowHandle());
-        m_memDesc.d3d9SCPresentFuncOffset = GetD3D9SCPresentOffset(getLightpackApp()->getMainWindowHandle());
-        m_memDesc.dxgiPresentFuncOffset = GetDxgiPresentOffset(getLightpackApp()->getMainWindowHandle());
+        m_memDesc.d3d9PresentFuncOffset = GetD3D9PresentOffset(m_getHwndCb());
+        m_memDesc.d3d9SCPresentFuncOffset = GetD3D9SCPresentOffset(m_getHwndCb());
+        m_memDesc.dxgiPresentFuncOffset = GetDxgiPresentOffset(m_getHwndCb());
 
         //converting logLevel from our app's level to EventLog's level
         m_memDesc.logLevel =  Debug::HighLevel - g_debugLevel;
@@ -196,8 +196,8 @@ bool D3D10Grabber::initIPC(LPSECURITY_ATTRIBUTES lpsa) {
     return true;
 }
 
-D3D10Grabber::D3D10Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets) : GrabberBase(parent, grabResult, grabWidgets) {
-    connect(getLightpackApp(), SIGNAL(postInitialization()), SLOT(init()));
+D3D10Grabber::D3D10Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets, GetHwndCallback_t getHwndCb) : GrabberBase(parent, grabResult, grabWidgets) {
+    m_getHwndCb = getHwndCb;
 }
 
 void D3D10Grabber::init(void) {
@@ -365,7 +365,7 @@ void D3D10Grabber::freeIPC() {
 void D3D10Grabber::updateGrabMonitor(QWidget *widget) {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     if (m_isInited) {
-        HMONITOR hMonitor = MonitorFromWindow( widget->winId(), MONITOR_DEFAULTTONEAREST );
+        HMONITOR hMonitor = MonitorFromWindow( reinterpret_cast<HWND>(widget->winId()), MONITOR_DEFAULTTONEAREST );
 
         ZeroMemory( &m_monitorInfo, sizeof(MONITORINFO) );
         m_monitorInfo.cbSize = sizeof(MONITORINFO);
@@ -395,7 +395,7 @@ UINT GetDxgiPresentOffset(HWND hwnd) {
     Q_ASSERT(hwnd != NULL);
     IDXGIFactory1 * factory = NULL;
     IDXGIAdapter * adapter;
-    HRESULT hresult = CreateDXGIFactory1(IID_IDXGIFactory, reinterpret_cast<void **>(&factory));
+    HRESULT hresult = CreateDXGIFactory(IID_IDXGIFactory, reinterpret_cast<void **>(&factory));
     if (hresult != S_OK) {
         qCritical() << "Can't create DXGIFactory. " << hresult;
         return NULL;
@@ -429,8 +429,8 @@ UINT GetDxgiPresentOffset(HWND hwnd) {
     dxgiSwapChainDesc.Flags         = 0;
 
     IDXGISwapChain * pSc;
-    ID3D10Device1  * pDev;
-    hresult = D3D10CreateDeviceAndSwapChain1(adapter, D3D10_DRIVER_TYPE_HARDWARE, NULL, 0, D3D10_FEATURE_LEVEL_9_1, D3D10_1_SDK_VERSION, &dxgiSwapChainDesc, &pSc, &pDev);
+    ID3D10Device  * pDev;
+    hresult = D3D10CreateDeviceAndSwapChain(adapter, D3D10_DRIVER_TYPE_HARDWARE, NULL, 0, D3D10_SDK_VERSION, &dxgiSwapChainDesc, &pSc, &pDev);
     if (S_OK != hresult) {
         qCritical() << Q_FUNC_INFO << QString("Can't create D3D10Device and SwapChain. hresult = 0x%1").arg(QString::number(hresult, 16));
         return NULL;
@@ -639,7 +639,7 @@ QRgb D3D10Grabber::getColor(QRect &widgetRect)
 
     QRgb result;
 
-    if (Calculations::calculateAvgColor(&result, pbPixelsBuff, m_memDesc.format, m_memDesc.rowPitch, preparedRect) == 0) {
+    if (Grab::Calculations::calculateAvgColor(&result, pbPixelsBuff, m_memDesc.format, m_memDesc.rowPitch, preparedRect) == 0) {
         return result;
     } else {
         return qRgb(0,0,0);

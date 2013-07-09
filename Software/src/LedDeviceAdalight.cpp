@@ -186,29 +186,29 @@ void LedDeviceAdalight::open()
     if (m_AdalightDevice != NULL)
         m_AdalightDevice->close();
     else
-        m_AdalightDevice = new AbstractSerial();
+        m_AdalightDevice = new QSerialPort();
 
-    m_AdalightDevice->setDeviceName(Settings::getAdalightSerialPortName());
+    m_AdalightDevice->setPortName(Settings::getAdalightSerialPortName());
 
-    m_AdalightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+    m_AdalightDevice->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
     bool ok = m_AdalightDevice->isOpen();
 
     // Ubuntu 10.04: on every second attempt to open the device leads to failure
     if (ok == false)
     {
         // Try one more time
-        m_AdalightDevice->open(AbstractSerial::WriteOnly | AbstractSerial::Unbuffered);
+        m_AdalightDevice->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
         ok = m_AdalightDevice->isOpen();
     }
 
     if (ok)
     {
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Serial device" << m_AdalightDevice->deviceName() << "open";
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Serial device" << m_AdalightDevice->portName() << "open";
 
         ok = m_AdalightDevice->setBaudRate(Settings::getAdalightSerialPortBaudRate());
         if (ok)
         {
-            ok = m_AdalightDevice->setDataBits(AbstractSerial::DataBits8);
+            ok = m_AdalightDevice->setDataBits(QSerialPort::Data8);
             if (ok)
             {
                 DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Baud rate  :" << m_AdalightDevice->baudRate();
@@ -224,7 +224,7 @@ void LedDeviceAdalight::open()
         }
 
     } else {
-        qWarning() << Q_FUNC_INFO << "Serial device" << m_AdalightDevice->deviceName() << "open fail";
+        qWarning() << Q_FUNC_INFO << "Serial device" << m_AdalightDevice->portName() << "open fail";
     }
 
     emit openDeviceSuccess(ok);
