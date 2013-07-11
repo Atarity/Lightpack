@@ -60,9 +60,7 @@ win32 {
     # For QSerialDevice
     LIBS    += -luuid -ladvapi32
 
-    QMAKE_LIBDIR += "$${DIRECTX_SDK_DIR}/Lib/x86"
-
-    LIBS    += -lwsock32 -lshlwapi -lole32 -ldxguid -ld3dx10 -ld3d10 -ld3d10_1 -ldxgi
+    LIBS    += -lwsock32 -lshlwapi -lole32 -L$${DIRECTX_SDK_DIR}/Lib/x86 -ldxguid -ld3dx10 -ld3d10 -ld3d10_1 -ldxgi
 
     SOURCES += hidapi/windows/hid.c
 
@@ -77,16 +75,16 @@ win32 {
     LIBS    += -lpsapi
 
     QMAKE_POST_LINK = cd $(DESTDIR) && \
-                cp -f \"$${QTDIR}/bin/QtCore$${DEBUG_EXT}4.dll\" ./ && \
-                cp -f \"$${QTDIR}/bin/QtXml$${DEBUG_EXT}4.dll\" ./ && \
-                cp -f \"$${QTDIR}/bin/QtGui$${DEBUG_EXT}4.dll\" ./ && \
-                cp -f \"$${QTDIR}/bin/QtNetwork$${DEBUG_EXT}4.dll\" ./ && \
-                cp -f \"$${MINGW_RUNTIME_DIR}/mingwm10.dll\" ./ && \
-                cp -f \"$${MINGW_RUNTIME_DIR}/libgcc_s_dw2-1.dll\" ./ && \
-                cp -f \"$${MINGW_RUNTIME_DIR}/libstdc++-6.dll\" ./ && \
-                cp -f \"$$PWD/../PythonQt/lib/PythonQt$${DEBUG_EXT}.dll\" ./ && \
-                cp -f \"$$PWD/../PythonQt/lib/PythonQt_QtAll$${DEBUG_EXT}.dll\" ./ && \
-                cp -f \"$$PWD\"/../python_binaries_win32/* ./
+                cp -f \"$${QTDIR}/bin/Qt5Core$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/Qt5SerialPort$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/Qt5Widgets$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/Qt5Network$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/icudt51.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/icuin51.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/icuuc51.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/libwinpthread-1.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/libgcc_s_dw2-1.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/libstdc++-6.dll\" ./
 }
 
 unix:!macx{

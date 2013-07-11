@@ -30,8 +30,6 @@
 #include <windows.h>
 #include <objbase.h>
 
-#include <qglobal.h>
-
 #if defined(LIBRARYINJECTOR_LIBRARY)
 #  define LIBRARYINJECTORSHARED_EXPORT extern
 #else
