@@ -23,12 +23,12 @@
  *
  */
 
-#include"WinAPIGrabber.hpp"
+#include "WinAPIGrabber.hpp"
 #ifdef WINAPI_GRAB_SUPPORT
-#include"../src/debug.h"
-#include<cmath>
-#include"calculations.hpp"
-#include"../src/enums.hpp"
+#include "../src/debug.h"
+#include <cmath>
+#include "calculations.hpp"
+#include "../src/enums.hpp"
 
 WinAPIGrabber::WinAPIGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
     : TimeredGrabber(parent, grabResult, grabAreasGeometry)

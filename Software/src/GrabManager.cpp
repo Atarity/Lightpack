@@ -456,7 +456,7 @@ void GrabManager::initGrabbers()
     for (int i = 0; i < Grab::GrabbersCount; i++)
         m_grabbers.append(NULL);
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     m_grabbers[Grab::GrabberTypeWinAPI] = initGrabber(new WinAPIGrabber(NULL, &m_colorsNew, &m_ledWidgets));
     m_grabbers[Grab::GrabberTypeD3D9] = initGrabber(new D3D9Grabber(NULL, &m_colorsNew, &m_ledWidgets));
 #endif
@@ -470,7 +470,7 @@ void GrabManager::initGrabbers()
 #endif
     m_grabbers[Grab::GrabberTypeQtEachWidget] = initGrabber(new QtGrabberEachWidget(NULL, &m_colorsNew, &m_ledWidgets));
     m_grabbers[Grab::GrabberTypeQt] = initGrabber(new QtGrabber(NULL, &m_colorsNew, &m_ledWidgets));
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     m_grabbers[Grab::GrabberTypeWinAPIEachWidget] = initGrabber(new WinAPIGrabberEachWidget(NULL, &m_colorsNew, &m_ledWidgets));
 #endif
 #ifdef D3D10_GRAB_SUPPORT

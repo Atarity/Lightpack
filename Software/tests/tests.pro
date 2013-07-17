@@ -25,7 +25,7 @@ RCC_DIR     = stuff
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-INCLUDEPATH += ../src/ ../src/grab ../hooks
+INCLUDEPATH += ../src/ ../src/grab ../hooks ../grab/include
 SOURCES += \
     LightpackApiTest.cpp \
     ../src/ApiServerSetColorTask.cpp \

@@ -3,8 +3,6 @@
 
 #include"ProxyFunc.hpp"
 
-#define JMP_INSTRUCTION_SIZE 6
-
 class ProxyFuncJmp : public ProxyFunc
 {
 public:
@@ -17,8 +15,9 @@ public:
     virtual bool removeHook();
 
 private:
-    char m_pOriginalCode[JMP_INSTRUCTION_SIZE];
-    char m_pJmpCode[JMP_INSTRUCTION_SIZE];
+    static const int kJmpInstructionSize = 6;
+    char m_pOriginalCode[kJmpInstructionSize];
+    char m_pJmpCode[kJmpInstructionSize];
 };
 
 #endif // PROXYFUNCJMP_H

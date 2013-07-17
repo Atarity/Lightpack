@@ -6,13 +6,11 @@
 
 QT       -= core gui
 
-DESTDIR  = bin
+DESTDIR  = ../lib
 TARGET   = libraryinjector
 TEMPLATE = lib
 LIBS += -luuid -lwsock32 -lole32 -ladvapi32
 QMAKE_LFLAGS +=-Wl,--kill-at
-
-QMAKE_POST_LINK = cp -f \"$(dir $(DESTDIR))libraryinjector.dll\" ../src/bin
 
 DEFINES += LIBRARYINJECTOR_LIBRARY
 

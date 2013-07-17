@@ -7,7 +7,7 @@
 # -------------------------------------------------
 
 TARGET      = Prismatik
-PRE_TARGETDEPS += ../grab/bin/libgrab.a
+PRE_TARGETDEPS += ../lib/libgrab.a
 DESTDIR     = bin
 TEMPLATE    = app
 QT         += network widgets
@@ -46,7 +46,7 @@ RC_FILE      = ../res/Lightpack.rc
 
 include(../build-config.prf)
 
-LIBS    += -L../grab/bin -lgrab
+LIBS    += -L../lib -lgrab
 
 unix:!macx{
     CONFIG    += link_pkgconfig
@@ -75,7 +75,10 @@ win32 {
     LIBS    += -lpsapi
 
     QMAKE_POST_LINK = cd $(DESTDIR) && \
+                cp -f \"../../lib/prismatik-hooks.dll\" ./ && \
+                cp -f \"../../lib/libraryinjector.dll\" ./ && \
                 cp -f \"$${QTDIR}/bin/Qt5Core$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/Qt5Gui$${DEBUG_EXT}.dll\" ./ && \
                 cp -f \"$${QTDIR}/bin/Qt5SerialPort$${DEBUG_EXT}.dll\" ./ && \
                 cp -f \"$${QTDIR}/bin/Qt5Widgets$${DEBUG_EXT}.dll\" ./ && \
                 cp -f \"$${QTDIR}/bin/Qt5Network$${DEBUG_EXT}.dll\" ./ && \

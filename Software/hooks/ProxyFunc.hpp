@@ -6,8 +6,12 @@
 class ProxyFunc : public LoggableTrait
 {
 public:
-    ProxyFunc(void *pTarget, void *pSubstFunc, Logger *logger):
-        m_pTarget(pTarget), m_pSubstFunc(pSubstFunc), m_isInited(false), LoggableTrait(logger) {}
+    ProxyFunc(void *pTarget, void *pSubstFunc, Logger *logger): LoggableTrait(logger)
+    {
+        m_pTarget = pTarget;
+        m_pSubstFunc = pSubstFunc;
+        m_isInited = false;
+    }
 
     virtual bool init()=0;
     virtual bool isHookInstalled()=0;

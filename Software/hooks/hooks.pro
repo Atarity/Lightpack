@@ -6,17 +6,18 @@
 
 QT       -= core gui
 
-DESTDIR  = bin
+DESTDIR  = ../lib
 TARGET   = prismatik-hooks
 TEMPLATE = lib
 
 include(../build-config.prf)
 
 INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
+               # ../zeromq/include
 
-QMAKE_POST_LINK = cp -f \"$(dir $(DESTDIR))prismatik-hooks.dll\" ../src/bin
 
-LIBS += -lwsock32 -lshlwapi -ladvapi32 -L"$${DIRECTX_SDK_DIR}/Lib/x86" -ldxguid
+QMAKE_CXXFLAGS = -std=c++11
+LIBS += -lwsock32 -lshlwapi -ladvapi32 -L"$${DIRECTX_SDK_DIR}/Lib/x86" -ldxguid #-LD:/System/Users/Tim/Projects/Lightpack/Software/zeromq -lzmq.dll
 QMAKE_LFLAGS += -static
 QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
 QMAKE_LFLAGS_EXCEPTIONS_ON -= -mthreads

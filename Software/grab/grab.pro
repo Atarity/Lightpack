@@ -6,7 +6,7 @@
 
 QT       += widgets
 
-DESTDIR = bin
+DESTDIR = ../lib
 TARGET = grab
 TEMPLATE = lib
 CONFIG += staticlib

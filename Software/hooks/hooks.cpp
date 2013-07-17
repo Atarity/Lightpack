@@ -66,6 +66,11 @@ HOOKSDLL_API BOOL APIENTRY DllMain(HINSTANCE hModule, DWORD fdwReason, LPVOID lp
 
         free(wstrEventSource);
 
+//        void *zctx = zmq_ctx_new();
+//        void *req_socket = zmq_socket(zctx, ZMQ_REQ);
+//        zmq_connect(req_socket,  "");
+
+
         if (!gIpcContext)
             gIpcContext = new IPCContext(gLog);
 
