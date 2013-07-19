@@ -23,11 +23,11 @@
  *
  */
 
-#include "LightpackMath.hpp"
+#include "PrismatikMath.hpp"
 #include <algorithm>
-#include "debug.h"
+#include "../src/debug.h"
 
-namespace LightpackMath
+namespace PrismatikMath
 {
     //Observer= 2°, Illuminant= D65
     const float refX = 95.047;

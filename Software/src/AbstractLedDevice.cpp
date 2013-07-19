@@ -26,7 +26,7 @@
 
 #include "AbstractLedDevice.hpp"
 #include "colorspace_types.h"
-#include "LightpackMath.hpp"
+#include "PrismatikMath.hpp"
 #include "Settings.hpp"
 
 void AbstractLedDevice::setGamma(double value) {
@@ -93,13 +93,13 @@ void AbstractLedDevice::applyColorModifications(const QList<QRgb> &inColors, QLi
             outColors[i].b *= m_wbAdjustments[i].blue;
         }
 
-        LightpackMath::gammaCorrection(m_gamma, outColors[i]);
+        PrismatikMath::gammaCorrection(m_gamma, outColors[i]);
     }
 
-    StructLab avgColor = LightpackMath::toLab(LightpackMath::avgColor(outColors));
+    StructLab avgColor = PrismatikMath::toLab(PrismatikMath::avgColor(outColors));
 
     for (int i = 0; i < outColors.count(); ++i) {
-        StructLab lab = LightpackMath::toLab(outColors[i]);
+        StructLab lab = PrismatikMath::toLab(outColors[i]);
         int dl = m_luminosityThreshold - lab.l;
         if (dl > 0) {
             if (m_isMinimumLuminosityEnabled) { // apply minimum luminosity or dead-zone
@@ -109,7 +109,7 @@ void AbstractLedDevice::applyColorModifications(const QList<QRgb> &inColors, QLi
                 lab.l = m_luminosityThreshold;
                 lab.a = avgColor.a + round(da/fadingCoeff);
                 lab.b = avgColor.b + round(db/fadingCoeff);
-                StructRgb rgb = LightpackMath::toRgb(lab);
+                StructRgb rgb = PrismatikMath::toRgb(lab);
                 outColors[i] = rgb;
             } else {
                 outColors[i].r = 0;
@@ -118,7 +118,7 @@ void AbstractLedDevice::applyColorModifications(const QList<QRgb> &inColors, QLi
             }
         }
 
-        LightpackMath::brightnessCorrection(m_brightness, outColors[i]);
+        PrismatikMath::brightnessCorrection(m_brightness, outColors[i]);
     }
 
 }

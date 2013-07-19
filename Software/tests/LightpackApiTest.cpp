@@ -23,9 +23,9 @@
  *
  */
 
-#include <QtCore/QString>
-#include <QtCore/QCoreApplication>
-#include <QtTest/QTest>
+#include <QString>
+#include <QtWidgets/QApplication>
+#include <QTest>
 
 #include "debug.h"
 #include "ApiServer.hpp"
@@ -53,8 +53,6 @@ LightpackApiTest::LightpackApiTest()
 
 void LightpackApiTest::initTestCase()
 {
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
-
     Settings::Initialize(QDir::currentPath(), true);
 
     m_socket = NULL;

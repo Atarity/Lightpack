@@ -46,7 +46,7 @@ RC_FILE      = ../res/Lightpack.rc
 
 include(../build-config.prf)
 
-LIBS    += -L../lib -lgrab
+LIBS    += -L../lib -lgrab -lprismatik-math
 
 unix:!macx{
     CONFIG    += link_pkgconfig
@@ -114,7 +114,7 @@ macx{
     QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
 }
 
-INCLUDEPATH += ./hidapi ./grab ./alienfx ../grab/include ./
+INCLUDEPATH += ./hidapi ./grab ./alienfx ../grab/include ../math/include ./
 
 SOURCES += \
     LightpackApplication.cpp  main.cpp   SettingsWindow.cpp  Settings.cpp \
@@ -128,7 +128,6 @@ SOURCES += \
     ColorButton.cpp \
     ApiServer.cpp \
     ApiServerSetColorTask.cpp \
-    LightpackMath.cpp \
     MoodLampManager.cpp \
     LedDeviceManager.cpp \
     SelectWidget.cpp \
@@ -162,7 +161,6 @@ HEADERS += \
     ../../CommonHeaders/LIGHTPACK_HW.h \
     ../../CommonHeaders/COMMANDS.h \
     ../../CommonHeaders/USB_ID.h \
-    LightpackMath.hpp \
     PluginManager.hpp \
     plugins/PyPlugin.h \    
     MoodLampManager.hpp \

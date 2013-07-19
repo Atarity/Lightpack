@@ -25,7 +25,7 @@
  */
 
 #include "LedDeviceAdalight.hpp"
-#include "LightpackMath.hpp"
+#include "PrismatikMath.hpp"
 #include "Settings.hpp"
 #include "debug.h"
 #include "stdio.h"

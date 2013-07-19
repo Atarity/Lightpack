@@ -25,7 +25,7 @@
  */
 
 #include "LedDeviceVirtual.hpp"
-#include "LightpackMath.hpp"
+#include "PrismatikMath.hpp"
 #include "Settings.hpp"
 #include "enums.hpp"
 #include "debug.h"

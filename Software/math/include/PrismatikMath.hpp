@@ -30,7 +30,7 @@
 #include <cmath>
 #include "colorspace_types.h"
 
-namespace LightpackMath
+namespace PrismatikMath
 {
     void gammaCorrection(double gamma, StructRgb &);
     void brightnessCorrection(unsigned int brightness, StructRgb &);

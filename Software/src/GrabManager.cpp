@@ -27,7 +27,7 @@
 #include "GrabManager.hpp"
 #include <QtCore/qmath.h>
 #include "debug.h"
-#include "LightpackMath.hpp"
+#include "PrismatikMath.hpp"
 #include "LightpackApplication.hpp"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>

@@ -25,7 +25,7 @@
 
 
 #include "MoodLampManager.hpp"
-#include "LightpackMath.hpp"
+#include "PrismatikMath.hpp"
 #include "Settings.hpp"
 #include <QTime>
 
@@ -188,7 +188,7 @@ void MoodLampManager::updateColors()
 
 int MoodLampManager::generateDelay(int speed)
 {
-    return 1000 / (speed + LightpackMath::rand(25) + 1);
+    return 1000 / (speed + PrismatikMath::rand(25) + 1);
 }
 
 QColor MoodLampManager::generateColor()
@@ -201,7 +201,7 @@ QColor MoodLampManager::generateColor()
             unselectedColors << m_colorsMoodLamp[i];
     }
 
-    int randIndex = LightpackMath::rand(unselectedColors.size());
+    int randIndex = PrismatikMath::rand(unselectedColors.size());
 
     return unselectedColors.takeAt(randIndex);
 }

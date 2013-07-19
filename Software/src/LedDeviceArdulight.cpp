@@ -25,7 +25,7 @@
  */
 
 #include "LedDeviceArdulight.hpp"
-#include "LightpackMath.hpp"
+#include "PrismatikMath.hpp"
 #include "Settings.hpp"
 #include "debug.h"
 #include "stdio.h"
@@ -71,7 +71,7 @@ void LedDeviceArdulight::setColors(const QList<QRgb> & colors)
         m_colorsBuffer[i].r = m_colorsBuffer[i].r << 4;
         m_colorsBuffer[i].g = m_colorsBuffer[i].g << 4;
         m_colorsBuffer[i].b = m_colorsBuffer[i].b << 4;
-        LightpackMath::maxCorrection(254, m_colorsBuffer[i]);
+        PrismatikMath::maxCorrection(254, m_colorsBuffer[i]);
     }
 
     m_writeBuffer.clear();

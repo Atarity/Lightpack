@@ -4,9 +4,7 @@
 #
 #-------------------------------------------------
 
-QT         += network testlib
-
-QT         += gui
+QT         += widgets network testlib
 
 TARGET      = LightpackTests
 DESTDIR     = bin
@@ -25,20 +23,19 @@ RCC_DIR     = stuff
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-INCLUDEPATH += ../src/ ../src/grab ../hooks ../grab/include
+LIBS += -L../lib -lprismatik-math -lgrab
+
+INCLUDEPATH += ../src/ ../src/grab ../hooks ../grab/include ../math/include
 SOURCES += \
     LightpackApiTest.cpp \
     ../src/ApiServerSetColorTask.cpp \
     ../src/ApiServer.cpp \
     ../src/Settings.cpp \
     ../src/LightpackPluginInterface.cpp \
-    ../src/plugins/PyPlugin.cpp \
-    ../src/grab/calculations.cpp \
     SettingsWindowMockup.cpp \
     main.cpp \
     GrabCalculationTest.cpp \
     lightpackmathtest.cpp \
-    ../src/LightpackMath.cpp \
     HooksTest.cpp \
     ../hooks/ProxyFuncJmp.cpp \
     ../hooks/hooksutils.cpp \
@@ -53,13 +50,12 @@ HEADERS += \
     ../src/ApiServer.hpp \
     ../src/debug.h \
     ../src/Settings.hpp \
-    ../src/plugins/PyPlugin.h \
     ../src/LightpackPluginInterface.hpp \
     SettingsWindowMockup.hpp \
     GrabCalculationTest.hpp \
     LightpackApiTest.hpp \
     lightpackmathtest.hpp \
-    ../src/LightpackMath.hpp \
+    ../math/include/PrismatikMath.hpp \
     HooksTest.h \
     ../hooks/ProxyFuncJmp.hpp \
     ../hooks/ProxyFunc.hpp \
