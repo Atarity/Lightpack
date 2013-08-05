@@ -81,8 +81,13 @@ const char * ApiServer::CmdGetFPS = "getfps";
 const char * ApiServer::CmdResultFPS = "fps:";
 
 const char * ApiServer::CmdGetScreenSize = "getscreensize";
-const char * ApiServer:: CmdResultScreenSize = "screensize:";
+const char * ApiServer::CmdResultScreenSize = "screensize:";
 
+const char * ApiServer::CmdGetCountMonitor = "getcountmonitors";
+const char * ApiServer::CmdResultCountMonitor = "countmonitors:";
+
+const char * ApiServer::CmdGetSizeMonitor = "getsizemonitor:";
+const char * ApiServer::CmdResultSizeMonitor = "sizemonitor:";
 
 const char * ApiServer::CmdGetBacklight = "getmode";
 const char * ApiServer::CmdResultBacklight_Ambilight = "mode:ambilight\r\n";
@@ -408,6 +413,47 @@ void ApiServer::clientProcessCommands()
             QRect screen = lightpack->GetScreenSize();
 
             result = QString("%1%2,%3,%4,%5\r\n").arg(CmdResultScreenSize).arg(screen.x()).arg(screen.y()).arg(screen.width()).arg(screen.height());
+        }
+        else if (cmdBuffer == CmdGetCountMonitor)
+        {
+            API_DEBUG_OUT << CmdGetCountMonitor;
+
+            int count = QApplication::desktop()->screenCount();
+
+            result = QString("%1%2\r\n").arg(CmdResultCountMonitor).arg(count);
+        }
+        else if (cmdBuffer.startsWith(CmdGetSizeMonitor))
+        {
+            API_DEBUG_OUT << CmdGetSizeMonitor;
+
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
+
+                bool ok = false;
+                int monitor = QString(cmdBuffer).toInt(&ok);
+
+                if (ok)
+                {
+                    API_DEBUG_OUT << CmdGetSizeMonitor << "OK:" << monitor;
+
+                    int count = QApplication::desktop()->screenCount();
+
+                    if (count>monitor)
+                    {
+                        QRect screen = QApplication::desktop()->screenGeometry(monitor);
+
+                        result = QString("%1%2,%3,%4,%5\r\n").arg(CmdResultSizeMonitor).arg(screen.x()).arg(screen.y()).arg(screen.width()).arg(screen.height());
+                    }
+                    else
+                    {
+                        API_DEBUG_OUT << CmdGetSizeMonitor << "Error (unknow monitor):" << monitor;
+                        result = CmdSetResult_Error;
+                    }
+
+                } else {
+                        API_DEBUG_OUT << CmdGetSizeMonitor << "Error (convert fail):" << monitor;
+                        result = CmdSetResult_Error;
+                }
         }
         else if (cmdBuffer == CmdGetBacklight)
         {

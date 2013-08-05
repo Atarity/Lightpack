@@ -26,6 +26,7 @@
 
 #pragma once
 
+#include <QDesktopWidget>
 #include <QStringList>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -101,6 +102,11 @@ public:
 
     static const char * CmdGetScreenSize;
     static const char * CmdResultScreenSize;
+
+    static const char * CmdGetCountMonitor;
+    static const char * CmdResultCountMonitor;
+    static const char * CmdGetSizeMonitor;
+    static const char * CmdResultSizeMonitor;
 
     static const char * CmdGetBacklight;
     static const char * CmdResultBacklight_Ambilight;
