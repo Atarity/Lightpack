@@ -375,9 +375,20 @@ bool LightpackPluginInterface::SetBacklight(QString sessionKey, int backlight)
     return false;
 }
 
+bool LightpackPluginInterface::SetCountLeds(QString sessionKey, int countLeds)
+{
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
+
+    Settings::setNumberOfLeds(Settings::getConnectedDevice(), countLeds);
+    emit updateCountLeds(countLeds);
+    return true;
+
+}
+
 int LightpackPluginInterface::GetCountLeds()
 {
-    return m_curColors.count();
+    return Settings::getNumberOfLeds(Settings::getConnectedDevice());
 }
 
 int LightpackPluginInterface::GetStatus()

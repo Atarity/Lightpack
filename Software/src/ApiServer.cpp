@@ -67,6 +67,11 @@ const char * ApiServer::CmdGetProfile = "getprofile";
 // Necessary to add a new line after filling results!
 const char * ApiServer::CmdResultProfile = "profile:";
 
+const char * ApiServer::CmdGetDevices = "getdevices";
+const char * ApiServer::CmdResultDevices = "devices:";
+const char * ApiServer::CmdGetDevice = "getdevice";
+const char * ApiServer::CmdResultDevice = "device:";
+
 const char * ApiServer::CmdGetCountLeds = "getcountleds";
 // Necessary to add a new line after filling results!
 const char * ApiServer::CmdResultCountLeds = "countleds:";
@@ -114,6 +119,7 @@ const char * ApiServer::CmdSetGamma = "setgamma:";
 const char * ApiServer::CmdSetBrightness = "setbrightness:";
 const char * ApiServer::CmdSetSmooth = "setsmooth:";
 const char * ApiServer::CmdSetProfile = "setprofile:";
+const char * ApiServer::CmdSetCountLeds = "setcountleds:";
 const char * ApiServer::CmdSetLeds = "setleds:";
 
 const char * ApiServer::CmdNewProfile = "newprofile:";
@@ -364,6 +370,25 @@ void ApiServer::clientProcessCommands()
             API_DEBUG_OUT << CmdGetProfile;
 
             result = CmdResultProfile + lightpack->GetProfile() + "\r\n";
+        }
+        else if (cmdBuffer == CmdGetDevices)
+        {
+            API_DEBUG_OUT << CmdGetDevices;
+
+            QStringList devices = Settings::getSupportedDevices();
+
+            result = ApiServer::CmdResultDevices;
+            for (int i = 0; i < devices.count(); i++)
+                result += devices[i] + ";";
+            result += "\r\n";
+        }
+        else if (cmdBuffer == CmdGetDevice)
+        {
+            API_DEBUG_OUT << CmdGetDevice;
+            result = ApiServer::CmdResultDevice;
+            result += Settings::getConnectedDeviceName();
+            Settings::get
+            result += "\r\n";
         }
         else if (cmdBuffer == CmdGetCountLeds)
         {
@@ -698,6 +723,41 @@ void ApiServer::clientProcessCommands()
                     result = CmdSetResult_Ok;
                 } else {
                     API_DEBUG_OUT << CmdSetProfile << "Error (profile not found):" << setProfileName;
+                    result = CmdSetResult_Error;
+                }
+            }
+            else if (m_lockedClient == 0)
+            {
+                result = CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result = CmdSetResult_Busy;
+            }
+        }
+        else if (cmdBuffer.startsWith(CmdSetCountLeds))
+        {
+            API_DEBUG_OUT << CmdSetCountLeds;
+
+            if (m_lockedClient == 1)
+            {
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
+                bool ok = false;
+                int countleds = QString(cmdBuffer).toInt(&ok);
+
+                if (ok)
+                {
+                    if (lightpack->SetCountLeds(sessionKey,countleds))
+                    {
+                        API_DEBUG_OUT << CmdSetCountLeds << "OK:" << countleds;
+                        result = CmdSetResult_Ok;
+                    } else {
+                        API_DEBUG_OUT << CmdSetCountLeds << "Error (max min test fail):" << countleds;
+                        result = CmdSetResult_Error;
+                    }
+                } else {
+                    API_DEBUG_OUT << CmdSetCountLeds << "Error (convert fail):" << countleds;
                     result = CmdSetResult_Error;
                 }
             }

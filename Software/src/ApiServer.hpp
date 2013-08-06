@@ -88,6 +88,12 @@ public:
     static const char * CmdGetProfile;
     static const char * CmdResultProfile;
 
+    static const char * CmdGetDevices;
+    static const char * CmdResultDevices;
+
+    static const char * CmdGetDevice;
+    static const char * CmdResultDevice;
+
     static const char * CmdGetCountLeds;
     static const char * CmdResultCountLeds;
 
@@ -131,6 +137,7 @@ public:
     static const char * CmdSetBrightness;
     static const char * CmdSetSmooth;
     static const char * CmdSetProfile;
+    static const char * CmdSetCountLeds;
     static const char * CmdSetLeds;
 
     static const char * CmdNewProfile;

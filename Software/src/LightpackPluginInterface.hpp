@@ -25,6 +25,7 @@ public:
      bool SetColor(QString sessionKey, int ind,int r, int g, int b);
      bool SetGamma(QString sessionKey, double gamma);
      bool SetBrightness(QString sessionKey, int brightness);
+     bool SetCountLeds(QString sessionKey, int countLeds);
      bool SetSmooth(QString sessionKey, int smooth);
      bool SetProfile(QString sessionKey, QString profile);
 
@@ -70,6 +71,7 @@ signals:
      void updateProfile(QString profileName);
      void updateStatus(Backlight::Status status);
      void updateBacklight(Lightpack::Mode status);
+     void updateCountLeds(int value);
 
 
 public slots:
