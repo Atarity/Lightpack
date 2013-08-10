@@ -72,6 +72,9 @@ const char * ApiServer::CmdResultDevices = "devices:";
 const char * ApiServer::CmdGetDevice = "getdevice";
 const char * ApiServer::CmdResultDevice = "device:";
 
+const char * ApiServer::CmdGetMaxLeds = "getmaxleds";
+const char * ApiServer::CmdResultMaxLeds = "maxleds:";
+
 const char * ApiServer::CmdGetCountLeds = "getcountleds";
 // Necessary to add a new line after filling results!
 const char * ApiServer::CmdResultCountLeds = "countleds:";
@@ -387,8 +390,34 @@ void ApiServer::clientProcessCommands()
             API_DEBUG_OUT << CmdGetDevice;
             result = ApiServer::CmdResultDevice;
             result += Settings::getConnectedDeviceName();
-            Settings::get
             result += "\r\n";
+        }
+        else if (cmdBuffer == CmdGetMaxLeds)
+        {
+            API_DEBUG_OUT << CmdGetMaxLeds;
+
+            int max = MaximumNumberOfLeds::AbsoluteMaximum;
+            switch (Settings::getConnectedDevice())
+            {
+            case SupportedDevices::DeviceTypeAdalight:
+                max = MaximumNumberOfLeds::Adalight;
+                break;
+            case SupportedDevices::DeviceTypeArdulight:
+                max = MaximumNumberOfLeds::Ardulight;
+                break;
+            case SupportedDevices::DeviceTypeLightpack:
+                max = MaximumNumberOfLeds::Lightpack5;
+                break;
+            case SupportedDevices::DeviceTypeVirtual:
+                max = MaximumNumberOfLeds::Virtual;
+                break;
+            case SupportedDevices::DeviceTypeAlienFx:
+                max = MaximumNumberOfLeds::AlienFx;
+                break;
+            default:
+                max = MaximumNumberOfLeds::Default;
+            }
+            result = QString("%1%2\r\n").arg(CmdResultMaxLeds).arg(max);
         }
         else if (cmdBuffer == CmdGetCountLeds)
         {

@@ -94,6 +94,9 @@ public:
     static const char * CmdGetDevice;
     static const char * CmdResultDevice;
 
+    static const char * CmdGetMaxLeds;
+    static const char * CmdResultMaxLeds;
+
     static const char * CmdGetCountLeds;
     static const char * CmdResultCountLeds;
 
