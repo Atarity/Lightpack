@@ -27,6 +27,8 @@
 #ifndef FLAGS_H_INCLUDED
 #define FLAGS_H_INCLUDED
 
+#include <util/atomic.h>
+
 extern volatile uint8_t g_Flags;
 
 typedef enum FLAGS

@@ -115,9 +115,12 @@ OBJDIR = obj
 # Path to the LUFA library
 LUFA_PATH = .
 
+ARCH = AVR8
+F_USB = $(F_CPU)
 
 # LUFA library compile-time options and predefined tokens
 LUFA_OPTS  = -D USB_DEVICE_ONLY
+LUFA_OPTS += -D F_USB=$(F_CPU)
 LUFA_OPTS += -D FIXED_CONTROL_ENDPOINT_SIZE=8
 LUFA_OPTS += -D FIXED_NUM_CONFIGURATIONS=1
 LUFA_OPTS += -D USE_FLASH_DESCRIPTORS

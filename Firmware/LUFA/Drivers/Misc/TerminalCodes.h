@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2010.
+     Copyright (C) Dean Camera, 2013.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2013  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -18,7 +18,7 @@
   advertising or publicity pertaining to distribution of the
   software without specific, written prior permission.
 
-  The author disclaim all warranties with regard to this
+  The author disclaims all warranties with regard to this
   software, including all implied warranties of merchantability
   and fitness.  In no event shall the author be liable for any
   special, indirect or consequential damages or any damages
@@ -36,22 +36,29 @@
  */
 
 /** \ingroup Group_MiscDrivers
- *  @defgroup Group_Terminal ANSI Terminal Escape Codes - LUFA/Drivers/Misc/TerminalCodes.h
+ *  \defgroup Group_Terminal ANSI Terminal Escape Codes - LUFA/Drivers/Misc/TerminalCodes.h
+ *  \brief ANSI terminal special escape code macros.
  *
  *  \section Sec_Dependencies Module Source Dependencies
  *  The following files must be built with any user project that uses this module:
  *    - None
  *
- *  \section Module Description
+ *  \section Sec_ModDescription Module Description
  *  Escape code macros for ANSI compliant text terminals.
  *
- *  \note If desired, the macro DISABLE_TERMINAL_CODES can be defined in the project makefile and passed to the GCC
+ *  \note If desired, the macro \c DISABLE_TERMINAL_CODES can be defined in the project makefile and passed to the GCC
  *        compiler via the -D switch to disable the terminal codes without modifying the source, for use with non
  *        compatible terminals (any terminal codes then equate to empty strings).
  *
- *  Example Usage:
+ *  \section Sec_ExampleUsage Example Usage
+ *  The following snippet is an example of how this module may be used within a typical
+ *  application.
+ *
  *  \code
- *      printf("Some String, " ESC_BOLD_ON " Some bold string");
+ *      printf("Normal String, "
+ *             ESC_BOLD_ON "Bold String, "
+ *             ESC_UNDERLINE_ON "Bold and Underlined String"
+ *             ESC_RESET ESC_FG_BLUE ESC_BG_YELLOW "Normal Blue-on-Yellow String");
  *  \endcode
  *
  *  @{
@@ -65,14 +72,14 @@
 			#if !defined(DISABLE_TERMINAL_CODES)
 				/** Creates an ANSI escape sequence with the specified payload.
 				 *
-				 *  \param[in] EscapeSeq  Payload to encode as an ANSI escape sequence, a ESC_* mask.
+				 *  \param[in] EscapeSeq  Payload to encode as an ANSI escape sequence, a \c ESC_* mask.
 				 */
 				#define ANSI_ESCAPE_SEQUENCE(EscapeSeq)  "\33[" EscapeSeq
 			#else
 				#define ANSI_ESCAPE_SEQUENCE(EscapeSeq)
 			#endif
 
-			/** \name Text Display Modifier Escape Sequences */
+			/** \name Text Display Modifier Control Sequences */
 			//@{
 			/** Turns on bold so that any following text is printed to the terminal in bold. */
 			#define ESC_BOLD_ON                     ANSI_ESCAPE_SEQUENCE("1m")
@@ -108,7 +115,7 @@
 			 */
 			#define ESC_STRIKETHROUGH_OFF           ANSI_ESCAPE_SEQUENCE("29m")
 			//@}
-			
+
 			/** \name Text Colour Control Sequences */
 			//@{
 			/** Sets the foreground (text) colour to black. */
@@ -176,8 +183,8 @@
 
 			/** Sets the cursor position to the given line and column.
 			 *
-			 *  \param[in] Line    Line number to position the cursor at
-			 *  \param[in] Column  Column number to position the cursor at
+			 *  \param[in] Line    Line number to position the cursor at.
+			 *  \param[in] Column  Column number to position the cursor at.
 			 */
 			#define ESC_CURSOR_POS(Line, Column)    ANSI_ESCAPE_SEQUENCE(#Line ";" #Column "H")
 

@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2010.
+     Copyright (C) Dean Camera, 2013.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2013  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -18,7 +18,7 @@
   advertising or publicity pertaining to distribution of the
   software without specific, written prior permission.
 
-  The author disclaim all warranties with regard to this
+  The author disclaims all warranties with regard to this
   software, including all implied warranties of merchantability
   and fitness.  In no event shall the author be liable for any
   special, indirect or consequential damages or any damages
@@ -29,43 +29,46 @@
 */
 
 /** \file
- *  \brief Master include file for the ADC peripheral driver.
+ *  \brief Hardware Analogue-to-Digital converter driver.
  *
- *  This file is the master dispatch header file for the device-specific ADC driver, for AVRs containing an ADC.
+ *  This file is the master dispatch header file for the device-specific ADC driver, for microcontrollers
+ *  containing an ADC.
  *
  *  User code should include this file, which will in turn include the correct ADC driver header file for the
- *  currently selected AVR model.
+ *  currently selected architecture and microcontroller model.
  */
 
 /** \ingroup Group_PeripheralDrivers
- *  @defgroup Group_ADC ADC Driver - LUFA/Drivers/Peripheral/ADC.h
+ *  \defgroup Group_ADC ADC Driver - LUFA/Drivers/Peripheral/ADC.h
+ *  \brief Hardware Analogue-to-Digital converter driver.
  *
  *  \section Sec_Dependencies Module Source Dependencies
  *  The following files must be built with any user project that uses this module:
  *    - None
  *
- *  \section Module Description
- *  Hardware ADC driver. This module provides an easy to use driver for the hardware
- *  ADC present on many AVR models, for the conversion of analogue signals into the
+ *  \section Sec_ModDescription Module Description
+ *  Hardware ADC driver. This module provides an easy to use driver for the hardware ADC
+ *  present on many microcontrollers, for the conversion of analogue signals into the
  *  digital domain.
+ *
+ *  \note The exact API for this driver may vary depending on the target used - see
+ *        individual target module documentation for the API specific to your target processor.
  */
 
 #ifndef __ADC_H__
 #define __ADC_H__
 
 	/* Macros: */
-	#if !defined(__DOXYGEN__)
 		#define __INCLUDE_FROM_ADC_H
-	#endif
 
 	/* Includes: */
-		#if (defined(__AVR_AT90USB1286__) || defined(__AVR_AT90USB646__) || \
-		     defined(__AVR_AT90USB1287__) || defined(__AVR_AT90USB647__) || \
-			 defined(__AVR_ATmega16U4__)  || defined(__AVR_ATmega32U4__) || \
-			 defined(__AVR_ATmega32U6__))
-			#include "AVRU4U6U7/ADC.h"
+		#include "../../Common/Common.h"
+
+	/* Includes: */
+		#if (ARCH == ARCH_AVR8)
+			#include "AVR8/ADC_AVR8.h"
 		#else
-			#error "ADC is not available for the currently selected AVR model."
+			#error The ADC peripheral driver is not currently available for your selected architecture.
 		#endif
 
 #endif

@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2010.
+     Copyright (C) Dean Camera, 2013.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2013  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -18,7 +18,7 @@
   advertising or publicity pertaining to distribution of the
   software without specific, written prior permission.
 
-  The author disclaim all warranties with regard to this
+  The author disclaims all warranties with regard to this
   software, including all implied warranties of merchantability
   and fitness.  In no event shall the author be liable for any
   special, indirect or consequential damages or any damages
@@ -29,35 +29,63 @@
 */
 
 /** \file
- *  \brief Master include file for the board digital joystick driver.
+ *  \brief Digital joystick board hardware driver.
  *
  *  This file is the master dispatch header file for the board-specific Joystick driver, for boards containing a
- *  5-way joystick.
+ *  digital joystick.
  *
  *  User code should include this file, which will in turn include the correct joystick driver header file for the
  *  currently selected board.
  *
- *  If the BOARD value is set to BOARD_USER, this will include the /Board/Joystick.h file in the user project
+ *  If the \c BOARD value is set to \c BOARD_USER, this will include the \c /Board/Joystick.h file in the user project
  *  directory.
  *
- *  For possible BOARD makefile values, see \ref Group_BoardTypes.
+ *  For possible \c BOARD makefile values, see \ref Group_BoardTypes.
  */
 
 /** \ingroup Group_BoardDrivers
- *  @defgroup Group_Joystick Joystick Driver - LUFA/Drivers/Board/Joystick.h
+ *  \defgroup Group_Joystick Joystick Driver - LUFA/Drivers/Board/Joystick.h
+ *  \brief Digital joystick board hardware driver.
  *
  *  \section Sec_Dependencies Module Source Dependencies
  *  The following files must be built with any user project that uses this module:
  *    - None
  *
- *  \section Module Description
+ *  \section Sec_ModDescription Module Description
  *  Hardware Joystick driver. This module provides an easy to use interface to control the hardware digital Joystick
  *  located on many boards.
  *
- *  If the BOARD value is set to BOARD_USER, this will include the /Board/Dataflash.h file in the user project
- *  directory. Otherwise, it will include the appropriate built in board driver header file.
+ *  If the \c BOARD value is set to \c BOARD_USER, this will include the \c /Board/Joystick.h file in the user project
+ *  directory. Otherwise, it will include the appropriate built-in board driver header file.
  *
- *  For possible BOARD makefile values, see \ref Group_BoardTypes.
+ *  For possible \c BOARD makefile values, see \ref Group_BoardTypes.
+ *
+ *  \section Sec_ExampleUsage Example Usage
+ *  The following snippet is an example of how this module may be used within a typical
+ *  application.
+ *
+ *  \code
+ *      // Initialize the board Joystick driver before first use
+ *      Joystick_Init();
+ *      
+ *      printf("Waiting for joystick movement...\r\n");
+ *      
+ *      // Loop until a the joystick has been moved
+ *      uint8_t JoystickMovement;
+ *      while (!(JoystickMovement = Joystick_GetStatus())) {};
+ *      
+ *      // Display which direction the joystick was moved in
+ *      printf("Joystick moved:\r\n");
+ *      
+ *      if (JoystickMovement & (JOY_UP | JOY_DOWN))
+ *        printf("%s ", (JoystickMovement & JOY_UP) ? "Up" : "Down");
+ *      
+ *      if (JoystickMovement & (JOY_LEFT | JOY_RIGHT))
+ *        printf("%s ", (JoystickMovement & JOY_LEFT) ? "Left" : "Right");
+ *      
+ *      if (JoystickMovement & JOY_PRESS)
+ *        printf("Pressed");
+ *  \endcode
  *
  *  @{
  */
@@ -66,46 +94,49 @@
 #define __JOYSTICK_H__
 
 	/* Macros: */
-	#if !defined(__DOXYGEN__)
 		#define __INCLUDE_FROM_JOYSTICK_H
-		#define INCLUDE_FROM_JOYSTICK_H
-	#endif
 
 	/* Includes: */
-	#include "../../Common/Common.h"
+		#include "../../Common/Common.h"
 
-	#if (BOARD == BOARD_NONE)
-		#error The Board Joystick driver cannot be used if the makefile BOARD option is not set.
-	#elif (BOARD == BOARD_USBKEY)
-		#include "USBKEY/Joystick.h"
-	#elif (BOARD == BOARD_STK525)
-		#include "STK525/Joystick.h"
-	#elif (BOARD == BOARD_STK526)
-		#include "STK526/Joystick.h"
-	#elif (BOARD == BOARD_BUMBLEB)
-		#include "BUMBLEB/Joystick.h"
-	#elif (BOARD == BOARD_EVK527)
-		#include "EVK527/Joystick.h"
-	#elif (BOARD == BOARD_USER)
-		#include "Board/Joystick.h"
-	#else
-		#error The selected board does not contain a joystick.
-	#endif
+		#if (BOARD == BOARD_NONE)
+			#error The Board Joystick driver cannot be used if the makefile BOARD option is not set.
+		#elif (BOARD == BOARD_USBKEY)
+			#include "AVR8/USBKEY/Joystick.h"
+		#elif (BOARD == BOARD_STK525)
+			#include "AVR8/STK525/Joystick.h"
+		#elif (BOARD == BOARD_STK526)
+			#include "AVR8/STK526/Joystick.h"
+		#elif (BOARD == BOARD_BUMBLEB)
+			#include "AVR8/BUMBLEB/Joystick.h"
+		#elif (BOARD == BOARD_EVK527)
+			#include "AVR8/EVK527/Joystick.h"
+		#elif (BOARD == BOARD_EVK1101)
+			#include "UC3/EVK1101/Joystick.h"
+		#elif (BOARD == BOARD_EVK1100)
+			#include "UC3/EVK1100/Joystick.h"
+		#else
+			#include "Board/Joystick.h"
+		#endif
 
 	/* Pseudo-Functions for Doxygen: */
 	#if defined(__DOXYGEN__)
-		/** Initialises the joystick driver so that the joystick position can be read. This sets the appropriate
+		/** Initializes the joystick driver so that the joystick position can be read. This sets the appropriate
 		 *  I/O pins to inputs with their pull-ups enabled.
+		 *
+		 *  This must be called before any Joystick driver functions are used.
 		 */
 		static inline void Joystick_Init(void);
+
+		/** Disables the joystick driver, releasing the I/O pins back to their default high-impedance input mode. */
+		static inline void Joystick_Disable(void);
 
 		/** Returns the current status of the joystick, as a mask indicating the direction the joystick is
 		 *  currently facing in (multiple bits can be set).
 		 *
-		 *  \return Mask indicating the joystick direction - see corresponding board specific Joystick.h file
-		 *          for direction masks.
+		 *  \return Mask of \c JOYSTICK_* constants indicating the current joystick direction(s).
 		 */
-		static inline uint8_t Joystick_GetStatus(void) ATTR_WARN_UNUSED_RESULT;
+		static inline uint_reg_t Joystick_GetStatus(void) ATTR_WARN_UNUSED_RESULT;
 	#endif
 
 #endif

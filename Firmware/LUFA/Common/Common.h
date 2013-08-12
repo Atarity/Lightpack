@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2010.
+     Copyright (C) Dean Camera, 2013.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2013  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -18,7 +18,7 @@
   advertising or publicity pertaining to distribution of the
   software without specific, written prior permission.
 
-  The author disclaim all warranties with regard to this
+  The author disclaims all warranties with regard to this
   software, including all implied warranties of merchantability
   and fitness.  In no event shall the author be liable for any
   special, indirect or consequential damages or any damages
@@ -28,14 +28,21 @@
   this software.
 */
 
-/** \file
- *  \brief Common library convenience macros and functions.
+/** \dir
+ *  \brief Common library header files.
  *
- *  This file contains macros which are common to all library elements, and which may be useful in user code. It
- *  also includes other common headers, such as Atomic.h, Attributes.h and BoardTypes.h.
+ *  This folder contains header files which are common to all parts of the LUFA library. They may be used freely in
+ *  user applications.
  */
 
-/** @defgroup Group_Common Common Utility Headers - LUFA/Drivers/Common/Common.h
+/** \file
+ *  \brief Common library convenience headers, macros and functions.
+ *
+ *  \copydetails Group_Common
+ */
+
+/** \defgroup Group_Common Common Utility Headers - LUFA/Drivers/Common/Common.h
+ *  \brief Common library convenience headers, macros and functions.
  *
  *  Common utility headers containing macros, functions, enums and types which are common to all
  *  aspects of the library.
@@ -43,118 +50,188 @@
  *  @{
  */
 
-/** @defgroup Group_Debugging Debugging Macros
+/** \defgroup Group_GlobalInt Global Interrupt Macros
+ *  \brief Convenience macros for the management of interrupts globally within the device.
  *
- *  Macros for debugging use.
+ *  Macros and functions to create and control global interrupts within the device.
  */
 
-/** @defgroup Group_BitManip Endian and Bit Macros
- *
- *  Functions for swapping endianness and reversing bit orders.
- */
+#ifndef __LUFA_COMMON_H__
+#define __LUFA_COMMON_H__
 
-#ifndef __COMMON_H__
-#define __COMMON_H__
+	/* Macros: */
+		#define __INCLUDE_FROM_COMMON_H
 
 	/* Includes: */
 		#include <stdint.h>
 		#include <stdbool.h>
+		#include <string.h>
+		#include <stddef.h>
 
-		#include "Attributes.h"
+		#include "Architectures.h"
 		#include "BoardTypes.h"
+		#include "ArchitectureSpecific.h"
+		#include "CompilerSpecific.h"
+		#include "Attributes.h"
+
+		#if defined(USE_LUFA_CONFIG_HEADER)
+			#include "LUFAConfig.h"
+		#endif
+
+	/* Enable C linkage for C++ Compilers: */
+		#if defined(__cplusplus)
+			extern "C" {
+		#endif
+
+	/* Architecture specific utility includes: */
+		#if defined(__DOXYGEN__)
+			/** Type define for an unsigned integer the same width as the selected architecture's machine register.
+			 *  This is distinct from the non-specific standard int data type, whose width is machine dependant but
+			 *  which may not reflect the actual machine register width on some targets (e.g. AVR8).
+			 */
+			typedef MACHINE_REG_t uint_reg_t;
+		#elif (ARCH == ARCH_AVR8)
+			#include <avr/io.h>
+			#include <avr/interrupt.h>
+			#include <avr/pgmspace.h>
+			#include <avr/eeprom.h>
+			#include <avr/boot.h>
+			#include <math.h>
+			#include <util/delay.h>
+
+			typedef uint8_t uint_reg_t;
+
+			#define ARCH_HAS_EEPROM_ADDRESS_SPACE
+			#define ARCH_HAS_FLASH_ADDRESS_SPACE
+			#define ARCH_HAS_MULTI_ADDRESS_SPACE
+			#define ARCH_LITTLE_ENDIAN
+
+			#include "Endianness.h"
+		#elif (ARCH == ARCH_UC3)
+			#include <avr32/io.h>
+			#include <math.h>
+
+			// === TODO: Find abstracted way to handle these ===
+			#define PROGMEM                  
+			#define pgm_read_byte(x)         *x
+			#define memcmp_P(...)            memcmp(__VA_ARGS__)
+			#define memcpy_P(...)            memcpy(__VA_ARGS__)
+			// =================================================
+
+			typedef uint32_t uint_reg_t;
+
+			#define ARCH_BIG_ENDIAN
+
+			#include "Endianness.h"
+		#elif (ARCH == ARCH_XMEGA)
+			#include <avr/io.h>
+			#include <avr/interrupt.h>
+			#include <avr/pgmspace.h>
+			#include <avr/eeprom.h>
+			#include <math.h>
+			#include <util/delay.h>
+
+			typedef uint8_t uint_reg_t;
+
+			#define ARCH_HAS_EEPROM_ADDRESS_SPACE
+			#define ARCH_HAS_FLASH_ADDRESS_SPACE
+			#define ARCH_HAS_MULTI_ADDRESS_SPACE
+			#define ARCH_LITTLE_ENDIAN
+
+			#include "Endianness.h"
+		#else
+			#error Unknown device architecture specified.
+		#endif
 
 	/* Public Interface - May be used in end-application: */
 		/* Macros: */
 			/** Macro for encasing other multi-statement macros. This should be used along with an opening brace
 			 *  before the start of any multi-statement macro, so that the macros contents as a whole are treated
 			 *  as a discrete block and not as a list of separate statements which may cause problems when used as
-			 *  a block (such as inline IF statements).
+			 *  a block (such as inline \c if statements).
 			 */
 			#define MACROS                  do
 
 			/** Macro for encasing other multi-statement macros. This should be used along with a preceding closing
 			 *  brace at the end of any multi-statement macro, so that the macros contents as a whole are treated
 			 *  as a discrete block and not as a list of separate statements which may cause problems when used as
-			 *  a block (such as inline IF statements).
+			 *  a block (such as inline \c if statements).
 			 */
 			#define MACROE                  while (0)
 
-			/** Defines a volatile NOP statement which cannot be optimized out by the compiler, and thus can always
-			 *  be set as a breakpoint in the resulting code. Useful for debugging purposes, where the optimiser
-			 *  removes/reorders code to the point where break points cannot reliably be set.
+			/** Convenience macro to determine the larger of two values.
 			 *
-			 *  \ingroup Group_Debugging
+			 *  \attention This macro should only be used with operands that do not have side effects from being evaluated
+			 *             multiple times.
+			 *
+			 *  \param[in] x  First value to compare
+			 *  \param[in] y  First value to compare
+			 *
+			 *  \return The larger of the two input parameters
 			 */
-			#define JTAG_DEBUG_POINT()      __asm__ volatile ("NOP" ::)
-
-			/** Defines an explicit JTAG break point in the resulting binary via the ASM BREAK statement. When
-			 *  a JTAG is used, this causes the program execution to halt when reached until manually resumed.
-			 *
-			 *  \ingroup Group_Debugging
-			 */
-			#define JTAG_DEBUG_BREAK()      __asm__ volatile ("BREAK" ::)
-
-			/** Macro for testing condition "x" and breaking via JTAG_DEBUG_BREAK() if the condition is false.
-			 *
-			 *  \ingroup Group_Debugging
-			*/
-			#define JTAG_DEBUG_ASSERT(x)    MACROS{ if (!(x)) { JTAG_DEBUG_BREAK(); } }MACROE
-
-			/** Macro for testing condition "x" and writing debug data to the stdout stream if false. The stdout stream
-			 *  must be pre-initialized before this macro is run and linked to an output device, such as the AVR's USART
-			 *  peripheral.
-			 *
-			 *  The output takes the form "{FILENAME}: Function {FUNCTION NAME}, Line {LINE NUMBER}: Assertion {x} failed."
-			 *
-			 *  \ingroup Group_Debugging
-			 */
-			#define STDOUT_ASSERT(x)        MACROS{ if (!(x)) { printf_P(PSTR("%s: Function \"%s\", Line %d: "   \
-			                                             "Assertion \"%s\" failed.\r\n"),     \
-			                                             __FILE__, __func__, __LINE__, #x); } }MACROE
-
-			#if !defined(pgm_read_ptr) || defined(__DOXYGEN__)
-				/** Reads a pointer out of PROGMEM space. This is currently a wrapper for the avr-libc pgm_read_ptr()
-				 *  macro with a void* cast, so that its value can be assigned directly to a pointer variable or used
-				 *  in pointer arithmetic without further casting in C. In a future avr-libc distribution this will be
-				 *  part of the standard API and will be implemented in a more formal manner.
-				 *
-				 *  \param[in] Addr  Address of the pointer to read.
-				 *
-				 *  \return Pointer retrieved from PROGMEM space.
-				 */
-				#define pgm_read_ptr(Addr)    (void*)pgm_read_word(Addr)
+			#if !defined(MAX) || defined(__DOXYGEN__)
+				#define MAX(x, y)               (((x) > (y)) ? (x) : (y))
 			#endif
 
-			/** Swaps the byte ordering of a 16-bit value at compile time. Do not use this macro for swapping byte orderings
-			 *  of dynamic values computed at runtime, use \ref SwapEndian_16() instead. The result of this macro can be used
-			 *  inside struct or other variable initializers outside of a function, something that is not possible with the
-			 *  inline function variant.
+			/** Convenience macro to determine the smaller of two values.
 			 *
-			 *  \param[in]  x  16-bit value whose byte ordering is to be swapped.
+			 *  \attention This macro should only be used with operands that do not have side effects from being evaluated
+			 *             multiple times.
 			 *
-			 *  \return Input value with the byte ordering reversed.
+			 *  \param[in] x  First value to compare
+			 *  \param[in] y  First value to compare
+			 *
+			 *  \return The smaller of the two input parameters
 			 */
-			#define SWAPENDIAN_16(x)          ((((x) & 0xFF00) >> 8) | (((x) & 0x00FF) << 8))
+			#if !defined(MIN) || defined(__DOXYGEN__)
+				#define MIN(x, y)               (((x) < (y)) ? (x) : (y))
+			#endif
 
-			/** Swaps the byte ordering of a 32-bit value at compile time. Do not use this macro for swapping byte orderings
-			 *  of dynamic values computed at runtime- use \ref SwapEndian_32() instead. The result of this macro can be used
-			 *  inside struct or other variable initializers outside of a function, something that is not possible with the
-			 *  inline function variant.
-			 *
-			 *  \param[in]  x  32-bit value whose byte ordering is to be swapped.
-			 *
-			 *  \return Input value with the byte ordering reversed.
-			 */
-			#define SWAPENDIAN_32(x)          ((((x) & 0xFF000000UL) >> 24UL) | (((x) & 0x00FF0000UL) >> 8UL) | \
-			                                   (((x) & 0x0000FF00UL) << 8UL)  | (((x) & 0x000000FFUL) << 24UL))
+			#if !defined(STRINGIFY) || defined(__DOXYGEN__)
+				/** Converts the given input into a string, via the C Preprocessor. This macro puts literal quotation
+				 *  marks around the input, converting the source into a string literal.
+				 *
+				 *  \param[in] x  Input to convert into a string literal.
+				 *
+				 *  \return String version of the input.
+				 */
+				#define STRINGIFY(x)            #x
+
+				/** Converts the given input into a string after macro expansion, via the C Preprocessor. This macro puts
+				 *  literal quotation marks around the expanded input, converting the source into a string literal.
+				 *
+				 *  \param[in] x  Input to expand and convert into a string literal.
+				 *
+				 *  \return String version of the expanded input.
+				 */
+				#define STRINGIFY_EXPANDED(x)   STRINGIFY(x)
+			#endif
+
+			#if !defined(ISR) || defined(__DOXYGEN__)
+				/** Macro for the definition of interrupt service routines, so that the compiler can insert the required
+				 *  prologue and epilogue code to properly manage the interrupt routine without affecting the main thread's
+				 *  state with unintentional side-effects.
+				 *
+				 *  Interrupt handlers written using this macro may still need to be registered with the microcontroller's
+				 *  Interrupt Controller (if present) before they will properly handle incoming interrupt events.
+				 *
+				 *  \note This macro is only supplied on some architectures, where the standard library does not include a valid
+				 *        definition. If an existing definition exists, the alternative definition here will be ignored.
+				 *
+				 *  \ingroup Group_GlobalInt
+				 *
+				 *  \param[in] Name  Unique name of the interrupt service routine.
+				 */
+				#define ISR(Name, ...)          void Name (void) __attribute__((__interrupt__)) __VA_ARGS__; void Name (void)
+			#endif
 
 		/* Inline Functions: */
 			/** Function to reverse the individual bits in a byte - i.e. bit 7 is moved to bit 0, bit 6 to bit 1,
 			 *  etc.
 			 *
-			 *  \ingroup Group_BitManip
-			 *
 			 *  \param[in] Byte  Byte of data whose bits are to be reversed.
+			 *
+			 *  \return Input data with the individual bits reversed (mirrored).
 			 */
 			static inline uint8_t BitReverse(uint8_t Byte) ATTR_WARN_UNUSED_RESULT ATTR_CONST;
 			static inline uint8_t BitReverse(uint8_t Byte)
@@ -166,86 +243,137 @@
 				return Byte;
 			}
 
-			/** Function to reverse the byte ordering of the individual bytes in a 16 bit number.
+			/** Function to perform a blocking delay for a specified number of milliseconds. The actual delay will be
+			 *  at a minimum the specified number of milliseconds, however due to loop overhead and internal calculations
+			 *  may be slightly higher.
 			 *
-			 *  \ingroup Group_BitManip
-			 *
-			 *  \param[in] Word  Word of data whose bytes are to be swapped.
+			 *  \param[in] Milliseconds  Number of milliseconds to delay
 			 */
-			static inline uint16_t SwapEndian_16(const uint16_t Word) ATTR_WARN_UNUSED_RESULT ATTR_CONST;
-			static inline uint16_t SwapEndian_16(const uint16_t Word)
+			static inline void Delay_MS(uint16_t Milliseconds) ATTR_ALWAYS_INLINE;
+			static inline void Delay_MS(uint16_t Milliseconds)
 			{
-				uint8_t Temp;
-
-				union
+				#if (ARCH == ARCH_AVR8)
+				if (GCC_IS_COMPILE_CONST(Milliseconds))
 				{
-					uint16_t Word;
-					uint8_t  Bytes[2];
-				} Data;
-
-				Data.Word = Word;
-
-				Temp = Data.Bytes[0];
-				Data.Bytes[0] = Data.Bytes[1];
-				Data.Bytes[1] = Temp;
-
-				return Data.Word;
-			}
-
-			/** Function to reverse the byte ordering of the individual bytes in a 32 bit number.
-			 *
-			 *  \ingroup Group_BitManip
-			 *
-			 *  \param[in] DWord  Double word of data whose bytes are to be swapped.
-			 */
-			static inline uint32_t SwapEndian_32(const uint32_t DWord) ATTR_WARN_UNUSED_RESULT ATTR_CONST;
-			static inline uint32_t SwapEndian_32(const uint32_t DWord)
-			{
-				uint8_t Temp;
-
-				union
-				{
-					uint32_t DWord;
-					uint8_t  Bytes[4];
-				} Data;
-
-				Data.DWord = DWord;
-
-				Temp = Data.Bytes[0];
-				Data.Bytes[0] = Data.Bytes[3];
-				Data.Bytes[3] = Temp;
-
-				Temp = Data.Bytes[1];
-				Data.Bytes[1] = Data.Bytes[2];
-				Data.Bytes[2] = Temp;
-
-				return Data.DWord;
-			}
-
-			/** Function to reverse the byte ordering of the individual bytes in a n byte number.
-			 *
-			 *  \ingroup Group_BitManip
-			 *
-			 *  \param[in,out] Data   Pointer to a number containing an even number of bytes to be reversed.
-			 *  \param[in]     Bytes  Length of the data in bytes.
-			 */
-			static inline void SwapEndian_n(void* Data,
-			                                uint8_t Bytes) ATTR_NON_NULL_PTR_ARG(1);
-			static inline void SwapEndian_n(void* Data,
-			                                uint8_t Bytes)
-			{
-				uint8_t* CurrDataPos = (uint8_t*)Data;
-
-				while (Bytes > 1)
-				{
-					uint8_t Temp = *CurrDataPos;
-					*CurrDataPos = *(CurrDataPos + Bytes - 1);
-					*(CurrDataPos + Bytes - 1) = Temp;
-
-					CurrDataPos++;
-					Bytes -= 2;
+					_delay_ms(Milliseconds);
 				}
+				else
+				{
+					while (Milliseconds--)
+					  _delay_ms(1);
+				}
+				#elif (ARCH == ARCH_UC3)
+				while (Milliseconds--)
+				{
+					__builtin_mtsr(AVR32_COUNT, 0);
+					while ((uint32_t)__builtin_mfsr(AVR32_COUNT) < (F_CPU / 1000));
+				}
+				#elif (ARCH == ARCH_XMEGA)
+				if (GCC_IS_COMPILE_CONST(Milliseconds))
+				{
+					_delay_ms(Milliseconds);
+				}
+				else
+				{
+					while (Milliseconds--)
+					  _delay_ms(1);
+				}
+				#endif
 			}
+
+			/** Retrieves a mask which contains the current state of the global interrupts for the device. This
+			 *  value can be stored before altering the global interrupt enable state, before restoring the
+			 *  flag(s) back to their previous values after a critical section using \ref SetGlobalInterruptMask().
+			 *
+			 *  \ingroup Group_GlobalInt
+			 *
+			 *  \return  Mask containing the current Global Interrupt Enable Mask bit(s).
+			 */
+			static inline uint_reg_t GetGlobalInterruptMask(void) ATTR_ALWAYS_INLINE ATTR_WARN_UNUSED_RESULT;
+			static inline uint_reg_t GetGlobalInterruptMask(void)
+			{
+				GCC_MEMORY_BARRIER();
+
+				#if (ARCH == ARCH_AVR8)
+				return SREG;
+				#elif (ARCH == ARCH_UC3)
+				return __builtin_mfsr(AVR32_SR);
+				#elif (ARCH == ARCH_XMEGA)
+				return SREG;
+				#endif
+			}
+
+			/** Sets the global interrupt enable state of the microcontroller to the mask passed into the function.
+			 *  This can be combined with \ref GetGlobalInterruptMask() to save and restore the Global Interrupt Enable
+			 *  Mask bit(s) of the device after a critical section has completed.
+			 *
+			 *  \ingroup Group_GlobalInt
+			 *
+			 *  \param[in] GlobalIntState  Global Interrupt Enable Mask value to use
+			 */
+			static inline void SetGlobalInterruptMask(const uint_reg_t GlobalIntState) ATTR_ALWAYS_INLINE;
+			static inline void SetGlobalInterruptMask(const uint_reg_t GlobalIntState)
+			{
+				GCC_MEMORY_BARRIER();
+
+				#if (ARCH == ARCH_AVR8)
+				SREG = GlobalIntState;
+				#elif (ARCH == ARCH_UC3)
+				if (GlobalIntState & AVR32_SR_GM)
+				  __builtin_ssrf(AVR32_SR_GM_OFFSET);
+				else
+				  __builtin_csrf(AVR32_SR_GM_OFFSET);
+				#elif (ARCH == ARCH_XMEGA)
+				SREG = GlobalIntState;
+				#endif
+
+				GCC_MEMORY_BARRIER();
+			}
+
+			/** Enables global interrupt handling for the device, allowing interrupts to be handled.
+			 *
+			 *  \ingroup Group_GlobalInt
+			 */
+			static inline void GlobalInterruptEnable(void) ATTR_ALWAYS_INLINE;
+			static inline void GlobalInterruptEnable(void)
+			{
+				GCC_MEMORY_BARRIER();
+
+				#if (ARCH == ARCH_AVR8)
+				sei();
+				#elif (ARCH == ARCH_UC3)
+				__builtin_csrf(AVR32_SR_GM_OFFSET);
+				#elif (ARCH == ARCH_XMEGA)
+				sei();
+				#endif
+
+				GCC_MEMORY_BARRIER();
+			}
+
+			/** Disabled global interrupt handling for the device, preventing interrupts from being handled.
+			 *
+			 *  \ingroup Group_GlobalInt
+			 */
+			static inline void GlobalInterruptDisable(void) ATTR_ALWAYS_INLINE;
+			static inline void GlobalInterruptDisable(void)
+			{
+				GCC_MEMORY_BARRIER();
+
+				#if (ARCH == ARCH_AVR8)
+				cli();
+				#elif (ARCH == ARCH_UC3)
+				__builtin_ssrf(AVR32_SR_GM_OFFSET);
+				#elif (ARCH == ARCH_XMEGA)
+				cli();
+				#endif
+
+				GCC_MEMORY_BARRIER();
+			}
+
+	/* Disable C linkage for C++ Compilers: */
+		#if defined(__cplusplus)
+			}
+		#endif
 
 #endif
 

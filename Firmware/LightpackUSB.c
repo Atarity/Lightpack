@@ -29,6 +29,7 @@
 #include "version.h"
 
 #include "../CommonHeaders/COMMANDS.h"
+#include <LUFA/Drivers/USB/USB.h>
 
 // Buffer to hold the previously generated HID report, for comparison purposes inside the HID class driver.
 uint8_t PrevHIDReportBuffer[GENERIC_REPORT_SIZE];
@@ -39,10 +40,17 @@ USB_ClassInfo_HID_Device_t Generic_HID_Interface =
         .Config =
         {
                 .InterfaceNumber              = 0,
+                .ReportINEndpoint =
+                {
+                    .Address                  = GENERIC_IN_EPNUM,
+                    .Size                     = GENERIC_EPSIZE,
+                    .Banks                    = 1,
 
-                .ReportINEndpointNumber       = GENERIC_IN_EPNUM,
-                .ReportINEndpointSize         = GENERIC_EPSIZE,
-                .ReportINEndpointDoubleBank   = false,
+                },
+
+//                .ReportINEndpointNumber       = GENERIC_IN_EPNUM,
+//                .ReportINEndpointSize         = GENERIC_EPSIZE,
+//                .ReportINEndpointDoubleBank   = false,
 
                 .PrevReportINBuffer           = PrevHIDReportBuffer,
                 .PrevReportINBufferSize       = sizeof(PrevHIDReportBuffer),

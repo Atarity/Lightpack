@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2010.
+     Copyright (C) Dean Camera, 2013.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2013  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -18,7 +18,7 @@
   advertising or publicity pertaining to distribution of the
   software without specific, written prior permission.
 
-  The author disclaim all warranties with regard to this
+  The author disclaims all warranties with regard to this
   software, including all implied warranties of merchantability
   and fitness.  In no event shall the author be liable for any
   special, indirect or consequential damages or any damages
@@ -28,23 +28,23 @@
   this software.
 */
 
-/*
-   This is a stub driver header file, for implementing custom board
-   layout hardware with compatible LUFA board specific drivers. If
-   the library is configured to use the BOARD_USER board mode, this
-   driver file should be completed and copied into the "/Board/" folder
-   inside the application's folder.
-
-   This stub is for the board-specific component of the LUFA LEDs driver,
-   for the LEDs (up to four) mounted on most USB AVR boards.
+/** \file
+ *  \brief LUFA Custom Board LED Hardware Driver (Template)
+ *
+ *  This is a stub driver header file, for implementing custom board
+ *  layout hardware with compatible LUFA board specific drivers. If
+ *  the library is configured to use the BOARD_USER board mode, this
+ *  driver file should be completed and copied into the "/Board/" folder
+ *  inside the application's folder.
+ *
+ *  This stub is for the board-specific component of the LUFA LEDs driver,
+ *  for the LEDs (up to four) mounted on most development boards.
 */
 
 #ifndef __LEDS_USER_H__
 #define __LEDS_USER_H__
 
 	/* Includes: */
-		#include <avr/io.h>
-
 		// TODO: Add any required includes here
 
 /* Enable C linkage for C++ Compilers: */
@@ -82,6 +82,11 @@
 			static inline void LEDs_Init(void)
 			{
 				// TODO: Add code to initialize LED port pins as outputs here
+			}
+
+			static inline void LEDs_Disable(void)
+			{
+				// TODO: Clear the LED port pins as high impedance inputs here
 			}
 
 			static inline void LEDs_TurnOnLEDs(const uint8_t LEDMask)

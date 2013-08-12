@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2010.
+     Copyright (C) Dean Camera, 2013.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2013  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -18,7 +18,7 @@
   advertising or publicity pertaining to distribution of the
   software without specific, written prior permission.
 
-  The author disclaim all warranties with regard to this
+  The author disclaims all warranties with regard to this
   software, including all implied warranties of merchantability
   and fitness.  In no event shall the author be liable for any
   special, indirect or consequential damages or any damages
@@ -29,43 +29,45 @@
 */
 
 /** \file
- *  \brief Master include file for the TWI peripheral driver.
+ *  \brief Hardware Two Wire Interface (I2C) driver.
  *
- *  This file is the master dispatch header file for the device-specific ADC driver, for AVRs containing an ADC.
+ *  This file is the master dispatch header file for the device-specific SPI driver, for microcontrollers
+ *  containing a hardware TWI.
  *
- *  User code should include this file, which will in turn include the correct ADC driver header file for the
- *  currently selected AVR model.
+ *  User code should include this file, which will in turn include the correct TWI driver header file for the
+ *  currently selected architecture and microcontroller model.
  */
 
 /** \ingroup Group_PeripheralDrivers
- *  @defgroup Group_TWI TWI Driver - LUFA/Drivers/Peripheral/TWI.h
+ *  \defgroup Group_TWI TWI Driver - LUFA/Drivers/Peripheral/TWI.h
+ *  \brief Hardware Two Wire Interface (I2C) driver.
  *
  *  \section Sec_Dependencies Module Source Dependencies
  *  The following files must be built with any user project that uses this module:
- *    - LUFA/Drivers/Peripheral/TWI.c <i>(Makefile source module name: LUFA_SRC_TWI)</i>
+ *    - LUFA/Drivers/Peripheral/<i>ARCH</i>/TWI_<i>ARCH</i>.c <i>(Makefile source module name: LUFA_SRC_TWI)</i>
  *
+ *  \section Sec_ModDescription Module Description
+ *  Hardware TWI driver. This module provides an easy to use driver for the setup and transfer of data over
+ *  the selected architecture and microcontroller model's TWI bus port.
  *
- *  \section Module Description
- *  Master Mode Hardware TWI driver. This module provides an easy to use driver for the hardware
- *  TWI present on many AVR models, for the transmission and reception of data on a TWI bus.
+ *  \note The exact API for this driver may vary depending on the target used - see
+ *        individual target module documentation for the API specific to your target processor.
  */
 
 #ifndef __TWI_H__
 #define __TWI_H__
 
 	/* Macros: */
-	#if !defined(__DOXYGEN__)
 		#define __INCLUDE_FROM_TWI_H
-	#endif
 
 	/* Includes: */
-		#if (defined(__AVR_AT90USB1286__) || defined(__AVR_AT90USB646__) || \
-		     defined(__AVR_AT90USB1287__) || defined(__AVR_AT90USB647__) || \
-			 defined(__AVR_ATmega16U4__)  || defined(__AVR_ATmega32U4__) || \
-			 defined(__AVR_ATmega32U6__))
-			#include "AVRU4U6U7/TWI.h"
+		#include "../../Common/Common.h"
+
+	/* Includes: */
+		#if (ARCH == ARCH_AVR8)
+			#include "AVR8/TWI_AVR8.h"
 		#else
-			#error "TWI is not available for the currently selected AVR model."
+			#error The TWI peripheral driver is not currently available for your selected architecture.
 		#endif
 
 #endif

@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2010.
+     Copyright (C) Dean Camera, 2013.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2013  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -18,7 +18,7 @@
   advertising or publicity pertaining to distribution of the
   software without specific, written prior permission.
 
-  The author disclaim all warranties with regard to this
+  The author disclaims all warranties with regard to this
   software, including all implied warranties of merchantability
   and fitness.  In no event shall the author be liable for any
   special, indirect or consequential damages or any damages
@@ -43,10 +43,10 @@
 	/* Public Interface - May be used in end-application: */
 		/* Macros: */
 			/** Indicates the version number of the library, as an integer. */
-			#define LUFA_VERSION_INTEGER     0x101122
+			#define LUFA_VERSION_INTEGER     0x130303
 
 			/** Indicates the version number of the library, as a string. */
-			#define LUFA_VERSION_STRING      "101122"
+			#define LUFA_VERSION_STRING      "130303"
 
 #endif
 

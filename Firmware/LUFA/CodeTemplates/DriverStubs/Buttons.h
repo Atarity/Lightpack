@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2010.
+     Copyright (C) Dean Camera, 2013.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2013  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -18,7 +18,7 @@
   advertising or publicity pertaining to distribution of the
   software without specific, written prior permission.
 
-  The author disclaim all warranties with regard to this
+  The author disclaims all warranties with regard to this
   software, including all implied warranties of merchantability
   and fitness.  In no event shall the author be liable for any
   special, indirect or consequential damages or any damages
@@ -28,24 +28,23 @@
   this software.
 */
 
-/*
-   This is a stub driver header file, for implementing custom board
-   layout hardware with compatible LUFA board specific drivers. If
-   the library is configured to use the BOARD_USER board mode, this
-   driver file should be completed and copied into the "/Board/" folder
-   inside the application's folder.
-
-   This stub is for the board-specific component of the LUFA Buttons driver,
-   for the control of physical board-mounted GPIO pushbuttons.
-*/
+/** \file
+ *  \brief LUFA Custom Board Button Hardware Driver (Template)
+ *
+ *  This is a stub driver header file, for implementing custom board
+ *  layout hardware with compatible LUFA board specific drivers. If
+ *  the library is configured to use the BOARD_USER board mode, this
+ *  driver file should be completed and copied into the "/Board/" folder
+ *  inside the application's folder.
+ *
+ *  This stub is for the board-specific component of the LUFA Buttons driver,
+ *  for the control of physical board-mounted GPIO pushbuttons.
+ */
 
 #ifndef __BUTTONS_USER_H__
 #define __BUTTONS_USER_H__
 
 	/* Includes: */
-		#include <avr/io.h>
-		#include <stdbool.h>
-
 		// TODO: Add any required includes here
 
 	/* Enable C linkage for C++ Compilers: */
@@ -68,6 +67,11 @@
 			static inline void Buttons_Init(void)
 			{
 				// TODO: Initialize the appropriate port pins as an inputs here, with pull-ups
+			}
+
+			static inline void Buttons_Disable(void)
+			{
+				// TODO: Clear the appropriate port pins as high impedance inputs here
 			}
 
 			static inline uint8_t Buttons_GetStatus(void) ATTR_WARN_UNUSED_RESULT;
