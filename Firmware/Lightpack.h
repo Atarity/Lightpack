@@ -56,6 +56,7 @@
 // Global variables
 extern Settings_t g_Settings;
 extern Images_t g_Images;
+extern volatile uint8_t g_isUsbLedOn;
 
 
 static inline void _BlinkUsbLed(const uint8_t times, const uint8_t ms)

@@ -30,9 +30,15 @@
 #include "LightpackUSB.h"
 
 volatile uint8_t g_Flags = 0;
+volatile uint8_t g_isUsbLedOn = 1;
+
+const uint8_t kT0CounterBase = 6;
+const uint8_t kUsbLedHighLevel = 2;
+const uint8_t kUsbLedLowLevel = 1;
+const uint16_t kPostPrescaler = 5000;
 
 uint8_t t0_counter = 0;
-const uint8_t T0_POSTPRESCALER = 30;
+uint16_t t0_extra_counter = 0;
 
 Images_t g_Images = { };
 
@@ -57,7 +63,7 @@ Settings_t g_Settings =
  */
 ISR( TIMER1_COMPA_vect )
 {
-	LedManager_UpdateColors();
+    LedManager_UpdateColors();
 
     // Clear timer interrupt flag
     TIFR1 = _BV(OCF1A);
@@ -66,10 +72,30 @@ ISR( TIMER1_COMPA_vect )
 ISR ( TIMER0_OVF_vect )
 {
     t0_counter ++;
-    if ( t0_counter > T0_POSTPRESCALER)
-    {
+    t0_extra_counter ++;
+
+    if ( t0_counter == kT0CounterBase ) {
         t0_counter = 0;
         SET(USBLED);
+    }
+    if ( t0_extra_counter == kPostPrescaler )
+    {
+        g_isUsbLedOn = 1;
+        t0_extra_counter = 0;
+    }
+    
+    if( g_isUsbLedOn != 0 )
+    {
+        if ( t0_counter == kUsbLedHighLevel )
+        {
+            CLR(USBLED);
+        }
+    } else
+    {
+        if ( t0_counter == kUsbLedLowLevel )
+        {
+            CLR(USBLED);
+        }
     }
 }
 
@@ -96,7 +122,7 @@ static inline void Timer_Init(void)
 
     // Start timer
     TCCR1B = _BV(CS10); // div1
-    TCCR0B = _BV(CS00 | CS02); // div by 1024
+    TCCR0B = _BV(CS01); // div by 8
 
     TCNT1 = 0x0000;
     TCNT0 = 0x0000;

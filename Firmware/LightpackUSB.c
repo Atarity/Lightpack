@@ -124,7 +124,7 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 
 inline void UpdateUsbLed(void)
 {
-    TOGGLE(USBLED);
+    g_isUsbLedOn = (g_isUsbLedOn == 0);
 }
 
 /** HID class driver callback function for the processing of HID reports from the host.
