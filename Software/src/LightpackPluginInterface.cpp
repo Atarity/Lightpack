@@ -290,6 +290,20 @@ bool LightpackPluginInterface::SetProfile(QString sessionKey,QString profile)
          return false;
 }
 
+bool LightpackPluginInterface::SetDevice(QString sessionKey,QString device)
+{
+    if (lockSessionKeys.isEmpty()) return false;
+    if (lockSessionKeys[0]!=sessionKey) return false;
+     QStringList devices = Settings::getSupportedDevices();
+     if (devices.contains(device))
+     {
+         Settings::setConnectedDeviceName(device);
+         //emit updateProfile(Settings::getCurrentProfileName());
+         return true;
+     } else
+         return false;
+}
+
 bool LightpackPluginInterface::SetStatus(QString sessionKey, int status)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << status;
@@ -382,6 +396,8 @@ bool LightpackPluginInterface::SetCountLeds(QString sessionKey, int countLeds)
 
     Settings::setNumberOfLeds(Settings::getConnectedDevice(), countLeds);
     emit updateCountLeds(countLeds);
+    QString profile = Settings::getCurrentProfileName();
+    emit updateProfile(profile);
     return true;
 
 }

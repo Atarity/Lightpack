@@ -122,6 +122,9 @@ const char * ApiServer::CmdSetGamma = "setgamma:";
 const char * ApiServer::CmdSetBrightness = "setbrightness:";
 const char * ApiServer::CmdSetSmooth = "setsmooth:";
 const char * ApiServer::CmdSetProfile = "setprofile:";
+
+const char * ApiServer::CmdSetDevice = "setdevice:";
+
 const char * ApiServer::CmdSetCountLeds = "setcountleds:";
 const char * ApiServer::CmdSetLeds = "setleds:";
 
@@ -764,6 +767,33 @@ void ApiServer::clientProcessCommands()
                 result = CmdSetResult_Busy;
             }
         }
+        else if (cmdBuffer.startsWith(CmdSetDevice))
+        {
+            API_DEBUG_OUT << CmdSetDevice;
+
+            if (m_lockedClient == 1)
+            {
+                cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+                API_DEBUG_OUT << QString(cmdBuffer);
+                QString setDeviceName = QString(cmdBuffer);
+                if (lightpack->SetDevice(sessionKey, setDeviceName))
+                {
+                    API_DEBUG_OUT << CmdSetDevice << "OK:" << setDeviceName;
+                    result = CmdSetResult_Ok;
+                } else {
+                    API_DEBUG_OUT << CmdSetDevice << "Error (device not found):" << setDeviceName;
+                    result = CmdSetResult_Error;
+                }
+            }
+            else if (m_lockedClient == 0)
+            {
+                result = CmdSetResult_NotLocked;
+            }
+            else // m_lockedClient != client
+            {
+                result = CmdSetResult_Busy;
+            }
+        }
         else if (cmdBuffer.startsWith(CmdSetCountLeds))
         {
             API_DEBUG_OUT << CmdSetCountLeds;
@@ -829,7 +859,7 @@ void ApiServer::clientProcessCommands()
                                   if (xywh.count()>2) w = xywh[2].toInt(&ok);
                                   if (xywh.count()>3) h = xywh[3].toInt(&ok);
                              }
-                             if ((ok)&&(num>0)&&(num<countleds))
+                             if ((ok)&&(num>0)&&(num<countleds+1))
                              {
                                  rectLeds << QRect(x,y,w,h);
                              }

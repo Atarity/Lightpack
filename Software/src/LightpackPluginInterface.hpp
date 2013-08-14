@@ -28,6 +28,7 @@ public:
      bool SetCountLeds(QString sessionKey, int countLeds);
      bool SetSmooth(QString sessionKey, int smooth);
      bool SetProfile(QString sessionKey, QString profile);
+     bool SetDevice(QString sessionKey,QString device);
 
      bool SetLeds(QString sessionKey, QList<QRect> leds);
      bool NewProfile(QString sessionKey, QString profile);

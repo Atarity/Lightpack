@@ -140,6 +140,9 @@ public:
     static const char * CmdSetBrightness;
     static const char * CmdSetSmooth;
     static const char * CmdSetProfile;
+
+    static const char * CmdSetDevice;
+
     static const char * CmdSetCountLeds;
     static const char * CmdSetLeds;
 
