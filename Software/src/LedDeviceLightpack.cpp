@@ -226,9 +226,13 @@ void LedDeviceLightpack::open()
 
     if (m_hidDevice == NULL)
     {
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Lightpack device not found";
-        emit openDeviceSuccess(false);
-        return;
+        m_hidDevice = hid_open(USB_OLD_VENDOR_ID, USB_OLD_PRODUCT_ID, NULL);
+        if (m_hidDevice == NULL)
+        {
+            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Lightpack device not found";
+            emit openDeviceSuccess(false);
+            return;
+        }
     }
 
     // Immediately return from hid_read() if no data available
