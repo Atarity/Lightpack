@@ -28,7 +28,7 @@
 
 #include "SettingsWindow.hpp"
 #include "LedDeviceManager.hpp"
-#include <QtSingleApplication>
+#include <qtsingleapplication.h>
 
 #define getLightpackApp() static_cast<LightpackApplication *>(QCoreApplication::instance())
 
