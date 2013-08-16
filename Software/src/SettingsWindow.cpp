@@ -1953,6 +1953,29 @@ void SettingsWindow::initConnectedDeviceComboBox()
 
 }
 
+void SettingsWindow::setDevice(QString deviceName)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    int currentIndex = 0;
+
+    if (deviceName == "Virtual")
+    {
+        // Virtual device is last in combobox
+        currentIndex = ui->comboBox_ConnectedDevice->count() - 1;
+    } else {
+        currentIndex = ui->comboBox_ConnectedDevice->findText(deviceName);
+    }
+
+    if (currentIndex < 0)
+    {
+        qCritical() << Q_FUNC_INFO << "Just fail. Supported devices"
+                    << Settings::getSupportedDevices() << "doesn't contains connected device:" << deviceName;
+        currentIndex = 0;
+    }
+    ui->comboBox_ConnectedDevice->setCurrentIndex(currentIndex);
+}
+
 void SettingsWindow::initSerialPortBaudRateComboBox()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;

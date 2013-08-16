@@ -297,8 +297,8 @@ bool LightpackPluginInterface::SetDevice(QString sessionKey,QString device)
      QStringList devices = Settings::getSupportedDevices();
      if (devices.contains(device))
      {
-         Settings::setConnectedDeviceName(device);
-         //emit updateProfile(Settings::getCurrentProfileName());
+         //Settings::setConnectedDeviceName(device);
+         emit changeDevice(device);
          return true;
      } else
          return false;

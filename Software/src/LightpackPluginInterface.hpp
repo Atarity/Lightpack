@@ -73,6 +73,7 @@ signals:
      void updateStatus(Backlight::Status status);
      void updateBacklight(Lightpack::Mode status);
      void updateCountLeds(int value);
+     void changeDevice(QString device);
 
 
 public slots:

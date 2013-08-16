@@ -103,6 +103,7 @@ public slots:
     void onApiServer_ErrorOnStartListening(QString errorMessage);
     void onPingDeviceEverySecond_Toggled(bool state);
     void processMessage(const QString &message);
+    void setDevice(QString deviceName);
 
     void onFocus();
     void onBlur();

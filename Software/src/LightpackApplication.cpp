@@ -458,6 +458,7 @@ void LightpackApplication::startLedDeviceManager()
     connect(m_pluginInterface, SIGNAL(updateBrightness(int)),         m_ledDeviceManager, SLOT(setBrightness(int)), Qt::QueuedConnection);
     connect(m_pluginInterface, SIGNAL(updateSmooth(int)),             m_ledDeviceManager, SLOT(setSmoothSlowdown(int)), Qt::QueuedConnection);
     connect(m_pluginInterface, SIGNAL(requestBacklightStatus()),       this, SLOT(requestBacklightStatus()));
+    connect(m_pluginInterface, SIGNAL(changeDevice(QString)),        m_settingsWindow , SLOT(setDevice(QString)));
 
     if (!m_noGui)
     {
