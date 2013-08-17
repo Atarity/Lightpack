@@ -334,6 +334,7 @@ bool LightpackPluginInterface::SetLeds(QString sessionKey, QList<QRect> leds)
         Settings::setLedSize(num,QSize(rectLed.width(),rectLed.height()));
         ++ num;
      }
+    emit updateCountLeds(leds.count());
     QString profile = Settings::getCurrentProfileName();
     emit updateProfile(profile);
     return true;
@@ -396,8 +397,6 @@ bool LightpackPluginInterface::SetCountLeds(QString sessionKey, int countLeds)
 
     Settings::setNumberOfLeds(Settings::getConnectedDevice(), countLeds);
     emit updateCountLeds(countLeds);
-    QString profile = Settings::getCurrentProfileName();
-    emit updateProfile(profile);
     return true;
 
 }

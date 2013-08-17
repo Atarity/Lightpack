@@ -87,6 +87,7 @@ public slots:
     void ledDeviceCallSuccess(bool isSuccess);
     void ledDeviceFirmwareVersionResult(const QString & fwVersion);
     void refreshAmbilightEvaluated(double updateResultMs);
+    void updateUiFromSettings();
 
     void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status,  QList<QString> modules);
     void setBacklightStatus(Backlight::Status);
@@ -203,7 +204,6 @@ private:
 
 
     void createActions();
-    void updateUiFromSettings();
     void updateStatusBar();
 
     void profileTraySync();
