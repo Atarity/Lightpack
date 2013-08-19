@@ -32,7 +32,7 @@
 #include <LUFA/Drivers/USB/USB.h>
 
 // Buffer to hold the previously generated HID report, for comparison purposes inside the HID class driver.
-uint8_t PrevHIDReportBuffer[GENERIC_REPORT_SIZE];
+uint8_t PrevHIDReportINBuffer[GENERIC_REPORT_SIZE];
 uint8_t PrevUsbLedState;
 
 USB_ClassInfo_HID_Device_t Generic_HID_Interface =
@@ -42,18 +42,13 @@ USB_ClassInfo_HID_Device_t Generic_HID_Interface =
                 .InterfaceNumber              = 0,
                 .ReportINEndpoint =
                 {
-                    .Address                  = GENERIC_IN_EPNUM,
+                    .Address                  = GENERIC_IN_EPADDR,
                     .Size                     = GENERIC_EPSIZE,
                     .Banks                    = 1,
-
                 },
 
-//                .ReportINEndpointNumber       = GENERIC_IN_EPNUM,
-//                .ReportINEndpointSize         = GENERIC_EPSIZE,
-//                .ReportINEndpointDoubleBank   = false,
-
-                .PrevReportINBuffer           = PrevHIDReportBuffer,
-                .PrevReportINBufferSize       = sizeof(PrevHIDReportBuffer),
+                .PrevReportINBuffer           = PrevHIDReportINBuffer,
+                .PrevReportINBufferSize       = sizeof(PrevHIDReportINBuffer),
         },
 };
 
@@ -84,42 +79,24 @@ void EVENT_USB_Device_ConfigurationChanged(void)
     USB_Device_EnableSOFEvents();
 }
 
-/** Event handler for the library USB Control Request reception event. */
-void EVENT_USB_Device_ControlRequest(void)
-{
-    HID_Device_ProcessControlRequest(&Generic_HID_Interface);
-}
-
 /** Event handler for the USB device Start Of Frame event. */
 void EVENT_USB_Device_StartOfFrame(void)
 {
     HID_Device_MillisecondElapsed(&Generic_HID_Interface);
 }
 
-/** HID class driver callback function for the creation of HID reports to the host.
- *
- *  \param[in]     HIDInterfaceInfo  Pointer to the HID class interface configuration structure being referenced
- *  \param[in,out] ReportID    Report ID requested by the host if non-zero, otherwise callback should set to the generated report ID
- *  \param[in]     ReportType  Type of the report to create, either HID_REPORT_ITEM_In or HID_REPORT_ITEM_Feature
- *  \param[out]    ReportData  Pointer to a buffer where the created report should be stored
- *  \param[out]    ReportSize  Number of bytes written in the report (or zero if no report is to be sent
- *
- *  \return Boolean true to force the sending of the report, false to let the library determine if it needs to be sent
- */
+
 bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
-        uint8_t* const ReportID,
-        const uint8_t ReportType,
-        void* ReportData,
-        uint16_t* const ReportSize)
+                                         uint8_t* const ReportID,
+                                         const uint8_t ReportType,
+                                         void* ReportData,
+                                         uint16_t* const ReportSize)
 {
     uint8_t *ReportData_u8 = (uint8_t *)ReportData;
 
     // Firmware version
     ReportData_u8[INDEX_FW_VER_MAJOR] = VERSION_OF_FIRMWARE_MAJOR;
     ReportData_u8[INDEX_FW_VER_MINOR] = VERSION_OF_FIRMWARE_MINOR;
-
-    *ReportSize = GENERIC_REPORT_SIZE;
-    return true;
 }
 
 inline void UpdateUsbLed(void)
@@ -136,12 +113,11 @@ inline void UpdateUsbLed(void)
  *  \param[in] ReportSize  Size in bytes of the received HID report
  */
 void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
-        const uint8_t ReportID,
-        const uint8_t ReportType,
-        const void* ReportData,
-        const uint16_t ReportSize)
+                                          const uint8_t ReportID,
+                                          const uint8_t ReportType,
+                                          const void* ReportData,
+                                          const uint16_t ReportSize)
 {
-    UpdateUsbLed();
     
     uint8_t *ReportData_u8 = (uint8_t *)ReportData;
 
@@ -239,4 +215,9 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
         break;
 
     }
+}
+
+void EVENT_USB_Device_ControlRequest(void)
+{
+	HID_Device_ProcessControlRequest(&Generic_HID_Interface);
 }
