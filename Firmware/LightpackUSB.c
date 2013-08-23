@@ -93,10 +93,12 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
                                          uint16_t* const ReportSize)
 {
     uint8_t *ReportData_u8 = (uint8_t *)ReportData;
+    *ReportSize = GENERIC_EPSIZE;
 
     // Firmware version
     ReportData_u8[INDEX_FW_VER_MAJOR] = VERSION_OF_FIRMWARE_MAJOR;
     ReportData_u8[INDEX_FW_VER_MINOR] = VERSION_OF_FIRMWARE_MINOR;
+    return true;
 }
 
 inline void UpdateUsbLed(void)

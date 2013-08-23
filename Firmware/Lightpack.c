@@ -182,7 +182,7 @@ int main(void)
     // Led driver ports initialization
     LedDriver_Init();
 
-    _SmoothSwitchOnUsbLed(0x40);
+//    _SmoothSwitchOnUsbLed(0x40);
 
     // Initialize timer for update LedDriver-s
     Timer_Init();
