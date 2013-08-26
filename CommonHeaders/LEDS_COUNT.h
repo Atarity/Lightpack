@@ -30,7 +30,7 @@
 
 #include "LIGHTPACK_HW.h"
 
-#if (LIGHTPACK_HW == 6)
+#if (LIGHTPACK_HW == 6 || LIGHTPACK_HW == 7 )
 
 #	define LEDS_COUNT  10
 

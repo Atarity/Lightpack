@@ -28,17 +28,15 @@
 #include "LedDriver.h"
 #include "LedManager.h"
 #include "LightpackUSB.h"
+#include<avr/sleep.h>
 
 volatile uint8_t g_Flags = 0;
 volatile uint8_t g_isUsbLedOn = 1;
 
-const uint8_t kT0CounterBase = 6;
-const uint8_t kUsbLedHighLevel = 2;
-const uint8_t kUsbLedLowLevel = 1;
-const uint16_t kPostPrescaler = 5000;
+const uint8_t kT0CounterBase = 3;
+const uint8_t kUsbLedHighLevel = 1;
 
 uint8_t t0_counter = 0;
-uint16_t t0_extra_counter = 0;
 
 Images_t g_Images = { };
 
@@ -71,31 +69,16 @@ ISR( TIMER1_COMPA_vect )
 
 ISR ( TIMER0_OVF_vect )
 {
-    t0_counter ++;
-    t0_extra_counter ++;
-
-    if ( t0_counter == kT0CounterBase ) {
+    if ( t0_counter >= kT0CounterBase ) {
         t0_counter = 0;
-        SET(USBLED);
-    }
-    if ( t0_extra_counter == kPostPrescaler )
-    {
-        g_isUsbLedOn = 1;
-        t0_extra_counter = 0;
+	SET(USBLED);
+	return;
+    } else {
+        t0_counter ++;
     }
     
-    if( g_isUsbLedOn != 0 )
-    {
-        if ( t0_counter == kUsbLedHighLevel )
-        {
-            CLR(USBLED);
-        }
-    } else
-    {
-        if ( t0_counter == kUsbLedLowLevel )
-        {
-            CLR(USBLED);
-        }
+    if ( t0_counter == kUsbLedHighLevel ) {
+        CLR(USBLED);
     }
 }
 
@@ -122,7 +105,7 @@ static inline void Timer_Init(void)
 
     // Start timer
     TCCR1B = _BV(CS10); // div1
-    TCCR0B = _BV(CS01); // div by 8
+    TCCR0B = _BV(CS02); // div by 8
 
     TCNT1 = 0x0000;
     TCNT0 = 0x0000;
@@ -130,10 +113,6 @@ static inline void Timer_Init(void)
 
 static inline void SetupHardware(void)
 {
-    // Watchdog configuration: interrupt after 250ms and reset after 500ms;
-    wdt_enable(WDTO_250MS);
-    // Enable watchdog interrupt
-    WDTCSR |= _BV(WDIE);
 
     /* Disable clock division */
     clock_prescale_set(clock_div_1);
@@ -149,7 +128,17 @@ static inline void SetupHardware(void)
     DDRD = 0x00;
 
     OUTPUT(USBLED);
-    SET(USBLED);
+    CLR(USBLED);
+
+//    set_sleep_mode(SLEEP_MODE_IDLE);
+}
+
+static inline void enableWatchdog(void)
+{
+    // Watchdog configuration: interrupt after 250ms and reset after 500ms;
+    wdt_enable(WDTO_250MS);
+    // Enable watchdog interrupt
+    WDTCSR |= _BV(WDIE);
 }
 
 static inline void _ProcessFlags(void)
@@ -177,12 +166,12 @@ static inline void _ProcessFlags(void)
  */
 int main(void)
 {
-    SetupHardware();
 
+    SetupHardware();
+    _WaveSwitchOnUsbLed(100, 25);
+    enableWatchdog();
     // Led driver ports initialization
     LedDriver_Init();
-
-//    _SmoothSwitchOnUsbLed(0x40);
 
     // Initialize timer for update LedDriver-s
     Timer_Init();
@@ -197,6 +186,7 @@ int main(void)
         wdt_reset();
         ProcessUsbTasks();
         _ProcessFlags();
+//	sleep_mode();
     }
 
     // Avoid annoying warning

@@ -42,7 +42,7 @@ void LedManager_FillImages(const uint8_t red, const uint8_t green, const uint8_t
     }
 }
 
-#if (LIGHTPACK_HW == 6)
+#if (LIGHTPACK_HW == 6 || LIGHTPACK_HW == 7)
 
 void EvalCurrentImage_SmoothlyAlg(void)
 {

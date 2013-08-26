@@ -51,13 +51,16 @@
 /* LED use with I/O manipulations macroses from iodefs.h */
 #define PINRX   (D,2)
 #define PINTX   (D,3)
-#define USBLED  (C,5)
+
+#if(LIGHTPACK_HW == 7)
+    #define USBLED  (D,4)
+#else
+    #define USBLED  (C,5)
+#endif
 
 // Global variables
 extern Settings_t g_Settings;
 extern Images_t g_Images;
-extern volatile uint8_t g_isUsbLedOn;
-
 
 static inline void _BlinkUsbLed(const uint8_t times, const uint8_t ms)
 {
@@ -74,8 +77,8 @@ static inline void _BlinkUsbLed(const uint8_t times, const uint8_t ms)
     SET(USBLED);
 }
 
-static inline void _SmoothSwitchOnUsbLed(const uint8_t num)
-{
+static inline void _WaveSwitchOnUsbLed(const uint8_t num, const uint8_t target)
+{                                                                               
     for (uint8_t pwm = 0; pwm < num; pwm++)
     {
         SET(USBLED);
@@ -86,7 +89,16 @@ static inline void _SmoothSwitchOnUsbLed(const uint8_t num)
         for (uint8_t i = 0; i < num - pwm; i++)
             _delay_us(50);
     }
-    SET(USBLED);
+    for (uint8_t pwm = 0; pwm < num - target; pwm++)
+    {
+        CLR(USBLED);
+        for (uint8_t i = 0; i < pwm; i++)
+            _delay_us(50);
+
+        SET(USBLED);
+        for (uint8_t i = 0; i < num - pwm; i++)
+            _delay_us(50);
+    }
 }
 
 #endif /* LIGHTPACK_H_INCLUDED */

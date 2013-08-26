@@ -34,7 +34,7 @@
 
 void LedDriver_Init(void);
 
-#if (LIGHTPACK_HW == 6)
+#if (LIGHTPACK_HW == 6 || LIGHTPACK_HW == 7)
 void LedDriver_Update(const RGB_t imageFrame[LEDS_COUNT]);
 #else
 void LedDriver_UpdatePWM(const RGB_t imageFrame[LEDS_COUNT], const uint8_t pwmIndex);
