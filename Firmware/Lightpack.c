@@ -31,12 +31,6 @@
 #include<avr/sleep.h>
 
 volatile uint8_t g_Flags = 0;
-volatile uint8_t g_isUsbLedOn = 1;
-
-const uint8_t kT0CounterBase = 3;
-const uint8_t kUsbLedHighLevel = 1;
-
-uint8_t t0_counter = 0;
 
 Images_t g_Images = { };
 
@@ -67,21 +61,6 @@ ISR( TIMER1_COMPA_vect )
     TIFR1 = _BV(OCF1A);
 }
 
-ISR ( TIMER0_OVF_vect )
-{
-    if ( t0_counter >= kT0CounterBase ) {
-        t0_counter = 0;
-	SET(USBLED);
-	return;
-    } else {
-        t0_counter ++;
-    }
-    
-    if ( t0_counter == kUsbLedHighLevel ) {
-        CLR(USBLED);
-    }
-}
-
 // Watchdog interrupt
 ISR ( WDT_vect )
 {
@@ -94,26 +73,25 @@ static inline void Timer_Init(void)
     TCCR1A = 0x00;
     TCCR1C = 0x00;
     TCCR1B = 0x00;
-    TCCR0A = 0x00;
-    TCCR0B = 0x00;
+//    TCCR0A = 0x00;
+//    TCCR0B = 0x00;
 
     // Setup default value
     OCR1A = g_Settings.timerOutputCompareRegValue;
 
     TIMSK1 = _BV(OCIE1A); // Main timer
-    TIMSK0 = _BV(TOIE0); // Usb led timer
+//    TIMSK0 = _BV(TOIE0); // Usb led timer
 
     // Start timer
     TCCR1B = _BV(CS10); // div1
-    TCCR0B = _BV(CS02); // div by 8
+//    TCCR0B = _BV(CS02); // div by 8
 
     TCNT1 = 0x0000;
-    TCNT0 = 0x0000;
+//    TCNT0 = 0x0000;
 }
 
 static inline void SetupHardware(void)
 {
-
     /* Disable clock division */
     clock_prescale_set(clock_div_1);
 
@@ -135,6 +113,7 @@ static inline void SetupHardware(void)
 
 static inline void enableWatchdog(void)
 {
+    wdt_reset();
     // Watchdog configuration: interrupt after 250ms and reset after 500ms;
     wdt_enable(WDTO_250MS);
     // Enable watchdog interrupt
@@ -166,10 +145,9 @@ static inline void _ProcessFlags(void)
  */
 int main(void)
 {
-
-    SetupHardware();
-    _WaveSwitchOnUsbLed(100, 25);
     enableWatchdog();
+    SetupHardware();
+    _WaveSwitchOnUsbLed(100, 100);
     // Led driver ports initialization
     LedDriver_Init();
 

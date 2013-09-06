@@ -81,23 +81,35 @@ static inline void _WaveSwitchOnUsbLed(const uint8_t num, const uint8_t target)
 {                                                                               
     for (uint8_t pwm = 0; pwm < num; pwm++)
     {
-        SET(USBLED);
-        for (uint8_t i = 0; i < pwm; i++)
-            _delay_us(50);
-
         CLR(USBLED);
         for (uint8_t i = 0; i < num - pwm; i++)
+        {
             _delay_us(50);
+            wdt_reset();
+        }
+
+        SET(USBLED);
+        for (uint8_t i = 0; i < pwm; i++)
+        {
+            _delay_us(50);
+            wdt_reset();
+        }
     }
     for (uint8_t pwm = 0; pwm < num - target; pwm++)
     {
         CLR(USBLED);
         for (uint8_t i = 0; i < pwm; i++)
+        {
             _delay_us(50);
+            wdt_reset();
+        }
 
         SET(USBLED);
         for (uint8_t i = 0; i < num - pwm; i++)
+        {
             _delay_us(50);
+            wdt_reset();
+        }
     }
 }
 
