@@ -121,6 +121,8 @@ public:
     static const char * CmdResultBacklight_Ambilight;
     static const char * CmdResultBacklight_Moodlamp;
 
+    static const char * CmdGuid;
+
     static const char * CmdLock;
     static const char * CmdResultLock_Success;
     static const char * CmdResultLock_Busy;

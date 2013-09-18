@@ -1,10 +1,11 @@
 #include <QtGui>
+#include <QtWidgets/QApplication>
 #include "LightpackPluginInterface.hpp"
-
+#include "Plugin.hpp"
 #include "Settings.hpp"
 #include "version.h"
 #include "debug.h"
-#include <QtWidgets/QApplication>
+
 using namespace SettingsScope;
 
 const int LightpackPluginInterface::SignalWaitTimeoutMs = 1000; // 1 second
@@ -18,6 +19,7 @@ LightpackPluginInterface::LightpackPluginInterface(QObject *parent) :
     m_timerLock = new QTimer(this);
     m_timerLock->start(5000); // check in 5000 ms
     connect(m_timerLock, SIGNAL(timeout()), this, SLOT(timeoutLock()));
+    _plugins.clear();
 }
 
 LightpackPluginInterface::~LightpackPluginInterface()
@@ -43,6 +45,50 @@ void LightpackPluginInterface::timeoutLock()
     }
 }
 
+void LightpackPluginInterface::updatePlugin(QList<Plugin*> plugins)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    if (!lockSessionKeys.isEmpty())
+        UnLock(lockSessionKeys[0]);
+    lockSessionKeys.clear();
+    //emit updateDeviceLockStatus(DeviceLocked::Unlocked, lockSessionKeys);
+    _plugins = plugins;
+
+}
+
+bool LightpackPluginInterface::VerifySessionKey(QString sessionKey)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << sessionKey;
+
+    foreach(Plugin* plugin, _plugins){
+            if (plugin->Guid() == sessionKey)
+                return true;
+        }
+    return false;
+}
+
+Plugin* LightpackPluginInterface::findName(QString name)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << name;
+    foreach(Plugin* plugin, _plugins){
+        if (plugin->Name() == name)
+            return plugin;
+    }
+
+    return NULL;
+}
+
+Plugin* LightpackPluginInterface::findSessionKey(QString sessionKey)
+{
+    foreach(Plugin* plugin, _plugins){
+        if (plugin->Guid() == sessionKey)
+            return plugin;
+    }
+
+    return NULL;
+}
+
+
 void LightpackPluginInterface::initColors(int numberOfLeds)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << numberOfLeds;
@@ -60,15 +106,6 @@ void LightpackPluginInterface::setNumberOfLeds(int numberOfLeds)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << numberOfLeds;
 
     initColors(numberOfLeds);
-}
-
-void LightpackPluginInterface::updatePlugin()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    if (!lockSessionKeys.isEmpty())
-        UnLock(lockSessionKeys[0]);
-    lockSessionKeys.clear();
-    //emit updateDeviceLockStatus(DeviceLocked::Unlocked, lockSessionKeys);
 }
 
 void LightpackPluginInterface::resultBacklightStatus(Backlight::Status status)
@@ -130,6 +167,10 @@ QString LightpackPluginInterface::Version()
 QString LightpackPluginInterface::GetSessionKey(QString module)
 {
     if (module=="API") return "Lock";
+    Plugin* plugin = findName(module);
+    if (plugin == NULL) return "";
+        return plugin->Guid();
+
 }
 
 int LightpackPluginInterface::CheckLock(QString sessionKey)
@@ -146,23 +187,46 @@ int LightpackPluginInterface::CheckLock(QString sessionKey)
 bool LightpackPluginInterface::Lock(QString sessionKey)
 {
     if (sessionKey == "") return false;
-    if (lockSessionKeys.contains(sessionKey)) return true;
-    if (sessionKey.indexOf("API", 0) != -1)
-    {
-        if (lockSessionKeys.count()>0)
-            if (lockSessionKeys[0].indexOf("API", 0) != -1) return false;
-        lockSessionKeys.insert(0,sessionKey);
-        emit updateDeviceLockStatus(DeviceLocked::Api,lockSessionKeys);
-    }
-    else
-    {
-        return false;
-    }
+        if (lockSessionKeys.contains(sessionKey)) return true;
+        if (sessionKey.indexOf("API", 0) != -1)
+            {
+                if (lockSessionKeys.count()>0)
+                    return false;
+                lockSessionKeys.insert(0,sessionKey);
+                emit updateDeviceLockStatus(DeviceLocked::Api,lockSessionKeys);
+            }
+            else
+            {
+              Plugin* plugin = findSessionKey(sessionKey);
+              if (plugin == NULL) return false;
 
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "lock end";
-    lockAlive = true;
-    emit ChangeLockStatus (true);
-    return true;
+                  foreach (QString key,lockSessionKeys)
+                  {
+                      if (key.indexOf("API", 0) != -1) break;
+
+                             Plugin* pluginLock = findSessionKey(key);
+                             if (pluginLock == NULL) return false;
+                             DEBUG_LOW_LEVEL << Q_FUNC_INFO << lockSessionKeys.indexOf(key);
+                             if (plugin->getPriority() > pluginLock->getPriority())
+                                 lockSessionKeys.insert(lockSessionKeys.indexOf(key),sessionKey);
+                             DEBUG_LOW_LEVEL << Q_FUNC_INFO << lockSessionKeys.indexOf(sessionKey);
+
+                  }
+                  if (!lockSessionKeys.contains(sessionKey))
+                  {
+                      DEBUG_LOW_LEVEL << Q_FUNC_INFO << "add to end";
+                      lockSessionKeys.insert(lockSessionKeys.count(),sessionKey);
+                  }
+                  if (lockSessionKeys[0].indexOf("API", 0) != -1)
+                      emit updateDeviceLockStatus(DeviceLocked::Api,lockSessionKeys);
+                  else
+                      emit updateDeviceLockStatus(DeviceLocked::Plugin, lockSessionKeys);
+}
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "lock end";
+        lockAlive = true;
+        emit ChangeLockStatus (true);
+        return true;
+
 }
 
 bool LightpackPluginInterface::UnLock(QString sessionKey)

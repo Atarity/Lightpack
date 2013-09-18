@@ -38,6 +38,7 @@
 #include "LedDeviceManager.hpp"
 #include "enums.hpp"
 #include "debug.h"
+#include "Plugin.hpp"
 
 using namespace SettingsScope;
 
@@ -673,6 +674,28 @@ void SettingsWindow::startBacklight()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "m_backlightStatus =" << m_backlightStatus
                     << "m_deviceLockStatus =" << m_deviceLockStatus;
+
+    if(ui->list_Plugins->count()>0)
+        {
+            int count = ui->list_Plugins->count();
+            for(int index = 0; index < count; index++)
+            {
+                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "check session key";
+                QListWidgetItem * item = ui->list_Plugins->item(index);
+                int indexPlugin =item->data(Qt::UserRole).toUInt();
+                QString key = _plugins[indexPlugin]->Guid();
+                if (m_deviceLockKey.contains(key))
+                {
+                    if (m_deviceLockStatus != DeviceLocked::Api  && m_deviceLockKey.indexOf(key)==0)
+                        m_deviceLockModule = _plugins[indexPlugin]->Name();
+                    if (Settings::isExpertModeEnabled())
+                        item->setText(_plugins[indexPlugin]->Name()+" (Lock)");
+                }
+                else
+                    item->setText(_plugins[indexPlugin]->Name());
+            }
+        }
+
 
     if (m_deviceLockKey.count()==0)
         m_deviceLockModule = "";
@@ -2084,3 +2107,124 @@ void SettingsWindow::on_pushButton_lumosityThresholdHelp_clicked()
 {
     showHelpOf(ui->horizontalSlider_LuminosityThreshold);
 }
+
+
+bool SettingsWindow::toPriority(Plugin* s1 ,Plugin* s2 )
+{
+    return s1->getPriority() > s2->getPriority();
+}
+
+void SettingsWindow::updatePlugin(QList<Plugin*> plugins)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+
+    _plugins = plugins;
+    // sort priority
+    qSort(_plugins.begin() , _plugins.end(), SettingsWindow::toPriority );
+    ui->list_Plugins->clear();
+    foreach(Plugin* plugin, _plugins){
+        int index = _plugins.indexOf(plugin);
+        QListWidgetItem *item = new QListWidgetItem(plugin->Name());
+        item->setData(Qt::UserRole, index);
+        item->setIcon(plugin->Icon());
+        if (plugin->isEnabled())
+        {
+            item->setCheckState(Qt::Checked);
+        }
+        else
+            item->setCheckState(Qt::Unchecked);
+
+        ui->list_Plugins->addItem(item);
+        QApplication::processEvents(QEventLoop::AllEvents, 1000);
+    }
+
+    ui->pushButton_ReloadPlugins->setEnabled(true);
+
+}
+
+void SettingsWindow::on_list_Plugins_itemClicked(QListWidgetItem* current)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    bool isEnabled = true;
+
+    if (current->checkState() == Qt::Checked)
+        isEnabled = true;
+    else
+        isEnabled = false;
+
+    int index =current->data(Qt::UserRole).toUInt();
+    if (_plugins[index]->isEnabled() != isEnabled)
+        _plugins[index]->setEnabled(isEnabled);
+
+    pluginSwitch(index);
+}
+
+void SettingsWindow::pluginSwitch(int index)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << index;
+
+    if (index == -1)
+    {
+        ui->label_PluginName->setText("");
+        ui->label_PluginAuthor->setText("");
+        ui->label_PluginVersion->setText("");
+        ui->tb_PluginDescription->setText("");
+        ui->label_PluginIcon->setPixmap(QIcon(":/plugin/Plugin.png").pixmap(50,50));
+        return;
+    }
+
+    ui->label_PluginName->setText(_plugins[index]->Name());
+    ui->label_PluginAuthor->setText(_plugins[index]->Author());
+    ui->label_PluginVersion->setText(_plugins[index]->Version());
+    ui->tb_PluginDescription->setText(_plugins[index]->Description());
+    ui->label_PluginIcon->setPixmap(_plugins[index]->Icon().pixmap(50,50));
+
+}
+
+void SettingsWindow::on_pushButton_ReloadPlugins_clicked()
+{
+    foreach(Plugin* plugin, _plugins){
+        plugin->Stop();
+    }
+    ui->list_Plugins->clear();
+    _plugins.clear();
+    ui->pushButton_ReloadPlugins->setEnabled(false);
+    emit reloadPlugins();
+}
+
+void SettingsWindow::MoveUpPlugin() {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    int k= ui->list_Plugins->currentRow();
+    if (k==0) return;
+    int n = k-1;
+    QListWidgetItem* pItem = ui->list_Plugins->takeItem(k);
+    ui->list_Plugins->insertItem(n, pItem);
+    ui->list_Plugins->setCurrentRow(n);
+    savePriorityPlugin();
+
+}
+void SettingsWindow::MoveDownPlugin() {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    int k= ui->list_Plugins->currentRow();
+    if (k==ui->list_Plugins->count()-1) return;
+    int n = k+1;
+    QListWidgetItem* pItem = ui->list_Plugins->takeItem(k);
+    ui->list_Plugins->insertItem(n, pItem);
+    ui->list_Plugins->setCurrentRow(n);
+    savePriorityPlugin();
+}
+
+void SettingsWindow::savePriorityPlugin()
+{
+    int count = ui->list_Plugins->count();
+    for(int index = 0; index < count; index++)
+    {
+        QListWidgetItem * item = ui->list_Plugins->item(index);
+        int indexPlugin =item->data(Qt::UserRole).toUInt();
+        _plugins[indexPlugin]->setPriority(count - index);
+    }
+}
+
+

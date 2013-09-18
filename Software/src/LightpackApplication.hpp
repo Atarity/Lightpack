@@ -34,6 +34,7 @@
 
 class LightpackPluginInterface;
 class ApiServer;
+class PluginsManager;
 
 class LightpackApplication : public QtSingleApplication
 {
@@ -106,6 +107,7 @@ private:
     QThread *m_grabManagerThread;
     QThread *m_moodlampManagerThread;
 
+    PluginsManager *m_pluginManager;
     LightpackPluginInterface *m_pluginInterface;
     QThread* m_PluginThread;
     QWidget *consolePlugin;

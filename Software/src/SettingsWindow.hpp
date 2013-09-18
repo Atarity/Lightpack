@@ -44,6 +44,7 @@ namespace Ui {
 }
 
 class GrabManager; // forward declaration
+class Plugin;
 
 class SettingsWindow : public QMainWindow {
     Q_OBJECT
@@ -105,6 +106,8 @@ public slots:
     void onPingDeviceEverySecond_Toggled(bool state);
     void processMessage(const QString &message);
     void setDevice(QString deviceName);
+
+    void updatePlugin(QList<Plugin*> plugins);
 
     void onFocus();
     void onBlur();
@@ -193,6 +196,14 @@ private slots:
 
     void on_pushButton_lumosityThresholdHelp_clicked();
 
+    void pluginSwitch(int index);
+    void on_list_Plugins_itemClicked(QListWidgetItem*);
+    void on_pushButton_ReloadPlugins_clicked();
+    void MoveUpPlugin();
+    void MoveDownPlugin();
+
+
+
 private:
     void updateTrayAndActionStates();    
     void updateExpertModeWidgetsVisibility();
@@ -279,5 +290,8 @@ private:
     static const unsigned MoodLampModeIndex;
 
     QString fimwareVersion;
+
+    QList<Plugin*> _plugins;
+    static bool toPriority(Plugin* s1 , Plugin* s2 );
 };
 

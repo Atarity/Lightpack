@@ -1,8 +1,11 @@
-#pragma once
+#ifndef LightpackPluginInterface_HPP
+#define LightpackPluginInterface_HPP
 
 #include <QtGui>
 #include <QObject>
 #include "enums.hpp"
+
+class Plugin;
 
 class LightpackPluginInterface : public QObject
 {
@@ -55,6 +58,8 @@ public:
      void SetSettingMain(QString key, QVariant value);
      QVariant GetSettingMain(QString key);
 
+     bool VerifySessionKey(QString sessionKey);
+
 signals:
      void ChangeProfile(QString profile);
      void ChangeStatus(int status);
@@ -83,7 +88,7 @@ public slots:
      void refreshAmbilightEvaluated(double updateResultMs);
      void refreshScreenRect(QRect rect);
      void updateColors(const QList<QRgb> & colors);
-     void updatePlugin();
+     void updatePlugin(QList<Plugin*> plugins);
 
 private slots:
       void timeoutLock();
@@ -106,6 +111,10 @@ private:
      QTimer *m_timerLock;
 
      void initColors(int numberOfLeds);
-};
 
+     QList<Plugin*> _plugins;
+     Plugin* findName(QString name);
+     Plugin* findSessionKey(QString sessionKey);
+};
+#endif
 

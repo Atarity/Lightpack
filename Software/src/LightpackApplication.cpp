@@ -31,6 +31,7 @@
 #include <QtWidgets/QHBoxLayout>
 #include "ApiServer.hpp"
 #include "LightpackPluginInterface.hpp"
+#include "PluginsManager.hpp"
 
 #include <unistd.h>
 #include <stdio.h>
@@ -91,6 +92,8 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     qRegisterMetaType<Lightpack::Mode>("Lightpack::Mode");
     qRegisterMetaType<Backlight::Status>("Backlight::Status");
     qRegisterMetaType<DeviceLocked::DeviceLockStatus>("DeviceLocked::DeviceLockStatus");
+    qRegisterMetaType< QList<QRgb> >("QList<Plugin*>");
+
 
     if (Settings::isBacklightEnabled())
     {
@@ -105,6 +108,8 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     startApiServer();
 
     initGrabManager();
+
+    startPluginManager();
 
     if (!m_noGui)
     {
@@ -506,6 +511,31 @@ void LightpackApplication::startLedDeviceManager()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "end";
 
 }
+
+void LightpackApplication::startPluginManager()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    m_pluginManager = new PluginsManager(NULL);
+
+    connect(this, SIGNAL(destroyed()),m_pluginManager, SLOT(StopPlugins()));
+
+    if (!m_noGui)
+    {
+        connect(m_settingsWindow,SIGNAL(reloadPlugins()),m_pluginManager,SLOT(reloadPlugins()));
+        connect(m_pluginManager,SIGNAL(updatePlugin(QList<Plugin*>)),m_settingsWindow,SLOT(updatePlugin(QList<Plugin*>)), Qt::QueuedConnection);
+        connect(m_pluginManager,SIGNAL(updatePlugin(QList<Plugin*>)),m_pluginInterface,SLOT(updatePlugin(QList<Plugin*>)), Qt::QueuedConnection);
+    }
+
+    m_pluginManager->LoadPlugins(QString(Settings::getApplicationDirPath() + "Plugins"));
+    m_pluginManager->StartPlugins();
+
+    m_PluginThread = new QThread();
+    m_pluginManager->moveToThread(m_PluginThread);
+    m_PluginThread->start();
+
+}
+
 
 void LightpackApplication::initGrabManager()
 {

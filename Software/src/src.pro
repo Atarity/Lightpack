@@ -133,6 +133,8 @@ SOURCES += \
     SelectWidget.cpp \
     GrabManager.cpp \
     AbstractLedDevice.cpp \
+    PluginsManager.cpp \
+    Plugin.cpp \
     LightpackPluginInterface.cpp
 
 HEADERS += \
@@ -161,8 +163,6 @@ HEADERS += \
     ../../CommonHeaders/LIGHTPACK_HW.h \
     ../../CommonHeaders/COMMANDS.h \
     ../../CommonHeaders/USB_ID.h \
-    PluginManager.hpp \
-    plugins/PyPlugin.h \    
     MoodLampManager.hpp \
     LedDeviceManager.hpp \
     SelectWidget.hpp \
@@ -170,6 +170,8 @@ HEADERS += \
     colorspace_types.h \
     AbstractLedDevice.hpp \
     SettingsWizard.hpp \
+    PluginsManager.hpp \
+    Plugin.hpp \
     LightpackPluginInterface.hpp
 
 FORMS += SettingsWindow.ui \

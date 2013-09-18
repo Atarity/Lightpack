@@ -31,6 +31,7 @@ SOURCES += \
     ../src/ApiServerSetColorTask.cpp \
     ../src/ApiServer.cpp \
     ../src/Settings.cpp \
+    ../src/Plugin.cpp \
     ../src/LightpackPluginInterface.cpp \
     SettingsWindowMockup.cpp \
     main.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     ../src/ApiServer.hpp \
     ../src/debug.h \
     ../src/Settings.hpp \
+    ../src/Plugin.hpp \
     ../src/LightpackPluginInterface.hpp \
     SettingsWindowMockup.hpp \
     GrabCalculationTest.hpp \

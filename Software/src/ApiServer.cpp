@@ -101,6 +101,8 @@ const char * ApiServer::CmdGetBacklight = "getmode";
 const char * ApiServer::CmdResultBacklight_Ambilight = "mode:ambilight\r\n";
 const char * ApiServer::CmdResultBacklight_Moodlamp = "mode:moodlamp\r\n";
 
+const char * ApiServer::CmdGuid = "guid:";
+
 const char * ApiServer::CmdLock = "lock";
 const char * ApiServer::CmdResultLock_Success = "lock:success\r\n";
 const char * ApiServer::CmdResultLock_Busy = "lock:busy\r\n";
@@ -230,6 +232,7 @@ void ApiServer::incomingConnection(int socketDescriptor)
 
     ClientInfo cs;
     cs.isAuthorized = !m_isAuthEnabled;
+    // set default sessionkey (disable lock priority)
     cs.sessionKey = "API"+lightpack->GetSessionKey("API")+QString(m_clients.count());
 
     m_clients.insert(client, cs);
@@ -526,6 +529,24 @@ void ApiServer::clientProcessCommands()
             case Lightpack::MoodLampMode:
                 result = CmdResultBacklight_Moodlamp;
                 break;
+            }
+        }
+        else if (cmdBuffer.startsWith(CmdGuid))
+        {
+            API_DEBUG_OUT << CmdGuid;
+
+            cmdBuffer.remove(0, cmdBuffer.indexOf(':') + 1);
+            API_DEBUG_OUT << QString(cmdBuffer);
+
+            QString guid = cmdBuffer;
+            if (lightpack->VerifySessionKey(guid))
+            {
+                m_clients[client].sessionKey = guid;
+                result = CmdSetResult_Ok;
+            }
+            else
+            {
+                result = CmdSetResult_Error;
             }
         }
         else if (cmdBuffer == CmdLock)
