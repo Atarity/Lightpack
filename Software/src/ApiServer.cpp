@@ -103,6 +103,8 @@ const char * ApiServer::CmdResultBacklight_Moodlamp = "mode:moodlamp\r\n";
 
 const char * ApiServer::CmdGuid = "guid:";
 
+const char * ApiServer::CmdLockStatus = "getlockstatus";
+
 const char * ApiServer::CmdLock = "lock";
 const char * ApiServer::CmdResultLock_Success = "lock:success\r\n";
 const char * ApiServer::CmdResultLock_Busy = "lock:busy\r\n";
@@ -548,6 +550,19 @@ void ApiServer::clientProcessCommands()
             {
                 result = CmdSetResult_Error;
             }
+        }
+        else if (cmdBuffer == CmdLockStatus)
+        {
+            API_DEBUG_OUT << CmdLockStatus;
+
+            int res = lightpack->CheckLock(sessionKey);
+            QString status = "no";
+            if (res == -1)
+                status = "busy";
+            if (res == 1)
+                status = "ok";
+
+            result = QString("lockstatus:%1\r\n").arg(status);
         }
         else if (cmdBuffer == CmdLock)
         {
