@@ -608,7 +608,10 @@ void ApiServer::clientProcessCommands()
                     if (m_isTaskSetColorDone)
                     {
                         if (m_isTaskSetColorParseSuccess)
+                        {
+                            lightpack->SetLockAlive(sessionKey);
                             result = CmdSetResult_Ok;
+                        }
                         else
                             result = CmdSetResult_Error;
                     } else {

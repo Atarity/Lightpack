@@ -109,8 +109,6 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     initGrabManager();
 
-    startPluginManager();
-
     if (!m_noGui)
     {
         connect(m_settingsWindow, SIGNAL(backlightStatusChanged(Backlight::Status)), this, SLOT(setStatusChanged(Backlight::Status)));
@@ -121,6 +119,7 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     handleConnectedDeviceChange(settings()->getConnectedDevice());
 
+    startPluginManager();
 
     emit postInitialization();
 }
@@ -530,9 +529,9 @@ void LightpackApplication::startPluginManager()
     m_pluginManager->LoadPlugins(QString(Settings::getApplicationDirPath() + "Plugins"));
     m_pluginManager->StartPlugins();
 
-    m_PluginThread = new QThread();
-    m_pluginManager->moveToThread(m_PluginThread);
-    m_PluginThread->start();
+    //m_PluginThread = new QThread();
+    //m_pluginManager->moveToThread(m_PluginThread);
+    //m_PluginThread->start();
 
 }
 

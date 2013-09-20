@@ -59,6 +59,7 @@ public:
      QVariant GetSettingMain(QString key);
 
      bool VerifySessionKey(QString sessionKey);
+     void SetLockAlive(QString sessionKey);
 
 signals:
      void ChangeProfile(QString profile);

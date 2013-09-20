@@ -262,6 +262,15 @@ bool LightpackPluginInterface::UnLock(QString sessionKey)
         return false;
 
 }
+
+
+void LightpackPluginInterface::SetLockAlive(QString sessionKey)
+{
+    if (lockSessionKeys.isEmpty()) return;
+    if (lockSessionKeys[0]!=sessionKey) return;
+       lockAlive = true;
+}
+
 // TODO: setcolor
 bool LightpackPluginInterface::SetColors(QString sessionKey, int r, int g, int b)
 {

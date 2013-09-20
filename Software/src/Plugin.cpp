@@ -84,8 +84,8 @@ void Plugin::setEnabled(bool enable){
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << enable;
     QString key = this->_name+"/Enable";
     Settings::setValueMain(key,enable);
-    if (!enable && process->isOpen() ) this->Stop();
-    if (enable && !process->isOpen() ) this->Start();
+    if (!enable) this->Stop();
+    if (enable) this->Start();
 }
 
 
@@ -94,17 +94,17 @@ void Plugin::Start()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << _exec;
 
     QString program = _exec;
-    QStringList arguments;
-    arguments << "-style" << "fusion";
+    //QStringList arguments;
+    //arguments << "-style" << "fusion";
 
     QDir dir(_pathPlugin);
     QDir::setCurrent(dir.absolutePath());
 
-    process->start(program,arguments);
+    process->start(program,NULL);
 }
 
 void Plugin::Stop()
 {
-    process->close();
+    process->kill();
 }
 
