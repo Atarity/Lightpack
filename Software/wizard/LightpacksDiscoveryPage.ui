@@ -26,20 +26,26 @@
    <item row="2" column="1">
     <widget class="QLabel" name="labelZonesAvailable">
      <property name="text">
-      <string>TextLabel</string>
+      <string>please connect Lightpack or setup another device</string>
      </property>
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QRadioButton" name="radioButton_2">
+    <widget class="QRadioButton" name="rbLightpackSelected">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="styleSheet">
       <string notr="true">margin-top: 1em;</string>
      </property>
      <property name="text">
       <string>Continue setting up the Lightpacks</string>
      </property>
-     <property name="checked">
+     <property name="checkable">
       <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -85,17 +91,26 @@
    <item row="1" column="1">
     <widget class="QLabel" name="labelLightpacksCount">
      <property name="styleSheet">
-      <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string>No Lightpacks connected</string>
      </property>
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QRadioButton" name="radioButton">
+    <widget class="QRadioButton" name="rbChooseAnotherDevice">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Setup another device</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

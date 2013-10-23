@@ -27,6 +27,7 @@
 #include "Wizard.hpp"
 #include "ui_Wizard.h"
 #include "LightpacksDiscoveryPage.hpp"
+#include "MonitorsConfigurationPage.hpp"
 
 Wizard::Wizard(SettingsScope::Settings *settings, QWidget *parent) :
     QWizard(parent),
@@ -35,6 +36,7 @@ Wizard::Wizard(SettingsScope::Settings *settings, QWidget *parent) :
 {
     _ui->setupUi(this);
     this->setPage(Page_LightpacksDiscovery, new LightpacksDiscoveryPage(_settings) );
+    this->setPage(Page_MonitorsConfiguration, new MonitorsConfigurationPage(_settings) );
 }
 
 Wizard::~Wizard()

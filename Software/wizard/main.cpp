@@ -79,6 +79,7 @@ int main(int argc, char *argv[])
     Settings settings;
     settings.Initialize(getApplicationDirectoryPath(argv[0]), false);
     Wizard w(&settings);
+    w.setWindowFlags(Qt::WindowStaysOnTopHint);
     w.show();
 
     return a.exec();

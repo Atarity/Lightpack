@@ -44,9 +44,11 @@ public:
 
 protected:
     virtual void initializePage();
+    virtual bool validatePage();
+    virtual int nextId() const;
 
 private:
-    Ui::LightpacksDiscoveryPage *ui;
+    Ui::LightpacksDiscoveryPage *_ui;
 };
 
 #endif // LIGHTPACKSDISCOVERYPAGE_HPP

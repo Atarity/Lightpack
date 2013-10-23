@@ -28,18 +28,19 @@
 #include "ui_LightpacksDiscoveryPage.h"
 #include "LedDeviceLightpack.hpp"
 #include "Settings.hpp"
+#include "Wizard.hpp"
 
 LightpacksDiscoveryPage::LightpacksDiscoveryPage(SettingsScope::Settings *settings, QWidget *parent) :
     QWizardPage(parent),
     SettingsAwareTrait(settings),
-    ui(new Ui::LightpacksDiscoveryPage)
+    _ui(new Ui::LightpacksDiscoveryPage)
 {
-    ui->setupUi(this);
+    _ui->setupUi(this);
 }
 
 LightpacksDiscoveryPage::~LightpacksDiscoveryPage()
 {
-    delete ui;
+    delete _ui;
 }
 
 void LightpacksDiscoveryPage::initializePage() {
@@ -49,6 +50,8 @@ void LightpacksDiscoveryPage::initializePage() {
 
     if (lpack.lightpacksFound() > 0) {
         char buf[10];
+        _ui->rbChooseAnotherDevice->setEnabled(true);
+        _ui->rbLightpackSelected->setEnabled(true);
 
         QString caption;
         if (lpack.lightpacksFound() == 1)
@@ -57,8 +60,21 @@ void LightpacksDiscoveryPage::initializePage() {
             caption = tr("%0 Lightpacks found").arg(itoa(lpack.lightpacksFound(), buf, 10));
 
         QString caption2 = tr("%0 zones are available").arg(itoa(lpack.maxLedsCount(), buf, 10));
-        ui->labelLightpacksCount->setText(caption);
-        ui->labelZonesAvailable->setText(caption2);
+        _ui->labelLightpacksCount->setText(caption);
+        _ui->labelZonesAvailable->setText(caption2);
     }
-
 }
+
+bool LightpacksDiscoveryPage::validatePage() {
+    if (_ui->rbLightpackSelected->isChecked())
+        _settings->setConnectedDevice(SupportedDevices::DeviceTypeLightpack);
+    return true;
+}
+
+int LightpacksDiscoveryPage::nextId() const {
+    if (_ui->rbLightpackSelected->isChecked())
+        return Page_MonitorsConfiguration;
+    else
+        return Page_ChooseDevice;
+}
+
