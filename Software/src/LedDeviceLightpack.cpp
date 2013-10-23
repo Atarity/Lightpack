@@ -25,7 +25,7 @@
  */
 
 #include "LedDeviceLightpack.hpp"
-#include "LightpackApplication.hpp"
+//#include "LightpackApplication.hpp"
 
 #include <unistd.h>
 
@@ -77,7 +77,7 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
         return;
     }
 
-    QMutexLocker locker(&getLightpackApp()->m_mutex);
+//    QMutexLocker locker(&getLightpackApp()->m_mutex);
 
     resizeColorsBuffer(colors.count());
 
@@ -117,7 +117,7 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
         }
     }
 
-    locker.unlock();
+//    locker.unlock();
 
 
     // WARNING: LedDeviceManager sends data only when the arrival of this signal
@@ -215,7 +215,7 @@ void LedDeviceLightpack::requestFirmwareVersion()
         int fw_minor = m_readBuffer[INDEX_FW_VER_MINOR];
         fwVersion = QString::number(fw_major) + "." + QString::number(fw_minor);
     } else {
-        fwVersion = QApplication::tr("read device fail");
+        fwVersion = tr("read device fail");
     }
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Version:" << fwVersion;
@@ -255,37 +255,14 @@ void LedDeviceLightpack::open()
 	const char *path_to_open = NULL;
 	hid_device * handle = NULL;
 
-	devs = hid_enumerate(USB_VENDOR_ID, USB_PRODUCT_ID);
-	cur_dev = devs;
-	while (cur_dev) {
-	    path_to_open = NULL;
-		if (cur_dev->vendor_id == USB_VENDOR_ID &&
-			cur_dev->product_id == USB_PRODUCT_ID) {
-		    path_to_open = cur_dev->path;
-		}
-		if (path_to_open) {
-			/* Open the device */
-			handle = hid_open_path(path_to_open);
-
-            // Immediately return from hid_read() if no data available
-            hid_set_nonblocking(handle, 1);
-            m_devices.append(handle);
-	    }
-		cur_dev = cur_dev->next;
-	}
-
-	hid_free_enumeration(devs);
-
+    open(USB_VENDOR_ID, USB_PRODUCT_ID);
+    open(USB_OLD_VENDOR_ID, USB_OLD_PRODUCT_ID);
 
     if (m_devices.size() == 0)
     {
-        m_hidDevice = hid_open(USB_OLD_VENDOR_ID, USB_OLD_PRODUCT_ID, NULL);
-        if (m_hidDevice == NULL)
-        {
-            DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Lightpack device not found";
-            emit openDeviceSuccess(false);
-            return;
-        }
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Lightpack devices not found";
+        emit openDeviceSuccess(false);
+        return;
     }
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Lightpack opened";
@@ -293,6 +270,30 @@ void LedDeviceLightpack::open()
     updateDeviceSettings();
 
     emit openDeviceSuccess(true);
+}
+
+void LedDeviceLightpack::open(unsigned short vid, unsigned short pid)
+{
+    struct hid_device_info *devs, *cur_dev;
+    const char *path_to_open = NULL;
+    hid_device * handle = NULL;
+
+    devs = hid_enumerate(vid, pid);
+    cur_dev = devs;
+    while (cur_dev) {
+        path_to_open = cur_dev->path;
+        if (path_to_open) {
+            /* Open the device */
+            handle = hid_open_path(path_to_open);
+
+            // Immediately return from hid_read() if no data available
+            hid_set_nonblocking(handle, 1);
+            m_devices.append(handle);
+        }
+        cur_dev = cur_dev->next;
+    }
+
+    hid_free_enumeration(devs);
 }
 
 bool LedDeviceLightpack::readDataFromDevice()

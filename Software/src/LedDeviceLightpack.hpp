@@ -60,6 +60,7 @@ public slots:
     void requestFirmwareVersion();
     void updateDeviceSettings();
     int maxLedsCount() { return m_devices.size() * kLedsPerDevice;}
+    size_t lightpacksFound() { return m_devices.size(); }
 
 private: 
     bool readDataFromDevice();
@@ -75,6 +76,8 @@ private slots:
     void timerPingDeviceTimeout();
 
 private:
+    void open(unsigned short vid, unsigned short pid);
+
     QList<hid_device*> m_devices;
 //    hid_device *m_hidDevice;
 

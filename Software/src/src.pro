@@ -169,15 +169,13 @@ HEADERS += \
     ../common/D3D10GrabberDefs.hpp \
     colorspace_types.h \
     AbstractLedDevice.hpp \
-    SettingsWizard.hpp \
     PluginsManager.hpp \
     Plugin.hpp \
     LightpackPluginInterface.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \
-    GrabConfigWidget.ui \
-    ../SettingsWizard.ui
+    GrabConfigWidget.ui
 
 #
 #   QSerialDevice
@@ -190,7 +188,3 @@ FORMS += SettingsWindow.ui \
 # QtSingleApplication
 #
 include(qtsingleapplication/src/qtsingleapplication.pri)
-
-
-OTHER_FILES += \
-    test.qml
