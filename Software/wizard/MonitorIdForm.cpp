@@ -29,12 +29,18 @@
 
 MonitorIdForm::MonitorIdForm(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::MonitorIdForm)
+    _ui(new Ui::MonitorIdForm)
 {
-    ui->setupUi(this);
+    _ui->setupUi(this);
 }
 
 MonitorIdForm::~MonitorIdForm()
 {
-    delete ui;
+    delete _ui;
+}
+
+void MonitorIdForm::setId(int id)
+{
+    char buf[4];
+    _ui->label->setText(itoa(id, buf, 10));
 }

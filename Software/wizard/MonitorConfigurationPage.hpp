@@ -36,19 +36,21 @@ class MonitorsConfigurationPage;
 }
 class MonitorIdForm;
 
-class MonitorsConfigurationPage : public QWizardPage, SettingsAwareTrait
+class MonitorConfigurationPage : public QWizardPage, SettingsAwareTrait
 {
     Q_OBJECT
 
 public:
-    explicit MonitorsConfigurationPage(SettingsScope::Settings *settings, QWidget *parent = 0);
-    ~MonitorsConfigurationPage();
+    explicit MonitorConfigurationPage(SettingsScope::Settings *settings, QWidget *parent = 0);
+    ~MonitorConfigurationPage();
 
 protected:
     virtual void initializePage();
     virtual bool validatePage();
 
 private:
+    void addMonitor(int id);
+
     Ui::MonitorsConfigurationPage *_ui;
     QList<MonitorIdForm*> _monitorForms;
 };

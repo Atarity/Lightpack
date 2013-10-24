@@ -24,13 +24,13 @@
  *
  */
 
-#include "LightpacksDiscoveryPage.hpp"
-#include "ui_LightpacksDiscoveryPage.h"
+#include "LightpackDiscoveryPage.hpp"
+#include "ui_LightpackDiscoveryPage.h"
 #include "LedDeviceLightpack.hpp"
 #include "Settings.hpp"
 #include "Wizard.hpp"
 
-LightpacksDiscoveryPage::LightpacksDiscoveryPage(SettingsScope::Settings *settings, QWidget *parent) :
+LightpackDiscoveryPage::LightpackDiscoveryPage(SettingsScope::Settings *settings, QWidget *parent) :
     QWizardPage(parent),
     SettingsAwareTrait(settings),
     _ui(new Ui::LightpacksDiscoveryPage)
@@ -38,12 +38,12 @@ LightpacksDiscoveryPage::LightpacksDiscoveryPage(SettingsScope::Settings *settin
     _ui->setupUi(this);
 }
 
-LightpacksDiscoveryPage::~LightpacksDiscoveryPage()
+LightpackDiscoveryPage::~LightpackDiscoveryPage()
 {
     delete _ui;
 }
 
-void LightpacksDiscoveryPage::initializePage() {
+void LightpackDiscoveryPage::initializePage() {
     LedDeviceLightpack lpack;
 
     lpack.open();
@@ -52,6 +52,8 @@ void LightpacksDiscoveryPage::initializePage() {
         char buf[10];
         _ui->rbChooseAnotherDevice->setEnabled(true);
         _ui->rbLightpackSelected->setEnabled(true);
+
+        _ui->rbLightpackSelected->setChecked(true);
 
         QString caption;
         if (lpack.lightpacksFound() == 1)
@@ -65,15 +67,15 @@ void LightpacksDiscoveryPage::initializePage() {
     }
 }
 
-bool LightpacksDiscoveryPage::validatePage() {
+bool LightpackDiscoveryPage::validatePage() {
     if (_ui->rbLightpackSelected->isChecked())
         _settings->setConnectedDevice(SupportedDevices::DeviceTypeLightpack);
     return true;
 }
 
-int LightpacksDiscoveryPage::nextId() const {
+int LightpackDiscoveryPage::nextId() const {
     if (_ui->rbLightpackSelected->isChecked())
-        return Page_MonitorsConfiguration;
+        return Page_MonitorConfiguration;
     else
         return Page_ChooseDevice;
 }

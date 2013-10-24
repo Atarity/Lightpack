@@ -244,16 +244,11 @@ void LedDeviceLightpack::open()
     if (m_devices.size() > 0)
     {
         return;
-        closeDevices();
     }
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << QString("hid_open(0x%1, 0x%2)")
                        .arg(USB_VENDOR_ID, 4, 16, QChar('0'))
                        .arg(USB_PRODUCT_ID, 4, 16, QChar('0'));
-
-	struct hid_device_info *devs, *cur_dev;
-	const char *path_to_open = NULL;
-	hid_device * handle = NULL;
 
     open(USB_VENDOR_ID, USB_PRODUCT_ID);
     open(USB_OLD_VENDOR_ID, USB_OLD_PRODUCT_ID);

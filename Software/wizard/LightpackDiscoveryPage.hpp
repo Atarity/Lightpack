@@ -34,13 +34,13 @@ namespace Ui {
 class LightpacksDiscoveryPage;
 }
 
-class LightpacksDiscoveryPage : public QWizardPage, SettingsAwareTrait
+class LightpackDiscoveryPage : public QWizardPage, SettingsAwareTrait
 {
     Q_OBJECT
 
 public:
-    explicit LightpacksDiscoveryPage(SettingsScope::Settings *settings, QWidget *parent = 0);
-    ~LightpacksDiscoveryPage();
+    explicit LightpackDiscoveryPage(SettingsScope::Settings *settings, QWidget *parent = 0);
+    ~LightpackDiscoveryPage();
 
 protected:
     virtual void initializePage();

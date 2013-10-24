@@ -25,11 +25,12 @@
  */
 
 #include <QDesktopWidget>
-#include "MonitorsConfigurationPage.hpp"
-#include "ui_MonitorsConfigurationPage.h"
+#include <QRadioButton>
+#include "MonitorConfigurationPage.hpp"
+#include "ui_MonitorConfigurationPage.h"
 #include "MonitorIdForm.hpp"
 
-MonitorsConfigurationPage::MonitorsConfigurationPage(SettingsScope::Settings *settings, QWidget *parent) :
+MonitorConfigurationPage::MonitorConfigurationPage(SettingsScope::Settings *settings, QWidget *parent) :
     QWizardPage(parent),
     SettingsAwareTrait(settings),
     _ui(new Ui::MonitorsConfigurationPage)
@@ -37,19 +38,19 @@ MonitorsConfigurationPage::MonitorsConfigurationPage(SettingsScope::Settings *se
     _ui->setupUi(this);
 }
 
-MonitorsConfigurationPage::~MonitorsConfigurationPage()
+MonitorConfigurationPage::~MonitorConfigurationPage()
 {
     delete _ui;
 }
 
-void MonitorsConfigurationPage::initializePage()
+void MonitorConfigurationPage::initializePage()
 {
     size_t screenCount = QApplication::desktop()->screenCount();
     if(screenCount == 1) {
         wizard()->next();
         return;
     }
-    for(int i = 0; i < screenCount; i++) {
+    for(size_t i = 0; i < screenCount; i++) {
         QRect geom = QApplication::desktop()->screenGeometry(i);
         MonitorIdForm *monitorIdForm = new MonitorIdForm();
 
@@ -58,6 +59,11 @@ void MonitorsConfigurationPage::initializePage()
         monitorIdForm->move(geom.topLeft());
         monitorIdForm->resize(geom.width(), geom.height());
 
+        monitorIdForm->setId(i+1);
+
+        QString text = QString("Monitor %0, %1x%2").arg(QString::number(i+1), QString::number(geom.width()), QString::number(geom.height()));
+        _ui->cbMonitor->addItem(text, i);
+
         monitorIdForm->show();
 
         _monitorForms.append(monitorIdForm);
@@ -65,10 +71,24 @@ void MonitorsConfigurationPage::initializePage()
 
 }
 
-bool MonitorsConfigurationPage::validatePage()
+bool MonitorConfigurationPage::validatePage()
 {
     foreach ( MonitorIdForm *monitorIdForm, _monitorForms ) {
         delete monitorIdForm;
     }
     return true;
+}
+
+void MonitorConfigurationPage::addMonitor(int id)\
+{
+    QRadioButton *rbMon = new QRadioButton(this);
+
+    char buf[10];
+    QString name = QString("rb%0").arg(itoa(id, buf, 10));
+
+    rbMon->setObjectName(name);
+    rbMon->setText(buf);
+
+    _ui->gridLayout->addWidget(rbMon, id + 1, 1, 1, 1);
+
 }

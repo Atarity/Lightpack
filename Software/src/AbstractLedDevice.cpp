@@ -53,7 +53,7 @@ void AbstractLedDevice::updateWBAdjustments() {
     using namespace SettingsScope;
     size_t ledsCount = Settings::getNumberOfLeds(Settings::getConnectedDevice());
     m_wbAdjustments.clear();
-    for (int i=0; i < ledsCount; i++) {
+    for (size_t i=0; i < ledsCount; i++) {
         WBAdjustment wbAdjustment;
         wbAdjustment.red   = Settings::getLedCoefRed(i);
         wbAdjustment.green = Settings::getLedCoefGreen(i);

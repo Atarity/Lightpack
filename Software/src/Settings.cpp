@@ -769,6 +769,8 @@ void Settings::setNumberOfLeds(SupportedDevices::DeviceType device, int numberOf
             case DeviceTypeVirtual:
             m_this->virtualNumberOfLedsChanged(numberOfLeds);
             break;
+        default:
+            qCritical() << Q_FUNC_INFO << "Device type not recognized, device ==" << device << "numberOfLeds ==" << numberOfLeds;
         }
     }
 }
@@ -789,8 +791,7 @@ int Settings::getNumberOfLeds(SupportedDevices::DeviceType device)
 
 void Settings::setColorSequence(SupportedDevices::DeviceType device, QString colorSequence)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-     DEBUG_LOW_LEVEL << Q_FUNC_INFO << device << colorSequence;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << device << colorSequence;
     switch (device)
     {
         case  SupportedDevices::DeviceTypeAdalight:
@@ -801,6 +802,9 @@ void Settings::setColorSequence(SupportedDevices::DeviceType device, QString col
             setValueMain(Main::Key::Ardulight::ColorSequence, colorSequence);
             DEBUG_LOW_LEVEL << Q_FUNC_INFO << "ard" << colorSequence;
             break;
+        default:
+            qWarning() << Q_FUNC_INFO << "Unsupported device type: " << device << m_devicesTypeToNameMap.value(device);
+            return;
     }
     m_this->deviceColorSequenceChanged(colorSequence);
 }
@@ -815,8 +819,10 @@ QString Settings::getColorSequence(SupportedDevices::DeviceType device)
         case SupportedDevices::DeviceTypeArdulight:
             return valueMain(Main::Key::Ardulight::ColorSequence).toString();
             break;
+        default:
+            qWarning() << Q_FUNC_INFO << "Unsupported device type: " << device << m_devicesTypeToNameMap.value(device);
     }
-    return "RGB";
+    return NULL;
 }
 
 int Settings::getGrabSlowdown()

@@ -41,8 +41,10 @@ public:
     explicit MonitorIdForm(QWidget *parent = 0);
     ~MonitorIdForm();
 
+    void setId(int id);
+
 private:
-    Ui::MonitorIdForm *ui;
+    Ui::MonitorIdForm *_ui;
 };
 
 #endif // MONITORIDFORM_HPP

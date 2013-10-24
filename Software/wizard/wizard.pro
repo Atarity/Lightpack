@@ -20,24 +20,24 @@ SOURCES += main.cpp\
     ../src/LedDeviceLightpack.cpp \
     ../src/AbstractLedDevice.cpp \
     ../math/PrismatikMath.cpp \
-    LightpacksDiscoveryPage.cpp \
-    MonitorsConfigurationPage.cpp \
-    MonitorIdForm.cpp
+    MonitorIdForm.cpp \
+    LightpackDiscoveryPage.cpp \
+    MonitorConfigurationPage.cpp
 
 HEADERS  += Wizard.hpp \
     ../src/Settings.hpp \
     ../src/LedDeviceLightpack.hpp \
     ../src/AbstractLedDevice.hpp \
-    LightpacksDiscoveryPage.hpp \
     SettingsAwareTrait.hpp \
-    MonitorsConfigurationPage.hpp \
-    MonitorIdForm.hpp
+    MonitorIdForm.hpp \
+    LightpackDiscoveryPage.hpp \
+    MonitorConfigurationPage.hpp
 
 FORMS    += \
     Wizard.ui \
-    LightpacksDiscoveryPage.ui \
-    MonitorsConfigurationPage.ui \
-    MonitorIdForm.ui
+    MonitorIdForm.ui \
+    LightpackDiscoveryPage.ui \
+    MonitorConfigurationPage.ui
 
 unix:!macx{
     # Linux version using libusb and hidapi codes
