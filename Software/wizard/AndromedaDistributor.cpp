@@ -1,0 +1,131 @@
+/*
+ * AndromedaZoneDistributor.cpp
+ *
+ *  Created on: 10/28/2013
+ *     Project: Prismatik
+ *
+ *  Copyright (c) 2013 Tim
+ *
+ *  Lightpack is an open-source, USB content-driving ambient lighting
+ *  hardware.
+ *
+ *  Prismatik is a free, open-source software: you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License as published
+ *  by the Free Software Foundation, either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Prismatik and Lightpack files is distributed in the hope that it will be
+ *  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#include "AndromedaDistributor.hpp"
+#include <math.h>
+
+#define STAND_WIDTH 0.3333 //33%
+
+template <class T>
+inline T within1(T x) {
+    if (x < 0.0) return 0.0;
+    if (x > 1.0) return 1.0;
+    return x;
+}
+
+template <class T>
+inline int cmp(T x, T y, T e) {
+    T d = x - y;
+    if (fabs(d) < e) return 0;
+    if (d < 0) return -1;
+    return 1;
+}
+
+ScreenArea * AndromedaDistributor::next() {
+    const float thikness = 0.15;
+    float x, y;
+
+    if (_dx == 0 && _dy == 0) {
+        _dx = 1;
+        _width = 1.0 / fragmentCountOnTopEdge();
+        _height = thikness;
+        x = 1.0 - fragmentCountOnBottomEdge() * _width / 2;
+        y = 1.0 - _height;
+    } else if (_dx > 0 && cmp(_currentArea->hScanEnd(), 1.0, 0.01) >= 0 ) {
+        cleanCurrentFragment();
+        _dx = 0;
+        _dy = -1;
+        _width = thikness;
+        _height = 1.0f / fragmentCountOnLeftEdge();
+        x = 1.0f - _width;
+        y = 1.0f - _height;
+    } else if (_dy < 0 && cmp(_currentArea->vScanStart(), 0.0, .01) <= 0) {
+        cleanCurrentFragment();
+        _dx = -1;
+        _dy = 0;
+        _width = 1.0 / fragmentCountOnTopEdge();
+        _height = thikness;
+        x = 1.0 - _width;
+        y = 0.0;
+    } else if (_dx < 0 && cmp(_currentArea->hScanStart(), 0.0, .01) <= 0) {
+        cleanCurrentFragment();
+        _dx = 0;
+        _dy = 1;
+        _width = thikness;
+        _height = 1.0 / fragmentCountOnLeftEdge();
+        x = 0.0;
+        y = 0.0;
+    } else if (_dy > 0 && cmp(_currentArea->vScanEnd(), 1.0, .01) >= 0) {
+        cleanCurrentFragment();
+        _dx = 1;
+        _dy = 0;
+        _width = 1.0 / fragmentCountOnTopEdge();
+        _height = thikness;
+        x = 0.0;
+        y = 1.0 - _height;
+    }
+
+    ScreenArea *result = NULL;
+    if (!_currentArea) {
+        result = new ScreenArea( x, x + _width, y, y + _height);
+    } else {
+        ScreenArea *cf = _currentArea;
+        double dx = _width * (double)_dx;
+        double dy = _height * (double)_dy;
+
+        result = new ScreenArea(within1(cf->hScanStart() + dx), within1(cf->hScanEnd() + dx),
+                                    within1(cf->vScanStart() + dy), within1(cf->vScanEnd() + dy));
+        cleanCurrentFragment();
+    }
+
+    _currentArea = result;
+    return new ScreenArea(*_currentArea);
+
+}
+
+size_t AndromedaDistributor::fragmentCountOnTopEdge() const
+{
+    double a = aspect();
+    size_t roundDistrib = _areaCount * a/(2 + 2*a);
+    return _isStandPresent ? round(roundDistrib * (1 + STAND_WIDTH )) : roundDistrib;
+}
+
+size_t AndromedaDistributor::fragmentCountOnBottomEdge() const
+{
+    double a = aspect();
+    size_t roundDistrib = _areaCount * a/(2 + 2*a);
+    return _isStandPresent ? round(roundDistrib * (1 - STAND_WIDTH )) : roundDistrib;
+}
+
+size_t AndromedaDistributor::fragmentCountOnLeftEdge() const
+{
+    return (_areaCount - fragmentCountOnTopEdge() - fragmentCountOnBottomEdge())/2;
+}
+
+size_t AndromedaDistributor::fragmentCountOnRightEdge() const
+{
+    return fragmentCountOnLeftEdge();
+}

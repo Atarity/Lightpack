@@ -1341,7 +1341,7 @@ void SettingsWindow::openFile(const QString &filePath)
 
     QString filePrefix = "file://";
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     filePrefix = "file:///";
 #endif
 
@@ -1740,7 +1740,7 @@ void SettingsWindow::onTrayIcon_Activated(QSystemTrayIcon::ActivationReason reas
         }
         break;
 
-#   ifdef Q_WS_WIN
+#   ifdef Q_OS_WIN
     case QSystemTrayIcon::Context:
         // Hide the tray after losing focus
         //

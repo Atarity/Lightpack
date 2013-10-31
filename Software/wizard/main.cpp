@@ -49,7 +49,7 @@ QString getApplicationDirectoryPath(const char * firstCmdArgument)
 
     cout << "Unportable version" << endl;
 
-#       ifdef Q_WS_WIN
+#       ifdef Q_OS_WIN
     appDirPath = QDir::homePath() + "/Prismatik";
 #       else
     appDirPath = QDir::homePath() + "/.Prismatik";

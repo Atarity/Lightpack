@@ -36,6 +36,7 @@ MonitorConfigurationPage::MonitorConfigurationPage(SettingsScope::Settings *sett
     _ui(new Ui::MonitorsConfigurationPage)
 {
     _ui->setupUi(this);
+    registerField("screenId", _ui->cbMonitor);
 }
 
 MonitorConfigurationPage::~MonitorConfigurationPage()
@@ -46,15 +47,11 @@ MonitorConfigurationPage::~MonitorConfigurationPage()
 void MonitorConfigurationPage::initializePage()
 {
     size_t screenCount = QApplication::desktop()->screenCount();
-    if(screenCount == 1) {
-        wizard()->next();
-        return;
-    }
     for(size_t i = 0; i < screenCount; i++) {
         QRect geom = QApplication::desktop()->screenGeometry(i);
         MonitorIdForm *monitorIdForm = new MonitorIdForm();
 
-        monitorIdForm->setWindowFlags(Qt::FramelessWindowHint);
+        monitorIdForm->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
 
         monitorIdForm->move(geom.topLeft());
         monitorIdForm->resize(geom.width(), geom.height());
@@ -68,7 +65,9 @@ void MonitorConfigurationPage::initializePage()
 
         _monitorForms.append(monitorIdForm);
     }
-
+    if(screenCount == 1) {
+        QMetaObject::invokeMethod(wizard(), "next", Qt::QueuedConnection);
+    }
 }
 
 bool MonitorConfigurationPage::validatePage()

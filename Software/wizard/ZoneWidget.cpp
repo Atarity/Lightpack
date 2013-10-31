@@ -1,10 +1,10 @@
 /*
- * Wizard.cpp
+ * ZoneWidget.cpp
  *
- *  Created on: 10/22/2013
- *     Project: %PROJECT% (Use "Lightpack" for hardware/firmware, or "Prismatik" for software)
+ *  Created on: 10/26/2013
+ *     Project: Prismatik
  *
- *  Copyright (c) 2013 %NICKNAME%
+ *  Copyright (c) 2013 Tim
  *
  *  Lightpack is an open-source, USB content-driving ambient lighting
  *  hardware.
@@ -24,24 +24,17 @@
  *
  */
 
-#include "Wizard.hpp"
-#include "ui_Wizard.h"
-#include "LightpackDiscoveryPage.hpp"
-#include "MonitorConfigurationPage.hpp"
-#include "ZonePlacementPage.hpp"
+#include "ZoneWidget.hpp"
+#include "ui_ZoneWidget.h"
 
-Wizard::Wizard(SettingsScope::Settings *settings, QWidget *parent) :
-    QWizard(parent),
-    SettingsAwareTrait(settings),
-    _ui(new Ui::Wizard)
+ZoneWidget::ZoneWidget(QWidget *parent) :
+    QWidget(parent),
+    _ui(new Ui::ZoneWidget)
 {
     _ui->setupUi(this);
-    this->setPage(Page_LightpackDiscovery, new LightpackDiscoveryPage(_settings) );
-    this->setPage(Page_MonitorConfiguration, new MonitorConfigurationPage(_settings) );
-    this->setPage(Page_ZonePlacement, new ZonePlacementPage(_settings) );
 }
 
-Wizard::~Wizard()
+ZoneWidget::~ZoneWidget()
 {
     delete _ui;
 }

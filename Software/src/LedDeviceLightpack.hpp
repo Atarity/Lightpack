@@ -59,7 +59,7 @@ public slots:
     void setColorSequence(QString /*value*/);
     void requestFirmwareVersion();
     void updateDeviceSettings();
-    int maxLedsCount() { return m_devices.size() * kLedsPerDevice;}
+    size_t maxLedsCount() { return m_devices.size() * kLedsPerDevice;}
     size_t lightpacksFound() { return m_devices.size(); }
 
 private: 

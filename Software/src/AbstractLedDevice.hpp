@@ -80,7 +80,7 @@ public slots:
     virtual void requestFirmwareVersion() = 0;
     virtual void updateDeviceSettings();
 
-    virtual int maxLedsCount() = 0;
+    virtual size_t maxLedsCount() = 0;
 
     /*!
       \obsolete only form compatibility with Lightpack ver.<=5.5 hardware

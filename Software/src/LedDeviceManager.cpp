@@ -314,12 +314,12 @@ AbstractLedDevice * LedDeviceManager::createLedDevice(SupportedDevices::DeviceTy
 {    
 
     if (deviceType == SupportedDevices::DeviceTypeAlienFx){
-#       if !defined(Q_WS_WIN)
+#       if !defined(Q_OS_WIN)
         qWarning() << Q_FUNC_INFO << "AlienFx not supported on current platform";
 
         Settings::setConnectedDevice(SupportedDevices::DefaultDeviceType);
         deviceType = Settings::getConnectedDevice();
-#       endif /* Q_WS_WIN */
+#       endif /* Q_OS_WIN */
     }
 
     switch (deviceType){
@@ -331,11 +331,11 @@ AbstractLedDevice * LedDeviceManager::createLedDevice(SupportedDevices::DeviceTy
     case SupportedDevices::DeviceTypeAlienFx:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::AlienFxDevice";
 
-#       ifdef Q_WS_WIN
+#       ifdef Q_OS_WIN
         return (AbstractLedDevice *)new LedDeviceAlienFx();
 #       else
         break;
-#       endif /* Q_WS_WIN */
+#       endif /* Q_OS_WIN */
 
     case SupportedDevices::DeviceTypeAdalight:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::AdalightDevice";

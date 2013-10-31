@@ -28,7 +28,7 @@
 
 #include <qglobal.h>
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 
 #include "AbstractLedDevice.hpp"
 
@@ -48,10 +48,12 @@ public slots:
     void setSmoothSlowdown(int /*value*/);
     void setColorSequence(QString /*value*/);
     void requestFirmwareVersion();
+    size_t maxLedsCount() { return 1; }
+
 
 private:
     HINSTANCE m_hLfxLibrary;
     bool m_isInitialized;
 };
 
-#endif /* Q_WS_WIN */
+#endif /* Q_OS_WIN */

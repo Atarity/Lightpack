@@ -93,21 +93,21 @@ void SpeedTest::printHeader()
     resultStream << "Time"                      << CSV_SEPARATOR;
     resultStream << "Lightpack version"         << CSV_SEPARATOR;
     resultStream << "GrabQt FullScreen"         << CSV_SEPARATOR;
-#   ifdef Q_WS_X11
+#   ifdef Q_OS_X11
     resultStream << "GrabX11 FullScreen"     << CSV_SEPARATOR;
-#   endif /* Q_WS_X11 */
-#   ifdef Q_WS_WIN
+#   endif /* Q_OS_X11 */
+#   ifdef Q_OS_WIN
     resultStream << "GrabWinAPI FullScreen"     << CSV_SEPARATOR;
-#   endif /* Q_WS_WIN */
+#   endif /* Q_OS_WIN */
 
     resultStream << "GrabQt LedsDefaults"       << CSV_SEPARATOR;
-#   ifdef Q_WS_X11
+#   ifdef Q_OS_LINUX
     resultStream << "GrabX11 LedsDefaults"   << CSV_SEPARATOR;
-#   endif /* Q_WS_X11 */
-#   ifdef Q_WS_WIN
+#   endif /* Q_OS_LINUX */
+#   ifdef Q_OS_WIN
     resultStream << "GrabWinAPI LedsDefaults"   << CSV_SEPARATOR;
     resultStream << "Windows"                   << CSV_SEPARATOR;
-#   endif /* Q_WS_WIN */
+#   endif /* Q_OS_WIN */
 
     resultStream << endl;
 }
@@ -135,7 +135,7 @@ void SpeedTest::startTests()
     testDefaultLedWidgetsGrabSpeed();
 
 
-#   ifdef _Q_WS_WIN
+#   ifdef _Q_OS_WIN
 
     //
     // Print windows version
@@ -180,7 +180,7 @@ void SpeedTest::startTests()
         }
     }
 
-#   endif /* Q_WS_WIN */
+#   endif /* Q_OS_WIN */
 
 
 
@@ -212,7 +212,7 @@ void SpeedTest::testFullScreenGrabSpeed()
 //    resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
 
 
-#ifdef _Q_WS_X11
+#ifdef _Q_OS_LINUX
     //
     // Grab full screen via WinAPI BitBlt
     //
@@ -236,9 +236,9 @@ void SpeedTest::testFullScreenGrabSpeed()
     }
     resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
 
-#endif /* Q_WS_X11 */
+#endif /* Q_OS_X11 */
 
-#   ifdef _Q_WS_WIN
+#   ifdef _Q_OS_WIN
     //
     // Grab full screen via WinAPI BitBlt
     //
@@ -262,7 +262,7 @@ void SpeedTest::testFullScreenGrabSpeed()
     }
     resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
 
-#   endif /* Q_WS_WIN */
+#   endif /* Q_OS_WIN */
 
 }
 
@@ -320,7 +320,7 @@ void SpeedTest::testDefaultLedWidgetsGrabSpeed()
 
 
 
-#   ifdef _Q_WS_X11
+#   ifdef _Q_OS_LINUX
     time.start();
     for(int test = 0; test < TestTimes; test++){
         GrabX11::captureScreen();
@@ -334,9 +334,9 @@ void SpeedTest::testDefaultLedWidgetsGrabSpeed()
     }
     resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
 
-#   endif /* Q_WS_X11 */
+#   endif /* Q_OS_LINUX */
 
-#   ifdef _Q_WS_WIN
+#   ifdef _Q_OS_WIN
     //
     // Grab led widget via WinAPI BitBlt
     //
@@ -353,5 +353,5 @@ void SpeedTest::testDefaultLedWidgetsGrabSpeed()
     }
     resultStream << ALIGNR5( time.elapsed() ) << CSV_SEPARATOR;
 
-#   endif /* Q_WS_WIN */
+#   endif /* Q_OS_WIN */
 }

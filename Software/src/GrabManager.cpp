@@ -461,7 +461,7 @@ void GrabManager::initGrabbers()
     m_grabbers[Grab::GrabberTypeD3D9] = initGrabber(new D3D9Grabber(NULL, &m_colorsNew, &m_ledWidgets));
 #endif
 
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
     m_grabbers[Grab::GrabberTypeX11] = initGrabber(new X11Grabber(NULL, &m_colorsNew, &m_ledWidgets));
 #endif
 

@@ -22,7 +22,11 @@ SOURCES += main.cpp\
     ../math/PrismatikMath.cpp \
     MonitorIdForm.cpp \
     LightpackDiscoveryPage.cpp \
-    MonitorConfigurationPage.cpp
+    MonitorConfigurationPage.cpp \
+    ZoneWidget.cpp \
+    ZonePlacementPage.cpp \
+    AndromedaDistributor.cpp \
+    GrabAreaWidget.cpp
 
 HEADERS  += Wizard.hpp \
     ../src/Settings.hpp \
@@ -31,13 +35,22 @@ HEADERS  += Wizard.hpp \
     SettingsAwareTrait.hpp \
     MonitorIdForm.hpp \
     LightpackDiscoveryPage.hpp \
-    MonitorConfigurationPage.hpp
+    MonitorConfigurationPage.hpp \
+    ZoneWidget.hpp \
+    ZonePlacementPage.hpp \
+    ZoneDistributor.hpp \
+    AndromedaDistributor.hpp \
+    GrabAreaWidget.hpp \
+    AndromedaDistributor.hpp
 
 FORMS    += \
     Wizard.ui \
     MonitorIdForm.ui \
     LightpackDiscoveryPage.ui \
-    MonitorConfigurationPage.ui
+    MonitorConfigurationPage.ui \
+    ZoneWidget.ui \
+    ZonePlacementPage.ui \
+    GrabAreaWidget.ui
 
 unix:!macx{
     # Linux version using libusb and hidapi codes

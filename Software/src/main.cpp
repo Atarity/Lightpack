@@ -37,7 +37,7 @@
 
 #include "SettingsWizard.hpp"
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include <windows.h>
 #endif
 
@@ -72,7 +72,7 @@ QString getApplicationDirectoryPath(const char * firstCmdArgument)
 
         cout << "Unportable version" << endl;
 
-#       ifdef Q_WS_WIN
+#       ifdef Q_OS_WIN
         appDirPath = QDir::homePath() + "/Prismatik";
 #       else
         appDirPath = QDir::homePath() + "/.Prismatik";
@@ -189,7 +189,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext &ctx, const QString
 int main(int argc, char **argv)
 {
 
-#   ifdef Q_WS_WIN
+#   ifdef Q_OS_WIN
     CreateMutex(NULL, FALSE, L"LightpackAppMutex");
 #   endif
     // Using locale codec for console output in messageHandler(..) function ( cout << qstring.toStdString() )

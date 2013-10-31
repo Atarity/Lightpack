@@ -26,7 +26,7 @@
 
 #include <qglobal.h>
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 
 #include "LedDeviceAlienFx.hpp"
 #include "Settings.hpp"
@@ -173,4 +173,4 @@ void LedDeviceAlienFx::open()
     emit openDeviceSuccess(true);
 }
 
-#endif /* Q_WS_WIN */
+#endif /* Q_OS_WIN */

@@ -47,7 +47,7 @@ public slots:
     void setColorSequence(QString value);
     void requestFirmwareVersion();
     void updateDeviceSettings();
-    int maxLedsCount() { return 255;}
+    size_t maxLedsCount() { return 255;}
 
 private:
     bool writeBuffer(const QByteArray & buff);
