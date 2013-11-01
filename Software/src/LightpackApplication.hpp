@@ -77,6 +77,7 @@ private slots:
     void setColoredLedWidget(bool colored);
     void handleConnectedDeviceChange(const SupportedDevices::DeviceType);
     void onFocusChanged(QWidget *, QWidget *);
+    void quitFromWizard(int result);
 
 private:
     void processCommandLineArguments();
@@ -90,6 +91,8 @@ private:
     void startBacklight();
     void connectApiServerAndLedDeviceSignalsSlots();
     void disconnectApiServerAndLedDeviceSignalsSlots();
+
+    void runWizardLoop(bool isInitFromSettings);
 
     virtual void commitData(QSessionManager &sessionManager);
 

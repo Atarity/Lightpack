@@ -30,9 +30,9 @@
 #include "ui_MonitorConfigurationPage.h"
 #include "MonitorIdForm.hpp"
 
-MonitorConfigurationPage::MonitorConfigurationPage(SettingsScope::Settings *settings, bool isInitFromSettings, TransientSettings *ts, QWidget *parent) :
+MonitorConfigurationPage::MonitorConfigurationPage(bool isInitFromSettings, TransientSettings *ts, QWidget *parent) :
     QWizardPage(parent),
-    SettingsAwareTrait(settings, isInitFromSettings, ts),
+    SettingsAwareTrait(isInitFromSettings, ts),
     _ui(new Ui::MonitorsConfigurationPage)
 {
     _ui->setupUi(this);
@@ -46,6 +46,7 @@ MonitorConfigurationPage::~MonitorConfigurationPage()
 
 void MonitorConfigurationPage::initializePage()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     size_t screenCount = QApplication::desktop()->screenCount();
     if (!_isInitFromSettings && screenCount > 1) {
         for(size_t i = 0; i < screenCount; i++) {
@@ -73,6 +74,7 @@ void MonitorConfigurationPage::initializePage()
 
 bool MonitorConfigurationPage::validatePage()
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     foreach ( MonitorIdForm *monitorIdForm, _monitorForms ) {
         delete monitorIdForm;
     }
@@ -81,6 +83,7 @@ bool MonitorConfigurationPage::validatePage()
 
 void MonitorConfigurationPage::addMonitor(int id)\
 {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     QRadioButton *rbMon = new QRadioButton(this);
 
     char buf[10];

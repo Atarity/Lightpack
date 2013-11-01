@@ -272,6 +272,8 @@ void LedDeviceLightpack::open(unsigned short vid, unsigned short pid)
     struct hid_device_info *devs, *cur_dev;
     const char *path_to_open = NULL;
     hid_device * handle = NULL;
+    QMap<QString, hid_device*> map;
+    QList<hid_device*> list;
 
     devs = hid_enumerate(vid, pid);
     cur_dev = devs;
@@ -283,12 +285,17 @@ void LedDeviceLightpack::open(unsigned short vid, unsigned short pid)
 
             // Immediately return from hid_read() if no data available
             hid_set_nonblocking(handle, 1);
-            m_devices.append(handle);
+            if(wcslen(cur_dev->serial_number) > 0) {
+                map.insert(QString::fromWCharArray(cur_dev->serial_number), handle);
+            } else {
+                list.append(handle);
+            }
         }
         cur_dev = cur_dev->next;
     }
-
     hid_free_enumeration(devs);
+    m_devices.append(map.values());
+    m_devices.append(list);
 }
 
 bool LedDeviceLightpack::readDataFromDevice()

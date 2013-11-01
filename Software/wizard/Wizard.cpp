@@ -30,15 +30,15 @@
 #include "MonitorConfigurationPage.hpp"
 #include "ZonePlacementPage.hpp"
 
-Wizard::Wizard(SettingsScope::Settings *settings, QWidget *parent) :
+Wizard::Wizard(SettingsScope::Settings *settings, bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent) :
     QWizard(parent),
-    SettingsAwareTrait(settings),
+    SettingsAwareTrait(settings, isInitFromSettings, transSettings),
     _ui(new Ui::Wizard)
 {
     _ui->setupUi(this);
-    this->setPage(Page_LightpackDiscovery, new LightpackDiscoveryPage(_settings) );
-    this->setPage(Page_MonitorConfiguration, new MonitorConfigurationPage(_settings) );
-    this->setPage(Page_ZonePlacement, new ZonePlacementPage(_settings) );
+    this->setPage(Page_LightpackDiscovery, new LightpackDiscoveryPage(_settings, _isInitFromSettings, _transSettings) );
+    this->setPage(Page_MonitorConfiguration, new MonitorConfigurationPage(_settings, _isInitFromSettings, _transSettings) );
+    this->setPage(Page_ZonePlacement, new ZonePlacementPage(_settings, _isInitFromSettings, _transSettings) );
 }
 
 Wizard::~Wizard()

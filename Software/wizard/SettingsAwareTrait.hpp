@@ -27,16 +27,27 @@
 #ifndef SETTINGSAWARETRAIT_HPP
 #define SETTINGSAWARETRAIT_HPP
 
+
 namespace SettingsScope {
 class Settings;
 }
 
+class AbstractLedDevice;
+
+struct TransientSettings {
+    AbstractLedDevice *ledDevice;
+};
+
 class SettingsAwareTrait {
 public:
-    SettingsAwareTrait(SettingsScope::Settings *settings):
-        _settings(settings){}
+    SettingsAwareTrait(SettingsScope::Settings *settings, bool isInitFromSettings, TransientSettings *transSettings):
+        _settings(settings),
+        _isInitFromSettings(isInitFromSettings),
+        _transSettings(transSettings){}
 protected:
     SettingsScope::Settings *_settings;
+    bool _isInitFromSettings;
+    TransientSettings *_transSettings;
 
 };
 

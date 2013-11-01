@@ -41,7 +41,7 @@ class MonitorConfigurationPage : public QWizardPage, SettingsAwareTrait
     Q_OBJECT
 
 public:
-    explicit MonitorConfigurationPage(SettingsScope::Settings *settings, QWidget *parent = 0);
+    explicit MonitorConfigurationPage(SettingsScope::Settings *settings, bool isInitFromSettings, TransientSettings *ts, QWidget *parent = 0);
     ~MonitorConfigurationPage();
 
 protected:

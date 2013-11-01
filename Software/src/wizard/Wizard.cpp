@@ -1,5 +1,5 @@
 /*
- * Wizard.hpp
+ * Wizard.cpp
  *
  *  Created on: 10/22/2013
  *     Project: %PROJECT% (Use "Lightpack" for hardware/firmware, or "Prismatik" for software)
@@ -24,29 +24,26 @@
  *
  */
 
-#ifndef WIZARD_HPP
-#define WIZARD_HPP
+#include "Wizard.hpp"
+#include "ui_Wizard.h"
+#include "LightpackDiscoveryPage.hpp"
+#include "MonitorConfigurationPage.hpp"
+#include "ZonePlacementPage.hpp"
+#include "SelectProfilePage.hpp"
 
-#include <QWizard>
-#include "SettingsAwareTrait.hpp"
-
-namespace Ui {
-class Wizard;
+Wizard::Wizard(bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent) :
+    QWizard(parent),
+    SettingsAwareTrait(isInitFromSettings, transSettings),
+    _ui(new Ui::Wizard)
+{
+    _ui->setupUi(this);
+    this->setPage(Page_LightpackDiscovery, new LightpackDiscoveryPage(_isInitFromSettings, _transSettings) );
+    this->setPage(Page_ChooseProfile, new SelectProfilePage(_isInitFromSettings, _transSettings) );
+    this->setPage(Page_MonitorConfiguration, new MonitorConfigurationPage(_isInitFromSettings, _transSettings) );
+    this->setPage(Page_ZonePlacement, new ZonePlacementPage(_isInitFromSettings, _transSettings) );
 }
 
-enum { Page_LightpackDiscovery, Page_ChooseDevice, Page_MonitorConfiguration, Page_ZonePlacement,
-            Page_Conclusion };
-
-class Wizard : public QWizard, SettingsAwareTrait
+Wizard::~Wizard()
 {
-    Q_OBJECT
-
-public:
-    explicit Wizard(SettingsScope::Settings *settings, bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent = 0);
-    ~Wizard();
-
-private:
-    Ui::Wizard *_ui;
-};
-
-#endif // WIZARD_HPP
+    delete _ui;
+}

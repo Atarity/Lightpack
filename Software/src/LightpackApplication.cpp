@@ -32,6 +32,7 @@
 #include "ApiServer.hpp"
 #include "LightpackPluginInterface.hpp"
 #include "PluginsManager.hpp"
+#include "wizard/Wizard.hpp"
 
 #include <unistd.h>
 #include <stdio.h>
@@ -68,7 +69,9 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     printVersionsSoftwareQtOS();
 
-    Settings::Initialize(m_applicationDirPath, m_isDebugLevelObtainedFromCmdArgs);
+    if (!Settings::Initialize(m_applicationDirPath, m_isDebugLevelObtainedFromCmdArgs)) {
+        runWizardLoop(false);
+    }
 
     m_isSettingsWindowActive = false;
 
@@ -129,6 +132,16 @@ HWND LightpackApplication::getMainWindowHandle() {
     // to get HWND sometimes needed to activate window
 //    winFocus(m_settingsWindow, true);
     return reinterpret_cast<HWND>(m_settingsWindow->winId());
+}
+
+void LightpackApplication::runWizardLoop(bool isInitFromSettings)
+{
+    Wizard *w = new Wizard(isInitFromSettings, new TransientSettings);
+    connect(w, SIGNAL(finished(int)), this, SLOT(quitFromWizard(int)));
+    w->setWindowFlags(Qt::WindowStaysOnTopHint);
+    w->show();
+    this->exec();
+    delete w;
 }
 
 bool LightpackApplication::winEventFilter ( MSG * msg, long * result ) {
@@ -253,6 +266,11 @@ void LightpackApplication::onFocusChanged(QWidget *old, QWidget *now)
     }
 }
 
+void LightpackApplication::quitFromWizard(int result)
+{
+    quit();
+}
+
 void LightpackApplication::processCommandLineArguments()
 {
     g_debugLevel = SettingsScope::Main::DebugLevelDefault;
@@ -265,6 +283,11 @@ void LightpackApplication::processCommandLineArguments()
         {
             m_noGui = true;
             DEBUG_LOW_LEVEL <<  "Application running no_GUI mode";
+        }
+        else if (arguments().at(i) == "--wizard")
+        {
+            bool isInitFromSettings = Settings::Initialize(m_applicationDirPath, false);
+            runWizardLoop(isInitFromSettings);
         }
         else if (arguments().at(i) == "--off")
         {
@@ -321,6 +344,7 @@ void LightpackApplication::printHelpMessage() const
     fprintf(stderr, "\n");
     fprintf(stderr, "Options: \n");
     fprintf(stderr, "  --nogui       - no GUI (console mode) \n");
+    fprintf(stderr, "  --wizard      - run settings wizard first \n");
     fprintf(stderr, "  --off         - send 'off leds' cmd to device \n");
     fprintf(stderr, "  --help        - show this help \n");
     fprintf(stderr, "  --debug-high  - maximum verbose level of debug output\n");

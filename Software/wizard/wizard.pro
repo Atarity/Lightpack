@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     ZoneWidget.cpp \
     ZonePlacementPage.cpp \
     AndromedaDistributor.cpp \
-    GrabAreaWidget.cpp
+    GrabAreaWidget.cpp \
+    SelectProfilePage.cpp
 
 HEADERS  += Wizard.hpp \
     ../src/Settings.hpp \
@@ -41,7 +42,8 @@ HEADERS  += Wizard.hpp \
     ZoneDistributor.hpp \
     AndromedaDistributor.hpp \
     GrabAreaWidget.hpp \
-    AndromedaDistributor.hpp
+    AndromedaDistributor.hpp \
+    SelectProfilePage.hpp
 
 FORMS    += \
     Wizard.ui \
@@ -50,7 +52,8 @@ FORMS    += \
     MonitorConfigurationPage.ui \
     ZoneWidget.ui \
     ZonePlacementPage.ui \
-    GrabAreaWidget.ui
+    GrabAreaWidget.ui \
+    SelectProfilePage.ui
 
 unix:!macx{
     # Linux version using libusb and hidapi codes

@@ -42,11 +42,12 @@ class ZonePlacementPage : public QWizardPage, SettingsAwareTrait
     Q_OBJECT
 
 public:
-    explicit ZonePlacementPage(SettingsScope::Settings *settings, bool isInitFromSettings, TransientSettings *ts, QWidget *parent = 0);
+    explicit ZonePlacementPage(bool isInitFromSettings, TransientSettings *ts, QWidget *parent = 0);
     ~ZonePlacementPage();
 
 protected:
     void initializePage();
+    void cleanupPage();
     bool validatePage();
     size_t getLedCountOnTopEdge(size_t ledCount);
 
@@ -59,6 +60,7 @@ private slots:
 
 private:
     void addGrabArea(int id, const QRect &rect);
+    void cleanupGrabAreas();
     Ui::ZonePlacementPage *_ui;
     QList<ZoneWidget*> _zoneWidgets;
     AbstractLedDevice *_ledDevice;

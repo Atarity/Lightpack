@@ -30,9 +30,9 @@
 #include "Settings.hpp"
 #include "Wizard.hpp"
 
-LightpackDiscoveryPage::LightpackDiscoveryPage(SettingsScope::Settings *settings, bool isInitFromSettings, TransientSettings *ts, QWidget *parent) :
+LightpackDiscoveryPage::LightpackDiscoveryPage(bool isInitFromSettings, TransientSettings *ts, QWidget *parent) :
     QWizardPage(parent),
-    SettingsAwareTrait(settings, isInitFromSettings, ts),
+    SettingsAwareTrait(isInitFromSettings, ts),
     _ui(new Ui::LightpacksDiscoveryPage)
 {
     _ui->setupUi(this);
@@ -44,6 +44,7 @@ LightpackDiscoveryPage::~LightpackDiscoveryPage()
 }
 
 void LightpackDiscoveryPage::initializePage() {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     LedDeviceLightpack lpack;
 
     lpack.open();
@@ -67,12 +68,17 @@ void LightpackDiscoveryPage::initializePage() {
 }
 
 bool LightpackDiscoveryPage::validatePage() {
-    if (_ui->rbLightpackSelected->isChecked())
-        _settings->setConnectedDevice(SupportedDevices::DeviceTypeLightpack);
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+//    if (_ui->rbLightpackSelected->isChecked())
+//        SettingsScope::Settings::setConnectedDevice(SupportedDevices::DeviceTypeLightpack);
     return true;
 }
 
 int LightpackDiscoveryPage::nextId() const {
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+//    if (_isInitFromSettings)
+//        return Page_ChooseProfile;
+
     if (_ui->rbLightpackSelected->isChecked())
         return Page_MonitorConfiguration;
     else

@@ -135,7 +135,16 @@ SOURCES += \
     AbstractLedDevice.cpp \
     PluginsManager.cpp \
     Plugin.cpp \
-    LightpackPluginInterface.cpp
+    LightpackPluginInterface.cpp \
+    wizard/ZoneWidget.cpp \
+    wizard/ZonePlacementPage.cpp \
+    wizard/Wizard.cpp \
+    wizard/SelectProfilePage.cpp \
+    wizard/MonitorIdForm.cpp \
+    wizard/MonitorConfigurationPage.cpp \
+    wizard/LightpackDiscoveryPage.cpp \
+    wizard/GrabAreaWidget.cpp \
+    wizard/AndromedaDistributor.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -171,11 +180,30 @@ HEADERS += \
     AbstractLedDevice.hpp \
     PluginsManager.hpp \
     Plugin.hpp \
-    LightpackPluginInterface.hpp
+    LightpackPluginInterface.hpp \
+    wizard/ZoneWidget.hpp \
+    wizard/ZonePlacementPage.hpp \
+    wizard/ZoneDistributor.hpp \
+    wizard/Wizard.hpp \
+    wizard/SettingsAwareTrait.hpp \
+    wizard/SelectProfilePage.hpp \
+    wizard/MonitorIdForm.hpp \
+    wizard/MonitorConfigurationPage.hpp \
+    wizard/LightpackDiscoveryPage.hpp \
+    wizard/GrabAreaWidget.hpp \
+    wizard/AndromedaDistributor.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \
-    GrabConfigWidget.ui
+    GrabConfigWidget.ui \
+    wizard/ZoneWidget.ui \
+    wizard/ZonePlacementPage.ui \
+    wizard/Wizard.ui \
+    wizard/SelectProfilePage.ui \
+    wizard/MonitorIdForm.ui \
+    wizard/MonitorConfigurationPage.ui \
+    wizard/LightpackDiscoveryPage.ui \
+    wizard/GrabAreaWidget.ui
 
 #
 #   QSerialDevice

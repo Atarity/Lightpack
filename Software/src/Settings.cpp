@@ -208,7 +208,7 @@ Settings::Settings() : QObject(NULL) {
 }
 
 // Desktop should be initialized before call Settings::Initialize()
-void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevelObtainedFromCmdArgs)
+bool Settings::Initialize( const QString & applicationDirPath, bool isDebugLevelObtainedFromCmdArgs)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -218,7 +218,10 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     if (m_applicationDirPath.lastIndexOf('/') != m_applicationDirPath.length() - 1)
         m_applicationDirPath += "/";
 
-    m_mainConfig = new QSettings(m_applicationDirPath + "main.conf", QSettings::IniFormat);
+    QString mainConfigPath = getMainConfigPath();
+    bool settingsWasPresent = QFileInfo(mainConfigPath).exists();
+
+    m_mainConfig = new QSettings(getMainConfigPath(), QSettings::IniFormat);
     m_mainConfig->setIniCodec("UTF-8");
 
     // TODO: if version < Main::Value::MainConfigVersion then clear lightpack main config file
@@ -282,6 +285,8 @@ void Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
 
     // Initialize profile with default values without reset exists values
     initCurrentProfile(false);
+
+    return settingsWasPresent;
 }
 
 //
@@ -430,6 +435,13 @@ QString Settings::getApplicationDirPath()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_applicationDirPath;
     return m_applicationDirPath;
+}
+
+QString Settings::getMainConfigPath()
+{
+    QString mainConfPath = m_applicationDirPath + "main.conf";
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << mainConfPath;
+    return mainConfPath;
 }
 
 QPoint Settings::getDefaultPosition(int ledIndex)

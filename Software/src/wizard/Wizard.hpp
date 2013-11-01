@@ -27,6 +27,7 @@
 #ifndef WIZARD_HPP
 #define WIZARD_HPP
 
+#include <QApplication>
 #include <QWizard>
 #include "SettingsAwareTrait.hpp"
 
@@ -34,7 +35,7 @@ namespace Ui {
 class Wizard;
 }
 
-enum { Page_LightpackDiscovery, Page_ChooseDevice, Page_MonitorConfiguration, Page_ZonePlacement,
+enum { Page_LightpackDiscovery, Page_ChooseDevice, Page_ChooseProfile, Page_MonitorConfiguration, Page_ZonePlacement,
             Page_Conclusion };
 
 class Wizard : public QWizard, SettingsAwareTrait
@@ -42,8 +43,9 @@ class Wizard : public QWizard, SettingsAwareTrait
     Q_OBJECT
 
 public:
-    explicit Wizard(SettingsScope::Settings *settings, bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent = 0);
+    explicit Wizard(bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent = 0);
     ~Wizard();
+public slots:
 
 private:
     Ui::Wizard *_ui;

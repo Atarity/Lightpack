@@ -60,6 +60,7 @@ signals:
     void colorsUpdated(QList<QRgb> colors);
 
 public slots:
+    virtual const QString name() const = 0;
     virtual void open() = 0;
     virtual void setColors(const QList<QRgb> & colors) = 0;
     virtual void switchOffLeds() = 0;

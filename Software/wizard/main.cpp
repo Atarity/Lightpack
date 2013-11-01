@@ -77,8 +77,8 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     Settings settings;
-    settings.Initialize(getApplicationDirectoryPath(argv[0]), false);
-    Wizard w(&settings);
+    bool isInitFromSettings = settings.Initialize(getApplicationDirectoryPath(argv[0]), false);
+    Wizard w(&settings, isInitFromSettings, new TransientSettings);
     w.setWindowFlags(Qt::WindowStaysOnTopHint);
     w.show();
 

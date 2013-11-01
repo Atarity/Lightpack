@@ -32,7 +32,6 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
-SUBDIRS = math grab \
-    wizard
+SUBDIRS = math grab
 win32:SUBDIRS += libraryinjector hooks tests
 SUBDIRS += src

@@ -1,10 +1,10 @@
 /*
- * Wizard.hpp
+ * MonitorIdForm.cpp
  *
- *  Created on: 10/22/2013
- *     Project: %PROJECT% (Use "Lightpack" for hardware/firmware, or "Prismatik" for software)
+ *  Created on: 10/23/2013
+ *     Project: Prismatik
  *
- *  Copyright (c) 2013 %NICKNAME%
+ *  Copyright (c) 2013 Tim
  *
  *  Lightpack is an open-source, USB content-driving ambient lighting
  *  hardware.
@@ -24,29 +24,23 @@
  *
  */
 
-#ifndef WIZARD_HPP
-#define WIZARD_HPP
+#include "MonitorIdForm.hpp"
+#include "ui_MonitorIdForm.h"
 
-#include <QWizard>
-#include "SettingsAwareTrait.hpp"
-
-namespace Ui {
-class Wizard;
+MonitorIdForm::MonitorIdForm(QWidget *parent) :
+    QWidget(parent),
+    _ui(new Ui::MonitorIdForm)
+{
+    _ui->setupUi(this);
 }
 
-enum { Page_LightpackDiscovery, Page_ChooseDevice, Page_MonitorConfiguration, Page_ZonePlacement,
-            Page_Conclusion };
-
-class Wizard : public QWizard, SettingsAwareTrait
+MonitorIdForm::~MonitorIdForm()
 {
-    Q_OBJECT
+    delete _ui;
+}
 
-public:
-    explicit Wizard(SettingsScope::Settings *settings, bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent = 0);
-    ~Wizard();
-
-private:
-    Ui::Wizard *_ui;
-};
-
-#endif // WIZARD_HPP
+void MonitorIdForm::setId(int id)
+{
+    char buf[4];
+    _ui->label->setText(itoa(id, buf, 10));
+}

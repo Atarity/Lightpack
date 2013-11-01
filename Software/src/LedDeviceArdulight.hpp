@@ -38,6 +38,7 @@ public:
     ~LedDeviceArdulight();
 
 public slots:
+    const QString name() const { return "ardulight"; }
     void open();
     void setColors(const QList<QRgb> & /*colors*/);
     void switchOffLeds();

@@ -36,6 +36,7 @@ public:
     LedDeviceVirtual(QObject * parent = 0);
 
 public slots:
+    const QString name() const { return "virtual"; }
     void open();
     void setColors(const QList<QRgb> & colors);
     void switchOffLeds();

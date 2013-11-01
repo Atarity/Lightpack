@@ -48,9 +48,17 @@ class Settings : public QObject
 
 public:
     Settings();
-    static void Initialize(const QString & applicationDirPath, bool isSetDebugLevelFromConfig);
+
+    /*!
+     * \brief Initialize reads settings file or create a new one and initializes it with default settings
+     * \param applicationDirPath
+     * \param isSetDebugLevelFromConfig
+     * \return is settings file was present before initialization
+     */
+    static bool Initialize(const QString & applicationDirPath, bool isSetDebugLevelFromConfig);
     static void resetDefaults();
     static const Settings * settingsSingleton() { return m_this; }
+    static bool isPresent(const QString & applicationDirPath);
 
     static QStringList findAllProfiles();
     static void loadOrCreateProfile(const QString & configName);
@@ -66,6 +74,7 @@ public:
     static QString getCurrentProfilePath();
     static QString getProfilesPath();
     static QString getApplicationDirPath();
+    static QString getMainConfigPath();
     static QPoint getDefaultPosition(int ledIndex);
 
     // Main

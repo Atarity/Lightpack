@@ -34,9 +34,9 @@
 #include "LedDeviceLightpack.hpp"
 
 
-ZonePlacementPage::ZonePlacementPage(SettingsScope::Settings *settings, bool isInitFromSettings, TransientSettings *ts, QWidget *parent):
+ZonePlacementPage::ZonePlacementPage(bool isInitFromSettings, TransientSettings *ts, QWidget *parent):
     QWizardPage(parent),
-    SettingsAwareTrait(settings, isInitFromSettings, ts),
+    SettingsAwareTrait(isInitFromSettings, ts),
     _ui(new Ui::ZonePlacementPage)
 {
     _ui->setupUi(this);
@@ -73,12 +73,22 @@ void ZonePlacementPage::initializePage()
 //    }
 }
 
-bool ZonePlacementPage::validatePage()
+void ZonePlacementPage::cleanupPage()
+{
+    cleanupGrabAreas();
+}
+
+void ZonePlacementPage::cleanupGrabAreas()
 {
     for(size_t i = 0; i < _zones.size(); i++) {
         delete _zones[i];
     }
     delete _ledDevice;
+}
+
+bool ZonePlacementPage::validatePage()
+{
+    cleanupGrabAreas();
     return true;
 }
 

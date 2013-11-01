@@ -50,6 +50,7 @@ public:
     ~LedDeviceLightpack();
 
 public slots:
+    const QString name() const { return "lightpack"; }
     void open();
     void setColors(const QList<QRgb> & colors);
     void switchOffLeds();

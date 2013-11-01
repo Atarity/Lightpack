@@ -1,10 +1,10 @@
 /*
- * Wizard.hpp
+ * MonitorsConfigurationPage.hpp
  *
- *  Created on: 10/22/2013
- *     Project: %PROJECT% (Use "Lightpack" for hardware/firmware, or "Prismatik" for software)
+ *  Created on: 10/23/2013
+ *     Project: Prismatik
  *
- *  Copyright (c) 2013 %NICKNAME%
+ *  Copyright (c) 2013 Tim
  *
  *  Lightpack is an open-source, USB content-driving ambient lighting
  *  hardware.
@@ -24,29 +24,35 @@
  *
  */
 
-#ifndef WIZARD_HPP
-#define WIZARD_HPP
+#ifndef MONITORSCONFIGURATIONPAGE_HPP
+#define MONITORSCONFIGURATIONPAGE_HPP
 
-#include <QWizard>
+#include <QWizardPage>
+#include <QList>
 #include "SettingsAwareTrait.hpp"
 
 namespace Ui {
-class Wizard;
+class MonitorsConfigurationPage;
 }
+class MonitorIdForm;
 
-enum { Page_LightpackDiscovery, Page_ChooseDevice, Page_MonitorConfiguration, Page_ZonePlacement,
-            Page_Conclusion };
-
-class Wizard : public QWizard, SettingsAwareTrait
+class MonitorConfigurationPage : public QWizardPage, SettingsAwareTrait
 {
     Q_OBJECT
 
 public:
-    explicit Wizard(SettingsScope::Settings *settings, bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent = 0);
-    ~Wizard();
+    explicit MonitorConfigurationPage(bool isInitFromSettings, TransientSettings *ts, QWidget *parent = 0);
+    ~MonitorConfigurationPage();
+
+protected:
+    virtual void initializePage();
+    virtual bool validatePage();
 
 private:
-    Ui::Wizard *_ui;
+    void addMonitor(int id);
+
+    Ui::MonitorsConfigurationPage *_ui;
+    QList<MonitorIdForm*> _monitorForms;
 };
 
-#endif // WIZARD_HPP
+#endif // MONITORSCONFIGURATIONPAGE_HPP

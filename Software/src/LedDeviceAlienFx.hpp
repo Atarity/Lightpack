@@ -40,6 +40,7 @@ public:
     ~LedDeviceAlienFx();
 
 public slots:
+    const QString name() const { return "lightfx"; }
     void open();
     void setColors(const QList<QRgb> & colors);
     void switchOffLeds();
