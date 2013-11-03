@@ -51,8 +51,7 @@ void ZonePlacementPage::initializePage()
 {
     using namespace SettingsScope;
     _screenId = field("screenId").toInt();
-    _ledDevice = new LedDeviceLightpack(wizard());
-    _ledDevice->open();
+    _ledDevice = _transSettings->ledDevice;
     _ledDevice->setSmoothSlowdown(70);
     if (_isInitFromSettings) {
         size_t ledCount = Settings::getNumberOfLeds(Settings::getConnectedDevice());
@@ -83,7 +82,7 @@ void ZonePlacementPage::cleanupGrabAreas()
     for(size_t i = 0; i < _zones.size(); i++) {
         delete _zones[i];
     }
-    delete _ledDevice;
+//    delete _ledDevice;
 }
 
 bool ZonePlacementPage::validatePage()

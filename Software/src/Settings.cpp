@@ -154,6 +154,7 @@ static const QString Gamma = "Device/Gamma";
 // [LED_i]
 namespace Led
 {
+
 static const QString Prefix = "LED_";
 static const QString IsEnabled = "IsEnabled";
 static const QString Size = "Size";
@@ -1150,6 +1151,22 @@ void Settings::setMoodLampSpeed(int value)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValue(Profile::Key::MoodLamp::Speed, getValidMoodLampSpeed(value));
     m_this->moodLampSpeedChanged(value);
+}
+
+QList<WBAdjustment> Settings::getLedCoefs()
+{
+    QList<WBAdjustment> result;
+    const size_t numOfLeds = getNumberOfLeds(getConnectedDevice());
+
+    for(size_t i; i < numOfLeds; i++)
+    {
+        WBAdjustment wba;
+        wba.red = getLedCoefRed(i);
+        wba.green = getLedCoefGreen(i);
+        wba.blue = getLedCoefBlue(i);
+        result.append(wba);
+    }
+    return result;
 }
 
 double Settings::getLedCoefRed(int ledIndex)

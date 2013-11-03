@@ -30,6 +30,8 @@
 #include "MonitorConfigurationPage.hpp"
 #include "ZonePlacementPage.hpp"
 #include "SelectProfilePage.hpp"
+#include "SelectDevicePage.hpp"
+#include "ConfigureDevicePage.hpp"
 
 Wizard::Wizard(bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent) :
     QWizard(parent),
@@ -38,6 +40,8 @@ Wizard::Wizard(bool isInitFromSettings, TransientSettings *transSettings, QWidge
 {
     _ui->setupUi(this);
     this->setPage(Page_LightpackDiscovery, new LightpackDiscoveryPage(_isInitFromSettings, _transSettings) );
+    this->setPage(Page_ChooseDevice, new SelectDevicePage(_isInitFromSettings, _transSettings) );
+    this->setPage(Page_ConfigureDevice, new ConfigureDevicePage(_isInitFromSettings, _transSettings) );
     this->setPage(Page_ChooseProfile, new SelectProfilePage(_isInitFromSettings, _transSettings) );
     this->setPage(Page_MonitorConfiguration, new MonitorConfigurationPage(_isInitFromSettings, _transSettings) );
     this->setPage(Page_ZonePlacement, new ZonePlacementPage(_isInitFromSettings, _transSettings) );

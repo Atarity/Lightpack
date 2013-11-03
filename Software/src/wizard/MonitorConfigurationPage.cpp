@@ -29,6 +29,7 @@
 #include "MonitorConfigurationPage.hpp"
 #include "ui_MonitorConfigurationPage.h"
 #include "MonitorIdForm.hpp"
+#include "debug.h"
 
 MonitorConfigurationPage::MonitorConfigurationPage(bool isInitFromSettings, TransientSettings *ts, QWidget *parent) :
     QWizardPage(parent),

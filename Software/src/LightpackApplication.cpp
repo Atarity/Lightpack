@@ -33,6 +33,7 @@
 #include "LightpackPluginInterface.hpp"
 #include "PluginsManager.hpp"
 #include "wizard/Wizard.hpp"
+#include "Plugin.hpp"
 
 #include <unistd.h>
 #include <stdio.h>
@@ -91,11 +92,11 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     }
     // Register QMetaType for Qt::QueuedConnection
     qRegisterMetaType< QList<QRgb> >("QList<QRgb>");
-    qRegisterMetaType< QList<QRgb> >("QList<QString>");
+    qRegisterMetaType< QList<QString> >("QList<QString>");
     qRegisterMetaType<Lightpack::Mode>("Lightpack::Mode");
     qRegisterMetaType<Backlight::Status>("Backlight::Status");
     qRegisterMetaType<DeviceLocked::DeviceLockStatus>("DeviceLocked::DeviceLockStatus");
-    qRegisterMetaType< QList<QRgb> >("QList<Plugin*>");
+    qRegisterMetaType< QList<Plugin*> >("QList<Plugin*>");
 
 
     if (Settings::isBacklightEnabled())

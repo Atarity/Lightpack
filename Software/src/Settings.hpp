@@ -35,6 +35,7 @@
 #include "enums.hpp"
 #include "../common/defs.h"
 #include "debug.h"
+#include "types.h"
 
 namespace SettingsScope
 {
@@ -164,6 +165,8 @@ public:
     static void setMoodLampColor(QColor color);
     static int getMoodLampSpeed();
     static void setMoodLampSpeed(int value);
+
+    static QList<WBAdjustment> getLedCoefs();
 
     static double getLedCoefRed(int ledIndex);
     static double getLedCoefGreen(int ledIndex);

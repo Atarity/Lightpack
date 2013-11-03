@@ -1,10 +1,10 @@
 /*
- * Wizard.hpp
+ * ConfigureDevicePage.hpp
  *
- *  Created on: 10/22/2013
- *     Project: %PROJECT% (Use "Lightpack" for hardware/firmware, or "Prismatik" for software)
+ *  Created on: 11/1/2013
+ *     Project: Prismatik
  *
- *  Copyright (c) 2013 %NICKNAME%
+ *  Copyright (c) 2013 Tim
  *
  *  Lightpack is an open-source, USB content-driving ambient lighting
  *  hardware.
@@ -24,31 +24,31 @@
  *
  */
 
-#ifndef WIZARD_HPP
-#define WIZARD_HPP
+#ifndef CONFIGUREDEVICEPAGE_HPP
+#define CONFIGUREDEVICEPAGE_HPP
 
-#include <QApplication>
-#include <QWizard>
+#include <QWizardPage>
 #include "SettingsAwareTrait.hpp"
 
 namespace Ui {
-class Wizard;
+class ConfigureDevicePage;
 }
 
-enum { Page_LightpackDiscovery, Page_ChooseDevice, Page_ConfigureDevice, Page_ChooseProfile, Page_MonitorConfiguration, Page_ZonePlacement,
-            Page_Conclusion };
-
-class Wizard : public QWizard, SettingsAwareTrait
+class ConfigureDevicePage : public QWizardPage, SettingsAwareTrait
 {
     Q_OBJECT
 
 public:
-    explicit Wizard(bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent = 0);
-    ~Wizard();
-public slots:
+    explicit ConfigureDevicePage(bool isInitFromSettings, TransientSettings *ts, QWidget *parent = 0);
+    ~ConfigureDevicePage();
+
+protected:
+    void initializePage();
+    void cleanupPage();
+    bool validatePage();
 
 private:
-    Ui::Wizard *_ui;
+    Ui::ConfigureDevicePage *ui;
 };
 
-#endif // WIZARD_HPP
+#endif // CONFIGUREDEVICEPAGE_HPP

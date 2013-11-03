@@ -34,7 +34,7 @@ class LedDeviceArdulight : public AbstractLedDevice
 {
     Q_OBJECT
 public:
-    LedDeviceArdulight(QObject * parent = 0);
+    LedDeviceArdulight(const QString &portName, const int baudRate, QObject * parent = 0);
     ~LedDeviceArdulight();
 
 public slots:
@@ -59,4 +59,7 @@ private:
 
     QByteArray m_writeBufferHeader;
     QByteArray m_writeBuffer;
+
+    QString m_portName;
+    int m_baudRate;
 };

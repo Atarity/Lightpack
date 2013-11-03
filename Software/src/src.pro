@@ -144,7 +144,9 @@ SOURCES += \
     wizard/MonitorConfigurationPage.cpp \
     wizard/LightpackDiscoveryPage.cpp \
     wizard/GrabAreaWidget.cpp \
-    wizard/AndromedaDistributor.cpp
+    wizard/AndromedaDistributor.cpp \
+    wizard/ConfigureDevicePage.cpp \
+    wizard/SelectDevicePage.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -191,7 +193,10 @@ HEADERS += \
     wizard/MonitorConfigurationPage.hpp \
     wizard/LightpackDiscoveryPage.hpp \
     wizard/GrabAreaWidget.hpp \
-    wizard/AndromedaDistributor.hpp
+    wizard/AndromedaDistributor.hpp \
+    wizard/ConfigureDevicePage.hpp \
+    wizard/SelectDevicePage.hpp \
+    types.h
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \
@@ -203,7 +208,9 @@ FORMS += SettingsWindow.ui \
     wizard/MonitorIdForm.ui \
     wizard/MonitorConfigurationPage.ui \
     wizard/LightpackDiscoveryPage.ui \
-    wizard/GrabAreaWidget.ui
+    wizard/GrabAreaWidget.ui \
+    wizard/ConfigureDevicePage.ui \
+    wizard/SelectDevicePage.ui
 
 #
 #   QSerialDevice

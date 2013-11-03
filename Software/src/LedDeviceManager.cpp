@@ -339,11 +339,11 @@ AbstractLedDevice * LedDeviceManager::createLedDevice(SupportedDevices::DeviceTy
 
     case SupportedDevices::DeviceTypeAdalight:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::AdalightDevice";
-        return (AbstractLedDevice *)new LedDeviceAdalight();
+        return (AbstractLedDevice *)new LedDeviceAdalight(Settings::getAdalightSerialPortName(), Settings::getAdalightSerialPortBaudRate());
 
     case SupportedDevices::DeviceTypeArdulight:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::ArdulightDevice";
-        return (AbstractLedDevice *)new LedDeviceArdulight();
+        return (AbstractLedDevice *)new LedDeviceArdulight(Settings::getArdulightSerialPortName(), Settings::getArdulightSerialPortBaudRate());
 
     case SupportedDevices::DeviceTypeVirtual:
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "SupportedDevices::VirtualDevice";

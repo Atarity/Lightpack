@@ -28,13 +28,7 @@
 
 #include <QtGui>
 #include "colorspace_types.h"
-
-/*!
-  White balance adjustment
-*/
-struct WBAdjustment {
-    double red, green, blue;
-};
+#include "types.h"
 
 /*!
     Abstract class representing any LED device.
@@ -77,7 +71,7 @@ public slots:
     virtual void setColorSequence(QString value) = 0;
     virtual void setLuminosityThreshold(int value);
     virtual void setMinimumLuminosityThresholdEnabled(bool value);
-    virtual void updateWBAdjustments();
+    virtual void updateWBAdjustments(const QList<WBAdjustment> &coefs);
     virtual void requestFirmwareVersion() = 0;
     virtual void updateDeviceSettings();
 

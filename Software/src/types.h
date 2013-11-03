@@ -1,10 +1,10 @@
 /*
- * Wizard.hpp
+ * types.hpp
  *
- *  Created on: 10/22/2013
- *     Project: %PROJECT% (Use "Lightpack" for hardware/firmware, or "Prismatik" for software)
+ *  Created on: 11/3/2013
+ *     Project: Prismatik
  *
- *  Copyright (c) 2013 %NICKNAME%
+ *  Copyright (c) 2013 Tim
  *
  *  Lightpack is an open-source, USB content-driving ambient lighting
  *  hardware.
@@ -24,31 +24,15 @@
  *
  */
 
-#ifndef WIZARD_HPP
-#define WIZARD_HPP
+#ifndef TYPES_H
+#define TYPES_H
 
-#include <QApplication>
-#include <QWizard>
-#include "SettingsAwareTrait.hpp"
-
-namespace Ui {
-class Wizard;
-}
-
-enum { Page_LightpackDiscovery, Page_ChooseDevice, Page_ConfigureDevice, Page_ChooseProfile, Page_MonitorConfiguration, Page_ZonePlacement,
-            Page_Conclusion };
-
-class Wizard : public QWizard, SettingsAwareTrait
-{
-    Q_OBJECT
-
-public:
-    explicit Wizard(bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent = 0);
-    ~Wizard();
-public slots:
-
-private:
-    Ui::Wizard *_ui;
+/*!
+  White balance adjustment
+*/
+struct WBAdjustment {
+    double red, green, blue;
 };
 
-#endif // WIZARD_HPP
+
+#endif // TYPES_H

@@ -49,17 +49,9 @@ void AbstractLedDevice::setMinimumLuminosityThresholdEnabled(bool value) {
     setColors(m_colorsSaved);
 }
 
-void AbstractLedDevice::updateWBAdjustments() {
-    using namespace SettingsScope;
-    size_t ledsCount = Settings::getNumberOfLeds(Settings::getConnectedDevice());
+void AbstractLedDevice::updateWBAdjustments(const QList<WBAdjustment> &coefs) {
     m_wbAdjustments.clear();
-    for (size_t i=0; i < ledsCount; i++) {
-        WBAdjustment wbAdjustment;
-        wbAdjustment.red   = Settings::getLedCoefRed(i);
-        wbAdjustment.green = Settings::getLedCoefGreen(i);
-        wbAdjustment.blue  = Settings::getLedCoefBlue(i);
-        m_wbAdjustments.append(wbAdjustment);
-    }
+    m_wbAdjustments.append(coefs);
     setColors(m_colorsSaved);
 }
 
@@ -70,7 +62,7 @@ void AbstractLedDevice::updateDeviceSettings()
     setBrightness(Settings::getDeviceBrightness());
     setLuminosityThreshold(Settings::getLuminosityThreshold());
     setMinimumLuminosityThresholdEnabled(Settings::isMinimumLuminosityEnabled());
-    updateWBAdjustments();
+    updateWBAdjustments(Settings::getLedCoefs());
 }
 
 /*!

@@ -29,6 +29,7 @@
 #include "LedDeviceLightpack.hpp"
 #include "Settings.hpp"
 #include "Wizard.hpp"
+#include "QDesktopWidget"
 
 LightpackDiscoveryPage::LightpackDiscoveryPage(bool isInitFromSettings, TransientSettings *ts, QWidget *parent) :
     QWizardPage(parent),
@@ -45,42 +46,46 @@ LightpackDiscoveryPage::~LightpackDiscoveryPage()
 
 void LightpackDiscoveryPage::initializePage() {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    LedDeviceLightpack lpack;
+    LedDeviceLightpack *lpack = new LedDeviceLightpack();
 
-    lpack.open();
+    lpack->open();
 
-    if (lpack.lightpacksFound() > 0) {
+    if (lpack->lightpacksFound() > 0) {
         _ui->rbChooseAnotherDevice->setEnabled(true);
         _ui->rbLightpackSelected->setEnabled(true);
 
         _ui->rbLightpackSelected->setChecked(true);
 
         QString caption;
-        if (lpack.lightpacksFound() == 1)
+        if (lpack->lightpacksFound() == 1)
             caption = tr("1 Lightpack found");
         else
-            caption = tr("%0 Lightpacks found").arg(QString::number(lpack.lightpacksFound()));
+            caption = tr("%0 Lightpacks found").arg(QString::number(lpack->lightpacksFound()));
 
-        QString caption2 = tr("%0 zones are available").arg(QString::number(lpack.maxLedsCount()));
+        QString caption2 = tr("%0 zones are available").arg(QString::number(lpack->maxLedsCount()));
         _ui->labelLightpacksCount->setText(caption);
         _ui->labelZonesAvailable->setText(caption2);
+
+        _transSettings->ledDevice = lpack;
+    } else {
+        delete lpack;
     }
 }
 
 bool LightpackDiscoveryPage::validatePage() {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-//    if (_ui->rbLightpackSelected->isChecked())
-//        SettingsScope::Settings::setConnectedDevice(SupportedDevices::DeviceTypeLightpack);
     return true;
 }
 
 int LightpackDiscoveryPage::nextId() const {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-//    if (_isInitFromSettings)
-//        return Page_ChooseProfile;
 
     if (_ui->rbLightpackSelected->isChecked())
-        return Page_MonitorConfiguration;
+        if (QApplication::desktop()->screenCount() > 1){
+            return Page_MonitorConfiguration;
+        } else {
+            return Page_ZonePlacement;
+        }
     else
         return Page_ChooseDevice;
 }

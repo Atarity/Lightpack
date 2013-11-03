@@ -32,16 +32,19 @@
 
 using namespace SettingsScope;
 
-LedDeviceArdulight::LedDeviceArdulight(QObject * parent) : AbstractLedDevice(parent)
+LedDeviceArdulight::LedDeviceArdulight(const QString &portName, const int baudRate, QObject *parent) : AbstractLedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_gamma = Settings::getDeviceGamma();
-    m_brightness = Settings::getDeviceBrightness();
+    m_portName = portName;
+    m_baudRate = baudRate;
+
+//    m_gamma = Settings::getDeviceGamma();
+//    m_brightness = Settings::getDeviceBrightness();
 
     m_writeBufferHeader.append((char)255);
 
-    m_colorSequence = Settings::getColorSequence(SupportedDevices::DeviceTypeArdulight);
+//    m_colorSequence = Settings::getColorSequence(SupportedDevices::DeviceTypeArdulight);
     m_ArdulightDevice = NULL;
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "initialized";
@@ -189,15 +192,15 @@ void LedDeviceArdulight::open()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_gamma = Settings::getDeviceGamma();
-    m_brightness = Settings::getDeviceBrightness();
+//    m_gamma = Settings::getDeviceGamma();
+//    m_brightness = Settings::getDeviceBrightness();
 
     if (m_ArdulightDevice != NULL)
         m_ArdulightDevice->close();
     else
         m_ArdulightDevice = new QSerialPort();
 
-    m_ArdulightDevice->setPortName(Settings::getArdulightSerialPortName());
+    m_ArdulightDevice->setPortName(m_portName);
 
     m_ArdulightDevice->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
     bool ok = m_ArdulightDevice->isOpen();
@@ -214,7 +217,7 @@ void LedDeviceArdulight::open()
     {
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Serial device" << m_ArdulightDevice->portName() << "open";
 
-        ok = m_ArdulightDevice->setBaudRate(Settings::getArdulightSerialPortBaudRate());
+        ok = m_ArdulightDevice->setBaudRate(m_baudRate);
         if (ok)
         {
             ok = m_ArdulightDevice->setDataBits(QSerialPort::Data8);
@@ -229,7 +232,7 @@ void LedDeviceArdulight::open()
                 qWarning() << Q_FUNC_INFO << "Set data bits 8 fail";
             }
         } else {
-            qWarning() << Q_FUNC_INFO << "Set baud rate" << Settings::getArdulightSerialPortBaudRate() << "fail";
+            qWarning() << Q_FUNC_INFO << "Set baud rate" << m_baudRate << "fail";
         }
 
     } else {

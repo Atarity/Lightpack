@@ -32,13 +32,16 @@
 
 using namespace SettingsScope;
 
-LedDeviceAdalight::LedDeviceAdalight(QObject * parent) : AbstractLedDevice(parent)
+LedDeviceAdalight::LedDeviceAdalight(const QString &portName, const int baudRate, QObject *parent) : AbstractLedDevice(parent)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    m_gamma = Settings::getDeviceGamma();
-    m_brightness = Settings::getDeviceBrightness();
-    m_colorSequence =Settings::getColorSequence(SupportedDevices::DeviceTypeAdalight);
+    m_portName = portName;
+    m_baudRate = baudRate;
+
+//    m_gamma = Settings::getDeviceGamma();
+//    m_brightness = Settings::getDeviceBrightness();
+//    m_colorSequence =Settings::getColorSequence(SupportedDevices::DeviceTypeAdalight);
     m_AdalightDevice = NULL;
 
     // TODO: think about init m_savedColors in all ILedDevices
@@ -180,15 +183,15 @@ void LedDeviceAdalight::open()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << sender();
 
-    m_gamma = Settings::getDeviceGamma();
-    m_brightness = Settings::getDeviceBrightness();
+//    m_gamma = Settings::getDeviceGamma();
+//    m_brightness = Settings::getDeviceBrightness();
 
     if (m_AdalightDevice != NULL)
         m_AdalightDevice->close();
     else
         m_AdalightDevice = new QSerialPort();
 
-    m_AdalightDevice->setPortName(Settings::getAdalightSerialPortName());
+    m_AdalightDevice->setPortName(m_portName);// Settings::getAdalightSerialPortName());
 
     m_AdalightDevice->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
     bool ok = m_AdalightDevice->isOpen();
@@ -205,7 +208,7 @@ void LedDeviceAdalight::open()
     {
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Serial device" << m_AdalightDevice->portName() << "open";
 
-        ok = m_AdalightDevice->setBaudRate(Settings::getAdalightSerialPortBaudRate());
+        ok = m_AdalightDevice->setBaudRate(m_baudRate);//Settings::getAdalightSerialPortBaudRate());
         if (ok)
         {
             ok = m_AdalightDevice->setDataBits(QSerialPort::Data8);
@@ -220,7 +223,7 @@ void LedDeviceAdalight::open()
                 qWarning() << Q_FUNC_INFO << "Set data bits 8 fail";
             }
         } else {
-            qWarning() << Q_FUNC_INFO << "Set baud rate" << Settings::getAdalightSerialPortBaudRate() << "fail";
+            qWarning() << Q_FUNC_INFO << "Set baud rate" << m_baudRate << "fail";
         }
 
     } else {
