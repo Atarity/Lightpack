@@ -128,13 +128,6 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     emit postInitialization();
 }
 
-#ifdef Q_OS_WIN
-HWND LightpackApplication::getMainWindowHandle() {
-    // to get HWND sometimes needed to activate window
-//    winFocus(m_settingsWindow, true);
-    return reinterpret_cast<HWND>(m_settingsWindow->winId());
-}
-
 void LightpackApplication::runWizardLoop(bool isInitFromSettings)
 {
     Wizard *w = new Wizard(isInitFromSettings, new TransientSettings);
@@ -143,6 +136,13 @@ void LightpackApplication::runWizardLoop(bool isInitFromSettings)
     w->show();
     this->exec();
     delete w;
+}
+
+#ifdef Q_OS_WIN
+HWND LightpackApplication::getMainWindowHandle() {
+    // to get HWND sometimes needed to activate window
+//    winFocus(m_settingsWindow, true);
+    return reinterpret_cast<HWND>(m_settingsWindow->winId());
 }
 
 bool LightpackApplication::winEventFilter ( MSG * msg, long * result ) {

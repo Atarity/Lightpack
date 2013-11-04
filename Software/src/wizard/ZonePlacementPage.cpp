@@ -63,13 +63,6 @@ void ZonePlacementPage::initializePage()
             addGrabArea(i, r);
         }
     }
-    /*
-     *TODO: create ledDevice
-     */
-//    size_t ledsCount = _ledDevice->maxLedsCount();
-//    for(size_t i = 0; i < ledsCount; i++) {
-
-//    }
 }
 
 void ZonePlacementPage::cleanupPage()
@@ -82,7 +75,6 @@ void ZonePlacementPage::cleanupGrabAreas()
     for(size_t i = 0; i < _zones.size(); i++) {
         delete _zones[i];
     }
-//    delete _ledDevice;
 }
 
 bool ZonePlacementPage::validatePage()

@@ -87,6 +87,6 @@ private:
 
     QTimer *m_timerPingDevice;
 
-    static const int PingDeviceInterval;
+    static const int kPingDeviceInterval;
     static const int kLedsPerDevice;
 };

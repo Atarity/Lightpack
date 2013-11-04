@@ -35,7 +35,7 @@
 
 using namespace SettingsScope;
 
-const int LedDeviceLightpack::PingDeviceInterval = 1000;
+const int LedDeviceLightpack::kPingDeviceInterval = 1000;
 const int LedDeviceLightpack::kLedsPerDevice = 10;
 
 LedDeviceLightpack::LedDeviceLightpack(QObject *parent) :
@@ -289,7 +289,7 @@ void LedDeviceLightpack::open(unsigned short vid, unsigned short pid)
 
             // Immediately return from hid_read() if no data available
             hid_set_nonblocking(handle, 1);
-            if(wcslen(cur_dev->serial_number) > 0) {
+            if(cur_dev->serial_number != NULL && wcslen(cur_dev->serial_number) > 0) {
                 map.insert(QString::fromWCharArray(cur_dev->serial_number), handle);
             } else {
                 list.append(handle);
@@ -439,7 +439,7 @@ void LedDeviceLightpack::restartPingDevice(bool isSuccess)
     if (Settings::isBacklightEnabled() && Settings::isPingDeviceEverySecond())
     {
         // Start ping device with PingDeviceInterval ms after last data transfer complete
-        m_timerPingDevice->start(PingDeviceInterval);
+        m_timerPingDevice->start(kPingDeviceInterval);
     } else {
         m_timerPingDevice->stop();
     }

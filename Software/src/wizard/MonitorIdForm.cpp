@@ -41,6 +41,5 @@ MonitorIdForm::~MonitorIdForm()
 
 void MonitorIdForm::setId(int id)
 {
-    char buf[4];
-    _ui->label->setText(itoa(id, buf, 10));
+    _ui->label->setText(QString::number(id));
 }

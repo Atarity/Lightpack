@@ -273,7 +273,7 @@ void SettingsWindow::connectSignalsSlots()
     //Plugins
     //    connected during setupUi by name:
     //    connect(ui->list_Plugins,SIGNAL(currentRowChanged(int)),this,SLOT(on_list_Plugins_itemClicked(QListWidgetItem *)));
-    connect(ui->pushButton_ConsolePlugin,SIGNAL(clicked()),this,SLOT(viewPluginConsole()));
+    //connect(ui->pushButton_ConsolePlugin,SIGNAL(clicked()),this,SLOT(viewPluginConsole()));
     connect(ui->pushButton_UpPriority, SIGNAL(clicked()), this, SLOT(MoveUpPlugin()));
     connect(ui->pushButton_DownPriority, SIGNAL(clicked()), this, SLOT(MoveDownPlugin()));
 }
@@ -2012,7 +2012,7 @@ void SettingsWindow::initSerialPortBaudRateComboBox()
     ui->comboBox_ArdulightSerialPortBaudRate->addItems(Settings::getSupportedSerialPortBaudRates());
 
 
-    QString baudrate = QString(Settings::getAdalightSerialPortBaudRate());
+    QString baudrate = QString::number(Settings::getAdalightSerialPortBaudRate());
     int index = ui->comboBox_AdalightSerialPortBaudRate->findText(baudrate);
     if (index < 0)
     {
@@ -2020,9 +2020,10 @@ void SettingsWindow::initSerialPortBaudRateComboBox()
                     << Settings::getSupportedSerialPortBaudRates() << "doesn't contains baud rate:" << baudrate;
         index = 0;
     }
+
     ui->comboBox_AdalightSerialPortBaudRate->setCurrentIndex(index);
 
-    baudrate = Settings::getArdulightSerialPortBaudRate();
+    baudrate = QString::number(Settings::getArdulightSerialPortBaudRate());
     index = ui->comboBox_ArdulightSerialPortBaudRate->findText(baudrate);
     if (index < 0)
     {
