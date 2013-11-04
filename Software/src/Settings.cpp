@@ -36,7 +36,7 @@
 #include <QUuid>
 #include "debug.h"
 
-#define MAIN_CONFIG_FILE_VERSION    "1.0"
+#define MAIN_CONFIG_FILE_VERSION    "2.0"
 
 //
 // This strings keys and values must be accessible only in current file
@@ -225,8 +225,7 @@ bool Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     m_mainConfig = new QSettings(getMainConfigPath(), QSettings::IniFormat);
     m_mainConfig->setIniCodec("UTF-8");
 
-    // TODO: if version < Main::Value::MainConfigVersion then clear lightpack main config file
-    setNewOptionMain(Main::Key::MainConfigVersion,      Main::Value::MainConfigVersion, true /* rewrite */);
+    setNewOptionMain(Main::Key::MainConfigVersion,      Main::Value::MainConfigVersion /* rewrite */);
     setNewOptionMain(Main::Key::ProfileLast,            Main::ProfileNameDefault);
     setNewOptionMain(Main::Key::Language,               Main::LanguageDefault);
     setNewOptionMain(Main::Key::DebugLevel,             Main::DebugLevelDefault);
@@ -286,6 +285,9 @@ bool Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
 
     // Initialize profile with default values without reset exists values
     initCurrentProfile(false);
+
+    // Do changes to settings if necessary
+    migrateSettings();
 
     return settingsWasPresent;
 }
@@ -1519,5 +1521,54 @@ void Settings::initDevicesMap()
     m_devicesTypeToNameMap[SupportedDevices::DeviceTypeAlienFx]   = Main::Value::ConnectedDevice::AlienFxDevice;
     m_devicesTypeToKeyNumberOfLedsMap[SupportedDevices::DeviceTypeAlienFx]   = Main::Key::AlienFx::NumberOfLeds;
 #endif
+}
+
+/*
+ * --------------------------- Migration --------------------------------
+ */
+
+struct LedInfo {
+    bool isEnabled;
+    QPoint position;
+    QSize size;
+    double wbRed;
+    double wbGreen;
+    double wbBlue;
+};
+
+void Settings::migrateSettings()
+{
+
+    if (valueMain(Main::Key::MainConfigVersion).toString() == "1.0") {
+
+        if (getConnectedDevice() == SupportedDevices::DeviceTypeLightpack){
+
+            int remap[] = {3, 4, 2, 1, 0, 5, 6, 7, 8, 9};
+
+            size_t ledCount = getNumberOfLeds(SupportedDevices::DeviceTypeLightpack);
+            QMap<int, LedInfo> ledInfoMap;
+            for(size_t i = 0; i < ledCount; i++){
+                LedInfo ledInfo;
+                ledInfo.isEnabled = isLedEnabled(i);
+                ledInfo.position = getLedPosition(i);
+                ledInfo.size = getLedSize(i);
+                ledInfo.wbRed = getLedCoefRed(i);
+                ledInfo.wbGreen = getLedCoefGreen(i);
+                ledInfo.wbBlue = getLedCoefBlue(i);
+                ledInfoMap.insert(remap[i], ledInfo);
+            }
+            QList<LedInfo> remappedLeds = ledInfoMap.values();
+            for (int i = 0; i < remappedLeds.size(); ++i) {
+                Settings::setLedEnabled(i, remappedLeds[i].isEnabled);
+                Settings::setLedPosition(i, remappedLeds[i].position);
+                Settings::setLedSize(i, remappedLeds[i].size);
+                Settings::setLedCoefRed(i, remappedLeds[i].wbRed);
+                Settings::setLedCoefGreen(i, remappedLeds[i].wbGreen);
+                Settings::setLedCoefBlue(i, remappedLeds[i].wbBlue);
+            }
+        }
+        setValueMain(Main::Key::MainConfigVersion, Main::Value::MainConfigVersion);
+    }
+
 }
 } /*SettingsScope*/

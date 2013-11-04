@@ -91,11 +91,15 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
     int buffIndex = WRITE_BUFFER_INDEX_DATA_START;
 
     bool ok = true;
+    const int kLedRemap[] = {4, 3, 2, 0, 1, 5, 6, 7, 8, 9};
+    const size_t kSizeOfLedColor = 6;
 
     memset(m_writeBuffer, 0, sizeof(m_writeBuffer));
     for (int i = 0; i < m_colorsBuffer.count(); i++)
     {
         StructRgb color = m_colorsBuffer[i];
+
+        buffIndex = WRITE_BUFFER_INDEX_DATA_START + kLedRemap[i % 10] * kSizeOfLedColor;
 
         // Send main 8 bits for compability with existing devices
         m_writeBuffer[buffIndex++] = (color.r & 0x0FF0) >> 4;

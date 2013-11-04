@@ -198,6 +198,9 @@ private:
     static void initCurrentProfile(bool isResetDefault);
     static void initDevicesMap();
 
+    static void migrateSettings();
+
+
 public:
     static void setNewOption(const QString & name, const QVariant & value,
                             bool isForceSetOption = false, QSettings * settings = m_currentProfile);
