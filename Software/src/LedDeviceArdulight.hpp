@@ -35,11 +35,12 @@ class LedDeviceArdulight : public AbstractLedDevice
     Q_OBJECT
 public:
     LedDeviceArdulight(const QString &portName, const int baudRate, QObject * parent = 0);
-    ~LedDeviceArdulight();
+    virtual ~LedDeviceArdulight();
 
 public slots:
     const QString name() const { return "ardulight"; }
     void open();
+    void close();
     void setColors(const QList<QRgb> & /*colors*/);
     void switchOffLeds();
     void setRefreshDelay(int /*value*/);

@@ -32,12 +32,15 @@
 #include "SelectProfilePage.hpp"
 #include "SelectDevicePage.hpp"
 #include "ConfigureDevicePage.hpp"
+#include "AbstractLedDevice.hpp"
 
-Wizard::Wizard(bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent) :
+Wizard::Wizard(bool isInitFromSettings, QWidget *parent) :
     QWizard(parent),
-    SettingsAwareTrait(isInitFromSettings, transSettings),
+    SettingsAwareTrait(isInitFromSettings, NULL),
     _ui(new Ui::Wizard)
 {
+    _transSettings = new TransientSettings;
+    memset(_transSettings, 0, sizeof(TransientSettings));
     _ui->setupUi(this);
     this->setPage(Page_LightpackDiscovery, new LightpackDiscoveryPage(_isInitFromSettings, _transSettings) );
     this->setPage(Page_ChooseDevice, new SelectDevicePage(_isInitFromSettings, _transSettings) );
@@ -49,5 +52,9 @@ Wizard::Wizard(bool isInitFromSettings, TransientSettings *transSettings, QWidge
 
 Wizard::~Wizard()
 {
+    if (_transSettings->ledDevice != NULL) {
+        delete _transSettings->ledDevice;
+    }
+    delete _transSettings;
     delete _ui;
 }

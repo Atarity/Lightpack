@@ -43,7 +43,7 @@ class Wizard : public QWizard, SettingsAwareTrait
     Q_OBJECT
 
 public:
-    explicit Wizard(bool isInitFromSettings, TransientSettings *transSettings, QWidget *parent = 0);
+    explicit Wizard(bool isInitFromSettings, QWidget *parent = 0);
     ~Wizard();
 public slots:
 

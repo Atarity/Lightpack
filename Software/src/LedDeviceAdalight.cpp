@@ -51,10 +51,17 @@ LedDeviceAdalight::LedDeviceAdalight(const QString &portName, const int baudRate
 
 LedDeviceAdalight::~LedDeviceAdalight()
 {
-    if (m_AdalightDevice != NULL)
+    close();
+}
+
+void LedDeviceAdalight::close()
+{
+    if (m_AdalightDevice != NULL) {
         m_AdalightDevice->close();
 
-    delete m_AdalightDevice;
+        delete m_AdalightDevice;
+        m_AdalightDevice = NULL;
+    }
 }
 
 void LedDeviceAdalight::setColors(const QList<QRgb> & colors)

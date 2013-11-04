@@ -52,11 +52,17 @@ LedDeviceArdulight::LedDeviceArdulight(const QString &portName, const int baudRa
 
 LedDeviceArdulight::~LedDeviceArdulight()
 {
-    if (m_ArdulightDevice != NULL)
+    close();
+}
+
+void LedDeviceArdulight::close()
+{
+    if (m_ArdulightDevice != NULL) {
         m_ArdulightDevice->close();
 
-    delete m_ArdulightDevice;
-    m_ArdulightDevice = NULL;
+        delete m_ArdulightDevice;
+        m_ArdulightDevice = NULL;
+    }
 }
 
 void LedDeviceArdulight::setColors(const QList<QRgb> & colors)

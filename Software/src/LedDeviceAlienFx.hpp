@@ -37,11 +37,12 @@ class LedDeviceAlienFx : public AbstractLedDevice
     Q_OBJECT
 public:
     LedDeviceAlienFx(QObject *parent = 0);
-    ~LedDeviceAlienFx();
+    virtual ~LedDeviceAlienFx();
 
 public slots:
     const QString name() const { return "lightfx"; }
     void open();
+    void close(){};
     void setColors(const QList<QRgb> & colors);
     void switchOffLeds();
     void setRefreshDelay(int /*value*/);

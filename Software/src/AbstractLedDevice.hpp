@@ -39,6 +39,7 @@ class AbstractLedDevice : public QObject
     Q_OBJECT
 public:
     AbstractLedDevice(QObject * parent) : QObject(parent) {}
+    virtual ~AbstractLedDevice(){}
 
 signals:
     void openDeviceSuccess(bool isSuccess);
@@ -56,6 +57,7 @@ signals:
 public slots:
     virtual const QString name() const = 0;
     virtual void open() = 0;
+    virtual void close() = 0;
     virtual void setColors(const QList<QRgb> & colors) = 0;
     virtual void switchOffLeds() = 0;
 

@@ -75,6 +75,7 @@ void ZonePlacementPage::cleanupGrabAreas()
     for(size_t i = 0; i < _zones.size(); i++) {
         delete _zones[i];
     }
+    _zones.clear();
 }
 
 bool ZonePlacementPage::validatePage()
@@ -86,6 +87,8 @@ bool ZonePlacementPage::validatePage()
 void ZonePlacementPage::on_pbAndromeda_clicked()
 {
     AndromedaDistributor *andromeda = new AndromedaDistributor(_screenId, true, 10);
+
+    cleanupGrabAreas();
 
     for(size_t i = 0; i < _ledDevice->maxLedsCount(); i++) {
         ScreenArea *sf = andromeda->next();

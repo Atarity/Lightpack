@@ -34,10 +34,12 @@ class LedDeviceVirtual : public AbstractLedDevice
     Q_OBJECT
 public:
     LedDeviceVirtual(QObject * parent = 0);
+    virtual ~LedDeviceVirtual() {}
 
 public slots:
     const QString name() const { return "virtual"; }
     void open();
+    void close(){}
     void setColors(const QList<QRgb> & colors);
     void switchOffLeds();
     void setRefreshDelay(int /*value*/);

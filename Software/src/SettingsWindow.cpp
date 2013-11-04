@@ -2137,7 +2137,7 @@ void SettingsWindow::updatePlugin(QList<Plugin*> plugins)
             item->setCheckState(Qt::Unchecked);
 
         ui->list_Plugins->addItem(item);
-        QApplication::processEvents(QEventLoop::AllEvents, 1000);
+//        QApplication::processEvents(QEventLoop::AllEvents, 1000);
     }
 
     ui->pushButton_ReloadPlugins->setEnabled(true);

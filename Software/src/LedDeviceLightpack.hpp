@@ -47,20 +47,21 @@ class LedDeviceLightpack : public AbstractLedDevice
     Q_OBJECT
 public:
     LedDeviceLightpack(QObject *parent = 0);
-    ~LedDeviceLightpack();
+    virtual ~LedDeviceLightpack();
 
 public slots:
-    const QString name() const { return "lightpack"; }
-    void open();
-    void setColors(const QList<QRgb> & colors);
-    void switchOffLeds();
-    void setRefreshDelay(int value);
-    void setColorDepth(int value);
-    void setSmoothSlowdown(int value);
-    void setColorSequence(QString /*value*/);
-    void requestFirmwareVersion();
-    void updateDeviceSettings();
-    size_t maxLedsCount() { return m_devices.size() * kLedsPerDevice;}
+    virtual const QString name() const { return "lightpack"; }
+    virtual void open();
+    virtual void close();
+    virtual void setColors(const QList<QRgb> & colors);
+    virtual void switchOffLeds();
+    virtual void setRefreshDelay(int value);
+    virtual void setColorDepth(int value);
+    virtual void setSmoothSlowdown(int value);
+    virtual void setColorSequence(QString /*value*/);
+    virtual void requestFirmwareVersion();
+    virtual void updateDeviceSettings();
+    virtual size_t maxLedsCount() { return m_devices.size() * kLedsPerDevice;}
     size_t lightpacksFound() { return m_devices.size(); }
 
 private: 

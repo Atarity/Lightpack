@@ -287,12 +287,20 @@ void LedDeviceLightpack::open(unsigned short vid, unsigned short pid)
             /* Open the device */
             handle = hid_open_path(path_to_open);
 
-            // Immediately return from hid_read() if no data available
-            hid_set_nonblocking(handle, 1);
-            if(cur_dev->serial_number != NULL && wcslen(cur_dev->serial_number) > 0) {
-                map.insert(QString::fromWCharArray(cur_dev->serial_number), handle);
+            if(handle != NULL) {
+
+                // Immediately return from hid_read() if no data available
+                hid_set_nonblocking(handle, 1);
+                if(cur_dev->serial_number != NULL && wcslen(cur_dev->serial_number) > 0) {
+                    QString serialNum = QString::fromWCharArray(cur_dev->serial_number);
+                    DEBUG_LOW_LEVEL << "found Lightpack, serial number: " << serialNum;
+                    map.insert(serialNum, handle);
+                } else {
+                    DEBUG_LOW_LEVEL << "found Lightpack, without serial number";
+                    list.append(handle);
+                }
             } else {
-                list.append(handle);
+                qCritical() << Q_FUNC_INFO << "couldn't open dev by path";
             }
         }
         cur_dev = cur_dev->next;
@@ -300,6 +308,10 @@ void LedDeviceLightpack::open(unsigned short vid, unsigned short pid)
     hid_free_enumeration(devs);
     m_devices.append(map.values());
     m_devices.append(list);
+}
+
+void LedDeviceLightpack::close() {
+    closeDevices();
 }
 
 bool LedDeviceLightpack::readDataFromDevice()

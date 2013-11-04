@@ -130,7 +130,7 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
 void LightpackApplication::runWizardLoop(bool isInitFromSettings)
 {
-    Wizard *w = new Wizard(isInitFromSettings, new TransientSettings);
+    Wizard *w = new Wizard(isInitFromSettings);
     connect(w, SIGNAL(finished(int)), this, SLOT(quitFromWizard(int)));
     w->setWindowFlags(Qt::WindowStaysOnTopHint);
     w->show();

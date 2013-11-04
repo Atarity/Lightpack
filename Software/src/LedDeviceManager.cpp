@@ -387,7 +387,7 @@ void LedDeviceManager::connectSignalSlotsLedDevice()
     connect(this, SIGNAL(ledDeviceSetLuminosityThreshold(int))      ,m_ledDevice, SLOT(setLuminosityThreshold(int)));
     connect(this, SIGNAL(ledDeviceSetMinimumLuminosityEnabled(bool)),m_ledDevice, SLOT(setMinimumLuminosityThresholdEnabled(bool)));
     connect(this, SIGNAL(ledDeviceRequestFirmwareVersion()),    m_ledDevice, SLOT(requestFirmwareVersion()), Qt::QueuedConnection);
-    connect(this, SIGNAL(ledDeviceUpdateWBAdjustments()),       m_ledDevice, SLOT(updateWBAdjustments()),  Qt::QueuedConnection);
+    connect(this, SIGNAL(ledDeviceUpdateWBAdjustments()),       m_ledDevice, SLOT(updateDeviceSettings()),  Qt::QueuedConnection);
     connect(this, SIGNAL(ledDeviceUpdateDeviceSettings()),      m_ledDevice, SLOT(updateDeviceSettings()), Qt::QueuedConnection);
 }
 
@@ -418,6 +418,7 @@ void LedDeviceManager::disconnectSignalSlotsLedDevice()
     disconnect(this, SIGNAL(ledDeviceSetLuminosityThreshold(int))      ,m_ledDevice, SLOT(setLuminosityThreshold(int)));
     disconnect(this, SIGNAL(ledDeviceSetMinimumLuminosityEnabled(bool)),m_ledDevice, SLOT(setMinimumLuminosityThresholdEnabled(bool)));
     disconnect(this, SIGNAL(ledDeviceRequestFirmwareVersion()), m_ledDevice, SLOT(requestFirmwareVersion()));
+    disconnect(this, SIGNAL(ledDeviceUpdateWBAdjustments()),    m_ledDevice, SLOT(updateDeviceSettings()));
     disconnect(this, SIGNAL(ledDeviceUpdateDeviceSettings()),   m_ledDevice, SLOT(updateDeviceSettings()));
 }
 

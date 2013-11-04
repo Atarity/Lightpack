@@ -35,11 +35,12 @@ class LedDeviceAdalight : public AbstractLedDevice
     Q_OBJECT
 public:
     LedDeviceAdalight(const QString &portName, const int baudRate, QObject * parent = 0);
-    ~LedDeviceAdalight();
+    virtual ~LedDeviceAdalight();
 
 public slots:
     const QString name() const { return "adalight"; }
     void open();
+    void close();
     void setColors(const QList<QRgb> & /*colors*/);
     void switchOffLeds();
     void setRefreshDelay(int /*value*/);
