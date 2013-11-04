@@ -1,22 +1,22 @@
 /*
- * AndromedaZoneDistributor.hpp
+ * CassiopeiaDistributor.hpp
  *
- *  Created on: 10/28/2013
- *     Project: Prismatik
+ *  Created on: 11/5/2013
+ *     Project: Prismatik 
  *
- *  Copyright (c) 2013 Tim
+ *  Copyright (c) 2013 tim
  *
  *  Lightpack is an open-source, USB content-driving ambient lighting
  *  hardware.
  *
- *  Prismatik is a free, open-source software: you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License as published
+ *  Prismatik is a free, open-source software: you can redistribute it and/or 
+ *  modify it under the terms of the GNU General Public License as published 
  *  by the Free Software Foundation, either version 2 of the License, or
  *  (at your option) any later version.
  *
  *  Prismatik and Lightpack files is distributed in the hope that it will be
  *  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
  *  General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
@@ -24,24 +24,23 @@
  *
  */
 
-#ifndef ANDROMEDAZONEDISTRIBUTOR_HPP
-#define ANDROMEDAZONEDISTRIBUTOR_HPP
+#ifndef CASSIOPEIADISTRIBUTOR_HPP
+#define CASSIOPEIADISTRIBUTOR_HPP
 #include "AreaDistributor.hpp"
 
-class AndromedaDistributor : public AreaDistributor
+class CassiopeiaDistributor : public AreaDistributor
 {
 public:
-    AndromedaDistributor(int screenId, bool isStandPresent, size_t fragmentCount):
-        AreaDistributor(screenId, fragmentCount),
-        _isStandPresent(isStandPresent),
+    CassiopeiaDistributor(int screenId, size_t areaCount):
+        AreaDistributor(screenId, areaCount),
         _dx(0), _dy(0)
     {}
-    virtual ~AndromedaDistributor();
 
-    virtual ScreenArea * next();
+    virtual ~CassiopeiaDistributor();
+
+    ScreenArea * next();
 
 protected:
-    bool _isStandPresent;
     char _dx, _dy;
     double _width, _height;
 
@@ -56,4 +55,4 @@ private:
     }
 };
 
-#endif // ANDROMEDAZONEDISTRIBUTOR_HPP
+#endif // CASSIOPEIADISTRIBUTOR_HPP

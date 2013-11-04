@@ -40,6 +40,15 @@
 namespace SettingsScope
 {
 
+struct LedInfo {
+    bool isEnabled;
+    QPoint position;
+    QSize size;
+    double wbRed;
+    double wbGreen;
+    double wbBlue;
+};
+
 /*!
   Provides access to persistent settings.
 */

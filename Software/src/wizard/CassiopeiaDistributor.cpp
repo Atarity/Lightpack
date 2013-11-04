@@ -1,22 +1,22 @@
 /*
- * AndromedaZoneDistributor.cpp
+ * CassiopeiaDistributor.cpp
  *
- *  Created on: 10/28/2013
- *     Project: Prismatik
+ *  Created on: 11/5/2013
+ *     Project: Prismatik 
  *
- *  Copyright (c) 2013 Tim
+ *  Copyright (c) 2013 tim
  *
  *  Lightpack is an open-source, USB content-driving ambient lighting
  *  hardware.
  *
- *  Prismatik is a free, open-source software: you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License as published
+ *  Prismatik is a free, open-source software: you can redistribute it and/or 
+ *  modify it under the terms of the GNU General Public License as published 
  *  by the Free Software Foundation, either version 2 of the License, or
  *  (at your option) any later version.
  *
  *  Prismatik and Lightpack files is distributed in the hope that it will be
  *  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
  *  General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
@@ -24,27 +24,18 @@
  *
  */
 
-#include "AndromedaDistributor.hpp"
+#include "CassiopeiaDistributor.hpp"
 
-#define STAND_WIDTH 0.3333 //33%
-
-AndromedaDistributor::~AndromedaDistributor() {
+CassiopeiaDistributor::~CassiopeiaDistributor() {
     if (_currentArea)
         cleanCurrentArea();
 }
 
-ScreenArea * AndromedaDistributor::next() {
+ScreenArea * CassiopeiaDistributor::next() {
     const double thikness = 0.15;
     double x, y;
 
     if (_dx == 0 && _dy == 0) {
-        _dx = 1;
-        _width = 1.0 / areaCountOnTopEdge();
-        _height = thikness;
-        x = 1.0 - areaCountOnBottomEdge() * _width / 2;
-        y = 1.0 - _height;
-    } else if (_dx > 0 && cmp(_currentArea->hScanEnd(), 1.0, 0.01) >= 0 ) {
-        cleanCurrentArea();
         _dx = 0;
         _dy = -1;
         _width = thikness;
@@ -67,14 +58,6 @@ ScreenArea * AndromedaDistributor::next() {
         _height = 1.0 / areaCountOnSideEdge();
         x = 0.0;
         y = 0.0;
-    } else if (_dy > 0 && cmp(_currentArea->vScanEnd(), 1.0, .01) >= 0) {
-        cleanCurrentArea();
-        _dx = 1;
-        _dy = 0;
-        _width = 1.0 / areaCountOnTopEdge();
-        _height = thikness;
-        x = 0.0;
-        y = 1.0 - _height;
     }
 
     ScreenArea *result = NULL;
@@ -95,20 +78,19 @@ ScreenArea * AndromedaDistributor::next() {
 
 }
 
-size_t AndromedaDistributor::areaCountOnTopEdge() const
+size_t CassiopeiaDistributor::areaCountOnTopEdge() const
 {
     return _areaCount - 2 * areaCountOnSideEdge() - areaCountOnBottomEdge();
 }
 
-size_t AndromedaDistributor::areaCountOnBottomEdge() const
+size_t CassiopeiaDistributor::areaCountOnBottomEdge() const
 {
-    size_t baseCount = (_areaCount - 2 * areaCountOnSideEdge()) / 2;
-    return _isStandPresent ? round(baseCount * (1 - STAND_WIDTH )) : baseCount;
+    return 0;
 }
 
-size_t AndromedaDistributor::areaCountOnSideEdge() const
+size_t CassiopeiaDistributor::areaCountOnSideEdge() const
 {
     double a = aspect();
-    size_t roundDistrib = round(_areaCount /(2 + 2*a));
+    size_t roundDistrib = round(_areaCount /(2 + a));
     return roundDistrib;
 }

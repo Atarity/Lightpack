@@ -146,7 +146,8 @@ SOURCES += \
     wizard/GrabAreaWidget.cpp \
     wizard/AndromedaDistributor.cpp \
     wizard/ConfigureDevicePage.cpp \
-    wizard/SelectDevicePage.cpp
+    wizard/SelectDevicePage.cpp \
+    wizard/CassiopeiaDistributor.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -185,7 +186,6 @@ HEADERS += \
     LightpackPluginInterface.hpp \
     wizard/ZoneWidget.hpp \
     wizard/ZonePlacementPage.hpp \
-    wizard/ZoneDistributor.hpp \
     wizard/Wizard.hpp \
     wizard/SettingsAwareTrait.hpp \
     wizard/SelectProfilePage.hpp \
@@ -196,7 +196,9 @@ HEADERS += \
     wizard/AndromedaDistributor.hpp \
     wizard/ConfigureDevicePage.hpp \
     wizard/SelectDevicePage.hpp \
-    types.h
+    types.h \
+    wizard/AreaDistributor.hpp \
+    wizard/CassiopeiaDistributor.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \

@@ -24,8 +24,8 @@
  *
  */
 
-#ifndef ZONEDISTRIBUTOR_HPP
-#define ZONEDISTRIBUTOR_HPP
+#ifndef AREADISTRIBUTOR_HPP
+#define AREADISTRIBUTOR_HPP
 #include <QList>
 #include <QApplication>
 #include <QDesktopWidget>
@@ -73,8 +73,11 @@ public:
         _areaCount(areaCount),
         _currentArea(NULL)
     {}
+    virtual ~AreaDistributor(){}
 
     virtual ScreenArea * next() = 0;
+
+    size_t areaCount() const { return _areaCount; }
 
 protected:
     int _screenId;
@@ -86,10 +89,9 @@ protected:
        return (double)screenRect.width() / screenRect.height();
     }
 
-    virtual size_t areaCountOnLeftEdge() const = 0;
+    virtual size_t areaCountOnSideEdge() const = 0;
     virtual size_t areaCountOnTopEdge() const = 0;
-    virtual size_t areaCountOnRightEdge() const = 0;
     virtual size_t areaCountOnBottomEdge() const = 0;
 };
 
-#endif // ZONEDISTRIBUTOR_HPP
+#endif // AREADISTRIBUTOR_HPP

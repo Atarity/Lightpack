@@ -30,6 +30,7 @@
 #include "AbstractLedDevice.hpp"
 #include "Settings.hpp"
 #include "AndromedaDistributor.hpp"
+#include "CassiopeiaDistributor.hpp"
 #include "GrabAreaWidget.hpp"
 #include "LedDeviceLightpack.hpp"
 
@@ -86,12 +87,28 @@ bool ZonePlacementPage::validatePage()
 
 void ZonePlacementPage::on_pbAndromeda_clicked()
 {
-    AndromedaDistributor *andromeda = new AndromedaDistributor(_screenId, true, 10);
+    AndromedaDistributor *andromeda = new AndromedaDistributor(_screenId, true, _ledDevice->maxLedsCount());
+
+    distributeAreas(andromeda);
+
+    delete andromeda;
+
+}
+
+void ZonePlacementPage::on_pbCassiopeia_clicked()
+{
+    CassiopeiaDistributor *cassiopeia = new CassiopeiaDistributor(_screenId, _ledDevice->maxLedsCount());
+
+    distributeAreas(cassiopeia);
+
+    delete cassiopeia;
+}
+
+void ZonePlacementPage::distributeAreas(AreaDistributor *distributor) {
 
     cleanupGrabAreas();
-
-    for(size_t i = 0; i < _ledDevice->maxLedsCount(); i++) {
-        ScreenArea *sf = andromeda->next();
+    for(size_t i = 0; i < distributor->areaCount(); i++) {
+        ScreenArea *sf = distributor->next();
         qDebug() << sf->hScanStart() << sf->vScanStart();
 
         QRect s = QApplication::desktop()->screenGeometry(_screenId);
@@ -103,8 +120,6 @@ void ZonePlacementPage::on_pbAndromeda_clicked()
 
         delete sf;
     }
-    delete andromeda;
-
 }
 
 void ZonePlacementPage::addGrabArea(int id, const QRect &r)
@@ -142,3 +157,4 @@ void ZonePlacementPage::turnLightsOff(int id)
     }
     _ledDevice->setColors(lights);
 }
+

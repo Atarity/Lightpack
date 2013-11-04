@@ -36,6 +36,7 @@ class ZonePlacementPage;
 
 class ZoneWidget;
 class AbstractLedDevice;
+class AreaDistributor;
 
 class ZonePlacementPage : public QWizardPage, SettingsAwareTrait
 {
@@ -57,10 +58,12 @@ public slots:
 
 private slots:
     void on_pbAndromeda_clicked();
+    void on_pbCassiopeia_clicked();
 
 private:
     void addGrabArea(int id, const QRect &rect);
     void cleanupGrabAreas();
+    void distributeAreas(AreaDistributor *);
     Ui::ZonePlacementPage *_ui;
     QList<ZoneWidget*> _zoneWidgets;
     AbstractLedDevice *_ledDevice;

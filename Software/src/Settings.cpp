@@ -1527,14 +1527,6 @@ void Settings::initDevicesMap()
  * --------------------------- Migration --------------------------------
  */
 
-struct LedInfo {
-    bool isEnabled;
-    QPoint position;
-    QSize size;
-    double wbRed;
-    double wbGreen;
-    double wbBlue;
-};
 
 void Settings::migrateSettings()
 {
