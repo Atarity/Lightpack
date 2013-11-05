@@ -13,7 +13,7 @@ CONFIG += staticlib
 
 include(../build-config.prf)
 
-INCLUDEPATH += ./include
+INCLUDEPATH += ./include ../src
 
 HEADERS += \
     include/D3D9Grabber.hpp \

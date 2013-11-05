@@ -14,7 +14,9 @@ QT         += network widgets
 win32 {
     QT += serialport
 }
-
+macx {
+    QT += serialport
+}
 # QMake and GCC produce a lot of stuff
 OBJECTS_DIR = stuff
 MOC_DIR     = stuff
@@ -111,7 +113,7 @@ macx{
     ICON = ../res/icons/Prismatik.icns
 
     # For build universal binaries (native on Intel and PowerPC)
-    QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
+    #QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
 }
 
 INCLUDEPATH += ./hidapi ./grab ./alienfx ../grab/include ../math/include ./
