@@ -27,7 +27,7 @@
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
 
-#include <CoreFoundation/CoreFoundation.h>
+#include <CoreGraphics/CoreGraphics.h>
 #include <ApplicationServices/ApplicationServices.h>
 #include "debug.h"
 
@@ -50,19 +50,43 @@ void MacOSGrabber::updateGrabMonitor(QWidget *widget)
     Q_UNUSED(widget);
 }
 
- GrabResult MacOSGrabber::_grab()
+QImage * MacOSGrabber::toImage(CGImageRef imageRef)
 {
-    CGImageRef image = CGDisplayCreateImage(kCGDirectMainDisplay);
+    size_t width = CGImageGetWidth(imageRef);
+    size_t height = CGImageGetHeight(imageRef);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    unsigned char *rawData = (unsigned char*) calloc(height * width * 4, sizeof(unsigned char));
+    size_t bytesPerPixel = 4;
+    size_t bytesPerRow = bytesPerPixel * width;
+    size_t bitsPerComponent = 8;
+    CGContextRef context = CGBitmapContextCreate(rawData, width, height,
+                    bitsPerComponent, bytesPerRow, colorSpace,
+                    kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
 
-    if (image != NULL)
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
+    CGContextRelease(context);
+
+    QImage * result = new QImage(rawData, width, height, QImage::Format_ARGB32);
+
+  return result;
+}
+
+GrabResult MacOSGrabber::_grab()
+{
+    CGImageRef imageRef = CGDisplayCreateImage(kCGDirectMainDisplay);
+
+    if (imageRef != NULL)
     {
-        QPixmap pixmap;// = QPixmap::fromMacCGImageRef(image);
+
+        QImage *image = toImage(imageRef);
         m_grabResult->clear();
         foreach(GrabWidget * widget, *m_grabWidgets) {
-            m_grabResult->append( widget->isAreaEnabled() ? getColor(pixmap, widget) : qRgb(0,0,0) );
+            m_grabResult->append( widget->isAreaEnabled() ? getColor(image, widget) : qRgb(0,0,0) );
         }
+        delete image;
 
-        CGImageRelease(image);
+        CGImageRelease(imageRef);
 
     } else {        
 
@@ -72,26 +96,25 @@ void MacOSGrabber::updateGrabMonitor(QWidget *widget)
     return GrabResultOk;
 }
 
-QRgb MacOSGrabber::getColor(QPixmap pixmap, const QWidget * grabme)
+QRgb MacOSGrabber::getColor(QImage * image, const QWidget * grabme)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    return getColor(pixmap,
+    return getColor(image,
                     grabme->x(),
                     grabme->y(),
                     grabme->width(),
                     grabme->height());
 }
 
-QRgb MacOSGrabber::getColor(QPixmap pixmap, int x, int y, int width, int height)
+QRgb MacOSGrabber::getColor(QImage * image, int x, int y, int width, int height)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO
                      << "x y w h:" << x << y << width << height;
 
-    QPixmap pix = pixmap.copy(x,y, width, height);
-    QPixmap scaledPix = pix.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    QImage im = scaledPix.toImage();
-    QRgb result = im.pixel(0,0);
+    QImage img = image->copy(x,y, width, height);
+    QImage scaledPix = img.scaled(1,1, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    QRgb result = scaledPix.pixel(0,0);
 
     DEBUG_HIGH_LEVEL << "QRgb result =" << hex << result;
 

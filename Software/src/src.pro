@@ -100,12 +100,14 @@ unix:!macx{
 }
 
 macx{
+    QMAKE_LFLAGS += -F/System/Library/Frameworks
     # MacOS version using libusb and hidapi codes
     SOURCES += hidapi/mac/hid.c
-    LIBS += -framework IOKit \
+    LIBS += \
             -framework Cocoa \
             -framework Carbon \
             -framework CoreFoundation \
+ #           -framework CoreGraphics \
             -framework ApplicationServices \
             -framework OpenGL \
             -L/opt/local/lib -lusb-1.0
@@ -113,7 +115,7 @@ macx{
     ICON = ../res/icons/Prismatik.icns
 
     # For build universal binaries (native on Intel and PowerPC)
-    #QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
+    QMAKE_MAC_SDK = macosx10.8
 }
 
 INCLUDEPATH += ./hidapi ./grab ./alienfx ../grab/include ../math/include ./

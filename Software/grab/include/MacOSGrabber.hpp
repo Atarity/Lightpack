@@ -31,6 +31,9 @@
 
 #include "TimeredGrabber.hpp"
 
+struct CGImage;
+typedef CGImage *CGImageRef;
+
 class MacOSGrabber : public TimeredGrabber
 {
 public:
@@ -47,8 +50,9 @@ protected:
 
 
 private:
-    QRgb getColor(QPixmap pixmap, const QWidget * grabme);
-    QRgb getColor(QPixmap pixmap, int x, int y, int width, int height);
+    QRgb getColor(QImage * image, const QWidget * grabme);
+    QRgb getColor(QImage * image, int x, int y, int width, int height);
+    QImage * toImage(CGImageRef);
 };
 
 #endif // MAC_OS_CG_GRAB_SUPPORT

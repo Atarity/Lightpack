@@ -16,32 +16,56 @@ include(../build-config.prf)
 INCLUDEPATH += ./include ../src
 
 HEADERS += \
-    include/D3D9Grabber.hpp \
     include/calculations.hpp \
-    include/D3D10Grabber.hpp \
-    include/X11Grabber.hpp \
-    include/WinAPIGrabberEachWidget.hpp \
-    include/WinAPIGrabber.hpp \
     include/TimeredGrabber.hpp \
     include/QtGrabberEachWidget.hpp \
     include/QtGrabber.hpp \
-    include/MacOSGrabber.hpp \
     include/IGrabber.hpp \
     include/GrabberBase.hpp
 
 SOURCES += \
-    D3D9Grabber.cpp \
     calculations.cpp \
-    D3D10Grabber.cpp \
-    X11Grabber.cpp \
-    WinAPIGrabberEachWidget.cpp \
-    WinAPIGrabber.cpp \
     TimeredGrabber.cpp \
     QtGrabberEachWidget.cpp \
     QtGrabber.cpp \
-    MacOSGrabber.cpp \
     GrabberBase.cpp
 
 win32 {
     INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
+    HEADERS += \
+            include/D3D9Grabber.hpp \
+            include/D3D10Grabber.hpp \
+            include/WinAPIGrabberEachWidget.hpp \
+            include/WinAPIGrabber.hpp
+    SOURCES += \
+            D3D9Grabber.cpp \
+            D3D10Grabber.cpp \
+            WinAPIGrabberEachWidget.cpp \
+            WinAPIGrabber.cpp
+}
+
+macx {
+    #QMAKE_LFLAGS += -F/System/Library/Frameworks
+
+    INCLUDEPATH += /System/Library/Frameworks
+
+    #LIBS += \
+    #        -framework CoreGraphics
+    #        -framework CoreFoundation
+
+    HEADERS += \
+            include/MacOSGrabber.hpp
+
+    SOURCES += \
+            MacOSGrabber.cpp
+
+    #QMAKE_MAC_SDK = macosx10.8
+}
+
+unix:!macx {
+    HEADERS += \
+            include/X11Grabber.hpp
+
+    SOURCES += \
+            X11Grabber.cpp
 }
