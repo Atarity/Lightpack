@@ -43,9 +43,6 @@ GrabAreaWidget::GrabAreaWidget(int id, QWidget *parent) :
 
     ui->setupUi(this);
 
-    // Button image size 24x24 px
-    ui->button_OpenConfig->setFixedSize(24, 24);
-
     m_selfId = id;
     m_selfIdString = QString::number(m_selfId + 1);
     cmd = NOP;
@@ -54,8 +51,8 @@ GrabAreaWidget::GrabAreaWidget(int id, QWidget *parent) :
     setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
     setFocusPolicy(Qt::NoFocus);
 
-    setMouseTracking(true);
 
+    setMouseTracking(true);
 }
 
 GrabAreaWidget::~GrabAreaWidget()
@@ -75,8 +72,6 @@ void GrabAreaWidget::closeEvent(QCloseEvent *event)
 void GrabAreaWidget::setCursorOnAll(Qt::CursorShape cursor)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << cursor;
-
-    ui->button_OpenConfig->setCursor(Qt::ArrowCursor);
 
     setCursor(cursor);
 }

@@ -91,7 +91,38 @@
         <widget class="QComboBox" name="cbBaudRate"/>
        </item>
        <item row="7" column="1">
-        <widget class="QComboBox" name="cbColorFormat"/>
+        <widget class="QComboBox" name="cbColorFormat">
+         <item>
+          <property name="text">
+           <string>RGB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>RBG</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>BGR</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>BRG</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>GRB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>GBR</string>
+          </property>
+         </item>
+        </widget>
        </item>
        <item row="6" column="1">
         <widget class="QLabel" name="label_3">

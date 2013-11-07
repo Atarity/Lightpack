@@ -396,23 +396,25 @@ void SettingsWindow::updateDeviceTabWidgetsVisibility()
     switch (connectedDevice)
     {
     case SupportedDevices::DeviceTypeVirtual:
-        ui->groupBox_DeviceSpecificSettings->show();
+        ui->tabDevices->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceVirtual);
         // Sync Virtual Leds count with NumberOfLeds field
         initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::DeviceTypeVirtual));
         break;
 
     case SupportedDevices::DeviceTypeLightpack:
-        ui->groupBox_DeviceSpecificSettings->show();
+        ui->tabDevices->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceLightpack);
         // Sync Virtual Leds count with NumberOfLeds field
         break;
 
     default:
-        ui->groupBox_DeviceSpecificSettings->hide();
+        ui->tabDevices->hide();
 //        qCritical() << Q_FUNC_INFO << "Fail. Unknown connectedDevice ==" << connectedDevice;
         break;
     }
+    setDeviceTabWidgetsVisibility(DeviceTab::Lightpack);
+
 }
 
 void SettingsWindow::setDeviceTabWidgetsVisibility(DeviceTab::Options options)

@@ -50,7 +50,8 @@ void ConfigureDevicePage::initializePage()
     ui->cbBaudRate->addItems(Settings::getSupportedSerialPortBaudRates());
 
     registerField("serialPort", ui->leSerialPortName);
-    registerField("baudRate", ui->cbBaudRate);
+    registerField("baudRate", ui->cbBaudRate, "currentText");
+    registerField("colorFormat", ui->cbColorFormat, "currentText");
 
 }
 
@@ -58,6 +59,7 @@ void ConfigureDevicePage::cleanupPage()
 {
     setField("serialPort", "");
     setField("baudRate", 0);
+    setField("colorFormat", "RGB");
 }
 
 bool ConfigureDevicePage::validatePage()
@@ -73,6 +75,8 @@ bool ConfigureDevicePage::validatePage()
         qCritical() << "couldn't create LedDevice, unexpected state, device is not selected or device is not configurable";
         return false;
     }
+    _transSettings->ledDevice->setColorSequence(field("colorFormat").toString());
+    _transSettings->ledDevice->open();
 
     return true;
 }

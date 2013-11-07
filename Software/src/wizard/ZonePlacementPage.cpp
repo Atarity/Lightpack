@@ -108,9 +108,16 @@ bool ZonePlacementPage::validatePage()
 
     } else if (deviceName.compare("adalight", Qt::CaseInsensitive) == 0) {
         devType = SupportedDevices::DeviceTypeAdalight;
+        Settings::setAdalightSerialPortName(field("serialPort").toString());
+        Settings::setAdalightSerialPortBaudRate(field("baudRate").toString());
+        Settings::setColorSequence(devType, field("colorFormat").toString());
 
     } else if (deviceName.compare("ardulight", Qt::CaseInsensitive) == 0) {
         devType = SupportedDevices::DeviceTypeArdulight;
+        Settings::setArdulightSerialPortName(field("serialPort").toString());
+        Settings::setArdulightSerialPortBaudRate(field("baudRate").toString());
+        Settings::setColorSequence(devType, field("colorFormat").toString());
+
     } else {
         devType = SupportedDevices::DeviceTypeVirtual;
     }
