@@ -121,8 +121,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     initGrabbersRadioButtonsVisibility();
     initLanguages();
     initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::DeviceTypeVirtual));
-    initConnectedDeviceComboBox();
-    initSerialPortBaudRateComboBox();
 
     loadTranslation(Settings::getLanguage());
 
@@ -202,20 +200,9 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->spinBox_DeviceSmooth, SIGNAL(valueChanged(int)), this, SLOT(onDeviceSmooth_valueChanged(int)));
     connect(ui->spinBox_DeviceBrightness, SIGNAL(valueChanged(int)), this, SLOT(onDeviceBrightness_valueChanged(int)));
     connect(ui->spinBox_DeviceColorDepth, SIGNAL(valueChanged(int)), this, SLOT(onDeviceColorDepth_valueChanged(int)));
-    connect(ui->comboBox_ConnectedDevice, SIGNAL(currentIndexChanged(QString)), this, SLOT(onDeviceConnectedDevice_currentIndexChanged(QString)));
-    connect(ui->lineEdit_AdalightSerialPort, SIGNAL(editingFinished()), this, SLOT(onAdalightSerialPort_editingFinished()));
-    connect(ui->comboBox_AdalightSerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onAdalightSerialPortBaudRate_valueChanged(QString)));
-    connect(ui->lineEdit_ArdulightSerialPort, SIGNAL(editingFinished()), this, SLOT(onArdulightSerialPort_editingFinished()));
-    connect(ui->comboBox_ArdulightSerialPortBaudRate, SIGNAL(currentIndexChanged(QString)), this, SLOT(onArdulightSerialPortBaudRate_valueChanged(QString)));
     connect(ui->doubleSpinBox_DeviceGamma, SIGNAL(valueChanged(double)), this, SLOT(onDeviceGammaCorrection_valueChanged(double)));
     connect(ui->horizontalSlider_GammaCorrection, SIGNAL(valueChanged(int)), this, SLOT(onSliderDeviceGammaCorrection_valueChanged(int)));
     connect(ui->checkBox_SendDataOnlyIfColorsChanges, SIGNAL(toggled(bool)), this, SLOT(onDeviceSendDataOnlyIfColorsChanged_toggled(bool)));
-    connect(ui->comboBox_AdalightColorSequence, SIGNAL(currentIndexChanged(QString)), this, SLOT(onColorSequence_valueChanged(QString)));
-    connect(ui->comboBox_ArdulightColorSequence, SIGNAL(currentIndexChanged(QString)), this, SLOT(onColorSequence_valueChanged(QString)));
-    connect(ui->spinBox_LightpackNumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onLightpackNumberOfLeds_valueChanged(int)));
-    connect(ui->spinBox_AdalightNumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onAdalightNumberOfLeds_valueChanged(int)));
-    connect(ui->spinBox_ArdulightNumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onArdulightNumberOfLeds_valueChanged(int)));
-    connect(ui->spinBox_VirtualNumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(onVirtualNumberOfLeds_valueChanged(int)));
 
     // Open Settings file
     connect(ui->commandLinkButton_OpenSettings, SIGNAL(clicked()), this, SLOT(openCurrentProfile()));
@@ -408,26 +395,6 @@ void SettingsWindow::updateDeviceTabWidgetsVisibility()
 
     switch (connectedDevice)
     {
-    case SupportedDevices::DeviceTypeAdalight:
-        ui->groupBox_DeviceSpecificSettings->show();
-        ui->tabDevices->setCurrentWidget(ui->tabDeviceAdalight);
-        break;
-
-    case SupportedDevices::DeviceTypeArdulight:
-        ui->groupBox_DeviceSpecificSettings->show();
-        ui->tabDevices->setCurrentWidget(ui->tabDeviceArdulight);
-        break;
-
-    case SupportedDevices::DeviceTypeAlienFx:
-        ui->groupBox_DeviceSpecificSettings->hide();
-        break;
-
-    case SupportedDevices::DeviceTypeLightpack:
-        ui->groupBox_DeviceSpecificSettings->show();
-        ui->tabDevices->setCurrentWidget(ui->tabDeviceLightpack);
-        setDeviceTabWidgetsVisibility(DeviceTab::Lightpack);
-        break;
-
     case SupportedDevices::DeviceTypeVirtual:
         ui->groupBox_DeviceSpecificSettings->show();
         ui->tabDevices->setCurrentWidget(ui->tabDeviceVirtual);
@@ -435,8 +402,15 @@ void SettingsWindow::updateDeviceTabWidgetsVisibility()
         initVirtualLeds(Settings::getNumberOfLeds(SupportedDevices::DeviceTypeVirtual));
         break;
 
+    case SupportedDevices::DeviceTypeLightpack:
+        ui->groupBox_DeviceSpecificSettings->show();
+        ui->tabDevices->setCurrentWidget(ui->tabDeviceLightpack);
+        // Sync Virtual Leds count with NumberOfLeds field
+        break;
+
     default:
-        qCritical() << Q_FUNC_INFO << "Fail. Unknown connectedDevice ==" << connectedDevice;
+        ui->groupBox_DeviceSpecificSettings->hide();
+//        qCritical() << Q_FUNC_INFO << "Fail. Unknown connectedDevice ==" << connectedDevice;
         break;
     }
 }
@@ -1101,117 +1075,6 @@ void SettingsWindow::onDeviceColorDepth_valueChanged(int value)
     Settings::setDeviceColorDepth(value);
 }
 
-void SettingsWindow::onDeviceConnectedDevice_currentIndexChanged(QString value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    int currentIndex = ui->comboBox_ConnectedDevice->currentIndex();
-    int virtualDeviceIndex = ui->comboBox_ConnectedDevice->count() - 1;
-
-    if (currentIndex == virtualDeviceIndex)
-    {
-        value = "Virtual";
-    }
-
-    Settings::setConnectedDeviceName(value);
-
-    // Sync connected device and widgets visibility on device tab
-    updateDeviceTabWidgetsVisibility();
-
-    // Update number of leds for current selected device
-    //    ui->spinBox_NumberOfLeds->setValue(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
-
-    int index = ui->comboBox_AdalightColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
-    if (index < 0)
-        index = 0;
-    ui->comboBox_AdalightColorSequence->setCurrentIndex(index);
-
-    emit recreateLedDevice();
-}
-
-void SettingsWindow::onLightpackNumberOfLeds_valueChanged(int value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    Settings::setNumberOfLeds(SupportedDevices::DeviceTypeLightpack, value);
-
-}
-
-void SettingsWindow::onAdalightNumberOfLeds_valueChanged(int value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    Settings::setNumberOfLeds(SupportedDevices::DeviceTypeAdalight, value);
-
-}
-
-void SettingsWindow::onArdulightNumberOfLeds_valueChanged(int value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    Settings::setNumberOfLeds(SupportedDevices::DeviceTypeArdulight, value);
-
-}
-
-void SettingsWindow::onVirtualNumberOfLeds_valueChanged(int value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    Settings::setNumberOfLeds(SupportedDevices::DeviceTypeVirtual, value);
-    initVirtualLeds(value);
-}
-
-void SettingsWindow::onAdalightSerialPort_editingFinished()
-{
-    QString serialPort = ui->lineEdit_AdalightSerialPort->text();
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << serialPort;
-
-    Settings::setAdalightSerialPortName(serialPort);
-
-    if (Settings::isConnectedDeviceUsesSerialPort())
-        emit recreateLedDevice();
-}
-
-void SettingsWindow::onAdalightSerialPortBaudRate_valueChanged(QString value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    Settings::setAdalightSerialPortBaudRate(value);
-
-    if (Settings::isConnectedDeviceUsesSerialPort())
-        emit recreateLedDevice();
-}
-
-void SettingsWindow::onArdulightSerialPort_editingFinished()
-{
-    QString serialPort = ui->lineEdit_ArdulightSerialPort->text();
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << serialPort;
-
-    Settings::setArdulightSerialPortName(serialPort);
-
-    if (Settings::isConnectedDeviceUsesSerialPort())
-        emit recreateLedDevice();
-}
-
-void SettingsWindow::onArdulightSerialPortBaudRate_valueChanged(QString value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    Settings::setArdulightSerialPortBaudRate(value);
-
-    if (Settings::isConnectedDeviceUsesSerialPort())
-        emit recreateLedDevice();
-}
-
-void SettingsWindow::onColorSequence_valueChanged(QString value)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
-
-    Settings::setColorSequence(Settings::getConnectedDevice(),value);
-
-    //todo emit change_ColorSequence
-}
-
 void SettingsWindow::onDeviceGammaCorrection_valueChanged(double value)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << value;
@@ -1565,10 +1428,10 @@ void SettingsWindow::initPixmapCache()
     m_pixmapCache.insert("error16", new QPixmap(QPixmap(":/icons/error.png").scaledToWidth(16, Qt::SmoothTransformation)) );
 }
 
-void SettingsWindow::handleConnectedDeviceChange(const SupportedDevices::DeviceType deviceType) {
-    this->labelDevice->setText(tr("Device: %1").arg(Settings::getConnectedDeviceName()));
-    updateUiFromSettings();
-}
+//void SettingsWindow::handleConnectedDeviceChange(const SupportedDevices::DeviceType deviceType) {
+//    this->labelDevice->setText(tr("Device: %1").arg(Settings::getConnectedDeviceName()));
+//    updateUiFromSettings();
+//}
 
 // ----------------------------------------------------------------------------
 // Translate GUI
@@ -1788,11 +1651,6 @@ void SettingsWindow::updateUiFromSettings()
     Lightpack::Mode mode = Settings::getLightpackMode();
     onLightpackModeChanged(mode);
 
-    int index = ui->comboBox_AdalightColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
-    if (index < 0)
-        index = 0;
-    ui->comboBox_AdalightColorSequence->setCurrentIndex(index);
-
     ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
 
     ui->checkBox_SendDataOnlyIfColorsChanges->setChecked(Settings::isSendDataOnlyIfColorsChanges());
@@ -1813,18 +1671,12 @@ void SettingsWindow::updateUiFromSettings()
     ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
     ui->horizontalSlider_MoodLampSpeed->setValue        (Settings::getMoodLampSpeed());
 
-    ui->spinBox_LightpackNumberOfLeds->setValue         (Settings::getNumberOfLeds(SupportedDevices::DeviceTypeLightpack));
-    ui->spinBox_AdalightNumberOfLeds->setValue          (Settings::getNumberOfLeds(SupportedDevices::DeviceTypeAdalight));
-    ui->spinBox_ArdulightNumberOfLeds->setValue         (Settings::getNumberOfLeds(SupportedDevices::DeviceTypeArdulight));
-    ui->spinBox_VirtualNumberOfLeds->setValue           (Settings::getNumberOfLeds(SupportedDevices::DeviceTypeVirtual));
     ui->horizontalSlider_DeviceRefreshDelay->setValue   (Settings::getDeviceRefreshDelay());
     ui->horizontalSlider_DeviceBrightness->setValue     (Settings::getDeviceBrightness());
     ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());
     ui->horizontalSlider_DeviceColorDepth->setValue     (Settings::getDeviceColorDepth());
     ui->doubleSpinBox_DeviceGamma->setValue             (Settings::getDeviceGamma());
     ui->horizontalSlider_GammaCorrection->setValue      (floor((Settings::getDeviceGamma() * 100 + 0.5)));
-    ui->lineEdit_AdalightSerialPort->setText            (Settings::getAdalightSerialPortName());
-    ui->lineEdit_ArdulightSerialPort->setText           (Settings::getArdulightSerialPortName());
 
     ui->groupBox_Api->setChecked                        (Settings::isApiEnabled());
     ui->lineEdit_ApiPort->setText                       (QString::number(Settings::getApiPort()));
@@ -1935,103 +1787,6 @@ void SettingsWindow::quit()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "QApplication::quit();";
 
     QApplication::quit();
-}
-
-void SettingsWindow::initConnectedDeviceComboBox()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    QString deviceName = Settings::getConnectedDeviceName();
-    QStringList devices = Settings::getSupportedDevices();
-
-    // Remove virtual device because it already in combobox
-    devices.removeOne("Virtual");
-    devices.append("Virtual (debug)");
-
-    // NOTE: This line emit's signal currentIndex_Changed()
-    ui->comboBox_ConnectedDevice->insertItems(0, devices);
-
-    int currentIndex = 0;
-
-    if (deviceName == "Virtual")
-    {
-        // Virtual device is last in combobox
-        currentIndex = ui->comboBox_ConnectedDevice->count() - 1;
-    } else {
-        currentIndex = ui->comboBox_ConnectedDevice->findText(deviceName);
-    }
-
-    if (currentIndex < 0)
-    {
-        qCritical() << Q_FUNC_INFO << "Just fail. Supported devices"
-                    << Settings::getSupportedDevices() << "doesn't contains connected device:" << deviceName;
-        currentIndex = 0;
-    }
-    ui->comboBox_ConnectedDevice->setCurrentIndex(currentIndex);
-
-    int index = ui->comboBox_AdalightColorSequence->findText(Settings::getColorSequence(Settings::getConnectedDevice()));
-    if (index < 0)
-        index = 0;
-    ui->comboBox_AdalightColorSequence->setCurrentIndex(index);
-
-}
-
-void SettingsWindow::setDevice(QString deviceName)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    int currentIndex = 0;
-
-    if (deviceName == "Virtual")
-    {
-        // Virtual device is last in combobox
-        currentIndex = ui->comboBox_ConnectedDevice->count() - 1;
-    } else {
-        currentIndex = ui->comboBox_ConnectedDevice->findText(deviceName);
-    }
-
-    if (currentIndex < 0)
-    {
-        qCritical() << Q_FUNC_INFO << "Just fail. Supported devices"
-                    << Settings::getSupportedDevices() << "doesn't contains connected device:" << deviceName;
-        currentIndex = 0;
-    }
-    ui->comboBox_ConnectedDevice->setCurrentIndex(currentIndex);
-}
-
-void SettingsWindow::initSerialPortBaudRateComboBox()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    ui->comboBox_AdalightSerialPortBaudRate->clear();
-    // NOTE: This line emit's signal currentIndex_Changed()
-    ui->comboBox_AdalightSerialPortBaudRate->addItems(Settings::getSupportedSerialPortBaudRates());
-
-    ui->comboBox_ArdulightSerialPortBaudRate->clear();
-    // NOTE: This line emit's signal currentIndex_Changed()
-    ui->comboBox_ArdulightSerialPortBaudRate->addItems(Settings::getSupportedSerialPortBaudRates());
-
-
-    QString baudrate = QString::number(Settings::getAdalightSerialPortBaudRate());
-    int index = ui->comboBox_AdalightSerialPortBaudRate->findText(baudrate);
-    if (index < 0)
-    {
-        qCritical() << Q_FUNC_INFO << "Just another fail. Serial port supported baud rates"
-                    << Settings::getSupportedSerialPortBaudRates() << "doesn't contains baud rate:" << baudrate;
-        index = 0;
-    }
-
-    ui->comboBox_AdalightSerialPortBaudRate->setCurrentIndex(index);
-
-    baudrate = QString::number(Settings::getArdulightSerialPortBaudRate());
-    index = ui->comboBox_ArdulightSerialPortBaudRate->findText(baudrate);
-    if (index < 0)
-    {
-        qCritical() << Q_FUNC_INFO << "Just another fail. Serial port supported baud rates"
-                    << Settings::getSupportedSerialPortBaudRates() << "doesn't contains baud rate:" << baudrate;
-        index = 0;
-    }
-    ui->comboBox_ArdulightSerialPortBaudRate->setCurrentIndex(index);
 }
 
 void SettingsWindow::adjustSizeAndMoveCenter()

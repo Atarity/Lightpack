@@ -27,6 +27,7 @@
 #include "SelectDevicePage.hpp"
 #include "ui_SelectDevicePage.h"
 #include "Wizard.hpp"
+#include "LedDeviceVirtual.hpp"
 
 SelectDevicePage::SelectDevicePage(bool isInitFromSettings, TransientSettings *ts, QWidget *parent):
     QWizardPage(parent),
@@ -58,6 +59,9 @@ void SelectDevicePage::cleanupPage()
 
 bool SelectDevicePage::validatePage()
 {
+    if (field("isVirtual").toBool()) {
+        _transSettings->ledDevice.reset(new LedDeviceVirtual());
+    }
     return true;
 }
 

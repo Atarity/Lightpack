@@ -31,6 +31,7 @@
 #include "Settings.hpp"
 #include "AndromedaDistributor.hpp"
 #include "CassiopeiaDistributor.hpp"
+#include "PegasusDistributor.hpp"
 #include "GrabAreaWidget.hpp"
 #include "LedDeviceLightpack.hpp"
 
@@ -63,8 +64,12 @@ AbstractLedDevice * ZonePlacementPage::device()
 void ZonePlacementPage::initializePage()
 {
     using namespace SettingsScope;
+
     _screenId = field("screenId").toInt();
+    registerField("numberOfLeds", _ui->sbNumberOfLeds);
+
     device()->setSmoothSlowdown(70);
+
     _ui->sbNumberOfLeds->setMaximum(device()->maxLedsCount());
     if (_isInitFromSettings) {
         size_t ledCount = Settings::getNumberOfLeds(Settings::getConnectedDevice());
@@ -87,14 +92,36 @@ void ZonePlacementPage::cleanupPage()
 
 void ZonePlacementPage::cleanupGrabAreas()
 {
-    for(int i = 0; i < _zones.size(); i++) {
-        delete _zones[i];
+    for(int i = 0; i < _grabAreas.size(); i++) {
+        delete _grabAreas[i];
     }
-    _zones.clear();
+    _grabAreas.clear();
 }
 
 bool ZonePlacementPage::validatePage()
 {
+    using namespace SettingsScope;
+    QString deviceName = device()->name();
+    SupportedDevices::DeviceType devType;
+    if (deviceName.compare("lightpack", Qt::CaseInsensitive) == 0) {
+        devType = SupportedDevices::DeviceTypeLightpack;
+
+    } else if (deviceName.compare("adalight", Qt::CaseInsensitive) == 0) {
+        devType = SupportedDevices::DeviceTypeAdalight;
+
+    } else if (deviceName.compare("ardulight", Qt::CaseInsensitive) == 0) {
+        devType = SupportedDevices::DeviceTypeArdulight;
+    } else {
+        devType = SupportedDevices::DeviceTypeVirtual;
+    }
+    Settings::setConnectedDevice(devType);
+    Settings::setNumberOfLeds(devType, field("numberOfLeds").toInt());
+
+    for(int i = 0; i < _grabAreas.size(); i++) {
+        Settings::setLedPosition(i, _grabAreas[i]->geometry().topLeft());
+        Settings::setLedSize(i, _grabAreas[i]->geometry().size());
+    }
+
     cleanupGrabAreas();
     return true;
 }
@@ -159,13 +186,13 @@ void ZonePlacementPage::addGrabArea(int id, const QRect &r)
     connect(zone, SIGNAL(resizeOrMoveStarted(int)), this, SLOT(turnLightOn(int)));
     connect(zone, SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(turnLightsOff(int)));
     zone->show();
-    _zones.append(zone);
+    _grabAreas.append(zone);
 }
 
 void ZonePlacementPage::removeLastGrabArea()
 {
-    delete _zones.last();
-    _zones.removeLast();
+    delete _grabAreas.last();
+    _grabAreas.removeLast();
 }
 
 void ZonePlacementPage::on_pbAndromeda_clicked()
@@ -187,11 +214,20 @@ void ZonePlacementPage::on_pbCassiopeia_clicked()
     delete cassiopeia;
 }
 
+void ZonePlacementPage::on_pbPegasus_clicked()
+{
+    PegasusDistributor *pegasus = new PegasusDistributor(_screenId, _ui->sbNumberOfLeds->value());
+
+    distributeAreas(pegasus);
+
+    delete pegasus;
+
+}
 
 
 void ZonePlacementPage::on_sbNumberOfLeds_valueChanged(int numOfLed)
 {
-    while (numOfLed < _zones.size()) {
+    while (numOfLed < _grabAreas.size()) {
         removeLastGrabArea();
     }
     QRect screen = QApplication::desktop()->screenGeometry(_screenId);
@@ -199,8 +235,8 @@ void ZonePlacementPage::on_sbNumberOfLeds_valueChanged(int numOfLed)
     const int dx = 10;
     const int dy = 10;
 
-    while (numOfLed > _zones.size()) {
-        addGrabArea(_zones.size(), _newAreaRect);
+    while (numOfLed > _grabAreas.size()) {
+        addGrabArea(_grabAreas.size(), _newAreaRect);
         if (_newAreaRect.right() + dx < screen.right()) {
             _newAreaRect.moveTo(_newAreaRect.x() + dx, _newAreaRect.y());
         } else if (_newAreaRect.bottom() + dy < screen.bottom()) {
@@ -210,3 +246,4 @@ void ZonePlacementPage::on_sbNumberOfLeds_valueChanged(int numOfLed)
         }
     }
 }
+

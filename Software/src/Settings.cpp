@@ -213,6 +213,9 @@ bool Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    if(m_applicationDirPath != "")
+        return true;
+
     m_applicationDirPath = applicationDirPath;
 
     // Append to the end of dir path '/'

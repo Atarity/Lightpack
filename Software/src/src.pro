@@ -151,7 +151,8 @@ SOURCES += \
     wizard/AndromedaDistributor.cpp \
     wizard/ConfigureDevicePage.cpp \
     wizard/SelectDevicePage.cpp \
-    wizard/CassiopeiaDistributor.cpp
+    wizard/CassiopeiaDistributor.cpp \
+    wizard/PegasusDistributor.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -202,7 +203,8 @@ HEADERS += \
     wizard/SelectDevicePage.hpp \
     types.h \
     wizard/AreaDistributor.hpp \
-    wizard/CassiopeiaDistributor.hpp
+    wizard/CassiopeiaDistributor.hpp \
+    wizard/PegasusDistributor.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \

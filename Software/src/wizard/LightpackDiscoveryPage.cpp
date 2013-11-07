@@ -82,7 +82,7 @@ int LightpackDiscoveryPage::nextId() const {
         if (QApplication::desktop()->screenCount() > 1){
             return Page_MonitorConfiguration;
         } else {
-            return Page_ZonePlacement;
+            return Page_ChooseProfile;
         }
     else
         return Page_ChooseDevice;

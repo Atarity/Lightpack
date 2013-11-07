@@ -62,6 +62,8 @@ private slots:
 
     void on_sbNumberOfLeds_valueChanged(int arg1);
 
+    void on_pbPegasus_clicked();
+
 private:
     void addGrabArea(int id, const QRect &rect);
     void removeLastGrabArea();
@@ -73,7 +75,7 @@ private:
     Ui::ZonePlacementPage *_ui;
     QList<ZoneWidget*> _zoneWidgets;
     int _screenId;
-    QList<QWidget*> _zones;
+    QList<QWidget*> _grabAreas;
     QRect _newAreaRect;
     int _x0;
     int _y0;

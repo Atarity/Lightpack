@@ -53,7 +53,7 @@ void MonitorConfigurationPage::initializePage()
         QRect geom = QApplication::desktop()->screenGeometry(i);
         MonitorIdForm *monitorIdForm = new MonitorIdForm();
 
-        monitorIdForm->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
+        monitorIdForm->setWindowFlags(Qt::FramelessWindowHint);
 
         monitorIdForm->move(geom.topLeft());
         monitorIdForm->resize(geom.width(), geom.height());

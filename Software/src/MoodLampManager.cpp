@@ -123,7 +123,11 @@ void MoodLampManager::settingsProfileChanged(const QString &profileName)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     Q_UNUSED(profileName)
+    initFromSettings();
+}
 
+void MoodLampManager::initFromSettings()
+{
     m_isLiquidMode = Settings::isMoodLampLiquidMode();
     m_liquidModeSpeed = Settings::getMoodLampSpeed();
     m_currentColor = Settings::getMoodLampColor();

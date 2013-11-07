@@ -98,14 +98,12 @@ public slots:
     void profilesLoadAll();
     void profileSwitch(const QString & configName);
     void handleProfileLoaded(const QString & configName);
-    void handleConnectedDeviceChange(const SupportedDevices::DeviceType deviceType);
     void profileSwitchCombobox(QString profile);
     void updateVirtualLedsColors(const QList<QRgb> & colors);
     void requestBacklightStatus();
     void onApiServer_ErrorOnStartListening(QString errorMessage);
     void onPingDeviceEverySecond_Toggled(bool state);
     void processMessage(const QString &message);
-    void setDevice(QString deviceName);
 
     void updatePlugin(QList<Plugin*> plugins);
 
@@ -148,19 +146,9 @@ private slots:
     void onDeviceSmooth_valueChanged(int value);
     void onDeviceBrightness_valueChanged(int value);
     void onDeviceColorDepth_valueChanged(int value);
-    void onDeviceConnectedDevice_currentIndexChanged(QString value);
-    void onLightpackNumberOfLeds_valueChanged(int value);
-    void onAdalightNumberOfLeds_valueChanged(int value);
-    void onArdulightNumberOfLeds_valueChanged(int value);
-    void onVirtualNumberOfLeds_valueChanged(int value);
-    void onAdalightSerialPort_editingFinished();
-    void onAdalightSerialPortBaudRate_valueChanged(QString value);
-    void onArdulightSerialPort_editingFinished();
-    void onArdulightSerialPortBaudRate_valueChanged(QString value);
     void onDeviceGammaCorrection_valueChanged(double value);
     void onSliderDeviceGammaCorrection_valueChanged(int value);
     void onDeviceSendDataOnlyIfColorsChanged_toggled(bool state);
-    void onColorSequence_valueChanged(QString value);
     void onDx1011CaptureEnabledChanged(bool isEnabled);
 
     void onDontShowLedWidgets_Toggled(bool checked);
@@ -225,8 +213,6 @@ private:
 
     void initGrabbersRadioButtonsVisibility();
     void initVirtualLeds(int ledsCount);
-    void initConnectedDeviceComboBox();
-    void initSerialPortBaudRateComboBox();    
 
     void adjustSizeAndMoveCenter();
 

@@ -72,10 +72,10 @@ private slots:
     void setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status, QList<QString> modules);
     void profileSwitch(const QString & configName);
     void settingsChanged();
-    void numberOfLedsChanged(int);
+//    void numberOfLedsChanged(int);
     void showLedWidgets(bool visible);
     void setColoredLedWidget(bool colored);
-    void handleConnectedDeviceChange(const SupportedDevices::DeviceType);
+//    void handleConnectedDeviceChange(const SupportedDevices::DeviceType);
     void onFocusChanged(QWidget *, QWidget *);
     void quitFromWizard(int result);
 

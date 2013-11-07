@@ -46,6 +46,7 @@ public:
     void reset();
 
 public slots:
+    void initFromSettings();
     void setLiquidMode(bool isEnabled);
     void setLiquidModeSpeed(int value);
     void settingsProfileChanged(const QString &profileName);

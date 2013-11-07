@@ -35,8 +35,14 @@ namespace Ui {
 class Wizard;
 }
 
-enum { Page_LightpackDiscovery, Page_ChooseDevice, Page_ConfigureDevice, Page_ChooseProfile, Page_MonitorConfiguration, Page_ZonePlacement,
-            Page_Conclusion };
+enum {
+    Page_LightpackDiscovery,
+    Page_ChooseDevice,
+    Page_ConfigureDevice,
+    Page_MonitorConfiguration,
+    Page_ChooseProfile,
+    Page_ZonePlacement
+};
 
 class Wizard : public QWizard, SettingsAwareTrait
 {
