@@ -41,6 +41,7 @@ Wizard::Wizard(bool isInitFromSettings, QWidget *parent) :
 {
     _transSettings = new TransientSettings;
     memset(_transSettings, 0, sizeof(TransientSettings));
+
     _ui->setupUi(this);
     this->setPage(Page_LightpackDiscovery, new LightpackDiscoveryPage(_isInitFromSettings, _transSettings) );
     this->setPage(Page_ChooseDevice, new SelectDevicePage(_isInitFromSettings, _transSettings) );
@@ -52,9 +53,8 @@ Wizard::Wizard(bool isInitFromSettings, QWidget *parent) :
 
 Wizard::~Wizard()
 {
-    if (_transSettings->ledDevice != NULL) {
+    if (_transSettings->ledDevice != NULL)
         delete _transSettings->ledDevice;
-    }
     delete _transSettings;
     delete _ui;
 }
