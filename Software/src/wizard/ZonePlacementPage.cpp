@@ -41,6 +41,13 @@ ZonePlacementPage::ZonePlacementPage(bool isInitFromSettings, TransientSettings 
     _ui(new Ui::ZonePlacementPage)
 {
     _ui->setupUi(this);
+
+    QRect screen = QApplication::desktop()->screenGeometry(_screenId);
+
+    _x0 = screen.left() + 150;
+    _y0 = screen.top() + 150;
+
+    resetNewAreaRect();
 }
 
 ZonePlacementPage::~ZonePlacementPage()
@@ -48,12 +55,17 @@ ZonePlacementPage::~ZonePlacementPage()
     delete _ui;
 }
 
+AbstractLedDevice * ZonePlacementPage::device()
+{
+    return _transSettings->ledDevice.data();
+}
+
 void ZonePlacementPage::initializePage()
 {
     using namespace SettingsScope;
     _screenId = field("screenId").toInt();
-    _ledDevice = _transSettings->ledDevice;
-    _ledDevice->setSmoothSlowdown(70);
+    device()->setSmoothSlowdown(70);
+    _ui->sbNumberOfLeds->setMaximum(device()->maxLedsCount());
     if (_isInitFromSettings) {
         size_t ledCount = Settings::getNumberOfLeds(Settings::getConnectedDevice());
 
@@ -63,6 +75,8 @@ void ZonePlacementPage::initializePage()
             QRect r(topLeft, size);
             addGrabArea(i, r);
         }
+    } else {
+        on_pbAndromeda_clicked();
     }
 }
 
@@ -73,7 +87,7 @@ void ZonePlacementPage::cleanupPage()
 
 void ZonePlacementPage::cleanupGrabAreas()
 {
-    for(size_t i = 0; i < _zones.size(); i++) {
+    for(int i = 0; i < _zones.size(); i++) {
         delete _zones[i];
     }
     _zones.clear();
@@ -85,23 +99,36 @@ bool ZonePlacementPage::validatePage()
     return true;
 }
 
-void ZonePlacementPage::on_pbAndromeda_clicked()
+void ZonePlacementPage::resetNewAreaRect()
 {
-    AndromedaDistributor *andromeda = new AndromedaDistributor(_screenId, true, _ledDevice->maxLedsCount());
-
-    distributeAreas(andromeda);
-
-    delete andromeda;
-
+    _newAreaRect.setX(_x0);
+    _newAreaRect.setY(_y0);
+    _newAreaRect.setWidth(100);
+    _newAreaRect.setHeight(100);
 }
 
-void ZonePlacementPage::on_pbCassiopeia_clicked()
+void ZonePlacementPage::turnLightOn(int id)
 {
-    CassiopeiaDistributor *cassiopeia = new CassiopeiaDistributor(_screenId, _ledDevice->maxLedsCount());
+    QList<QRgb> lights;
+    for(size_t i=0; i < device()->maxLedsCount(); i++)
+    {
+        if (i == id)
+            lights.append(qRgb(255,255,255));
+        else
+            lights.append(0);
+    }
+    device()->setColors(lights);
+}
 
-    distributeAreas(cassiopeia);
-
-    delete cassiopeia;
+void ZonePlacementPage::turnLightsOff(int id)
+{
+    Q_UNUSED(id)
+    QList<QRgb> lights;
+    for(size_t i=0; i < device()->maxLedsCount(); i++)
+    {
+        lights.append(0);
+    }
+    device()->setColors(lights);
 }
 
 void ZonePlacementPage::distributeAreas(AreaDistributor *distributor) {
@@ -120,6 +147,7 @@ void ZonePlacementPage::distributeAreas(AreaDistributor *distributor) {
 
         delete sf;
     }
+    resetNewAreaRect();
 }
 
 void ZonePlacementPage::addGrabArea(int id, const QRect &r)
@@ -134,27 +162,51 @@ void ZonePlacementPage::addGrabArea(int id, const QRect &r)
     _zones.append(zone);
 }
 
-void ZonePlacementPage::turnLightOn(int id)
+void ZonePlacementPage::removeLastGrabArea()
 {
-    QList<QRgb> lights;
-    for(size_t i=0; i < _ledDevice->maxLedsCount(); i++)
-    {
-        if (i == id)
-            lights.append(qRgb(255,255,255));
-        else
-            lights.append(0);
-    }
-    _ledDevice->setColors(lights);
+    delete _zones.last();
+    _zones.removeLast();
 }
 
-void ZonePlacementPage::turnLightsOff(int id)
+void ZonePlacementPage::on_pbAndromeda_clicked()
 {
-    Q_UNUSED(id)
-    QList<QRgb> lights;
-    for(size_t i=0; i < _ledDevice->maxLedsCount(); i++)
-    {
-        lights.append(0);
-    }
-    _ledDevice->setColors(lights);
+    AndromedaDistributor *andromeda = new AndromedaDistributor(_screenId, true, _ui->sbNumberOfLeds->value());
+
+    distributeAreas(andromeda);
+
+    delete andromeda;
+
 }
 
+void ZonePlacementPage::on_pbCassiopeia_clicked()
+{
+    CassiopeiaDistributor *cassiopeia = new CassiopeiaDistributor(_screenId, _ui->sbNumberOfLeds->value());
+
+    distributeAreas(cassiopeia);
+
+    delete cassiopeia;
+}
+
+
+
+void ZonePlacementPage::on_sbNumberOfLeds_valueChanged(int numOfLed)
+{
+    while (numOfLed < _zones.size()) {
+        removeLastGrabArea();
+    }
+    QRect screen = QApplication::desktop()->screenGeometry(_screenId);
+
+    const int dx = 10;
+    const int dy = 10;
+
+    while (numOfLed > _zones.size()) {
+        addGrabArea(_zones.size(), _newAreaRect);
+        if (_newAreaRect.right() + dx < screen.right()) {
+            _newAreaRect.moveTo(_newAreaRect.x() + dx, _newAreaRect.y());
+        } else if (_newAreaRect.bottom() + dy < screen.bottom()) {
+            _newAreaRect.moveTo(_x0, _newAreaRect.y() + dy);
+        } else {
+            _newAreaRect.moveTo(_x0,_y0);
+        }
+    }
+}

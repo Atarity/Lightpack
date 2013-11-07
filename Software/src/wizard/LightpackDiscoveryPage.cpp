@@ -46,10 +46,12 @@ LightpackDiscoveryPage::~LightpackDiscoveryPage()
 
 void LightpackDiscoveryPage::initializePage() {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+
     LedDeviceLightpack *lpack = new LedDeviceLightpack();
+    _transSettings->ledDevice.reset(lpack);
 
     lpack->open();
-
     if (lpack->lightpacksFound() > 0) {
         _ui->rbChooseAnotherDevice->setEnabled(true);
         _ui->rbLightpackSelected->setEnabled(true);
@@ -65,10 +67,6 @@ void LightpackDiscoveryPage::initializePage() {
         QString caption2 = tr("%0 zones are available").arg(QString::number(lpack->maxLedsCount()));
         _ui->labelLightpacksCount->setText(caption);
         _ui->labelZonesAvailable->setText(caption2);
-
-        _transSettings->ledDevice = lpack;
-    } else {
-        delete lpack;
     }
 }
 

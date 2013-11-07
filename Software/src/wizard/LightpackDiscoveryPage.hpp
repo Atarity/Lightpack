@@ -48,6 +48,7 @@ protected:
     virtual int nextId() const;
 
 private:
+
     Ui::LightpacksDiscoveryPage *_ui;
 };
 

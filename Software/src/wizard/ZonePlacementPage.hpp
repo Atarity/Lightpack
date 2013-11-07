@@ -60,15 +60,23 @@ private slots:
     void on_pbAndromeda_clicked();
     void on_pbCassiopeia_clicked();
 
+    void on_sbNumberOfLeds_valueChanged(int arg1);
+
 private:
     void addGrabArea(int id, const QRect &rect);
+    void removeLastGrabArea();
     void cleanupGrabAreas();
     void distributeAreas(AreaDistributor *);
+    void resetNewAreaRect();
+    AbstractLedDevice * device();
+
     Ui::ZonePlacementPage *_ui;
     QList<ZoneWidget*> _zoneWidgets;
-    AbstractLedDevice *_ledDevice;
     int _screenId;
     QList<QWidget*> _zones;
+    QRect _newAreaRect;
+    int _x0;
+    int _y0;
 
 };
 

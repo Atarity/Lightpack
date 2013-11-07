@@ -49,37 +49,45 @@ void MonitorConfigurationPage::initializePage()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     size_t screenCount = QApplication::desktop()->screenCount();
-//    if (!_isInitFromSettings && screenCount > 1) {
-        for(size_t i = 0; i < screenCount; i++) {
-            QRect geom = QApplication::desktop()->screenGeometry(i);
-            MonitorIdForm *monitorIdForm = new MonitorIdForm();
+    for(size_t i = 0; i < screenCount; i++) {
+        QRect geom = QApplication::desktop()->screenGeometry(i);
+        MonitorIdForm *monitorIdForm = new MonitorIdForm();
 
-            monitorIdForm->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
+        monitorIdForm->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
 
-            monitorIdForm->move(geom.topLeft());
-            monitorIdForm->resize(geom.width(), geom.height());
+        monitorIdForm->move(geom.topLeft());
+        monitorIdForm->resize(geom.width(), geom.height());
 
-            monitorIdForm->setId(i+1);
+        monitorIdForm->setId(i+1);
 
-            QString text = QString("Monitor %0, %1x%2").arg(QString::number(i+1), QString::number(geom.width()), QString::number(geom.height()));
-            _ui->cbMonitor->addItem(text, (int)i);
+        QString text = QString("Monitor %0, %1x%2").arg(QString::number(i+1), QString::number(geom.width()), QString::number(geom.height()));
+        _ui->cbMonitor->addItem(text, (int)i);
 
-            monitorIdForm->show();
+        monitorIdForm->show();
 
-            _monitorForms.append(monitorIdForm);
-        }
-//    } else {
-//        QMetaObject::invokeMethod(wizard(), "next", Qt::QueuedConnection);
-//    }
+        _monitorForms.append(monitorIdForm);
+    }
 }
 
 bool MonitorConfigurationPage::validatePage()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    cleanupMonitors();
+    return true;
+}
+
+void MonitorConfigurationPage::cleanupPage()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    cleanupMonitors();
+}
+
+void MonitorConfigurationPage::cleanupMonitors()
+{
     foreach ( MonitorIdForm *monitorIdForm, _monitorForms ) {
         delete monitorIdForm;
     }
-    return true;
+    _monitorForms.clear();
 }
 
 void MonitorConfigurationPage::addMonitor(int id)\

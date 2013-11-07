@@ -53,8 +53,8 @@ Wizard::Wizard(bool isInitFromSettings, QWidget *parent) :
 
 Wizard::~Wizard()
 {
-    if (_transSettings->ledDevice != NULL)
-        delete _transSettings->ledDevice;
+//    if (_transSettings->ledDevice != NULL)
+//        delete _transSettings->ledDevice;
     delete _transSettings;
     delete _ui;
 }

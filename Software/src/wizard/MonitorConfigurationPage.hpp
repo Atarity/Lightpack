@@ -46,10 +46,12 @@ public:
 
 protected:
     virtual void initializePage();
+    virtual void cleanupPage();
     virtual bool validatePage();
 
 private:
     void addMonitor(int id);
+    void cleanupMonitors();
 
     Ui::MonitorsConfigurationPage *_ui;
     QList<MonitorIdForm*> _monitorForms;

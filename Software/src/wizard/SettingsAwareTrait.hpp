@@ -27,6 +27,7 @@
 #ifndef SETTINGSAWARETRAIT_HPP
 #define SETTINGSAWARETRAIT_HPP
 
+#include<QSharedPointer>
 
 namespace SettingsScope {
 class Settings;
@@ -35,7 +36,7 @@ class Settings;
 class AbstractLedDevice;
 
 struct TransientSettings {
-    AbstractLedDevice *ledDevice;
+    QSharedPointer<AbstractLedDevice>ledDevice;
 };
 
 class SettingsAwareTrait {

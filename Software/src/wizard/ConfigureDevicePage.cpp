@@ -65,9 +65,9 @@ bool ConfigureDevicePage::validatePage()
     QString portName = field("serialPort").toString();
     int baudRate = field("baudRate").toInt();
     if (field("isAdalight").toBool()) {
-        _transSettings->ledDevice = new LedDeviceAdalight(portName, baudRate);
+        _transSettings->ledDevice.reset(new LedDeviceAdalight(portName, baudRate));
     } else if (field("isArdulight").toBool()){
-        _transSettings->ledDevice = new LedDeviceArdulight(portName, baudRate);
+        _transSettings->ledDevice.reset(new LedDeviceArdulight(portName, baudRate));
     } else {
         QMessageBox::information(NULL, "Wrong device", "Try to restart the wizard");
         qCritical() << "couldn't create LedDevice, unexpected state, device is not selected or device is not configurable";

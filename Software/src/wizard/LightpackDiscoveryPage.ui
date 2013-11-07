@@ -25,6 +25,9 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="1">
     <widget class="QLabel" name="labelZonesAvailable">
+     <property name="styleSheet">
+      <string notr="true">margin-bottom: 1em;</string>
+     </property>
      <property name="text">
       <string>please connect Lightpack or setup another device</string>
      </property>
@@ -36,7 +39,7 @@
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">margin-top: 1em;</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string>Continue setting up the Lightpacks</string>
