@@ -243,7 +243,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -529,9 +529,9 @@
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_16">
                <item>
-                <widget class="QRadioButton" name="radioButton_Colored">
+                <widget class="QRadioButton" name="radioButton_GrabWidgetsDontShow">
                  <property name="text">
-                  <string>Colored</string>
+                  <string>Do not show</string>
                  </property>
                  <property name="checked">
                   <bool>true</bool>
@@ -539,16 +539,19 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_White">
+                <widget class="QRadioButton" name="radioButton_Colored">
                  <property name="text">
-                  <string>White</string>
+                  <string>Colored</string>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_GrabWidgetsDontShow">
+                <widget class="QRadioButton" name="radioButton_White">
                  <property name="text">
-                  <string>Do not show</string>
+                  <string>White</string>
                  </property>
                 </widget>
                </item>
@@ -1088,30 +1091,8 @@
             <string>Lightpack</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_13">
-            <item row="5" column="0">
-             <widget class="QSlider" name="horizontalSlider_DeviceSmooth">
-              <property name="whatsThis">
-               <string>&lt;h4&gt;Smoothness&lt;/h4&gt; It defines how many steps will be color changed in</string>
-              </property>
-              <property name="minimum">
-               <number>0</number>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-              <property name="pageStep">
-               <number>1</number>
-              </property>
-              <property name="value">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_DeviceRefreshDelay">
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_9">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1119,30 +1100,29 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>Refresh delay (Lightpack 5 and below):</string>
+               <string>Smoothness:</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="2">
-             <widget class="QPushButton" name="pushButton_LightpackSmoothnessHelp">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+            <item row="7" column="0">
+             <widget class="QSlider" name="horizontalSlider_DeviceRefreshDelay">
+              <property name="whatsThis">
+               <string>&lt;h4&gt;Refresh delay&lt;/h4&gt; This setting’s values are inversely proportional to the PWM’s frequency. It's affects to performance.</string>
               </property>
-              <property name="styleSheet">
-               <string notr="true">margin:0px;</string>
+              <property name="minimum">
+               <number>64</number>
               </property>
-              <property name="text">
-               <string/>
+              <property name="maximum">
+               <number>1023</number>
               </property>
-              <property name="icon">
-               <iconset resource="../res/LightpackResources.qrc">
-                <normaloff>:/icons/help.png</normaloff>:/icons/help.png</iconset>
+              <property name="pageStep">
+               <number>1</number>
               </property>
-              <property name="flat">
-               <bool>true</bool>
+              <property name="value">
+               <number>64</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
@@ -1177,34 +1157,39 @@
               </property>
              </widget>
             </item>
-            <item row="7" column="1">
-             <widget class="QSpinBox" name="spinBox_DeviceRefreshDelay">
+            <item row="5" column="2">
+             <widget class="QPushButton" name="pushButton_LightpackSmoothnessHelp">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>50</width>
-                <height>0</height>
-               </size>
+              <property name="styleSheet">
+               <string notr="true">margin:0px;</string>
               </property>
-              <property name="maximumSize">
-               <size>
-                <width>60</width>
-                <height>16777215</height>
-               </size>
+              <property name="text">
+               <string/>
               </property>
-              <property name="minimum">
-               <number>64</number>
+              <property name="icon">
+               <iconset resource="../res/LightpackResources.qrc">
+                <normaloff>:/icons/help.png</normaloff>:/icons/help.png</iconset>
               </property>
-              <property name="maximum">
-               <number>1023</number>
+              <property name="flat">
+               <bool>true</bool>
               </property>
-              <property name="value">
-               <number>64</number>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_DeviceRefreshDelay">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Refresh delay (Lightpack 5 and below):</string>
               </property>
              </widget>
             </item>
@@ -1284,48 +1269,22 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_9">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Smoothness:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_DeviceColorDepth">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Color depth (Lightpack 5 and below):</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QSlider" name="horizontalSlider_DeviceRefreshDelay">
+            <item row="5" column="0">
+             <widget class="QSlider" name="horizontalSlider_DeviceSmooth">
               <property name="whatsThis">
-               <string>&lt;h4&gt;Refresh delay&lt;/h4&gt; This setting’s values are inversely proportional to the PWM’s frequency. It's affects to performance.</string>
+               <string>&lt;h4&gt;Smoothness&lt;/h4&gt; It defines how many steps will be color changed in</string>
               </property>
               <property name="minimum">
-               <number>64</number>
+               <number>0</number>
               </property>
               <property name="maximum">
-               <number>1023</number>
+               <number>255</number>
               </property>
               <property name="pageStep">
                <number>1</number>
               </property>
               <property name="value">
-               <number>64</number>
+               <number>100</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -1354,6 +1313,63 @@
                <bool>true</bool>
               </property>
              </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_DeviceColorDepth">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Color depth (Lightpack 5 and below):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QSpinBox" name="spinBox_DeviceRefreshDelay">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>60</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="minimum">
+               <number>64</number>
+              </property>
+              <property name="maximum">
+               <number>1023</number>
+              </property>
+              <property name="value">
+               <number>64</number>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <spacer name="verticalSpacer_8">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </widget>
@@ -1928,21 +1944,21 @@
             <item row="0" column="1">
              <widget class="QLabel" name="label_PluginName">
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
              </widget>
             </item>
             <item row="1" column="1">
              <widget class="QLabel" name="label_PluginAuthor">
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
              </widget>
             </item>
             <item row="2" column="1">
              <widget class="QLabel" name="label_PluginVersion">
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -1977,7 +1993,7 @@
             <item row="0" column="2" rowspan="3">
              <widget class="QLabel" name="label_PluginIcon">
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
