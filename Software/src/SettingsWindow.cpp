@@ -40,6 +40,12 @@
 #include "debug.h"
 #include "Plugin.hpp"
 
+#undef signals // Collides with GTK symbols
+#ifdef UNITY_DESKTOP
+#include <libappindicator/app-indicator.h>
+#endif
+
+
 using namespace SettingsScope;
 
 // ----------------------------------------------------------------------------
@@ -1551,10 +1557,73 @@ void SettingsWindow::createActions()
     connect(m_quitAction, SIGNAL(triggered()), this, SLOT(quit()));
 }
 
+
+#ifdef UNITY_DESKTOP
+
+static void action_switch_on (GtkAction *action, SettingsWindow *m_SetWindow);
+static void action_switch_off (GtkAction *action, SettingsWindow *m_SetWindow);
+static void action_show_settings (GtkAction *action, SettingsWindow *m_SetWindow);
+static void action_hide_settings (GtkAction *action, SettingsWindow *m_SetWindow);
+static void action_quit (GtkAction *action, SettingsWindow *m_SetWindow);
+
+static GtkActionEntry entries[] = {
+ /*  Name, 		stock_id, 	label, 		accelerator, 	tooltip, 	callback  */
+    { "On",       NULL,     "On",        NULL,           NULL,       G_CALLBACK (action_switch_on) },
+    { "Off",      NULL,     "Off",       NULL,           NULL,       G_CALLBACK (action_switch_off) },
+    { "Settings", NULL,     "Settings",  NULL,           NULL,       G_CALLBACK (action_show_settings) },
+    { "Quit",     NULL,     "Quit",      NULL,           NULL,       G_CALLBACK (action_quit) },
+};
+
+static guint n_entries = G_N_ELEMENTS (entries);
+
+static const gchar *ui_info =
+"<ui>"
+"  <popup name='IndicatorPopup'>"
+"    <menuitem action='On' />"
+"    <menuitem action='Off' />"
+"    <menuitem action='Settings' />"
+"    <separator />"
+"    <menuitem action='Quit' />"
+"  </popup>"
+"</ui>";
+
+static void action_switch_on (GtkAction *action, SettingsWindow *m_SetWindow)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_SetWindow->backlightOn();
+}
+
+static void action_switch_off (GtkAction *action, SettingsWindow *m_SetWindow)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_SetWindow->backlightOff();
+}
+
+
+static void action_show_settings (GtkAction *action, SettingsWindow *m_SetWindow)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_SetWindow->showSettings();
+}
+
+static void action_hide_settings (GtkAction *action, SettingsWindow *m_SetWindow)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_SetWindow->hideSettings();
+}
+
+static void action_quit (GtkAction *action, SettingsWindow *m_SetWindow)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    m_SetWindow->quit();
+    return;
+}
+#endif
+
 void SettingsWindow::createTrayIcon()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
+#ifndef UNITY_DESKTOP
     m_trayIconMenu = new QMenu(this);
     m_trayIconMenu->addAction(m_switchOnBacklightAction);
     m_trayIconMenu->addAction(m_switchOffBacklightAction);
@@ -1568,6 +1637,48 @@ void SettingsWindow::createTrayIcon()
     m_trayIcon->setContextMenu(m_trayIconMenu);
     m_trayIcon->setIcon(QIcon(":/icons/off.png"));
     m_trayIcon->show();
+
+#else
+
+    /*
+     Ubuntu indicator
+    */
+    DEBUG_LOW_LEVEL << "TEST!!!!!!";
+    GtkWidget *indicator_menu;
+    GtkActionGroup *action_group;
+    GtkUIManager *uim;
+    AppIndicator *indicator;
+    GError *error = NULL;
+
+    /* Menus */
+    action_group = gtk_action_group_new ("AppActions");
+    gtk_action_group_add_actions (action_group, entries, n_entries, this);
+
+    uim = gtk_ui_manager_new ();
+    gtk_ui_manager_insert_action_group (uim, action_group, 0);
+
+    if (!gtk_ui_manager_add_ui_from_string (uim, ui_info, -1, &error))
+    {
+          DEBUG_LOW_LEVEL << "Failed to build menus:"<< error->message;
+          g_message ("Failed to build menus: %s\n", error->message);
+          g_error_free (error);
+          error = NULL;
+    }
+    gtk_ui_manager_ensure_update(uim);
+
+    /* Indicator */
+     indicator = app_indicator_new ("example-simple-client",
+                                    "indicator-weather",
+                                    APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+
+     indicator_menu = gtk_ui_manager_get_widget (uim, "/ui/IndicatorPopup");
+
+     app_indicator_set_status (indicator, APP_INDICATOR_STATUS_ACTIVE);
+     //app_indicator_set_attention_icon (indicator, "indicator-weather");
+
+     app_indicator_set_menu (indicator, GTK_MENU (indicator_menu));
+     gtk_widget_show_all(indicator_menu);
+#endif
 }
 
 // ----------------------------------------------------------------------------

@@ -109,6 +109,9 @@ public slots:
 
     void onFocus();
     void onBlur();
+    void quit(); /* using in actions */
+    void showSettings(); /* using in actions */
+    void hideSettings(); /* using in iconActivated(..) */
 
 protected:
     virtual void changeEvent(QEvent *e);
@@ -123,13 +126,9 @@ private slots:
     void onTrayIcon_Activated(QSystemTrayIcon::ActivationReason reason);
     void onTrayIcon_MessageClicked();
     void showAbout(); /* using in actions */
-    void showSettings(); /* using in actions */
-    void hideSettings(); /* using in iconActivated(..) */
     void onPostInit();
 
     void changePage(int page);
-
-    void quit(); /* using in actions */
 
     void toggleBacklight();
     void toggleBacklightMode();
