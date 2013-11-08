@@ -4,7 +4,7 @@
 #define MyAppName "Prismatik"
 #define MyAppVersion "5.10.1"
 #define MyAppPublisher "Pixelkit LLC"
-#define MyAppURL "http://code.google.com/p/lightpack/"
+#define MyAppURL "https://github.com/Atarity/Lightpack"
 #define MyAppExeName "Prismatik.exe"
 #define UserSettingsDirName "{%USERPROFILE|{app}}\Prismatik"
 
@@ -51,13 +51,18 @@ Name: "startupicon"; Description: "{cm:CreateStartupIcon}"; GroupDescription: "{
 Source: "content/below_win7/Prismatik.exe"; DestDir: "{app}"; OnlyBelowVersion: 6.1.7600; Flags: ignoreversion
 Source: "content/Prismatik.exe"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: ignoreversion
 Source: "Prismatik.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/QtCore5.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/QtGui5.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/QtNetwork5.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/QtWidgets5.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/Qt5SerialPort.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/icudt51.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/icuin51.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/icuuc51.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/libstdc++-6.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/libwinpthread-1.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/libraryinjector.dll"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: 32bit regserver ignoreversion
 Source: "content/prismatik-hooks.dll"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: ignoreversion
 Source: "content/Plugins/*"; DestDir: "{#UserSettingsDirName}\Plugins"; Flags: onlyifdoesntexist createallsubdirs recursesubdirs
@@ -73,7 +78,7 @@ Name: "{commonstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "http://code.google.com/p/lightpack/w/list"; Description: "{cm:OpenWiki}"; Flags: postinstall shellexec skipifsilent runasoriginaluser 
+Filename: "https://github.com/Atarity/Lightpack-docs"; Description: "{cm:OpenWiki}"; Flags: postinstall shellexec skipifsilent runasoriginaluser 
 
 [UninstallDelete]
 Name: "{app}\*.*"; Type: filesandordirs
