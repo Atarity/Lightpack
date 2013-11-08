@@ -50,6 +50,10 @@ void MacOSGrabber::updateGrabMonitor(QWidget *widget)
     Q_UNUSED(widget);
 }
 
+void imageCleanup(void *data) {
+    free(data);
+}
+
 QImage * MacOSGrabber::toImage(CGImageRef imageRef)
 {
     size_t width = CGImageGetWidth(imageRef);
@@ -67,7 +71,7 @@ QImage * MacOSGrabber::toImage(CGImageRef imageRef)
     CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
     CGContextRelease(context);
 
-    QImage * result = new QImage(rawData, width, height, QImage::Format_ARGB32);
+    QImage * result = new QImage(rawData, width, height, QImage::Format_ARGB32, imageCleanup);
 
   return result;
 }
