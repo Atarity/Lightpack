@@ -34,10 +34,21 @@
 MacOSGrabber::MacOSGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry):
     TimeredGrabber(parent, grabResult, grabAreasGeometry)
 {
+    _imageBuf = NULL;
+    _imageBufSize = 0;
+    _colorSpace = CGColorSpaceCreateDeviceRGB();
+    _context = NULL;
+    _contextHeight = 0;
+    _contextWidth = 0;
 }
 
 MacOSGrabber::~MacOSGrabber()
 {
+    CGColorSpaceRelease(_colorSpace);
+    if(_imageBuf)
+        free(_imageBuf);
+    if(_context)
+        CGContextRelease(_context);
 }
 
 const char * MacOSGrabber::getName()
@@ -50,28 +61,36 @@ void MacOSGrabber::updateGrabMonitor(QWidget *widget)
     Q_UNUSED(widget);
 }
 
-void imageCleanup(void *data) {
-    free(data);
-}
-
 QImage * MacOSGrabber::toImage(CGImageRef imageRef)
 {
     size_t width = CGImageGetWidth(imageRef);
     size_t height = CGImageGetHeight(imageRef);
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    unsigned char *rawData = (unsigned char*) calloc(height * width * 4, sizeof(unsigned char));
+    size_t new_buf_size = height * width * 4;
+    if (new_buf_size > _imageBufSize) {
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "new width = " << width << " new height = " << height;
+        if (_imageBuf)
+            free(_imageBuf);
+        _imageBuf = (unsigned char*) calloc(height * width * 4, sizeof(unsigned char));
+        _imageBufSize = new_buf_size;
+    }
+
     size_t bytesPerPixel = 4;
     size_t bytesPerRow = bytesPerPixel * width;
     size_t bitsPerComponent = 8;
-    CGContextRef context = CGBitmapContextCreate(rawData, width, height,
-                    bitsPerComponent, bytesPerRow, colorSpace,
-                    kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
-    CGColorSpaceRelease(colorSpace);
+    if (width != _contextWidth || height != _contextHeight) {
+        if(_context)
+            CGContextRelease(_context);
 
-    CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
-    CGContextRelease(context);
+        _context = CGBitmapContextCreate(_imageBuf, width, height,
+                    bitsPerComponent, bytesPerRow, _colorSpace,
+                    kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little);
+        _contextWidth = width;
+        _contextHeight = height;
+    }
 
-    QImage * result = new QImage(rawData, width, height, QImage::Format_ARGB32, imageCleanup);
+    CGContextDrawImage(_context, CGRectMake(0, 0, _contextWidth, _contextHeight), imageRef);
+
+    QImage * result = new QImage(_imageBuf, _contextWidth, _contextHeight, QImage::Format_RGB32);
 
   return result;
 }
