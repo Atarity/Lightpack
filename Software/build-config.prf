@@ -9,12 +9,6 @@ include( build-vars.prf )
         isEmpty( DIRECTX_SDK_DIR ) {
             error("please make sure you have defined DIRECTX_SDK_DIR in your build-vars.prf file")
         }
-        isEmpty( PYTHON_PATH ) {
-            error("PYTHON_PATH is empty, please make sure you have defined PYTHON_PATH in your build-vars.prf file")
-        }
-        isEmpty( PYTHON_LIB ) {
-            error("PYTHON_LIB is empty, please make sure you have defined PYTHON_LIB in your build-vars.prf file")
-        }
         CONFIG(debug, debug|release) {
             DEBUG_EXT = d
         } else {
