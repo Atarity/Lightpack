@@ -52,8 +52,10 @@ LIBS    += -L../lib -lgrab -lprismatik-math
 
 unix:!macx{
     CONFIG    += link_pkgconfig
-    PKGCONFIG += libusb-1.0 \
-                 Qt5SerialPort
+    PKGCONFIG += libusb-1.0
+
+    INCLUDEPATH += ../qtserialport/include
+    LIBS += -L../qtserialport/lib -lQt5SerialPort
 }
 
 win32 {
@@ -184,7 +186,6 @@ HEADERS += \
     LedDeviceManager.hpp \
     SelectWidget.hpp \
     ../common/D3D10GrabberDefs.hpp \
-    colorspace_types.h \
     AbstractLedDevice.hpp \
     PluginsManager.hpp \
     Plugin.hpp \
