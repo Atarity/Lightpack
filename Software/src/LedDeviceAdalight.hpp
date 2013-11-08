@@ -28,7 +28,7 @@
 
 #include "AbstractLedDevice.hpp"
 #include "colorspace_types.h"
-#include <QSerialPort>
+#include <QtSerialPort/QSerialPort>
 
 class LedDeviceAdalight : public AbstractLedDevice
 {
