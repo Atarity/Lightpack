@@ -243,7 +243,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -1858,35 +1858,12 @@
             <height>500</height>
            </size>
           </property>
-          <property name="currentIndex">
-           <number>1</number>
+          <property name="styleSheet">
+           <string notr="true">display:none;</string>
           </property>
-          <widget class="QWidget" name="tabSettingsPlugin">
-           <attribute name="title">
-            <string>Plugin settings</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QTabWidget" name="tabPluginsSettings">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>500</height>
-               </size>
-              </property>
-              <property name="currentIndex">
-               <number>-1</number>
-              </property>
-              <property name="usesScrollButtons">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
           <widget class="QWidget" name="tabInfoPlugin">
            <attribute name="title">
             <string>Info</string>

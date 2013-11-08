@@ -97,10 +97,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     QTabBar* tabBar=ui->tabWidget->findChild<QTabBar*>();
     tabBar->hide();
     // hide plugin settings tabbar
-    tabBar=ui->tabPluginsSettings->findChild<QTabBar*>();
-    tabBar->hide();
-    ui->tabPluginsSettings->setDocumentMode(true);
-    // hide device options tabbar
     tabBar=ui->tabDevices->findChild<QTabBar*>();
     tabBar->hide();
 

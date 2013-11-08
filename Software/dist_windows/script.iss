@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Prismatik"
-#define MyAppVersion "5.9.5"
+#define MyAppVersion "5.10.1"
 #define MyAppPublisher "Pixelkit LLC"
 #define MyAppURL "http://code.google.com/p/lightpack/"
 #define MyAppExeName "Prismatik.exe"
@@ -51,33 +51,15 @@ Name: "startupicon"; Description: "{cm:CreateStartupIcon}"; GroupDescription: "{
 Source: "content/below_win7/Prismatik.exe"; DestDir: "{app}"; OnlyBelowVersion: 6.1.7600; Flags: ignoreversion
 Source: "content/Prismatik.exe"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: ignoreversion
 Source: "Prismatik.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/PythonQt.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/PythonQt_QtAll.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_bsddb.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_ctypes.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_ctypes_test.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_elementtree.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_hashlib.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_msi.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_multiprocessing.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_socket.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_sqlite3.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_ssl.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_testcapi.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/_tkinter.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/bz2.pyd"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/QtCore5.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/QtGui5.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/QtNetwork5.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "content/QtWidgets5.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/libstdc++-6.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/libraryinjector.dll"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: 32bit regserver ignoreversion
 Source: "content/prismatik-hooks.dll"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: ignoreversion
-Source: "content/mingwm10.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/python27.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "content/python27.zip"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/Plugins/*"; DestDir: "{#UserSettingsDirName}\Plugins"; Flags: onlyifdoesntexist createallsubdirs recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
