@@ -96,14 +96,14 @@ static inline void SetupHardware(void)
     clock_prescale_set(clock_div_1);
 
     /* Hardware Initialization */
-    PORTB = 0x00;
-    DDRB = 0x00;
+    DDRB  = 0b11111000;
+    PORTB = 0b00000111;
 
-    PORTC = 0x00;
-    DDRC = 0x00;
+    DDRC  = 0b11111100;
+    PORTC = 0b00000010;
 
-    PORTD = 0x00;
-    DDRD = 0x00;
+    DDRD  = 0b11111111;
+    PORTD = 0b00000000;
 
     OUTPUT(USBLED);
     CLR(USBLED);
