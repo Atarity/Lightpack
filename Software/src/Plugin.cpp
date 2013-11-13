@@ -100,6 +100,8 @@ void Plugin::Start()
     QDir dir(_pathPlugin);
     QDir::setCurrent(dir.absolutePath());
 
+    process->setEnvironment(QProcess::systemEnvironment());
+//    process->setProcessChannelMode(QProcess::ForwardedChannels);
     process->start(program,NULL);
 }
 
