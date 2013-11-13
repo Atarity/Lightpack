@@ -28,7 +28,8 @@
 
 #include "enums.hpp"
 #include "AbstractLedDevice.hpp"
-#include "QTimer"
+
+class QTimer;
 
 /*!
     This class creates \a ILedDevice implementations and manages them after.
@@ -40,6 +41,7 @@ class LedDeviceManager : public QObject
 
 public:
     explicit LedDeviceManager(QObject *parent = 0);
+    virtual ~LedDeviceManager();
 
 signals:
     void openDeviceSuccess(bool isSuccess);
@@ -64,6 +66,8 @@ signals:
     void ledDeviceUpdateDeviceSettings();
 
 public slots:
+    void init();
+
     void recreateLedDevice(const SupportedDevices::DeviceType deviceType);
 
     // This slots are protected from the overflow of queries
@@ -115,5 +119,5 @@ private:
     QList<AbstractLedDevice *> m_ledDevices;
     AbstractLedDevice *m_ledDevice;
     QThread *m_ledDeviceThread;
-    QTimer m_cmdTimeoutTimer;
+    QTimer *m_cmdTimeoutTimer;
 };

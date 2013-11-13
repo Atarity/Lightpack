@@ -47,11 +47,28 @@ LedDeviceManager::LedDeviceManager(QObject *parent)
 
     m_isColorsSaved = false;
 
-    m_cmdTimeoutTimer.setInterval(100);
-    connect(&m_cmdTimeoutTimer, SIGNAL(timeout()), this, SLOT(ledDeviceCommandTimedOut()));
+    m_cmdTimeoutTimer = NULL;
+
 
     for (int i = 0; i < SupportedDevices::DeviceTypesCount; i++)
         m_ledDevices.append(NULL);
+
+}
+
+LedDeviceManager::~LedDeviceManager()
+{
+    m_ledDeviceThread->deleteLater();
+    if (m_cmdTimeoutTimer)
+        delete m_cmdTimeoutTimer;
+}
+
+void LedDeviceManager::init()
+{
+    if (!m_cmdTimeoutTimer)
+        m_cmdTimeoutTimer = new QTimer();
+
+    m_cmdTimeoutTimer->setInterval(100);
+    connect(m_cmdTimeoutTimer, SIGNAL(timeout()), this, SLOT(ledDeviceCommandTimedOut()));
 
     initLedDevice();
 }
@@ -86,7 +103,7 @@ void LedDeviceManager::setColors(const QList<QRgb> & colors)
         m_isColorsSaved = true;
         if (m_isLastCommandCompleted)
         {
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             m_isLastCommandCompleted = false;
             emit ledDeviceSetColors(colors);
         } else {
@@ -101,7 +118,7 @@ void LedDeviceManager::switchOffLeds()
 
     if (m_isLastCommandCompleted)
     {
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         m_isLastCommandCompleted = false;
         processOffLeds();
     } else {
@@ -123,7 +140,7 @@ void LedDeviceManager::setRefreshDelay(int value)
 
     if (m_isLastCommandCompleted)
     {
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         m_isLastCommandCompleted = false;
         emit ledDeviceSetRefreshDelay(value);
     } else {
@@ -138,7 +155,7 @@ void LedDeviceManager::setColorDepth(int value)
 
     if (m_isLastCommandCompleted)
     {
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         m_isLastCommandCompleted = false;
         emit ledDeviceSetColorDepth(value);
     } else {
@@ -154,7 +171,7 @@ void LedDeviceManager::setSmoothSlowdown(int value)
     if (m_isLastCommandCompleted)
     {
         m_isLastCommandCompleted = false;
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         emit ledDeviceSetSmoothSlowdown(value);
     } else {
         m_savedSmoothSlowdown = value;
@@ -169,7 +186,7 @@ void LedDeviceManager::setGamma(double value)
     if (m_isLastCommandCompleted)
     {
         m_isLastCommandCompleted = false;
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         emit ledDeviceSetGamma(value);
     } else {
         m_savedGamma = value;
@@ -184,7 +201,7 @@ void LedDeviceManager::setBrightness(int value)
     if (m_isLastCommandCompleted)
     {
         m_isLastCommandCompleted = false;
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         emit ledDeviceSetBrightness(value);
     } else {
         m_savedBrightness = value;
@@ -199,7 +216,7 @@ void LedDeviceManager::setLuminosityThreshold(int value)
     if (m_isLastCommandCompleted)
     {
         m_isLastCommandCompleted = false;
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         emit ledDeviceSetLuminosityThreshold(value);
     } else {
         m_savedLuminosityThreshold = value;
@@ -214,7 +231,7 @@ void LedDeviceManager::setMinimumLuminosityEnabled(bool value)
     if (m_isLastCommandCompleted)
     {
         m_isLastCommandCompleted = false;
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         emit ledDeviceSetMinimumLuminosityEnabled(value);
     } else {
         m_savedIsMinimumLuminosityEnabled = value;
@@ -229,7 +246,7 @@ void LedDeviceManager::setColorSequence(QString value)
     if (m_isLastCommandCompleted)
     {
         m_isLastCommandCompleted = false;
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         emit ledDeviceSetColorSequence(value);
     } else {
         m_savedColorSequence = value;
@@ -244,7 +261,7 @@ void LedDeviceManager::requestFirmwareVersion()
     if (m_isLastCommandCompleted)
     {
         m_isLastCommandCompleted = false;
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         emit ledDeviceRequestFirmwareVersion();
     } else {
         cmdQueueAppend(LedDeviceCommands::RequestFirmwareVersion);
@@ -258,7 +275,7 @@ void LedDeviceManager::updateDeviceSettings()
     if (m_isLastCommandCompleted)
     {
         m_isLastCommandCompleted = false;
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         emit ledDeviceUpdateDeviceSettings();
     } else {
         cmdQueueAppend(LedDeviceCommands::UpdateDeviceSettings);
@@ -272,7 +289,7 @@ void LedDeviceManager::updateWBAdjustments()
     if (m_isLastCommandCompleted)
     {
         m_isLastCommandCompleted = false;
-        m_cmdTimeoutTimer.start();
+        m_cmdTimeoutTimer->start();
         emit ledDeviceUpdateWBAdjustments();
     } else {
         cmdQueueAppend(LedDeviceCommands::UpdateWBAdjustments);
@@ -283,7 +300,7 @@ void LedDeviceManager::ledDeviceCommandCompleted(bool ok)
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << ok;
 
-    m_cmdTimeoutTimer.stop();
+    m_cmdTimeoutTimer->stop();
 
     if (ok)
     {
@@ -463,69 +480,69 @@ void LedDeviceManager::cmdQueueProcessNext()
         switch(cmd)
         {
         case LedDeviceCommands::OffLeds:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             processOffLeds();
             break;
 
         case LedDeviceCommands::SetColors:
             if (m_isColorsSaved) {
-                m_cmdTimeoutTimer.start();
+                m_cmdTimeoutTimer->start();
                 emit ledDeviceSetColors(m_savedColors);
             }
             break;
 
         case LedDeviceCommands::SetRefreshDelay:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             emit ledDeviceSetRefreshDelay(m_savedRefreshDelay);
             break;
 
         case LedDeviceCommands::SetColorDepth:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             emit ledDeviceSetColorDepth(m_savedColorDepth);
             break;
 
         case LedDeviceCommands::SetSmoothSlowdown:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             emit ledDeviceSetSmoothSlowdown(m_savedSmoothSlowdown);
             break;
 
         case LedDeviceCommands::SetGamma:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             emit ledDeviceSetGamma(m_savedGamma);
             break;
 
         case LedDeviceCommands::SetBrightness:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             emit ledDeviceSetBrightness(m_savedBrightness);
             break;
 
         case LedDeviceCommands::SetColorSequence:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             emit ledDeviceSetColorSequence(m_savedColorSequence);
             break;
 
         case LedDeviceCommands::SetLuminosityThreshold:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             emit ledDeviceSetLuminosityThreshold(m_savedLuminosityThreshold);
             break;
 
         case LedDeviceCommands::SetMinimumLuminosityEnabled:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             emit ledDeviceSetMinimumLuminosityEnabled(m_savedIsMinimumLuminosityEnabled);
             break;
 
         case LedDeviceCommands::RequestFirmwareVersion:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             emit ledDeviceRequestFirmwareVersion();
             break;
 
         case LedDeviceCommands::UpdateDeviceSettings:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             emit ledDeviceUpdateDeviceSettings();
             break;
 
         case LedDeviceCommands::UpdateWBAdjustments:
-            m_cmdTimeoutTimer.start();
+            m_cmdTimeoutTimer->start();
             emit ledDeviceUpdateWBAdjustments();
             break;
 

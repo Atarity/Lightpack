@@ -531,6 +531,7 @@ void LightpackApplication::startLedDeviceManager()
     }
     m_ledDeviceManager->moveToThread(m_LedDeviceManagerThread);
     m_LedDeviceManagerThread->start();
+    QMetaObject::invokeMethod(m_ledDeviceManager, "init", Qt::QueuedConnection);
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "end";
 
