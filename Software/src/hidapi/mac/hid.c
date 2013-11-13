@@ -1046,6 +1046,7 @@ void HID_API_EXPORT hid_close(hid_device *dev)
 	pthread_mutex_unlock(&dev->mutex);
 
 	free_hid_device(dev);
+    dev = NULL;
 }
 
 int HID_API_EXPORT_CALL hid_get_manufacturer_string(hid_device *dev, wchar_t *string, size_t maxlen)

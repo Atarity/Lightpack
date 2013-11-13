@@ -741,6 +741,7 @@ void HID_API_EXPORT HID_API_CALL hid_close(hid_device *dev)
 	LocalFree(dev->last_error_str);
 	free(dev->read_buf);
 	free(dev);
+    dev = NULL;
 }
 
 int HID_API_EXPORT_CALL HID_API_CALL hid_get_manufacturer_string(hid_device *dev, wchar_t *string, size_t maxlen)

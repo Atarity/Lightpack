@@ -384,6 +384,7 @@ int HID_API_EXPORT hid_init(void)
 	if (!initialized) {
 		if (libusb_init(NULL))
 			return -1;
+//        libusb_set_debug(NULL,2);
 		initialized = 1;
 	}
 
@@ -1109,7 +1110,7 @@ void HID_API_EXPORT hid_close(hid_device *dev)
 	
 	/* Cause read_thread() to stop. */
 	dev->shutdown_thread = 1;
-	libusb_cancel_transfer(dev->transfer);
+//    libusb_cancel_transfer(dev->transfer);
 
 	/* Wait for read_thread() to end. */
 	pthread_join(dev->thread, NULL);
@@ -1132,6 +1133,7 @@ void HID_API_EXPORT hid_close(hid_device *dev)
 	pthread_mutex_unlock(&dev->mutex);
 	
 	free_hid_device(dev);
+    dev = NULL;
 }
 
 
