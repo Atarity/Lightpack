@@ -28,6 +28,7 @@
 
 #include "enums.hpp"
 #include "AbstractLedDevice.hpp"
+#include "QTimer"
 
 /*!
     This class creates \a ILedDevice implementations and manages them after.
@@ -83,6 +84,7 @@ public slots:
 
 private slots:
     void ledDeviceCommandCompleted(bool ok);
+    void ledDeviceCommandTimedOut();
 
 private:    
     void initLedDevice();
@@ -113,4 +115,5 @@ private:
     QList<AbstractLedDevice *> m_ledDevices;
     AbstractLedDevice *m_ledDevice;
     QThread *m_ledDeviceThread;
+    QTimer m_cmdTimeoutTimer;
 };

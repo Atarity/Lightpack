@@ -61,7 +61,7 @@ public slots:
     virtual void setColorSequence(QString /*value*/);
     virtual void requestFirmwareVersion();
     virtual void updateDeviceSettings();
-    virtual size_t maxLedsCount() { return m_devices.size() * kLedsPerDevice;}
+    virtual size_t maxLedsCount();
     size_t lightpacksFound() { return m_devices.size(); }
 
 private: 

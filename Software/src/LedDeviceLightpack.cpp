@@ -128,6 +128,12 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
     emit commandCompleted(ok);
 }
 
+size_t LedDeviceLightpack::maxLedsCount()
+{
+    if (m_devices.size() == 0)
+        tryToReopenDevice();
+    return m_devices.size() * kLedsPerDevice;
+}
 void LedDeviceLightpack::switchOffLeds()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
@@ -247,6 +253,7 @@ void LedDeviceLightpack::open()
 
     if (m_devices.size() > 0)
     {
+        emit openDeviceSuccess(true);
         return;
     }
 
@@ -357,6 +364,7 @@ bool LedDeviceLightpack::writeBufferToDevice(int command, hid_device *phid_devic
 bool LedDeviceLightpack::tryToReopenDevice()
 {
     closeDevices();
+//    QThread::sleep(100);
     open();
 
     if (m_devices.size() == 0)
@@ -460,19 +468,18 @@ void LedDeviceLightpack::restartPingDevice(bool isSuccess)
 void LedDeviceLightpack::timerPingDeviceTimeout()
 {
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
-/*
-    if (m_hidDevice == NULL)
+    if (m_devices.size() == 0)
     {
-        DEBUG_MID_LEVEL << Q_FUNC_INFO << "hid_open";
-        m_hidDevice = hid_open(USB_VENDOR_ID, USB_PRODUCT_ID, NULL);
+        DEBUG_MID_LEVEL << Q_FUNC_INFO << "open devices";
+        open();
 
-        if (m_hidDevice == NULL)
+        if (m_devices.size() == 0)
         {
-            DEBUG_MID_LEVEL << Q_FUNC_INFO << "hid_open fail";
+            DEBUG_MID_LEVEL << Q_FUNC_INFO << "open devices fail";
             emit openDeviceSuccess(false);
             return;
         }
-        DEBUG_MID_LEVEL << Q_FUNC_INFO << "hid_open ok";
+        DEBUG_MID_LEVEL << Q_FUNC_INFO << "open devices ok";
 
         emit openDeviceSuccess(true);
         closeDevices(); // device should be opened by open() function
@@ -483,7 +490,7 @@ void LedDeviceLightpack::timerPingDeviceTimeout()
 
     m_writeBuffer[WRITE_BUFFER_INDEX_REPORT_ID] = 0x00;
     m_writeBuffer[WRITE_BUFFER_INDEX_COMMAND] = CMD_NOP;
-    int bytes = hid_write(m_hidDevice, m_writeBuffer, sizeof(m_writeBuffer));
+    int bytes = hid_write(m_devices[0], m_writeBuffer, sizeof(m_writeBuffer));
 
     if (bytes < 0)
     {
@@ -494,6 +501,5 @@ void LedDeviceLightpack::timerPingDeviceTimeout()
     }
 
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "hid_write ok";
-*/
     emit ioDeviceSuccess(true);
 }
