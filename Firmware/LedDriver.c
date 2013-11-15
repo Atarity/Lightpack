@@ -31,7 +31,7 @@
 
 #include "version.h"
 
-#if (LIGHTPACK_HW == 6 || LIGHTPACK_HW == 7)
+#if (LIGHTPACK_HW >= 6)
 
 /*
  *  Hardware 6.x

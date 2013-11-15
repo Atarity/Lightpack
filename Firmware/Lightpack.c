@@ -97,10 +97,10 @@ static inline void SetupHardware(void)
 
     /* Hardware Initialization */
     DDRB  = 0b11111000;
-    PORTB = 0b00000111;
+    PORTB = 0b00000000;
 
     DDRC  = 0b11111100;
-    PORTC = 0b00000010;
+    PORTC = 0b00000000;
 
     DDRD  = 0b11111111;
     PORTD = 0b00000000;

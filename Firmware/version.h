@@ -31,13 +31,13 @@
 #include "../CommonHeaders/LIGHTPACK_HW.h"
 
 #if(LIGHTPACK_HW == 7)
-#define VERSION_OF_FIRMWARE              (0x0704UL)
+#define VERSION_OF_FIRMWARE              (0x0705UL)
 #elif(LIGHTPACK_HW == 6)
-#define VERSION_OF_FIRMWARE              (0x0604UL)
+#define VERSION_OF_FIRMWARE              (0x0605UL)
 #elif (LIGHTPACK_HW == 5)
-#define VERSION_OF_FIRMWARE              (0x0504UL)
+#define VERSION_OF_FIRMWARE              (0x0505UL)
 #elif (LIGHTPACK_HW == 4)
-#define VERSION_OF_FIRMWARE              (0x0404UL)
+#define VERSION_OF_FIRMWARE              (0x0405UL)
 #endif
 
 #define VERSION_OF_FIRMWARE_MAJOR        ((VERSION_OF_FIRMWARE & 0xff00) >> 8)
