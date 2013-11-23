@@ -1629,9 +1629,9 @@ void SettingsWindow::createTrayIcon()
     m_trayIconMenu->addSeparator();
     m_trayIconMenu->addAction(m_quitAction);
 
-    m_trayIcon = new QSystemTrayIcon(this);
+    m_trayIcon = new SysTrayIcon();
     m_trayIcon->setContextMenu(m_trayIconMenu);
-    m_trayIcon->setIcon(QIcon(":/icons/off.png"));
+    m_trayIcon->setIcon(":/icons/off.png");
     m_trayIcon->show();
 
 #else
@@ -1664,13 +1664,13 @@ void SettingsWindow::createTrayIcon()
 
     /* Indicator */
      indicator = app_indicator_new ("example-simple-client",
-                                    "indicator-weather",
+                                    "prismatik-on",
                                     APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
 
      indicator_menu = gtk_ui_manager_get_widget (uim, "/ui/IndicatorPopup");
 
      app_indicator_set_status (indicator, APP_INDICATOR_STATUS_ACTIVE);
-     //app_indicator_set_attention_icon (indicator, "indicator-weather");
+     //app_indicator_set_attention_icon (indicator, "prismatik-on");
 
      app_indicator_set_menu (indicator, GTK_MENU (indicator_menu));
      gtk_widget_show_all(indicator_menu);

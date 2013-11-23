@@ -161,7 +161,8 @@ SOURCES += \
     wizard/ConfigureDevicePage.cpp \
     wizard/SelectDevicePage.cpp \
     wizard/CassiopeiaDistributor.cpp \
-    wizard/PegasusDistributor.cpp
+    wizard/PegasusDistributor.cpp \
+    systrayicon/SysTrayIcon.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -212,7 +213,9 @@ HEADERS += \
     types.h \
     wizard/AreaDistributor.hpp \
     wizard/CassiopeiaDistributor.hpp \
-    wizard/PegasusDistributor.hpp
+    wizard/PegasusDistributor.hpp \
+    systrayicon/SysTrayIcon.hpp \
+    systrayicon/SysTrayIcon_qt_p.hpp
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \
