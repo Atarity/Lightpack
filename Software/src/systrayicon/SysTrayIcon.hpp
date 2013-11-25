@@ -28,9 +28,7 @@
 #define SYSTRAYICON_HPP
 
 #include <QObject>
-#ifndef UNITY_DESKTOP
-#include <QSystemTrayIcon>
-#endif
+#include "enums.hpp"
 
 class QMenu;
 class SysTrayIconPrivate;
@@ -39,25 +37,48 @@ class SysTrayIconPrivate;
 class SysTrayIcon : public QObject
 {
     Q_OBJECT
+
+    static const QString LightpackDownloadsPageUrl;
 public:
+
+    enum Message
+    {
+        MessageUpdateFirmware,
+        MessageAnotherInstance,
+        MessageGeneric
+    };
+
+    enum Status
+    {
+        StatusOn,
+        StatusOff,
+        StatusError,
+        StatusLockedByApi,
+        StatusLockedByPlugin
+    };
+
     explicit SysTrayIcon(QObject *parent = 0);
     virtual ~SysTrayIcon();
     
-    void setToolTip(QString &tip);
-    bool isVisible();
-    void setIcon(QString &filename);
-    void setContextMenu(QMenu *menu);
-    void showMessage(QString &title, QString &msg);
-    void show();
+    bool isVisible() const;
+    void showMessage(const QString &title, const QString &text);
+    void showMessage(const Message msg);
+    void setStatus(const Status status, const QString *arg = NULL);
+    void updateProfiles();
+    QString toolTip() const;
     void hide();
+    void show();
 
 signals:
-#ifndef UNITY_DESKTOP
-    void activated(QSystemTrayIcon::ActivationReason);
-    void messageClicked();
-#endif
+    void profileSwitched(const QString &profileName);
+    void backlightOn();
+    void backlightOff();
+    void showSettings();
+    void hideSettings();
+    void quit();
 
 public slots:
+    void retranslateUi();
 
 private:
     SysTrayIconPrivate * const d_ptr;

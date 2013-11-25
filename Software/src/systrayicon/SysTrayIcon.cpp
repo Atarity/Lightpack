@@ -32,6 +32,8 @@
 #include "SysTrayIcon_qt_p.hpp"
 #endif
 
+const QString SysTrayIcon::LightpackDownloadsPageUrl = "http://code.google.com/p/lightpack/downloads/list";
+
 SysTrayIcon::SysTrayIcon(QObject *parent) :
     QObject(parent),
     d_ptr(new SysTrayIconPrivate(this))
@@ -44,34 +46,22 @@ SysTrayIcon::~SysTrayIcon()
 }
 
 
-void SysTrayIcon::setToolTip(QString &tip)
+bool SysTrayIcon::isVisible() const
 {
-    Q_D(SysTrayIcon);
-    d->setToolTip(tip);
-}
-
-bool SysTrayIcon::isVisible()
-{
-    Q_D(SysTrayIcon);
+    const Q_D(SysTrayIcon);
     return d->isVisible();
 }
 
-void SysTrayIcon::setIcon(QString &filename)
+void SysTrayIcon::showMessage(const QString &title, const QString &text)
 {
     Q_D(SysTrayIcon);
-    d->setIcon(filename);
+    d->showMessage(title, text);
 }
 
-void SysTrayIcon::setContextMenu(QMenu *menu)
+void SysTrayIcon::showMessage(const Message msg)
 {
     Q_D(SysTrayIcon);
-    d->setContextMenu(menu);
-}
-
-void SysTrayIcon::showMessage(QString &title, QString &msg)
-{
-    Q_D(SysTrayIcon);
-    d->showMessage(title, msg);
+    d->showMessage(msg);
 }
 
 void SysTrayIcon::show()
@@ -84,4 +74,28 @@ void SysTrayIcon::hide()
 {
     Q_D(SysTrayIcon);
     d->hide();
+}
+
+void SysTrayIcon::retranslateUi()
+{
+    Q_D(SysTrayIcon);
+    d->retranslateUi();
+}
+
+void SysTrayIcon::setStatus(const Status status, const QString *arg)
+{
+    Q_D(SysTrayIcon);
+    d->setStatus(status, arg);
+}
+
+QString SysTrayIcon::toolTip() const
+{
+    const Q_D(SysTrayIcon);
+    return d->toolTip();
+}
+
+void SysTrayIcon::updateProfiles()
+{
+    Q_D(SysTrayIcon);
+    d->updateProfiles();
 }

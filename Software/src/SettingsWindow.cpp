@@ -39,6 +39,7 @@
 #include "enums.hpp"
 #include "debug.h"
 #include "Plugin.hpp"
+#include "systrayicon/SysTrayIcon.hpp"
 
 #undef signals // Collides with GTK symbols
 #ifdef UNITY_DESKTOP
@@ -71,8 +72,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ui->tabWidget->setCurrentIndex(0);
-
-    createActions();
 
     setWindowFlags(Qt::Window |
                    Qt::CustomizeWindowHint |
@@ -155,14 +154,7 @@ SettingsWindow::~SettingsWindow()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    delete m_switchOnBacklightAction;
-    delete m_switchOffBacklightAction;
-    delete m_settingsAction;
-    delete m_quitAction;
-
     delete m_trayIcon;
-    delete m_trayIconMenu;
-
 
     delete ui;
 }
@@ -283,31 +275,9 @@ void SettingsWindow::changeEvent(QEvent *e)
 
         currentPage = ui->listWidget->currentRow();
         ui->retranslateUi(this);
-        m_switchOnBacklightAction->setText(tr("&Turn on"));
-        m_switchOffBacklightAction->setText(tr("&Turn off"));
-        m_settingsAction->setText(tr("&Settings"));
-        m_quitAction->setText(tr("&Quit"));
+        m_trayIcon->retranslateUi();
 
         ui->comboBox_LightpackModes->setCurrentIndex(Settings::getLightpackMode() == Lightpack::MoodLampMode ? MoodLampModeIndex : GrabModeIndex);
-
-        m_profilesMenu->setTitle(tr("&Profiles"));
-
-        if (m_trayIcon!=NULL)
-            switch (m_backlightStatus)
-            {
-            case Backlight::StatusOn:
-                m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
-                break;
-            case Backlight::StatusOff:
-                m_trayIcon->setToolTip(tr("Disabled"));
-                break;
-            case Backlight::StatusDeviceError:
-                m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
-                break;
-            default:
-                qWarning() << Q_FUNC_INFO << "m_backlightStatus contains crap =" << m_backlightStatus;
-                break;
-            }
 
         setWindowTitle(tr("Prismatik: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
@@ -320,8 +290,6 @@ void SettingsWindow::changeEvent(QEvent *e)
         ui->comboBox_Language->setItemText(0, tr("System default"));
 
         updateStatusBar();
-
-        updateTrayAndActionStates();
 
         break;
     default:
@@ -717,24 +685,19 @@ void SettingsWindow::updateTrayAndActionStates()
     case Backlight::StatusOn:
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(*m_pixmapCache["off16"]));
         ui->pushButton_EnableDisableDevice->setText("  " + tr("Turn lights OFF"));
-        m_switchOnBacklightAction->setEnabled(false);
-        m_switchOffBacklightAction->setEnabled(true);
 
         if (m_deviceLockStatus == DeviceLocked::Api)
         {
             m_labelStatusIcon->setPixmap(*m_pixmapCache["lock16"]);
-            m_trayIcon->setIcon(QIcon(*m_pixmapCache["lock16"]));
-            m_trayIcon->setToolTip(tr("Device locked via API"));
+            m_trayIcon->setStatus(SysTrayIcon::StatusLockedByApi);
         } else
             if (m_deviceLockStatus == DeviceLocked::Plugin)
             {
                 m_labelStatusIcon->setPixmap(*m_pixmapCache["lock16"]);
-                m_trayIcon->setIcon(QIcon(*m_pixmapCache["lock16"]));
-                m_trayIcon->setToolTip(tr("Device locked via Plugin")+" ("+m_deviceLockModule+")");
+                m_trayIcon->setStatus(SysTrayIcon::StatusLockedByPlugin, &m_deviceLockModule);
             } else {
                 m_labelStatusIcon->setPixmap(*m_pixmapCache["on16"]);
-                m_trayIcon->setIcon(QIcon(*m_pixmapCache["on16"]));
-                m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
+                m_trayIcon->setStatus(SysTrayIcon::StatusOn);
             }
         break;
 
@@ -742,20 +705,14 @@ void SettingsWindow::updateTrayAndActionStates()
         m_labelStatusIcon->setPixmap(*m_pixmapCache["off16"]);
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(*m_pixmapCache["on16"]));
         ui->pushButton_EnableDisableDevice->setText("  " + tr("Turn lights ON"));
-        m_switchOnBacklightAction->setEnabled(true);
-        m_switchOffBacklightAction->setEnabled(false);
-        m_trayIcon->setIcon(QIcon(*m_pixmapCache["off16"]));
-        m_trayIcon->setToolTip(tr("Disabled"));
+        m_trayIcon->setStatus(SysTrayIcon::StatusOff);
         break;
 
     case Backlight::StatusDeviceError:
         m_labelStatusIcon->setPixmap(*m_pixmapCache["error16"]);
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(*m_pixmapCache["off16"]));
         ui->pushButton_EnableDisableDevice->setText("  " + tr("Turn lights OFF"));
-        m_switchOnBacklightAction->setEnabled(false);
-        m_switchOffBacklightAction->setEnabled(true);
-        m_trayIcon->setIcon(QIcon(*m_pixmapCache["error16"]));
-        m_trayIcon->setToolTip(tr("Error with connection device, verbose in logs"));
+        m_trayIcon->setStatus(SysTrayIcon::StatusError);
         break;
     default:
         qWarning() << Q_FUNC_INFO << "m_backlightStatus = " << m_backlightStatus;
@@ -884,8 +841,7 @@ void SettingsWindow::processMessage(const QString &message)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << message;
 
     if (m_trayIcon==NULL) return;
-    m_trayMessage = Tray_AnotherInstanceMessage;
-    m_trayIcon->showMessage(tr("Prismatik"), tr("Application already running"));
+    m_trayIcon->showMessage(SysTrayIcon::MessageAnotherInstance);
 }
 
 // ----------------------------------------------------------------------------
@@ -981,9 +937,8 @@ void SettingsWindow::ledDeviceFirmwareVersionResult(const QString & fwVersion)
 
             if (Settings::isUpdateFirmwareMessageShown() == false)
             {
-                m_trayMessage = Tray_UpdateFirmwareMessage;
                 if (m_trayIcon!=NULL)
-                    m_trayIcon->showMessage(tr("Lightpack firmware update"), tr("Click on this message to open lightpack downloads page"));
+                    m_trayIcon->showMessage(SysTrayIcon::MessageUpdateFirmware);
                 Settings::setUpdateFirmwareMessageShown(true);
             }
         }
@@ -1273,15 +1228,7 @@ void SettingsWindow::profileSwitch(const QString & configName)
 
     ui->comboBox_Profiles->setCurrentIndex(index);
 
-    for(int i=0; i < m_profilesMenu->actions().count(); i++){
-        QAction * action = m_profilesMenu->actions().at(i);
-        if(action->text() != configName)
-            action->setChecked(false);
-        else
-            action->setChecked(true);
-
-    }
-
+    m_trayIcon->updateProfiles();
 
     Settings::loadOrCreateProfile(configName);
 
@@ -1293,25 +1240,11 @@ void SettingsWindow::handleProfileLoaded(const QString &configName) {
     updateUiFromSettings();
 }
 
-void SettingsWindow::profileTraySwitch()
+void SettingsWindow::profileTraySwitch(const QString &profileName)
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    for(int i=0; i < m_profilesMenu->actions().count(); i++){
-        QAction * action = m_profilesMenu->actions().at(i);
-        if(action->isChecked()){
-            if(action->text() != ui->comboBox_Profiles->currentText()){
-                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "switch to" << action->text();
-                profileSwitchCombobox(action->text());
-                return;
-            }
-        }else{
-            if(action->text() == ui->comboBox_Profiles->currentText()){
-                DEBUG_LOW_LEVEL << Q_FUNC_INFO << "set checked" << action->text();
-                action->setChecked(true);
-            }
-        }
-    }
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "switch to" << profileName;
+    profileSwitchCombobox(profileName);
+    return;
 }
 
 void SettingsWindow::profileSwitchCombobox(QString profile)
@@ -1394,31 +1327,12 @@ void SettingsWindow::settingsProfileChanged_UpdateUI(const QString &profileName)
     setWindowTitle(tr("Prismatik: %1").arg(profileName));
 
     if (m_backlightStatus == Backlight::StatusOn && m_trayIcon!=NULL)
-        m_trayIcon->setToolTip(tr("Enabled profile: %1").arg(profileName));
+        m_trayIcon->updateProfiles();
 
     if(ui->comboBox_Profiles->count() > 1){
         ui->pushButton_DeleteProfile->setEnabled(true);
     }else{
         ui->pushButton_DeleteProfile->setEnabled(false);
-    }
-}
-
-void SettingsWindow::profileTraySync()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    QAction *profileAction;
-
-    m_profilesMenu->clear();
-
-    for(int i=0; i < ui->comboBox_Profiles->count(); i++){
-        profileAction = new QAction(ui->comboBox_Profiles->itemText(i), this);
-        profileAction->setCheckable(true);
-        if(i == ui->comboBox_Profiles->currentIndex()){
-            profileAction->setChecked(true);
-        }
-        m_profilesMenu->addAction(profileAction);
-        connect(profileAction, SIGNAL(triggered()), this, SLOT(profileTraySwitch()));
     }
 }
 
@@ -1528,30 +1442,6 @@ void SettingsWindow::startTestsClick()
 // Create tray icon and actions
 // ----------------------------------------------------------------------------
 
-void SettingsWindow::createActions()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    m_switchOnBacklightAction = new QAction(QIcon(":/icons/on.png"), tr("&Turn on"), this);
-    m_switchOnBacklightAction->setIconVisibleInMenu(true);
-    connect(m_switchOnBacklightAction, SIGNAL(triggered()), this, SLOT(backlightOn()));
-
-    m_switchOffBacklightAction = new QAction(QIcon(":/icons/off.png"), tr("&Turn off"), this);
-    m_switchOffBacklightAction->setIconVisibleInMenu(true);
-    connect(m_switchOffBacklightAction, SIGNAL(triggered()), this, SLOT(backlightOff()));
-
-
-    m_profilesMenu = new QMenu(tr("&Profiles"), this);
-    m_profilesMenu->setIcon(QIcon(":/icons/profiles.png"));
-    m_profilesMenu->clear();
-
-    m_settingsAction = new QAction(QIcon(":/icons/settings.png"), tr("&Settings"), this);
-    m_settingsAction->setIconVisibleInMenu(true);
-    connect(m_settingsAction, SIGNAL(triggered()), this, SLOT(showSettings()));
-
-    m_quitAction = new QAction(tr("&Quit"), this);
-    connect(m_quitAction, SIGNAL(triggered()), this, SLOT(quit()));
-}
 
 
 #ifdef UNITY_DESKTOP
@@ -1619,21 +1509,14 @@ static void action_quit (GtkAction *action, SettingsWindow *m_SetWindow)
 void SettingsWindow::createTrayIcon()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-#ifndef UNITY_DESKTOP
-    m_trayIconMenu = new QMenu(this);
-    m_trayIconMenu->addAction(m_switchOnBacklightAction);
-    m_trayIconMenu->addAction(m_switchOffBacklightAction);
-    m_trayIconMenu->addSeparator();
-    m_trayIconMenu->addMenu(m_profilesMenu);
-    m_trayIconMenu->addAction(m_settingsAction);
-    m_trayIconMenu->addSeparator();
-    m_trayIconMenu->addAction(m_quitAction);
-
     m_trayIcon = new SysTrayIcon();
-    m_trayIcon->setContextMenu(m_trayIconMenu);
-    m_trayIcon->setIcon(":/icons/off.png");
-    m_trayIcon->show();
-
+    connect(m_trayIcon, SIGNAL(quit()), this, SLOT(quit()));
+    connect(m_trayIcon, SIGNAL(showSettings()), this, SLOT(showSettings()));
+    connect(m_trayIcon, SIGNAL(hideSettings()), this, SLOT(hideSettings()));
+    connect(m_trayIcon, SIGNAL(backlightOn()), this, SLOT(backlightOn()));
+    connect(m_trayIcon, SIGNAL(backlightOff()), this, SLOT(backlightOff()));
+    connect(m_trayIcon, SIGNAL(profileSwitched(QString)), this, SLOT(profileTraySwitch(QString)));
+#ifndef UNITY_DESKTOP
 #else
 
     /*
@@ -1663,90 +1546,18 @@ void SettingsWindow::createTrayIcon()
     gtk_ui_manager_ensure_update(uim);
 
     /* Indicator */
-     indicator = app_indicator_new ("example-simple-client",
-                                    "prismatik-on",
-                                    APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+    indicator = app_indicator_new ("example-simple-client",
+                                "prismatik-on",
+                                APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
 
-     indicator_menu = gtk_ui_manager_get_widget (uim, "/ui/IndicatorPopup");
+    indicator_menu = gtk_ui_manager_get_widget (uim, "/ui/IndicatorPopup");
 
-     app_indicator_set_status (indicator, APP_INDICATOR_STATUS_ACTIVE);
-     //app_indicator_set_attention_icon (indicator, "prismatik-on");
+    app_indicator_set_status (indicator, APP_INDICATOR_STATUS_ACTIVE);
+    //app_indicator_set_attention_icon (indicator, "prismatik-on");
 
-     app_indicator_set_menu (indicator, GTK_MENU (indicator_menu));
-     gtk_widget_show_all(indicator_menu);
+    app_indicator_set_menu (indicator, GTK_MENU (indicator_menu));
+    gtk_widget_show_all(indicator_menu);
 #endif
-}
-
-// ----------------------------------------------------------------------------
-// Process icon click event
-// ----------------------------------------------------------------------------
-
-void SettingsWindow::onTrayIcon_Activated(QSystemTrayIcon::ActivationReason reason)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-
-    switch (reason)
-    {
-    case QSystemTrayIcon::DoubleClick:
-        switch (m_backlightStatus)
-        {
-        case Backlight::StatusOff:
-            backlightOn();
-            break;
-        case Backlight::StatusOn:
-        case Backlight::StatusDeviceError:
-            backlightOff();
-            break;
-        default:
-            qWarning() << Q_FUNC_INFO << "m_backlightStatus = " << m_backlightStatus;
-            break;
-        }
-        break;
-
-    case QSystemTrayIcon::MiddleClick:
-        if (this->isVisible())
-        {
-            hideSettings();
-        } else {
-            showSettings();
-        }
-        break;
-
-#   ifdef Q_OS_WIN
-    case QSystemTrayIcon::Context:
-        // Hide the tray after losing focus
-        //
-        // In Linux (Ubuntu 10.04) this code grab keyboard input and
-        // not give it back to the text editor after close application with
-        // "Quit" button in the tray menu
-        m_trayIconMenu->activateWindow();
-        break;
-#   endif
-
-
-    default:
-        ;
-    }
-}
-
-void SettingsWindow::onTrayIcon_MessageClicked()
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_trayMessage;
-
-    switch(m_trayMessage)
-    {
-    case Tray_UpdateFirmwareMessage:
-        if (Settings::getConnectedDevice() == SupportedDevices::DeviceTypeLightpack)
-        {
-            // Open lightpack downloads page
-            QDesktopServices::openUrl(QUrl(LightpackDownloadsPageUrl, QUrl::TolerantMode));
-        }
-        break;
-
-    case Tray_AnotherInstanceMessage:
-    default:
-        break;
-    }
 }
 
 void SettingsWindow::updateUiFromSettings()
@@ -1832,7 +1643,6 @@ void SettingsWindow::updateUiFromSettings()
     onMoodLampLiquidMode_Toggled(ui->radioButton_LiquidColorMoodLampMode->isChecked());
     updateExpertModeWidgetsVisibility();
     onGrabberChanged();
-    profileTraySync();
     settingsProfileChanged_UpdateUI(Settings::getCurrentProfileName());
 }
 

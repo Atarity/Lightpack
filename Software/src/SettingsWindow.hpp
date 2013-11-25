@@ -45,6 +45,7 @@ namespace Ui {
 
 class GrabManager; // forward declaration
 class Plugin;
+class SysTrayIcon;
 
 class SettingsWindow : public QMainWindow {
     Q_OBJECT
@@ -123,8 +124,6 @@ private slots:
     void onMoodLampColor_changed(QColor color);
     void onMoodLampSpeed_valueChanged(int value);
     void onMoodLampLiquidMode_Toggled(bool isConstantColor);
-    void onTrayIcon_Activated(QSystemTrayIcon::ActivationReason reason);
-    void onTrayIcon_MessageClicked();
     void showAbout(); /* using in actions */
     void onPostInit();
 
@@ -157,7 +156,7 @@ private slots:
     void openCurrentProfile();
 
     void profileRename();
-    void profileTraySwitch();
+    void profileTraySwitch(const QString &profileName);
     void profileNew();
     void profileResetToDefaultCurrent();
     void profileDeleteCurrent();
@@ -199,11 +198,7 @@ private:
     void syncLedDeviceWithSettingsWindow();
     int getLigtpackFirmwareVersionMajor();
 
-
-    void createActions();
     void updateStatusBar();
-
-    void profileTraySync();
 
     void initLanguages();
     void initPixmapCache();
@@ -242,15 +237,9 @@ private:
 
     QList<QLabel *> m_labelsGrabbedColors;
 
-    QAction *m_switchOnBacklightAction;
-    QAction *m_switchOffBacklightAction;
-    QAction *m_settingsAction;
-    QAction *m_quitAction;
 
     bool m_isHotkeySelectionChanging;
-    QSystemTrayIcon *m_trayIcon;
-    QMenu *m_trayIconMenu;
-    QMenu *m_profilesMenu;
+    SysTrayIcon *m_trayIcon;
 
     QLabel *m_labelStatusIcon;
     QLabel *labelProfile;
@@ -258,12 +247,6 @@ private:
     QLabel *labelFPS;
 
     QCache<QString, QPixmap> m_pixmapCache;
-
-    enum TrayMessages
-    {
-        Tray_UpdateFirmwareMessage,
-        Tray_AnotherInstanceMessage
-    } m_trayMessage;
 
     QTranslator *m_translator;
 
