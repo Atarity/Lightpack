@@ -215,7 +215,15 @@ HEADERS += \
     wizard/CassiopeiaDistributor.hpp \
     wizard/PegasusDistributor.hpp \
     systrayicon/SysTrayIcon.hpp \
-    systrayicon/SysTrayIcon_qt_p.hpp
+    systrayicon/SysTrayIcon_p.hpp
+
+!contains(DEFINES,UNITY_DESKTOP) {
+    HEADERS += systrayicon/SysTrayIcon_qt_p.hpp
+}
+
+contains(DEFINES,UNITY_DESKTOP) {
+    HEADERS += systrayicon/SysTrayIcon_unity_p.hpp
+}
 
 FORMS += SettingsWindow.ui \
     GrabWidget.ui \

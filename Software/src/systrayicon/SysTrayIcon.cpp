@@ -24,8 +24,6 @@
  *
  */
 
-#include "SysTrayIcon.hpp"
-
 #ifdef UNITY_DESKTOP
 #include "SysTrayIcon_unity_p.hpp"
 #else

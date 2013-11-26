@@ -26,24 +26,25 @@
 
 #ifndef SYSTRAYICON_QT_P_HPP
 #define SYSTRAYICON_QT_P_HPP
-#include "SysTrayIcon.hpp"
-#include "QSystemTrayIcon"
+#include "SysTrayIcon_p.hpp"
+#include <QSystemTrayIcon>
 #include "Settings.hpp"
-#include "QAction"
-#include "QDesktopServices"
-#include "QCache"
-#include "QMenu"
-#include "QUrl"
+#include <QAction>
+#include <QDesktopServices>
+#include <QCache>
+#include <QMenu>
+#include <QUrl>
+#include <QObject>
 
-class SysTrayIconPrivate : QObject
+class SysTrayIconPrivate : public QObject, public SysTrayIconPrivateData
 {
     Q_OBJECT
     Q_DECLARE_PUBLIC(SysTrayIcon)
 
 public:
     SysTrayIconPrivate(SysTrayIcon * q)
-        : _qsystray(new QSystemTrayIcon())
-        , q_ptr(q)
+        : SysTrayIconPrivateData(q)
+        , _qsystray(new QSystemTrayIcon())
     {
         connect(_qsystray, SIGNAL(activated(QSystemTrayIcon::ActivationReason))
                 , this, SLOT(onTrayIcon_Activated(QSystemTrayIcon::ActivationReason)));
@@ -340,8 +341,6 @@ private:
     SysTrayIcon::Status _status;
 
     QCache<QString, QPixmap> _pixmapCache;
-
-    SysTrayIcon * const q_ptr;
 };
 
 #endif // SYSTRAYICON_QT_P_HPP
