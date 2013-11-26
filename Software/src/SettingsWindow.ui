@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>608</width>
-    <height>599</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -243,7 +243,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabSoftwareOptions">
        <property name="enabled">
@@ -1874,9 +1874,6 @@
             <height>500</height>
            </size>
           </property>
-          <property name="styleSheet">
-           <string notr="true">display:none;</string>
-          </property>
           <property name="currentIndex">
            <number>0</number>
           </property>
@@ -2079,7 +2076,7 @@
               </sizepolicy>
              </property>
              <property name="inputMask">
-              <string notr="true">D999; </string>
+              <string notr="true">D999</string>
              </property>
             </widget>
            </item>

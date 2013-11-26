@@ -127,7 +127,7 @@ public:
         _qsystray->hide();
     }
 
-    const QString & toolTip() const
+    QString toolTip() const
     {
         return _qsystray->toolTip();
     }

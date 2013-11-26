@@ -154,7 +154,7 @@ public:
 
     }
 
-    const QString & toolTip() const
+    QString toolTip() const
     {
         return "";
     }

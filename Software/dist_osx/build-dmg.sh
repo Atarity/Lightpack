@@ -20,7 +20,7 @@ if [ ! -d "$SRC_FOLDER/Prismatik.app" ]; then
 fi
 
 echo "collecting dependencies..."
-macdeployqt $SRC_FOLDER/Prismatik.app
+~/Qt5.1.1/5.1.1/clang_64/bin/macdeployqt $SRC_FOLDER/Prismatik.app
 
 # Create the image
 echo "Creating disk image..."

@@ -28,7 +28,7 @@ public:
 
     virtual void setStatus(const SysTrayIcon::Status status, const QString *arg = NULL) = 0;
 
-    virtual const QString & toolTip() const = 0;
+    virtual QString toolTip() const = 0;
 
     virtual void updateProfiles() = 0;
 
