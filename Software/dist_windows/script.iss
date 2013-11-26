@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Prismatik"
-#define MyAppVersion "5.10.1"
+#define MyAppVersion "5.10.3"
 #define MyAppPublisher "Pixelkit LLC"
 #define MyAppURL "https://github.com/Atarity/Lightpack"
 #define MyAppExeName "Prismatik.exe"

@@ -27,10 +27,10 @@
 #pragma once
 
 // Current version of Lightpack software
-#define VERSION_STR     "5.10.1"
+#define VERSION_STR     "5.10.3"
 
 // Resource defines using in Lightpack.rc
-#define VER_FILEVERSION             5,10,1,0
+#define VER_FILEVERSION             5,10,3,0
 #define VER_PRODUCTVERSION          VER_FILEVERSION
 
 #define VER_FILEVERSION_STR         VERSION_STR "\0"

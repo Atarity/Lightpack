@@ -12,6 +12,27 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 #    Software changelog
 ===================================================================================
 
+Version 5.10.3
+---------------
+November 27, 2013
+
+* SysTrayIcon implementation for Unity added
+* Fixed pinging of Lightpacks
+* Crash on device disconnection is fixed
+* Several minor fixes
+
+Version 5.10.1
+---------------
+November 9, 2013
+
+* Settings wizard
+* Support for multiple connected Lightpacks
+* Identification of multiple Lightpacks by serial numbers
+* New plugin support system
+* Hotkeys temporary unavailable
+* Device settings moved to wizard
+* Migrated to Qt5
+
 Version 5.9.6
 ---------------
 April 8, 2013
