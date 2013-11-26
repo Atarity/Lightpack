@@ -43,13 +43,10 @@ class SysTrayIconPrivate : public QObject, public SysTrayIconPrivateData
 
 public:
     SysTrayIconPrivate(SysTrayIcon * q)
-        : SysTrayIconPrivateData(q)
+        : QObject(static_cast<QObject *>(q))
+        , SysTrayIconPrivateData(q)
         , _qsystray(new QSystemTrayIcon())
     {
-        connect(_qsystray, SIGNAL(activated(QSystemTrayIcon::ActivationReason))
-                , this, SLOT(onTrayIcon_Activated(QSystemTrayIcon::ActivationReason)));
-        connect(_qsystray, SIGNAL(messageClicked())
-                , this, SLOT(onTrayIcon_MessageClicked()));
         QMenu *trayIconMenu = new QMenu();
 
         createActions();
@@ -64,15 +61,8 @@ public:
         trayIconMenu->addSeparator();
         trayIconMenu->addAction(_quitAction);
 
-        _pixmapCache.insert("lock16", new QPixmap(QPixmap(":/icons/lock.png").scaledToWidth(16, Qt::SmoothTransformation)) );
-        _pixmapCache.insert("on16", new QPixmap(QPixmap(":/icons/on.png").scaledToWidth(16, Qt::SmoothTransformation)) );
-        _pixmapCache.insert("off16", new QPixmap(QPixmap(":/icons/off.png").scaledToWidth(16, Qt::SmoothTransformation)) );
-        _pixmapCache.insert("error16", new QPixmap(QPixmap(":/icons/error.png").scaledToWidth(16, Qt::SmoothTransformation)) );
-
         _qsystray = new QSystemTrayIcon();
         _qsystray->setContextMenu(trayIconMenu);
-        setStatus(SysTrayIcon::StatusOn);
-        _qsystray->show();
     }
 
     virtual ~SysTrayIconPrivate()
@@ -80,6 +70,23 @@ public:
         delete _qsystray->contextMenu();
         delete _profilesMenu;
         delete _qsystray;
+    }
+
+    void init()
+    {
+
+        connect(_qsystray, SIGNAL(activated(QSystemTrayIcon::ActivationReason))
+                , this, SLOT(onTrayIcon_Activated(QSystemTrayIcon::ActivationReason)));
+        connect(_qsystray, SIGNAL(messageClicked())
+                , this, SLOT(onTrayIcon_MessageClicked()));
+
+        _pixmapCache.insert("lock16", new QPixmap(QPixmap(":/icons/lock.png").scaledToWidth(16, Qt::SmoothTransformation)) );
+        _pixmapCache.insert("on16", new QPixmap(QPixmap(":/icons/on.png").scaledToWidth(16, Qt::SmoothTransformation)) );
+        _pixmapCache.insert("off16", new QPixmap(QPixmap(":/icons/off.png").scaledToWidth(16, Qt::SmoothTransformation)) );
+        _pixmapCache.insert("error16", new QPixmap(QPixmap(":/icons/error.png").scaledToWidth(16, Qt::SmoothTransformation)) );
+
+        setStatus(SysTrayIcon::StatusOn);
+        _qsystray->show();
     }
 
     bool isVisible() const
@@ -257,12 +264,7 @@ private slots:
             break;
 
         case QSystemTrayIcon::MiddleClick:
-            if (this->isVisible())
-            {
-                q->hideSettings();
-            } else {
-                q->showSettings();
-            }
+            q->toggleSettings();
             break;
 
     #   ifdef Q_OS_WIN
@@ -272,7 +274,7 @@ private slots:
             // In Linux (Ubuntu 10.04) this code grab keyboard input and
             // not give it back to the text editor after close application with
             // "Quit" button in the tray menu
-            _trayIconMenu->activateWindow();
+            _qsystray->contextMenu()->activateWindow();
             break;
     #   endif
 

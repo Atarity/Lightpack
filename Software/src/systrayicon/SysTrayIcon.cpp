@@ -43,6 +43,11 @@ SysTrayIcon::~SysTrayIcon()
     delete d_ptr;
 }
 
+void SysTrayIcon::init()
+{
+    Q_D(SysTrayIcon);
+    d->init();
+}
 
 bool SysTrayIcon::isVisible() const
 {

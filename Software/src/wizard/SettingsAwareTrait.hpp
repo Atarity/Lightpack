@@ -41,9 +41,10 @@ struct TransientSettings {
 
 class SettingsAwareTrait {
 public:
-    SettingsAwareTrait(bool isInitFromSettings, TransientSettings *transSettings):
-        _isInitFromSettings(isInitFromSettings),
-        _transSettings(transSettings){}
+    SettingsAwareTrait(bool isInitFromSettings, TransientSettings *transSettings)
+        : _isInitFromSettings(isInitFromSettings)
+        , _transSettings(transSettings)
+    {}
 protected:
     bool _isInitFromSettings;
     TransientSettings *_transSettings;

@@ -149,8 +149,6 @@ SettingsWindow::~SettingsWindow()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    delete m_trayIcon;
-
     delete ui;
 }
 
@@ -158,11 +156,11 @@ void SettingsWindow::connectSignalsSlots()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    if (m_trayIcon!=NULL)
-    {
-        connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayIcon_Activated(QSystemTrayIcon::ActivationReason)));
-        connect(m_trayIcon, SIGNAL(messageClicked()), this, SLOT(onTrayIcon_MessageClicked()));
-    }
+//    if (m_trayIcon!=NULL)
+//    {
+//        connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayIcon_Activated(QSystemTrayIcon::ActivationReason)));
+//        connect(m_trayIcon, SIGNAL(messageClicked()), this, SLOT(onTrayIcon_MessageClicked()));
+//    }
     DEBUG_MID_LEVEL << Q_FUNC_INFO << "tr";
 
     connect(ui->listWidget, SIGNAL(currentRowChanged(int)), this, SLOT(changePage(int)));
@@ -873,6 +871,15 @@ void SettingsWindow::hideSettings()
     this->hide();
 }
 
+void SettingsWindow::toggleSettings()
+{
+    if(this->isVisible())
+        hideSettings();
+    else
+        showSettings();
+}
+
+
 // ----------------------------------------------------------------------------
 // Public slots
 // ----------------------------------------------------------------------------
@@ -1434,24 +1441,21 @@ void SettingsWindow::startTestsClick()
 }
 
 // ----------------------------------------------------------------------------
-// Create tray icon and actions
+// Create tray icon
 // ----------------------------------------------------------------------------
-
-
-
-#ifdef UNITY_DESKTOP
-#endif
 
 void SettingsWindow::createTrayIcon()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    m_trayIcon = new SysTrayIcon();
+    m_trayIcon = new SysTrayIcon(this);
     connect(m_trayIcon, SIGNAL(quit()), this, SLOT(quit()));
     connect(m_trayIcon, SIGNAL(showSettings()), this, SLOT(showSettings()));
-    connect(m_trayIcon, SIGNAL(hideSettings()), this, SLOT(hideSettings()));
+    connect(m_trayIcon, SIGNAL(toggleSettings()), this, SLOT(toggleSettings()));
     connect(m_trayIcon, SIGNAL(backlightOn()), this, SLOT(backlightOn()));
     connect(m_trayIcon, SIGNAL(backlightOff()), this, SLOT(backlightOff()));
     connect(m_trayIcon, SIGNAL(profileSwitched(QString)), this, SLOT(profileTraySwitch(QString)));
+
+    m_trayIcon->init();
 }
 
 void SettingsWindow::updateUiFromSettings()

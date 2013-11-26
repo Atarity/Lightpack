@@ -112,7 +112,8 @@ public slots:
     void onBlur();
     void quit(); /* using in actions */
     void showSettings(); /* using in actions */
-    void hideSettings(); /* using in iconActivated(..) */
+    void hideSettings(); /* used in closeEvent(..) */
+    void toggleSettings(); /* using in iconActivated(..) */
 
 protected:
     virtual void changeEvent(QEvent *e);

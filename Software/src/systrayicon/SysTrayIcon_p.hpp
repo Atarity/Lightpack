@@ -12,6 +12,8 @@ public:
     {
     }
 
+    virtual void init() = 0;
+
     virtual bool isVisible() const = 0;
 
     virtual void hide() = 0;

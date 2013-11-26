@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="ru_RU">
-<defaultcodec>UTF-8</defaultcodec>
 <context>
     <name>ApiServer</name>
     <message>
@@ -691,6 +690,87 @@ p, li { white-space: pre-wrap; }
         <location filename="../../src/SettingsWindow.cpp" line="1471"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
+    </message>
+</context>
+<context>
+    <name>SysTrayIconPrivate</name>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="108"/>
+        <source>Prismatik</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="108"/>
+        <source>Application already running</source>
+        <translation>Приложение уже запущено</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="111"/>
+        <source>Lightpack firmware update</source>
+        <translation>Обновление прошивки Лайтпака</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="111"/>
+        <source>Click on this message to open lightpack downloads page</source>
+        <translation>Нажмите на это сообщение чтобы перейти на страницу скачивания прошивок</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="138"/>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="294"/>
+        <source>&amp;Turn on</source>
+        <translation>&amp;Включить</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="139"/>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="298"/>
+        <source>&amp;Turn off</source>
+        <translation>&amp;Выключить</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="140"/>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="307"/>
+        <source>&amp;Settings</source>
+        <translation>&amp;Настройки</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="141"/>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="311"/>
+        <source>&amp;Quit</source>
+        <translation>&amp;Выход</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="142"/>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="303"/>
+        <source>&amp;Profiles</source>
+        <translation>&amp;Профили</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="149"/>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="171"/>
+        <source>Enabled profile: %1</source>
+        <translation>Включен профиль: %1</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="152"/>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="189"/>
+        <source>Disabled</source>
+        <translation>Выключен</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="155"/>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="196"/>
+        <source>Error with connection device, verbose in logs</source>
+        <translation>Проблемы с подключением, подробности в логах</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="178"/>
+        <source>Device locked via API</source>
+        <translation>Устройство заблокировано через API</translation>
+    </message>
+    <message>
+        <location filename="src/systrayicon/SysTrayIcon_qt_p.hpp" line="182"/>
+        <source>Device locked via Plugin</source>
+        <translation>Устройство находится под управлением плагина</translation>
     </message>
 </context>
 </TS>

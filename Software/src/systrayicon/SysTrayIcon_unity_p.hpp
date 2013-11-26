@@ -114,6 +114,11 @@ public:
         return;
     }
 
+    void init()
+    {
+
+    }
+
     bool isVisible() const
     {
         return true;

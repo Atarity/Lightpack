@@ -60,6 +60,7 @@ public:
     explicit SysTrayIcon(QObject *parent = 0);
     virtual ~SysTrayIcon();
     
+    void init();
     bool isVisible() const;
     void showMessage(const QString &title, const QString &text);
     void showMessage(const Message msg);
@@ -74,7 +75,7 @@ signals:
     void backlightOn();
     void backlightOff();
     void showSettings();
-    void hideSettings();
+    void toggleSettings();
     void quit();
 
 public slots:
