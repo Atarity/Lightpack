@@ -29,15 +29,9 @@ then
 	exit 1
 fi
 
-if [ ! -e "deb/usr/lib/prismatik/libPythonQt.so.1" ];
+if [ ! -e "deb/usr/lib/prismatik/libQt5SerialPort.so.5" ];
 then
-	echo "File 'deb/usr/lib/prismatik/libPythonQt.so.1' not found."
-	exit 1
-fi
-
-if [ ! -e "deb/usr/lib/prismatik/libPythonQt_QtAll.so.1" ];
-then
-	echo "File 'deb/usr/lib/prismatik/libPythonQt_QtAll.so.1' not found."
+	echo "File 'deb/usr/lib/prismatik/libQt5SerialPort.so.5' not found."
 	exit 1
 fi
 

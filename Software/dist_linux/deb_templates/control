@@ -3,7 +3,7 @@ Version: ${version}
 Architecture: ${arch} 
 Maintainer: Timur Sattarov <tim.helloworld@gmail.com>
 Installed-Size: ${size}
-Depends: libqtcore4 (>= 4.6), libqtgui4 (>= 4.6), libqt4-network (>= 4.6), libusb-1.0-0 (>= 2:1.0.6-1), libpython2.7
+Depends: libc6, libxext6, libx11-6, libusb-1.0-0, libappindicator1, libgtk2.0-0, libglib2.0-0, libqt5widgets5(>=5.0.2), libqt5network5(>=5.0.2), libqt5gui5(>=5.0.2), libqt5core5(>=5.0.2), libstdc++6, libgcc1
 Conflicts: lightpack
 Replaces: lightpack
 Section: electronics
