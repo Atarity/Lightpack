@@ -1383,6 +1383,7 @@ void Settings::initCurrentProfile(bool isResetDefault)
     setNewOption(Profile::Key::Grab::IsSendDataOnlyIfColorsChanges, Profile::Grab::IsSendDataOnlyIfColorsChangesDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::Slowdown,      Profile::Grab::SlowdownDefault, isResetDefault);
     setNewOption(Profile::Key::Grab::LuminosityThreshold, Profile::Grab::MinimumLevelOfSensitivityDefault, isResetDefault);
+    setNewOption(Profile::Key::Grab::IsMinimumLuminosityEnabled, Profile::Grab::IsMinimumLuminosityEnabledDefault, isResetDefault);
     // [MoodLamp]
     setNewOption(Profile::Key::MoodLamp::IsLiquidMode,  Profile::MoodLamp::IsLiquidMode, isResetDefault);
     setNewOption(Profile::Key::MoodLamp::Color,         Profile::MoodLamp::ColorDefault, isResetDefault);

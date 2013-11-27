@@ -130,6 +130,7 @@ static const ::Grab::GrabberType GrabberDefault = GRABMODE_DEFAULT;
 static const QString GrabberDefaultString = GRABMODE_DEFAULT_STR;
 static const bool IsAvgColorsEnabledDefault = false;
 static const bool IsSendDataOnlyIfColorsChangesDefault = true;
+static const bool IsMinimumLuminosityEnabledDefault = true;
 static const int SlowdownMin = 1;
 static const int SlowdownDefault = 50;
 static const int SlowdownMax = 1000;
