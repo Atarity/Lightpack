@@ -10,7 +10,6 @@
 static void action_switch_on (GtkAction *action, SysTrayIcon *q);
 static void action_switch_off (GtkAction *action, SysTrayIcon *q);
 static void action_show_settings (GtkAction *action, SysTrayIcon *q);
-static void action_hide_settings (GtkAction *action, SysTrayIcon *q);
 static void action_quit (GtkAction *action, SysTrayIcon *q);
 
 static GtkActionEntry entries[] = {
@@ -51,12 +50,6 @@ static void action_show_settings (GtkAction *action, SysTrayIcon *q)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     q->showSettings();
-}
-
-static void action_hide_settings (GtkAction *action, SysTrayIcon *q)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    q->hideSettings();
 }
 
 static void action_quit (GtkAction *action, SysTrayIcon *q)
