@@ -6,16 +6,3 @@
         MINGW_RUNTIME_DIR = c:/Qt/mingw/bin
         DIRECTX_SDK_DIR = "C:/Program Files/Microsoft DirectX SDK (June 2010)"
     }
-
-#------------------------------------------------------------------------------
-# PythonQt
-#------------------------------------------------------------------------------
-
-    # Change this variable to your python version (2.5, 2.6)
-    win32:PYTHON_VERSION=27
-    unix:PYTHON_VERSION=2.7
-
-    win32: {
-        PYTHON_PATH = c:/Python27
-        PYTHON_LIB  = c:/Python27/libs
-    }
