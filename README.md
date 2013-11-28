@@ -54,7 +54,7 @@ You will need the following packages, usually all of them are in distro's reposi
 ####Build process:
 1. go to `<repo>/Software`
 2. run ```qmake -r && make```
-3. Add a rule for **UDEV**. See comments from `<repo>/93-lightpack.rules` for how to do it.
+3. Add a rule for **UDEV**. See comments from `<repo>/Software/dist_linux/deb/etc/udev/rules.d/93-lightpack.rules` for how to do it.
 4. Make sure `<repo>/Software/qtserialport/libQt5SerialPort.so.5` is available for loading by *Prismatik* (place it in appropriate dir or use *LD_LIBRARY_PATH* variable)
 
 ---
