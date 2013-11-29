@@ -45,6 +45,7 @@ handle another devices with Prismatik such as Adalight, Ardulight or even Alienw
 ###Build instructions for Linux
 ####Prerequisites:
 You will need the following packages, usually all of them are in distro's repository:
+* qt5-default
 * gtk2-engines-pixbuf
 * g++
 * libusb-dev
