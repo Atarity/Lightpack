@@ -148,6 +148,8 @@ void SettingsWindow::changePage(int page)
 SettingsWindow::~SettingsWindow()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    if (m_trayIcon)
+        delete m_trayIcon;
 
     delete ui;
 }
@@ -1447,7 +1449,7 @@ void SettingsWindow::startTestsClick()
 void SettingsWindow::createTrayIcon()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    m_trayIcon = new SysTrayIcon(this);
+    m_trayIcon = new SysTrayIcon();
     connect(m_trayIcon, SIGNAL(quit()), this, SLOT(quit()));
     connect(m_trayIcon, SIGNAL(showSettings()), this, SLOT(showSettings()));
     connect(m_trayIcon, SIGNAL(toggleSettings()), this, SLOT(toggleSettings()));
@@ -1598,8 +1600,9 @@ void SettingsWindow::quit()
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "trayIcon->hide();";
 
-    if (m_trayIcon!=NULL)
+    if (m_trayIcon!=NULL) {
         m_trayIcon->hide();
+    }
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "QApplication::quit();";
 

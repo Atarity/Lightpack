@@ -267,7 +267,7 @@ private slots:
             q->toggleSettings();
             break;
 
-    #   ifdef Q_OS_WIN
+//    #   ifdef Q_OS_WIN
         case QSystemTrayIcon::Context:
             // Hide the tray after losing focus
             //
@@ -276,7 +276,7 @@ private slots:
             // "Quit" button in the tray menu
             _qsystray->contextMenu()->activateWindow();
             break;
-    #   endif
+//    #   endif
 
 
         default:
