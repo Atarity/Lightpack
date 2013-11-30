@@ -45,15 +45,18 @@ handle another devices with Prismatik such as Adalight, Ardulight or even Alienw
 ###Build instructions for Linux
 ####Prerequisites:
 You will need the following packages, usually all of them are in distro's repository:
+* qt5-default
 * gtk2-engines-pixbuf
 * g++
 * libusb-dev
 * libudev-dev
+* if you are using Ubuntu: libappindicator-dev
 
 ####Build process:
-1. Set version of python in `<repo>/Software/build-vars.prf` (`<repo>/Software/build-vars.prf.original` is example of such config)
-4. Build **Prismatik** project
-5. Add a rule for **UDEV**. See comments from `<repo>/93-lightpack.rules` for how to do it.
+1. go to `<repo>/Software`
+2. run ```qmake -r && make```
+3. Add a rule for **UDEV**. See comments from `<repo>/Software/dist_linux/deb/etc/udev/rules.d/93-lightpack.rules` for how to do it.
+4. Make sure `<repo>/Software/qtserialport/libQt5SerialPort.so.5` is available for loading by *Prismatik* (place it in appropriate dir or use *LD_LIBRARY_PATH* variable)
 
 ---
 
