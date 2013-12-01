@@ -128,6 +128,8 @@ private slots:
     void showAbout(); /* using in actions */
     void onPostInit();
 
+    void updateTrayAndActionStates();
+
     void changePage(int page);
 
     void toggleBacklight();
@@ -192,7 +194,6 @@ private slots:
 
 
 private:
-    void updateTrayAndActionStates();    
     void updateExpertModeWidgetsVisibility();
     void updateDeviceTabWidgetsVisibility();
     void setDeviceTabWidgetsVisibility(DeviceTab::Options options);
@@ -229,6 +230,8 @@ private:
     DeviceLocked::DeviceLockStatus m_deviceLockStatus;
     QList<QString> m_deviceLockKey;
     QString m_deviceLockModule;
+
+    QTimer *m_updateTrayTimer;
 
     SpeedTest *m_speedTest;
 

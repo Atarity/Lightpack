@@ -919,7 +919,6 @@ void SettingsWindow::ledDeviceCallSuccess(bool isSuccess)
         if (m_backlightStatus == Backlight::StatusDeviceError)
             m_backlightStatus = Backlight::StatusOn;
     }
-    updateTrayAndActionStates();
 }
 
 void SettingsWindow::ledDeviceFirmwareVersionResult(const QString & fwVersion)
@@ -1457,7 +1456,12 @@ void SettingsWindow::createTrayIcon()
     connect(m_trayIcon, SIGNAL(backlightOff()), this, SLOT(backlightOff()));
     connect(m_trayIcon, SIGNAL(profileSwitched(QString)), this, SLOT(profileTraySwitch(QString)));
 
+    m_updateTrayTimer = new QTimer(this);
+    m_updateTrayTimer->setInterval(333);
+    connect(m_updateTrayTimer, SIGNAL(timeout()), this, SLOT(updateTrayAndActionStates()));
+
     m_trayIcon->init();
+    m_updateTrayTimer->start();
 }
 
 void SettingsWindow::updateUiFromSettings()
