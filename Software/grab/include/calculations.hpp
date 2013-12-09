@@ -33,7 +33,7 @@
 namespace Grab {
     namespace Calculations {
 
-        QRgb calculateAvgColor(QRgb *result, unsigned char *buffer, BufferFormat bufferFormat, unsigned int pitch, const QRect &rect );
+        QRgb calculateAvgColor(QRgb *result, const unsigned char *buffer, BufferFormat bufferFormat, unsigned int pitch, const QRect &rect );
         QRgb calculateAvgColor(QList<QRgb> *colors);
     }
 }

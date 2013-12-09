@@ -52,16 +52,11 @@ protected:
 
 
 private:
-    QRgb getColor(QImage * image, const QWidget * grabme);
-    QRgb getColor(QImage * image, int x, int y, int width, int height);
+    QRgb getColor(QImage * image, const QRect &rect);
     QImage * toImage(CGImageRef);
 
     unsigned char *_imageBuf;
     size_t _imageBufSize;
-    size_t _contextWidth;
-    size_t _contextHeight;
-    CGColorSpaceRef _colorSpace;
-    CGContextRef _context;
 };
 
 #endif // MAC_OS_CG_GRAB_SUPPORT
