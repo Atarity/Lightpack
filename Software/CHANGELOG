@@ -12,6 +12,15 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 #    Software changelog
 ===================================================================================
 
+Version 5.10.4
+---------------
+December 10, 2013
+
+* Disable ApiAuth by default (please set it after installation if you really need it)
+* Fixing Adalight
+* Speed optimization under Mac OS X
+* Several minor bugs
+
 Version 5.10.3
 ---------------
 November 27, 2013
