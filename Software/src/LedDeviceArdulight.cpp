@@ -29,6 +29,7 @@
 #include "Settings.hpp"
 #include "debug.h"
 #include "stdio.h"
+#include <QtSerialPort/QSerialPortInfo>
 
 using namespace SettingsScope;
 
@@ -208,14 +209,14 @@ void LedDeviceArdulight::open()
 
     m_ArdulightDevice->setPortName(m_portName);
 
-    m_ArdulightDevice->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+    m_ArdulightDevice->open(QIODevice::WriteOnly);
     bool ok = m_ArdulightDevice->isOpen();
 
     // Ubuntu 10.04: on every second attempt to open the device leads to failure
     if (ok == false)
     {
         // Try one more time
-        m_ArdulightDevice->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+        m_ArdulightDevice->open(QIODevice::WriteOnly);
         ok = m_ArdulightDevice->isOpen();
     }
 
@@ -242,7 +243,12 @@ void LedDeviceArdulight::open()
         }
 
     } else {
-        qWarning() << Q_FUNC_INFO << "Serial device" << m_ArdulightDevice->portName() << "open fail";
+        qWarning() << Q_FUNC_INFO << "Serial device" << m_ArdulightDevice->portName() << "open fail. " << m_ArdulightDevice->errorString();
+        DEBUG_OUT << Q_FUNC_INFO << "Available ports:";
+        QList<QSerialPortInfo> availPorts = QSerialPortInfo::availablePorts();
+        for(int i=0; i < availPorts.size(); i++) {
+            DEBUG_OUT << Q_FUNC_INFO << availPorts[i].portName();
+        }
     }
 
     emit openDeviceSuccess(ok);
@@ -259,7 +265,7 @@ bool LedDeviceArdulight::writeBuffer(const QByteArray & buff)
 
     if (bytesWritten != buff.count())
     {
-        qWarning() << Q_FUNC_INFO << "bytesWritten != buff.count():" << bytesWritten << buff.count();
+        qWarning() << Q_FUNC_INFO << "bytesWritten != buff.count():" << bytesWritten << buff.count() << " " << m_ArdulightDevice->errorString();
         return false;
     }
 
