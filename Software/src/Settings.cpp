@@ -36,7 +36,7 @@
 #include <QUuid>
 #include "debug.h"
 
-#define MAIN_CONFIG_FILE_VERSION    "2.0"
+#define MAIN_CONFIG_FILE_VERSION    "3.0"
 
 //
 // This strings keys and values must be accessible only in current file
@@ -70,7 +70,6 @@ namespace Api
 {
 static const QString IsEnabled = "API/IsEnabled";
 static const QString Port = "API/Port";
-static const QString IsAuthEnabled = "API/IsAuthEnabled";
 static const QString AuthKey = "API/AuthKey";
 }
 namespace Adalight
@@ -240,9 +239,8 @@ bool Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::SupportedDevices,       Main::SupportedDevices, true /* always rewrite this information to main config */);
     setNewOptionMain(Main::Key::Api::IsEnabled,         Main::Api::IsEnabledDefault);
     setNewOptionMain(Main::Key::Api::Port,              Main::Api::PortDefault);
-    setNewOptionMain(Main::Key::Api::IsAuthEnabled,     Main::Api::IsAuthEnabledDefault);
     // Generation AuthKey as new UUID
-    setNewOptionMain(Main::Key::Api::AuthKey,           QUuid::createUuid().toString());
+    setNewOptionMain(Main::Key::Api::AuthKey,           Main::Api::AuthKey);
 
     // Serial device configuration
     setNewOptionMain(Main::Key::Adalight::Port,             Main::Adalight::PortDefault);
@@ -1563,8 +1561,19 @@ void Settings::migrateSettings()
                 Settings::setLedCoefBlue(i, remappedLeds[i].wbBlue);
             }
         }
-        setValueMain(Main::Key::MainConfigVersion, Main::Value::MainConfigVersion);
+        setValueMain(Main::Key::MainConfigVersion, "2.0");
     }
+    if (valueMain(Main::Key::MainConfigVersion).toString() == "2.0") {
+        // Disable ApiAuth by default
+        setApiKey("");
 
+        // Remove obsolete keys
+        QString authEnabledKey = "API/IsAuthEnabled";
+        if(m_mainConfig->contains(authEnabledKey)) {
+            m_mainConfig->remove(authEnabledKey);
+        }
+
+        setValueMain(Main::Key::MainConfigVersion, "3.0");
+    }
 }
 } /*SettingsScope*/

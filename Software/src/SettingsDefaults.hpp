@@ -85,7 +85,7 @@ namespace Api
 {
 static const bool IsEnabledDefault = true;
 static const int PortDefault = 3636;
-static const bool IsAuthEnabledDefault = true;
+static const QString AuthKey = "";
 // See ApiKey generation in Settings initialization
 }
 namespace Adalight
