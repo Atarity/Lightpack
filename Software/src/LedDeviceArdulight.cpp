@@ -78,9 +78,9 @@ void LedDeviceArdulight::setColors(const QList<QRgb> & colors)
     applyColorModifications(colors, m_colorsBuffer);
 
     for(int i=0; i < m_colorsBuffer.count(); i++) {
-        m_colorsBuffer[i].r = m_colorsBuffer[i].r << 4;
-        m_colorsBuffer[i].g = m_colorsBuffer[i].g << 4;
-        m_colorsBuffer[i].b = m_colorsBuffer[i].b << 4;
+        m_colorsBuffer[i].r = m_colorsBuffer[i].r >> 4;
+        m_colorsBuffer[i].g = m_colorsBuffer[i].g >> 4;
+        m_colorsBuffer[i].b = m_colorsBuffer[i].b >> 4;
         PrismatikMath::maxCorrection(254, m_colorsBuffer[i]);
     }
 
@@ -90,7 +90,6 @@ void LedDeviceArdulight::setColors(const QList<QRgb> & colors)
     for (int i = 0; i < m_colorsBuffer.count(); i++)
     {
         StructRgb color = m_colorsBuffer[i];
-
 
         if (m_colorSequence == "RBG")
         {
