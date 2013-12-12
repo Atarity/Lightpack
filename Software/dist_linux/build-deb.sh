@@ -16,23 +16,28 @@ perl prepare_deb.pl $1 $2 || exit 1;
 
 chmod a+x deb/DEBIAN/control || exit 1;
 
-if [ -e "deb/usr/lib/prismatik/Prismatik" ];
+if [ -e "deb/usr/bin/Prismatik" ];
 then
-	echo "Renaming 'deb/usr/lib/prismatik/Prismatik' to 'deb/usr/lib/prismatik/prismatik'."
-	mv deb/usr/lib/prismatik/Prismatik deb/usr/lib/prismatik/prismatik
+	echo "Renaming 'deb/usr/bin/Prismatik' to 'deb/usr/bin/prismatik'."
+	mv deb/usr/bin/Prismatik deb/usr/bin/prismatik
 fi
 
+if [ ! -e "deb/usr/bin/prismatik" ];
+then
+	echo "File 'deb/usr/bin/prismatik' not found."
+	exit 2
+fi
 
 if [ ! -e "deb/usr/lib/prismatik" ];
 then
 	echo "File 'deb/usr/lib/prismatik' not found."
-	exit 1
+	exit 3
 fi
 
 if [ ! -e "deb/usr/lib/prismatik/libQt5SerialPort.so.5" ];
 then
 	echo "File 'deb/usr/lib/prismatik/libQt5SerialPort.so.5' not found."
-	exit 1
+	exit 4
 fi
 
 
@@ -43,7 +48,7 @@ then
 	md5deep -r deb/usr > deb/DEBIAN/md5sums
 else
 	echo "Please install 'md5deep' package first."
-	exit 2
+	exit 5
 fi
 
 # Build package in format "name_version_arch.deb"

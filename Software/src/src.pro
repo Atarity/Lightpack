@@ -63,6 +63,7 @@ unix:!macx{
 
     INCLUDEPATH += ../qtserialport/include
     LIBS += -L../qtserialport/lib -lQt5SerialPort
+    QMAKE_LFLAGS += -Wl,-rpath=/usr/lib/prismatik
 }
 
 win32 {
