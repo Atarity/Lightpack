@@ -15,7 +15,7 @@ PluginsManager::PluginsManager(QObject *parent) :
 
 PluginsManager::~PluginsManager()
 {
-
+    dropPlugins();
 }
 
 void PluginsManager::dropPlugins(){

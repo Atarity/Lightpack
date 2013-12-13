@@ -38,7 +38,7 @@ public:
     QtGrabberEachWidget(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
     virtual ~QtGrabberEachWidget();
     virtual const char * name() const {
-        static char * name = "QtGrabberEachWidget";
+        static const char * name = "QtGrabberEachWidget";
         return name;
     }
     virtual void updateGrabMonitor( QWidget * widget );

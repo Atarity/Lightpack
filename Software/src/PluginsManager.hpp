@@ -10,7 +10,7 @@ class PluginsManager : public QObject
     Q_OBJECT
 public:
     PluginsManager(QObject *parent = 0);
-    ~PluginsManager();
+    virtual ~PluginsManager();
 
     void LoadPlugins(QString path);
     QList<Plugin*> getPluginList();
