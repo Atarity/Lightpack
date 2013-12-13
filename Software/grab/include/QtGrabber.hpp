@@ -36,8 +36,11 @@ class QtGrabber : public TimeredGrabber
 {
 public:
     QtGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
-    ~QtGrabber();
-    virtual const char * getName();
+    virtual ~QtGrabber();
+    virtual const QString & name() {
+        static QString name = "QtGrabber";
+        return name;
+    }
     virtual void updateGrabMonitor( QWidget * widget );
 
 protected:

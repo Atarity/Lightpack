@@ -47,7 +47,7 @@ class GrabManager : public QObject
 
 public:
     GrabManager(QWidget *parent = 0);
-    ~GrabManager();
+    virtual ~GrabManager();
 
 signals:
     void updateLedsColors(const QList<QRgb> & colors);

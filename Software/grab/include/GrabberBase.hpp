@@ -51,6 +51,9 @@ public:
      \param grabWidgets List of GrabWidgets
     */
     GrabberBase(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets);
+    virtual ~GrabberBase() {}
+
+    virtual const QString & name() = 0;
 
 public slots:
     virtual void init() = 0;

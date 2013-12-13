@@ -66,6 +66,7 @@ signals:
 public slots:
     void setStatusChanged(Backlight::Status);
     void setBacklightChanged(Lightpack::Mode);
+    void free();
 
 private slots:
     void requestBacklightStatus();

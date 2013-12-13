@@ -49,15 +49,18 @@ LedDeviceManager::LedDeviceManager(QObject *parent)
 
     m_cmdTimeoutTimer = NULL;
 
-
     for (int i = 0; i < SupportedDevices::DeviceTypesCount; i++)
         m_ledDevices.append(NULL);
-
 }
 
 LedDeviceManager::~LedDeviceManager()
 {
     m_ledDeviceThread->deleteLater();
+    for (int i = 0; i < m_ledDevices.size(); i++) {
+        if(m_ledDevices[i])
+            m_ledDevices[i]->close();
+    }
+
     if (m_cmdTimeoutTimer)
         delete m_cmdTimeoutTimer;
 }

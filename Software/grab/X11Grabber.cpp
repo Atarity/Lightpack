@@ -58,10 +58,6 @@ X11Grabber::~X11Grabber()
     delete d;
 }
 
-const char * X11Grabber::getName()
-{
-    return "X11Grabber";
-}
 void X11Grabber::updateGrabMonitor(QWidget *widget)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;

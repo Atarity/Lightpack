@@ -39,7 +39,7 @@ class WinAPIGrabberEachWidget : public TimeredGrabber
 {
 public:
     WinAPIGrabberEachWidget(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
-    ~WinAPIGrabberEachWidget();
+    virtual ~WinAPIGrabberEachWidget();
     virtual const char * getName();
     virtual void updateGrabMonitor( QWidget * widget );
 

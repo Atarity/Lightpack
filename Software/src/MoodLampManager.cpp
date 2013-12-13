@@ -139,7 +139,7 @@ void MoodLampManager::initFromSettings()
 
 void MoodLampManager::updateColors()
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << m_isLiquidMode << m_liquidModeSpeed;
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << m_isLiquidMode << m_liquidModeSpeed;
 
     QRgb rgb;
 

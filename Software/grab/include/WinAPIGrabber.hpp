@@ -40,7 +40,7 @@ class WinAPIGrabber : public TimeredGrabber
     Q_OBJECT
 public:
     WinAPIGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
-    ~WinAPIGrabber();
+    virtual ~WinAPIGrabber();
 
 protected:
     virtual GrabResult _grab();

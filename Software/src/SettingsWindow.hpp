@@ -193,6 +193,8 @@ private slots:
 
 
 
+    void on_pbRunConfigurationWizard_clicked();
+
 private:
     void updateExpertModeWidgetsVisibility();
     void updateDeviceTabWidgetsVisibility();

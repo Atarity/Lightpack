@@ -28,6 +28,7 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QDesktopWidget>
+#include "LightpackApplication.hpp"
 
 #include "SettingsWindow.hpp"
 #include "ui_SettingsWindow.h"
@@ -1807,4 +1808,10 @@ void SettingsWindow::savePriorityPlugin()
     }
 }
 
+void SettingsWindow::on_pbRunConfigurationWizard_clicked()
+{
+    getLightpackApp()->free();
 
+    QProcess::startDetached(QApplication::applicationFilePath().append(" --wizard"));
+    quit();
+}

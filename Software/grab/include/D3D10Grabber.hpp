@@ -40,7 +40,7 @@ class D3D10GrabberWorker: public QObject {
     Q_OBJECT
     public:
         D3D10GrabberWorker(QObject *parent, LPSECURITY_ATTRIBUTES lpsa);
-        ~D3D10GrabberWorker();
+        virtual ~D3D10GrabberWorker();
     private:
         HANDLE m_frameGrabbedEvent;
     signals:
@@ -69,6 +69,7 @@ public slots:
     virtual bool isGrabbingStarted() const { return m_isStarted; }
     virtual void setGrabInterval(int msec);
     virtual void grab();
+    virtual const QString & name() { return "D3D10Grabber"; }
 
 private slots:
     void infectCleanDxProcesses(void);

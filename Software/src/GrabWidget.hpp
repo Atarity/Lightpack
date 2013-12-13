@@ -38,7 +38,7 @@ class GrabWidget : public QWidget
     Q_OBJECT
 public:
     GrabWidget(int id, QWidget *parent = 0);
-    ~GrabWidget();
+    virtual ~GrabWidget();
 
     void saveSizeAndPosition();
 

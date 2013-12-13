@@ -87,19 +87,27 @@ GrabManager::~GrabManager()
 
     delete m_timerGrab;
     delete m_timeEval;
-    delete m_grabber;
+    m_grabber = NULL;
 
     for (int i = 0; i < m_ledWidgets.size(); i++)
     {
-        m_ledWidgets[i]->deleteLater();
+        delete m_ledWidgets[i];
     }
+
     m_ledWidgets.clear();
 
-    for (int i = 0; i < Grab::GrabbersCount; i++)
-        delete m_grabbers[i];
+    for (int i = 0; i < m_grabbers.size(); i++)
+        if (m_grabbers[i]){
+            DEBUG_OUT << m_grabbers[i]->name();
+            delete m_grabbers[i];
+            m_grabbers[i] = NULL;
+        }
+
+    m_grabbers.clear();
 
 #ifdef D3D10_GRAB_SUPPORT
     delete m_d3d10Grabber;
+    m_d3d10Grabber = NULL;
 #endif
 }
 

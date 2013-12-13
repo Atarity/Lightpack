@@ -566,7 +566,7 @@ void LightpackApplication::initGrabManager()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     m_grabManager = new GrabManager(NULL);
-    m_moodlampManager = new MoodLampManager(this);
+    m_moodlampManager = new MoodLampManager(NULL);
 
     m_moodlampManager->initFromSettings();
 
@@ -697,4 +697,27 @@ void LightpackApplication::requestBacklightStatus()
 {
     //m_apiServer->resultBacklightStatus(m_backlightStatus);
     m_pluginInterface->resultBacklightStatus(m_backlightStatus);
+}
+
+void LightpackApplication::free()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    m_moodlampManager->start(false);
+    m_grabManager->start(false);
+    m_pluginManager->StopPlugins();
+
+    QApplication::processEvents(QEventLoop::AllEvents, 1000);
+
+    delete m_pluginManager;
+    delete m_moodlampManager;
+    delete m_grabManager;
+    delete m_ledDeviceManager;
+
+    m_pluginManager = NULL;
+    m_moodlampManager = NULL;
+    m_grabManager = NULL;
+    m_ledDeviceManager = NULL;
+
+    QApplication::processEvents(QEventLoop::AllEvents, 1000);
 }

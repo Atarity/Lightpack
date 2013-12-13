@@ -42,11 +42,6 @@ QtGrabber::~QtGrabber()
 {
 }
 
-const char * QtGrabber::getName()
-{
-    return "QtGrabber";
-}
-
 void QtGrabber::updateGrabMonitor(QWidget *widget)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;

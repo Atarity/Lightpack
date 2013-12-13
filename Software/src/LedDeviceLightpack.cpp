@@ -32,6 +32,7 @@
 #include <QtDebug>
 #include "debug.h"
 #include "Settings.hpp"
+#include <QApplication>
 
 using namespace SettingsScope;
 
@@ -445,7 +446,11 @@ void LedDeviceLightpack::resizeColorsBuffer(int buffSize)
 
 void LedDeviceLightpack::closeDevices()
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    m_timerPingDevice->stop();
+    m_timerPingDevice->blockSignals(true);
+
     for(int i=0; i < m_devices.size(); i++) {
         hid_close(m_devices[i]);
     }

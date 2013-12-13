@@ -35,7 +35,7 @@ class TimeredGrabber : public GrabberBase
     Q_OBJECT
 public:
     TimeredGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
-    ~TimeredGrabber();
+    virtual ~TimeredGrabber();
 public slots:
     virtual void init();
     virtual GrabResult _grab() = 0;
@@ -43,6 +43,7 @@ public slots:
     virtual void stopGrabbing();
     virtual bool isGrabbingStarted() const;
     virtual void setGrabInterval(int msec);
+    virtual const QString & name() = 0;
 
 protected:
     QTimer *m_timer;

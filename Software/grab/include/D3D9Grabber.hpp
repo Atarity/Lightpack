@@ -38,7 +38,7 @@ class D3D9Grabber : public TimeredGrabber
 {
 public:
     D3D9Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
-    ~D3D9Grabber();
+    virtual ~D3D9Grabber();
     virtual const char * getName();
     virtual void updateGrabMonitor( QWidget * ){}
 

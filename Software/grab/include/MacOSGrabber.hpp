@@ -40,7 +40,7 @@ class MacOSGrabber : public TimeredGrabber
 {
 public:
     MacOSGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
-    ~MacOSGrabber();
+    virtual ~MacOSGrabber();
 //    virtual QList<QRgb>grabWidgetsColors(QList<GrabWidget *> &widgets);
     virtual const char * getName();
 

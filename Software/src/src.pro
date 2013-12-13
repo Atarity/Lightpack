@@ -49,6 +49,7 @@ RC_FILE      = ../res/Lightpack.rc
 include(../build-config.prf)
 
 LIBS    += -L../lib -lgrab -lprismatik-math
+QMAKE_CFLAGS += -std=c++11
 
 unix:!macx{
     CONFIG    += link_pkgconfig

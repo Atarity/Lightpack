@@ -48,8 +48,8 @@ class X11Grabber : public TimeredGrabber
 {
 public:
     X11Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
-    ~X11Grabber();
-    virtual const char * getName();
+    virtual ~X11Grabber();
+    virtual const QString & name() { return _name; }
     virtual void updateGrabMonitor( QWidget * widget );
     virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
 
@@ -67,5 +67,6 @@ private:
     QRect screenres;
 
     X11GrabberData *d;
+    const QString _name = "X11";
 };
 #endif // X11_GRAB_SUPPORT
