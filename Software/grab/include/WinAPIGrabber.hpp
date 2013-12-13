@@ -42,6 +42,11 @@ public:
     WinAPIGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
     virtual ~WinAPIGrabber();
 
+    virtual const char * name() const {
+        static char * name = "WinAPIGrabber";
+        return name;
+    }
+
 protected:
     virtual GrabResult _grab();
 

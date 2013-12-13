@@ -55,9 +55,14 @@ class D3D10Grabber : public GrabberBase
     Q_OBJECT
 public:
     D3D10Grabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets, GetHwndCallback_t getHwndCb);
-    ~D3D10Grabber();
+    virtual ~D3D10Grabber();
 
-    void init(void);
+    virtual void init(void);
+
+    virtual const char * name() const {
+        static char * name = "D3D10Grabber";
+        return name;
+    }
 
 protected:
     virtual GrabResult _grab();
@@ -69,7 +74,6 @@ public slots:
     virtual bool isGrabbingStarted() const { return m_isStarted; }
     virtual void setGrabInterval(int msec);
     virtual void grab();
-    virtual const QString & name() { return "D3D10Grabber"; }
 
 private slots:
     void infectCleanDxProcesses(void);

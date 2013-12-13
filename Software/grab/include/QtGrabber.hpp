@@ -37,8 +37,8 @@ class QtGrabber : public TimeredGrabber
 public:
     QtGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
     virtual ~QtGrabber();
-    virtual const QString & name() {
-        static QString name = "QtGrabber";
+    virtual const char * name() const {
+        static char * name = "QtGrabber";
         return name;
     }
     virtual void updateGrabMonitor( QWidget * widget );

@@ -53,7 +53,7 @@ public:
     GrabberBase(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets);
     virtual ~GrabberBase() {}
 
-    virtual const QString & name() = 0;
+    virtual const char * name() const = 0;
 
 public slots:
     virtual void init() = 0;

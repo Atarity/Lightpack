@@ -39,8 +39,12 @@ class D3D9Grabber : public TimeredGrabber
 public:
     D3D9Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
     virtual ~D3D9Grabber();
-    virtual const char * getName();
     virtual void updateGrabMonitor( QWidget * ){}
+
+    virtual const char * name() const {
+        static char * name = "D3D9Grabber";
+        return name;
+    }
 
 protected:
     virtual GrabResult _grab();

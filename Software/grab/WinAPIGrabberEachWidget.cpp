@@ -41,11 +41,6 @@ WinAPIGrabberEachWidget::~WinAPIGrabberEachWidget()
     delete[] pbPixelsBuff;
 }
 
-const char * WinAPIGrabberEachWidget::getName()
-{
-    return "WinAPIGrabberEachWidget";
-}
-
 void WinAPIGrabberEachWidget::updateGrabMonitor(QWidget *widget)
 {
     hMonitor = MonitorFromWindow( reinterpret_cast<HWND>(widget->winId()), MONITOR_DEFAULTTONEAREST );

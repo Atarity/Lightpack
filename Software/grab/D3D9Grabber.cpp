@@ -118,11 +118,6 @@ D3D9Grabber::~D3D9Grabber()
     }
 }
 
-const char * D3D9Grabber::getName()
-{
-    return "D3D9Grabber";
-}
-
 int D3D9Grabber::getBufLength(const RECT &rect)
 {
     return (rect.right - rect.left) * (rect.bottom - rect.top) * BYTES_PER_PIXEL;
