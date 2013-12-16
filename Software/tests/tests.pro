@@ -26,22 +26,6 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 LIBS += -L../lib -lprismatik-math -lgrab
 
 INCLUDEPATH += ../src/ ../src/grab ../hooks ../grab/include ../math/include
-SOURCES += \
-    LightpackApiTest.cpp \
-    ../src/ApiServerSetColorTask.cpp \
-    ../src/ApiServer.cpp \
-    ../src/Settings.cpp \
-    ../src/Plugin.cpp \
-    ../src/LightpackPluginInterface.cpp \
-    SettingsWindowMockup.cpp \
-    main.cpp \
-    GrabCalculationTest.cpp \
-    lightpackmathtest.cpp \
-    HooksTest.cpp \
-    ../hooks/ProxyFuncJmp.cpp \
-    ../hooks/hooksutils.cpp \
-    ../hooks/ProxyFuncVFTable.cpp \
-    ../hooks/Logger.cpp
 
 HEADERS += \
     ../src/grab/calculations.hpp \
@@ -57,10 +41,31 @@ HEADERS += \
     GrabCalculationTest.hpp \
     LightpackApiTest.hpp \
     lightpackmathtest.hpp \
-    ../math/include/PrismatikMath.hpp \
-    HooksTest.h \
-    ../hooks/ProxyFuncJmp.hpp \
-    ../hooks/ProxyFunc.hpp \
-    ../hooks/hooksutils.h \
-    ../hooks/ProxyFuncVFTable.hpp \
-    ../hooks/Logger.hpp
+    ../math/include/PrismatikMath.hpp
+
+SOURCES += \
+    LightpackApiTest.cpp \
+    ../src/ApiServerSetColorTask.cpp \
+    ../src/ApiServer.cpp \
+    ../src/Settings.cpp \
+    ../src/Plugin.cpp \
+    ../src/LightpackPluginInterface.cpp \
+    SettingsWindowMockup.cpp \
+    main.cpp \
+    GrabCalculationTest.cpp \
+    lightpackmathtest.cpp
+
+win32{
+    HEADERS += \
+        HooksTest.h \
+        ../hooks/ProxyFuncJmp.hpp \
+        ../hooks/ProxyFunc.hpp \
+        ../hooks/hooksutils.h \
+        ../hooks/ProxyFuncVFTable.hpp
+
+    SOURCES += \
+        HooksTest.cpp \
+        ../hooks/ProxyFuncJmp.cpp \
+        ../hooks/hooksutils.cpp \
+        ../hooks/ProxyFuncVFTable.cpp
+}

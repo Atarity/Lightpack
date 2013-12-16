@@ -3,7 +3,9 @@
 #include "LightpackApiTest.hpp"
 #include "GrabCalculationTest.hpp"
 #include "lightpackmathtest.hpp"
+#ifdef Q_OS_WIN
 #include "HooksTest.h"
+#endif
 #include <iostream>
 
 using namespace std;
@@ -17,7 +19,11 @@ int main(int argc, char *argv[])
     QStringList summary;
 
     tests.append(new GrabCalculationTest());
+
+#ifdef Q_OS_WIN
     tests.append(new HooksTest());
+#endif
+
     tests.append(new LightpackMathTest());
     tests.append(new LightpackApiTest());
 
