@@ -136,7 +136,6 @@ SOURCES += \
       GrabWidget.cpp  GrabConfigWidget.cpp \
     SpeedTest.cpp \
     LedDeviceLightpack.cpp \
-    LedDeviceAlienFx.cpp \
     LedDeviceAdalight.cpp \
     LedDeviceArdulight.cpp \
     LedDeviceVirtual.cpp \
@@ -181,7 +180,6 @@ HEADERS += \
     alienfx/LFXDecl.h \
     alienfx/LFX2.h \
     LedDeviceLightpack.hpp \
-    LedDeviceAlienFx.hpp \
     LedDeviceAdalight.hpp \
     LedDeviceArdulight.hpp \
     LedDeviceVirtual.hpp \
@@ -225,6 +223,11 @@ HEADERS += \
 
 contains(DEFINES,UNITY_DESKTOP) {
     HEADERS += systrayicon/SysTrayIcon_unity_p.hpp
+}
+
+win32 {
+    SOURCES += LedDeviceAlienFx.cpp
+    HEADERS += LedDeviceAlienFx.hpp
 }
 
 FORMS += SettingsWindow.ui \

@@ -80,7 +80,7 @@ QImage * MacOSGrabber::toImage(CGImageRef imageRef)
   return result;
 }
 
-GrabResult MacOSGrabber::_grab()
+GrabResult MacOSGrabber::_grab\([\s\w]*\)
 {
     CGImageRef imageRef = CGDisplayCreateImage(kCGDirectMainDisplay);
 

@@ -29,9 +29,10 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
 #include "../src/debug.h"
+#include "GrabberContext.hpp"
 
-QtGrabberEachWidget::QtGrabberEachWidget(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
-    : TimeredGrabber(parent, grabResult, grabAreasGeometry)
+QtGrabberEachWidget::QtGrabberEachWidget(QObject *parent, GrabberContext *context)
+    : TimeredGrabber(parent, context)
 {
 }
 
@@ -39,19 +40,14 @@ QtGrabberEachWidget::~QtGrabberEachWidget()
 {
 }
 
-void QtGrabberEachWidget::updateGrabMonitor(QWidget * /*widget*/)
-{
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
-}
-
-GrabResult QtGrabberEachWidget::_grab()
+GrabResult QtGrabberEachWidget::_grab(QList<QRgb> &grabResult, const QList<GrabWidget*> &grabWidgets)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    m_grabResult->clear();
-    foreach(GrabWidget * widget, *m_grabWidgets)
+    grabResult.clear();
+    foreach(GrabWidget * widget, grabWidgets)
 	{
-        m_grabResult->append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
+        grabResult.append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
     }
     return GrabResultOk;
 }

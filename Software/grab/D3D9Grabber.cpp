@@ -123,7 +123,7 @@ int D3D9Grabber::getBufLength(const RECT &rect)
     return (rect.right - rect.left) * (rect.bottom - rect.top) * BYTES_PER_PIXEL;
 }
 
-GrabResult D3D9Grabber::_grab()
+GrabResult D3D9Grabber::_grab\([\s\w]*\)
 {
     D3DSURFACE_DESC surfaceDesc;
     m_rect = getEffectiveRect(*m_grabWidgets);

@@ -35,7 +35,7 @@ using namespace Grab;
 class QtGrabber : public TimeredGrabber
 {
 public:
-    QtGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
+    QtGrabber(QObject *parent, GrabberContext * context);
     virtual ~QtGrabber();
     virtual const char * name() const {
         static const char * name = "QtGrabber";
@@ -44,7 +44,7 @@ public:
     virtual void updateGrabMonitor( QWidget * widget );
 
 protected:
-    virtual GrabResult _grab();
+    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget);
 
 private:
     QRgb getColor(QPixmap pixmap, const QWidget * grabme);

@@ -50,7 +50,7 @@ public slots:
     virtual void updateGrabMonitor(QWidget *widget);
 
 protected:
-    virtual GrabResult _grab();
+    virtual GrabResult _grab(QList<QRgb> grabResult, const QList<GrabWidget *> &grabWidget);
 
 private:
     QRgb getColor(QImage * image, const QRect &rect);

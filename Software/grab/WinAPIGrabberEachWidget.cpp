@@ -47,7 +47,7 @@ void WinAPIGrabberEachWidget::updateGrabMonitor(QWidget *widget)
     isBufferNeedsResize = true;
 }
 
-GrabResult WinAPIGrabberEachWidget::_grab()
+GrabResult WinAPIGrabberEachWidget::_grab\([\s\w]*\)
 {
     m_grabResult->clear();
     foreach(GrabWidget * widget, *m_grabWidgets) {

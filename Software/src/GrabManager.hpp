@@ -41,6 +41,8 @@
 
 #include "enums.hpp"
 
+class GrabberContext;
+
 class GrabManager : public QObject
 {
     Q_OBJECT
@@ -123,4 +125,5 @@ private:
     double m_fpsMs;
 
     bool m_isGrabWidgetsVisible;
+    GrabberContext * m_grabberContext;
 };

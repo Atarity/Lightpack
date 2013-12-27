@@ -27,7 +27,7 @@
 #include "TimeredGrabber.hpp"
 #include "../src/debug.h"
 
-TimeredGrabber::TimeredGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry) : GrabberBase(parent, grabResult, grabAreasGeometry) {
+TimeredGrabber::TimeredGrabber(QObject * parent, GrabberContext *context) : GrabberBase(parent, context) {
 }
 
 TimeredGrabber::~TimeredGrabber() {

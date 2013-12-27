@@ -48,7 +48,7 @@ public:
     }
 
 protected:
-    virtual GrabResult _grab();
+    virtual GrabResult _grab(QList<QRgb> grabResult, const QList<GrabWidget *> &grabWidget);
 
 private:
     void captureWidget(const QWidget * w);

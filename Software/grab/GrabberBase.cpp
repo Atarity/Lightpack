@@ -26,13 +26,12 @@
 #include "GrabberBase.hpp"
 #include "../src/debug.h"
 
-GrabberBase::GrabberBase(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets) : QObject(parent) {
-    m_grabResult = grabResult;
-    m_grabWidgets = grabWidgets;
+GrabberBase::GrabberBase(QObject *parent, GrabberContext *grabberContext) : QObject(parent) {
+    _context = grabberContext;
 }
 
-void GrabberBase::grab() {
+void GrabberBase::grab(QList<QRgb> &grabResult, const QList<GrabWidget*> &grabWidgets) {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
-    m_lastGrabResult = _grab();
+    m_lastGrabResult = _grab(grabResult, grabWidgets);
     emit frameGrabAttempted(m_lastGrabResult);
 }

@@ -20,15 +20,21 @@ HEADERS += \
     include/TimeredGrabber.hpp \
     include/QtGrabberEachWidget.hpp \
     include/QtGrabber.hpp \
-    include/IGrabber.hpp \
-    include/GrabberBase.hpp
+    include/GrabberBase.hpp \
+    VirtualDesktop.hpp \
+    AvgColorCalculator.hpp \
+    include/ColorProvider.hpp \
+    include/GrabberContext.hpp
 
 SOURCES += \
     calculations.cpp \
     TimeredGrabber.cpp \
     QtGrabberEachWidget.cpp \
     QtGrabber.cpp \
-    GrabberBase.cpp
+    GrabberBase.cpp \
+    VirtualDesktop.cpp \
+    AvgColorCalculator.cpp \
+    include/ColorProvider.cpp
 
 win32 {
     INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"

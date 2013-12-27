@@ -42,11 +42,11 @@ struct X11GrabberData
     XShmSegmentInfo shminfo;
 };
 
-X11Grabber::X11Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
-    : TimeredGrabber(parent, grabResult, grabAreasGeometry)
+X11Grabber::X11Grabber(QObject *parent, GrabberContext * context)
+    : TimeredGrabber(parent, context)
 {
-    this->updateScreenAndAllocateMemory = true;
-    this->screen = 0;
+    this->_updateScreenAndAllocateMemory = true;
+    this->_screen = 0;
     d = new X11GrabberData();
     d->image = NULL;
     d->display = XOpenDisplay(NULL);
@@ -58,29 +58,12 @@ X11Grabber::~X11Grabber()
     delete d;
 }
 
-void X11Grabber::updateGrabMonitor(QWidget *widget)
-{
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
-//    updateScreenAndAllocateMemory = true;
-//    screen = QApplication::desktop()->screenNumber( widget );
-}
-
-QList<QRgb> X11Grabber::grabWidgetsColors(QList<GrabWidget *> &widgets)
+GrabResult X11Grabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets)
 {
     captureScreen();
-    QList<QRgb> result;
-    for(int i = 0; i < widgets.size(); i++) {
-        result.append(getColor(widgets[i]));
-    }
-    return result;
-}
-
-GrabResult X11Grabber::_grab()
-{
-    captureScreen();
-    m_grabResult->clear();
-    foreach(GrabWidget * widget, *m_grabWidgets) {
-        m_grabResult->append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
+    grabResult.clear();
+    foreach(GrabWidget * widget, grabWidgets) {
+        grabResult.append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
     }
     return GrabResultOk;
 }
@@ -89,18 +72,18 @@ void X11Grabber::captureScreen()
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    if( updateScreenAndAllocateMemory ){
+    if( _updateScreenAndAllocateMemory ){
         //screenres = QApplication::desktop()->screenGeometry(screen);
-        updateScreenAndAllocateMemory = false;
+        _updateScreenAndAllocateMemory = false;
 
-        // todo test and fix dual monitor configuration
+        //TODO: test and fix dual monitor configuration
         d->Xscreen = DefaultScreenOfDisplay(d->display);
 
-        long width=DisplayWidth(d->display, screen);
-        long height=DisplayHeight(d->display, screen);
+        long width=DisplayWidth(d->display, _screen);
+        long height=DisplayHeight(d->display, _screen);
 	
-	DEBUG_HIGH_LEVEL << "dimensions " << width << "x" << height << screen;
-        screenres = QRect(0,0,width,height);
+	DEBUG_HIGH_LEVEL << "dimensions " << width << "x" << height << _screen;
+        _screenres = QRect(0,0,width,height);
 
         if (d->image != NULL) {
             XShmDetach(d->display, &d->shminfo);
@@ -111,7 +94,7 @@ void X11Grabber::captureScreen()
         d->image = XShmCreateImage(d->display,   DefaultVisualOfScreen(d->Xscreen),
                                         DefaultDepthOfScreen(d->Xscreen),
                                         ZPixmap, NULL, &d->shminfo,
-                                        screenres.width(), screenres.height() );
+                                        _screenres.width(), _screenres.height() );
         uint imagesize;
         imagesize = d->image->bytes_per_line * d->image->height;
         d->shminfo.shmid = shmget(    IPC_PRIVATE,
@@ -128,7 +111,7 @@ void X11Grabber::captureScreen()
     }
     // DEBUG_LOW_LEVEL << "XShmGetImage";
     XShmGetImage(d->display,
-                 RootWindow(d->display, screen),
+                 RootWindow(d->display, _screen),
                  d->image,
                  0,
                  0,
@@ -172,10 +155,10 @@ QRgb X11Grabber::getColor(int x, int y, int width, int height)
             << "x y w h:" << x << y << width << height;
 
     // Checking for the 'grabme' widget position inside the monitor that is used to capture color
-    if( x + width  < screenres.left()  ||
-        x               > screenres.right()  ||
-        y + height < screenres.top()    ||
-        y               > screenres.bottom() ){
+    if( x + width  < _screenres.left()  ||
+        x               > _screenres.right()  ||
+        y + height < _screenres.top()    ||
+        y               > _screenres.bottom() ){
 
         DEBUG_MID_LEVEL << "Widget 'grabme' is out of screen, x y w h:" << x << y << width << height;
 
@@ -184,8 +167,8 @@ QRgb X11Grabber::getColor(int x, int y, int width, int height)
     }
 
     // Convert coordinates from "Main" desktop coord-system to capture-monitor coord-system
-    x -= screenres.left() ;
-    y -= screenres.top();
+    x -= _screenres.left() ;
+    y -= _screenres.top();
 
     // Ignore part of LED widget which out of screen
     if( x < 0 ) {
@@ -196,8 +179,8 @@ QRgb X11Grabber::getColor(int x, int y, int width, int height)
         height += y;  /* reduce height */
         y = 0;
     }
-    if( x + width  > (int)screenres.width()  ) width  -= (x + width ) - screenres.width();
-    if( y + height > (int)screenres.height() ) height -= (y + height) - screenres.height();
+    if( x + width  > (int)_screenres.width()  ) width  -= (x + width ) - _screenres.width();
+    if( y + height > (int)_screenres.height() ) height -= (y + height) - _screenres.height();
 
     //calculate aligned width (align by 4 pixels)
     width = width - (width % 4);
@@ -221,7 +204,7 @@ QRgb X11Grabber::getColor(int x, int y, int width, int height)
             b += pbPixelsBuff[index]   + pbPixelsBuff[index + 4] + pbPixelsBuff[index + 8 ] + pbPixelsBuff[index + 12];
             g += pbPixelsBuff[index+1] + pbPixelsBuff[index + 5] + pbPixelsBuff[index + 9 ] + pbPixelsBuff[index + 13];
             r += pbPixelsBuff[index+2] + pbPixelsBuff[index + 6] + pbPixelsBuff[index + 10] + pbPixelsBuff[index + 14];
-            count+=4;
+            count += 4;
             index += bytesPerPixel * 4;
         }
 

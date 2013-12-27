@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <QSharedPointer>
 #include <QColor>
 #include <QTimer>
 #include "../common/defs.h"
@@ -35,6 +36,10 @@ enum GrabResult {
     GrabResultFrameNotReady,
     GrabResultError
 };
+
+class GrabberContext;
+
+class QImage;
 
 /*!
   Base class which represents each particular grabber. If you want to add a new grabber just add implementation of \code GrabberBase \endcode
@@ -50,7 +55,7 @@ public:
      \param grabResult \code QList \endcode to write results of grabbing to
      \param grabWidgets List of GrabWidgets
     */
-    GrabberBase(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets);
+    GrabberBase(QObject * parent, GrabberContext * grabberContext);
     virtual ~GrabberBase() {}
 
     virtual const char * name() const = 0;
@@ -61,19 +66,14 @@ public slots:
     virtual void stopGrabbing() = 0;
     virtual bool isGrabbingStarted() const = 0;
     virtual void setGrabInterval(int msec) = 0;
-    virtual void grab();
+    virtual void grab(QList<QRgb> &grabResult, const QList<GrabWidget*> &grabWidgets);
 
-    /*!
-      Updates monitor to grab picture from. We are grabbing picture from monitor first grabWidget belongs to.
-     \param widget
-    */
-    virtual void updateGrabMonitor(QWidget * widget) = 0;
-
+protected slots:
     /*!
       Grab implementation, called from @a GrabberBase#grab() slot, needs to be overriden
      \return GrabResult
     */
-    virtual GrabResult _grab() = 0;
+    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget*> &grabWidgets) = 0;
 
 signals:
     void frameGrabAttempted(GrabResult grabResult);
@@ -84,8 +84,8 @@ signals:
     void grabberStateChangeRequested(bool isStartRequested);
 
 protected:
-    QList<QRgb> *m_grabResult; /*!< \code QList \endcode which stores grab result and could be accessed by \code GrabManager \endcode */
-    QList<GrabWidget *> *m_grabWidgets;
+    GrabberContext *_context;
     GrabResult m_lastGrabResult;
+    QList<QImage *> m_screens;
 
 };

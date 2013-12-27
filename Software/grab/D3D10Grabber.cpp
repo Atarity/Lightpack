@@ -292,7 +292,7 @@ void D3D10Grabber::grab() {
     }
 }
 
-GrabResult D3D10Grabber::_grab() {
+GrabResult D3D10Grabber::_grab\([\s\w]*\) {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     if (!m_isInited) {
         return GrabResultFrameNotReady;

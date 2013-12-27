@@ -31,6 +31,7 @@
 #include "LightpackApplication.hpp"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
+#include "GrabberContext.hpp"
 using namespace SettingsScope;
 
 #ifdef D3D10_GRAB_SUPPORT
@@ -52,6 +53,8 @@ GrabManager::GrabManager(QWidget *parent) : QObject(parent)
     m_timeEval = new TimeEvaluations();
 
     m_fpsMs = 0;
+
+    m_grabberContext = new GrabberContext();
 
     m_isSendDataOnlyIfColorsChanged = Settings::isSendDataOnlyIfColorsChanges();
 
@@ -109,6 +112,8 @@ GrabManager::~GrabManager()
     delete m_d3d10Grabber;
     m_d3d10Grabber = NULL;
 #endif
+
+    delete m_grabberContext;
 }
 
 void GrabManager::start(bool isGrabEnabled)
@@ -388,7 +393,7 @@ void GrabManager::firstWidgetPositionChanged()
             return;
         }
 
-        m_grabber->updateGrabMonitor(m_ledWidgets[0]);
+//        m_grabber->updateGrabMonitor();
     }
 }
 
@@ -470,14 +475,14 @@ void GrabManager::initGrabbers()
 #endif
 
 #ifdef Q_OS_LINUX
-    m_grabbers[Grab::GrabberTypeX11] = initGrabber(new X11Grabber(NULL, &m_colorsNew, &m_ledWidgets));
+    m_grabbers[Grab::GrabberTypeX11] = initGrabber(new X11Grabber(NULL, m_grabberContext));
 #endif
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
     m_grabbers[Grab::GrabberTypeMacCoreGraphics] = initGrabber(new MacOSGrabber(NULL, &m_colorsNew, &m_ledWidgets));
 #endif
-    m_grabbers[Grab::GrabberTypeQtEachWidget] = initGrabber(new QtGrabberEachWidget(NULL, &m_colorsNew, &m_ledWidgets));
-    m_grabbers[Grab::GrabberTypeQt] = initGrabber(new QtGrabber(NULL, &m_colorsNew, &m_ledWidgets));
+    m_grabbers[Grab::GrabberTypeQtEachWidget] = initGrabber(new QtGrabberEachWidget(NULL, m_grabberContext));
+    m_grabbers[Grab::GrabberTypeQt] = initGrabber(new QtGrabber(NULL, m_grabberContext));
 #ifdef Q_OS_WIN
     m_grabbers[Grab::GrabberTypeWinAPIEachWidget] = initGrabber(new WinAPIGrabberEachWidget(NULL, &m_colorsNew, &m_ledWidgets));
 #endif

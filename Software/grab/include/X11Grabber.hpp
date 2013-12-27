@@ -35,6 +35,7 @@
 //#include <QDesktopWidget>
 #include <QPixmap>
 #include <QImage>
+#include <QSharedPointer>
 
 #include <qtextstream.h>
 
@@ -47,17 +48,15 @@ using namespace Grab;
 class X11Grabber : public TimeredGrabber
 {
 public:
-    X11Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
+    X11Grabber(QObject *parent, GrabberContext *context);
     virtual ~X11Grabber();
     virtual const char * name() const {
         static const char * name = "X11Grabber";
         return name;
     }
-    virtual void updateGrabMonitor( QWidget * widget );
-    virtual QList<QRgb> grabWidgetsColors(QList<GrabWidget *> &widgets);
 
 protected:
-    virtual GrabResult _grab();
+    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget);
 
 private:
     void captureScreen();
@@ -65,9 +64,9 @@ private:
     QRgb getColor(int x, int y, int width, int height);
 
 private:
-    bool updateScreenAndAllocateMemory;
-    int screen;
-    QRect screenres;
+    bool _updateScreenAndAllocateMemory;
+    int _screen;
+    QRect _screenres;
 
     X11GrabberData *d;
 };

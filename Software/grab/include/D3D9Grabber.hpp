@@ -47,7 +47,7 @@ public:
     }
 
 protected:
-    virtual GrabResult _grab();
+    virtual GrabResult _grab(QList<QRgb> grabResult, const QList<GrabWidget *> &grabWidget);
 
 private:
     LPDIRECT3D9 m_d3D;

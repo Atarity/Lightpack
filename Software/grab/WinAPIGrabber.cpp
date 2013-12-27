@@ -120,7 +120,7 @@ void WinAPIGrabber::updateGrabMonitor(QWidget *widget)
 
 }
 
-GrabResult WinAPIGrabber::_grab()
+GrabResult WinAPIGrabber::_grab\([\s\w]*\)
 {
     captureScreen();
     m_grabResult->clear();
