@@ -443,16 +443,16 @@ LIBRARYINJECTORSHARED_EXPORT HRESULT PASCAL DllGetClassObject(REFCLSID objGuid, 
     reportLog(EVENTLOG_INFORMATION_TYPE, "factory guid %s", guida);
 #endif
 
-    ClassFactory * classFactory;
     if (IsEqualCLSID(objGuid, &CLSID_ILibraryInjector))
     {
-
-        classFactory = (ClassFactory *)GlobalAlloc(GMEM_FIXED, sizeof(ClassFactory));
+        ClassFactory * classFactory = (ClassFactory *)GlobalAlloc(GMEM_FIXED, sizeof(ClassFactory));
         _ClassFactory(classFactory);
+        classFactory->lpVtbl->AddRef(classFactory);
         // Fill in the caller's handle with a pointer to our IClassFactory object.
         // We'll let our IClassFactory's QueryInterface do that, because it also
         // checks the IClassFactory GUID and does other book-keeping
         hr = classFactory->lpVtbl->QueryInterface(classFactory, factoryGuid, factoryHandle);
+        classFactory->lpVtbl->Release(classFactory);
     }
     else
     {
