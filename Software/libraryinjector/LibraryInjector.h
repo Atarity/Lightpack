@@ -1,5 +1,5 @@
 /*
- * LibraryInjector.hpp
+ * LibraryInjector.h
  *
  *  Created on: 05.06.2012
  *     Project: Lightpack
@@ -22,39 +22,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#include"initguid.h"
-#include"ILibraryInjector.h"
 
-typedef struct {
-    const ILibraryInjectorVtbl *lpVtbl;
-    volatile LONG refCount;
-} LibraryInjector;
+#ifndef _LIBRARYINJECTOR_HEADER
+#define _LIBRARYINJECTOR_HEADER
 
-typedef struct {
-    const IClassFactoryVtbl *lpVtbl;
-    volatile LONG refCount;
-} ClassFactory;
+#include "ILibraryInjector.h"
 
+int libraryInjectorInit(void);
+int isLibraryInjectorActive(void);
+void libraryInjectorShutdown(void);
+void reportLog(WORD logType, LPCWSTR message, ...);
 
-static HRESULT STDMETHODCALLTYPE LibraryInjector_QueryInterface(LibraryInjector * this, REFIID interfaceGuid, void **ppv);
-static ULONG STDMETHODCALLTYPE LibraryInjector_AddRef(LibraryInjector * this);
-static ULONG STDMETHODCALLTYPE LibraryInjector_Release(LibraryInjector * this);
-static HRESULT STDMETHODCALLTYPE LibraryInjector_Inject(LibraryInjector * this, DWORD Process, LPWSTR ModulePath);
+ILibraryInjector * allocLibraryInjector(void);
+IClassFactory * allocClassFactory(void);
 
-
-static HRESULT STDMETHODCALLTYPE ClassFactory_QueryInterface(ClassFactory * this, REFIID factoryGuid, void **ppv);
-static ULONG STDMETHODCALLTYPE ClassFactory_AddRef(ClassFactory * this);
-static ULONG STDMETHODCALLTYPE ClassFactory_Release(ClassFactory * this);
-static HRESULT STDMETHODCALLTYPE ClassFactory_CreateInstance(ClassFactory * this, IUnknown *punkOuter, REFIID vTableGuid, void **objHandle);
-static HRESULT STDMETHODCALLTYPE ClassFactory_LockServer(ClassFactory * this, BOOL flock);
-
-static const ILibraryInjectorVtbl libraryInjectorVtbl = {LibraryInjector_QueryInterface,
-                                            LibraryInjector_AddRef,
-                                            LibraryInjector_Release,
-                                            LibraryInjector_Inject};
-
-static const IClassFactoryVtbl classFactoryVtbl = {ClassFactory_QueryInterface,
-                                      ClassFactory_AddRef,
-                                      ClassFactory_Release,
-                                      ClassFactory_CreateInstance,
-                                      ClassFactory_LockServer};
+#endif // _LIBRARYINJECTOR_HEADER
