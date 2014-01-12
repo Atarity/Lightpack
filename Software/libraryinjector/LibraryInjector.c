@@ -25,6 +25,7 @@
 
 
 #include "LibraryInjector.h"
+#include "stdarg.h"
 #include "olectl.h"
 
 /*! A count of how many objects of our DLL has been created
@@ -41,12 +42,13 @@ static HANDLE hEventSrc = NULL;
 
 void reportLog(WORD logType, const LPWSTR message, ...) {
     va_list ap;
+    int sprintfResult;
 
     WCHAR *reportLogBuf = malloc(REPORT_LOG_BUF_SIZE);
     memset(reportLogBuf, 0, REPORT_LOG_BUF_SIZE);
 
     va_start( ap, message );
-    int sprintfResult = wvsprintfW(reportLogBuf, message, ap);
+    sprintfResult = wvsprintfW(reportLogBuf, message, ap);
     va_end( ap );
     if (sprintfResult > -1)
         ReportEventW(hEventSrc, logType, 0, 0x100, NULL, 1, 0, &reportLogBuf, NULL);
@@ -137,6 +139,11 @@ static HRESULT STDMETHODCALLTYPE LibraryInjector_Inject(LibraryInjector * this, 
 #define SIZE_OF_CODE 25
     reportLog(EVENTLOG_INFORMATION_TYPE, L"injecting library...");
     if(AcquirePrivilege()) {
+        int sizeofCP;
+        LPVOID Memory;
+        LPWSTR DLLName;
+        DWORD *LoadLibProc, *LibNameArg, *ExitThreadProc;
+        HANDLE hThread;
         HMODULE hKernel32 = GetModuleHandle(L"kernel32.dll");
 
         HANDLE Process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, ProcessId);
@@ -146,16 +153,13 @@ static HRESULT STDMETHODCALLTYPE LibraryInjector_Inject(LibraryInjector * this, 
             return S_FALSE;
         }
 
-        int sizeofCP = wcslen(ModulePath)*2 + SIZE_OF_CODE + 1;
-        LPVOID Memory = VirtualAllocEx(Process, 0, sizeofCP, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+        sizeofCP = wcslen(ModulePath)*2 + SIZE_OF_CODE + 1;
+        Memory = VirtualAllocEx(Process, 0, sizeofCP, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 
         if (!Memory) {
             reportLog(EVENTLOG_ERROR_TYPE, L"couldn't allocate memory");
             return S_FALSE;
         }
-
-        LPWSTR *DLLName;
-        DWORD *LoadLibProc, *LibNameArg, *ExitThreadProc;
 
         DLLName = (LPWSTR) ((DWORD) CodePage + SIZE_OF_CODE);
         LoadLibProc = (DWORD*) (CodePage + LOAD_LIB_OFFSET);
@@ -165,7 +169,7 @@ static HRESULT STDMETHODCALLTYPE LibraryInjector_Inject(LibraryInjector * this, 
         wcscpy(DLLName, ModulePath);
         *LoadLibProc = (DWORD) GetProcAddress(hKernel32, "LoadLibraryW");
         *ExitThreadProc = (DWORD) GetProcAddress(hKernel32, "ExitThread");
-        *LibNameArg = (DWORD) (Memory + SIZE_OF_CODE); // need to do this: *EBX = *EBX + (Section)
+        *LibNameArg = (DWORD)Memory + SIZE_OF_CODE; // need to do this: *EBX = *EBX + (Section)
         ////////////////////////////
 
         if(!WriteProcessMemory(Process, Memory, CodePage, sizeofCP, 0)) {
@@ -173,8 +177,8 @@ static HRESULT STDMETHODCALLTYPE LibraryInjector_Inject(LibraryInjector * this, 
             return S_FALSE;
         }
 
-        HANDLE hThread = CreateRemoteThread(Process, 0, 0, (LPTHREAD_START_ROUTINE) Memory, 0, 0, 0);
-        //    HANDLE hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CodePage, 0, 0, 0);
+        hThread = CreateRemoteThread(Process, 0, 0, (LPTHREAD_START_ROUTINE) Memory, 0, 0, 0);
+        //    hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CodePage, 0, 0, 0);
         if (!hThread) {
             reportLog(EVENTLOG_ERROR_TYPE, L"couldn't create remote thread");
             return S_FALSE;
