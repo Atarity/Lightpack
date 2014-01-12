@@ -26,12 +26,12 @@
 #include"ILibraryInjector.h"
 
 typedef struct {
-    ILibraryInjectorVtbl *lpVtbl;
+    const ILibraryInjectorVtbl *lpVtbl;
     volatile LONG refCount;
 } LibraryInjector;
 
 typedef struct {
-    IClassFactoryVtbl *lpVtbl;
+    const IClassFactoryVtbl *lpVtbl;
     volatile LONG refCount;
 } ClassFactory;
 
