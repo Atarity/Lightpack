@@ -581,13 +581,13 @@ void GrabManager::initLedWidgets(int numberOfLeds)
         connect(ledWidget, SIGNAL(resizeOrMoveStarted()), this, SLOT(pauseWhileResizeOrMoving()));
         connect(ledWidget, SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(resumeAfterResizeOrMoving()));
 
+// TODO: Check out this line!
 //         First LED widget using to determine grabbing-monitor in WinAPI version of Grab
-        connect(ledWidget, SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(firstWidgetPositionChanged()));
+//        connect(ledWidget, SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(firstWidgetPositionChanged()));
 
         m_ledWidgets << ledWidget;
 
-        // TODO: Check out this line!
-        firstWidgetPositionChanged();
+//        firstWidgetPositionChanged();
     }
 
     int diff = numberOfLeds - m_ledWidgets.size();
