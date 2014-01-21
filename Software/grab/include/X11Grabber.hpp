@@ -34,6 +34,7 @@
 #include "../src/debug.h"
 
 struct X11GrabberData;
+struct _XDisplay;
 
 using namespace Grab;
 
@@ -48,7 +49,9 @@ public:
     }
 
 protected:
-    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget);
+    virtual GrabResult grabScreens();
+    virtual bool reallocate(const QList<ScreenInfo> &screens);
+    virtual QList<ScreenInfo> * screensToGrab(QList<ScreenInfo> *result, const QList<GrabWidget *> &grabWidgets);
 
 private:
     void captureScreen();
@@ -56,10 +59,6 @@ private:
     QRgb getColor(int x, int y, int width, int height);
 
 private:
-    bool _updateScreenAndAllocateMemory;
-    int _screen;
-    QRect _screenres;
-
-    QScopedPointer<X11GrabberData> _data;
+    _XDisplay *_display;
 };
 #endif // X11_GRAB_SUPPORT

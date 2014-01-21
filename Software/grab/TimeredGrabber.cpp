@@ -27,34 +27,23 @@
 #include "TimeredGrabber.hpp"
 
 #include <QTimer>
-#include "../src/debug.h"
 
 TimeredGrabber::TimeredGrabber(QObject * parent, GrabberContext *context)
     : GrabberBase(parent, context) {
-}
-
-TimeredGrabber::~TimeredGrabber() {
     if (m_timer && m_timer->isActive())
         m_timer->stop();
-}
-
-void TimeredGrabber::init() {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     m_timer.reset(new QTimer(this));
     connect(m_timer.data(), SIGNAL(timeout()), this, SLOT(grab()));
-    m_timer->setSingleShot(false);
 }
 
 void TimeredGrabber::setGrabInterval(int msec) {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO <<  this->metaObject()->className();
     m_timer->setInterval(msec);
 }
-
 void TimeredGrabber::startGrabbing() {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     m_timer->start();
 }
-
 void TimeredGrabber::stopGrabbing() {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     m_timer->stop();

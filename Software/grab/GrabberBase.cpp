@@ -30,8 +30,95 @@ GrabberBase::GrabberBase(QObject *parent, GrabberContext *grabberContext) : QObj
     _context = grabberContext;
 }
 
-void GrabberBase::grab(QList<QRgb> &grabResult, const QList<GrabWidget*> &grabWidgets) {
+const GrabbedScreen * GrabberBase::screenOfRect(const QRect &rect) const {
+    QPoint center = rect.center();
+    for (int i = 0; i < _screens.size(); ++i) {
+        if (_screens[i].screenInfo.rect.contains(center))
+            return &_screens[i];
+    }
+    for (int i = 0; i < _screens.size(); ++i) {
+        if (_screens[i].screenInfo.rect.intersects(rect))
+            return &_screens[i];
+    }
+    return NULL;
+}
+
+bool GrabberBase::isReallocationNeeded(const QList< ScreenInfo > &grabScreens) const  {
+    if (_screens.size() == 0 || grabScreens.size() != _screens.size())
+        return true;
+
+    for (int i = 0; i < grabScreens.size(); ++i) {
+        if (grabScreens[i].rect.size() != _screens[i].screenInfo.rect.size())
+            return true;
+    }
+    return false;
+}
+
+void GrabberBase::grab() {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
-    m_lastGrabResult = _grab(grabResult, grabWidgets);
-    emit frameGrabAttempted(m_lastGrabResult);
+    QList< ScreenInfo > grabbedScreens;
+    screensToGrab(&grabbedScreens, *_context->grabWidgets);
+    if (isReallocationNeeded(grabbedScreens)) {
+        if (!reallocate(grabbedScreens)) {
+            qCritical() << Q_FUNC_INFO << " couldn't reallocate grabbing buffer";
+            emit frameGrabAttempted(GrabResultError);
+            return;
+        }
+    }
+    _lastGrabResult = grabScreens();
+    if (_lastGrabResult == GrabResultOk) {
+        _context->grabResult->clear();
+
+        for (int i = 0; i < _context->grabWidgets->size(); ++i) {
+            QRect widgetRect = _context->grabWidgets->at(i)->frameGeometry();
+            const GrabbedScreen *grabbedScreen = screenOfRect(widgetRect);
+            if (grabbedScreen == NULL) {
+                DEBUG_HIGH_LEVEL << Q_FUNC_INFO << " widget is out of screen " << Debug::toString(widgetRect);
+                _context->grabResult->append(0);
+                continue;
+            }
+            DEBUG_HIGH_LEVEL << Q_FUNC_INFO << Debug::toString(widgetRect);
+            QRect monitorRect = grabbedScreen->screenInfo.rect;
+
+            QRect clippedRect = monitorRect.intersected(widgetRect);
+
+            // Checking for the 'grabme' widget position inside the monitor that is used to capture color
+            if( !clippedRect.isValid() ){
+
+                DEBUG_MID_LEVEL << "Widget 'grabme' is out of screen:" << Debug::toString(clippedRect);
+
+                _context->grabResult->append(qRgb(0,0,0));
+                continue;
+            }
+
+            // Convert coordinates from "Main" desktop coord-system to capture-monitor coord-system
+            QRect preparedRect = clippedRect.translated(-monitorRect.x(), -monitorRect.y());
+
+            // Align width by 4 for accelerated calculations
+            preparedRect.setWidth(preparedRect.width() - (preparedRect.width() % 4));
+
+            if( !preparedRect.isValid() ){
+                qWarning() << Q_FUNC_INFO << " preparedRect is not valid:" << Debug::toString(preparedRect);
+                // width and height can't be negative
+
+                _context->grabResult->append(qRgb(0,0,0));
+                continue;
+            }
+
+            using namespace Grab;
+            const int bytesPerPixel = 4;
+            QRgb avgColor;
+            if (_context->grabWidgets->at(i)->isEnabled()) {
+                Calculations::calculateAvgColor(&avgColor, grabbedScreen->imgData, grabbedScreen->imgFormat, grabbedScreen->screenInfo.rect.width() * bytesPerPixel, preparedRect );
+                _context->grabResult->append(avgColor);
+            } else {
+                _context->grabResult->append(qRgb(0,0,0));
+            }
+
+            //TODO: implement calc
+
+        }
+
+    }
+    emit frameGrabAttempted(_lastGrabResult);
 }

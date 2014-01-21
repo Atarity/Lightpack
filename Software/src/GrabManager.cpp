@@ -470,6 +470,9 @@ void GrabManager::initGrabbers()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
+    m_grabberContext->grabWidgets = &m_ledWidgets;
+    m_grabberContext->grabResult = &m_colorsNew;
+
     for (int i = 0; i < Grab::GrabbersCount; i++)
         m_grabbers.append(NULL);
 
@@ -485,8 +488,9 @@ void GrabManager::initGrabbers()
 #ifdef MAC_OS_CG_GRAB_SUPPORT
     m_grabbers[Grab::GrabberTypeMacCoreGraphics] = initGrabber(new MacOSGrabber(NULL, m_grabberContext));
 #endif
-    m_grabbers[Grab::GrabberTypeQtEachWidget] = initGrabber(new QtGrabberEachWidget(NULL, m_grabberContext));
-    m_grabbers[Grab::GrabberTypeQt] = initGrabber(new QtGrabber(NULL, m_grabberContext));
+    //TODO: migrate Qt grabbers to the new hierarchy
+//    m_grabbers[Grab::GrabberTypeQtEachWidget] = initGrabber(new QtGrabberEachWidget(NULL, m_grabberContext));
+//    m_grabbers[Grab::GrabberTypeQt] = initGrabber(new QtGrabber(NULL, m_grabberContext));
 #ifdef Q_OS_WIN
     m_grabbers[Grab::GrabberTypeWinAPIEachWidget] = initGrabber(new WinAPIGrabberEachWidget(NULL, m_grabberContext));
 #endif

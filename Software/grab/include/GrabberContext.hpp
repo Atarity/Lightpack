@@ -29,9 +29,9 @@
 
 #include <QList>
 #include <QRgb>
+#include "GrabberBase.hpp"
 
 class GrabWidget;
-class GrabberBase;
 
 struct AllocatedBuf {
     AllocatedBuf()
@@ -46,14 +46,13 @@ struct AllocatedBuf {
 };
 
 class GrabberContext {
-friend class GrabberBase;
 public:
     GrabberContext()
     {}
 
     ~GrabberContext(){
-        releaseAllBufs();
-        freeReleasedBufs();
+//        releaseAllBufs();
+//        freeReleasedBufs();
     }
 
     unsigned char * queryBuf(size_t reqSize) {
@@ -97,6 +96,9 @@ public:
         }
     }
 public:
+    QList<GrabWidget *> *grabWidgets;
+    QList<QRgb> *grabResult;
+
 
 private:
     QList<AllocatedBuf *> _allocatedBufs;

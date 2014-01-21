@@ -30,6 +30,8 @@
 #include <QTimer>
 #include "../common/defs.h"
 #include "../src/GrabWidget.hpp"
+#include "calculations.hpp"
+#include "GrabberContext.hpp"
 
 enum GrabResult {
     GrabResultOk,
@@ -37,9 +39,22 @@ enum GrabResult {
     GrabResultError
 };
 
-class GrabberContext;
+struct ScreenInfo {
+    QRect rect;
+    void * handle;
+};
 
-class QImage;
+struct GrabbedScreen {
+    GrabbedScreen()
+        : imgData(NULL)
+        , imgFormat(BufferFormatUnknown)
+        , associatedData(NULL)
+    {}
+    unsigned char * imgData;
+    BufferFormat imgFormat;
+    ScreenInfo screenInfo;
+    void * associatedData;
+};
 
 /*!
   Base class which represents each particular grabber. If you want to add a new grabber just add implementation of \code GrabberBase \endcode
@@ -66,14 +81,21 @@ public slots:
     virtual void stopGrabbing() = 0;
     virtual bool isGrabbingStarted() const = 0;
     virtual void setGrabInterval(int msec) = 0;
-    virtual void grab(QList<QRgb> &grabResult, const QList<GrabWidget*> &grabWidgets);
+    virtual void grab();
+    virtual QList< ScreenInfo > * screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets) = 0;
+    virtual bool isReallocationNeeded(const QList< ScreenInfo > &grabScreens) const;
 
 protected slots:
     /*!
-      Grab implementation, called from @a GrabberBase#grab() slot, needs to be overriden
-     \return GrabResult
+      Grabs screens and saves them to \a GrabberBase#_screens field, called from
+      \a GrabberBase#grab() slot, needs to be overriden.
+      \return GrabResult
     */
-    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget*> &grabWidgets) = 0;
+    virtual GrabResult grabScreens() = 0;
+    virtual bool reallocate(const QList< ScreenInfo > &grabScreens) = 0;
+
+protected:
+    const GrabbedScreen * screenOfRect(const QRect &rect) const;
 
 signals:
     void frameGrabAttempted(GrabResult grabResult);
@@ -85,7 +107,7 @@ signals:
 
 protected:
     GrabberContext *_context;
-    GrabResult m_lastGrabResult;
-    QList<QImage *> m_screens;
+    GrabResult _lastGrabResult;
+    QList<GrabbedScreen> _screens;
 
 };

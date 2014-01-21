@@ -504,8 +504,8 @@ void D3D10Grabber::setGrabInterval(int msec) {
 void D3D10Grabber::grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets) {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     if (m_impl && m_impl->isStarted()) {
-        m_lastGrabResult = _grab(grabResult, grabWidgets);
-        emit frameGrabAttempted(m_lastGrabResult);
+        GrabResult result = _grab(grabResult, grabWidgets);
+        emit frameGrabAttempted(result);
     } else {
         emit grabberStateChangeRequested(true);
     }

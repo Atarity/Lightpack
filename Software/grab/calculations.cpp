@@ -166,7 +166,7 @@ namespace Grab {
             }
 
             *result = qRgb(color.r, color.g, color.b);
-            return 0;
+            return *result;
         }
 
         QRgb calculateAvgColor(QList<QRgb> *colors) {

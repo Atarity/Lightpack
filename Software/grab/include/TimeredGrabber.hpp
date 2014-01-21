@@ -29,6 +29,7 @@
 
 #include <QScopedPointer>
 #include "GrabberBase.hpp"
+#include "../src/debug.h"
 
 QT_FORWARD_DECLARE_CLASS(QTimer)
 

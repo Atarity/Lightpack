@@ -33,11 +33,17 @@
 #include <X11/extensions/XShm.h>
 #include <cmath>
 #include <sys/ipc.h>
+#include <errno.h>
+#include <inttypes.h>
 
 struct X11GrabberData
 {
-    Display *display;
-    Screen *Xscreen;
+    X11GrabberData()
+        : image(NULL)
+    {
+        memset(&shminfo, 0, sizeof(shminfo));
+    }
+
     XImage *image;
     XShmSegmentInfo shminfo;
 };
@@ -47,77 +53,107 @@ X11Grabber::X11Grabber(QObject *parent, GrabberContext * context)
     , _updateScreenAndAllocateMemory(true)
     , _screen(0)
 {
-    _data.reset(new X11GrabberData());
-    _data->image = NULL;
-    _data->display = XOpenDisplay(NULL);
+    _display = XOpenDisplay(NULL);
 }
 
 X11Grabber::~X11Grabber()
 {
-    if (_data->image)
-        XDestroyImage(_data->image);
-    XCloseDisplay(_data->display);
+    XCloseDisplay(_display);
 }
 
-GrabResult X11Grabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets)
+QList<ScreenInfo> * X11Grabber::screensToGrab(QList<ScreenInfo> *result, const QList<GrabWidget *> &grabWidgets)
 {
-    captureScreen();
-    grabResult.clear();
-    foreach(GrabWidget * widget, grabWidgets) {
-        grabResult.append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
-    }
-    return GrabResultOk;
-}
+    result->clear();
 
-void X11Grabber::captureScreen()
-{
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
-
-    if( _updateScreenAndAllocateMemory ){
-        //screenres = QApplication::desktop()->screenGeometry(screen);
-        _updateScreenAndAllocateMemory = false;
-
-        //TODO: test and fix dual monitor configuration
-        _data->Xscreen = DefaultScreenOfDisplay(_data->display);
-
-        long width=DisplayWidth(_data->display, _screen);
-        long height=DisplayHeight(_data->display, _screen);
-
-        DEBUG_HIGH_LEVEL << "dimensions " << width << "x" << height << _screen;
-        _screenres = QRect(0,0,width,height);
-
-        if (_data->image != NULL) {
-            XShmDetach(_data->display, &_data->shminfo);
-            XDestroyImage(_data->image);
-            shmdt (_data->shminfo.shmaddr);
-            shmctl(_data->shminfo.shmid, IPC_RMID, 0);
+    for (int i = 0; i < ScreenCount(_display); ++i) {
+        XWindowAttributes xwa;
+        XGetWindowAttributes(_display, RootWindow(_display, i), &xwa);
+        ScreenInfo screen;
+        intptr_t handle = i;
+        screen.handle = reinterpret_cast<void *>(handle);
+        screen.rect = QRect(xwa.x, xwa.y, xwa.width, xwa.height);
+        for (int k = 0; k < grabWidgets.size(); ++k) {
+            if (screen.rect.intersects(grabWidgets[k]->rect())) {
+                result->append(screen);
+                break;
+            }
         }
-        _data->image = XShmCreateImage(_data->display,   DefaultVisualOfScreen(_data->Xscreen),
-                                        DefaultDepthOfScreen(_data->Xscreen),
-                                        ZPixmap, NULL, &_data->shminfo,
-                                        _screenres.width(), _screenres.height() );
+    }
+
+    return result;
+}
+
+bool X11Grabber::reallocate(const QList<ScreenInfo> &screens)
+{
+    for (int i = 0; i < _screens.size(); ++i) {
+        X11GrabberData *d = reinterpret_cast<X11GrabberData *>(_screens[i].associatedData);
+        XShmDetach(_display, &d->shminfo);
+        XDestroyImage(d->image);
+        shmdt (d->shminfo.shmaddr);
+        shmctl(d->shminfo.shmid, IPC_RMID, 0);
+        delete d;
+        d = NULL;
+    }
+
+    _screens.clear();
+
+    for (int i = 0; i < screens.size(); ++i) {
+
+        long width = screens[i].rect.width();
+        long height = screens[i].rect.height();
+
+        DEBUG_HIGH_LEVEL << "dimensions " << width << "x" << height << screens[i].handle;
+
+        X11GrabberData *d = new X11GrabberData();
+
+        int screenid = reinterpret_cast<intptr_t>(screens[i].handle);
+
+        Screen * xscreen = ScreenOfDisplay(_display, screenid);
+
+        d->image = XShmCreateImage(_display, DefaultVisualOfScreen(xscreen),
+                                   DefaultDepthOfScreen(xscreen),
+                                   ZPixmap, NULL, &d->shminfo,
+                                   width, height );
         uint imagesize;
         imagesize = _data->image->bytes_per_line * _data->image->height;
-        _data->shminfo.shmid = shmget(    IPC_PRIVATE,
-                                   imagesize,
-                                   IPC_CREAT|0777
-                                   );
+
+                                      imagesize,
+                                      IPC_CREAT|0777
+                                      );
+        if (d->shminfo.shmid == -1) {
+            qCritical() << Q_FUNC_INFO << " error occured while trying to get shared memory: " << strerror(errno);
+        }
 
         char* mem = (char*)shmat(_data->shminfo.shmid, 0, 0);
         _data->shminfo.shmaddr = mem;
         _data->image->data = mem;
         _data->shminfo.readOnly = False;
 
-        XShmAttach(_data->display, &_data->shminfo);
+        XShmAttach(_display, &d->shminfo);
+
+        GrabbedScreen grabScreen;
+        grabScreen.imgData = (unsigned char *)mem;
+        grabScreen.imgFormat = BufferFormatArgb;
+        grabScreen.screenInfo = screens[i];
+        grabScreen.associatedData = d;
+        _screens.append(grabScreen);
     }
-    // DEBUG_LOW_LEVEL << "XShmGetImage";
-    XShmGetImage(_data->display,
-                 RootWindow(_data->display, _screen),
-                 _data->image,
-                 0,
-                 0,
-                 0x00FFFFFF
-                 );
+
+
+    return true;
+}
+
+GrabResult X11Grabber::grabScreens()
+{
+    for (int i = 0; i < _screens.size(); ++i) {
+        XShmGetImage(_display,
+                     RootWindow(_display, reinterpret_cast<intptr_t>(_screens[i].screenInfo.handle)),
+                     reinterpret_cast<X11GrabberData *>(_screens[i].associatedData)->image,
+                     0,
+                     0,
+                     0x00FFFFFF
+                     );
+    }
 #if 0
     DEBUG_LOW_LEVEL << "QImage";
     QImage *pic = new QImage(1024,768,QImage::Format_RGB32);
@@ -138,8 +174,17 @@ void X11Grabber::captureScreen()
     DEBUG_LOW_LEVEL << "save";
     pic->save("/home/atarity/.Lightpack/test.bmp");
 #endif
+    /*
+    _context->grabResult->clear();
+    foreach(GrabWidget * widget, *_context->grabWidgets) {
+        _context->grabResult->append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
+    }
+    return GrabResultOk;
+    */
+    return GrabResultOk;
 }
 
+/*
 QRgb X11Grabber::getColor(const QWidget * grabme)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
@@ -173,11 +218,11 @@ QRgb X11Grabber::getColor(int x, int y, int width, int height)
 
     // Ignore part of LED widget which out of screen
     if( x < 0 ) {
-        width  += x;  /* reduce width  */
+        width  += x;  // reduce width
         x = 0;
     }
     if( y < 0 ) {
-        height += y;  /* reduce height */
+        height += y;  // reduce height
         y = 0;
     }
     if( x + width  > (int)_screenres.width()  ) width  -= (x + width ) - _screenres.width();
@@ -223,4 +268,5 @@ QRgb X11Grabber::getColor(int x, int y, int width, int height)
 
     return result;
 }
+*/
 #endif // X11_GRAB_SUPPORT
