@@ -25,9 +25,9 @@
 
 #pragma once
 
-#include "QRect"
-#include "QRgb"
-#include "QList"
+#include <QRect>
+#include <QRgb>
+#include <QList>
 #include "../common/BufferFormat.h"
 
 namespace Grab {
