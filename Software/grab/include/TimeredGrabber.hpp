@@ -27,27 +27,28 @@
 #ifndef TIMEREDGRABBER_HPP
 #define TIMEREDGRABBER_HPP
 
-#include <QTimer>
+#include <QScopedPointer>
 #include "GrabberBase.hpp"
+
+QT_FORWARD_DECLARE_CLASS(QTimer)
 
 class TimeredGrabber : public GrabberBase
 {
     Q_OBJECT
 public:
     TimeredGrabber(QObject * parent, GrabberContext *context);
-    virtual ~TimeredGrabber();
+    ~TimeredGrabber();
 
     virtual const char * name() const = 0;
 public slots:
     virtual void init();
-    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget*> &grabWidgets) = 0;
     virtual void startGrabbing();
     virtual void stopGrabbing();
     virtual bool isGrabbingStarted() const;
     virtual void setGrabInterval(int msec);
 
 protected:
-    QTimer *m_timer;
+    QScopedPointer<QTimer> m_timer;
 };
 
 #endif // TIMEREDGRABBER_HPP
