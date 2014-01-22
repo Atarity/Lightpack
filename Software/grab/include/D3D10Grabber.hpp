@@ -25,36 +25,22 @@
 
 #pragma once
 
-#include<GrabberBase.hpp>
+#include <GrabberBase.hpp>
 #ifdef D3D10_GRAB_SUPPORT
-//#define WINVER 0x0500
 
-#include<windows.h>
-#include"../../common/D3D10GrabberDefs.hpp"
 #include<QList>
-#include<../libraryinjector/ILibraryInjector.h>
+#include<QScopedPointer>
 
-typedef HWND (*GetHwndCallback_t)();
+typedef void* (*GetHwndCallback_t)();
 
-class D3D10GrabberWorker: public QObject {
-    Q_OBJECT
-    public:
-        D3D10GrabberWorker(QObject *parent, LPSECURITY_ATTRIBUTES lpsa);
-        virtual ~D3D10GrabberWorker();
-    private:
-        HANDLE m_frameGrabbedEvent;
-    signals:
-        void frameGrabbed();
-    public slots:
-        void runLoop();
-};
+class D3D10GrabberImpl;
 
 class D3D10Grabber : public GrabberBase
 {
-
     Q_OBJECT
+
 public:
-    D3D10Grabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabWidgets, GetHwndCallback_t getHwndCb);
+    D3D10Grabber(QObject * parent, GrabberContext *context, GetHwndCallback_t getHwndCb);
     virtual ~D3D10Grabber();
 
     virtual void init(void);
@@ -65,43 +51,18 @@ public:
     }
 
 protected:
-    virtual GrabResult _grab(QList<QRgb> grabResult, const QList<GrabWidget *> &grabWidget);
+    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget);
 
 public slots:
     virtual void updateGrabMonitor(QWidget * firstWidget);
     virtual void startGrabbing();
     virtual void stopGrabbing();
-    virtual bool isGrabbingStarted() const { return m_isStarted; }
+    virtual bool isGrabbingStarted() const;
     virtual void setGrabInterval(int msec);
-    virtual void grab();
-
-private slots:
-    void infectCleanDxProcesses(void);
-    void handleIfFrameGrabbed();
+    virtual void grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget);
 
 private:
-    bool initIPC(LPSECURITY_ATTRIBUTES lpsa);
-    void freeIPC();
-    QRgb getColor(QRect &widgetRect);
-    QTimer *m_checkIfFrameGrabbedTimer;
-
-    static HANDLE m_sharedMem;
-    static HANDLE m_mutex;
-    static bool m_isStarted;
-    static PVOID m_memMap;
-    D3D10GrabberWorker *m_worker;
-    QThread * m_workerThread;
-//    GrabberBase * m_fallbackGrabber;
-    HOOKSGRABBER_SHARED_MEM_DESC m_memDesc;
-    static UINT m_lastFrameId;
-    static MONITORINFO m_monitorInfo;
-    static QTimer * m_processesScanAndInfectTimer;
-    static bool m_isInited;
-    static ILibraryInjector * m_libraryInjector;
-    static WCHAR m_hooksLibPath[300];
-    static WCHAR m_systemrootPath[300];
-    static bool m_isFrameGrabbedDuringLastSecond;
-    static GetHwndCallback_t m_getHwndCb;
+    QScopedPointer<D3D10GrabberImpl> m_impl;
 };
 
 #endif
