@@ -501,17 +501,17 @@ void D3D10Grabber::setGrabInterval(int msec) {
     Q_UNUSED(msec);
 }
 
-void D3D10Grabber::grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget) {
+void D3D10Grabber::grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets) {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     if (m_impl && m_impl->isStarted()) {
-        m_lastGrabResult = _grab();
+        m_lastGrabResult = _grab(grabResult, grabWidgets);
         emit frameGrabAttempted(m_lastGrabResult);
     } else {
         emit grabberStateChangeRequested(true);
     }
 }
 
-GrabResult D3D10Grabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget) {
+GrabResult D3D10Grabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets) {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     if (!m_impl) {
         return GrabResultFrameNotReady;

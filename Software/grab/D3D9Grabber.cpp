@@ -108,7 +108,7 @@ int D3D9Grabber::getBufLength(const RECT &rect)
     return (rect.right - rect.left) * (rect.bottom - rect.top) * BYTES_PER_PIXEL;
 }
 
-GrabResult D3D9Grabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget)
+GrabResult D3D9Grabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets)
 {
     D3DSURFACE_DESC surfaceDesc;
     m_rect = getEffectiveRect(grabWidget);
@@ -117,9 +117,9 @@ GrabResult D3D9Grabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *>
     int bufLengthNeeded = getBufLength(m_rect);
     m_buf.resize(bufLengthNeeded);
     getImageData(m_buf, m_rect);
-    grabResult->clear();
+    grabResult.clear();
     foreach(GrabWidget * widget, grabWidget) {
-        grabResult->append( widget->isAreaEnabled() ?
+        grabResult.append( widget->isAreaEnabled() ?
                                   getColor(widget->x(), widget->y(), widget->width(), widget->height()) :
                                   qRgb(0,0,0) );
     }

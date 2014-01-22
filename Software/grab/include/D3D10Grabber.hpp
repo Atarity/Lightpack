@@ -51,7 +51,7 @@ public:
     }
 
 protected:
-    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget);
+    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets);
 
 public slots:
     virtual void updateGrabMonitor(QWidget * firstWidget);

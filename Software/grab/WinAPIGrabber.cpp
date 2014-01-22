@@ -57,70 +57,76 @@ void WinAPIGrabber::freeDCs()
         DeleteObject(hMemDC);
 }
 
+void WinAPIGrabber::updateMonitorInfo()
+{
+    ZeroMemory( &monitorInfo, sizeof(MONITORINFO) );
+    monitorInfo.cbSize = sizeof(MONITORINFO);
+
+    // Get position and resolution of the monitor
+    GetMonitorInfo( hMonitor, &monitorInfo );
+
+    screenWidth  = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
+    screenHeight = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenWidth x screenHeight" << screenWidth << "x" << screenHeight;
+
+    freeDCs();
+
+    // CreateDC for multiple monitors
+    hScreenDC = CreateDC( TEXT("DISPLAY"), NULL, NULL, NULL );
+
+    // Create a bitmap compatible with the screen DC
+    hBitmap = CreateCompatibleBitmap( hScreenDC, screenWidth, screenHeight );
+
+    // Create a memory DC compatible to screen DC
+    hMemDC = CreateCompatibleDC( hScreenDC );
+
+    // Select new bitmap into memory DC
+    SelectObject( hMemDC, hBitmap );
+}
+
+void WinAPIGrabber::resizePixelsBuffer()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Allocate memory for pbPixelsBuff and update pixelsBuffSize, bytesPerPixel";
+    BITMAP bmp;
+    memset(&bmp, 0, sizeof(BITMAP));
+
+    // Now get the actual Bitmap
+    GetObject( hBitmap, sizeof(BITMAP), &bmp );
+
+    // Calculate the size the buffer needs to be
+    unsigned pixelsBuffSizeNew = bmp.bmWidthBytes * bmp.bmHeight;
+
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "pixelsBuffSize =" << pixelsBuffSizeNew;
+
+    // ReAllocate memory for new buffer size
+    pbPixelsBuff.resize(pixelsBuffSizeNew);
+
+    // The amount of bytes per pixel is the amount of bits divided by 8
+    bytesPerPixel = bmp.bmBitsPixel / 8;
+
+    if( bytesPerPixel != 4 ){
+        qDebug() << "Not 32-bit mode is not supported!" << bytesPerPixel;
+    }
+}
+
 void WinAPIGrabber::updateGrabMonitor(QWidget *widget)
 {
     HMONITOR hMonitorNew = MonitorFromWindow(reinterpret_cast<HWND>(widget->winId()), MONITOR_DEFAULTTONEAREST);
     if (hMonitor != hMonitorNew) {
         hMonitor = hMonitorNew;
 
-        ZeroMemory( &monitorInfo, sizeof(MONITORINFO) );
-        monitorInfo.cbSize = sizeof(MONITORINFO);
-
-        // Get position and resolution of the monitor
-        GetMonitorInfo( hMonitor, &monitorInfo );
-
-        screenWidth  = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
-        screenHeight = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
-
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenWidth x screenHeight" << screenWidth << "x" << screenHeight;
-
-
-        freeDCs();
-
-        // CreateDC for multiple monitors
-        hScreenDC = CreateDC( TEXT("DISPLAY"), NULL, NULL, NULL );
-
-        // Create a bitmap compatible with the screen DC
-        hBitmap = CreateCompatibleBitmap( hScreenDC, screenWidth, screenHeight );
-
-        // Create a memory DC compatible to screen DC
-        hMemDC = CreateCompatibleDC( hScreenDC );
-
-        // Select new bitmap into memory DC
-        SelectObject( hMemDC, hBitmap );
-
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Allocate memory for pbPixelsBuff and update pixelsBuffSize, bytesPerPixel";
-
-        BITMAP bmp;
-        memset(&bmp, 0, sizeof(BITMAP));
-
-        // Now get the actual Bitmap
-        GetObject( hBitmap, sizeof(BITMAP), bmp );
-
-        // Calculate the size the buffer needs to be
-        unsigned pixelsBuffSizeNew = bmp->bmWidthBytes * bmp->bmHeight;
-
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "pixelsBuffSize =" << pixelsBuffSizeNew;
-
-        // ReAllocate memory for new buffer size
-        pbPixelsBuff.resize(pixelsBuffSizeNew);
-
-        // The amount of bytes per pixel is the amount of bits divided by 8
-        bytesPerPixel = bmp->bmBitsPixel / 8;
-
-        if( bytesPerPixel != 4 ){
-            qDebug() << "Not 32-bit mode is not supported!" << bytesPerPixel;
-        }
+        updateMonitorInfo();
+        resizePixelsBuffer();
     }
-
 }
 
-GrabResult WinAPIGrabber::_grab()
+GrabResult WinAPIGrabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget)
 {
     captureScreen();
-    m_grabResult->clear();
-    foreach(GrabWidget * widget, *m_grabWidgets) {
-        m_grabResult->append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
+    grabResult.clear();
+    foreach(GrabWidget * widget, grabWidgets) {
+        grabResult.append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
     }
     return GrabResultOk;
 }
@@ -212,4 +218,3 @@ QRgb WinAPIGrabber::getColor(const QRect &widgetRect)
 }
 
 #endif // WINAPI_GRAB_SUPPORT
->>>>>>> Fix resource handling in WinAPIGrabber class
