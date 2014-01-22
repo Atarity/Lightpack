@@ -48,8 +48,6 @@
 
 #include <windows.h>
 
-using namespace Grab;
-
 class WinAPIGrabber : public TimeredGrabber
 {
     Q_OBJECT
@@ -57,18 +55,19 @@ public:
     WinAPIGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
     ~WinAPIGrabber();
 
-protected:
-    virtual GrabResult _grab();
-
 public slots:
     virtual void updateGrabMonitor(QWidget *widget);
-private:
-    void captureScreen();
+
+protected:
+    virtual GrabResult _grab();
     void freeDCs();
+    void captureScreen();
     QRgb getColor(const QWidget * grabme);
     QRgb getColor(const QRect &widgetRect);
+    void updateMonitorInfo();
+    void resizePixelsBuffer();
 
-private:
+protected:
     HMONITOR hMonitor;
     MONITORINFO monitorInfo;
 
