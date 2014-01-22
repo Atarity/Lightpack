@@ -30,6 +30,14 @@
 
 #ifdef D3D9_GRAB_SUPPORT
 
+// <d3d9.h> includes <windows.h>
+#if !defined NOMINMAX
+#define NOMINMAX
+#endif
+
+#if !defined WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 #include <d3d9.h>
 
 using namespace Grab;
@@ -37,7 +45,7 @@ using namespace Grab;
 class D3D9Grabber : public TimeredGrabber
 {
 public:
-    D3D9Grabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
+    D3D9Grabber(QObject * parent, GrabberContext *context);
     virtual ~D3D9Grabber();
     virtual void updateGrabMonitor( QWidget * ){}
 
@@ -47,7 +55,15 @@ public:
     }
 
 protected:
-    virtual GrabResult _grab(QList<QRgb> grabResult, const QList<GrabWidget *> &grabWidget);
+    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget);
+
+private:
+    BYTE * expandBuffer(BYTE * buf, int newLength);
+    BYTE * getImageData(QVector<BYTE> &, RECT &);
+    RECT getEffectiveRect(const QList<GrabWidget *> &widgets);
+    int getBufLength(const RECT &rect);
+    QRgb getColor(int x, int y, int width, int height);
+    void clipRect(RECT *rect, D3DSURFACE_DESC *surfaceDesc);
 
 private:
     LPDIRECT3D9 m_d3D;
@@ -55,18 +71,8 @@ private:
     LPDIRECT3DSURFACE9 m_surface;
     D3DDISPLAYMODE m_displayMode;
     D3DPRESENT_PARAMETERS m_presentParams;
-    int m_bufLength;
-    BYTE * m_buf;
+    QVector<BYTE> m_buf;
     RECT m_rect;
-private:
-    BYTE * expandBuffer(BYTE * buf, int newLength);
-    BYTE * getImageData(BYTE *, RECT &);
-    RECT getEffectiveRect(QList<GrabWidget *> &widgets);
-    int getBufLength(const RECT &rect);
-    QRgb getColor(int x, int y, int width, int height);
-    void clipRect(RECT *rect, D3DSURFACE_DESC *surfaceDesc);
-
-
 };
 
 #endif // D3D9_GRAB_SUPPORT
