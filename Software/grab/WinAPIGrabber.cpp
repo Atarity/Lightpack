@@ -31,15 +31,16 @@
 #include "../src/enums.hpp"
 
 WinAPIGrabber::WinAPIGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
-    : TimeredGrabber(parent, grabResult, grabAreasGeometry)
+    : TimeredGrabber(parent, grabResult, grabAreasGeometry),
+        hScreenDC(NULL),
+        hMemDC(NULL),
+        hBitmap(NULL)
 {
-    pbPixelsBuff = NULL;
 }
 
 WinAPIGrabber::~WinAPIGrabber()
 {
     freeDCs();
-    delete[] pbPixelsBuff;
 }
 
 void WinAPIGrabber::freeDCs()
@@ -88,7 +89,8 @@ void WinAPIGrabber::updateGrabMonitor(QWidget *widget)
 
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Allocate memory for pbPixelsBuff and update pixelsBuffSize, bytesPerPixel";
 
-        BITMAP * bmp = new BITMAP;
+        BITMAP bmp;
+        memset(&bmp, 0, sizeof(BITMAP));
 
         // Now get the actual Bitmap
         GetObject( hBitmap, sizeof(BITMAP), bmp );
@@ -98,15 +100,8 @@ void WinAPIGrabber::updateGrabMonitor(QWidget *widget)
 
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "pixelsBuffSize =" << pixelsBuffSizeNew;
 
-        if(pixelsBuffSize != pixelsBuffSizeNew){
-            pixelsBuffSize = pixelsBuffSizeNew;
-
-            // ReAllocate memory for new buffer size
-            if( pbPixelsBuff ) delete[] pbPixelsBuff;
-
-            // Allocate
-            pbPixelsBuff = new BYTE[ pixelsBuffSize ];
-        }
+        // ReAllocate memory for new buffer size
+        pbPixelsBuff.resize(pixelsBuffSizeNew);
 
         // The amount of bytes per pixel is the amount of bits divided by 8
         bytesPerPixel = bmp->bmBitsPixel / 8;
@@ -114,8 +109,6 @@ void WinAPIGrabber::updateGrabMonitor(QWidget *widget)
         if( bytesPerPixel != 4 ){
             qDebug() << "Not 32-bit mode is not supported!" << bytesPerPixel;
         }
-
-        DeleteObject( bmp );
     }
 
 }
@@ -139,7 +132,7 @@ void WinAPIGrabber::captureScreen()
             monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.top, SRCCOPY );
 
     // Get the actual RGB data and put it into pbPixelsBuff
-    GetBitmapBits( hBitmap, pixelsBuffSize, pbPixelsBuff );
+    GetBitmapBits( hBitmap, pbPixelsBuff.size(), &pbPixelsBuff[0] );
 }
 
 QRgb WinAPIGrabber::getColor(const QWidget * grabme)
@@ -154,9 +147,9 @@ QRgb WinAPIGrabber::getColor(const QRect &widgetRect)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << Debug::toString(widgetRect);
 
-    if (pbPixelsBuff == NULL)
+    if (pbPixelsBuff.empty())
     {
-        qCritical() << Q_FUNC_INFO << "pbPixelsBuff == NULL";
+        qCritical() << Q_FUNC_INFO << "pbPixelsBuff is empty!";
         return 0;
     }
 
@@ -189,7 +182,7 @@ QRgb WinAPIGrabber::getColor(const QRect &widgetRect)
 
     using namespace Grab;
     QRgb avgColor;
-    if (Calculations::calculateAvgColor(&avgColor, pbPixelsBuff, BufferFormatArgb, screenWidth * bytesPerPixel, preparedRect ) == 0) {
+    if (Calculations::calculateAvgColor(&avgColor, &pbPixelsBuff[0], BufferFormatArgb, screenWidth * bytesPerPixel, preparedRect ) == 0) {
         return avgColor;
     } else {
         return qRgb(0,0,0);
