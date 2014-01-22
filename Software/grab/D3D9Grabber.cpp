@@ -33,8 +33,15 @@
 #include "cmath"
 #define BYTES_PER_PIXEL 4
 
+#if defined _MSC_VER
+#include "PrismatikMath.hpp"
+
+using PrismatikMath::round;
+#endif // _MSC_VER
+
 D3D9Grabber::D3D9Grabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
-    : TimeredGrabber(parent, grabResult, grabAreasGeometry), m_d3D(NULL), m_d3Device(NULL), m_surface(NULL)
+    : TimeredGrabber(parent, grabResult, grabAreasGeometry),
+      m_d3D(NULL), m_d3Device(NULL), m_surface(NULL)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
@@ -51,9 +58,6 @@ D3D9Grabber::D3D9Grabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWi
     }
 
     HWND hWnd = GetDesktopWindow(); // todo
-
-    m_bufLength = 0;
-
     ZeroMemory(&m_presentParams, sizeof(D3DPRESENT_PARAMETERS));
     m_presentParams.Windowed = true;
     m_presentParams.hDeviceWindow = hWnd;
@@ -111,11 +115,6 @@ D3D9Grabber::~D3D9Grabber()
         m_d3D->Release();
         m_d3D = NULL;
     }
-
-    if (m_buf != NULL)
-    {
-        free(m_buf);
-    }
 }
 
 const char * D3D9Grabber::getName()
@@ -135,13 +134,7 @@ GrabResult D3D9Grabber::_grab()
     m_surface->GetDesc(&surfaceDesc);
     clipRect(&m_rect, &surfaceDesc);
     int bufLengthNeeded = getBufLength(m_rect);
-    if (bufLengthNeeded > m_bufLength)
-    {
-        if(m_buf != NULL)
-            free(m_buf);
-        m_buf = (BYTE *)malloc(bufLengthNeeded);
-        m_bufLength = bufLengthNeeded;
-    }
+    m_buf.resize(bufLengthNeeded);
     getImageData(m_buf, m_rect);
     m_grabResult->clear();
     foreach(GrabWidget * widget, *m_grabWidgets) {
@@ -156,14 +149,14 @@ void D3D9Grabber::clipRect(RECT *rect, D3DSURFACE_DESC *surfaceDesc) {
     if (rect->left < 0) {
         rect->left = 0;
     }
-    if (rect->right > surfaceDesc->Width) {
+    if (static_cast<UINT>(rect->right) > surfaceDesc->Width) {
         rect->right = surfaceDesc->Width;
     }
     if (rect->top < 0) {
         rect->top = 0;
     }
 
-    if (rect->bottom > surfaceDesc->Height) {
+    if (static_cast<UINT>(rect->bottom) > surfaceDesc->Height) {
         rect->bottom = surfaceDesc->Height;
     }
 }
@@ -193,7 +186,7 @@ RECT D3D9Grabber::getEffectiveRect(QList<GrabWidget *> &widgets)
     return result;
 }
 
-BYTE * D3D9Grabber::getImageData(BYTE * buf, RECT &rect)
+BYTE * D3D9Grabber::getImageData(QVector<BYTE> &buf, RECT &rect)
 {
     D3DLOCKED_RECT blockedRect;
     D3DSURFACE_DESC surfaceDesc;
@@ -206,10 +199,15 @@ BYTE * D3D9Grabber::getImageData(BYTE * buf, RECT &rect)
     }
     m_surface->GetDesc(&surfaceDesc);
 //    kopiowanie UpdateSurface
-    CopyMemory(buf, blockedRect.pBits, getBufLength(rect));
+    const int dataLength = getBufLength(rect);
+    if (dataLength > buf.size()) {
+        DEBUG_LOW_LEVEL << "Insufficient buffer length!";
+    }
+
+    CopyMemory(buf.data(), blockedRect.pBits, std::min(dataLength, buf.size()));
 
     m_surface->UnlockRect();
-    return buf;
+    return buf.data();
 }
 
 QRgb D3D9Grabber::getColor(int x, int y, int width, int height)
@@ -217,9 +215,9 @@ QRgb D3D9Grabber::getColor(int x, int y, int width, int height)
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO
                      << "x y w h:" << x << y << width << height;
 
-    if (m_buf == NULL)
+    if (m_buf.empty())
     {
-        qCritical() << Q_FUNC_INFO << "m_buf == NULL";
+        qCritical() << Q_FUNC_INFO << "m_buf is empty!";
         return 0;
     }
 
