@@ -30,9 +30,9 @@
 namespace PrismatikMath
 {
     //Observer= 2°, Illuminant= D65
-    const float refX = 95.047;
-    const float refY = 100.000;
-    const float refZ = 108.883;
+    const float refX = 95.047f;
+    const float refY = 100.000f;
+    const float refZ = 108.883f;
 
     template<typename A, typename T>
     T withinRange(A x, T min, T max)
