@@ -30,7 +30,21 @@
 
 #ifdef WINAPI_GRAB_SUPPORT
 
+#if defined WINVER && WINVER < 0x0500
+#undef WINVER
+#endif
+
+#if !defined WINVER
 #define WINVER 0x0500 /* Windows2000 for MonitorFromWindow(..) func */
+#endif
+#if !defined NOMINMAX
+#define NOMINMAX
+#endif
+
+#if !defined WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include <windows.h>
 
 using namespace Grab;
@@ -54,6 +68,7 @@ private:
     void captureWidget(const QWidget * w);
     QRgb getColor(const QWidget * grabme);
     QRgb getColor(int x, int y, int width, int height);
+    void freeDCs();
 
 private:
     HMONITOR hMonitor;
@@ -65,8 +80,7 @@ private:
     unsigned screenHeight;
 
     // Captured screen buffer, contains actual RGB data in reversed order
-    BYTE * pbPixelsBuff;
-    unsigned pixelsBuffSize;
+    QVector<BYTE> pbPixelsBuff;
     unsigned bytesPerPixel;
 
     HDC hScreenDC;
