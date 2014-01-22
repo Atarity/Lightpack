@@ -27,9 +27,23 @@
 
 #include "TimeredGrabber.hpp"
 #include "../src/enums.hpp"
+
 #ifdef WINAPI_GRAB_SUPPORT
 
+#if defined WINVER && WINVER < 0x0500
+#undef WINVER
+#endif
+
+#if !defined WINVER
 #define WINVER 0x0500 /* Windows2000 for MonitorFromWindow(..) func */
+#endif
+#if !defined NOMINMAX
+#define NOMINMAX
+#endif
+
+#if !defined WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 
 #include <windows.h>
 
@@ -39,7 +53,7 @@ class WinAPIGrabber : public TimeredGrabber
 {
     Q_OBJECT
 public:
-    WinAPIGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
+    WinAPIGrabber(QObject * parent, GrabberContext *context);
     virtual ~WinAPIGrabber();
 
     virtual const char * name() const {
@@ -67,8 +81,7 @@ private:
     unsigned screenHeight;
 
     // Captured screen buffer, contains actual RGB data in reversed order
-    BYTE * pbPixelsBuff;
-    unsigned pixelsBuffSize;
+    QVector<BYTE> pbPixelsBuff;
     unsigned bytesPerPixel;
 
     HDC hScreenDC;
@@ -76,4 +89,5 @@ private:
     HBITMAP hBitmap;
 
 };
+
 #endif // WINAPI_GRAB_SUPPORT
