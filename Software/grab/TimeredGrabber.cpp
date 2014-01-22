@@ -25,20 +25,23 @@
 
 
 #include "TimeredGrabber.hpp"
+
+#include <QTimer>
 #include "../src/debug.h"
 
-TimeredGrabber::TimeredGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry) : GrabberBase(parent, grabResult, grabAreasGeometry) {
+TimeredGrabber::TimeredGrabber(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
+    : GrabberBase(parent, grabResult, grabAreasGeometry) {
 }
 
 TimeredGrabber::~TimeredGrabber() {
-    if (m_timer)
-        delete m_timer;
+    if (m_timer && m_timer->isActive())
+        m_timer->stop();
 }
 
 void TimeredGrabber::init() {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
-    m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(grab()));
+    m_timer.reset(new QTimer(this));
+    connect(m_timer.data(), SIGNAL(timeout()), this, SLOT(grab()));
     m_timer->setSingleShot(false);
 }
 
