@@ -63,5 +63,9 @@ namespace PrismatikMath
         return qrand() % val;
     }
 
+    inline double round(double number)
+    {
+        return number < 0.0 ? std::ceil(number - 0.5) : std::floor(number + 0.5);
+    }
 }
 
