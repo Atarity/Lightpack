@@ -30,15 +30,7 @@
 
 #ifdef X11_GRAB_SUPPORT
 
-
-//#include <QApplication>
-//#include <QDesktopWidget>
-#include <QPixmap>
-#include <QImage>
-#include <QSharedPointer>
-
-#include <qtextstream.h>
-
+#include <QScopedPointer>
 #include "../src/debug.h"
 
 struct X11GrabberData;
@@ -68,6 +60,6 @@ private:
     int _screen;
     QRect _screenres;
 
-    X11GrabberData *d;
+    QScopedPointer<X11GrabberData> _data;
 };
 #endif // X11_GRAB_SUPPORT
