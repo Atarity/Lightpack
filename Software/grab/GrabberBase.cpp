@@ -26,6 +26,22 @@
 #include "GrabberBase.hpp"
 #include "../src/debug.h"
 
+int validCoord(int a) {
+    const unsigned int neg = (1 << 15);
+    if (a & neg)
+        a = ((~(a-1)) & 0x0000ffff) * -1;
+    return a;
+}
+
+inline QRect & getValidRect(QRect & rect) {
+    int x1,x2,y1,y2;
+    rect.getCoords(&x1, &y1, &x2, &y2);
+    x1 = validCoord(x1);
+    y1 = validCoord(y1);
+    rect.setCoords(x1, y1, x1 + rect.width() - 1, y1 + rect.height() - 1);
+    return rect;
+}
+
 GrabberBase::GrabberBase(QObject *parent, GrabberContext *grabberContext) : QObject(parent) {
     _context = grabberContext;
 }
@@ -71,6 +87,8 @@ void GrabberBase::grab() {
 
         for (int i = 0; i < _context->grabWidgets->size(); ++i) {
             QRect widgetRect = _context->grabWidgets->at(i)->frameGeometry();
+            getValidRect(widgetRect);
+
             const GrabbedScreen *grabbedScreen = screenOfRect(widgetRect);
             if (grabbedScreen == NULL) {
                 DEBUG_HIGH_LEVEL << Q_FUNC_INFO << " widget is out of screen " << Debug::toString(widgetRect);
