@@ -17,7 +17,7 @@ Logger::~Logger() {
     this->closeLog();
 }
 
-void Logger::initLog(LPWSTR name, DWORD logLevel) {
+void Logger::initLog(LPCWSTR name, DWORD logLevel) {
     if (!m_hEventSrc) m_hEventSrc = RegisterEventSourceW(NULL, name);
     if (!m_reportLogBuf) m_reportLogBuf = (WCHAR*)malloc(REPORT_LOG_BUF_SIZE);
     m_logLevel = logLevel;
@@ -27,7 +27,7 @@ void Logger::setLogLevel(DWORD logLevel) {
     m_logLevel = logLevel;
 }
 
-void Logger::reportLogDebug(const LPWSTR message, ...) {
+void Logger::reportLogDebug(LPCWSTR message, ...) {
     va_list ap;
     va_start( ap, message );
     if (m_logLevel <= PRISMATIK_LOG_SEVERITY_DEBUG) {
@@ -36,7 +36,7 @@ void Logger::reportLogDebug(const LPWSTR message, ...) {
     va_end( ap );
 }
 
-void Logger::reportLogInfo(const LPWSTR message, ...) {
+void Logger::reportLogInfo(LPCWSTR message, ...) {
     va_list ap;
     va_start( ap, message );
     if (m_logLevel <= PRISMATIK_LOG_SEVERITY_INFO) {
@@ -45,7 +45,7 @@ void Logger::reportLogInfo(const LPWSTR message, ...) {
     va_end( ap );
 }
 
-void Logger::reportLogWarning(const LPWSTR message, ...) {
+void Logger::reportLogWarning(LPCWSTR message, ...) {
     va_list ap;
     va_start( ap, message );
     if (m_logLevel <= PRISMATIK_LOG_SEVERITY_WARNING) {
@@ -54,19 +54,19 @@ void Logger::reportLogWarning(const LPWSTR message, ...) {
     va_end( ap );
 }
 
-void Logger::reportLogError(const LPWSTR message, ...) {
+void Logger::reportLogError(LPCWSTR message, ...) {
     va_list ap;
     va_start( ap, message );
         this->reportLog(EVENTLOG_ERROR_TYPE, PRISMATIK_LOG_MSG_ERROR, message, ap);
     va_end( ap );
 }
 
-void Logger::reportLog(DWORD type, DWORD msgId, const LPWSTR message, va_list ap) {
+void Logger::reportLog(DWORD type, DWORD msgId, LPCWSTR message, va_list ap) {
     if (m_hEventSrc && m_reportLogBuf) {
-        ZeroMemory(m_reportLogBuf, sizeof(m_reportLogBuf));
+        ZeroMemory(m_reportLogBuf, REPORT_LOG_BUF_SIZE);
         int sprintfResult = wvsprintfW(m_reportLogBuf, message, ap);
         if (sprintfResult > -1)
-            ReportEventW(m_hEventSrc, type, 0, msgId, NULL, 1, 0, const_cast<const WCHAR **>(&m_reportLogBuf), NULL);
+            ReportEventW(m_hEventSrc, type & 0xFFFF, 0, msgId, NULL, 1, 0, const_cast<const WCHAR **>(&m_reportLogBuf), NULL);
     }
 }
 

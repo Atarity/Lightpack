@@ -16,8 +16,8 @@ public:
 
 private:
     static const int kJmpInstructionSize = 6;
-    char m_pOriginalCode[kJmpInstructionSize];
-    char m_pJmpCode[kJmpInstructionSize];
+    unsigned char m_pOriginalCode[kJmpInstructionSize];
+    unsigned char m_pJmpCode[kJmpInstructionSize];
 };
 
 #endif // PROXYFUNCJMP_H

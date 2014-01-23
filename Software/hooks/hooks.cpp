@@ -48,6 +48,8 @@ WCHAR *getEventSourceName(char *executableName) {
 }
 
 HOOKSDLL_API BOOL APIENTRY DllMain(HINSTANCE hModule, DWORD fdwReason, LPVOID lpReserved) {
+    UNREFERENCED_PARAMETER(lpReserved);
+
     if (fdwReason == DLL_PROCESS_ATTACH /*|| fdwReason == DLL_THREAD_ATTACH*/) // When initializing....
     {
 //        __asm__("int $3");
