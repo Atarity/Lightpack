@@ -1,7 +1,8 @@
 #include "D3D9FrameGrabber.hpp"
 #include "IPCContext.hpp"
 
-#include "msvcstub.h"
+#include "hooksutils.h"
+#include "../common/msvcstub.h"
 #include <initguid.h>
 #include "d3d9types.h"
 #include "d3d9.h"
@@ -64,7 +65,7 @@ void D3D9FrameGrabber::free() {
 void ** D3D9FrameGrabber::calcD3d9PresentPointer() {
     void * hD3d9 = reinterpret_cast<void *>(GetModuleHandleA("d3d9.dll"));
     m_logger->reportLogDebug(L"m_ipcContext->m_memDesc.d3d9PresentFuncOffset = 0x%x, hDxgi = 0x%x", m_ipcContext->m_memDesc.d3d9PresentFuncOffset, hD3d9);
-    void ** result = static_cast<void ** >(hD3d9 + m_ipcContext->m_memDesc.d3d9PresentFuncOffset);
+    void ** result = static_cast<void ** >(incPtr(hD3d9 , m_ipcContext->m_memDesc.d3d9PresentFuncOffset));
     m_logger->reportLogDebug(L"d3d9.dll = 0x%x, swapchain::present location = 0x%x", hD3d9, result);
     return result;
 }
@@ -72,7 +73,7 @@ void ** D3D9FrameGrabber::calcD3d9PresentPointer() {
 void ** D3D9FrameGrabber::calcD3d9SCPresentPointer() {
     void * hD3d9 = reinterpret_cast<void *>(GetModuleHandleA("d3d9.dll"));
     m_logger->reportLogDebug(L"m_ipcContext->m_memDesc.d3d9SCPresentFuncOffset = 0x%x, hDxgi = 0x%x", m_ipcContext->m_memDesc.d3d9SCPresentFuncOffset, hD3d9);
-    void ** result = static_cast<void ** >(hD3d9 + m_ipcContext->m_memDesc.d3d9SCPresentFuncOffset);
+    void ** result = static_cast<void ** >(incPtr(hD3d9, m_ipcContext->m_memDesc.d3d9SCPresentFuncOffset));
     m_logger->reportLogDebug(L"d3d9.dll = 0x%x, swapchain::present location = 0x%x", hD3d9, result);
     return result;
 }
@@ -86,7 +87,7 @@ HRESULT WINAPI D3D9Present(IDirect3DDevice9 *pDev, CONST RECT* pSourceRect,CONST
         logger->reportLogDebug(L"D3D9Present");
         HRESULT hRes;
 
-        RECT newRect = {0};
+        RECT newRect = RECT();
         IDirect3DSurface9 *pBackBuffer = NULL;
         IDirect3DSurface9 *pDemultisampledSurf = NULL;
         IDirect3DSurface9 *pOffscreenSurf = NULL;
@@ -165,13 +166,13 @@ HRESULT WINAPI D3D9Present(IDirect3DDevice9 *pDev, CONST RECT* pSourceRect,CONST
     //        reportLog(EVENTLOG_INFORMATION_TYPE, L"d3d9 writing description to mem mapped file");
             memcpy(ipcContext->m_pMemMap, &(ipcContext->m_memDesc), sizeof (ipcContext->m_memDesc));
     //        reportLog(EVENTLOG_INFORMATION_TYPE, L"d3d9 writing data to mem mapped file");
-            PVOID pMemDataMap = ipcContext->m_pMemMap + sizeof (ipcContext->m_memDesc);
-            if (lockedSrcRect.Pitch == surfDesc.Width * 4) {
+            PVOID pMemDataMap = incPtr(ipcContext->m_pMemMap, sizeof (ipcContext->m_memDesc));
+            if (static_cast<UINT>(lockedSrcRect.Pitch) == surfDesc.Width * 4) {
                 memcpy(pMemDataMap, lockedSrcRect.pBits, surfDesc.Width * surfDesc.Height * 4);
             } else {
                 UINT i = 0, cleanOffset = 0, pitchOffset = 0;
                 while (i < surfDesc.Height) {
-                    memcpy(pMemDataMap + cleanOffset, lockedSrcRect.pBits + pitchOffset, surfDesc.Width * 4);
+                    memcpy(incPtr(pMemDataMap, cleanOffset), incPtr(lockedSrcRect.pBits, pitchOffset), surfDesc.Width * 4);
                     cleanOffset += surfDesc.Width * 4;
                     pitchOffset += lockedSrcRect.Pitch;
                     i++;
@@ -218,7 +219,7 @@ HRESULT WINAPI D3D9SCPresent(IDirect3DSwapChain9 *pSc, CONST RECT* pSourceRect,C
         logger->reportLogDebug(L"D3D9SCPresent");
         IDirect3DSurface9 *pBackBuffer = NULL;
         D3DPRESENT_PARAMETERS params;
-        RECT newRect = {0};
+        RECT newRect = RECT();
         IDirect3DSurface9 *pDemultisampledSurf = NULL;
         IDirect3DSurface9 *pOffscreenSurf = NULL;
         IDirect3DDevice9 *pDev = NULL;
@@ -298,13 +299,13 @@ HRESULT WINAPI D3D9SCPresent(IDirect3DSwapChain9 *pSc, CONST RECT* pSourceRect,C
     //        reportLog(EVENTLOG_INFORMATION_TYPE, L"d3d9sc writing description to mem mapped file");
             memcpy(ipcContext->m_pMemMap, &ipcContext->m_memDesc, sizeof (ipcContext->m_memDesc));
     //        reportLog(EVENTLOG_INFORMATION_TYPE, L"d3d9sc writing data to mem mapped file");
-            PVOID pMemDataMap = ipcContext->m_pMemMap + sizeof (ipcContext->m_memDesc);
-            if (lockedSrcRect.Pitch == surfDesc.Width * 4) {
+            PVOID pMemDataMap = incPtr(ipcContext->m_pMemMap, sizeof (ipcContext->m_memDesc));
+            if (static_cast<UINT>(lockedSrcRect.Pitch) == surfDesc.Width * 4) {
                 memcpy(pMemDataMap, lockedSrcRect.pBits, surfDesc.Width * surfDesc.Height * 4);
             } else {
                 UINT i = 0, cleanOffset = 0, pitchOffset = 0;
                 while (i < surfDesc.Height) {
-                    memcpy(pMemDataMap + cleanOffset, lockedSrcRect.pBits + pitchOffset, surfDesc.Width * 4);
+                    memcpy(incPtr(pMemDataMap, cleanOffset), incPtr(lockedSrcRect.pBits, pitchOffset), surfDesc.Width * 4);
                     cleanOffset += surfDesc.Width * 4;
                     pitchOffset += lockedSrcRect.Pitch;
                     i++;

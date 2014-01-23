@@ -12,20 +12,19 @@ public:
     static Logger *getInstance();
     ~Logger();
 
-    void initLog(LPWSTR name, DWORD logLevel);
+    void initLog(LPCWSTR name, DWORD logLevel);
     void closeLog();
     void setLogLevel(DWORD logLevel);
-    void reportLogDebug(const LPWSTR message, ...);
-    void reportLogInfo(const LPWSTR message, ...);
-    void reportLogWarning(const LPWSTR message, ...);
-    void reportLogError(const LPWSTR message, ...);
+    void reportLogDebug(LPCWSTR message, ...);
+    void reportLogInfo(LPCWSTR message, ...);
+    void reportLogWarning(LPCWSTR message, ...);
+    void reportLogError(LPCWSTR message, ...);
 
 protected:
     Logger();
 
 private:
-
-    void reportLog(DWORD type, DWORD msgId, const LPWSTR message, va_list ap);
+    void reportLog(DWORD type, DWORD msgId, LPCWSTR message, va_list ap);
 
     HANDLE m_hEventSrc;
     unsigned int m_logLevel;
