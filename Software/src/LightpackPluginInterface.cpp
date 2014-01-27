@@ -575,6 +575,10 @@ int LightpackPluginInterface::GetBacklight()
     case Lightpack::MoodLampMode:
         return 2;
         break;
+    default:
+        qWarning() << "Unsupported Lightpack::Mode: " << (int)mode;
+        // TODO: use more suitable value.
+        return 0;
     }
 }
 
