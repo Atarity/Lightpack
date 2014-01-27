@@ -35,10 +35,8 @@
 #include "wizard/Wizard.hpp"
 #include "Plugin.hpp"
 
-#include <unistd.h>
 #include <stdio.h>
 #include <iostream>
-
 
 using namespace std;
 using namespace SettingsScope;
@@ -146,6 +144,8 @@ HWND LightpackApplication::getMainWindowHandle() {
 }
 
 bool LightpackApplication::winEventFilter ( MSG * msg, long * result ) {
+    Q_UNUSED(result);
+
     const unsigned char POWER_RESUME  = 0x01;
     const unsigned char POWER_SUSPEND = 0x02;
     static unsigned char processed = 0x00;
@@ -191,6 +191,7 @@ void LightpackApplication::setBacklightChanged(Lightpack::Mode mode)
 
 void LightpackApplication::setDeviceLockViaAPI(DeviceLocked::DeviceLockStatus status, QList<QString> modules)
 {
+    Q_UNUSED(modules);
     m_deviceLockStatus = status;
 
     if (m_grabManager == NULL)
@@ -215,7 +216,8 @@ void LightpackApplication::startBacklight()
 
     Settings::setIsBacklightEnabled(isBacklightEnabled);
 
-    switch (Settings::getLightpackMode())
+    const Lightpack::Mode lightpackMode = Settings::getLightpackMode();
+    switch (lightpackMode)
     {
     case Lightpack::AmbilightMode:
         m_grabManager->start(isCanStart);
@@ -225,6 +227,10 @@ void LightpackApplication::startBacklight()
     case Lightpack::MoodLampMode:
         m_grabManager->start(false);
         m_moodlampManager->start(isCanStart);
+        break;
+
+    default:
+        qWarning() << Q_FUNC_INFO << "lightpackMode unsupported value =" << lightpackMode;
         break;
     }
 
@@ -269,6 +275,7 @@ void LightpackApplication::onFocusChanged(QWidget *old, QWidget *now)
 
 void LightpackApplication::quitFromWizard(int result)
 {
+    Q_UNUSED(result);
     quit();
 }
 
