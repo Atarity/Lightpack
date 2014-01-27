@@ -34,8 +34,12 @@
 #include "GrabberContext.hpp"
 using namespace SettingsScope;
 
+#if defined _MSC_VER
+using PrismatikMath::round;
+#endif
+
 #ifdef D3D10_GRAB_SUPPORT
-HWND GetMainWindowHandle()
+void *GetMainWindowHandle()
 {
     return getLightpackApp()->getMainWindowHandle();
 }
