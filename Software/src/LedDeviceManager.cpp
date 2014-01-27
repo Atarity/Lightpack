@@ -28,7 +28,11 @@
 
 #include "LedDeviceManager.hpp"
 #include "LedDeviceLightpack.hpp"
+
+#ifdef Q_OS_WIN
 #include "LedDeviceAlienFx.hpp"
+#endif
+
 #include "LedDeviceAdalight.hpp"
 #include "LedDeviceArdulight.hpp"
 #include "LedDeviceVirtual.hpp"

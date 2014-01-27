@@ -30,9 +30,6 @@
 
 #include "LedDeviceAlienFx.hpp"
 #include "Settings.hpp"
-
-#include <unistd.h>
-
 #include <QtDebug>
 #include "debug.h"
 #include "../alienfx/LFX2.h"
