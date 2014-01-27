@@ -29,6 +29,10 @@
 #include "PrismatikMath.hpp"
 #include "Settings.hpp"
 
+#if defined _MSC_VER
+using PrismatikMath::round;
+#endif
+
 void AbstractLedDevice::setGamma(double value) {
     m_gamma = value;
     setColors(m_colorsSaved);
