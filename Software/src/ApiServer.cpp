@@ -531,6 +531,9 @@ void ApiServer::clientProcessCommands()
             case Lightpack::MoodLampMode:
                 result = CmdResultBacklight_Moodlamp;
                 break;
+            default:
+                result = CmdSetResult_Error;
+                break;
             }
         }
         else if (cmdBuffer.startsWith(CmdGuid))
