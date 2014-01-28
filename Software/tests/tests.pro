@@ -25,10 +25,14 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 LIBS += -L../lib -lprismatik-math -lgrab
 
+win32 {
+    CONFIG(msvc):DEFINES += _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE
+    LIBS += -ladvapi32
+}
+
 INCLUDEPATH += ../src/ ../src/grab ../hooks ../grab/include ../math/include
 
 HEADERS += \
-    ../src/grab/calculations.hpp \
     ../common/defs.h \
     ../src/enums.hpp \
     ../src/ApiServerSetColorTask.hpp \
@@ -37,11 +41,12 @@ HEADERS += \
     ../src/Settings.hpp \
     ../src/Plugin.hpp \
     ../src/LightpackPluginInterface.hpp \
+    ../grab/include/calculations.hpp \
+    ../math/include/PrismatikMath.hpp \
     SettingsWindowMockup.hpp \
     GrabCalculationTest.hpp \
     LightpackApiTest.hpp \
-    lightpackmathtest.hpp \
-    ../math/include/PrismatikMath.hpp
+    lightpackmathtest.hpp
 
 SOURCES += \
     LightpackApiTest.cpp \
