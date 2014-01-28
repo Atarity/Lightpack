@@ -35,7 +35,7 @@
 WinAPIGrabber::WinAPIGrabber(QObject * parent, GrabberContext *context)
     : TimeredGrabber(parent, context)
     , hScreenDC(NULL)
-    , hMemDC(NULL),
+    , hMemDC(NULL)
     , hBitmap(NULL)
 {
 }
@@ -121,7 +121,7 @@ void WinAPIGrabber::updateGrabMonitor(QWidget *widget)
     }
 }
 
-GrabResult WinAPIGrabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget)
+GrabResult WinAPIGrabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets)
 {
     captureScreen();
     grabResult.clear();

@@ -230,12 +230,12 @@ public:
         if( m_memDesc.frameId != HOOKSGRABBER_BLANK_FRAME_ID) {
             if( m_memDesc.frameId != m_lastFrameId) {
                 m_lastFrameId = m_memDesc.frameId;
-                grabResult->clear();
-                foreach(GrabWidget *widget, *grabWidgets) {
+                grabResult.clear();
+                foreach(GrabWidget *widget, grabWidgets) {
                     if(widget->isAreaEnabled()) {
-                        grabResult->append(getColor(widget->frameGeometry()));
+                        grabResult.append(getColor(widget->frameGeometry()));
                     } else {
-                        grabResult->append(qRgb(0,0,0));
+                        grabResult.append(qRgb(0,0,0));
                     }
                 }
                 m_isFrameGrabbedDuringLastSecond = true;

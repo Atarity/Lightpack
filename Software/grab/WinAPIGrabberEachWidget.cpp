@@ -35,9 +35,9 @@
 using PrismatikMath::round;
 #endif // _MSC_VER
 
-WinAPIGrabberEachWidget::WinAPIGrabberEachWidget(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
-    : WinAPIGrabber(parent, grabResult, grabAreasGeometry),
-      isBufferNeedsResize(true)
+WinAPIGrabberEachWidget::WinAPIGrabberEachWidget(QObject * parent, GrabberContext *context)
+    : WinAPIGrabber(parent, context)
+    , isBufferNeedsResize(true)
 {
 }
 
@@ -51,11 +51,11 @@ void WinAPIGrabberEachWidget::updateGrabMonitor(QWidget *widget)
     isBufferNeedsResize = true;
 }
 
-GrabResult WinAPIGrabberEachWidget::_grab\([\s\w]*\)
+GrabResult WinAPIGrabberEachWidget::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets)
 {
-    m_grabResult->clear();
-    foreach(GrabWidget * widget, *m_grabWidgets) {
-        m_grabResult->append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
+    grabResult.clear();
+    foreach(GrabWidget * widget, grabWidgets) {
+        grabResult.append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
     }
     return GrabResultOk;
 }

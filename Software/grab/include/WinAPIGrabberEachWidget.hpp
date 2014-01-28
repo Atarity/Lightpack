@@ -33,7 +33,7 @@
 class WinAPIGrabberEachWidget : public WinAPIGrabber
 {
 public:
-    WinAPIGrabberEachWidget(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
+    WinAPIGrabberEachWidget(QObject * parent, GrabberContext *context);
     virtual ~WinAPIGrabberEachWidget();
     virtual void updateGrabMonitor( QWidget * widget );
 
@@ -43,7 +43,7 @@ public:
     }
 
 protected:
-    virtual GrabResult _grab(QList<QRgb> grabResult, const QList<GrabWidget *> &grabWidget);
+    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets);
 
 private:
     void captureWidget(const QWidget * w);

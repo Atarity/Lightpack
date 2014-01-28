@@ -39,6 +39,19 @@
 using PrismatikMath::round;
 #endif // _MSC_VER
 
+namespace
+{
+template <typename T>
+inline void safeRelease(T *&p)
+{
+    if (p)
+    {
+        p->Release();
+        p = 0;
+    }
+}
+}
+
 D3D9Grabber::D3D9Grabber(QObject * parent, GrabberContext *context)
     : TimeredGrabber(parent, context),
       m_d3D(NULL), m_d3Device(NULL), m_surface(NULL)
@@ -98,9 +111,9 @@ D3D9Grabber::D3D9Grabber(QObject * parent, GrabberContext *context)
 D3D9Grabber::~D3D9Grabber()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    SAFE_RELEASE(m_surface);
-    SAFE_RELEASE(m_d3Device);
-    SAFE_RELEASE(m_d3D);
+    safeRelease(m_surface);
+    safeRelease(m_d3Device);
+    safeRelease(m_d3D);
 }
 
 int D3D9Grabber::getBufLength(const RECT &rect)
@@ -111,14 +124,14 @@ int D3D9Grabber::getBufLength(const RECT &rect)
 GrabResult D3D9Grabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets)
 {
     D3DSURFACE_DESC surfaceDesc;
-    m_rect = getEffectiveRect(grabWidget);
+    m_rect = getEffectiveRect(grabWidgets);
     m_surface->GetDesc(&surfaceDesc);
     clipRect(&m_rect, &surfaceDesc);
     int bufLengthNeeded = getBufLength(m_rect);
     m_buf.resize(bufLengthNeeded);
     getImageData(m_buf, m_rect);
     grabResult.clear();
-    foreach(GrabWidget * widget, grabWidget) {
+    foreach(GrabWidget * widget, grabWidgets) {
         grabResult.append( widget->isAreaEnabled() ?
                                   getColor(widget->x(), widget->y(), widget->width(), widget->height()) :
                                   qRgb(0,0,0) );
