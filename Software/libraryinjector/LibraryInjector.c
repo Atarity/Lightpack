@@ -142,8 +142,6 @@ static ULONG STDMETHODCALLTYPE LibraryInjector_Release(LibraryInjector * this) {
 }
 
 static HRESULT STDMETHODCALLTYPE LibraryInjector_Inject(ILibraryInjector * this, DWORD ProcessId, LPWSTR ModulePath) {
-    UNREFERENCED_PARAMETER(this);
-
     char CodePage[4096] ={
         0x90,                                     // nop (to replace with int 3h - 0xCC)
         0xC7, 0x04, 0xE4, 0x00, 0x00, 0x00, 0x00, // mov DWORD PTR [esp], 0h | DLLName to inject (DWORD)
@@ -153,6 +151,9 @@ static HRESULT STDMETHODCALLTYPE LibraryInjector_Inject(ILibraryInjector * this,
         0xB8, 0x00, 0x00, 0x00, 0x00,             // mov eax, ExitTheadProc
         0xFF, 0xD0                                // call eax
     };
+
+    UNREFERENCED_PARAMETER(this);
+
 #define LIB_NAME_OFFSET 4
 #define LOAD_LIB_OFFSET 9
 #define EXIT_THREAD_OFFSET 19
