@@ -324,8 +324,8 @@ void GrabAreaWidget::mouseReleaseEvent(QMouseEvent *pe)
 
 void GrabAreaWidget::wheelEvent(QWheelEvent *pe)
 {
+    Q_UNUSED(pe);
     DEBUG_MID_LEVEL << Q_FUNC_INFO;
-
 }
 
 void GrabAreaWidget::resizeEvent(QResizeEvent *)

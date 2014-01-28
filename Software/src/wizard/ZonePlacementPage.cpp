@@ -146,7 +146,7 @@ void ZonePlacementPage::turnLightOn(int id)
     QList<QRgb> lights;
     for(size_t i=0; i < device()->maxLedsCount(); i++)
     {
-        if (i == id)
+        if (i == static_cast<size_t>(id))
             lights.append(qRgb(255,255,255));
         else
             lights.append(0);

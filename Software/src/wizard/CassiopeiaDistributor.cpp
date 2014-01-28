@@ -26,6 +26,12 @@
 
 #include "CassiopeiaDistributor.hpp"
 
+#if defined _MSC_VER
+#include "PrismatikMath.hpp"
+
+using PrismatikMath::round;
+#endif
+
 CassiopeiaDistributor::~CassiopeiaDistributor() {
     if (_currentArea)
         cleanCurrentArea();

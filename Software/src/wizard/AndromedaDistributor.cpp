@@ -26,6 +26,12 @@
 
 #include "AndromedaDistributor.hpp"
 
+#if defined _MSC_VER
+#include "PrismatikMath.hpp"
+
+using PrismatikMath::round;
+#endif
+
 #define STAND_WIDTH 0.3333 //33%
 
 AndromedaDistributor::~AndromedaDistributor() {
