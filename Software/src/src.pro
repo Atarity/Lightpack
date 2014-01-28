@@ -7,7 +7,11 @@
 # -------------------------------------------------
 
 TARGET      = Prismatik
-PRE_TARGETDEPS += ../lib/libgrab.a
+CONFIG(msvc) {
+    PRE_TARGETDEPS += ../lib/grab.lib
+} else {
+    PRE_TARGETDEPS += ../lib/libgrab.a
+}
 DESTDIR     = bin
 TEMPLATE    = app
 QT         += network widgets
@@ -68,8 +72,9 @@ unix:!macx{
 }
 
 win32 {
+    CONFIG(msvc):DEFINES += _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE
     # Windows version using WinAPI for HID
-    LIBS    += -lhid -lusbcamd -lsetupapi
+    LIBS    += -lsetupapi
     # For QSerialDevice
     LIBS    += -luuid -ladvapi32
 
@@ -87,7 +92,20 @@ win32 {
 
     LIBS    += -lpsapi
 
-    QMAKE_POST_LINK = cd $(DESTDIR) && \
+    CONFIG(msvc) {
+        QMAKE_POST_LINK = cd $(DESTDIR) && \
+                cp -f \"../../lib/prismatik-hooks.dll\" ./ && \
+                cp -f \"../../lib/libraryinjector.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/Qt5Core$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/Qt5Gui$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/Qt5SerialPort$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/Qt5Widgets$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/Qt5Network$${DEBUG_EXT}.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/icudt51.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/icuin51.dll\" ./ && \
+                cp -f \"$${QTDIR}/bin/icuuc51.dll\" ./
+    } else {
+        QMAKE_POST_LINK = cd $(DESTDIR) && \
                 cp -f \"../../lib/prismatik-hooks.dll\" ./ && \
                 cp -f \"../../lib/libraryinjector.dll\" ./ && \
                 cp -f \"$${QTDIR}/bin/Qt5Core$${DEBUG_EXT}.dll\" ./ && \
@@ -101,6 +119,7 @@ win32 {
                 cp -f \"$${QTDIR}/bin/libwinpthread-1.dll\" ./ && \
                 cp -f \"$${QTDIR}/bin/libgcc_s_dw2-1.dll\" ./ && \
                 cp -f \"$${QTDIR}/bin/libstdc++-6.dll\" ./
+    }
 }
 
 unix:!macx{
@@ -121,7 +140,7 @@ macx{
  #           -framework CoreGraphics \
             -framework ApplicationServices \
             -framework OpenGL \
-            -L/opt/local/lib -lusb-1.0
+            #-L/opt/local/lib -lusb-1.0
 
     ICON = ../res/icons/Prismatik.icns
 
@@ -150,6 +169,7 @@ SOURCES += \
     PluginsManager.cpp \
     Plugin.cpp \
     LightpackPluginInterface.cpp \
+    TimeEvaluations.cpp \
     wizard/ZoneWidget.cpp \
     wizard/ZonePlacementPage.cpp \
     wizard/Wizard.cpp \
@@ -216,6 +236,12 @@ HEADERS += \
     wizard/PegasusDistributor.hpp \
     systrayicon/SysTrayIcon.hpp \
     systrayicon/SysTrayIcon_p.hpp
+
+win32 {
+    SOURCES += LedDeviceAlienFx.cpp
+
+    HEADERS += LedDeviceAlienFx.hpp
+}
 
 !contains(DEFINES,UNITY_DESKTOP) {
     HEADERS += systrayicon/SysTrayIcon_qt_p.hpp
