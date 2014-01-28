@@ -32,22 +32,17 @@
 #include "calculations.hpp"
 #include "debug.h"
 
-MacOSGrabber::MacOSGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry):
-    TimeredGrabber(parent, grabResult, grabAreasGeometry)
+MacOSGrabber::MacOSGrabber(QObject * parent, GrabberContext *context)
+    : TimeredGrabber(parent, context)
+    , _imageBuf(NULL)
+    , _imageBufSize(0)
 {
-    _imageBuf = NULL;
-    _imageBufSize = 0;
 }
 
 MacOSGrabber::~MacOSGrabber()
 {
     if(_imageBuf)
         free(_imageBuf);
-}
-
-const char * MacOSGrabber::getName()
-{
-    return "MacOSGrabber";
 }
 
 void MacOSGrabber::updateGrabMonitor(QWidget *widget)
@@ -80,7 +75,7 @@ QImage * MacOSGrabber::toImage(CGImageRef imageRef)
   return result;
 }
 
-GrabResult MacOSGrabber::_grab\([\s\w]*\)
+GrabResult MacOSGrabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets)
 {
     CGImageRef imageRef = CGDisplayCreateImage(kCGDirectMainDisplay);
 
@@ -88,9 +83,9 @@ GrabResult MacOSGrabber::_grab\([\s\w]*\)
     {
 
         QImage *image = toImage(imageRef);
-        m_grabResult->clear();
-        foreach(GrabWidget * widget, *m_grabWidgets) {
-            m_grabResult->append( widget->isAreaEnabled() ? getColor(image, widget->frameGeometry()) : qRgb(0,0,0) );
+        grabResult.clear();
+        foreach(GrabWidget * widget, grabWidgets) {
+            grabResult.append( widget->isAreaEnabled() ? getColor(image, widget->frameGeometry()) : qRgb(0,0,0) );
         }
         delete image;
 

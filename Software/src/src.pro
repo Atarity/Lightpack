@@ -140,12 +140,16 @@ macx{
  #           -framework CoreGraphics \
             -framework ApplicationServices \
             -framework OpenGL \
-            #-L/opt/local/lib -lusb-1.0
 
     ICON = ../res/icons/Prismatik.icns
 
     # For build universal binaries (native on Intel and PowerPC)
     QMAKE_MAC_SDK = macosx10.8
+
+    CONFIG(clang) {
+        QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -stdlib=libc+
+        CONFIG +=c++11
+    }
 }
 
 INCLUDEPATH += ./hidapi ./grab ./alienfx ../grab/include ../math/include ./

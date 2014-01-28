@@ -483,7 +483,7 @@ void GrabManager::initGrabbers()
 #endif
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
-    m_grabbers[Grab::GrabberTypeMacCoreGraphics] = initGrabber(new MacOSGrabber(NULL, &m_colorsNew, &m_ledWidgets));
+    m_grabbers[Grab::GrabberTypeMacCoreGraphics] = initGrabber(new MacOSGrabber(NULL, m_grabberContext));
 #endif
     m_grabbers[Grab::GrabberTypeQtEachWidget] = initGrabber(new QtGrabberEachWidget(NULL, m_grabberContext));
     m_grabbers[Grab::GrabberTypeQt] = initGrabber(new QtGrabber(NULL, m_grabberContext));

@@ -39,7 +39,7 @@
 class MacOSGrabber : public TimeredGrabber
 {
 public:
-    MacOSGrabber(QObject *parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
+    MacOSGrabber(QObject * parent, GrabberContext *context);
     virtual ~MacOSGrabber();
     virtual const char * name() const {
         static const char * name = "MacOSGrabber";
@@ -50,7 +50,7 @@ public slots:
     virtual void updateGrabMonitor(QWidget *widget);
 
 protected:
-    virtual GrabResult _grab(QList<QRgb> grabResult, const QList<GrabWidget *> &grabWidget);
+    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets);
 
 private:
     QRgb getColor(QImage * image, const QRect &rect);
