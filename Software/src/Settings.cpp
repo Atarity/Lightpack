@@ -38,6 +38,20 @@
 
 #define MAIN_CONFIG_FILE_VERSION    "3.0"
 
+namespace
+{
+inline const WBAdjustment getLedAdjustment(size_t ledIndex)
+{
+    using namespace SettingsScope;
+
+    WBAdjustment wba;
+    wba.red = Settings::getLedCoefRed(ledIndex);
+    wba.green = Settings::getLedCoefGreen(ledIndex);
+    wba.blue = Settings::getLedCoefBlue(ledIndex);
+    return wba;
+}
+}
+
 //
 // This strings keys and values must be accessible only in current file
 //
@@ -1161,14 +1175,9 @@ QList<WBAdjustment> Settings::getLedCoefs()
     QList<WBAdjustment> result;
     const size_t numOfLeds = getNumberOfLeds(getConnectedDevice());
 
-    for(size_t i; i < numOfLeds; i++)
-    {
-        WBAdjustment wba;
-        wba.red = getLedCoefRed(i);
-        wba.green = getLedCoefGreen(i);
-        wba.blue = getLedCoefBlue(i);
-        result.append(wba);
-    }
+    for(size_t led = 0; led < numOfLeds; ++led)
+        result.append(getLedAdjustment(led));
+
     return result;
 }
 
