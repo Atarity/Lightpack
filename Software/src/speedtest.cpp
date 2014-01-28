@@ -192,6 +192,7 @@ void SpeedTest::testFullScreenGrabSpeed()
 {
     // Main screen geometry
     QRect screenRect = QApplication::desktop()->screenGeometry();
+    Q_UNUSED(screenRect);
 
     //
     // Grab full screen via Qt grabWindow

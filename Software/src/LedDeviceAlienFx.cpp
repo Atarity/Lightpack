@@ -104,6 +104,7 @@ void LedDeviceAlienFx::setColors(const QList<QRgb> & colors)
     {
         unsigned int numDevs = 0;
         LFX_RESULT result = lfxGetNumDevicesFunction(&numDevs);
+        Q_UNUSED(result);
 
         for(unsigned int devIndex = 0; devIndex < numDevs; devIndex++)
         {
