@@ -6,9 +6,13 @@
 #ifdef Q_OS_WIN
 #include "HooksTest.h"
 #endif
+#include "debug.h"
+
 #include <iostream>
 
 using namespace std;
+
+unsigned g_debugLevel = Debug::LowLevel;
 
 int main(int argc, char *argv[])
 {

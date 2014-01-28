@@ -49,16 +49,16 @@ HEADERS += \
     lightpackmathtest.hpp
 
 SOURCES += \
-    LightpackApiTest.cpp \
     ../src/ApiServerSetColorTask.cpp \
     ../src/ApiServer.cpp \
     ../src/Settings.cpp \
     ../src/Plugin.cpp \
     ../src/LightpackPluginInterface.cpp \
+    LightpackApiTest.cpp \
     SettingsWindowMockup.cpp \
-    main.cpp \
     GrabCalculationTest.cpp \
-    lightpackmathtest.cpp
+    lightpackmathtest.cpp \
+    TestsMain.cpp
 
 win32{
     HEADERS += \
@@ -66,11 +66,13 @@ win32{
         ../hooks/ProxyFuncJmp.hpp \
         ../hooks/ProxyFunc.hpp \
         ../hooks/hooksutils.h \
-        ../hooks/ProxyFuncVFTable.hpp
+        ../hooks/ProxyFuncVFTable.hpp \
+        ../hooks/Logger.hpp
 
     SOURCES += \
         HooksTest.cpp \
         ../hooks/ProxyFuncJmp.cpp \
         ../hooks/hooksutils.cpp \
-        ../hooks/ProxyFuncVFTable.cpp
+        ../hooks/ProxyFuncVFTable.cpp \
+        ../hooks/Logger.cpp
 }

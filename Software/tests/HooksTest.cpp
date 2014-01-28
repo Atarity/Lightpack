@@ -3,7 +3,7 @@
 #include "HooksTest.h"
 #include "hooksutils.h"
 #include <QtTest/QtTest>
-#include "Logger.hpp"
+
 HooksTest::HooksTest(QObject *parent) :
     QObject(parent)
 {

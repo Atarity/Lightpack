@@ -43,7 +43,6 @@ using namespace SettingsScope;
 
 #define VERSION_API_TESTS   "1.4"
 
-
 LightpackApiTest::LightpackApiTest()
 {
     // Register QMetaType for Qt::QueuedConnection
@@ -764,5 +763,3 @@ bool LightpackApiTest::unlock(QTcpSocket * socket)
     // because result will be ApiServer::CmdResultUnlock_NotLocked
     return writeCommandWithCheck(socket, ApiServer::CmdUnlock, ApiServer::CmdResultUnlock_Success);
 }
-
-unsigned g_debugLevel = Debug::LowLevel;
