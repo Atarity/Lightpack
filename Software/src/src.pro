@@ -53,7 +53,7 @@ RC_FILE      = ../res/Lightpack.rc
 include(../build-config.prf)
 
 LIBS    += -L../lib -lgrab -lprismatik-math
-QMAKE_CXXFLAGS += -std=c++11
+CONFIG(gcc):QMAKE_CXXFLAGS += -std=c++11
 
 unix:!macx{
     CONFIG    += link_pkgconfig
@@ -236,12 +236,6 @@ HEADERS += \
     wizard/PegasusDistributor.hpp \
     systrayicon/SysTrayIcon.hpp \
     systrayicon/SysTrayIcon_p.hpp
-
-win32 {
-    SOURCES += LedDeviceAlienFx.cpp
-
-    HEADERS += LedDeviceAlienFx.hpp
-}
 
 !contains(DEFINES,UNITY_DESKTOP) {
     HEADERS += systrayicon/SysTrayIcon_qt_p.hpp
