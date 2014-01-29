@@ -29,21 +29,24 @@
 #include "../src/enums.hpp"
 
 #ifdef WINAPI_GRAB_SUPPORT
-
+/*
 class WinAPIGrabberEachWidget : public WinAPIGrabber
 {
 public:
     WinAPIGrabberEachWidget(QObject * parent, GrabberContext *context);
     virtual ~WinAPIGrabberEachWidget();
-    virtual void updateGrabMonitor( QWidget * widget );
 
     virtual const char * name() const {
-        static char * name = "WinAPIGrabberEachWidget";
+        static const char * name = "WinAPIGrabberEachWidget";
         return name;
     }
 
-protected:
-    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets);
+protected slots:
+    virtual GrabResult grabScreens();
+    virtual bool reallocate(const QList< ScreenInfo > &grabScreens);
+
+    virtual QList< ScreenInfo > * screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets);
+    virtual GrabResult grab();
 
 private:
     void captureWidget(const QWidget * w);
@@ -53,5 +56,5 @@ private:
 private:
     bool isBufferNeedsResize;
 };
-
+*/
 #endif // WINAPI_GRAB_SUPPORT

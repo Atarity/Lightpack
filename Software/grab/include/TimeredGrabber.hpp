@@ -38,11 +38,10 @@ class TimeredGrabber : public GrabberBase
     Q_OBJECT
 public:
     TimeredGrabber(QObject * parent, GrabberContext *context);
-    ~TimeredGrabber();
+    virtual ~TimeredGrabber() {}
 
     virtual const char * name() const = 0;
 public slots:
-    virtual void init();
     virtual void startGrabbing();
     virtual void stopGrabbing();
     virtual bool isGrabbingStarted() const;

@@ -55,18 +55,18 @@ public:
     virtual ~WinAPIGrabber();
 
     virtual const char * name() const {
-        static char * name = "WinAPIGrabber";
+        static const char * name = "WinAPIGrabber";
         return name;
     }
 
-protected:
-    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget);
+protected slots:
+    virtual GrabResult grabScreens();
+    virtual bool reallocate(const QList< ScreenInfo > &grabScreens);
 
-public slots:
-    virtual void updateGrabMonitor(QWidget *widget);
+    virtual QList< ScreenInfo > * screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets);
 
 protected:
-    void freeDCs();
+    void freeScreens();
     void captureScreen();
     QRgb getColor(const QWidget * grabme);
     QRgb getColor(const QRect &widgetRect);
@@ -74,20 +74,9 @@ protected:
     void resizePixelsBuffer();
 
 protected:
-    HMONITOR hMonitor;
-    MONITORINFO monitorInfo;
-
-    // Size of screen in pixels, initialize in captureScreen() using in getColor()
-    unsigned screenWidth;
-    unsigned screenHeight;
 
     // Captured screen buffer, contains actual RGB data in reversed order
-    QVector<BYTE> pbPixelsBuff;
     unsigned bytesPerPixel;
-
-    HDC hScreenDC;
-    HDC hMemDC;
-    HBITMAP hBitmap;
 
 };
 

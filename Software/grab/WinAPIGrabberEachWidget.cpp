@@ -24,8 +24,8 @@
  */
 
 #include "WinAPIGrabberEachWidget.hpp"
-
 #ifdef WINAPI_GRAB_SUPPORT
+/*
 #include "../src/debug.h"
 #include <cmath>
 
@@ -45,21 +45,15 @@ WinAPIGrabberEachWidget::~WinAPIGrabberEachWidget()
 {
 }
 
-void WinAPIGrabberEachWidget::updateGrabMonitor(QWidget *widget)
-{
-    hMonitor = MonitorFromWindow( reinterpret_cast<HWND>(widget->winId()), MONITOR_DEFAULTTONEAREST );
-    isBufferNeedsResize = true;
-}
-
-GrabResult WinAPIGrabberEachWidget::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets)
-{
-    grabResult.clear();
-    foreach(GrabWidget * widget, grabWidgets) {
-        grabResult.append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
-    }
-    return GrabResultOk;
-}
-
+//GrabResult WinAPIGrabberEachWidget::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets)
+//{
+//    grabResult.clear();
+//    foreach(GrabWidget * widget, grabWidgets) {
+//        grabResult.append( widget->isAreaEnabled() ? getColor(widget) : qRgb(0,0,0) );
+//    }
+//    return GrabResultOk;
+//}
+/*
 void WinAPIGrabberEachWidget::captureWidget(const QWidget * w)
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
@@ -123,11 +117,11 @@ QRgb WinAPIGrabberEachWidget::getColor(int x, int y, int width, int height)
 
     // Ignore part of LED widget which out of screen
     if( x < 0 ) {
-        width  += x;  /* reduce width  */
+        width  += x;  // reduce width
         x = 0;
     }
     if( y < 0 ) {
-        height += y;  /* reduce height */
+        height += y;  // reduce height
         y = 0;
     }
     if( x + width  > (int)screenWidth  ) width  -= (x + width ) - screenWidth;
@@ -189,5 +183,5 @@ QRgb WinAPIGrabberEachWidget::getColor(int x, int y, int width, int height)
 
     return result;
 }
-
+*/
 #endif // WINAPI_GRAB_SUPPORT

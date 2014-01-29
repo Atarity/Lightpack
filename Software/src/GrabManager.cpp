@@ -476,12 +476,15 @@ void GrabManager::initGrabbers()
     for (int i = 0; i < Grab::GrabbersCount; i++)
         m_grabbers.append(NULL);
 
-#ifdef Q_OS_WIN
+#ifdef WINAPI_GRAB_SUPPORT
     m_grabbers[Grab::GrabberTypeWinAPI] = initGrabber(new WinAPIGrabber(NULL, m_grabberContext));
+#endif
+
+#ifdef D3D9_GRAB_SUPPORT
     m_grabbers[Grab::GrabberTypeD3D9] = initGrabber(new D3D9Grabber(NULL, m_grabberContext));
 #endif
 
-#ifdef Q_OS_LINUX
+#ifdef X11_GRAB_SUPPORT
     m_grabbers[Grab::GrabberTypeX11] = initGrabber(new X11Grabber(NULL, m_grabberContext));
 #endif
 
@@ -491,8 +494,8 @@ void GrabManager::initGrabbers()
     //TODO: migrate Qt grabbers to the new hierarchy
 //    m_grabbers[Grab::GrabberTypeQtEachWidget] = initGrabber(new QtGrabberEachWidget(NULL, m_grabberContext));
 //    m_grabbers[Grab::GrabberTypeQt] = initGrabber(new QtGrabber(NULL, m_grabberContext));
-#ifdef Q_OS_WIN
-    m_grabbers[Grab::GrabberTypeWinAPIEachWidget] = initGrabber(new WinAPIGrabberEachWidget(NULL, m_grabberContext));
+#ifdef WINAPI_GRAB_SUPPORT
+    //m_grabbers[Grab::GrabberTypeWinAPIEachWidget] = initGrabber(new WinAPIGrabberEachWidget(NULL, m_grabberContext));
 #endif
 #ifdef D3D10_GRAB_SUPPORT
     m_d3d10Grabber = static_cast<D3D10Grabber *>(initGrabber(new D3D10Grabber(NULL, m_grabberContext, &GetMainWindowHandle)));

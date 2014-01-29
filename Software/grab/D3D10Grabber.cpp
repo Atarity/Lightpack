@@ -214,7 +214,6 @@ public:
         m_isInited = true;
         return m_isInited;
     }
-/*
     void start() { m_isStarted = true; }
     void stop() { m_isStarted = false; }
     bool isStarted() { return m_isStarted; }
@@ -250,7 +249,6 @@ public:
 
         return result;
     }
-*/
 
     void updateGrabMonitor(QWidget *widget)
     {

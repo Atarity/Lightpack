@@ -57,6 +57,12 @@ public:
 protected:
     virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets);
 
+protected slots:
+    virtual GrabResult grabScreens();
+    virtual bool reallocate(const QList< ScreenInfo > &grabScreens);
+
+    virtual QList< ScreenInfo > * screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets);
+
 private:
     BYTE * expandBuffer(BYTE * buf, int newLength);
     BYTE * getImageData(QVector<BYTE> &, RECT &);

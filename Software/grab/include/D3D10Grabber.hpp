@@ -61,6 +61,12 @@ public slots:
     virtual void setGrabInterval(int msec);
     virtual void grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget);
 
+protected slots:
+    virtual GrabResult grabScreens();
+    virtual bool reallocate(const QList< ScreenInfo > &grabScreens);
+
+    virtual QList< ScreenInfo > * screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets);
+
 private:
     QScopedPointer<D3D10GrabberImpl> m_impl;
 };

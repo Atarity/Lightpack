@@ -42,15 +42,18 @@ enum GrabResult {
 struct ScreenInfo {
     QRect rect;
     void * handle;
+    bool operator ==(const ScreenInfo &other) const {
+        return other.rect == this->rect;
+    }
 };
 
 struct GrabbedScreen {
     GrabbedScreen()
-        : imgData(NULL)
-        , imgFormat(BufferFormatUnknown)
+        : imgFormat(BufferFormatUnknown)
         , associatedData(NULL)
     {}
     unsigned char * imgData;
+    size_t imgDataSize;
     BufferFormat imgFormat;
     ScreenInfo screenInfo;
     void * associatedData;
@@ -76,23 +79,25 @@ public:
     virtual const char * name() const = 0;
 
 public slots:
-    virtual void init() = 0;
+//    virtual void init() = 0;
     virtual void startGrabbing() = 0;
     virtual void stopGrabbing() = 0;
     virtual bool isGrabbingStarted() const = 0;
     virtual void setGrabInterval(int msec) = 0;
+
     virtual void grab();
-    virtual QList< ScreenInfo > * screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets) = 0;
-    virtual bool isReallocationNeeded(const QList< ScreenInfo > &grabScreens) const;
 
 protected slots:
     /*!
-      Grabs screens and saves them to \a GrabberBase#_screens field, called from
-      \a GrabberBase#grab() slot, needs to be overriden.
+      Grabs screens and saves them to \a GrabberBase#_screens field. Called by:wa
+      \a GrabberBase#grab() slot. Needs to be implemented in derived classes.
       \return GrabResult
     */
     virtual GrabResult grabScreens() = 0;
     virtual bool reallocate(const QList< ScreenInfo > &grabScreens) = 0;
+
+    virtual QList< ScreenInfo > * screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets) = 0;
+    virtual bool isReallocationNeeded(const QList< ScreenInfo > &grabScreens) const;
 
 protected:
     const GrabbedScreen * screenOfRect(const QRect &rect) const;
