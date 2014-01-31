@@ -40,6 +40,9 @@ enum GrabResult {
 };
 
 struct ScreenInfo {
+    ScreenInfo()
+        : handle(NULL)
+    {}
     QRect rect;
     void * handle;
     bool operator ==(const ScreenInfo &other) const {

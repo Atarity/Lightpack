@@ -32,29 +32,79 @@
 #include "calculations.hpp"
 #include "debug.h"
 
-MacOSGrabber::MacOSGrabber(QObject * parent, GrabberContext *context)
-    : TimeredGrabber(parent, context)
-    , _imageBuf(NULL)
-    , _imageBufSize(0)
+const uint32_t kMaxDisplaysCount = 10;
+
+MacOSGrabber::MacOSGrabber(QObject *parent, GrabberContext *context):
+    TimeredGrabber(parent, context)
 {
 }
 
 MacOSGrabber::~MacOSGrabber()
 {
-    if(_imageBuf)
-        free(_imageBuf);
+    freeScreens();
 }
 
-void MacOSGrabber::updateGrabMonitor(QWidget *widget)
+void MacOSGrabber::freeScreens()
 {
-    Q_UNUSED(widget);
+    for (int i = 0; i < _screens.size(); ++i) {
+        GrabbedScreen screen = _screens[i];
+        if (screen.imgData != NULL)
+            free(screen.imgData);
+
+        if (screen.associatedData != NULL)
+            free(screen.associatedData);
+    }
+    _screens.clear();
 }
 
-QImage * MacOSGrabber::toImage(CGImageRef imageRef)
+QList< ScreenInfo > * MacOSGrabber::screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets)
 {
-    const size_t bytesPerPixel = 4;
+    CGDirectDisplayID displays[kMaxDisplaysCount];
+    uint32_t displayCount;
+
+    CGError err = CGGetActiveDisplayList(kMaxDisplaysCount, displays, &displayCount);
+
+
+    if (err == kCGErrorSuccess) {
+        for (unsigned int i = 0; i < displayCount; ++i) {
+            CGRect cgScreenRect = CGDisplayBounds(displays[i]);
+            for (int k = 0; k < grabWidgets.size(); ++k) {
+                QRect rect = grabWidgets[i]->frameGeometry();
+                CGPoint widgetCenter = CGPointMake(rect.x() + rect.width() / 2, rect.y() + rect.height() / 2);
+                if (CGRectContainsPoint(cgScreenRect, widgetCenter)) {
+                    ScreenInfo screenInfo;
+                    int x1 = cgScreenRect.origin.x;
+                    int y1 = cgScreenRect.origin.y;
+                    int x2 = cgScreenRect.size.width  + x1 - 1;
+                    int y2 = cgScreenRect.size.height + y1 - 1;
+                    screenInfo.rect.setCoords( x1, y1, x2, y2);
+                    screenInfo.handle = reinterpret_cast<void *>(displays[i]);
+
+                    if (k < result->size())
+                        result->replace(k,screenInfo);
+                    else
+                        result->append(screenInfo);
+
+                    break;
+                }
+            }
+        }
+
+        while (result->size() > displayCount)
+            result->removeLast();
+
+    } else {
+        qCritical() << "couldn't get active displays, error code " << QString::number(err, 16);
+    }
+    return result;
+
+}
+
+void MacOSGrabber::toGrabbedScreen(CGImageRef imageRef, GrabbedScreen *screen)
+{
     size_t width = CGImageGetWidth(imageRef);
     size_t height = CGImageGetHeight(imageRef);
+    /*
     size_t new_buf_size = height * width * bytesPerPixel;
     if (new_buf_size > _imageBufSize) {
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "new width = " << width << " new height = " << height;
@@ -63,53 +113,70 @@ QImage * MacOSGrabber::toImage(CGImageRef imageRef)
         _imageBuf = (unsigned char*) calloc(height * width * bytesPerPixel, sizeof(unsigned char));
         _imageBufSize = new_buf_size;
     }
-
+*/
 
     CGDataProviderRef provider = CGImageGetDataProvider(imageRef);
     CFDataRef dataref = CGDataProviderCopyData(provider);
-    memcpy(_imageBuf, CFDataGetBytePtr(dataref), width * height * 4);
+    memcpy(screen->imgData, CFDataGetBytePtr(dataref), width * height * 4);
     CFRelease(dataref);
-
-    QImage * result = new QImage(_imageBuf, width, height, QImage::Format_RGB32);
-
-  return result;
 }
 
-GrabResult MacOSGrabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets)
+bool MacOSGrabber::reallocate(const QList<ScreenInfo> &screens)
 {
-    CGImageRef imageRef = CGDisplayCreateImage(kCGDirectMainDisplay);
+    const size_t kBytesPerPixel = 4;
+    freeScreens();
+    for (int i = 0; i < screens.size(); ++i) {
 
-    if (imageRef != NULL)
-    {
 
-        QImage *image = toImage(imageRef);
-        grabResult.clear();
-        foreach(GrabWidget * widget, grabWidgets) {
-            grabResult.append( widget->isAreaEnabled() ? getColor(image, widget->frameGeometry()) : qRgb(0,0,0) );
+        //MacOSScreenData *d = new MacOSScreenData();
+
+        int screenid = reinterpret_cast<intptr_t>(screens[i].handle);
+
+        long width = CGDisplayPixelsWide(screenid);
+        long height = CGDisplayPixelsHigh(screenid);
+
+        DEBUG_HIGH_LEVEL << "dimensions " << width << "x" << height << screens[i].handle;
+
+        size_t imgSize = height * width * kBytesPerPixel;
+        unsigned char *buf = reinterpret_cast<unsigned char*>(calloc(imgSize, sizeof(unsigned char)));
+        if (buf == NULL) {
+            qCritical() << "couldn't allocate image buffer";
+            freeScreens();
+            return false;
         }
-        delete image;
+        GrabbedScreen grabScreen;
+        grabScreen.imgData = buf;
+        grabScreen.imgFormat = BufferFormatArgb;
+        grabScreen.screenInfo = screens[i];
+        //grabScreen.associatedData = d;
+        _screens.append(grabScreen);
 
-        CGImageRelease(imageRef);
+    }
+    return true;
+}
 
-    } else {        
+GrabResult MacOSGrabber::grabScreens()
+{
+    for (int i = 0; i < _screens.size(); ++i) {
 
-        qCritical() << Q_FUNC_INFO << "CGDisplayCreateImage(..) returned NULL";
-        return GrabResultError;
+        CGDirectDisplayID display = reinterpret_cast<intptr_t>(_screens[i].screenInfo.handle);
+
+        CGImageRef imageRef = CGDisplayCreateImage(display);
+
+        if (imageRef != NULL)
+        {
+
+            toGrabbedScreen(imageRef, &_screens[i] );
+
+            CGImageRelease(imageRef);
+
+        } else {
+
+            qCritical() << Q_FUNC_INFO << "CGDisplayCreateImage(..) returned NULL";
+            return GrabResultError;
+        }
     }
     return GrabResultOk;
 }
 
-QRgb MacOSGrabber::getColor(QImage * image, const QRect &rect)
-{
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO
-                     << "x y w h:" << rect.x() << rect.y() << rect.width() << rect.height();
-
-    QRgb result;
-
-    Grab::Calculations::calculateAvgColor(&result, image->constBits(), BufferFormatArgb, image->width()*4, rect);
-
-    DEBUG_HIGH_LEVEL << "QRgb result =" << hex << result;
-
-    return result;
-}
 #endif // MAC_OS_CG_GRAB_SUPPORT

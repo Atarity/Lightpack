@@ -39,25 +39,21 @@
 class MacOSGrabber : public TimeredGrabber
 {
 public:
-    MacOSGrabber(QObject * parent, GrabberContext *context);
+    MacOSGrabber(QObject *parent, GrabberContext *context);
     virtual ~MacOSGrabber();
     virtual const char * name() const {
         static const char * name = "MacOSGrabber";
         return name;
     }
 
-public slots:
-    virtual void updateGrabMonitor(QWidget *widget);
+protected slots:
+    virtual GrabResult grabScreens();
+    virtual bool reallocate(const QList< ScreenInfo > &grabScreens);
 
-protected:
-    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets);
-
+    virtual QList< ScreenInfo > * screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets);
 private:
-    QRgb getColor(QImage * image, const QRect &rect);
-    QImage * toImage(CGImageRef);
-
-    unsigned char *_imageBuf;
-    size_t _imageBufSize;
+    void freeScreens();
+    void toGrabbedScreen(CGImageRef, GrabbedScreen *);
 };
 
 #endif // MAC_OS_CG_GRAB_SUPPORT

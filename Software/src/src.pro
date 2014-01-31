@@ -130,6 +130,8 @@ unix:!macx{
 }
 
 macx{
+    QMAKE_CXXFLAGS = -mmacosx-version-min=10.8 -std=c++11 -stdlib=libc+
+    CONFIG +=c++11
     QMAKE_LFLAGS += -F/System/Library/Frameworks
     # MacOS version using libusb and hidapi codes
     SOURCES += hidapi/mac/hid.c

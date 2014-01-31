@@ -64,7 +64,7 @@ bool GrabberBase::isReallocationNeeded(const QList< ScreenInfo > &grabScreens) c
         return true;
 
     for (int i = 0; i < grabScreens.size(); ++i) {
-        if (grabScreens[i].rect.size() != _screens[i].screenInfo.rect.size())
+        if (grabScreens[i].rect != _screens[i].screenInfo.rect)
             return true;
     }
     return false;
@@ -72,10 +72,10 @@ bool GrabberBase::isReallocationNeeded(const QList< ScreenInfo > &grabScreens) c
 
 void GrabberBase::grab() {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
-    QList< ScreenInfo > grabbedScreens;
-    screensToGrab(&grabbedScreens, *_context->grabWidgets);
-    if (isReallocationNeeded(grabbedScreens)) {
-        if (!reallocate(grabbedScreens)) {
+    QList< ScreenInfo > screens2Grab;
+    screensToGrab(&screens2Grab, *_context->grabWidgets);
+    if (isReallocationNeeded(screens2Grab)) {
+        if (!reallocate(screens2Grab)) {
             qCritical() << Q_FUNC_INFO << " couldn't reallocate grabbing buffer";
             emit frameGrabAttempted(GrabResultError);
             return;
