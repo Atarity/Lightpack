@@ -45,7 +45,7 @@ struct ScreenInfo {
     {}
     QRect rect;
     void * handle;
-    bool operator ==(const ScreenInfo &other) const {
+    bool operator== (const ScreenInfo &other) const {
         return other.rect == this->rect;
     }
 };

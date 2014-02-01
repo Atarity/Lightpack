@@ -64,6 +64,7 @@ QList< ScreenInfo > * MacOSGrabber::screensToGrab(QList< ScreenInfo > * result, 
 
     CGError err = CGGetActiveDisplayList(kMaxDisplaysCount, displays, &displayCount);
 
+    result->clear();
 
     if (err == kCGErrorSuccess) {
         for (unsigned int i = 0; i < displayCount; ++i) {
@@ -80,18 +81,12 @@ QList< ScreenInfo > * MacOSGrabber::screensToGrab(QList< ScreenInfo > * result, 
                     screenInfo.rect.setCoords( x1, y1, x2, y2);
                     screenInfo.handle = reinterpret_cast<void *>(displays[i]);
 
-                    if (k < result->size())
-                        result->replace(k,screenInfo);
-                    else
-                        result->append(screenInfo);
+                    result->append(screenInfo);
 
                     break;
                 }
             }
         }
-
-        while (result->size() > displayCount)
-            result->removeLast();
 
     } else {
         qCritical() << "couldn't get active displays, error code " << QString::number(err, 16);

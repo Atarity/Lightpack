@@ -73,6 +73,7 @@ bool GrabberBase::isReallocationNeeded(const QList< ScreenInfo > &grabScreens) c
 void GrabberBase::grab() {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     QList< ScreenInfo > screens2Grab;
+    screens2Grab.reserve(5);
     screensToGrab(&screens2Grab, *_context->grabWidgets);
     if (isReallocationNeeded(screens2Grab)) {
         if (!reallocate(screens2Grab)) {
