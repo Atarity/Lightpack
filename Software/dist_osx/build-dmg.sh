@@ -1,13 +1,15 @@
 #!/bin/sh
 
-test -z "$1" && echo "usage: $0 <version>" && exit 1
+test -z "$1" && test -z "$2" && echo "usage: $0 <version> <identity>" && exit 1
 
+IDENTITY=$2
 VOLUME_NAME="Prismatik $1"
 DMG_TEMP_NAME="temp.dmg"
 DMG_NAME="Prismatik.$1.dmg"
 SRC_FOLDER="contents"
 LAYOUT_FILE="dsstore"
 APP_PATH="$SRC_FOLDER/Prismatik.app/Contents/MacOS"
+QT_PATH=~/Qt/5.2.0/clang_64
 
 if [ ! -L "$SRC_FOLDER/Applications" ]; then
 	echo "Creating link to /Applications folder"
@@ -20,7 +22,46 @@ if [ ! -d "$SRC_FOLDER/Prismatik.app" ]; then
 fi
 
 echo "collecting dependencies..."
-~/Qt5.1.1/5.1.1/clang_64/bin/macdeployqt $SRC_FOLDER/Prismatik.app
+$QT_PATH/bin/macdeployqt $SRC_FOLDER/Prismatik.app
+
+echo "signing application..."
+
+FRAMEWORKS=$SRC_FOLDER/Prismatik.app/Contents/Frameworks/*
+for f in $FRAMEWORKS
+do
+    FW=$(basename "$f")
+    echo "copying Info.plist for $FW"
+    cp $QT_PATH/lib/$FW/Contents/Info.plist $f/Resources
+done
+
+#FRAMEWORKS=$SRC_FOLDER/Prismatik.app/Contents/Frameworks/*
+#for f in $FRAMEWORKS
+#do
+#    for ff in "$f/Versions/5/*"
+#    do
+#    	if codesign --verify --verbose -s "$IDENTITY" $ff ; then
+#    		echo "\t done"
+#    	else
+#    		exit 1
+#    	fi
+#    done 
+#done
+#
+#PLUGINS=$SRC_FOLDER/Prismatik.app/Contents/PlugIns/*
+#for f in $PLUGINS
+#do
+#    for ff in "$f/*"
+#    do
+#    	if codesign --verify --verbose -s "$IDENTITY" $ff ; then
+#    	    echo "\t done"
+#    	else
+#    	    exit 1
+#    	fi
+#    done 
+#done
+
+codesign -vvv --deep -s "$IDENTITY" $SRC_FOLDER/Prismatik.app || exit 1
+codesign -vvv --verify $SRC_FOLDER/Prismatik.app || exit 1
 
 # Create the image
 echo "Creating disk image..."
