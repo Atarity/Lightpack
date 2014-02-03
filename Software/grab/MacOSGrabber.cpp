@@ -57,7 +57,7 @@ void MacOSGrabber::freeScreens()
     _screensWithWidgets.clear();
 }
 
-QList< ScreenInfo > * MacOSGrabber::screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets)
+QList< ScreenInfo > * MacOSGrabber::screensWithWidgets(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets)
 {
     CGDirectDisplayID displays[kMaxDisplaysCount];
     uint32_t displayCount;
