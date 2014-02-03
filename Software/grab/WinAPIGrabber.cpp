@@ -57,8 +57,8 @@ WinAPIGrabber::~WinAPIGrabber()
 
 void WinAPIGrabber::freeScreens()
 {
-    for (int i = 0; i < _screens.size(); ++i) {
-        WinAPIScreenData *d = reinterpret_cast<WinAPIScreenData *>(_screens[i].associatedData);
+    for (int i = 0; i < _screensWithWidgets.size(); ++i) {
+        WinAPIScreenData *d = reinterpret_cast<WinAPIScreenData *>(_screensWithWidgets[i].associatedData);
         if (d->hScreenDC)
             DeleteObject(d->hScreenDC);
 
@@ -70,17 +70,17 @@ void WinAPIGrabber::freeScreens()
 
         delete d;
 
-        if (_screens[i].imgData != NULL) {
-            free(_screens[i].imgData);
-            _screens[i].imgData = NULL;
-            _screens[i].imgDataSize = 0;
+        if (_screensWithWidgets[i].imgData != NULL) {
+            free(_screensWithWidgets[i].imgData);
+            _screensWithWidgets[i].imgData = NULL;
+            _screensWithWidgets[i].imgDataSize = 0;
         }
     }
 
-    _screens.clear();
+    _screensWithWidgets.clear();
 }
 
-QList< ScreenInfo > * WinAPIGrabber::screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets)
+QList< ScreenInfo > * WinAPIGrabber::screensWithWidgets(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets)
 {
     result->clear();
     for (int i = 0; i < grabWidgets.size(); ++i) {
@@ -160,7 +160,7 @@ bool WinAPIGrabber::reallocate(const QList< ScreenInfo > &screens)
         grabScreen.imgFormat = BufferFormatArgb;
         grabScreen.screenInfo = screen;
         grabScreen.associatedData = d;
-        _screens.append(grabScreen);
+        _screensWithWidgets.append(grabScreen);
     }
 
 
@@ -169,7 +169,7 @@ bool WinAPIGrabber::reallocate(const QList< ScreenInfo > &screens)
 
 GrabResult WinAPIGrabber::grabScreens()
 {
-    foreach(GrabbedScreen screen, _screens) {
+    foreach(GrabbedScreen screen, _screensWithWidgets) {
         QRect screenRect = screen.screenInfo.rect;
         WinAPIScreenData *d = reinterpret_cast<WinAPIScreenData *>(screen.associatedData);
 
@@ -261,11 +261,11 @@ void WinAPIGrabber::captureScreen()
 {
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
-    for (int i = 0; i < _screens.size(); ++i) {
+    for (int i = 0; i < _screensWithWidgets.size(); ++i) {
 
-        GrabbedScreen screen = _screens[i];
+        GrabbedScreen screen = _screensWithWidgets[i];
         QRect screenRect = screen.screenInfo.rect;
-        WinAPIScreenData *d = reinterpret_cast<WinAPIScreenData *>(_screens[i].associatedData);
+        WinAPIScreenData *d = reinterpret_cast<WinAPIScreenData *>(_screensWithWidgets[i].associatedData);
 
         BitBlt( d->hMemDC, 0, 0, screenRect.width(), screenRect.height(), d->hScreenDC,
                 screenRect.left(), screenRect.top(), SRCCOPY );

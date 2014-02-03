@@ -92,14 +92,27 @@ public slots:
 
 protected slots:
     /*!
-      Grabs screens and saves them to \a GrabberBase#_screens field. Called by:wa
+      Grabs screens and saves them to \a GrabberBase#_screensWithWidgets field. Called by
       \a GrabberBase#grab() slot. Needs to be implemented in derived classes.
       \return GrabResult
     */
     virtual GrabResult grabScreens() = 0;
+
+    /*!
+     * Frees unnecessary resources and allocates needed ones based on \a ScreenInfo
+     * \param grabScreens
+     * \return
+     */
     virtual bool reallocate(const QList< ScreenInfo > &grabScreens) = 0;
 
-    virtual QList< ScreenInfo > * screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets) = 0;
+    /*!
+     * Get all screens grab widgets lies on.
+     * \param result
+     * \param grabWidgets
+     * \return
+     */
+    virtual QList< ScreenInfo > * screensWithWidgets(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets) = 0;
+
     virtual bool isReallocationNeeded(const QList< ScreenInfo > &grabScreens) const;
 
 protected:
@@ -116,6 +129,6 @@ signals:
 protected:
     GrabberContext *_context;
     GrabResult _lastGrabResult;
-    QList<GrabbedScreen> _screens;
+    QList<GrabbedScreen> _screensWithWidgets;
 
 };

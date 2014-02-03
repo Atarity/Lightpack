@@ -48,23 +48,23 @@ GrabberBase::GrabberBase(QObject *parent, GrabberContext *grabberContext) : QObj
 
 const GrabbedScreen * GrabberBase::screenOfRect(const QRect &rect) const {
     QPoint center = rect.center();
-    for (int i = 0; i < _screens.size(); ++i) {
-        if (_screens[i].screenInfo.rect.contains(center))
-            return &_screens[i];
+    for (int i = 0; i < _screensWithWidgets.size(); ++i) {
+        if (_screensWithWidgets[i].screenInfo.rect.contains(center))
+            return &_screensWithWidgets[i];
     }
-    for (int i = 0; i < _screens.size(); ++i) {
-        if (_screens[i].screenInfo.rect.intersects(rect))
-            return &_screens[i];
+    for (int i = 0; i < _screensWithWidgets.size(); ++i) {
+        if (_screensWithWidgets[i].screenInfo.rect.intersects(rect))
+            return &_screensWithWidgets[i];
     }
     return NULL;
 }
 
-bool GrabberBase::isReallocationNeeded(const QList< ScreenInfo > &grabScreens) const  {
-    if (_screens.size() == 0 || grabScreens.size() != _screens.size())
+bool GrabberBase::isReallocationNeeded(const QList< ScreenInfo > &screensWithWidgets) const  {
+    if (_screensWithWidgets.size() == 0 || screensWithWidgets.size() != _screensWithWidgets.size())
         return true;
 
-    for (int i = 0; i < grabScreens.size(); ++i) {
-        if (grabScreens[i].rect != _screens[i].screenInfo.rect)
+    for (int i = 0; i < screensWithWidgets.size(); ++i) {
+        if (screensWithWidgets[i].rect != _screensWithWidgets[i].screenInfo.rect)
             return true;
     }
     return false;
@@ -74,7 +74,7 @@ void GrabberBase::grab() {
     DEBUG_MID_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     QList< ScreenInfo > screens2Grab;
     screens2Grab.reserve(5);
-    screensToGrab(&screens2Grab, *_context->grabWidgets);
+    screensWithWidgets(&screens2Grab, *_context->grabWidgets);
     if (isReallocationNeeded(screens2Grab)) {
         if (!reallocate(screens2Grab)) {
             qCritical() << Q_FUNC_INFO << " couldn't reallocate grabbing buffer";

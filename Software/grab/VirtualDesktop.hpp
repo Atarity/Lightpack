@@ -41,7 +41,7 @@ public:
     explicit VirtualDesktop(QObject *parent = 0);
     virtual ~VirtualDesktop();
 
-    const QList<QImage *> & constScreens() const { return _screens; }
+    const QList<QImage *> & constScreens() const { return _screensWithWidgets; }
 
 signals:
 
@@ -51,7 +51,7 @@ public slots:
 private:
     QList<int> getUsedScreens(const QList<GrabWidget *> *widgets);
 private:
-    QList<QImage *> _screens;
+    QList<QImage *> _screensWithWidgets;
 
 };
 

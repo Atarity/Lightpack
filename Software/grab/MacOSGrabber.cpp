@@ -46,15 +46,15 @@ MacOSGrabber::~MacOSGrabber()
 
 void MacOSGrabber::freeScreens()
 {
-    for (int i = 0; i < _screens.size(); ++i) {
-        GrabbedScreen screen = _screens[i];
+    for (int i = 0; i < _screensWithWidgets.size(); ++i) {
+        GrabbedScreen screen = _screensWithWidgets[i];
         if (screen.imgData != NULL)
             free(screen.imgData);
 
         if (screen.associatedData != NULL)
             free(screen.associatedData);
     }
-    _screens.clear();
+    _screensWithWidgets.clear();
 }
 
 QList< ScreenInfo > * MacOSGrabber::screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets)
@@ -144,7 +144,7 @@ bool MacOSGrabber::reallocate(const QList<ScreenInfo> &screens)
         grabScreen.imgFormat = BufferFormatArgb;
         grabScreen.screenInfo = screens[i];
         //grabScreen.associatedData = d;
-        _screens.append(grabScreen);
+        _screensWithWidgets.append(grabScreen);
 
     }
     return true;
@@ -152,16 +152,16 @@ bool MacOSGrabber::reallocate(const QList<ScreenInfo> &screens)
 
 GrabResult MacOSGrabber::grabScreens()
 {
-    for (int i = 0; i < _screens.size(); ++i) {
+    for (int i = 0; i < _screensWithWidgets.size(); ++i) {
 
-        CGDirectDisplayID display = reinterpret_cast<intptr_t>(_screens[i].screenInfo.handle);
+        CGDirectDisplayID display = reinterpret_cast<intptr_t>(_screensWithWidgets[i].screenInfo.handle);
 
         CGImageRef imageRef = CGDisplayCreateImage(display);
 
         if (imageRef != NULL)
         {
 
-            toGrabbedScreen(imageRef, &_screens[i] );
+            toGrabbedScreen(imageRef, &_screensWithWidgets[i] );
 
             CGImageRelease(imageRef);
 

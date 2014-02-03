@@ -85,8 +85,8 @@ QList<ScreenInfo> * X11Grabber::screensToGrab(QList<ScreenInfo> *result, const Q
 
 bool X11Grabber::reallocate(const QList<ScreenInfo> &screens)
 {
-    for (int i = 0; i < _screens.size(); ++i) {
-        X11GrabberData *d = reinterpret_cast<X11GrabberData *>(_screens[i].associatedData);
+    for (int i = 0; i < _screensWithWidgets.size(); ++i) {
+        X11GrabberData *d = reinterpret_cast<X11GrabberData *>(_screensWithWidgets[i].associatedData);
         XShmDetach(_display, &d->shminfo);
         XDestroyImage(d->image);
         shmdt (d->shminfo.shmaddr);
@@ -95,7 +95,7 @@ bool X11Grabber::reallocate(const QList<ScreenInfo> &screens)
         d = NULL;
     }
 
-    _screens.clear();
+    _screensWithWidgets.clear();
 
     for (int i = 0; i < screens.size(); ++i) {
 
@@ -136,7 +136,7 @@ bool X11Grabber::reallocate(const QList<ScreenInfo> &screens)
         grabScreen.imgFormat = BufferFormatArgb;
         grabScreen.screenInfo = screens[i];
         grabScreen.associatedData = d;
-        _screens.append(grabScreen);
+        _screensWithWidgets.append(grabScreen);
     }
 
 
@@ -145,10 +145,10 @@ bool X11Grabber::reallocate(const QList<ScreenInfo> &screens)
 
 GrabResult X11Grabber::grabScreens()
 {
-    for (int i = 0; i < _screens.size(); ++i) {
+    for (int i = 0; i < _screensWithWidgets.size(); ++i) {
         XShmGetImage(_display,
-                     RootWindow(_display, reinterpret_cast<intptr_t>(_screens[i].screenInfo.handle)),
-                     reinterpret_cast<X11GrabberData *>(_screens[i].associatedData)->image,
+                     RootWindow(_display, reinterpret_cast<intptr_t>(_screensWithWidgets[i].screenInfo.handle)),
+                     reinterpret_cast<X11GrabberData *>(_screensWithWidgets[i].associatedData)->image,
                      0,
                      0,
                      0x00FFFFFF
