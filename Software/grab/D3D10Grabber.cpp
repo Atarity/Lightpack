@@ -32,6 +32,8 @@
 
 #include <QObject>
 #include <QThread>
+#include <QApplication>
+#include <QDesktopWidget>
 #include <cstdlib>
 #include <stdio.h>
 #include "calculations.hpp"
@@ -63,7 +65,11 @@ signals:
     void frameGrabbed();
 public slots:
     void runLoop();
+
+
 };
+
+const unsigned kBytesPerPixel = 4;
 
 D3D10GrabberWorker::D3D10GrabberWorker(QObject *parent, LPSECURITY_ATTRIBUTES lpsa) : QObject(parent) {
     if (NULL == (m_frameGrabbedEvent = CreateEventW(lpsa, false, false, HOOKSGRABBER_FRAMEGRABBED_EVENT_NAME))) {
@@ -93,7 +99,7 @@ class D3D10GrabberImpl: public QObject
     Q_OBJECT
 
 public:
-    D3D10GrabberImpl(D3D10Grabber &owner, GetHwndCallback_t getHwndCb)
+    D3D10GrabberImpl(D3D10Grabber &owner, GrabberContext *context, GetHwndCallback_t getHwndCb)
         : m_sharedMem(NULL),
           m_mutex(NULL),
           m_isStarted(false),
@@ -102,6 +108,7 @@ public:
           m_isInited(false),
           m_libraryInjector(NULL),
           m_isFrameGrabbedDuringLastSecond(false),
+          m_context(context),
           m_getHwndCb(getHwndCb),
           m_owner(owner)
     {}
@@ -203,7 +210,7 @@ public:
         m_worker.reset(new D3D10GrabberWorker(NULL, NULL));
         m_worker->moveToThread(m_workerThread.data());
         m_workerThread->start();
-        connect(m_worker.data(), SIGNAL(frameGrabbed()), this, SLOT(grab()));
+        connect(m_worker.data(), SIGNAL(frameGrabbed()), this, SIGNAL(frameGrabbed()), Qt::QueuedConnection);
         QMetaObject::invokeMethod(m_worker.data(), "runLoop", Qt::QueuedConnection);
 
         m_checkIfFrameGrabbedTimer.reset(new QTimer());
@@ -218,7 +225,13 @@ public:
     void stop() { m_isStarted = false; }
     bool isStarted() { return m_isStarted; }
 
-    GrabResult grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets)
+    QList< ScreenInfo > * screensWithWidgets(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets)
+    {
+        result->clear();
+        return result;
+    }
+
+    GrabResult grabScreens(QList<GrabbedScreen> &grabbedScreens)
     {
         if (!m_isInited) {
             return GrabResultFrameNotReady;
@@ -229,16 +242,28 @@ public:
         if( m_memDesc.frameId != HOOKSGRABBER_BLANK_FRAME_ID) {
             if( m_memDesc.frameId != m_lastFrameId) {
                 m_lastFrameId = m_memDesc.frameId;
-                grabResult.clear();
-                foreach(GrabWidget *widget, grabWidgets) {
-                    if(widget->isAreaEnabled()) {
-                        grabResult.append(getColor(widget->frameGeometry()));
-                    } else {
-                        grabResult.append(qRgb(0,0,0));
+
+                if (m_memDesc.width != grabbedScreens[0].screenInfo.rect.width()
+                        || m_memDesc.height != grabbedScreens[0].screenInfo.rect.height())
+                {
+                    qCritical() << Q_FUNC_INFO << "illegal state, screens don't match: qt " <<
+                                   grabbedScreens[0].screenInfo.rect << ", remote proc's " <<
+                                   m_memDesc.width << "x" << m_memDesc.height;
+
+                   result = GrabResultError;
+                } else {
+                    if (m_memMap == NULL)
+                    {
+                        qCritical() << Q_FUNC_INFO << "m_memMap == NULL";
+                        return GrabResultError;
                     }
+
+                    grabbedScreens[0].imgData = reinterpret_cast<unsigned char *>(m_memMap) + sizeof(HOOKSGRABBER_SHARED_MEM_DESC);
+                    grabbedScreens[0].imgDataSize = m_memDesc.height * m_memDesc.width * kBytesPerPixel;
+                    grabbedScreens[0].imgFormat = m_memDesc.format;
+                    m_isFrameGrabbedDuringLastSecond = true;
+                    result = GrabResultOk;
                 }
-                m_isFrameGrabbedDuringLastSecond = true;
-                result = GrabResultOk;
 
             } else {
                 result = GrabResultFrameNotReady;
@@ -249,19 +274,8 @@ public:
 
         return result;
     }
-
-    void updateGrabMonitor(QWidget *widget)
-    {
-        if (m_isInited) {
-            HMONITOR hMonitor = MonitorFromWindow( reinterpret_cast<HWND>(widget->winId()), MONITOR_DEFAULTTONEAREST );
-
-            ZeroMemory( &m_monitorInfo, sizeof(MONITORINFO) );
-            m_monitorInfo.cbSize = sizeof(MONITORINFO);
-
-            // Get position and resolution of the monitor
-            GetMonitorInfo( hMonitor, &m_monitorInfo );
-        }
-    }
+signals:
+    void frameGrabbed();
 
 private slots:
     void infectCleanDxProcesses(void) {
@@ -464,6 +478,7 @@ private:
     WCHAR m_hooksLibPath[300];
     WCHAR m_systemrootPath[300];
     bool m_isFrameGrabbedDuringLastSecond;
+    GrabberContext *m_context;
     GetHwndCallback_t m_getHwndCb;
 
     QScopedPointer<QTimer> m_checkIfFrameGrabbedTimer;
@@ -478,11 +493,17 @@ private:
 
 D3D10Grabber::D3D10Grabber(QObject *parent, GrabberContext *context, GetHwndCallback_t getHwndCb)
     : GrabberBase(parent, context) {
-    m_impl.reset(new D3D10GrabberImpl(*this, getHwndCb));
+    m_impl.reset(new D3D10GrabberImpl(*this, context, getHwndCb));
 }
 
-void D3D10Grabber::init(void) {
+void D3D10Grabber::init() {
     m_impl->init();
+    connect(m_impl.data(), SIGNAL(frameGrabbed()), this, SLOT(grab()));
+    _screensWithWidgets.clear();
+    GrabbedScreen grabbedScreen;
+    grabbedScreen.screenInfo.handle = reinterpret_cast<void *>(QApplication::desktop()->primaryScreen());
+    grabbedScreen.screenInfo.rect = QApplication::desktop()->screenGeometry(QApplication::desktop()->primaryScreen());
+    _screensWithWidgets.append(grabbedScreen);
 }
 
 void D3D10Grabber::startGrabbing() {
@@ -500,31 +521,43 @@ void D3D10Grabber::setGrabInterval(int msec) {
     Q_UNUSED(msec);
 }
 
-void D3D10Grabber::grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets) {
+/*!
+ * Just stub, we don't need to reallocate anything, and we suppose fullscreen application
+ * runs on primary screen \see D3D10Grabber#init()
+ * \param result
+ * \param grabWidgets
+ * \return
+ */
+QList< ScreenInfo > * D3D10Grabber::screensWithWidgets(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets)
+{
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
-    if (m_impl && m_impl->isStarted()) {
-        GrabResult result = _grab(grabResult, grabWidgets);
-        emit frameGrabAttempted(result);
-    } else {
-        emit grabberStateChangeRequested(true);
-    }
+    return result;
 }
 
-GrabResult D3D10Grabber::_grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets) {
+/*!
+ * Just stub. Reallocations are unnecessary here.
+ * \param grabScreens
+ * \return
+ */
+bool D3D10Grabber::reallocate(const QList<ScreenInfo> &grabScreens)
+{
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
-    if (!m_impl) {
+    return true;
+}
+
+GrabResult D3D10Grabber::grabScreens()
+{
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
+    if (m_impl && m_impl->isStarted()) {
+        GrabResult result = m_impl->grabScreens(_screensWithWidgets);
+        return result;
+    } else {
+        emit grabberStateChangeRequested(true);
         return GrabResultFrameNotReady;
     }
-
-    return m_impl->grab(grabResult, grabWidgets);
 }
 
 D3D10Grabber::~D3D10Grabber() {
-}
-
-void D3D10Grabber::updateGrabMonitor(QWidget *widget) {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
-    m_impl->updateGrabMonitor(widget);
 }
 
 bool D3D10Grabber::isGrabbingStarted() const {

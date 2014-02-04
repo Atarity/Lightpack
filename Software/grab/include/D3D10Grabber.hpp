@@ -43,23 +43,18 @@ public:
     D3D10Grabber(QObject * parent, GrabberContext *context, GetHwndCallback_t getHwndCb);
     virtual ~D3D10Grabber();
 
-    virtual void init(void);
 
     virtual const char * name() const {
         static char * name = "D3D10Grabber";
         return name;
     }
 
-protected:
-    virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidgets);
-
 public slots:
-    virtual void updateGrabMonitor(QWidget * firstWidget);
+    virtual void init();
     virtual void startGrabbing();
     virtual void stopGrabbing();
     virtual bool isGrabbingStarted() const;
     virtual void setGrabInterval(int msec);
-    virtual void grab(QList<QRgb> &grabResult, const QList<GrabWidget *> &grabWidget);
 
 protected slots:
     virtual GrabResult grabScreens();
