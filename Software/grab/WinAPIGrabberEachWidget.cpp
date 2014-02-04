@@ -24,7 +24,7 @@
  */
 
 #include "WinAPIGrabberEachWidget.hpp"
-#ifdef WINAPI_GRAB_SUPPORT
+#ifdef WINAPI_EACH_GRAB_SUPPORT
 /*
 #include "../src/debug.h"
 #include <cmath>

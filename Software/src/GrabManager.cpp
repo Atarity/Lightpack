@@ -482,11 +482,13 @@ void GrabManager::initGrabbers()
 #ifdef MAC_OS_CG_GRAB_SUPPORT
     m_grabbers[Grab::GrabberTypeMacCoreGraphics] = initGrabber(new MacOSGrabber(NULL, m_grabberContext));
 #endif
+#ifdef QT_GRAB_SUPPORT
     //TODO: migrate Qt grabbers to the new hierarchy
-//    m_grabbers[Grab::GrabberTypeQtEachWidget] = initGrabber(new QtGrabberEachWidget(NULL, m_grabberContext));
-//    m_grabbers[Grab::GrabberTypeQt] = initGrabber(new QtGrabber(NULL, m_grabberContext));
-#ifdef WINAPI_GRAB_SUPPORT
-    //m_grabbers[Grab::GrabberTypeWinAPIEachWidget] = initGrabber(new WinAPIGrabberEachWidget(NULL, m_grabberContext));
+    m_grabbers[Grab::GrabberTypeQtEachWidget] = initGrabber(new QtGrabberEachWidget(NULL, m_grabberContext));
+    m_grabbers[Grab::GrabberTypeQt] = initGrabber(new QtGrabber(NULL, m_grabberContext));
+#endif
+#ifdef WINAPI_EACH_GRAB_SUPPORT
+    m_grabbers[Grab::GrabberTypeWinAPIEachWidget] = initGrabber(new WinAPIGrabberEachWidget(NULL, m_grabberContext));
 #endif
 #ifdef D3D10_GRAB_SUPPORT
     m_d3d10Grabber = static_cast<D3D10Grabber *>(initGrabber(new D3D10Grabber(NULL, m_grabberContext, &GetMainWindowHandle)));

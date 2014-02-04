@@ -28,8 +28,8 @@
 #include "WinAPIGrabber.hpp"
 #include "../src/enums.hpp"
 
-#ifdef WINAPI_GRAB_SUPPORT
-/*
+#ifdef WINAPI_EACH_GRAB_SUPPORT
+
 class WinAPIGrabberEachWidget : public WinAPIGrabber
 {
 public:
@@ -45,8 +45,8 @@ protected slots:
     virtual GrabResult grabScreens();
     virtual bool reallocate(const QList< ScreenInfo > &grabScreens);
 
-    virtual QList< ScreenInfo > * screensToGrab(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets);
-    virtual GrabResult grab();
+    virtual QList< ScreenInfo > * screensWithWidgets(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets);
+    virtual void grab();
 
 private:
     void captureWidget(const QWidget * w);
@@ -56,5 +56,5 @@ private:
 private:
     bool isBufferNeedsResize;
 };
-*/
-#endif // WINAPI_GRAB_SUPPORT
+
+#endif // WINAPI_EACH_GRAB_SUPPORT

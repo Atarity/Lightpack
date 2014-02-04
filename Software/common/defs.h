@@ -28,10 +28,11 @@
 
 #include <qglobal.h>
 
-#define QT_GRAB_SUPPORT
+//#define QT_GRAB_SUPPORT
 #ifdef Q_OS_WIN
 //#   define ALIEN_FX_SUPPORTED
 #   define WINAPI_GRAB_SUPPORT
+//#   define WINAPI_EACH_GRAB_SUPPORT
 //#   define D3D9_GRAB_SUPPORT
 #   define D3D10_GRAB_SUPPORT
 #elif defined(Q_OS_UNIX)

@@ -36,7 +36,7 @@
 #include <QUuid>
 #include "debug.h"
 
-#define MAIN_CONFIG_FILE_VERSION    "3.0"
+#define MAIN_CONFIG_FILE_VERSION    "4.0"
 
 namespace
 {
@@ -994,14 +994,18 @@ Grab::GrabberType Settings::getGrabberType()
 
     QString strGrabber = value(Profile::Key::Grab::Grabber).toString();
 
+#ifdef QT_GRAB_SUPPORT
     if (strGrabber == Profile::Value::GrabberType::Qt)
         return Grab::GrabberTypeQt;
     if (strGrabber == Profile::Value::GrabberType::QtEachWidget)
         return Grab::GrabberTypeQtEachWidget;
+#endif
 
 #ifdef WINAPI_GRAB_SUPPORT
     if (strGrabber == Profile::Value::GrabberType::WinAPI)
         return Grab::GrabberTypeWinAPI;
+#endif
+#ifdef WINAPI_EACH_GRAB_SUPPORT
     if (strGrabber == Profile::Value::GrabberType::WinAPIEachWidget)
         return Grab::GrabberTypeWinAPIEachWidget;
 #endif
@@ -1583,6 +1587,21 @@ void Settings::migrateSettings()
         }
 
         setValueMain(Main::Key::MainConfigVersion, "3.0");
+    }
+    if (valueMain(Main::Key::MainConfigVersion).toString() == "3.0") {
+#ifdef WINAPI_GRAB_SUPPORT
+        Settings::setGrabberType(Grab::GrabberTypeWinAPI);
+#endif
+
+#ifdef X11_GRAB_SUPPORT
+        Settings::setGrabberType(Grab::GrabberTypeX11);
+#endif
+
+#ifdef MAC_OS_CG_GRAB_SUPPORT
+        Settings::setGrabberType(Grab::GrabberTypeMacCoreGraphics);
+#endif
+
+        setValueMain(Main::Key::MainConfigVersion, "4.0");
     }
 }
 } /*SettingsScope*/
