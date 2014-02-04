@@ -1,10 +1,10 @@
 #include "DxgiFrameGrabber.hpp"
 
-#include "msvcstub.h"
+#include "hooksutils.h"
+#include "../common/msvcstub.h"
 #include <initguid.h>
-#include "DXGI.h"
 #include "D3D11.h"
-#include "D3DX11tex.h"
+#include "DXGI.h"
 #include "D3D10.h"
 #include "D3DX10tex.h"
 
@@ -21,7 +21,7 @@ enum DxgiDevice {
 
 DxgiDevice dxgiDevice = DxgiDeviceUnknown;
 
-typedef HRESULT WINAPI (*DXGISCPresentFunc)(IDXGISwapChain *, UINT, UINT);
+typedef HRESULT (WINAPI *DXGISCPresentFunc)(IDXGISwapChain *, UINT, UINT);
 
 HRESULT WINAPI DXGIPresent(IDXGISwapChain * sc, UINT b, UINT c);
 
@@ -68,7 +68,7 @@ void ** DxgiFrameGrabber::calcDxgiPresentPointer() {
     void * hDxgi = reinterpret_cast<void *>(GetModuleHandleA("dxgi.dll"));
     if (m_logger)
         m_logger->reportLogDebug(L"gIpcContext.m_memDesc.dxgiPresentFuncOffset = 0x%x, hDxgi = 0x%x", m_ipcContext->m_memDesc.dxgiPresentFuncOffset, hDxgi);
-    void ** result = static_cast<void ** >(hDxgi + m_ipcContext->m_memDesc.dxgiPresentFuncOffset);
+    void ** result = static_cast<void ** >(incPtr(hDxgi, m_ipcContext->m_memDesc.dxgiPresentFuncOffset));
     if (m_logger)
         m_logger->reportLogDebug(L"dxgi.dll = 0x%x, swapchain::present location = 0x%x", hDxgi, result);
     return result;
@@ -89,7 +89,8 @@ void D3D10Grab(ID3D10Texture2D* pBackBuffer) {
     tex_desc.ArraySize = 1;
     tex_desc.MipLevels = 1;
     tex_desc.BindFlags = 0;
-    tex_desc.SampleDesc = (DXGI_SAMPLE_DESC){1, 0};
+    tex_desc.SampleDesc.Count = 1;
+    tex_desc.SampleDesc.Quality = 0;
     tex_desc.Usage = D3D10_USAGE_STAGING;
     tex_desc.MiscFlags = 0;
 
@@ -124,13 +125,13 @@ void D3D10Grab(ID3D10Texture2D* pBackBuffer) {
 //        reportLog(EVENTLOG_INFORMATION_TYPE, L"d3d10 writing description to mem mapped file");
         memcpy(ipcContext->m_pMemMap, &ipcContext->m_memDesc, sizeof (ipcContext->m_memDesc));
 //        reportLog(EVENTLOG_INFORMATION_TYPE, L"d3d10 writing data to mem mapped file");
-        PVOID pMemDataMap = ipcContext->m_pMemMap + sizeof (ipcContext->m_memDesc);
+        PVOID pMemDataMap = incPtr(ipcContext->m_pMemMap, sizeof (ipcContext->m_memDesc));
         if (mappedTexture.RowPitch == tex_desc.Width * 4) {
             memcpy(pMemDataMap, mappedTexture.pData, tex_desc.Width * tex_desc.Height * 4);
         } else {
             UINT cleanOffset = 0, pitchOffset = 0, i = 0;
             while (i < tex_desc.Height) {
-                memcpy(pMemDataMap + cleanOffset, mappedTexture.pData + pitchOffset, tex_desc.Width * 4);
+                memcpy(incPtr(pMemDataMap, cleanOffset), incPtr(mappedTexture.pData, pitchOffset), tex_desc.Width * 4);
                 cleanOffset += tex_desc.Width * 4;
                 pitchOffset += mappedTexture.RowPitch;
                 i++;
@@ -165,7 +166,8 @@ void D3D11Grab(ID3D11Texture2D *pBackBuffer) {
     tex_desc.ArraySize = 1;
     tex_desc.MipLevels = 1;
     tex_desc.BindFlags = 0;
-    tex_desc.SampleDesc = (DXGI_SAMPLE_DESC){1, 0};
+    tex_desc.SampleDesc.Count = 1;
+    tex_desc.SampleDesc.Quality = 0;
     tex_desc.Usage = D3D11_USAGE_STAGING;
     tex_desc.MiscFlags = 0;
 
@@ -199,13 +201,13 @@ void D3D11Grab(ID3D11Texture2D *pBackBuffer) {
 //        reportLog(EVENTLOG_INFORMATION_TYPE, L"d3d11 writing description to mem mapped file");
         memcpy(ipcContext->m_pMemMap, &ipcContext->m_memDesc, sizeof (ipcContext->m_memDesc));
 //        reportLog(EVENTLOG_INFORMATION_TYPE, L"d3d11 writing data to mem mapped file");
-        PVOID pMemDataMap = ipcContext->m_pMemMap + sizeof (ipcContext->m_memDesc);
+        PVOID pMemDataMap = incPtr(ipcContext->m_pMemMap, sizeof (ipcContext->m_memDesc));
         if (mappedTexture.RowPitch == tex_desc.Width * 4) {
             memcpy(pMemDataMap, mappedTexture.pData, tex_desc.Width * tex_desc.Height * 4);
         } else {
             UINT i = 0, cleanOffset = 0, pitchOffset = 0;
             while (i < tex_desc.Height) {
-                memcpy(pMemDataMap + cleanOffset, mappedTexture.pData + pitchOffset, tex_desc.Width * 4);
+                memcpy(incPtr(pMemDataMap, cleanOffset), incPtr(mappedTexture.pData, pitchOffset), tex_desc.Width * 4);
                 cleanOffset += tex_desc.Width * 4;
                 pitchOffset += mappedTexture.RowPitch;
                 i++;
