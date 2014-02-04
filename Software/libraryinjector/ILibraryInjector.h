@@ -1,5 +1,5 @@
 /*
- * LibraryInjector.hpp
+ * ILibraryInjector.h
  *
  *  Created on: 05.06.2012
  *     Project: Lightpack
@@ -26,9 +26,9 @@
 #ifndef _ILIBRARYINJECTOR_HEADER
 #define _ILIBRARYINJECTOR_HEADER
 
-
 #include <windows.h>
 #include <objbase.h>
+#include <initguid.h>
 
 #if defined(LIBRARYINJECTOR_LIBRARY)
 #  define LIBRARYINJECTORSHARED_EXPORT extern
@@ -38,7 +38,7 @@
 
 // AppID                  = {04C77575-EB91-47b3-844B-45D0584D3853}
 // IID_ILibraryInjector   = {029587AD-87F3-4623-941F-E37BF99A6DB2}
-DEFINE_GUID(IID_ILibraryInjector  , 0x029587ad, 0x87f3, 0x4623, 0x94, 0x1f, 0xe3, 0x7b, 0xf9, 0x9a, 0x6d, 0xb2);
+DEFINE_GUID(IID_ILibraryInjector, 0x029587ad, 0x87f3, 0x4623, 0x94, 0x1f, 0xe3, 0x7b, 0xf9, 0x9a, 0x6d, 0xb2);
 
 // CLSID_ILibraryInjector = {FC9D8F66-7B9A-47b7-8C5B-830BFF0E48C9}
 DEFINE_GUID(CLSID_ILibraryInjector, 0xfc9d8f66, 0x7b9a, 0x47b7, 0x8c, 0x5b, 0x83, 0x0b, 0xff, 0x0e, 0x48, 0xc9);
@@ -51,6 +51,5 @@ DECLARE_INTERFACE_ (INTERFACE, IUnknown) {
     STDMETHOD_(ULONG,Release)(THIS) PURE;
     STDMETHOD(Inject)(THIS_ DWORD ProcessId, LPWSTR ModulePath) PURE;
 };
-
 
 #endif
