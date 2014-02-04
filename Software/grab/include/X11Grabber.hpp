@@ -51,12 +51,10 @@ public:
 protected:
     virtual GrabResult grabScreens();
     virtual bool reallocate(const QList<ScreenInfo> &screens);
-    virtual QList<ScreenInfo> * screensToGrab(QList<ScreenInfo> *result, const QList<GrabWidget *> &grabWidgets);
+    virtual QList<ScreenInfo> * screensWithWidgets(QList<ScreenInfo> *result, const QList<GrabWidget *> &grabWidgets);
 
 private:
-    void captureScreen();
-    QRgb getColor(const QWidget * grabme);
-    QRgb getColor(int x, int y, int width, int height);
+    void freeScreens();
 
 private:
     _XDisplay *_display;

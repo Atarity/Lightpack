@@ -106,7 +106,7 @@ GrabManager::~GrabManager()
 
     for (int i = 0; i < m_grabbers.size(); i++)
         if (m_grabbers[i]){
-            DEBUG_OUT << m_grabbers[i]->name();
+            DEBUG_OUT << "deleting " << m_grabbers[i]->name();
             delete m_grabbers[i];
             m_grabbers[i] = NULL;
         }

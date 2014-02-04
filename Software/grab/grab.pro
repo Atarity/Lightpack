@@ -23,8 +23,6 @@ HEADERS += \
     include/QtGrabberEachWidget.hpp \
     include/QtGrabber.hpp \
     include/GrabberBase.hpp \
-    VirtualDesktop.hpp \
-    AvgColorCalculator.hpp \
     include/ColorProvider.hpp \
     include/GrabberContext.hpp
 
@@ -34,7 +32,6 @@ SOURCES += \
     QtGrabberEachWidget.cpp \
     QtGrabber.cpp \
     GrabberBase.cpp \
-    VirtualDesktop.cpp \
     include/ColorProvider.cpp
 
 win32 {

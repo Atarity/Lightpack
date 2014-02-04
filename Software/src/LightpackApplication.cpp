@@ -427,7 +427,7 @@ void LightpackApplication::checkSystemTrayAvailability() const
         if (QSystemTrayIcon::isSystemTrayAvailable())
             break;
 
-        sleep(1);
+        QThread::sleep(1);
     }
 #   endif
 

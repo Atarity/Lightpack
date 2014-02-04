@@ -50,18 +50,17 @@ struct X11GrabberData
 
 X11Grabber::X11Grabber(QObject *parent, GrabberContext * context)
     : TimeredGrabber(parent, context)
-    , _updateScreenAndAllocateMemory(true)
-    , _screen(0)
 {
     _display = XOpenDisplay(NULL);
 }
 
 X11Grabber::~X11Grabber()
 {
+    freeScreens();
     XCloseDisplay(_display);
 }
 
-QList<ScreenInfo> * X11Grabber::screensToGrab(QList<ScreenInfo> *result, const QList<GrabWidget *> &grabWidgets)
+QList<ScreenInfo> * X11Grabber::screensWithWidgets(QList<ScreenInfo> *result, const QList<GrabWidget *> &grabWidgets)
 {
     result->clear();
 
@@ -83,7 +82,7 @@ QList<ScreenInfo> * X11Grabber::screensToGrab(QList<ScreenInfo> *result, const Q
     return result;
 }
 
-bool X11Grabber::reallocate(const QList<ScreenInfo> &screens)
+void X11Grabber::freeScreens()
 {
     for (int i = 0; i < _screensWithWidgets.size(); ++i) {
         X11GrabberData *d = reinterpret_cast<X11GrabberData *>(_screensWithWidgets[i].associatedData);
@@ -96,6 +95,11 @@ bool X11Grabber::reallocate(const QList<ScreenInfo> &screens)
     }
 
     _screensWithWidgets.clear();
+}
+
+bool X11Grabber::reallocate(const QList<ScreenInfo> &screens)
+{
+    freeScreens();
 
     for (int i = 0; i < screens.size(); ++i) {
 
@@ -115,8 +119,8 @@ bool X11Grabber::reallocate(const QList<ScreenInfo> &screens)
                                    ZPixmap, NULL, &d->shminfo,
                                    width, height );
         uint imagesize;
-        imagesize = _data->image->bytes_per_line * _data->image->height;
-
+        imagesize = d->image->bytes_per_line * d->image->height;
+        d->shminfo.shmid = shmget(    IPC_PRIVATE,
                                       imagesize,
                                       IPC_CREAT|0777
                                       );
@@ -124,10 +128,10 @@ bool X11Grabber::reallocate(const QList<ScreenInfo> &screens)
             qCritical() << Q_FUNC_INFO << " error occured while trying to get shared memory: " << strerror(errno);
         }
 
-        char* mem = (char*)shmat(_data->shminfo.shmid, 0, 0);
-        _data->shminfo.shmaddr = mem;
-        _data->image->data = mem;
-        _data->shminfo.readOnly = False;
+        char* mem = (char*)shmat(d->shminfo.shmid, 0, 0);
+        d->shminfo.shmaddr = mem;
+        d->image->data = mem;
+        d->shminfo.readOnly = False;
 
         XShmAttach(_display, &d->shminfo);
 
@@ -184,89 +188,4 @@ GrabResult X11Grabber::grabScreens()
     return GrabResultOk;
 }
 
-/*
-QRgb X11Grabber::getColor(const QWidget * grabme)
-{
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
-
-    return getColor(grabme->x(),
-                    grabme->y(),
-                    grabme->width(),
-                    grabme->height());
-}
-
-QRgb X11Grabber::getColor(int x, int y, int width, int height)
-{
-    DEBUG_HIGH_LEVEL << Q_FUNC_INFO
-            << "x y w h:" << x << y << width << height;
-
-    // Checking for the 'grabme' widget position inside the monitor that is used to capture color
-    if( x + width  < _screenres.left()  ||
-        x               > _screenres.right()  ||
-        y + height < _screenres.top()    ||
-        y               > _screenres.bottom() ){
-
-        DEBUG_MID_LEVEL << "Widget 'grabme' is out of screen, x y w h:" << x << y << width << height;
-
-        // Widget 'grabme' is out of screen
-        return 0x000000;
-    }
-
-    // Convert coordinates from "Main" desktop coord-system to capture-monitor coord-system
-    x -= _screenres.left() ;
-    y -= _screenres.top();
-
-    // Ignore part of LED widget which out of screen
-    if( x < 0 ) {
-        width  += x;  // reduce width
-        x = 0;
-    }
-    if( y < 0 ) {
-        height += y;  // reduce height
-        y = 0;
-    }
-    if( x + width  > (int)_screenres.width()  ) width  -= (x + width ) - _screenres.width();
-    if( y + height > (int)_screenres.height() ) height -= (y + height) - _screenres.height();
-
-    //calculate aligned width (align by 4 pixels)
-    width = width - (width % 4);
-
-    if(width < 0 || height < 0){
-        qWarning() << Q_FUNC_INFO << "width < 0 || height < 0:" << width << height;
-
-        // width and height can't be negative
-        return 0x000000;
-    }
-
-    register unsigned r=0,g=0,b=0;
-
-    unsigned char *pbPixelsBuff;
-    int bytesPerPixel = _data->image->bits_per_pixel / 8;
-    pbPixelsBuff = (unsigned char *)_data->image->data;
-    int count = 0; // count the amount of pixels taken into account
-    for(int j = 0; j < height; j++) {
-        int index = _data->image->bytes_per_line * (y+j) + x * bytesPerPixel;
-        for(int i = 0; i < width; i+=4) {
-            b += pbPixelsBuff[index]   + pbPixelsBuff[index + 4] + pbPixelsBuff[index + 8 ] + pbPixelsBuff[index + 12];
-            g += pbPixelsBuff[index+1] + pbPixelsBuff[index + 5] + pbPixelsBuff[index + 9 ] + pbPixelsBuff[index + 13];
-            r += pbPixelsBuff[index+2] + pbPixelsBuff[index + 6] + pbPixelsBuff[index + 10] + pbPixelsBuff[index + 14];
-            count += 4;
-            index += bytesPerPixel * 4;
-        }
-
-    }
-
-    if( count != 0 ){
-        r = (unsigned)round((double) r / count) & 0xff;
-        g = (unsigned)round((double) g / count) & 0xff;
-        b = (unsigned)round((double) b / count) & 0xff;
-    }
-
-    QRgb result = qRgb(r,g,b);// im.pixel(0,0);
-
-    DEBUG_HIGH_LEVEL << "QRgb result =" << hex << result;
-
-    return result;
-}
-*/
 #endif // X11_GRAB_SUPPORT
