@@ -227,7 +227,7 @@ void ApiServer::updateApiKey(const QString &key)
         m_isAuthEnabled = true;
 }
 
-void ApiServer::incomingConnection(int socketDescriptor)
+void ApiServer::incomingConnection(qintptr socketDescriptor)
 {
     QTcpSocket *client = new QTcpSocket(this);
     client->setSocketDescriptor(socketDescriptor);

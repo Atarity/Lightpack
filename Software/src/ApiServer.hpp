@@ -175,7 +175,7 @@ public slots:
     void updateApiKey(const QString &key);
 
 protected:
-    void incomingConnection(int socketDescriptor);
+    void incomingConnection(qintptr socketDescriptor);
 
 private slots:
     void clientDisconnected();
