@@ -91,7 +91,7 @@ void LedDeviceLightpack::setColors(const QList<QRgb> & colors)
 
     bool ok = true;
     // FIXME: fix remap values
-    const int kLedRemap[] = {4, 3, 0, 1, 2, 5, 6, 7, 8, 9};
+    const int kLedRemap[] = {4, 3, 2, 0, 1, 5, 6, 7, 8, 9};
     const size_t kSizeOfLedColor = 6;
 
     memset(m_writeBuffer, 0, sizeof(m_writeBuffer));
