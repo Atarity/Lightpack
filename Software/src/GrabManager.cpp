@@ -79,8 +79,9 @@ GrabManager::GrabManager(QWidget *parent) : QObject(parent)
 
 //    connect(m_timerGrab, SIGNAL(timeout()), this, SLOT(handleGrabbedColors()));
     connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(scaleLedWidgets(int)));
+    connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), this, SLOT(onScreenCountChanged(int)));
 
-    firstWidgetPositionChanged();
+    updateScreenGeometry();
 
     settingsProfileChanged(Settings::getCurrentProfileName());
 
@@ -161,7 +162,6 @@ void GrabManager::onGrabberTypeChanged(const Grab::GrabberType grabberType)
         m_grabber->startGrabbing();
 #endif
     }
-    firstWidgetPositionChanged();
 }
 
 void GrabManager::onGrabberStateChangeRequested(bool isStartRequested) {
@@ -381,60 +381,53 @@ void GrabManager::resumeAfterResizeOrMoving()
     m_isPauseGrabWhileResizeOrMoving = false;
 }
 
-void GrabManager::firstWidgetPositionChanged()
+void GrabManager::updateScreenGeometry()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-    int newScreenNum = QApplication::desktop()->screenNumber(m_ledWidgets[0]);
-    QRect newScreenRect = QApplication::desktop()->screenGeometry(newScreenNum);
-    if (m_screenSavedIndex != newScreenNum || m_screenSavedRect == newScreenRect) {
-        m_screenSavedIndex = newScreenNum;
-        m_screenSavedRect = newScreenRect;
-        emit changeScreen(m_screenSavedRect);
-
-        if (m_grabber == NULL)
-        {
-            qCritical() << Q_FUNC_INFO << "m_grabber == NULL";
-            return;
-        }
-
-//        m_grabber->updateGrabMonitor();
+    m_lastScreenGeometry.clear();
+    for (int i = 0; i < QApplication::desktop()->screenCount(); ++i) {
+        m_lastScreenGeometry.append(QApplication::desktop()->screenGeometry(i));
     }
+    emit changeScreen();
+    if (m_grabber == NULL)
+    {
+        qCritical() << Q_FUNC_INFO << "m_grabber == NULL";
+        return;
+    }
+
+}
+
+void GrabManager::onScreenCountChanged(int)
+{
+    updateScreenGeometry();
 }
 
 void GrabManager::scaleLedWidgets(int screenIndexResized)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenIndexResized:" << screenIndexResized;
 
-    int screenIndexOfFirstLedWidget = QApplication::desktop()->screenNumber(m_ledWidgets[0]);
+    QRect screenGeometry = QApplication::desktop()->screenGeometry(screenIndexResized);
+    QRect lastScreenGeometry = m_lastScreenGeometry[screenIndexResized];
 
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] index of screen:" << screenIndexOfFirstLedWidget;
-
-    QRect screen = QApplication::desktop()->screenGeometry(m_screenSavedIndex);
-
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screen:" << screen;
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screenSaved:" << m_screenSavedRect;
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screenSavedIndex:" << m_screenSavedIndex;
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "LedWidgets[0] screenIndexOfFirstLedWidget:" << screenIndexOfFirstLedWidget;
-
-    if(screenIndexResized != -1 && screenIndexOfFirstLedWidget != -1 && screenIndexResized != screenIndexOfFirstLedWidget) {
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "not interesting monitor has been resized";
-        return;
-    }
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screen " << screenIndexResized << " is resized to " << screenGeometry;
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << "was " << lastScreenGeometry;
 
     // Move LedWidgets
-    int deltaX = m_screenSavedRect.x() - screen.x();
-    int deltaY = m_screenSavedRect.y() - screen.y();
+    int deltaX = lastScreenGeometry.x() - screenGeometry.x();
+    int deltaY = lastScreenGeometry.y() - screenGeometry.y();
 
-    double scaleX = (double) screen.width() / m_screenSavedRect.width();
-    double scaleY = (double) screen.height() / m_screenSavedRect.height();
+    double scaleX = (double) screenGeometry.width() / lastScreenGeometry.width();
+    double scaleY = (double) screenGeometry.height() / lastScreenGeometry.height();
 
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "deltaX =" << deltaX << "deltaY =" << deltaY;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "scaleX =" << scaleX << "scaleY =" << scaleY;
 
-    m_screenSavedRect = screen;
-    m_screenSavedIndex = screenIndexOfFirstLedWidget;
+    m_lastScreenGeometry[screenIndexResized] = screenGeometry;
 
     for(int i=0; i < m_ledWidgets.size(); i++){
+
+        if (!lastScreenGeometry.contains(m_ledWidgets[i]->geometry().center()))
+            continue;
 
         int width  = round(scaleX * m_ledWidgets[i]->width());
         int height = round(scaleY * m_ledWidgets[i]->height());
@@ -442,14 +435,14 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
         int x = m_ledWidgets[i]->x();
         int y = m_ledWidgets[i]->y();
 
-        x -= screen.x();
-        y -= screen.y();
+        x -= screenGeometry.x();
+        y -= screenGeometry.y();
 
         x = round(scaleX * x);
         y = round(scaleY * y);
 
-        x += screen.x();
-        y += screen.y();
+        x += screenGeometry.x();
+        y += screenGeometry.y();
 
         x -= deltaX;
         y -= deltaY;
@@ -462,8 +455,6 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "new values [" << i << "]" << "x =" << x << "y =" << y << "w =" << width << "h =" << height;
     }
 
-    // Update grab buffer if screen resized
-    firstWidgetPositionChanged();
 }
 
 void GrabManager::initGrabbers()
@@ -505,7 +496,6 @@ void GrabManager::initGrabbers()
 }
 
 GrabberBase *GrabManager::initGrabber(GrabberBase * grabber) {
-    QMetaObject::invokeMethod(grabber, "init", Qt::DirectConnection);
     QMetaObject::invokeMethod(grabber, "setGrabInterval", Qt::QueuedConnection, Q_ARG(int, Settings::getGrabSlowdown()));
 //    QMetaObject::invokeMethod(grabber, "startGrabbing", Qt::QueuedConnection);
     bool isConnected = connect(grabber, SIGNAL(frameGrabAttempted(GrabResult)), this, SLOT(onFrameGrabAttempted(GrabResult)), Qt::QueuedConnection);

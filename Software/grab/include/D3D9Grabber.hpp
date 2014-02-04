@@ -47,7 +47,6 @@ class D3D9Grabber : public TimeredGrabber
 public:
     D3D9Grabber(QObject * parent, GrabberContext *context);
     virtual ~D3D9Grabber();
-    virtual void updateGrabMonitor( QWidget * ){}
 
     virtual const char * name() const {
         static char * name = "D3D9Grabber";

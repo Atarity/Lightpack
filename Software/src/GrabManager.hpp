@@ -54,7 +54,7 @@ public:
 signals:
     void updateLedsColors(const QList<QRgb> & colors);
     void ambilightTimeOfUpdatingColors(double ms);
-    void changeScreen(QRect rect);
+    void changeScreen();
 
 public:
 
@@ -81,9 +81,10 @@ private slots:
     void timeoutUpdateFPS();
     void pauseWhileResizeOrMoving();
     void resumeAfterResizeOrMoving();
-    void firstWidgetPositionChanged();
     void scaleLedWidgets(int screenIndexResized);
     void onFrameGrabAttempted(GrabResult result);
+    void updateScreenGeometry();
+    void onScreenCountChanged(int);
 
 private:
     GrabberBase *queryGrabber(Grab::GrabberType grabber);
@@ -97,6 +98,7 @@ private:
 private:
     QList<GrabberBase*> m_grabbers;
     GrabberBase *m_grabber;
+    QList<QRect> m_lastScreenGeometry;
 
 #ifdef D3D10_GRAB_SUPPORT
     D3D10Grabber *m_d3d10Grabber;

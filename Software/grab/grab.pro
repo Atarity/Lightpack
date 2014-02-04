@@ -35,7 +35,6 @@ SOURCES += \
     QtGrabber.cpp \
     GrabberBase.cpp \
     VirtualDesktop.cpp \
-    AvgColorCalculator.cpp \
     include/ColorProvider.cpp
 
 win32 {

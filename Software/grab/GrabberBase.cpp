@@ -29,7 +29,7 @@
 int validCoord(int a) {
     const unsigned int neg = (1 << 15);
     if (a & neg)
-        a = ((~(a-1)) & 0x0000ffff) * -1;
+        a = ((~a + 1) & 0x0000ffff) * -1;
     return a;
 }
 
