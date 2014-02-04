@@ -12,6 +12,23 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 #    Software changelog
 ===================================================================================
 
+Version 5.10.5
+---------------
+February 5, 2014
+
+* Temporarly removed xxxEachWidget grabbers
+* Widgets scaling on screen resize
+* Fix multiple screens on Mac
+* Signing OS X, build
+* Fixing LED remapping (3-5 LEDs were tossed)
+* Make Prismatik compileable with MSVS
+* Fix ApiServer.{hpp,cpp} method signature
+* Fix resource handling in WinAPIGrabber class
+* Added 'Run wizard' button
+* Get rid of LD_LIBRARY_PATH
+* Fix potential memory leak in LibraryInjector
+* Minor fixes
+
 Version 5.10.4
 ---------------
 December 10, 2013
