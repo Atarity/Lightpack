@@ -25,17 +25,12 @@
 
 #pragma once
 
-#include "TimeredGrabber.hpp"
+#include "WinAPIGrabber.hpp"
 #include "../src/enums.hpp"
 
 #ifdef WINAPI_GRAB_SUPPORT
 
-#define WINVER 0x0500 /* Windows2000 for MonitorFromWindow(..) func */
-#include <windows.h>
-
-using namespace Grab;
-
-class WinAPIGrabberEachWidget : public TimeredGrabber
+class WinAPIGrabberEachWidget : public WinAPIGrabber
 {
 public:
     WinAPIGrabberEachWidget(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry);
@@ -52,22 +47,7 @@ private:
     QRgb getColor(int x, int y, int width, int height);
 
 private:
-    HMONITOR hMonitor;
     bool isBufferNeedsResize;
-    MONITORINFO monitorInfo;
-
-    // Size of screen in pixels, initialize in captureScreen() using in getColor()
-    unsigned screenWidth;
-    unsigned screenHeight;
-
-    // Captured screen buffer, contains actual RGB data in reversed order
-    BYTE * pbPixelsBuff;
-    unsigned pixelsBuffSize;
-    unsigned bytesPerPixel;
-
-    HDC hScreenDC;
-    HDC hMemDC;
-    HBITMAP hBitmap;
-
 };
+
 #endif // WINAPI_GRAB_SUPPORT

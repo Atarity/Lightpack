@@ -1,10 +1,10 @@
 /*
- * calculations.hpp
+ * WinUtils.hpp
  *
- *  Created on: 16.07.2012
+ *  Created on: 25.07.11
  *     Project: Lightpack
  *
- *  Copyright (c) 2012 Timur Sattarov
+ *  Copyright (c) 2011 Timur Sattarov, Mike Shatohin
  *
  *  Lightpack a USB content-driving ambient lighting system
  *
@@ -23,17 +23,31 @@
  *
  */
 
+#ifndef WINDXUTILS_HPP
+#define WINDXUTILS_HPP
+
 #pragma once
 
-#include <QRect>
-#include <QRgb>
-#include <QList>
-#include "../common/BufferFormat.h"
+#if !defined NOMINMAX
+#define NOMINMAX
+#endif
 
-namespace Grab {
-    namespace Calculations {
+#if !defined WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
 
-        QRgb calculateAvgColor(QRgb *result, const unsigned char *buffer, BufferFormat bufferFormat, unsigned int pitch, const QRect &rect );
-        QRgb calculateAvgColor(QList<QRgb> *colors);
-    }
+namespace WinUtils
+{
+/*!
+  We are not allowed to create DXGIFactory inside of Dll, so determine SwapChain->Present vtbl location here.
+  To determine location we need to create SwapChain instance and dereference pointer.
+ \param hWnd window handle to bind SwapChain to
+ \return UINT
+*/
+UINT GetDxgiPresentOffset(HWND hWnd);
+UINT GetD3D9PresentOffset(HWND hWnd);
+UINT GetD3D9SCPresentOffset(HWND hWnd);
 }
+
+#endif // WINDXUTILS_HPP

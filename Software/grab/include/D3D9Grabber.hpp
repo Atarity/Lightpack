@@ -30,6 +30,14 @@
 
 #ifdef D3D9_GRAB_SUPPORT
 
+// <d3d9.h> includes <windows.h>
+#if !defined NOMINMAX
+#define NOMINMAX
+#endif
+
+#if !defined WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 #include <d3d9.h>
 
 using namespace Grab;
@@ -46,23 +54,21 @@ protected:
     virtual GrabResult _grab();
 
 private:
-    LPDIRECT3D9 m_d3D;
-    LPDIRECT3DDEVICE9 m_d3Device;
-    LPDIRECT3DSURFACE9 m_surface;
-    D3DDISPLAYMODE m_displayMode;
-    D3DPRESENT_PARAMETERS m_presentParams;
-    int m_bufLength;
-    BYTE * m_buf;
-    RECT m_rect;
-private:
     BYTE * expandBuffer(BYTE * buf, int newLength);
-    BYTE * getImageData(BYTE *, RECT &);
+    BYTE * getImageData(QVector<BYTE> &, RECT &);
     RECT getEffectiveRect(QList<GrabWidget *> &widgets);
     int getBufLength(const RECT &rect);
     QRgb getColor(int x, int y, int width, int height);
     void clipRect(RECT *rect, D3DSURFACE_DESC *surfaceDesc);
 
-
+private:
+    LPDIRECT3D9 m_d3D;
+    LPDIRECT3DDEVICE9 m_d3Device;
+    LPDIRECT3DSURFACE9 m_surface;
+    D3DDISPLAYMODE m_displayMode;
+    D3DPRESENT_PARAMETERS m_presentParams;
+    QVector<BYTE> m_buf;
+    RECT m_rect;
 };
 
 #endif // D3D9_GRAB_SUPPORT

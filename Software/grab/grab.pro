@@ -13,7 +13,9 @@ CONFIG += staticlib
 
 include(../build-config.prf)
 
-INCLUDEPATH += ./include ../src
+LIBS += -lprismatik-math
+
+INCLUDEPATH += ./include ../src ../math/include
 
 HEADERS += \
     include/calculations.hpp \
@@ -31,17 +33,33 @@ SOURCES += \
     GrabberBase.cpp
 
 win32 {
-    INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
+    # This will suppress gcc warnings in DX headers.
+    CONFIG(gcc) {
+        QMAKE_CXXFLAGS += -isystem "$${DIRECTX_SDK_DIR}/Include"
+    } else {
+        INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
+    }
+
+    # This will suppress many MSVC warnings about 'unsecure' CRT functions.
+    CONFIG(msvc) {
+        DEFINES += _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE
+    }
+
     HEADERS += \
+            ../common/msvcstub.h \
             include/D3D9Grabber.hpp \
             include/D3D10Grabber.hpp \
             include/WinAPIGrabberEachWidget.hpp \
-            include/WinAPIGrabber.hpp
+            include/WinAPIGrabber.hpp \
+            include/WinUtils.hpp \
+            include/WinDXUtils.hpp
     SOURCES += \
             D3D9Grabber.cpp \
             D3D10Grabber.cpp \
             WinAPIGrabberEachWidget.cpp \
-            WinAPIGrabber.cpp
+            WinAPIGrabber.cpp \
+            WinUtils.cpp \
+            WinDXUtils.cpp
 }
 
 macx {

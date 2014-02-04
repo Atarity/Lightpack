@@ -1,6 +1,7 @@
 #ifndef MSVCSTUB_H
 #define MSVCSTUB_H
 
+#if !defined _MSC_VER
 #define __in
 #define __out
 #define __inout
@@ -16,6 +17,8 @@
 #define __out_ecount(x)
 #define __in_ecount_opt(x)
 #define __out_ecount_opt(x)
+#endif // !defined _MSC_VER
+
 #define WINAPI_INLINE WINAPI
 
 #endif // MSVCSTUB_H

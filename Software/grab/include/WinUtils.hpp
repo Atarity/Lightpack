@@ -1,10 +1,10 @@
 /*
- * calculations.hpp
+ * WinUtils.hpp
  *
- *  Created on: 16.07.2012
+ *  Created on: 25.07.11
  *     Project: Lightpack
  *
- *  Copyright (c) 2012 Timur Sattarov
+ *  Copyright (c) 2011 Timur Sattarov, Mike Shatohin
  *
  *  Lightpack a USB content-driving ambient lighting system
  *
@@ -23,17 +23,36 @@
  *
  */
 
+#ifndef WINUTILS_HPP
+#define WINUTILS_HPP
+
 #pragma once
 
-#include <QRect>
-#include <QRgb>
+#if !defined NOMINMAX
+#define NOMINMAX
+#endif
+
+#if !defined WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
 #include <QList>
-#include "../common/BufferFormat.h"
 
-namespace Grab {
-    namespace Calculations {
+namespace WinUtils
+{
+extern const WCHAR lightpackHooksDllName[];
 
-        QRgb calculateAvgColor(QRgb *result, const unsigned char *buffer, BufferFormat bufferFormat, unsigned int pitch, const QRect &rect );
-        QRgb calculateAvgColor(QList<QRgb> *colors);
-    }
+BOOL SetPrivilege(HANDLE hToken, LPCTSTR szPrivName, BOOL fEnable);
+
+BOOL AcquirePrivileges();
+
+QList<DWORD> * getDxProcessesIDs(QList<DWORD> * processes, LPCWSTR wstrSystemRootPath);
+
+PVOID BuildRestrictedSD(PSECURITY_DESCRIPTOR pSD);
+
+// The following function frees memory allocated in the
+// BuildRestrictedSD() function
+VOID FreeRestrictedSD(PVOID ptr);
 }
+
+#endif // WINUTILS_HPP

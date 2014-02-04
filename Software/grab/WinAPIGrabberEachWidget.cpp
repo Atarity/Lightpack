@@ -29,16 +29,20 @@
 #include "../src/debug.h"
 #include <cmath>
 
+#if defined _MSC_VER
+#include "PrismatikMath.hpp"
+
+using PrismatikMath::round;
+#endif // _MSC_VER
+
 WinAPIGrabberEachWidget::WinAPIGrabberEachWidget(QObject * parent, QList<QRgb> *grabResult, QList<GrabWidget *> *grabAreasGeometry)
-    : TimeredGrabber(parent, grabResult, grabAreasGeometry)
+    : WinAPIGrabber(parent, grabResult, grabAreasGeometry),
+      isBufferNeedsResize(true)
 {
-    pbPixelsBuff = NULL;
-    isBufferNeedsResize = true;
 }
 
 WinAPIGrabberEachWidget::~WinAPIGrabberEachWidget()
 {
-    delete[] pbPixelsBuff;
 }
 
 const char * WinAPIGrabberEachWidget::getName()
@@ -66,30 +70,7 @@ void WinAPIGrabberEachWidget::captureWidget(const QWidget * w)
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
 
     if( isBufferNeedsResize ){
-
-        ZeroMemory( &monitorInfo, sizeof(MONITORINFO) );
-        monitorInfo.cbSize = sizeof(MONITORINFO);
-
-        // Get position and resolution of the monitor
-        GetMonitorInfo( hMonitor, &monitorInfo );
-
-        screenWidth  = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
-        screenHeight = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
-
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "screenWidth x screenHeight" << screenWidth << "x" << screenHeight;
-
-
-        // CreateDC for multiple monitors
-        hScreenDC = CreateDC( TEXT("DISPLAY"), NULL, NULL, NULL );
-
-        // Create a bitmap compatible with the screen DC
-        hBitmap = CreateCompatibleBitmap( hScreenDC, screenWidth, screenHeight );
-
-        // Create a memory DC compatible to screen DC
-        hMemDC = CreateCompatibleDC( hScreenDC );
-
-        // Select new bitmap into memory DC
-        SelectObject( hMemDC, hBitmap );
+        updateMonitorInfo();
     }
 
     // Copy screen
@@ -97,43 +78,13 @@ void WinAPIGrabberEachWidget::captureWidget(const QWidget * w)
             w->x(), w->y(), SRCCOPY );
 
     if( isBufferNeedsResize ){
-
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Allocate memory for pbPixelsBuff and update pixelsBuffSize, bytesPerPixel";
-
-        BITMAP * bmp = new BITMAP;
-
-        // Now get the actual Bitmap
-        GetObject( hBitmap, sizeof(BITMAP), bmp );
-
-        // Calculate the size the buffer needs to be
-        unsigned pixelsBuffSizeNew = bmp->bmWidthBytes * bmp->bmHeight;
-
-        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "pixelsBuffSize =" << pixelsBuffSizeNew;
-
-        if(pixelsBuffSize != pixelsBuffSizeNew){
-            pixelsBuffSize = pixelsBuffSizeNew;
-
-            // ReAllocate memory for new buffer size
-            if( pbPixelsBuff ) delete[] pbPixelsBuff;
-
-            // Allocate
-            pbPixelsBuff = new BYTE[ pixelsBuffSize ];
-        }
-
-        // The amount of bytes per pixel is the amount of bits divided by 8
-        bytesPerPixel = bmp->bmBitsPixel / 8;
-
-        if( bytesPerPixel != 4 ){
-            qDebug() << "Not 32-bit mode is not supported!" << bytesPerPixel;
-        }
-
-        DeleteObject( bmp );
+        resizePixelsBuffer();
 
         isBufferNeedsResize = false;
     }
 
     // Get the actual RGB data and put it into pbPixelsBuff
-    GetBitmapBits( hBitmap, pixelsBuffSize, pbPixelsBuff );
+    GetBitmapBits( hBitmap, pbPixelsBuff.size(), &pbPixelsBuff[0] );
 }
 
 QRgb WinAPIGrabberEachWidget::getColor(const QWidget * grabme)
@@ -153,9 +104,9 @@ QRgb WinAPIGrabberEachWidget::getColor(int x, int y, int width, int height)
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO
                      << "x y w h:" << x << y << width << height;
 
-    if (pbPixelsBuff == NULL)
+    if (pbPixelsBuff.empty())
     {
-        qCritical() << Q_FUNC_INFO << "pbPixelsBuff == NULL";
+        qCritical() << Q_FUNC_INFO << "pbPixelsBuff is empty!";
         return 0;
     }
 
