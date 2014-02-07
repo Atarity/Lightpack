@@ -71,6 +71,9 @@ void ZonePlacementPage::initializePage()
     device()->setSmoothSlowdown(70);
 
     _ui->sbNumberOfLeds->setMaximum(device()->maxLedsCount());
+    _ui->sbNumberOfLeds->setValue(device()->defaultLedsCount());
+
+    _ui->sbNumberOfLeds->setValue(device()->maxLedsCount());
     if (_isInitFromSettings) {
         size_t ledCount = Settings::getNumberOfLeds(Settings::getConnectedDevice());
 

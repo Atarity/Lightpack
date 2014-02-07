@@ -78,6 +78,7 @@ public slots:
     virtual void updateDeviceSettings();
 
     virtual size_t maxLedsCount() = 0;
+    virtual size_t defaultLedsCount() = 0;
 
     /*!
       \obsolete only form compatibility with Lightpack ver.<=5.5 hardware

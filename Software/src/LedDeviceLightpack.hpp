@@ -62,6 +62,7 @@ public slots:
     virtual void requestFirmwareVersion();
     virtual void updateDeviceSettings();
     virtual size_t maxLedsCount();
+    virtual size_t defaultLedsCount() { return maxLedsCount(); }
     size_t lightpacksFound() { return m_devices.size(); }
 
 private: 

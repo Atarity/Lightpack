@@ -50,6 +50,7 @@ public slots:
     void setBrightness(int value);
     void requestFirmwareVersion();
     size_t maxLedsCount() { return 255;}
+    size_t defaultLedsCount() { return 10;}
 
 
 private:
