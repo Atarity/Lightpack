@@ -4,7 +4,7 @@ import lightpack
 eg.RegisterPlugin(
     name = "Prismatik for EventGhost",
     author = "Lucleonhart, 0xdefec, SaladFork",
-    version = "1.0",
+    version = "1.0.1",
     kind = "external",
     description = "Control the Lightpack's Prismatik software. Enable API Server in Prismatik's experimental settings."
 )
