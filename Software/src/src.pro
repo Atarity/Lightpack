@@ -130,8 +130,6 @@ unix:!macx{
 }
 
 macx{
-    QMAKE_CXXFLAGS = -mmacosx-version-min=10.8 -std=c++11 -stdlib=libc+
-    CONFIG +=c++11
     QMAKE_LFLAGS += -F/System/Library/Frameworks
     # MacOS version using libusb and hidapi codes
     SOURCES += hidapi/mac/hid.c
@@ -139,6 +137,7 @@ macx{
             -framework Cocoa \
             -framework Carbon \
             -framework CoreFoundation \
+            -framework Foundation \
  #           -framework CoreGraphics \
             -framework ApplicationServices \
             -framework OpenGL \
@@ -146,10 +145,10 @@ macx{
     ICON = ../res/icons/Prismatik.icns
 
     # For build universal binaries (native on Intel and PowerPC)
-    QMAKE_MAC_SDK = macosx10.8
+    QMAKE_MAC_SDK = macosx10.9
 
     CONFIG(clang) {
-        QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -stdlib=libc+
+        QMAKE_CXXFLAGS += -mmacosx-version-min=10.9 -stdlib=libc+ -x objective-c++
         CONFIG +=c++11
     }
 }

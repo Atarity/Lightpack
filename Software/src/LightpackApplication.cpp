@@ -64,6 +64,7 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
     m_applicationDirPath = appDirPath;
     m_noGui = false;
 
+
     processCommandLineArguments();
 
     printVersionsSoftwareQtOS();

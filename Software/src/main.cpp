@@ -41,6 +41,10 @@
 #include <windows.h>
 #endif
 
+#ifdef Q_OS_MACX
+#import <Foundation/NSProcessInfo.h>
+#endif
+
 using namespace std;
 
 static const int StoreLogsLaunches = 5;
@@ -193,6 +197,10 @@ void messageHandler(QtMsgType type, const QMessageLogContext &ctx, const QString
 int main(int argc, char **argv)
 {
 
+#ifdef Q_OS_MACX
+    id activity = [[NSProcessInfo processInfo] beginActivityWithOptions: NSActivityLatencyCritical reason:@"Prismatik is latency-critical app"];
+#endif
+
 #   ifdef Q_OS_WIN
     CreateMutex(NULL, FALSE, L"LightpackAppMutex");
 #   endif
@@ -226,5 +234,11 @@ int main(int argc, char **argv)
 
     qDebug() << "Start main event loop: lightpackApp.exec();";
 
-    return lightpackApp.exec();
+    int returnCode = lightpackApp.exec();
+
+#ifdef Q_OS_MACX
+    [[NSProcessInfo processInfo] endActivity: activity];
+#endif
+
+    return returnCode;
 }
