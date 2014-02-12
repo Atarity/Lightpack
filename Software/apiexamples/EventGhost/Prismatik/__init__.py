@@ -6,7 +6,7 @@ eg.RegisterPlugin(
     author = "Lucleonhart, 0xdefec, SaladFork",
     version = "1.0",
     kind = "external",
-    description = "Control the Lightpack's Prismatik software. Enable API Server in Prismatik's experimental settings (leave the key empty and port at 3636)."
+    description = "Control the Lightpack's Prismatik software. Enable API Server in Prismatik's experimental settings."
 )
 
 class Lightpack(eg.PluginBase):
@@ -19,8 +19,8 @@ class Lightpack(eg.PluginBase):
         self.AddAction(MaxBrightness)
         self.AddAction(NextProfile)
 
-    def __start__(self):
-        self.lpack = lightpack.lightpack("127.0.0.1", 3636, "", [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])
+    def __start__(self, host, port, apikey):
+        self.lpack = lightpack.lightpack(host, int(port), apikey, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])
         self.lpack.connect()
 
     def __stop__(self):
@@ -28,6 +28,24 @@ class Lightpack(eg.PluginBase):
 
     def __close__(self):
         pass
+
+    def Configure(self, host="127.0.0.1", port="3636", apikey=""):
+        panel = eg.ConfigPanel()
+        sizer = panel.sizer
+
+        txtHost = wx.TextCtrl(panel, -1, host)
+        txtPort = wx.TextCtrl(panel, -1, port)
+        txtApikey = wx.TextCtrl(panel, -1, apikey)
+
+        sizer.Add(panel.StaticText("Host: "))
+        sizer.Add(txtHost)
+        sizer.Add(panel.StaticText("Port: "))
+        sizer.Add(txtPort)
+        sizer.Add(panel.StaticText("API Key: "))
+        sizer.Add(txtApikey)
+
+        while panel.Affirmed():
+            panel.SetResult(txtHost.GetValue(), txtPort.GetValue(), txtApikey.GetValue())
 
 
 class TurnOn(eg.ActionBase):
