@@ -19,8 +19,15 @@ class Lightpack(eg.PluginBase):
 		self.AddAction(MaxBrightness)
 		self.AddAction(NextProfile)
 
-		self.lpack = lightpack.lightpack("127.0.0.1", 3636, "", [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] )
+	def __start__(self):
+		self.lpack = lightpack.lightpack("127.0.0.1", 3636, "", [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])
 		self.lpack.connect()
+
+	def __stop__(self):
+		self.lpack.disconnect()
+
+	def __close__(self):
+		pass
 
 
 class TurnOn(eg.ActionBase):
