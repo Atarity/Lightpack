@@ -41,6 +41,7 @@
 #include "debug.h"
 #include "Plugin.hpp"
 #include "systrayicon/SysTrayIcon.hpp"
+#include <QStringBuilder>
 
 
 using namespace SettingsScope;
@@ -1827,6 +1828,16 @@ void SettingsWindow::on_pbRunConfigurationWizard_clicked()
 {
     getLightpackApp()->free();
 
+#ifdef Q_OS_WIN
+    QString cmdLine;
+    cmdLine.append("\"");
+    cmdLine.append(QApplication::applicationFilePath());
+    cmdLine.append("\"");
+    cmdLine.append(" --wizard");
+    QProcess::startDetached(cmdLine);
+#else
     QProcess::startDetached(QApplication::applicationFilePath().append(" --wizard"));
+#endif
+
     quit();
 }
