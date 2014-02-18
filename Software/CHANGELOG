@@ -12,6 +12,14 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 #    Software changelog
 ===================================================================================
 
+Version 5.10.6
+---------------
+February 18, 2014
+
+* Disable LEDs first on ZonePlacementPage.
+* Maximize default LEDs count in configuratin wizard.
+* Disable AppNap, introduced in OS X 10.9
+
 Version 5.10.5
 ---------------
 February 5, 2014
