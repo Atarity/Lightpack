@@ -86,6 +86,7 @@ void ZonePlacementPage::initializePage()
     } else {
         on_pbAndromeda_clicked();
     }
+    turnLightsOff();
 }
 
 void ZonePlacementPage::cleanupPage()
@@ -157,9 +158,8 @@ void ZonePlacementPage::turnLightOn(int id)
     device()->setColors(lights);
 }
 
-void ZonePlacementPage::turnLightsOff(int id)
+void ZonePlacementPage::turnLightsOff()
 {
-    Q_UNUSED(id)
     QList<QRgb> lights;
     for(size_t i=0; i < device()->maxLedsCount(); i++)
     {
@@ -194,7 +194,7 @@ void ZonePlacementPage::addGrabArea(int id, const QRect &r)
     zone->move(r.topLeft());
     zone->resize(r.size());
     connect(zone, SIGNAL(resizeOrMoveStarted(int)), this, SLOT(turnLightOn(int)));
-    connect(zone, SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(turnLightsOff(int)));
+    connect(zone, SIGNAL(resizeOrMoveCompleted(int)), this, SLOT(turnLightsOff()));
     zone->show();
     _grabAreas.append(zone);
 }

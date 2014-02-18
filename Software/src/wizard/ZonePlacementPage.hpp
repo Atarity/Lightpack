@@ -54,7 +54,7 @@ protected:
 
 public slots:
     void turnLightOn(int id);
-    void turnLightsOff(int id);
+    void turnLightsOff();
 
 private slots:
     void on_pbAndromeda_clicked();
