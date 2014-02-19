@@ -74,6 +74,7 @@ public:
     static void loadOrCreateProfile(const QString & configName);
     static void renameCurrentProfile(const QString & configName);
     static void removeCurrentProfile();
+    static bool isProfileLoaded();
 
     static QString getCurrentProfileName();
     /*!

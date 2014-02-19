@@ -430,6 +430,7 @@ void Settings::removeCurrentProfile()
     m_currentProfile = NULL;
 
     m_mainConfig->setValue(Main::Key::ProfileLast, Main::ProfileNameDefault);
+
     m_this->currentProfileRemoved();
 }
 
@@ -437,7 +438,12 @@ QString Settings::getCurrentProfileName()
 {
     QMutexLocker locker(&m_mutex);
 
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << m_currentProfile->fileName();
+    if (m_currentProfile != NULL) {
+        DEBUG_MID_LEVEL << Q_FUNC_INFO << m_currentProfile->fileName();
+    } else {
+        qCritical() << Q_FUNC_INFO << ("current profile isn't set!!!");
+    }
+
     return QFileInfo(m_currentProfile->fileName()).completeBaseName();
 }
 
@@ -445,8 +451,20 @@ QString Settings::getCurrentProfilePath()
 {
     QMutexLocker locker(&m_mutex);
 
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << m_currentProfile->fileName();
+    if (m_currentProfile != NULL) {
+        DEBUG_MID_LEVEL << Q_FUNC_INFO << m_currentProfile->fileName();
+    } else {
+        qCritical() << Q_FUNC_INFO << ("current profile isn't set!!!");
+    }
+
     return m_currentProfile->fileName();
+}
+
+bool Settings::isProfileLoaded()
+{
+    QMutexLocker locker(&m_mutex);
+    DEBUG_HIGH_LEVEL << Q_FUNC_INFO;
+    return m_currentProfile != NULL;
 }
 
 QString Settings::getApplicationDirPath()

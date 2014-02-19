@@ -168,7 +168,9 @@ public:
             _switchOnBacklightAction->setEnabled(false);
             _switchOffBacklightAction->setEnabled(true);
             _qsystray->setIcon(QIcon(*_pixmapCache["on16"]));
-            _qsystray->setToolTip(tr("Enabled profile: %1").arg(SettingsScope::Settings::getCurrentProfileName()));
+
+            if(SettingsScope::Settings::isProfileLoaded())
+                _qsystray->setToolTip(tr("Enabled profile: %1").arg(SettingsScope::Settings::getCurrentProfileName()));
             break;
 
         case SysTrayIcon::StatusLockedByApi:
@@ -324,7 +326,7 @@ private:
         for(int i=0; i < profiles.count(); i++) {
             profileAction = new QAction(profiles[i], this);
             profileAction->setCheckable(true);
-            if( profiles[i].compare(Settings::getCurrentProfileName()) == 0 ) {
+            if( SettingsScope::Settings::isProfileLoaded() && profiles[i].compare(Settings::getCurrentProfileName()) == 0 ) {
                 profileAction->setChecked(true);
             }
             _profilesMenu->addAction(profileAction);
