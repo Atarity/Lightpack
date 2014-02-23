@@ -41,10 +41,8 @@ class MacOSGrabber : public TimeredGrabber
 public:
     MacOSGrabber(QObject *parent, GrabberContext *context);
     virtual ~MacOSGrabber();
-    virtual const char * name() const {
-        static const char * name = "MacOSGrabber";
-        return name;
-    }
+
+    DECLARE_GRABBER_NAME("MacOSGrabber")
 
 protected slots:
     virtual GrabResult grabScreens();

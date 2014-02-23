@@ -36,10 +36,7 @@ public:
     WinAPIGrabberEachWidget(QObject * parent, GrabberContext *context);
     virtual ~WinAPIGrabberEachWidget();
 
-    virtual const char * name() const {
-        static const char * name = "WinAPIGrabberEachWidget";
-        return name;
-    }
+    DECLARE_GRABBER_NAME("WinAPIGrabberEachWidget")
 
 protected slots:
     virtual GrabResult grabScreens();

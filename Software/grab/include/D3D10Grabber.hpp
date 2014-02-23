@@ -43,11 +43,7 @@ public:
     D3D10Grabber(QObject * parent, GrabberContext *context, GetHwndCallback_t getHwndCb);
     virtual ~D3D10Grabber();
 
-
-    virtual const char * name() const {
-        static char * name = "D3D10Grabber";
-        return name;
-    }
+    DECLARE_GRABBER_NAME("D3D10Grabber")
 
 public slots:
     virtual void init();

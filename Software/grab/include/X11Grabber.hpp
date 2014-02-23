@@ -43,10 +43,8 @@ class X11Grabber : public TimeredGrabber
 public:
     X11Grabber(QObject *parent, GrabberContext *context);
     virtual ~X11Grabber();
-    virtual const char * name() const {
-        static const char * name = "X11Grabber";
-        return name;
-    }
+
+    DECLARE_GRABBER_NAME("X11Grabber")
 
 protected:
     virtual GrabResult grabScreens();

@@ -223,10 +223,12 @@ public:
     }
     void start() { m_isStarted = true; }
     void stop() { m_isStarted = false; }
-    bool isStarted() { return m_isStarted; }
+    bool isStarted() const { return m_isStarted; }
 
     QList< ScreenInfo > * screensWithWidgets(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets)
     {
+        Q_UNUSED(grabWidgets);
+
         result->clear();
         return result;
     }
@@ -243,14 +245,14 @@ public:
             if( m_memDesc.frameId != m_lastFrameId) {
                 m_lastFrameId = m_memDesc.frameId;
 
-                if (m_memDesc.width != grabbedScreens[0].screenInfo.rect.width()
-                        || m_memDesc.height != grabbedScreens[0].screenInfo.rect.height())
+                if ((int)m_memDesc.width != grabbedScreens[0].screenInfo.rect.width() ||
+                    (int)m_memDesc.height != grabbedScreens[0].screenInfo.rect.height())
                 {
                     qCritical() << Q_FUNC_INFO << "illegal state, screens don't match: qt " <<
                                    grabbedScreens[0].screenInfo.rect << ", remote proc's " <<
                                    m_memDesc.width << "x" << m_memDesc.height;
 
-                   result = GrabResultError;
+                    result = GrabResultError;
                 } else {
                     if (m_memMap == NULL)
                     {
@@ -301,6 +303,7 @@ private slots:
 private:
     QRgb getColor(const QRect &widgetRect)
     {
+        static const QRgb kBlackColor = qRgb(0,0,0);
         DEBUG_HIGH_LEVEL << Q_FUNC_INFO << Debug::toString(widgetRect);
 
         if (m_memMap == NULL)
@@ -321,7 +324,7 @@ private:
             DEBUG_MID_LEVEL << "Widget 'grabme' is out of screen:" << Debug::toString(clippedRect);
 
             // Widget 'grabme' is out of screen
-            return 0x000000;
+            return kBlackColor;
         }
 
         // Convert coordinates from "Main" desktop coord-system to capture-monitor coord-system
@@ -334,7 +337,7 @@ private:
             qWarning() << Q_FUNC_INFO << " preparedRect is not valid:" << Debug::toString(preparedRect);
 
             // width and height can't be negative
-            return 0x000000;
+            return kBlackColor;
         }
 
         QRgb result;
@@ -342,7 +345,7 @@ private:
         if (Grab::Calculations::calculateAvgColor(&result, pbPixelsBuff, m_memDesc.format, m_memDesc.rowPitch, preparedRect) == 0) {
             return result;
         } else {
-            return qRgb(0,0,0);
+            return kBlackColor;
         }
 
     #if 0
@@ -530,6 +533,8 @@ void D3D10Grabber::setGrabInterval(int msec) {
  */
 QList< ScreenInfo > * D3D10Grabber::screensWithWidgets(QList< ScreenInfo > * result, const QList<GrabWidget *> &grabWidgets)
 {
+    Q_UNUSED(grabWidgets);
+
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     return result;
 }
@@ -541,6 +546,8 @@ QList< ScreenInfo > * D3D10Grabber::screensWithWidgets(QList< ScreenInfo > * res
  */
 bool D3D10Grabber::reallocate(const QList<ScreenInfo> &grabScreens)
 {
+    Q_UNUSED(grabScreens);
+
     DEBUG_HIGH_LEVEL << Q_FUNC_INFO << this->metaObject()->className();
     return true;
 }
