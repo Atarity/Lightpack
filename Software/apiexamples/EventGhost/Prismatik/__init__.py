@@ -14,7 +14,6 @@ class Lightpack(eg.PluginBase):
     def __init__(self):
         self.AddAction(TurnOn)
         self.AddAction(TurnOff)
-        self.AddAction(Toggle)
         self.AddAction(LowBrightness)
         self.AddAction(MaxBrightness)
         self.AddAction(NextProfile)
@@ -68,22 +67,6 @@ class TurnOff(eg.ActionBase):
     def __call__(self):
         self.plugin.lpack.lock()
         self.plugin.lpack.turnOff()
-        self.plugin.lpack.unlock()
-
-class Toggle(eg.ActionBase):
-
-    name = "Toggle lights on/off"
-    description = "Toggles the lights on or off"
-
-    def __call__(self):
-        self.plugin.lpack.lock()
-        status = self.plugin.lpack.getStatus()
-        if status.strip() == 'on':
-            self.plugin.lpack.turnOff()
-            print "turning off"
-        else:
-            self.plugin.lpack.turnOn()
-            print "turning on"
         self.plugin.lpack.unlock()
 
 class LowBrightness(eg.ActionBase):
