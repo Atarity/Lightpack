@@ -59,7 +59,6 @@ class TurnOn(eg.ActionBase):
         self.plugin.lpack.lock()
         self.plugin.lpack.turnOn()
         self.plugin.lpack.unlock()
-        print "Lightpack lights are on now"
 
 class TurnOff(eg.ActionBase):
 
@@ -70,7 +69,6 @@ class TurnOff(eg.ActionBase):
         self.plugin.lpack.lock()
         self.plugin.lpack.turnOff()
         self.plugin.lpack.unlock()
-        print "Lightpack lights are off now"
 
 class Toggle(eg.ActionBase):
 
@@ -87,7 +85,6 @@ class Toggle(eg.ActionBase):
             self.plugin.lpack.turnOn()
             print "turning on"
         self.plugin.lpack.unlock()
-        print "Lightpack lights are "+self.plugin.lpack.getStatus().strip()+" now"
 
 class LowBrightness(eg.ActionBase):
 
@@ -98,7 +95,6 @@ class LowBrightness(eg.ActionBase):
         self.plugin.lpack.lock()
         self.plugin.lpack.setBrightness(20)
         self.plugin.lpack.unlock()
-        print "Brightness now at 20%"
 
 class MaxBrightness(eg.ActionBase):
 
@@ -109,7 +105,6 @@ class MaxBrightness(eg.ActionBase):
         self.plugin.lpack.lock()
         self.plugin.lpack.setBrightness(100)
         self.plugin.lpack.unlock()
-        print "Brightness now at 100%"
 
 class NextProfile(eg.ActionBase):
 
@@ -127,4 +122,3 @@ class NextProfile(eg.ActionBase):
             next = profilePos+1
         self.plugin.lpack.setProfile(profiles[next])
         self.plugin.lpack.unlock()
-        print "Switched profile to "+profiles[next]
