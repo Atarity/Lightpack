@@ -20,7 +20,7 @@ class Lightpack(eg.PluginBase):
         self.AddAction(NextProfile)
 
     def __start__(self, host, port, apikey):
-        self.lpack = lightpack.lightpack(host, int(port), apikey, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])
+        self.lpack = lightpack.lightpack(host, int(port), apikey, range(1, 20))
         self.lpack.connect()
 
     def __stop__(self):
