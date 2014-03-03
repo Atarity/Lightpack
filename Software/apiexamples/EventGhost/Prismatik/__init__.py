@@ -52,7 +52,7 @@ class Lightpack(eg.PluginBase):
 class TurnOn(eg.ActionBase):
 
     name = "Turn on"
-    description = "Turn on the Lights."
+    description = "Turns on the lights"
 
     def __call__(self):
         self.plugin.lpack.lock()
@@ -62,7 +62,7 @@ class TurnOn(eg.ActionBase):
 class TurnOff(eg.ActionBase):
 
     name = "Turn off"
-    description = "Turn off the Lights."
+    description = "Turns off the Lights"
 
     def __call__(self):
         self.plugin.lpack.lock()
@@ -71,7 +71,7 @@ class TurnOff(eg.ActionBase):
 
 class LowBrightness(eg.ActionBase):
 
-    name = "Low Brightness"
+    name = "Low brightness"
     description = "Sets the brightness to 20%"
 
     def __call__(self):
@@ -81,7 +81,7 @@ class LowBrightness(eg.ActionBase):
 
 class MaxBrightness(eg.ActionBase):
 
-    name = "Maximum Brightness"
+    name = "Maximum brightness"
     description = "Sets the brightness to 100%"
 
     def __call__(self):
