@@ -37,12 +37,14 @@ class Lightpack(eg.PluginBase):
         txtPort = wx.TextCtrl(panel, -1, port, size=(250, -1))
         txtApikey = wx.TextCtrl(panel, -1, apikey, size=(250, -1))
 
-        sizer.Add(panel.StaticText("Host: "))
-        sizer.Add(txtHost)
-        sizer.Add(panel.StaticText("Port: "))
-        sizer.Add(txtPort)
-        sizer.Add(panel.StaticText("API Key: "))
-        sizer.Add(txtApikey)
+        sizer.AddMany([
+            (panel.StaticText("Host: ")),
+            (txtHost),
+            (panel.StaticText("Port: ")),
+            (txtPort),
+            (panel.StaticText("API Key: ")),
+            (txtApikey)
+        ])
 
         while panel.Affirmed():
             panel.SetResult(txtHost.GetValue(), txtPort.GetValue(), txtApikey.GetValue())
