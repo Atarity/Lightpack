@@ -17,6 +17,7 @@ class Lightpack(eg.PluginBase):
         self.AddAction(LowBrightness)
         self.AddAction(MaxBrightness)
         self.AddAction(NextProfile)
+        self.AddAction(SetProfile)
 
     def __start__(self, host, port, apikey):
         self.lpack = lightpack.lightpack(host, int(port), apikey, range(1, 20))
@@ -105,3 +106,32 @@ class NextProfile(eg.ActionBase):
             next = profilePos+1
         self.plugin.lpack.setProfile(profiles[next])
         self.plugin.lpack.unlock()
+
+class SetProfile(eg.ActionBase):
+
+    name = "Set profile"
+    description = "Switches to a specific profile"
+
+    def __call__(self, profile):
+        self.plugin.lpack.lock()
+        self.plugin.lpack.setProfile(profile)
+        self.plugin.lpack.unlock()
+
+        setProfile = self.plugin.lpack.getProfile().strip()
+
+        if setProfile != profile:
+            self.PrintError("Could not switch to profile '%s'!" % profile);
+
+    def Configure(self, profile="Lightpack"):
+        profiles = self.plugin.lpack.getProfiles()
+
+        panel = eg.ConfigPanel()
+        sizer = panel.sizer
+
+        cmbProfiles = wx.ComboBox(panel, -1, profile, choices=profiles, size=(250, -1))
+
+        sizer.Add(panel.StaticText("Profile: "))
+        sizer.Add(cmbProfiles)
+
+        while panel.Affirmed():
+            panel.SetResult(cmbProfiles.GetValue())
