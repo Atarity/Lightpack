@@ -33,9 +33,9 @@ class Lightpack(eg.PluginBase):
         panel = eg.ConfigPanel()
         sizer = panel.sizer
 
-        txtHost = wx.TextCtrl(panel, -1, host)
-        txtPort = wx.TextCtrl(panel, -1, port)
-        txtApikey = wx.TextCtrl(panel, -1, apikey)
+        txtHost = wx.TextCtrl(panel, -1, host, size=(250, -1))
+        txtPort = wx.TextCtrl(panel, -1, port, size=(250, -1))
+        txtApikey = wx.TextCtrl(panel, -1, apikey, size=(250, -1))
 
         sizer.Add(panel.StaticText("Host: "))
         sizer.Add(txtHost)
