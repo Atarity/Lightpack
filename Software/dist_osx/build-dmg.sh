@@ -9,7 +9,7 @@ DMG_NAME="Prismatik.$1.dmg"
 SRC_FOLDER="contents"
 LAYOUT_FILE="dsstore"
 APP_PATH="$SRC_FOLDER/Prismatik.app/Contents/MacOS"
-QT_PATH=~/Qt/5.2.0/clang_64
+QT_PATH=~/Qt/5.2.1/clang_64
 
 if [ ! -L "$SRC_FOLDER/Applications" ]; then
 	echo "Creating link to /Applications folder"
