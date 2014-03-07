@@ -14,9 +14,9 @@ class Lightpack(eg.PluginBase):
     def __init__(self):
         self.AddAction(TurnOn)
         self.AddAction(TurnOff)
-        self.AddAction(SetBrightness)
-        self.AddAction(NextProfile)
         self.AddAction(SetProfile)
+        self.AddAction(NextProfile)
+        self.AddAction(SetBrightness)
         self.AddAction(SetColor)
         self.AddAction(SetColorToAll)
 
