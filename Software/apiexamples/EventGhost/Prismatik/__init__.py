@@ -90,10 +90,34 @@ class MaxBrightness(eg.ActionBase):
         self.plugin.lpack.setBrightness(100)
         self.plugin.lpack.unlock()
 
+class SetBrightness(eg.ActionBase):
+
+    name = "Set brightness"
+    description = "Sets the LED brightness to a specific value"
+
+    def __call__(self, brightness):
+        self.plugin.lpack.lock()
+        self.plugin.lpack.setBrightness(brightness)
+        self.plugin.lpack.unlock()
+
+    def Configure(self, brightness="100"):
+        profiles = self.plugin.lpack.getProfiles()
+
+        panel = eg.ConfigPanel()
+        sizer = panel.sizer
+
+        txtBrightness = wx.TextCtrl(panel, -1, brightness, size=(250, -1))
+
+        sizer.Add(panel.StaticText("Brightness (%): "))
+        sizer.Add(txtBrightness)
+
+        while panel.Affirmed():
+            panel.SetResult(txtBrightness.GetValue())
+
 class NextProfile(eg.ActionBase):
 
     name = "Next profile"
-    description = "Switches to the next prismatik profile"
+    description = "Switches to the next Prismatik profile"
 
     def __call__(self):
         self.plugin.lpack.lock()
@@ -110,7 +134,7 @@ class NextProfile(eg.ActionBase):
 class SetProfile(eg.ActionBase):
 
     name = "Set profile"
-    description = "Switches to a specific profile"
+    description = "Switches to a specific Prismatik profile"
 
     def __call__(self, profile):
         self.plugin.lpack.lock()
