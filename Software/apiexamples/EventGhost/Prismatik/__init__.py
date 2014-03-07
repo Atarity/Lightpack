@@ -101,8 +101,6 @@ class SetBrightness(eg.ActionBase):
         self.plugin.lpack.unlock()
 
     def Configure(self, brightness="100"):
-        profiles = self.plugin.lpack.getProfiles()
-
         panel = eg.ConfigPanel()
         sizer = panel.sizer
 
