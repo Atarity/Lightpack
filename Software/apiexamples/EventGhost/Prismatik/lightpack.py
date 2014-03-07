@@ -23,7 +23,7 @@ class lightpack:
         cmd = 'getprofiles\n'
         self.connection.send(cmd)
         profiles = self.__readResult()
-        return profiles.split(':')[1].rstrip(';\n').split(';')
+        return profiles.split(':')[1].rstrip(';\n').split(';')[:-1]
 
     def getProfile(self):
         cmd = 'getprofile\n'
