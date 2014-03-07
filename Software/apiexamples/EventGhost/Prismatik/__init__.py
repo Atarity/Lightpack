@@ -32,9 +32,9 @@ class Lightpack(eg.PluginBase):
         panel = eg.ConfigPanel()
         sizer = panel.sizer
 
-        txtHost = wx.TextCtrl(panel, -1, host, size=(250, -1))
-        txtPort = wx.TextCtrl(panel, -1, port, size=(250, -1))
-        txtApikey = wx.TextCtrl(panel, -1, apikey, size=(250, -1))
+        txtHost = panel.TextCtrl(host, size=(250, -1))
+        txtPort = panel.TextCtrl(port, size=(250, -1))
+        txtApikey = panel.TextCtrl(apikey, size=(250, -1))
 
         sizer.AddMany([
             (panel.StaticText("Host: ")),
@@ -83,7 +83,7 @@ class SetBrightness(eg.ActionBase):
         panel = eg.ConfigPanel()
         sizer = panel.sizer
 
-        txtBrightness = wx.TextCtrl(panel, -1, brightness, size=(250, -1))
+        txtBrightness = panel.TextCtrl(brightness, size=(250, -1))
 
         sizer.Add(panel.StaticText("Brightness (%): "))
         sizer.Add(txtBrightness)
@@ -129,7 +129,7 @@ class SetProfile(eg.ActionBase):
         panel = eg.ConfigPanel()
         sizer = panel.sizer
 
-        cmbProfiles = wx.ComboBox(panel, -1, profile, choices=profiles, size=(250, -1))
+        cmbProfiles = panel.ComboBox(profile, choices=profiles, size=(250, -1))
 
         sizer.Add(panel.StaticText("Profile: "))
         sizer.Add(cmbProfiles)
