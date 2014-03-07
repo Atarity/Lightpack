@@ -14,8 +14,7 @@ class Lightpack(eg.PluginBase):
     def __init__(self):
         self.AddAction(TurnOn)
         self.AddAction(TurnOff)
-        self.AddAction(LowBrightness)
-        self.AddAction(MaxBrightness)
+        self.AddAction(SetBrightness)
         self.AddAction(NextProfile)
         self.AddAction(SetProfile)
 
@@ -68,26 +67,6 @@ class TurnOff(eg.ActionBase):
     def __call__(self):
         self.plugin.lpack.lock()
         self.plugin.lpack.turnOff()
-        self.plugin.lpack.unlock()
-
-class LowBrightness(eg.ActionBase):
-
-    name = "Low brightness"
-    description = "Sets the brightness to 20%"
-
-    def __call__(self):
-        self.plugin.lpack.lock()
-        self.plugin.lpack.setBrightness(20)
-        self.plugin.lpack.unlock()
-
-class MaxBrightness(eg.ActionBase):
-
-    name = "Maximum brightness"
-    description = "Sets the brightness to 100%"
-
-    def __call__(self):
-        self.plugin.lpack.lock()
-        self.plugin.lpack.setBrightness(100)
         self.plugin.lpack.unlock()
 
 class SetBrightness(eg.ActionBase):
