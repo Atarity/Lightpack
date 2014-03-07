@@ -2,7 +2,7 @@ import eg
 import lightpack
 
 eg.RegisterPlugin(
-    name = "Prismatik for EventGhost",
+    name = "Prismatik",
     author = "Lucleonhart, 0xdefec, SaladFork",
     version = "1.0.1",
     kind = "external",
