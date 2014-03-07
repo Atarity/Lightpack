@@ -20,11 +20,11 @@ class Lightpack(eg.PluginBase):
         self.AddAction(SetProfile)
 
     def __start__(self, host, port, apikey):
-        self.lpack = lightpack.lightpack(host, int(port), apikey, range(1, 20))
-        self.lpack.connect()
+        self.plugin.lpack = lightpack.lightpack(host, int(port), apikey, range(1, 20))
+        self.plugin.lpack.connect()
 
     def __stop__(self):
-        self.lpack.disconnect()
+        self.plugin.lpack.disconnect()
 
     def __close__(self):
         pass
