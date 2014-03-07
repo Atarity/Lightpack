@@ -20,7 +20,7 @@ class Lightpack(eg.PluginBase):
         self.AddAction(SetProfile)
 
     def __start__(self, host, port, apikey):
-        self.plugin.lpack = lightpack.lightpack(host, int(port), apikey, range(1, 20))
+        self.plugin.lpack = lightpack.lightpack(host, int(port), apikey or None, range(1, 20))
         self.plugin.lpack.connect()
 
     def __stop__(self):
@@ -29,7 +29,7 @@ class Lightpack(eg.PluginBase):
     def __close__(self):
         pass
 
-    def Configure(self, host="127.0.0.1", port="3636", apikey=""):
+    def Configure(self, host="127.0.0.1", port="3636", apikey=None):
         panel = eg.ConfigPanel()
         sizer = panel.sizer
 

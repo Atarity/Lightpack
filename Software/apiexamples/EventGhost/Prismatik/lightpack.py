@@ -1,11 +1,17 @@
 import socket, time, imaplib, re, sys
 
 class lightpack:
-    def __init__(self, _host, _port, _apikey, _ledMap):
+
+#   host = '127.0.0.1'    # The remote host
+#   port = 3636              # The same port as used by the server
+#   apikey = 'key'        # Secure API key which generates by Lightpack software on Dev tab
+#   ledMap = [1,2,3,4,5,6,7,8,9,10]     #mapped LEDs
+
+    def __init__(self, _host, _port, _ledMap, _apikey = None):
         self.host = _host
         self.port = _port
-        self.apikey = _apikey
         self.ledMap = _ledMap
+        self.apikey = _apikey
 
     def __readResult(self): # Return last-command API answer  (call in every local method)
         total_data=[]
@@ -17,7 +23,7 @@ class lightpack:
         cmd = 'getprofiles\n'
         self.connection.send(cmd)
         profiles = self.__readResult()
-        return profiles.split(':')[1].strip(';\n\r').split(';')
+        return profiles.split(':')[1].rstrip(';\n').split(';')
 
     def getProfile(self):
         cmd = 'getprofile\n'
@@ -33,6 +39,13 @@ class lightpack:
         status = status.split(':')[1]
         return status
 
+    def getCountLeds(self):
+        cmd = 'getcountleds\n'
+        self.connection.send(cmd)
+        count = self.__readResult()
+        count = count.split(':')[1]
+        return count
+
     def getAPIStatus(self):
         cmd = 'getstatusapi\n'
         self.connection.send(cmd)
@@ -45,9 +58,10 @@ class lightpack:
             self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.connection.connect((self.host, self.port))
             self.__readResult()
-            cmd = 'apikey:' + self.apikey + '\n'
-            self.connection.send(cmd)
-            self.__readResult()
+            if self.apikey is not None:
+                cmd = 'apikey:' + self.apikey + '\n'
+                self.connection.send(cmd)
+                self.__readResult()
             return 0
         except:
             print 'Lightpack API server is missing'
@@ -73,6 +87,11 @@ class lightpack:
 
     def setSmooth(self, s):
         cmd = 'setsmooth:{0}\n'.format(s)
+        self.connection.send(cmd)
+        self.__readResult()
+
+    def setBrightness(self, s):
+        cmd = 'setbrightness:{0}\n'.format(s)
         self.connection.send(cmd)
         self.__readResult()
 
