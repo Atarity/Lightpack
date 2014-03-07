@@ -120,7 +120,7 @@ class SetProfile(eg.ActionBase):
         setProfile = self.plugin.lpack.getProfile().strip()
 
         if setProfile != profile:
-            self.PrintError("Could not switch to profile '%s'!" % profile);
+            self.PrintError("Could not switch to profile '%s'!" % profile)
 
     def Configure(self, profile="Lightpack"):
         profiles = self.plugin.lpack.getProfiles()
