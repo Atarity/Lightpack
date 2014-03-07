@@ -195,7 +195,7 @@ class SetColor(eg.ActionBase):
 
     def __call__(self, n, r, g, b):
         self.plugin.lpack.lock()
-        self.plugin.lpack.setColor(n, r, g, b)
+        self.plugin.lpack.setColor(int(n), r, g, b)
         self.plugin.lpack.unlock()
 
     def Configure(self, n=1, r=0, g=0, b=0):
