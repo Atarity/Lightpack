@@ -29,7 +29,7 @@ class Lightpack(eg.PluginBase):
     def __close__(self):
         pass
 
-    def Configure(self, host="127.0.0.1", port="3636", apikey=None):
+    def Configure(self, host="127.0.0.1", port="3636", apikey=""):
         panel = eg.ConfigPanel()
         sizer = panel.sizer
 
