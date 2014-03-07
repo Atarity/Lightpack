@@ -17,9 +17,14 @@ class Lightpack(eg.PluginBase):
         self.AddAction(SetBrightness)
         self.AddAction(NextProfile)
         self.AddAction(SetProfile)
+        self.AddAction(SetColor)
+        self.AddAction(SetColorToAll)
+
+        self.numLeds = 20
 
     def __start__(self, host, port, apikey):
-        self.lpack = lightpack.lightpack(host, int(port), range(1, 20), apikey or None)
+        self.ledMap = range(1, self.numLeds + 1)
+        self.lpack = lightpack.lightpack(host, int(port), self.ledMap, apikey or None)
         self.lpack.connect()
 
     def __stop__(self):
@@ -136,3 +141,58 @@ class SetProfile(eg.ActionBase):
 
         while panel.Affirmed():
             panel.SetResult(cmbProfiles.GetValue())
+
+class SetColor(eg.ActionBase):
+
+    name = "Set LED light color"
+    description = "Sets the color of a specific LED light"
+
+    def __call__(self, n, r, g, b):
+        self.plugin.lpack.lock()
+        self.plugin.lpack.setColor(n, r, g, b)
+        self.plugin.lpack.unlock()
+
+    def Configure(self, n=1, r=0, g=0, b=0):
+        panel = eg.ConfigPanel()
+        sizer = panel.sizer
+
+        leds = [str(led) for led in range(1, self.plugin.numLeds + 1)]
+
+        cmbLeds = panel.ComboBox(str(n), choices=leds, size=(75, -1))
+        colorCtrl = wx.ColourPickerCtrl(panel, col=wx.Colour(r, g, b), size=wx.Size(75, -1))
+
+        sizer.AddMany([
+            panel.StaticText("LED: "),
+            cmbLeds,
+            panel.StaticText("Color: "),
+            colorCtrl
+        ])
+
+        while panel.Affirmed():
+            color = colorCtrl.GetColour()
+            panel.SetResult(cmbLeds.GetValue(), color[0], color[1], color[2])
+
+class SetColorToAll(eg.ActionBase):
+
+    name = "Set all LED lights color"
+    description = "Sets the color of all LED light"
+
+    def __call__(self, r, g, b):
+        self.plugin.lpack.lock()
+        self.plugin.lpack.setColorToAll(r, g, b)
+        self.plugin.lpack.unlock()
+
+    def Configure(self, r=0, g=0, b=0):
+        panel = eg.ConfigPanel()
+        sizer = panel.sizer
+
+        colorCtrl = wx.ColourPickerCtrl(panel, col=wx.Colour(r, g, b), size=wx.Size(75, -1))
+
+        sizer.AddMany([
+            panel.StaticText("Color: "),
+            colorCtrl
+        ])
+
+        while panel.Affirmed():
+            color = colorCtrl.GetColour()
+            panel.SetResult(color[0], color[1], color[2])
