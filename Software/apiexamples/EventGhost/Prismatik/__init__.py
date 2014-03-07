@@ -175,7 +175,7 @@ class SetColor(eg.ActionBase):
 class SetColorToAll(eg.ActionBase):
 
     name = "Set all LED lights color"
-    description = "Sets the color of all LED light"
+    description = "Sets the color of all LED lights"
 
     def __call__(self, r, g, b):
         self.plugin.lpack.lock()
