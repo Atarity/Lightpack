@@ -17,6 +17,8 @@ class Lightpack(eg.PluginBase):
         self.AddAction(SetProfile)
         self.AddAction(NextProfile)
         self.AddAction(SetBrightness)
+        self.AddAction(SetSmooth)
+        self.AddAction(SetGamma)
         self.AddAction(SetColor)
         self.AddAction(SetColorToAll)
 
@@ -95,6 +97,50 @@ class SetBrightness(eg.ActionBase):
 
         while panel.Affirmed():
             panel.SetResult(txtBrightness.GetValue())
+
+class SetSmooth(eg.ActionBase):
+
+    name = "Set smoothness"
+    description = "Sets how many steps the LEDs will take to change color"
+
+    def __call__(self, smoothness):
+        self.plugin.lpack.lock()
+        self.plugin.lpack.setSmooth(smoothness)
+        self.plugin.lpack.unlock()
+
+    def Configure(self, smoothness="100"):
+        panel = eg.ConfigPanel()
+        sizer = panel.sizer
+
+        spinSmoothness = wx.SpinCtrl(panel, value=smoothness, min=0, max=255, size=(100, -1))
+
+        sizer.Add(panel.StaticText("Smoothness: "))
+        sizer.Add(spinSmoothness)
+
+        while panel.Affirmed():
+            panel.SetResult(spinSmoothness.GetValue())
+
+class SetGamma(eg.ActionBase):
+
+    name = "Set gamma correction"
+    description = "Sets the level of saturation of the LED lights"
+
+    def __call__(self, gamma):
+        self.plugin.lpack.lock()
+        self.plugin.lpack.setGamma(gamma)
+        self.plugin.lpack.unlock()
+
+    def Configure(self, gamma="2.00"):
+        panel = eg.ConfigPanel()
+        sizer = panel.sizer
+
+        txtGamma = panel.TextCtrl(gamma, size=(150, -1))
+
+        sizer.Add(panel.StaticText("Gamma: "))
+        sizer.Add(txtGamma)
+
+        while panel.Affirmed():
+            panel.SetResult(txtGamma.GetValue())
 
 class NextProfile(eg.ActionBase):
 
