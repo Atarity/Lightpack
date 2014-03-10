@@ -102,12 +102,14 @@ void AbstractLedDevice::applyColorModifications(const QList<QRgb> &inColors, QLi
         int dl = m_luminosityThreshold - lab.l;
         if (dl > 0) {
             if (m_isMinimumLuminosityEnabled) { // apply minimum luminosity or dead-zone
-                double fadingCoeff = 1+dl*0.7 + (dl > 5 ? (dl - 5)*(dl - 5): 0);
-                char da = lab.a - avgColor.a;
-                char db = lab.b - avgColor.b;
+                // Cross-fade a and b channels to avarage value within kFadingRange, fadingFactor = (dL - fadingRange)^2 / (fadingRange^2)
+                const int kFadingRange = 5;
+                double fadingCoeff = dl < kFadingRange ? (dl - kFadingRange)*(dl - kFadingRange)/(kFadingRange*kFadingRange): 1;
+                char da = avgColor.a - lab.a;
+                char db = avgColor.b - lab.b;
                 lab.l = m_luminosityThreshold;
-                lab.a = avgColor.a + round(da/fadingCoeff);
-                lab.b = avgColor.b + round(db/fadingCoeff);
+                lab.a += round(da * fadingCoeff);
+                lab.b += round(db * fadingCoeff);
                 StructRgb rgb = PrismatikMath::toRgb(lab);
                 outColors[i] = rgb;
             } else {
