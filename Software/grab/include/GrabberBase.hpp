@@ -62,6 +62,12 @@ struct GrabbedScreen {
     void * associatedData;
 };
 
+#define DECLARE_GRABBER_NAME(grabber_name) \
+    virtual const char * name() const { \
+        static const char * static_grabber_name = (grabber_name); \
+        return static_grabber_name; \
+    }
+
 /*!
   Base class which represents each particular grabber. If you want to add a new grabber just add implementation of \code GrabberBase \endcode
   and modify \a GrabManager
@@ -82,7 +88,6 @@ public:
     virtual const char * name() const = 0;
 
 public slots:
-//    virtual void init() = 0;
     virtual void startGrabbing() = 0;
     virtual void stopGrabbing() = 0;
     virtual bool isGrabbingStarted() const = 0;

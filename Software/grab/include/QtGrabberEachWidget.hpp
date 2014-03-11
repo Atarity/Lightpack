@@ -38,10 +38,8 @@ class QtGrabberEachWidget : public TimeredGrabber
 public:
     QtGrabberEachWidget(QObject *parent, GrabberContext * context);
     virtual ~QtGrabberEachWidget();
-    virtual const char * name() const {
-        static const char * name = "QtGrabberEachWidget";
-        return name;
-    }
+
+    DECLARE_GRABBER_NAME("QtGrabberEachWidget")
 
 protected:
     virtual GrabResult _grab(QList<QRgb> &grabResult, const QList<GrabWidget*> &grabWidgets);

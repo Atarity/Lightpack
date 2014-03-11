@@ -54,10 +54,7 @@ public:
     WinAPIGrabber(QObject * parent, GrabberContext *context);
     virtual ~WinAPIGrabber();
 
-    virtual const char * name() const {
-        static const char * name = "WinAPIGrabber";
-        return name;
-    }
+    DECLARE_GRABBER_NAME("WinAPIGrabber")
 
 protected slots:
     virtual GrabResult grabScreens();
