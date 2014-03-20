@@ -67,7 +67,12 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     processCommandLineArguments();
 
-    printVersionsSoftwareQtOS();
+	printVersionsSoftwareQtOS();
+
+	m_EventFilters.push_back(std::unique_ptr<QAbstractNativeEventFilter>(new EndSessionDetector()));
+
+	for (std::unique_ptr<QAbstractNativeEventFilter>& iter : m_EventFilters)
+		this->installNativeEventFilter(iter.get());
 
     if (!Settings::Initialize(m_applicationDirPath, m_isDebugLevelObtainedFromCmdArgs)
             && !m_noGui) {
