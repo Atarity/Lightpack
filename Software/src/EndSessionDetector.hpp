@@ -37,5 +37,10 @@ public:
     bool nativeEventFilter(const QByteArray& eventType, void* message, long* result) Q_DECL_OVERRIDE;
 
     ~EndSessionDetector();
+
+private:
+	void Destroy();
+
+	bool m_isDestroyed;
 };
 #endif

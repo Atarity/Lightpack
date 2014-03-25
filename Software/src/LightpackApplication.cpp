@@ -69,11 +69,6 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
 	printVersionsSoftwareQtOS();
 
-	m_EventFilters.push_back(std::unique_ptr<QAbstractNativeEventFilter>(new EndSessionDetector()));
-
-	for (std::unique_ptr<QAbstractNativeEventFilter>& iter : m_EventFilters)
-		this->installNativeEventFilter(iter.get());
-
     if (!Settings::Initialize(m_applicationDirPath, m_isDebugLevelObtainedFromCmdArgs)
             && !m_noGui) {
         runWizardLoop(false);
@@ -129,6 +124,11 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 //    handleConnectedDeviceChange(settings()->getConnectedDevice());
 
     startPluginManager();
+
+	m_EventFilters.push_back(std::unique_ptr<QAbstractNativeEventFilter>(new EndSessionDetector()));
+
+	for (std::unique_ptr<QAbstractNativeEventFilter>& iter : m_EventFilters)
+		this->installNativeEventFilter(iter.get());
 
     emit postInitialization();
 }

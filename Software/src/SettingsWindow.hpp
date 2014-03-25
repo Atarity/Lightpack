@@ -191,7 +191,7 @@ private slots:
     void MoveUpPlugin();
     void MoveDownPlugin();
 
-
+	void onKeepLightsAfterLock_Toggled(bool isEnabled);
 
     void on_pbRunConfigurationWizard_clicked();
 
