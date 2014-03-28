@@ -31,7 +31,7 @@ bool EndSessionDetector::nativeEventFilter(const QByteArray& eventType, void* me
 
 	if (msg->message == WM_QUERYENDSESSION)
 	{
-		if (SettingsScope::Settings::isKeepLightsOnAfterExit())
+		if (!SettingsScope::Settings::isKeepLightsOnAfterExit())
 		{
 			Destroy();
 			isSessionEnding = true;
@@ -39,7 +39,7 @@ bool EndSessionDetector::nativeEventFilter(const QByteArray& eventType, void* me
 	}
 	else if (msg->message == WM_WTSSESSION_CHANGE)
 	{
-		if (SettingsScope::Settings::isKeepLightsOnAfterLock())
+		if (!SettingsScope::Settings::isKeepLightsOnAfterLock())
 		{
 			if (msg->wParam == WTS_SESSION_LOCK)
 			{
