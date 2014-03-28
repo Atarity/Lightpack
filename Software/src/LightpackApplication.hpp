@@ -29,6 +29,9 @@
 #include "SettingsWindow.hpp"
 #include "LedDeviceManager.hpp"
 #include "qtsingleapplication.h"
+#include "EndSessionDetector.hpp"
+
+#include <memory>
 
 #define getLightpackApp() static_cast<LightpackApplication *>(QCoreApplication::instance())
 
@@ -47,6 +50,7 @@ public:
     bool winEventFilter ( MSG * msg, long * result );
     HWND getMainWindowHandle();
 #endif
+    SettingsWindow * settingsWnd() { return m_settingsWindow; }
     const SettingsScope::Settings * settings() { return SettingsScope::Settings::settingsSingleton(); }
     enum ErrorCodes {
         OK_ErrorCode                            = 0,
@@ -123,4 +127,6 @@ private:
     DeviceLocked::DeviceLockStatus m_deviceLockStatus;
     bool m_isSettingsWindowActive;
     Backlight::Status m_backlightStatus;
+
+	std::vector<std::unique_ptr<QAbstractNativeEventFilter>> m_EventFilters;
 };

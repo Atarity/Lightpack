@@ -105,6 +105,8 @@ public:
     static void setExpertModeEnabled(bool isEnabled);
     static bool isKeepLightsOnAfterExit();
     static void setKeepLightsOnAfterExit(bool isEnabled);
+	static bool isKeepLightsOnAfterLock();
+	static void setKeepLightsOnAfterLock(bool isEnabled);
     static bool isPingDeviceEverySecond();
     static void setPingDeviceEverySecond(bool isEnabled);
     static bool isUpdateFirmwareMessageShown();
@@ -232,6 +234,7 @@ signals:
     void apiKeyChanged(const QString &);
     void expertModeEnabledChanged(bool);
     void keepLightsOnAfterExitChanged(bool isEnabled);
+	void keepLightsOnAfterLockChanged(bool isEnabled);
     void pingDeviceEverySecondEnabledChanged(bool);
 
     void languageChanged(const QString &);
