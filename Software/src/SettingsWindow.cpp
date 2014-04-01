@@ -215,6 +215,7 @@ void SettingsWindow::connectSignalsSlots()
     connect(ui->pushButton_SelectColor, SIGNAL(colorChanged(QColor)), this, SLOT(onMoodLampColor_changed(QColor)));
     connect(ui->checkBox_ExpertModeEnabled, SIGNAL(toggled(bool)), this, SLOT(onExpertModeEnabled_Toggled(bool)));
     connect(ui->checkBox_KeepLightsOnAfterExit, SIGNAL(toggled(bool)), this, SLOT(onKeepLightsAfterExit_Toggled(bool)));
+	connect(ui->checkBox_KeepLightsOnAfterLockComputer, SIGNAL(toggled(bool)), this, SLOT(onKeepLightsAfterLock_Toggled(bool)));
 
     // Dev tab
     connect(ui->checkBox_EnableDx1011Capture, SIGNAL(toggled(bool)), this, SLOT(onGrabberChanged()));
@@ -1492,37 +1493,38 @@ void SettingsWindow::updateUiFromSettings()
     Lightpack::Mode mode = Settings::getLightpackMode();
     onLightpackModeChanged(mode);
 
-    ui->checkBox_ExpertModeEnabled->setChecked          (Settings::isExpertModeEnabled());
+    ui->checkBox_ExpertModeEnabled->setChecked                       (Settings::isExpertModeEnabled());
 
-    ui->checkBox_SendDataOnlyIfColorsChanges->setChecked(Settings::isSendDataOnlyIfColorsChanges());
-    ui->checkBox_KeepLightsOnAfterExit->setChecked      (Settings::isKeepLightsOnAfterExit());
-    ui->checkBox_PingDeviceEverySecond->setChecked      (Settings::isPingDeviceEverySecond());
+    ui->checkBox_SendDataOnlyIfColorsChanges->setChecked             (Settings::isSendDataOnlyIfColorsChanges());
+    ui->checkBox_KeepLightsOnAfterExit->setChecked                   (Settings::isKeepLightsOnAfterExit());
+	ui->checkBox_KeepLightsOnAfterLockComputer->setChecked           (Settings::isKeepLightsOnAfterLock());
+    ui->checkBox_PingDeviceEverySecond->setChecked                   (Settings::isPingDeviceEverySecond());
 
-    ui->checkBox_GrabIsAvgColors->setChecked            (Settings::isGrabAvgColorsEnabled());
-    ui->spinBox_GrabSlowdown->setValue                  (Settings::getGrabSlowdown());
-    ui->spinBox_LuminosityThreshold->setValue           (Settings::getLuminosityThreshold());
-
-    // Check the selected moodlamp mode (setChecked(false) not working to select another)
-    ui->radioButton_MinimumLuminosity->setChecked       (Settings::isMinimumLuminosityEnabled());
-    ui->radioButton_LuminosityDeadZone->setChecked      (!Settings::isMinimumLuminosityEnabled());
+    ui->checkBox_GrabIsAvgColors->setChecked                         (Settings::isGrabAvgColorsEnabled());
+    ui->spinBox_GrabSlowdown->setValue                               (Settings::getGrabSlowdown());
+    ui->spinBox_LuminosityThreshold->setValue                        (Settings::getLuminosityThreshold());
 
     // Check the selected moodlamp mode (setChecked(false) not working to select another)
-    ui->radioButton_ConstantColorMoodLampMode->setChecked(!Settings::isMoodLampLiquidMode());
-    ui->radioButton_LiquidColorMoodLampMode->setChecked (Settings::isMoodLampLiquidMode());
-    ui->pushButton_SelectColor->setColor                (Settings::getMoodLampColor());
-    ui->horizontalSlider_MoodLampSpeed->setValue        (Settings::getMoodLampSpeed());
+    ui->radioButton_MinimumLuminosity->setChecked                    (Settings::isMinimumLuminosityEnabled());
+    ui->radioButton_LuminosityDeadZone->setChecked                   (!Settings::isMinimumLuminosityEnabled());
 
-    ui->horizontalSlider_DeviceRefreshDelay->setValue   (Settings::getDeviceRefreshDelay());
-    ui->horizontalSlider_DeviceBrightness->setValue     (Settings::getDeviceBrightness());
-    ui->horizontalSlider_DeviceSmooth->setValue         (Settings::getDeviceSmooth());
-    ui->horizontalSlider_DeviceColorDepth->setValue     (Settings::getDeviceColorDepth());
-    ui->doubleSpinBox_DeviceGamma->setValue             (Settings::getDeviceGamma());
-    ui->horizontalSlider_GammaCorrection->setValue      (floor((Settings::getDeviceGamma() * 100 + 0.5)));
+    // Check the selected moodlamp mode (setChecked(false) not working to select another)
+    ui->radioButton_ConstantColorMoodLampMode->setChecked            (!Settings::isMoodLampLiquidMode());
+    ui->radioButton_LiquidColorMoodLampMode->setChecked              (Settings::isMoodLampLiquidMode());
+    ui->pushButton_SelectColor->setColor                             (Settings::getMoodLampColor());
+    ui->horizontalSlider_MoodLampSpeed->setValue                     (Settings::getMoodLampSpeed());
 
-    ui->groupBox_Api->setChecked                        (Settings::isApiEnabled());
-    ui->lineEdit_ApiPort->setText                       (QString::number(Settings::getApiPort()));
-    ui->lineEdit_ApiKey->setText                        (Settings::getApiAuthKey());
-    ui->spinBox_LoggingLevel->setValue                  (g_debugLevel);
+    ui->horizontalSlider_DeviceRefreshDelay->setValue                (Settings::getDeviceRefreshDelay());
+    ui->horizontalSlider_DeviceBrightness->setValue                  (Settings::getDeviceBrightness());
+    ui->horizontalSlider_DeviceSmooth->setValue                      (Settings::getDeviceSmooth());
+    ui->horizontalSlider_DeviceColorDepth->setValue                  (Settings::getDeviceColorDepth());
+    ui->doubleSpinBox_DeviceGamma->setValue                          (Settings::getDeviceGamma());
+    ui->horizontalSlider_GammaCorrection->setValue            (floor((Settings::getDeviceGamma() * 100 + 0.5)));
+
+    ui->groupBox_Api->setChecked                                     (Settings::isApiEnabled());
+    ui->lineEdit_ApiPort->setText                    (QString::number(Settings::getApiPort()));
+    ui->lineEdit_ApiKey->setText                                     (Settings::getApiAuthKey());
+    ui->spinBox_LoggingLevel->setValue                               (g_debugLevel);
 
     switch (Settings::getGrabberType())
     {
@@ -1840,4 +1842,9 @@ void SettingsWindow::on_pbRunConfigurationWizard_clicked()
 #endif
 
     quit();
+}
+
+void SettingsWindow::onKeepLightsAfterLock_Toggled(bool isEnabled)
+{
+	Settings::setKeepLightsOnAfterLock(isEnabled);
 }
