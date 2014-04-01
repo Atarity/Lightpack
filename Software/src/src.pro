@@ -91,6 +91,7 @@ win32 {
     LIBS    += -lwsock32 -lshlwapi -lole32
 
     LIBS    += -lpsapi
+    LIBS    += -lwtsapi32
 
     CONFIG(msvc) {
         QMAKE_POST_LINK = cd $(DESTDIR) && \
@@ -175,6 +176,7 @@ SOURCES += \
     Plugin.cpp \
     LightpackPluginInterface.cpp \
     TimeEvaluations.cpp \
+    EndSessionDetector.cpp \
     wizard/ZoneWidget.cpp \
     wizard/ZonePlacementPage.cpp \
     wizard/Wizard.cpp \
@@ -223,6 +225,7 @@ HEADERS += \
     PluginsManager.hpp \
     Plugin.hpp \
     LightpackPluginInterface.hpp \
+    EndSessionDetector.hpp \
     wizard/ZoneWidget.hpp \
     wizard/ZonePlacementPage.hpp \
     wizard/Wizard.hpp \

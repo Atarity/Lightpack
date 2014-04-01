@@ -9,12 +9,19 @@
 #include <WtsApi32.h>
 #endif
 
+class register_exception : public std::exception {
+  virtual const char* what() const throw()
+  {
+    return "Failed to register session notification";
+  }
+};
+
 EndSessionDetector::EndSessionDetector()
 	: m_isDestroyed(false)
 {
 #ifdef Q_OS_WIN
 	if (WTSRegisterSessionNotification(getLightpackApp()->getMainWindowHandle(), NOTIFY_FOR_THIS_SESSION) == FALSE)
-		throw std::exception("Failed to register session notification.");
+        throw register_exception();
 #endif
 }
 
