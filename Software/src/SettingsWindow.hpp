@@ -128,6 +128,8 @@ private slots:
     void showAbout(); /* using in actions */
     void onPostInit();
 
+    void scrollThanks();
+
     void updateTrayAndActionStates();
 
     void changePage(int page);
@@ -234,6 +236,7 @@ private:
     QString m_deviceLockModule;
 
     QTimer *m_updateTrayTimer;
+    QTimer m_smoothScrollTimer;
 
     SpeedTest *m_speedTest;
 

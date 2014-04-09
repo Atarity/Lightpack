@@ -42,6 +42,7 @@
 #include "Plugin.hpp"
 #include "systrayicon/SysTrayIcon.hpp"
 #include <QStringBuilder>
+#include <QScrollBar>
 
 
 using namespace SettingsScope;
@@ -88,6 +89,8 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     ui->lineEdit_ApiKey->setValidator(validatorApiKey);
 
     m_speedTest = new SpeedTest();
+
+    ui->textBrowser->setSource(QUrl("qrc:/text/cast.html"));
 
     // hide main tabbar
     QTabBar* tabBar=ui->tabWidget->findChild<QTabBar*>();
@@ -141,10 +144,21 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 void SettingsWindow::changePage(int page)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << page;
+    int targetPage;
     if (page > ui->tabWidget->count()-1)
-        ui->tabWidget->setCurrentIndex(page-1);
+        targetPage = page-1;
     else
-        ui->tabWidget->setCurrentIndex(page);
+        targetPage = page;
+
+    ui->tabWidget->setCurrentIndex(page);
+    if (targetPage == 5) {
+        ui->textBrowser->verticalScrollBar()->setValue(0);
+        m_smoothScrollTimer.setInterval(100);
+        m_smoothScrollTimer.start();
+    } else {
+        m_smoothScrollTimer.stop();
+    }
+
 }
 
 SettingsWindow::~SettingsWindow()
@@ -259,6 +273,8 @@ void SettingsWindow::connectSignalsSlots()
     //connect(ui->pushButton_ConsolePlugin,SIGNAL(clicked()),this,SLOT(viewPluginConsole()));
     connect(ui->pushButton_UpPriority, SIGNAL(clicked()), this, SLOT(MoveUpPlugin()));
     connect(ui->pushButton_DownPriority, SIGNAL(clicked()), this, SLOT(MoveDownPlugin()));
+
+    connect(&m_smoothScrollTimer, SIGNAL(timeout()), this, SLOT(scrollThanks()));
 }
 
 // ----------------------------------------------------------------------------
@@ -867,6 +883,17 @@ void SettingsWindow::showAbout()
 
     ui->tabWidget->setCurrentWidget(ui->tabAbout);
     this->show();
+
+    m_smoothScrollTimer.setInterval(100);
+    connect(&m_smoothScrollTimer, SIGNAL(timeout()), this, SLOT(scrollThanks()));
+    m_smoothScrollTimer.start();
+}
+
+void SettingsWindow::scrollThanks()
+{
+   QScrollBar *scrollBar = this->ui->textBrowser->verticalScrollBar();
+
+   scrollBar->setValue(scrollBar->value() + 1);
 
 }
 

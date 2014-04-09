@@ -37,5 +37,6 @@
         <file>icons/console_gray.png</file>
         <file>icons/Prismatik.png</file>
         <file>icons/Prismatik-pixmap.png</file>
+        <file>text/cast.html</file>
     </qresource>
 </RCC>

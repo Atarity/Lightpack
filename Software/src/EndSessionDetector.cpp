@@ -73,7 +73,9 @@ void EndSessionDetector::Destroy()
 	if (!m_isDestroyed)
 	{
 		m_isDestroyed = true;
+#ifdef Q_OS_WIN
 		WTSUnRegisterSessionNotification(getLightpackApp()->getMainWindowHandle());
+#endif
 	}
 }
 
