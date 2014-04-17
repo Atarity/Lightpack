@@ -78,11 +78,15 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     if (!m_noGui)
     {
-        checkSystemTrayAvailability();
+        bool trayAvailable = checkSystemTrayAvailability();
 
         m_settingsWindow = new SettingsWindow();
-        m_settingsWindow->setVisible(false); /* Load to tray */
-        m_settingsWindow->createTrayIcon();
+        if (trayAvailable) {
+            m_settingsWindow->setVisible(false); /* Load to tray */
+            m_settingsWindow->createTrayIcon();
+        }
+        else
+            m_settingsWindow->setVisible(true);
         m_settingsWindow->connectSignalsSlots();
         connect(this, SIGNAL(postInitialization()), m_settingsWindow, SLOT(onPostInit()));
 //        m_settingsWindow->profileSwitch(Settings::getCurrentProfileName());
@@ -418,7 +422,7 @@ void LightpackApplication::printVersionsSoftwareQtOS() const
     }
 }
 
-void LightpackApplication::checkSystemTrayAvailability() const
+bool LightpackApplication::checkSystemTrayAvailability() const
 {
 #   ifdef Q_OS_LINUX
     // When you add lightpack in the Startup in Ubuntu (10.04), tray starts later than the application runs.
@@ -435,8 +439,10 @@ void LightpackApplication::checkSystemTrayAvailability() const
     if (QSystemTrayIcon::isSystemTrayAvailable() == false)
     {
         QMessageBox::critical(0, "Prismatik", "I couldn't detect any system tray on this system.");
-        qFatal("%s %s", Q_FUNC_INFO, "I couldn't detect any system tray on this system.");
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Systray couldn't be detected, running in trayless mode";
+        return false;
     }
+    return true;
 }
 
 void LightpackApplication::startApiServer()
