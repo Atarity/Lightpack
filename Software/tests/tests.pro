@@ -12,7 +12,7 @@ DESTDIR     = bin
 CONFIG     += console
 CONFIG     -= app_bundle
 
-TEMPLATE    = app
+CONFIG(gcc):QMAKE_CXXFLAGS += -std=c++11
 
 # QMake and GCC produce a lot of stuff
 OBJECTS_DIR = stuff
@@ -46,7 +46,9 @@ HEADERS += \
     SettingsWindowMockup.hpp \
     GrabCalculationTest.hpp \
     LightpackApiTest.hpp \
-    lightpackmathtest.hpp
+    lightpackmathtest.hpp \
+    AppVersionTest.hpp \
+    ../src/UpdatesProcessor.hpp
 
 SOURCES += \
     ../src/ApiServerSetColorTask.cpp \
@@ -58,7 +60,9 @@ SOURCES += \
     SettingsWindowMockup.cpp \
     GrabCalculationTest.cpp \
     lightpackmathtest.cpp \
-    TestsMain.cpp
+    TestsMain.cpp \
+    AppVersionTest.cpp \
+    ../src/UpdatesProcessor.cpp
 
 win32{
     HEADERS += \

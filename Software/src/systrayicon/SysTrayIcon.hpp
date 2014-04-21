@@ -80,6 +80,7 @@ signals:
 
 public slots:
     void retranslateUi();
+    void checkUpdate();
 
 private:
     SysTrayIconPrivate * const d_ptr;

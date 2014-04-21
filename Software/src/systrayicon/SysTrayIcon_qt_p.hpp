@@ -35,6 +35,7 @@
 #include <QMenu>
 #include <QUrl>
 #include <QObject>
+#include <QNetworkReply>
 
 class SysTrayIconPrivate : public QObject, public SysTrayIconPrivateData
 {
@@ -79,6 +80,8 @@ public:
                 , this, SLOT(onTrayIcon_Activated(QSystemTrayIcon::ActivationReason)));
         connect(_qsystray, SIGNAL(messageClicked())
                 , this, SLOT(onTrayIcon_MessageClicked()));
+
+        connect(&_updatesProcessor, SIGNAL(readyRead()), this, SLOT(onCheckUpdate_Finished()));
 
         _pixmapCache.insert("lock16", new QPixmap(QPixmap(":/icons/lock.png").scaledToWidth(16, Qt::SmoothTransformation)) );
         _pixmapCache.insert("on16", new QPixmap(QPixmap(":/icons/on.png").scaledToWidth(16, Qt::SmoothTransformation)) );
@@ -160,6 +163,11 @@ public:
         }
     }
 
+    void checkUpdate()
+    {
+        _updatesProcessor.requestUpdates();
+    }
+
     void setStatus(const SysTrayIcon::Status status, const QString *arg = NULL)
     {
         switch (status)
@@ -211,6 +219,16 @@ public:
     }
 
 private slots:
+
+    void onCheckUpdate_Finished()
+    {
+        QList<UpdateInfo> updates = _updatesProcessor.readUpdates((uint)0);
+        for (int i = 0; i < updates.size(); ++i) {
+            UpdateInfo update = updates.at(i);
+            _qsystray->showMessage(update.title, update.text);
+
+        }
+    }
 
     void onProfileAction_Triggered()
     {

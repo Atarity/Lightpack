@@ -190,7 +190,8 @@ SOURCES += \
     wizard/SelectDevicePage.cpp \
     wizard/CassiopeiaDistributor.cpp \
     wizard/PegasusDistributor.cpp \
-    systrayicon/SysTrayIcon.cpp
+    systrayicon/SysTrayIcon.cpp \
+    UpdatesProcessor.cpp
 
 HEADERS += \
     LightpackApplication.hpp \
@@ -243,7 +244,8 @@ HEADERS += \
     wizard/CassiopeiaDistributor.hpp \
     wizard/PegasusDistributor.hpp \
     systrayicon/SysTrayIcon.hpp \
-    systrayicon/SysTrayIcon_p.hpp
+    systrayicon/SysTrayIcon_p.hpp \
+    UpdatesProcessor.hpp
 
 !contains(DEFINES,UNITY_DESKTOP) {
     HEADERS += systrayicon/SysTrayIcon_qt_p.hpp

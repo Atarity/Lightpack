@@ -85,6 +85,12 @@ void SysTrayIcon::retranslateUi()
     d->retranslateUi();
 }
 
+void SysTrayIcon::checkUpdate()
+{
+    Q_D(SysTrayIcon);
+    d->checkUpdate();
+}
+
 void SysTrayIcon::setStatus(const Status status, const QString *arg)
 {
     Q_D(SysTrayIcon);

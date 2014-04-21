@@ -2,6 +2,7 @@
 #define SYSTRAYICON_P_HPP
 
 #include "SysTrayIcon.hpp"
+#include "UpdatesProcessor.hpp"
 
 class SysTrayIconPrivateData
 {
@@ -32,8 +33,14 @@ public:
 
     virtual void updateProfiles() = 0;
 
+    virtual void checkUpdate() = 0;
+
 protected:
     SysTrayIcon * const q_ptr;
+
+    UpdatesProcessor _updatesProcessor;
+
+
 
 };
 
