@@ -88,7 +88,7 @@ private:
     void processCommandLineArguments();
     void printHelpMessage() const;
     void printVersionsSoftwareQtOS() const;
-    void checkSystemTrayAvailability() const;
+    bool checkSystemTrayAvailability() const;
     void startApiServer();
     void startLedDeviceManager();
     void initGrabManager();

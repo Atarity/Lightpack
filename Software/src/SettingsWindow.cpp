@@ -293,7 +293,8 @@ void SettingsWindow::changeEvent(QEvent *e)
 
         currentPage = ui->listWidget->currentRow();
         ui->retranslateUi(this);
-        m_trayIcon->retranslateUi();
+        if (m_trayIcon)
+            m_trayIcon->retranslateUi();
 
         ui->comboBox_LightpackModes->setCurrentIndex(Settings::getLightpackMode() == Lightpack::MoodLampMode ? MoodLampModeIndex : GrabModeIndex);
 
@@ -319,10 +320,14 @@ void SettingsWindow::closeEvent(QCloseEvent *event)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    if(m_trayIcon->isVisible()){
+    if (m_trayIcon && m_trayIcon->isVisible()) {
         // Just hide settings
         hideSettings();
         event->ignore();
+    }
+    else {
+        // terminate application if we're running in "trayless" mode
+        QApplication::quit();
     }
 }
 
@@ -708,15 +713,18 @@ void SettingsWindow::updateTrayAndActionStates()
         if (m_deviceLockStatus == DeviceLocked::Api)
         {
             m_labelStatusIcon->setPixmap(*m_pixmapCache["lock16"]);
-            m_trayIcon->setStatus(SysTrayIcon::StatusLockedByApi);
+            if (m_trayIcon)
+                m_trayIcon->setStatus(SysTrayIcon::StatusLockedByApi);
         } else
             if (m_deviceLockStatus == DeviceLocked::Plugin)
             {
                 m_labelStatusIcon->setPixmap(*m_pixmapCache["lock16"]);
-                m_trayIcon->setStatus(SysTrayIcon::StatusLockedByPlugin, &m_deviceLockModule);
+                if (m_trayIcon)
+                    m_trayIcon->setStatus(SysTrayIcon::StatusLockedByPlugin, &m_deviceLockModule);
             } else {
                 m_labelStatusIcon->setPixmap(*m_pixmapCache["on16"]);
-                m_trayIcon->setStatus(SysTrayIcon::StatusOn);
+                if (m_trayIcon)
+                    m_trayIcon->setStatus(SysTrayIcon::StatusOn);
             }
         break;
 
@@ -724,20 +732,23 @@ void SettingsWindow::updateTrayAndActionStates()
         m_labelStatusIcon->setPixmap(*m_pixmapCache["off16"]);
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(*m_pixmapCache["on16"]));
         ui->pushButton_EnableDisableDevice->setText("  " + tr("Turn lights ON"));
-        m_trayIcon->setStatus(SysTrayIcon::StatusOff);
+        if (m_trayIcon)
+            m_trayIcon->setStatus(SysTrayIcon::StatusOff);
         break;
 
     case Backlight::StatusDeviceError:
         m_labelStatusIcon->setPixmap(*m_pixmapCache["error16"]);
         ui->pushButton_EnableDisableDevice->setIcon(QIcon(*m_pixmapCache["off16"]));
         ui->pushButton_EnableDisableDevice->setText("  " + tr("Turn lights OFF"));
-        m_trayIcon->setStatus(SysTrayIcon::StatusError);
+        if (m_trayIcon)
+            m_trayIcon->setStatus(SysTrayIcon::StatusError);
         break;
     default:
         qWarning() << Q_FUNC_INFO << "m_backlightStatus = " << m_backlightStatus;
         break;
     }
-    m_labelStatusIcon->setToolTip(m_trayIcon->toolTip());
+    if (m_trayIcon)
+        m_labelStatusIcon->setToolTip(m_trayIcon->toolTip());
 }
 
 void SettingsWindow::initGrabbersRadioButtonsVisibility()
@@ -1277,7 +1288,8 @@ void SettingsWindow::profileSwitch(const QString & configName)
 
     ui->comboBox_Profiles->setCurrentIndex(index);
 
-    m_trayIcon->updateProfiles();
+    if (m_trayIcon)
+        m_trayIcon->updateProfiles();
 
     Settings::loadOrCreateProfile(configName);
 
