@@ -223,10 +223,17 @@ private slots:
     void onCheckUpdate_Finished()
     {
         QList<UpdateInfo> updates = _updatesProcessor.readUpdates((uint)0);
-        for (int i = 0; i < updates.size(); ++i) {
-            UpdateInfo update = updates.at(i);
-            _qsystray->showMessage(update.title, update.text);
-
+        if (updates.size() > 0) {
+            if(updates.size() > 1) {
+                _trayMessage = SysTrayIcon::MessageGeneric;
+                _trayMsgUrl = QUrl("http://lightpack.tv");
+                _qsystray->showMessage("Updates are available", "click here to visit http://lightpack.tv");
+            } else {
+                _trayMessage = SysTrayIcon::MessageGeneric;
+                UpdateInfo update = updates.last();
+                _trayMsgUrl = QUrl(update.url);
+                _qsystray->showMessage(update.title, update.text);
+            }
         }
     }
 
@@ -251,6 +258,10 @@ private slots:
                 QDesktopServices::openUrl(QUrl(SysTrayIcon::LightpackDownloadsPageUrl, QUrl::TolerantMode));
             }
             break;
+        case SysTrayIcon::MessageGeneric:
+            QDesktopServices::openUrl(_trayMsgUrl);
+            break;
+
         default:
             break;
         }
@@ -360,6 +371,7 @@ private:
     QAction * _quitAction;
     QMenu * _profilesMenu;
     SysTrayIcon::Message _trayMessage;
+    QUrl _trayMsgUrl;
     SysTrayIcon::Status _status;
 
     QCache<QString, QPixmap> _pixmapCache;
