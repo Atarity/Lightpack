@@ -57,6 +57,11 @@
 #   define SERIAL_PORT_DEFAULT    "COM1"
 #endif
 
+//it is supposed to define LASTREAD_UPDATE_ID_DEFAULT outside of this file
+#ifndef LASTREAD_UPDATE_ID_DEFAULT
+#   define LASTREAD_UPDATE_ID_DEFAULT 0
+#endif
+
 namespace SettingsScope
 {
 
@@ -74,6 +79,7 @@ static const bool IsPingDeviceEverySecond = true;
 static const bool IsUpdateFirmwareMessageShown = false;
 static const QString ConnectedDeviceDefault = "Lightpack";
 static const QString SupportedDevices = SUPPORTED_DEVICES; /* comma separated values! */
+static const uint LastReadUpdateId = LASTREAD_UPDATE_ID_DEFAULT;
 
 // [HotKeys]
 namespace HotKeys

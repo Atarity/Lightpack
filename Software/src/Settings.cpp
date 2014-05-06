@@ -73,6 +73,7 @@ static const QString IsPingDeviceEverySecond = "IsPingDeviceEverySecond";
 static const QString IsUpdateFirmwareMessageShown = "IsUpdateFirmwareMessageShown";
 static const QString ConnectedDevice = "ConnectedDevice";
 static const QString SupportedDevices = "SupportedDevices";
+static const QString LastReadUpdateId = "LastReadUpdateId";
 
 // [Hotkeys]
 namespace Hotkeys
@@ -272,6 +273,7 @@ bool Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::AlienFx::NumberOfLeds,      Main::AlienFx::NumberOfLedsDefault);
     setNewOptionMain(Main::Key::Lightpack::NumberOfLeds,    Main::Lightpack::NumberOfLedsDefault);
     setNewOptionMain(Main::Key::Virtual::NumberOfLeds,      Main::Virtual::NumberOfLedsDefault);
+    setNewOptionMain(Main::Key::LastReadUpdateId,           Main::LastReadUpdateId);
 
     if (isDebugLevelObtainedFromCmdArgs == false)
     {
@@ -1408,6 +1410,15 @@ double Settings::getValidLedCoef(int ledIndex, const QString & keyCoef)
 
 QString Settings::getProfilesPath() {
    return m_applicationDirPath + "Profiles/";
+}
+
+const uint Settings::getLastReadUpdateId() {
+   return valueMain(Main::Key::LastReadUpdateId).toUInt();
+
+}
+
+void Settings::setLastReadUpdateId(const uint updateId) {
+    setValueMain(Main::Key::LastReadUpdateId, updateId);
 }
 
 //

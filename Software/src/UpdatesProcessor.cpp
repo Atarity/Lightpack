@@ -137,7 +137,7 @@ bool UpdatesProcessor::isVersionMatches(const QString &predicate, const AppVersi
 
 QList<UpdateInfo> * UpdatesProcessor::readUpdates(QList<UpdateInfo> *updates, QXmlStreamReader *xmlReader)
 {
-    if(xmlReader->readNextStartElement()) {
+    if (xmlReader->readNextStartElement()) {
         qDebug() << xmlReader->name();
         while (xmlReader->name() == "update") {
             UpdateInfo updateInfo;

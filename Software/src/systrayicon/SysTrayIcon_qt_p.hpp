@@ -222,7 +222,8 @@ private slots:
 
     void onCheckUpdate_Finished()
     {
-        QList<UpdateInfo> updates = _updatesProcessor.readUpdates((uint)0);
+        using namespace SettingsScope;
+        QList<UpdateInfo> updates = _updatesProcessor.readUpdates(Settings::getLastReadUpdateId());
         if (updates.size() > 0) {
             if(updates.size() > 1) {
                 _trayMessage = SysTrayIcon::MessageGeneric;
@@ -234,6 +235,7 @@ private slots:
                 _trayMsgUrl = QUrl(update.url);
                 _qsystray->showMessage(update.title, update.text);
             }
+            Settings::setLastReadUpdateId(updates.last().id);
         }
     }
 
