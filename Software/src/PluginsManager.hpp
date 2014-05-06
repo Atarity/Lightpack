@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <QProcess>
 
 class Plugin;
 
@@ -27,6 +28,9 @@ public slots:
     void reloadPlugins();
     void StartPlugins();
     void StopPlugins();
+
+private slots:
+    void onPluginStateChangedHandler();
 
 };
 

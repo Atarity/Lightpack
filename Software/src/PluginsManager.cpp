@@ -89,8 +89,10 @@ void PluginsManager::StartPlugins()
 
     for(QMap<QString, Plugin*>::iterator it = _plugins.begin(); it != _plugins.end(); ++it){
             Plugin* p = it.value();
+            p->disconnect();
             if (p->isEnabled())
                 p->Start();
+            connect(p, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(onPluginStateChangedHandler()));
         }
 
 }
@@ -106,3 +108,10 @@ void PluginsManager::StopPlugins()
 
 }
 
+void PluginsManager::onPluginStateChangedHandler()
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+
+    emit updatePlugin(_plugins.values());
+
+}

@@ -14,20 +14,24 @@ public:
     void Start();
     void Stop();
 
-    QString Name() ;
-    QString Guid() ;
-    QString Description() ;
-    QString Author() ;
-    QString Version() ;
-    QIcon Icon() ;
+    QString Name() const;
+    QString Guid() const;
+    QString Description() const;
+    QString Author() const;
+    QString Version() const;
+    QIcon Icon() const;
 
-    bool isEnabled();
+
+    QProcess::ProcessState state() const;
+    bool isEnabled() const;
     void setEnabled(bool enable);
     void setPriority(int priority);
-    int getPriority();
+    int getPriority() const;
 
 
 signals:
+
+    void stateChanged(QProcess::ProcessState);
     
 public slots:
     

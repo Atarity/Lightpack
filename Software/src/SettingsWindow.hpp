@@ -225,6 +225,7 @@ private:
     void savePriorityPlugin();
     void showHelpOf(QObject *object);
     QString getSlotName(const QString &actionName);
+    QString getPluginName(const Plugin *plugin) const;
 
 
 private:

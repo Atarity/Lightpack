@@ -1075,6 +1075,7 @@ void ApiServer::initApiSetColorTask()
 
     m_apiSetColorTaskThread = new QThread();
     m_apiSetColorTask = new ApiServerSetColorTask();
+    m_apiSetColorTask->setApiDeviceNumberOfLeds(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
 
     //connect(m_apiSetColorTask, SIGNAL(taskParseSetColorDone(QList<QRgb>)), this, SIGNAL(updateLedsColors(QList<QRgb>)), Qt::QueuedConnection);
     connect(m_apiSetColorTask, SIGNAL(taskParseSetColorIsSuccess(bool)), this, SLOT(taskSetColorIsSuccess(bool)), Qt::QueuedConnection);
