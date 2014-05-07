@@ -235,7 +235,6 @@ private:
     QList<QString> m_deviceLockKey;
     QString m_deviceLockModule;
 
-    QTimer *m_updateTrayTimer;
     QTimer m_smoothScrollTimer;
 
     SpeedTest *m_speedTest;

@@ -129,10 +129,13 @@ void GrabManager::start(bool isGrabEnabled)
 
     if (m_grabber != NULL) {
         if (isGrabEnabled) {
+            m_timerUpdateFPS->start();
             m_grabber->startGrabbing();
         } else {
             clearColorsCurrent();
+            m_timerUpdateFPS->stop();
             m_grabber->stopGrabbing();
+            emit ambilightTimeOfUpdatingColors(0);
         }
     }
 }
