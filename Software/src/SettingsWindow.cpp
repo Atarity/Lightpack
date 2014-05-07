@@ -90,8 +90,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     m_speedTest = new SpeedTest();
 
-    ui->textBrowser->setSource(QUrl("qrc:/text/cast.html"));
-
     // hide main tabbar
     QTabBar* tabBar=ui->tabWidget->findChild<QTabBar*>();
     tabBar->hide();
@@ -659,10 +657,10 @@ void SettingsWindow::startBacklight()
                     if (m_deviceLockStatus != DeviceLocked::Api  && m_deviceLockKey.indexOf(key)==0)
                         m_deviceLockModule = _plugins[indexPlugin]->Name();
                     if (Settings::isExpertModeEnabled())
-                        item->setText(_plugins[indexPlugin]->Name()+" (Lock)");
+                        item->setText(getPluginName(_plugins[indexPlugin])+" (Lock)");
                 }
                 else
-                    item->setText(_plugins[indexPlugin]->Name());
+                    item->setText(getPluginName(_plugins[indexPlugin]));
             }
         }
 
@@ -1764,7 +1762,7 @@ void SettingsWindow::updatePlugin(QList<Plugin*> plugins)
     ui->list_Plugins->clear();
     foreach(Plugin* plugin, _plugins){
         int index = _plugins.indexOf(plugin);
-        QListWidgetItem *item = new QListWidgetItem(plugin->Name());
+        QListWidgetItem *item = new QListWidgetItem(getPluginName(plugin));
         item->setData(Qt::UserRole, index);
         item->setIcon(plugin->Icon());
         if (plugin->isEnabled())
@@ -1775,7 +1773,6 @@ void SettingsWindow::updatePlugin(QList<Plugin*> plugins)
             item->setCheckState(Qt::Unchecked);
 
         ui->list_Plugins->addItem(item);
-//        QApplication::processEvents(QEventLoop::AllEvents, 1000);
     }
 
     ui->pushButton_ReloadPlugins->setEnabled(true);
@@ -1863,6 +1860,15 @@ void SettingsWindow::savePriorityPlugin()
         QListWidgetItem * item = ui->list_Plugins->item(index);
         int indexPlugin =item->data(Qt::UserRole).toUInt();
         _plugins[indexPlugin]->setPriority(count - index);
+    }
+}
+
+QString SettingsWindow::getPluginName(const Plugin *plugin) const
+{
+    if (plugin->state() == QProcess::Running) {
+        return plugin->Name().append(" (running)");
+    } else {
+        return plugin->Name().append(" (not running)");
     }
 }
 

@@ -81,7 +81,6 @@ signals:
     void updateApiPort(int port);
     void updateApiKey(QString key);
     void updateApiDeviceNumberOfLeds(int value);
-    void getPluginConsole();
     void reloadPlugins();
 
 public slots:
