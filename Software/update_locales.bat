@@ -13,15 +13,15 @@ echo.
 echo =================================================
 echo Updating translation files for Lightpack project:
 echo.
-echo executing C:\QtSDK\Desktop\Qt\4.8.1\mingw\bin\lupdate.exe %1 src\src.pro
+echo executing C:\Qt\4.8.5\bin\lupdate.exe %1 -pro src\src.pro
 echo.
-C:\Qt\Qt5.1.1\5.1.1\mingw48_32\bin\lupdate.exe %1 -pro src\src.pro
+C:\Qt\4.8.5\bin\lupdate.exe %1 -pro src\src.pro
 
 echo.
 echo ===========================================================
 echo Generating release translation files for Lightpack project:
 echo.
-C:\Qt\Qt5.1.1\5.1.1\mingw48_32\bin\lrelease.exe src\src.pro
+C:\Qt\4.8.5\bin\lrelease.exe src\src.pro
 
 echo.
 
