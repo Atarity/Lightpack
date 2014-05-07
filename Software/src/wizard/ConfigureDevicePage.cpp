@@ -31,6 +31,8 @@
 #include "LedDeviceAdalight.hpp"
 #include "LedDeviceVirtual.hpp"
 #include "QMessageBox"
+#include "Wizard.hpp"
+#include "QDesktopWidget"
 
 using namespace SettingsScope;
 
@@ -81,6 +83,13 @@ bool ConfigureDevicePage::validatePage()
     return true;
 }
 
+int ConfigureDevicePage::nextId() {
+    if (QApplication::desktop()->screenCount() == 1) {
+        return reinterpret_cast<Wizard *>(wizard())->skipMonitorConfigurationPage();
+    } else {
+        return Page_MonitorConfiguration;
+    }
+}
 
 ConfigureDevicePage::~ConfigureDevicePage()
 {

@@ -51,6 +51,12 @@ class Wizard : public QWizard, SettingsAwareTrait
 public:
     explicit Wizard(bool isInitFromSettings, QWidget *parent = 0);
     ~Wizard();
+
+    int skipMonitorConfigurationPage() {
+        this->setField("screenId", -1);
+        return Page_ChooseProfile;
+    }
+
 public slots:
 
 private:

@@ -60,7 +60,7 @@ private slots:
     void on_pbAndromeda_clicked();
     void on_pbCassiopeia_clicked();
 
-    void on_sbNumberOfLeds_valueChanged(int arg1);
+    void on_numberOfLeds_valueChanged(int arg1);
 
     void on_pbPegasus_clicked();
 

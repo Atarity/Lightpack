@@ -71,11 +71,10 @@ void ZonePlacementPage::initializePage()
     device()->setSmoothSlowdown(70);
 
     _ui->sbNumberOfLeds->setMaximum(device()->maxLedsCount());
-    _ui->sbNumberOfLeds->setValue(device()->defaultLedsCount());
 
-    _ui->sbNumberOfLeds->setValue(device()->maxLedsCount());
     if (_isInitFromSettings) {
         size_t ledCount = Settings::getNumberOfLeds(Settings::getConnectedDevice());
+        _ui->sbNumberOfLeds->setValue(ledCount);
 
         for(size_t i = 0; i < ledCount; i++) {
             QPoint topLeft = Settings::getLedPosition(i);
@@ -84,14 +83,17 @@ void ZonePlacementPage::initializePage()
             addGrabArea(i, r);
         }
     } else {
+        _ui->sbNumberOfLeds->setValue(device()->defaultLedsCount());
         on_pbAndromeda_clicked();
     }
+    connect(_ui->sbNumberOfLeds, SIGNAL(valueChanged(int)), this, SLOT(on_numberOfLeds_valueChanged(int)));
     turnLightsOff();
 }
 
 void ZonePlacementPage::cleanupPage()
 {
     cleanupGrabAreas();
+    _ui->sbNumberOfLeds->disconnect();
 }
 
 void ZonePlacementPage::cleanupGrabAreas()
@@ -235,7 +237,7 @@ void ZonePlacementPage::on_pbPegasus_clicked()
 }
 
 
-void ZonePlacementPage::on_sbNumberOfLeds_valueChanged(int numOfLed)
+void ZonePlacementPage::on_numberOfLeds_valueChanged(int numOfLed)
 {
     while (numOfLed < _grabAreas.size()) {
         removeLastGrabArea();

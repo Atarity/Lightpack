@@ -28,6 +28,7 @@
 #include "ui_SelectDevicePage.h"
 #include "Wizard.hpp"
 #include "LedDeviceVirtual.hpp"
+#include "QDesktopWidget"
 
 SelectDevicePage::SelectDevicePage(bool isInitFromSettings, TransientSettings *ts, QWidget *parent):
     QWizardPage(parent),
@@ -68,7 +69,12 @@ bool SelectDevicePage::validatePage()
 int SelectDevicePage::nextId() const
 {
     if (ui->rbVirtual->isChecked())
-        return Page_MonitorConfiguration;
+        if (QApplication::desktop()->screenCount() == 1) {
+            return reinterpret_cast<Wizard *>(wizard())->skipMonitorConfigurationPage();
+        } else {
+            return Page_MonitorConfiguration;
+        }
+
     else
         return Page_ConfigureDevice;
 }
