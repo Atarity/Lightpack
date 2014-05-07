@@ -971,9 +971,10 @@ void SettingsWindow::ledDeviceCallSuccess(bool isSuccess)
         }
         DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Backlight::StatusDeviceError";
     } else {
-        if (m_backlightStatus == Backlight::StatusDeviceError)
+        if (m_backlightStatus == Backlight::StatusDeviceError) {
             m_backlightStatus = Backlight::StatusOn;
-        updateTrayAndActionStates();
+            updateTrayAndActionStates();
+        }
     }
 }
 
