@@ -216,6 +216,12 @@ public:
     void updateProfiles()
     {
         fillProfilesFromSettings();
+        if (_status == SysTrayIcon::StatusOn) {
+            auto profileName = SettingsScope::Settings::getCurrentProfileName();
+            setStatus(_status, &profileName);
+        }
+
+
     }
 
 private slots:
@@ -355,7 +361,7 @@ private:
         QStringList profiles = Settings::findAllProfiles();
 
         for(int i=0; i < profiles.count(); i++) {
-            profileAction = new QAction(profiles[i], this);
+            profileAction = new QAction(profiles[i], _profilesMenu);
             profileAction->setCheckable(true);
             if( SettingsScope::Settings::isProfileLoaded() && profiles[i].compare(Settings::getCurrentProfileName()) == 0 ) {
                 profileAction->setChecked(true);
