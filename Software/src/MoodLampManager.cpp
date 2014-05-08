@@ -63,15 +63,13 @@ void MoodLampManager::start(bool isEnabled)
 
     if (m_isMoodLampEnabled)
     {
-        m_timer.start(0);
-
         // Clear saved color for force emit signal after check m_rgbSaved != rgb in updateColors()
         // This is usable if start is called after API unlock, and we should force set current color
         m_rgbSaved = 0;
-
-    } else {
-        m_timer.stop();
+        updateColors();
     }
+    else
+        m_timer.stop();
 }
 
 void MoodLampManager::setCurrentColor(QColor color)
@@ -91,6 +89,12 @@ void MoodLampManager::setLiquidMode(bool state)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << state;
     m_isLiquidMode = state;
+    if (m_isLiquidMode && m_isMoodLampEnabled)
+        m_timer.start();
+    else {
+        m_timer.stop();
+        updateColors();
+    }
 }
 
 void MoodLampManager::setLiquidModeSpeed(int value)
@@ -128,10 +132,9 @@ void MoodLampManager::settingsProfileChanged(const QString &profileName)
 
 void MoodLampManager::initFromSettings()
 {
-    m_isLiquidMode = Settings::isMoodLampLiquidMode();
     m_liquidModeSpeed = Settings::getMoodLampSpeed();
     m_currentColor = Settings::getMoodLampColor();
-
+    setLiquidMode(Settings::isMoodLampLiquidMode());
     m_isSendDataOnlyIfColorsChanged = Settings::isSendDataOnlyIfColorsChanges();
 
     initColors(Settings::getNumberOfLeds(Settings::getConnectedDevice()));
@@ -182,7 +185,7 @@ void MoodLampManager::updateColors()
         emit updateLedsColors(m_colors);
     }
 
-    if (m_isMoodLampEnabled)
+    if (m_isMoodLampEnabled && m_isLiquidMode)
     {
         m_timer.start(m_delay);
     }
