@@ -19,8 +19,9 @@ using namespace SettingsScope;
 Plugin::Plugin(QString name, QString path, QObject *parent) :
     QObject(parent)
 {
-    _pathPlugin = path;
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << name << path;
+    _pathPlugin = path;
+    QDir pluginPath(_pathPlugin);
 
     QString fileName = path+"/"+name+".ini";
     QSettings settings( fileName, QSettings::IniFormat );
@@ -35,7 +36,7 @@ Plugin::Plugin(QString name, QString path, QObject *parent) :
     this->_author = settings.value( "Author", "").toString();
     this->_description = settings.value( "Description", "").toString();
     this->_version = settings.value( "Version", "").toString();
-    this->_icon = settings.value( "Icon", "").toString();
+    this->_icon = pluginPath.absoluteFilePath(settings.value( "Icon", "").toString());
     settings.endGroup();
 
     process = new QProcess(this);
@@ -71,7 +72,6 @@ QString Plugin::Version() const  {
 
 
 QIcon Plugin::Icon() const  {
-    // TODO path to image
    QFileInfo f(_icon);
    if (f.exists())
        return QIcon(_icon);
