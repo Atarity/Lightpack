@@ -195,7 +195,7 @@ public:
     static bool isLedEnabled(int ledIndex);
     static void setLedEnabled(int ledIndex, bool isEnabled);
 
-    static const uint getLastReadUpdateId();
+    static uint getLastReadUpdateId();
     static void setLastReadUpdateId(const uint updateId);
 
 private:        

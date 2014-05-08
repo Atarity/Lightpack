@@ -113,5 +113,4 @@ void PluginsManager::onPluginStateChangedHandler()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     emit updatePlugin(_plugins.values());
-
 }

@@ -1412,7 +1412,7 @@ QString Settings::getProfilesPath() {
    return m_applicationDirPath + "Profiles/";
 }
 
-const uint Settings::getLastReadUpdateId() {
+uint Settings::getLastReadUpdateId() {
    return valueMain(Main::Key::LastReadUpdateId).toUInt();
 
 }
