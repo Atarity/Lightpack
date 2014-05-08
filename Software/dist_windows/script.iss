@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Prismatik"
-#define MyAppVersion "5.10.6"
+#define MyAppVersion "5.11.0"
 #define MyAppPublisher "Pixelkit LLC"
 #define MyAppURL "https://github.com/Atarity/Lightpack"
 #define MyAppExeName "Prismatik.exe"
@@ -50,6 +50,7 @@ Name: "startupicon"; Description: "{cm:CreateStartupIcon}"; GroupDescription: "{
 [Files]
 Source: "content/below_win7/Prismatik.exe"; DestDir: "{app}"; OnlyBelowVersion: 6.1.7600; Flags: ignoreversion
 Source: "content/Prismatik.exe"; DestDir: "{app}"; MinVersion: 6.1.7600; Flags: ignoreversion
+Source: "content/Prismatik.exe.manifest"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Prismatik.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "content/Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
