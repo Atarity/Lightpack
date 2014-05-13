@@ -12,6 +12,25 @@ _/_/_/_/  _/    _/_/_/  _/    _/      _/_/  _/_/_/      _/_/_/    _/_/_/  _/    
 #    Software changelog
 ===================================================================================
 
+Version 5.11.0
+---------------
+May 13, 2014
+
+* Ubuntu 14 support
+* Fixed plugin's icon searchpath
+* Fixed zones order mess
+* Remove unnecessary monitor configuration page
+* One more optimization
+* Improved Russian translation
+* Minimize wakeups in ConstantColor/Mood mode
+* Minimize wakeups in inactive mode
+* Add plugin status to plugins list
+* Updates notification is introduced
+* Workaround for "no systray found" problem (issue 362)
+* Thanks to backers in About tab
+* Fixed the issue that leds stay on when OS shutdowns (windows only)
+* Remove icon from OS X's dock
+
 Version 5.10.6
 ---------------
 February 18, 2014
