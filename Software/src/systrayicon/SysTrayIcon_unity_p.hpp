@@ -6,6 +6,8 @@
 #undef signals
 #include <libappindicator/app-indicator.h>
 #include <QObject>
+#include <QUrl>
+#include <libnotify/notify.h>
 
 static void action_switch_on (GtkAction *action, SysTrayIcon *q);
 static void action_switch_off (GtkAction *action, SysTrayIcon *q);
@@ -58,8 +60,9 @@ static void action_quit (GtkAction *action, SysTrayIcon *q)
     q->quit();
 }
 
-class SysTrayIconPrivate : public SysTrayIconPrivateData
+class SysTrayIconPrivate : public QObject, public SysTrayIconPrivateData
 {
+    Q_OBJECT
     Q_DECLARE_PUBLIC(SysTrayIcon)
 
 public:
@@ -71,6 +74,8 @@ public:
         GtkUIManager *uim;
         AppIndicator *indicator;
         GError *error = NULL;
+
+        notify_init (tr("Prismatik").toUtf8().constData());
 
         /* Menus */
         action_group = gtk_action_group_new ("AppActions");
@@ -104,12 +109,13 @@ public:
 
     virtual ~SysTrayIconPrivate()
     {
-        return;
+    notify_uninit();
+    return;
     }
 
     void init()
     {
-
+        connect(&_updatesProcessor, SIGNAL(readyRead()), this, SLOT(onCheckUpdate_Finished()));
     }
 
     bool isVisible() const
@@ -155,6 +161,33 @@ public:
     void updateProfiles()
     {
 
+    }
+
+    virtual void checkUpdate()
+    {
+        _updatesProcessor.requestUpdates();
+    }
+
+private slots:
+    void onCheckUpdate_Finished()
+    {
+        using namespace SettingsScope;
+        QList<UpdateInfo> updates = _updatesProcessor.readUpdates(Settings::getLastReadUpdateId());
+        if (updates.size() > 0) {
+            if(updates.size() > 1) {
+                NotifyNotification * updates = notify_notification_new ("Updates are available", "please visit http://lightpack.tv","Prismatik");
+                notify_notification_show (updates, NULL);
+                g_object_unref(G_OBJECT(updates));
+            } else {
+                UpdateInfo updateInfo = updates.last();
+                if (!updateInfo.url.isEmpty())
+                    updateInfo.text = updateInfo.text.append("\n please visit ").append(updateInfo.url);
+                NotifyNotification * update = notify_notification_new (updateInfo.title.toUtf8().constData(), updateInfo.text.toUtf8().constData(), "Prismatik");
+                notify_notification_show (update, NULL);
+                g_object_unref(G_OBJECT(update));
+            }
+            Settings::setLastReadUpdateId(updates.last().id);
+        }
     }
 };
 

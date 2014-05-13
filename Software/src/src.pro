@@ -63,7 +63,7 @@ unix:!macx{
 
     equals(DESKTOP, "Unity") {
         DEFINES += UNITY_DESKTOP
-        PKGCONFIG += gtk+-2.0 appindicator-0.1
+        PKGCONFIG += gtk+-2.0 appindicator-0.1 libnotify
     }
 
     INCLUDEPATH += ../qtserialport/include
