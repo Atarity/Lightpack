@@ -63,6 +63,8 @@ void MonitorConfigurationPage::initializePage()
         QString text = QString("Monitor %0, %1x%2").arg(QString::number(i+1), QString::number(geom.width()), QString::number(geom.height()));
         _ui->cbMonitor->addItem(text, (int)i);
 
+        DEBUG_LOW_LEVEL << Q_FUNC_INFO << QString("Monitor %0, %1x%2+%3+%4").arg(QString::number(i+1), QString::number(geom.width()), QString::number(geom.height()), QString::number(geom.left()), QString::number(geom.top()) );
+
         monitorIdForm->show();
 
         _monitorForms.append(monitorIdForm);

@@ -43,6 +43,7 @@
 
 #ifdef Q_OS_MACX
 #import <Foundation/NSProcessInfo.h>
+#import <CoreServices/CoreServices.h>
 #endif
 
 using namespace std;
@@ -198,7 +199,15 @@ int main(int argc, char **argv)
 {
 
 #ifdef Q_OS_MACX
-    id activity = [[NSProcessInfo processInfo] beginActivityWithOptions: NSActivityLatencyCritical reason:@"Prismatik is latency-critical app"];
+    id activity;
+    SInt32 version = 0;
+    Gestalt( gestaltSystemVersion, &version );
+    bool endActivityRequired = false;
+    if ( version >= 0x1090 ) {
+      activity = [[NSProcessInfo processInfo] beginActivityWithOptions: NSActivityLatencyCritical reason:@"Prismatik is latency-critical app"];
+      endActivityRequired = true;
+      DEBUG_LOW_LEVEL << "Latency critical activity is started";
+    }
 #endif
 
 #   ifdef Q_OS_WIN
@@ -237,7 +246,8 @@ int main(int argc, char **argv)
     int returnCode = lightpackApp.exec();
 
 #ifdef Q_OS_MACX
-    [[NSProcessInfo processInfo] endActivity: activity];
+    if (endActivityRequired)
+      [[NSProcessInfo processInfo] endActivity: activity];
 #endif
 
     return returnCode;

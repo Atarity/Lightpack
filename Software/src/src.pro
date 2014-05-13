@@ -138,12 +138,15 @@ macx{
             -framework Cocoa \
             -framework Carbon \
             -framework CoreFoundation \
+            #-framework CoreServices \
             -framework Foundation \
  #           -framework CoreGraphics \
             -framework ApplicationServices \
             -framework OpenGL \
 
     ICON = ../res/icons/Prismatik.icns
+
+    QMAKE_INFO_PLIST = ./Info.plist
 
     # For build universal binaries (native on Intel and PowerPC)
     QMAKE_MAC_SDK = macosx10.9
@@ -285,3 +288,6 @@ FORMS += SettingsWindow.ui \
 # QtSingleApplication
 #
 include(qtsingleapplication/src/qtsingleapplication.pri)
+
+OTHER_FILES += \
+    Info.plist
