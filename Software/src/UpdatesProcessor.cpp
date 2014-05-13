@@ -59,7 +59,6 @@ QList<UpdateInfo> UpdatesProcessor::readUpdates(uint lastReadId)
     QXmlStreamReader xmlReader(_reply->readAll());
 
     if (xmlReader.readNextStartElement()) {
-        qDebug() << xmlReader.name();
         if (xmlReader.name() == "updates") {
             readUpdates(&updates, &xmlReader);
             QList<UpdateInfo>::iterator it = updates.begin();
@@ -138,7 +137,6 @@ bool UpdatesProcessor::isVersionMatches(const QString &predicate, const AppVersi
 QList<UpdateInfo> * UpdatesProcessor::readUpdates(QList<UpdateInfo> *updates, QXmlStreamReader *xmlReader)
 {
     if (xmlReader->readNextStartElement()) {
-        qDebug() << xmlReader->name();
         while (xmlReader->name() == "update") {
             UpdateInfo updateInfo;
             while(xmlReader->readNextStartElement()) {
