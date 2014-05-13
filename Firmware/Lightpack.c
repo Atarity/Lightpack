@@ -124,7 +124,7 @@ static inline void _ProcessFlags(void)
 {
     /* if (_FlagProcess(Flag_HaveNewColors)) */
 
-    if (_FlagProcess(Flag_LedsOffAll))
+    if (USB_DeviceState!=DEVICE_STATE_Configured || _FlagProcess(Flag_LedsOffAll))
         LedManager_FillImages(0, 0, 0);
 
     if (_FlagProcess(Flag_TimerOptionsChanged))
