@@ -88,7 +88,7 @@
 <context>
     <name>LedDeviceLightpack</name>
     <message>
-        <location filename="../../src/LedDeviceLightpack.cpp" line="228"/>
+        <location filename="../../src/LedDeviceLightpack.cpp" line="227"/>
         <source>read device fail</source>
         <translation type="unfinished">пристрій не відповідає</translation>
     </message>
@@ -355,12 +355,8 @@ You still will be able to place capturing zones manually.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2653"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <location filename="../../src/SettingsWindow.ui" line="2635"/>
+        <source>qrc:/text/cast.html</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -721,41 +717,41 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Помилка при підключенні до пристрою, подробиці у звіті</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="301"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1388"/>
+        <location filename="../../src/SettingsWindow.cpp" line="299"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1390"/>
         <source>Prismatik: %1</source>
         <translation>Prismatik: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="309"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1424"/>
+        <location filename="../../src/SettingsWindow.cpp" line="307"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1426"/>
         <source>System default</source>
         <translation>Типова для системи</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="363"/>
+        <location filename="../../src/SettingsWindow.cpp" line="361"/>
         <source>Dev tab</source>
         <translation>Вкладка розробника</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="378"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1300"/>
+        <location filename="../../src/SettingsWindow.cpp" line="376"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1302"/>
         <source>Profile: %1</source>
         <translation>Профіль: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="379"/>
+        <location filename="../../src/SettingsWindow.cpp" line="377"/>
         <source>Device: %1</source>
         <translation>Пристрій: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="380"/>
+        <location filename="../../src/SettingsWindow.cpp" line="378"/>
         <source>FPS: %1</source>
         <translation>FPS: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="711"/>
-        <location filename="../../src/SettingsWindow.cpp" line="742"/>
+        <location filename="../../src/SettingsWindow.cpp" line="709"/>
+        <location filename="../../src/SettingsWindow.cpp" line="740"/>
         <source>Turn lights OFF</source>
         <translation>Вимкнути лампи</translation>
     </message>
@@ -768,7 +764,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Пристрій заблоковано через додаток</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="734"/>
+        <location filename="../../src/SettingsWindow.cpp" line="732"/>
         <source>Turn lights ON</source>
         <translation>Увімкнути лампи</translation>
     </message>
@@ -781,7 +777,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Програма вже завантажена</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="991"/>
+        <location filename="../../src/SettingsWindow.cpp" line="993"/>
         <source>update firmware</source>
         <translation>оновити мікропрограму</translation>
     </message>
@@ -794,12 +790,12 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Для відкриття сторінки завантаження lightpack натисніть це повідомлення.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1021"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1023"/>
         <source>FPS: </source>
         <translation>FPS: </translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1321"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1323"/>
         <source>New profile</source>
         <translation>Новий профіль</translation>
     </message>
@@ -848,6 +844,7 @@ p, li { white-space: pre-wrap; }
     <name>SysTrayIconPrivate</name>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="111"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_unity_p.hpp" line="78"/>
         <source>Prismatik</source>
         <translation type="unfinished">Prismatik</translation>
     </message>
@@ -868,31 +865,31 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="141"/>
-        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="327"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="333"/>
         <source>&amp;Turn on</source>
         <translation type="unfinished">&amp;Увімкнути</translation>
     </message>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="142"/>
-        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="331"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="337"/>
         <source>&amp;Turn off</source>
         <translation type="unfinished">&amp;Вимкнути</translation>
     </message>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="143"/>
-        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="340"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="346"/>
         <source>&amp;Settings</source>
         <translation type="unfinished">&amp;Налаштування</translation>
     </message>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="144"/>
-        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="344"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="350"/>
         <source>&amp;Quit</source>
         <translation type="unfinished">Ви&amp;хід</translation>
     </message>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="145"/>
-        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="336"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="342"/>
         <source>&amp;Profiles</source>
         <translation type="unfinished">&amp;Профілі</translation>
     </message>

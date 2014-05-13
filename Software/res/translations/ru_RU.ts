@@ -88,7 +88,7 @@
 <context>
     <name>LedDeviceLightpack</name>
     <message>
-        <location filename="../../src/LedDeviceLightpack.cpp" line="228"/>
+        <location filename="../../src/LedDeviceLightpack.cpp" line="227"/>
         <source>read device fail</source>
         <translation>устройство не отвечает</translation>
     </message>
@@ -384,7 +384,7 @@ You still will be able to place capturing zones manually.</source>
         <location filename="../../src/SettingsWindow.ui" line="2286"/>
         <source>Enable DX hooking</source>
         <translatorcomment>Включить перехват DX API</translatorcomment>
-        <translation></translation>
+        <translation>Включить перехват DX API</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="2302"/>
@@ -489,7 +489,7 @@ p, li { white-space: pre-wrap; }
         <translation>Автор:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="363"/>
+        <location filename="../../src/SettingsWindow.cpp" line="361"/>
         <source>Dev tab</source>
         <translation>Отладка</translation>
     </message>
@@ -583,7 +583,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SettingsWindow.ui" line="853"/>
         <source>Run configuration wizard</source>
-        <translation></translation>
+        <translation>Запустить мастер настройки</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="1051"/>
@@ -596,12 +596,8 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Это программное обеспечение распространяется &amp;laquo;как есть&amp;raquo; под открытой лицензией &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL&lt;/a&gt;. Авторы не несут отвественности за утерянные вами данные, нанесённый ущёрб или недополученную выгоду в результате использования этого ПО. Весь контент не являющийся частью исходного кода (иконки, битмапы, плагины и т.д.) покрываются лицензией &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/deed.ru&quot;&gt;CC-BY-SA&lt;/a&gt;, если не указано иного.&lt;br /&gt;&lt;br /&gt;Это ПО построено на базе фреймворка &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; и использует, набор иконок &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; в качестве лицензируемых продуктов третих лиц.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2653"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <location filename="../../src/SettingsWindow.ui" line="2635"/>
+        <source>qrc:/text/cast.html</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -721,19 +717,19 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="309"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1424"/>
+        <location filename="../../src/SettingsWindow.cpp" line="307"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1426"/>
         <source>System default</source>
         <translation>По умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="380"/>
+        <location filename="../../src/SettingsWindow.cpp" line="378"/>
         <source>FPS: %1</source>
         <translation>Кадр/c: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="711"/>
-        <location filename="../../src/SettingsWindow.cpp" line="742"/>
+        <location filename="../../src/SettingsWindow.cpp" line="709"/>
+        <location filename="../../src/SettingsWindow.cpp" line="740"/>
         <source>Turn lights OFF</source>
         <translation>Выключить подсветку</translation>
     </message>
@@ -742,7 +738,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Устройство находится под управлением плагина</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="734"/>
+        <location filename="../../src/SettingsWindow.cpp" line="732"/>
         <source>Turn lights ON</source>
         <translation>Включить подсветку</translation>
     </message>
@@ -751,19 +747,19 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Приложение уже запущено</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="378"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1300"/>
+        <location filename="../../src/SettingsWindow.cpp" line="376"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1302"/>
         <source>Profile: %1</source>
         <translation>Профиль: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="301"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1388"/>
+        <location filename="../../src/SettingsWindow.cpp" line="299"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1390"/>
         <source>Prismatik: %1</source>
         <translation type="unfinished">Призматик: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="379"/>
+        <location filename="../../src/SettingsWindow.cpp" line="377"/>
         <source>Device: %1</source>
         <translation>Устройство: %1</translation>
     </message>
@@ -817,7 +813,7 @@ p, li { white-space: pre-wrap; }
         <translation>Лайтпак</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="991"/>
+        <location filename="../../src/SettingsWindow.cpp" line="993"/>
         <source>update firmware</source>
         <translation>обновить прошивку</translation>
     </message>
@@ -830,7 +826,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Нажмите на это сообщение чтобы перейти на страницу скачивания прошивок</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1021"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1023"/>
         <source>FPS: </source>
         <translation>Кадр/с: </translation>
     </message>
@@ -839,7 +835,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Устройство:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1321"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1323"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
     </message>
@@ -848,8 +844,9 @@ p, li { white-space: pre-wrap; }
     <name>SysTrayIconPrivate</name>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="111"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_unity_p.hpp" line="78"/>
         <source>Prismatik</source>
-        <translation type="unfinished">Призматик</translation>
+        <translation>Призматик</translation>
     </message>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="111"/>
@@ -868,31 +865,31 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="141"/>
-        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="327"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="333"/>
         <source>&amp;Turn on</source>
         <translation>&amp;Включить</translation>
     </message>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="142"/>
-        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="331"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="337"/>
         <source>&amp;Turn off</source>
         <translation>&amp;Выключить</translation>
     </message>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="143"/>
-        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="340"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="346"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="144"/>
-        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="344"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="350"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
         <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="145"/>
-        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="336"/>
+        <location filename="../../src/systrayicon/SysTrayIcon_qt_p.hpp" line="342"/>
         <source>&amp;Profiles</source>
         <translation>&amp;Профили</translation>
     </message>
@@ -930,7 +927,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/wizard/Wizard.ui" line="14"/>
         <source>Wizard</source>
-        <translation type="unfinished">Мастер настройки</translation>
+        <translation>Мастер настройки</translation>
     </message>
 </context>
 <context>
