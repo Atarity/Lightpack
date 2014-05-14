@@ -142,14 +142,9 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 void SettingsWindow::changePage(int page)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << page;
-    int targetPage;
-    if (page > ui->tabWidget->count()-1)
-        targetPage = page-1;
-    else
-        targetPage = page;
 
     ui->tabWidget->setCurrentIndex(page);
-    if (targetPage == 5) {
+    if (page == 5) {
         ui->textBrowser->verticalScrollBar()->setValue(0);
         m_smoothScrollTimer.setInterval(100);
         m_smoothScrollTimer.start();
@@ -357,11 +352,8 @@ void SettingsWindow::onExpertModeEnabled_Toggled(bool isEnabled)
 void SettingsWindow::updateExpertModeWidgetsVisibility()
 {    
     if(Settings::isExpertModeEnabled()) {
-        if (ui->tabWidget->indexOf(ui->tabExperimental) < 0)
-            ui->tabWidget->insertTab(4,ui->tabExperimental, tr("Dev tab"));
         ui->listWidget->setItemHidden(ui->listWidget->item(4),false);
     } else {
-        ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabExperimental));
         ui->listWidget->setItemHidden(ui->listWidget->item(4),true);
     }
 
