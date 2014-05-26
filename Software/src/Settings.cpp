@@ -85,6 +85,7 @@ static const QString SettingsPrefix = "HotKeys/";
 namespace Api
 {
 static const QString IsEnabled = "API/IsEnabled";
+static const QString ListenOnlyOnLoInterface = "API/ListenOnlyOnLoInterface";
 static const QString Port = "API/Port";
 static const QString AuthKey = "API/AuthKey";
 }
@@ -255,6 +256,7 @@ bool Settings::Initialize( const QString & applicationDirPath, bool isDebugLevel
     setNewOptionMain(Main::Key::ConnectedDevice,        Main::ConnectedDeviceDefault);
     setNewOptionMain(Main::Key::SupportedDevices,       Main::SupportedDevices, true /* always rewrite this information to main config */);
     setNewOptionMain(Main::Key::Api::IsEnabled,         Main::Api::IsEnabledDefault);
+    setNewOptionMain(Main::Key::Api::ListenOnlyOnLoInterface, Main::Api::ListenOnlyOnLoInterfaceDefault);
     setNewOptionMain(Main::Key::Api::Port,              Main::Api::PortDefault);
     // Generation AuthKey as new UUID
     setNewOptionMain(Main::Key::Api::AuthKey,           Main::Api::AuthKey);
@@ -552,7 +554,19 @@ void Settings::setIsApiEnabled(bool isEnabled)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::Api::IsEnabled, isEnabled);
-    m_this->apiServerEnabledChanged(isEnabled);
+    m_this->apiServerSettingsChanged();
+}
+
+bool Settings::isListenOnlyOnLoInterface()
+{
+    return valueMain(Main::Key::Api::ListenOnlyOnLoInterface).toBool();
+}
+
+void Settings::setListenOnlyOnLoInterface(bool localOnly)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+    setValueMain(Main::Key::Api::ListenOnlyOnLoInterface, localOnly);
+    m_this->apiServerSettingsChanged();
 }
 
 int Settings::getApiPort()
@@ -564,7 +578,7 @@ void Settings::setApiPort(int apiPort)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
     setValueMain(Main::Key::Api::Port, apiPort);
-    m_this->apiPortChanged(apiPort);
+    m_this->apiServerSettingsChanged();
 }
 
 QString Settings::getApiAuthKey()

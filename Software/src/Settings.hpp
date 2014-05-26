@@ -96,6 +96,8 @@ public:
     static void setDebugLevel(int debugLvl);
     static bool isApiEnabled();
     static void setIsApiEnabled(bool isEnabled);
+    static bool isListenOnlyOnLoInterface();
+    static void setListenOnlyOnLoInterface(bool localOnly);
     static int getApiPort();
     static void setApiPort(int apiPort);
     static QString getApiAuthKey();
@@ -233,8 +235,7 @@ signals:
     void currentProfileNameChanged(const QString &);
     void currentProfileRemoved();
     void currentProfileInited(const QString &);
-    void apiServerEnabledChanged(bool);
-    void apiPortChanged(int);
+    void apiServerSettingsChanged();
     void apiKeyChanged(const QString &);
     void expertModeEnabledChanged(bool);
     void keepLightsOnAfterExitChanged(bool isEnabled);

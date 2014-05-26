@@ -195,24 +195,17 @@ void ApiServer::firstStart()
     }
 }
 
-void ApiServer::enableApiServer(bool isEnabled)
+void ApiServer::apiServerSettingsChanged()
 {
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << isEnabled;
+    initPrivateVariables();
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
-    if (isEnabled)
+    if (Settings::isApiEnabled()) {
+        stopListening();
         startListening();
+    }
     else
         stopListening();
-}
-
-void ApiServer::updateApiPort(int port)
-{
-    DEBUG_LOW_LEVEL << Q_FUNC_INFO << port;
-
-    m_apiPort = port;
-
-    stopListening();
-    startListening();
 }
 
 void ApiServer::updateApiKey(const QString &key)
@@ -1065,6 +1058,7 @@ void ApiServer::taskSetColorIsSuccess(bool isSuccess)
 void ApiServer::initPrivateVariables()
 {
     m_apiPort = Settings::getApiPort();
+    m_listenOnlyOnLoInterface = Settings::isListenOnlyOnLoInterface();
     m_apiAuthKey = Settings::getApiAuthKey();
     m_isAuthEnabled = Settings::isApiAuthEnabled();
 }
@@ -1093,7 +1087,8 @@ void ApiServer::startListening()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << m_apiPort;
 
-    bool ok = listen(QHostAddress::Any, m_apiPort);
+    QHostAddress address = m_listenOnlyOnLoInterface ? QHostAddress::LocalHost : QHostAddress::Any;
+    bool ok = listen(address, m_apiPort);
 
     if (ok == false)
     {
