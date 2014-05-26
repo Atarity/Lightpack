@@ -1561,6 +1561,7 @@ void SettingsWindow::updateUiFromSettings()
     ui->groupBox_Api->setChecked                                     (Settings::isApiEnabled());
     ui->checkBox_listenOnlyOnLoInterface->setChecked                 (Settings::isListenOnlyOnLoInterface());
     ui->lineEdit_ApiPort->setText                    (QString::number(Settings::getApiPort()));
+    ui->lineEdit_ApiPort->setValidator(new QIntValidator(1, 49151));
     ui->lineEdit_ApiKey->setText                                     (Settings::getApiAuthKey());
     ui->spinBox_LoggingLevel->setValue                               (g_debugLevel);
 

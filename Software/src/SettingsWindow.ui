@@ -2113,9 +2113,6 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="inputMask">
-              <string notr="true">D999</string>
-             </property>
             </widget>
            </item>
            <item row="1" column="0">
