@@ -1,6 +1,13 @@
 #ifndef GAPIPROXY_HPP
 #define GAPIPROXY_HPP
 
+#if !defined NOMINMAX
+#define NOMINMAX
+#endif
+
+#if !defined WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 #include <windows.h>
 #include "ProxyFunc.hpp"
 
@@ -10,11 +17,11 @@ class GAPIProxyFrameGrabber {
 public:
     GAPIProxyFrameGrabber(HANDLE syncRunMutex);
     ~GAPIProxyFrameGrabber();
-    virtual bool init() PURE;
-    virtual bool isGAPILoaded() PURE;
+    virtual bool init() = 0;
+    virtual bool isGAPILoaded() = 0;
     //must be overidden in derived classes
     virtual bool isHooksInstalled(){return false;}
-    virtual bool installHooks() PURE;
+    virtual bool installHooks() = 0;
     //must be overidden in derived classes
     virtual bool removeHooks(){return false;}
     virtual void free(){}

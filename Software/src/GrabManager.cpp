@@ -34,7 +34,7 @@
 #include "GrabberContext.hpp"
 using namespace SettingsScope;
 
-#if defined _MSC_VER
+#if !defined HAVE_PLATFORM_ROUND_FUNC
 using PrismatikMath::round;
 #endif
 

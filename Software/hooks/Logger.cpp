@@ -1,4 +1,5 @@
 #include "Logger.hpp"
+#include <stdlib.h>
 
 Logger *Logger::_this = NULL;
 

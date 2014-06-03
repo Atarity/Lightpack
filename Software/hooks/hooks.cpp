@@ -1,7 +1,6 @@
 #include"hooks.h"
 #include"stdio.h"
 #include"shlwapi.h"
-#include <windows.h>
 
 #define UINT8 unsigned char
 #include "hooksutils.h"

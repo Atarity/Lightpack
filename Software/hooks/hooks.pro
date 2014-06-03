@@ -12,14 +12,19 @@ TEMPLATE = lib
 
 include(../build-config.prf)
 
-# This will suppress gcc warnings in DX headers.
-CONFIG(gcc) {
-    QMAKE_CXXFLAGS += -isystem "$${DIRECTX_SDK_DIR}/Include"
-} else {
-    INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
-}
+LIBS += -lshlwapi -ladvapi32 -luser32
 
-LIBS += -lshlwapi -ladvapi32 -luser32 -L"$${DIRECTX_SDK_DIR}/Lib/x86" -ldxguid #-LD:/System/Users/Tim/Projects/Lightpack/Software/zeromq -lzmq.dll
+!isEmpty( DIRECTX_SDK_DIR ) {
+    # This will suppress gcc warnings in DX headers.
+    CONFIG(gcc) {
+        QMAKE_CXXFLAGS += -isystem "$${DIRECTX_SDK_DIR}/Include"
+    } else {
+        INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
+    }
+    LIBS += -L"$${DIRECTX_SDK_DIR}/Lib/x86"
+}
+LIBS += -ldxguid
+
 #QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
 QMAKE_LFLAGS_EXCEPTIONS_ON -= -mthreads
 QMAKE_CXXFLAGS_EXCEPTIONS_ON -= -mthreads

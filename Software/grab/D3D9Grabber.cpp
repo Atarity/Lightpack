@@ -33,7 +33,7 @@
 #include "cmath"
 #define BYTES_PER_PIXEL 4
 
-#if defined _MSC_VER
+#if !defined HAVE_SYSTEM_ROUND_FUNC
 #include "PrismatikMath.hpp"
 
 using PrismatikMath::round;

@@ -132,6 +132,9 @@ bool UpdatesProcessor::isVersionMatches(const QString &predicate, const AppVersi
         return *version >= predicateVer;
         break;
     }
+
+    Q_ASSERT(false);
+    return false;
 }
 
 QList<UpdateInfo> * UpdatesProcessor::readUpdates(QList<UpdateInfo> *updates, QXmlStreamReader *xmlReader)

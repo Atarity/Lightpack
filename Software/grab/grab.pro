@@ -35,11 +35,13 @@ SOURCES += \
     include/ColorProvider.cpp
 
 win32 {
-    # This will suppress gcc warnings in DX headers.
-    CONFIG(gcc) {
-        QMAKE_CXXFLAGS += -isystem "$${DIRECTX_SDK_DIR}/Include"
-    } else {
-        INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
+    !isEmpty( DIRECTX_SDK_DIR ) {
+        # This will suppress gcc warnings in DX headers.
+        CONFIG(gcc) {
+            QMAKE_CXXFLAGS += -isystem "$${DIRECTX_SDK_DIR}/Include"
+        } else {
+            INCLUDEPATH += "$${DIRECTX_SDK_DIR}/Include"
+        }
     }
 
     # This will suppress many MSVC warnings about 'unsecure' CRT functions.

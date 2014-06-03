@@ -29,7 +29,7 @@
 #include "../src/debug.h"
 #include <cmath>
 
-#if defined _MSC_VER
+#if !defined HAVE_PLATFORM_ROUND_FUNC
 #include "PrismatikMath.hpp"
 
 using PrismatikMath::round;

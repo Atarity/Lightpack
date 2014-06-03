@@ -25,8 +25,9 @@
  */
 
 #include "CassiopeiaDistributor.hpp"
+#include "../../common/defs.h"
 
-#if defined _MSC_VER
+#if !defined HAVE_PLATFORM_ROUND_FUNC
 #include "PrismatikMath.hpp"
 
 using PrismatikMath::round;
