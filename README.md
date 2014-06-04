@@ -64,16 +64,12 @@ You will need the following packages, usually all of them are in distro's reposi
 ####Prerequisites:
 * Qt SDK (5.0+)
 * MacOSX 10.7.sdk
-* libUSB-1.0 from macports
 
 ###### Whole dependencies list for Prismatik 5.10.1:
 * QtCore.framework
 * QtGui.framework
 * QtNetwork.framework
 * QtOpenGL.framework
-* libsqlite3.0.dylib
-* libusb-1.0.0.dylib
-* libz.1.dylib
 
 ####Build process:
 1. Download and unpack 5.0+ **Qt SDK** from www.qt-project.org
