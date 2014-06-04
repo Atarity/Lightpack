@@ -6,7 +6,6 @@
 #include "D3D11.h"
 #include "DXGI.h"
 #include "D3D10.h"
-//#include "D3DX10tex.h"
 
 #include "ProxyFuncVFTable.hpp"
 #include "IPCContext.hpp"

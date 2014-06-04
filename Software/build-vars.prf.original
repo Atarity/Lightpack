@@ -5,4 +5,6 @@
         QTDIR = c:/Qt/4.8.4
         MINGW_RUNTIME_DIR = c:/Qt/mingw/bin
         DIRECTX_SDK_DIR = "C:/Program Files/Microsoft DirectX SDK (June 2010)"
+        # If you have WinSDK 8.1 installed then you should use this instead of DIRECTX_SDK_DIR
+        # WIN81_SDK_DIR = "c:/Program Files (x86)/Windows Kits/8.1"
     }
