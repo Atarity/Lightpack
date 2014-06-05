@@ -31,7 +31,7 @@
 #include "../CommonHeaders/LIGHTPACK_HW.h"
 
 #if(LIGHTPACK_HW == 7)
-#define VERSION_OF_FIRMWARE              (0x0705UL)
+#define VERSION_OF_FIRMWARE              (0x0706UL)
 #elif(LIGHTPACK_HW == 6)
 #define VERSION_OF_FIRMWARE              (0x0605UL)
 #elif (LIGHTPACK_HW == 5)
