@@ -170,8 +170,7 @@ signals:
     void updateApiDeviceNumberOfLeds(int value);
 
 public slots:
-    void enableApiServer(bool isEnabled);
-    void updateApiPort(int port);
+    void apiServerSettingsChanged();
     void updateApiKey(const QString &key);
 
 protected:
@@ -198,6 +197,7 @@ private:
 
 private:
     int m_apiPort;
+    bool m_listenOnlyOnLoInterface;
     QString m_apiAuthKey;
     bool m_isAuthEnabled;
     QTime m_time;

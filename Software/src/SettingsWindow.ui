@@ -2098,7 +2098,14 @@
            <bool>true</bool>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="1" column="0">
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="checkBox_listenOnlyOnLoInterface">
+             <property name="text">
+              <string>Listen only on local interface (127.0.0.1)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
             <widget class="QLineEdit" name="lineEdit_ApiPort">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -2106,12 +2113,9 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="inputMask">
-              <string notr="true">D999</string>
-             </property>
             </widget>
            </item>
-           <item row="0" column="0">
+           <item row="1" column="0">
             <widget class="QLabel" name="label_ApiPort">
              <property name="styleSheet">
               <string notr="true">margin-top: .1em</string>
@@ -2124,14 +2128,14 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="2">
+           <item row="5" column="2">
             <widget class="QPushButton" name="pushButton_GenerateNewApiKey">
              <property name="text">
               <string>Generate</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
+           <item row="5" column="0">
             <widget class="QLineEdit" name="lineEdit_ApiKey">
              <property name="minimumSize">
               <size>
@@ -2159,7 +2163,7 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
+           <item row="4" column="0">
             <widget class="QLabel" name="label_ApiKey">
              <property name="styleSheet">
               <string notr="true">margin-top:0</string>

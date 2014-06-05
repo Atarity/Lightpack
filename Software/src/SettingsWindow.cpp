@@ -252,6 +252,7 @@ void SettingsWindow::connectSignalsSlots()
 
     // Dev tab configure API (port, apikey)
     connect(ui->groupBox_Api, SIGNAL(toggled(bool)), this, SLOT(onEnableApi_Toggled(bool)));
+    connect(ui->checkBox_listenOnlyOnLoInterface, SIGNAL(toggled(bool)), this, SLOT(onListenOnlyOnLoInterface_Toggled(bool)));
     connect(ui->lineEdit_ApiPort, SIGNAL(editingFinished()), this, SLOT(onSetApiPort_Clicked()));
     //connect(ui->checkBox_IsApiAuthEnabled, SIGNAL(toggled(bool)), this, SLOT(onIsApiAuthEnabled_Toggled(bool)));
     connect(ui->pushButton_GenerateNewApiKey, SIGNAL(clicked()), this, SLOT(onGenerateNewApiKey_Clicked()));
@@ -466,6 +467,12 @@ void SettingsWindow::onEnableApi_Toggled(bool isEnabled)
 
     Settings::setIsApiEnabled(isEnabled);
 
+}
+
+void SettingsWindow::onListenOnlyOnLoInterface_Toggled(bool localOnly)
+{
+    DEBUG_LOW_LEVEL << Q_FUNC_INFO << localOnly;
+    Settings::setListenOnlyOnLoInterface(localOnly);
 }
 
 void SettingsWindow::onApiKey_EditingFinished()
@@ -1552,7 +1559,9 @@ void SettingsWindow::updateUiFromSettings()
     ui->horizontalSlider_GammaCorrection->setValue            (floor((Settings::getDeviceGamma() * 100 + 0.5)));
 
     ui->groupBox_Api->setChecked                                     (Settings::isApiEnabled());
+    ui->checkBox_listenOnlyOnLoInterface->setChecked                 (Settings::isListenOnlyOnLoInterface());
     ui->lineEdit_ApiPort->setText                    (QString::number(Settings::getApiPort()));
+    ui->lineEdit_ApiPort->setValidator(new QIntValidator(1, 49151));
     ui->lineEdit_ApiKey->setText                                     (Settings::getApiAuthKey());
     ui->spinBox_LoggingLevel->setValue                               (g_debugLevel);
 

@@ -143,6 +143,7 @@ macx{
  #           -framework CoreGraphics \
             -framework ApplicationServices \
             -framework OpenGL \
+            -framework IOKit \
 
     ICON = ../res/icons/Prismatik.icns
 
