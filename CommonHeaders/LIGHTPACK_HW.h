@@ -37,14 +37,14 @@
 
 # /* FIRST for firmware make preprocessor */
 # /*
-           LIGHTPACK_HW = 6
+           LIGHTPACK_HW = 7
 # */
 
 #if !defined( LIGHTPACK_HW )
 
 # /* SECOND for C/C++ preprocessor */
 
-#   define LIGHTPACK_HW   6
+#   define LIGHTPACK_HW   7
 
 #endif /* !defined( LIGHTPACK_HW ) */
 
