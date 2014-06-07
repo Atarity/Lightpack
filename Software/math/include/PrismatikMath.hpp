@@ -29,6 +29,7 @@
 #include <QRgb>
 #include <cmath>
 #include "colorspace_types.h"
+#include "../../common/defs.h"
 
 namespace PrismatikMath
 {
@@ -65,7 +66,11 @@ namespace PrismatikMath
 
     inline double round(double number)
     {
+#if defined HAVE_PLATFORM_ROUND_FUNC
+        return ::round(number);
+#else
         return number < 0.0 ? std::ceil(number - 0.5) : std::floor(number + 0.5);
+#endif
     }
 }
 

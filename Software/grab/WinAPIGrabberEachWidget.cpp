@@ -26,14 +26,9 @@
 #include "WinAPIGrabberEachWidget.hpp"
 #ifdef WINAPI_EACH_GRAB_SUPPORT
 /*
-#include "../src/debug.h"
 #include <cmath>
-
-#if !defined HAVE_PLATFORM_ROUND_FUNC
+#include "../src/debug.h"
 #include "PrismatikMath.hpp"
-
-using PrismatikMath::round;
-#endif // _MSC_VER
 
 WinAPIGrabberEachWidget::WinAPIGrabberEachWidget(QObject * parent, GrabberContext *context)
     : WinAPIGrabber(parent, context)
@@ -155,9 +150,9 @@ QRgb WinAPIGrabberEachWidget::getColor(int x, int y, int width, int height)
     }
 
     if( count != 0 ){
-        r = (unsigned)round((double) r / count) & 0xff;
-        g = (unsigned)round((double) g / count) & 0xff;
-        b = (unsigned)round((double) b / count) & 0xff;
+        r = (unsigned)PrismatikMath::round((double) r / count) & 0xff;
+        g = (unsigned)PrismatikMath::round((double) g / count) & 0xff;
+        b = (unsigned)PrismatikMath::round((double) b / count) & 0xff;
     }
 
 #if 0

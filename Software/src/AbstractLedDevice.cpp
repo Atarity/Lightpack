@@ -29,10 +29,6 @@
 #include "PrismatikMath.hpp"
 #include "Settings.hpp"
 
-#if !defined HAVE_PLATFORM_ROUND_FUNC
-using PrismatikMath::round;
-#endif
-
 void AbstractLedDevice::setGamma(double value) {
     m_gamma = value;
     setColors(m_colorsSaved);
@@ -108,8 +104,8 @@ void AbstractLedDevice::applyColorModifications(const QList<QRgb> &inColors, QLi
                 char da = avgColor.a - lab.a;
                 char db = avgColor.b - lab.b;
                 lab.l = m_luminosityThreshold;
-                lab.a += round(da * fadingCoeff);
-                lab.b += round(db * fadingCoeff);
+                lab.a += PrismatikMath::round(da * fadingCoeff);
+                lab.b += PrismatikMath::round(db * fadingCoeff);
                 StructRgb rgb = PrismatikMath::toRgb(lab);
                 outColors[i] = rgb;
             } else {
