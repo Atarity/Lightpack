@@ -4,7 +4,7 @@
 <context>
     <name>ApiServer</name>
     <message>
-        <location filename="../../src/ApiServer.cpp" line="1100"/>
+        <location filename="../../src/ApiServer.cpp" line="1095"/>
         <source>API server unable to start (port: %1): %2.</source>
         <translation>Неможливо запустити сервер API (порт: %1): %2.</translation>
     </message>
@@ -275,7 +275,7 @@ You still will be able to place capturing zones manually.</source>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="210"/>
-        <location filename="../../src/SettingsWindow.ui" line="2374"/>
+        <location filename="../../src/SettingsWindow.ui" line="2378"/>
         <source>About</source>
         <translation>Про програму</translation>
     </message>
@@ -350,12 +350,17 @@ You still will be able to place capturing zones manually.</source>
         <translation>Білі</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2609"/>
+        <location filename="../../src/SettingsWindow.ui" line="2104"/>
+        <source>Listen only on local interface (127.0.0.1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="2606"/>
         <source>This program is distributed &amp;laquo;as is&amp;raquo;. It source code is under &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL license&lt;/a&gt;. No warranty of any kind is expressed or implied. The authors will not be liable for data loss, damages, loss of profits or any other kind of loss while using or misusing this software. All content, such as icons, plugins, bitmaps etc. is under &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA&lt;/a&gt; if otherwise is not noticed. &lt;br /&gt;&lt;br /&gt;This software build with &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; cross-platform framework and &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; icon set by P.J. Onori as a third-party licensed products.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2635"/>
+        <location filename="../../src/SettingsWindow.ui" line="2632"/>
         <source>qrc:/text/cast.html</source>
         <translation type="unfinished"></translation>
     </message>
@@ -617,72 +622,59 @@ You still will be able to place capturing zones manually.</source>
         <translation>Дозволити сервер (API через сокети)</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2120"/>
+        <location filename="../../src/SettingsWindow.ui" line="2124"/>
         <source>Port:</source>
         <translation>Порт:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2130"/>
+        <location filename="../../src/SettingsWindow.ui" line="2134"/>
         <source>Generate</source>
         <translation>Генерувати</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2149"/>
+        <location filename="../../src/SettingsWindow.ui" line="2153"/>
         <source>Copy and paste this key into the application using the API, for authorization on the server</source>
         <translation>Скопіюйте і вставте цей ключ в програму, яка використовує API, для авторизації на сервері</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2168"/>
+        <location filename="../../src/SettingsWindow.ui" line="2172"/>
         <source>Key (authorization disabled if empty):</source>
         <translation>Ключ (авторизація вимкнута, якщо відсутній):</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2187"/>
+        <location filename="../../src/SettingsWindow.ui" line="2191"/>
         <source>Capture source</source>
         <translation>Джерело захоплення</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2286"/>
+        <location filename="../../src/SettingsWindow.ui" line="2290"/>
         <source>Enable DX hooking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2302"/>
+        <location filename="../../src/SettingsWindow.ui" line="2306"/>
         <source>Logging level:</source>
         <translation>Рівень ведення журналу:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2334"/>
+        <location filename="../../src/SettingsWindow.ui" line="2338"/>
         <source>Ping Lightpack device every second</source>
         <translation>Опитувати Lightpack кожну секунду</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2341"/>
+        <location filename="../../src/SettingsWindow.ui" line="2345"/>
         <source>Send data only if colors changes</source>
         <translation>Надсилати данні тільки при зміні кольору</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2439"/>
+        <location filename="../../src/SettingsWindow.ui" line="2443"/>
         <source>&lt;h2&gt;Prismatik&lt;/h2&gt;</source>
         <translation>&lt;h2&gt;Prismatik&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2473"/>
+        <location filename="../../src/SettingsWindow.ui" line="2477"/>
         <source>Open-source software from team made &lt;b&gt;Lightpack&lt;/b&gt; &amp;mdash; content-appropriate ambient lighting system with USB interface</source>
         <translation>Програмне забезпечення з відкритим кодом від команди яка створила &lt;b&gt;Lightpack&lt;/b&gt; &amp;mdash; контентно-залежної системи фонового освітлення з USB інтерфейсом</translation>
-    </message>
-    <message>
-        <location filename="../../src/SettingsWindow.ui" line="2510"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;software &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;програмне забезпечення &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревізія &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), мікропрограма &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&amp;Turn on</source>
@@ -717,35 +709,34 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Помилка при підключенні до пристрою, подробиці у звіті</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="299"/>
+        <location filename="../../src/SettingsWindow.cpp" line="295"/>
         <location filename="../../src/SettingsWindow.cpp" line="1390"/>
         <source>Prismatik: %1</source>
         <translation>Prismatik: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="307"/>
+        <location filename="../../src/SettingsWindow.cpp" line="303"/>
         <location filename="../../src/SettingsWindow.cpp" line="1426"/>
         <source>System default</source>
         <translation>Типова для системи</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="361"/>
         <source>Dev tab</source>
-        <translation>Вкладка розробника</translation>
+        <translation type="obsolete">Вкладка розробника</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="376"/>
+        <location filename="../../src/SettingsWindow.cpp" line="370"/>
         <location filename="../../src/SettingsWindow.cpp" line="1302"/>
         <source>Profile: %1</source>
         <translation>Профіль: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="377"/>
+        <location filename="../../src/SettingsWindow.cpp" line="371"/>
         <source>Device: %1</source>
         <translation>Пристрій: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="378"/>
+        <location filename="../../src/SettingsWindow.cpp" line="372"/>
         <source>FPS: %1</source>
         <translation>FPS: %1</translation>
     </message>
@@ -754,6 +745,15 @@ p, li { white-space: pre-wrap; }
         <location filename="../../src/SettingsWindow.cpp" line="740"/>
         <source>Turn lights OFF</source>
         <translation>Вимкнути лампи</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.cpp" line="1698"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt; &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt; p, li { white-space: pre-wrap; } &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt; &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;software &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;програмне забезпечення &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревізія &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), мікропрограма &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Device locked via API</source>

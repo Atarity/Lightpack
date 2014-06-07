@@ -4,7 +4,7 @@
 <context>
     <name>ApiServer</name>
     <message>
-        <location filename="../../src/ApiServer.cpp" line="1100"/>
+        <location filename="../../src/ApiServer.cpp" line="1095"/>
         <source>API server unable to start (port: %1): %2.</source>
         <translation>Проблемы с запуском API сервера (порт: %1): %2.</translation>
     </message>
@@ -381,38 +381,25 @@ You still will be able to place capturing zones manually.</source>
         <translation>Показывать дополнительные настройки</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2286"/>
+        <location filename="../../src/SettingsWindow.ui" line="2290"/>
         <source>Enable DX hooking</source>
         <translatorcomment>Включить перехват DX API</translatorcomment>
         <translation>Включить перехват DX API</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2302"/>
+        <location filename="../../src/SettingsWindow.ui" line="2306"/>
         <source>Logging level:</source>
         <translation>Детализация логирования:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2439"/>
+        <location filename="../../src/SettingsWindow.ui" line="2443"/>
         <source>&lt;h2&gt;Prismatik&lt;/h2&gt;</source>
         <translation>&lt;h2&gt;Призматик&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2473"/>
+        <location filename="../../src/SettingsWindow.ui" line="2477"/>
         <source>Open-source software from team made &lt;b&gt;Lightpack&lt;/b&gt; &amp;mdash; content-appropriate ambient lighting system with USB interface</source>
         <translation type="unfinished">Открытый софт от команды создавшей &lt;b&gt;Лайтпак&lt;/b&gt; &amp;mdash; USB-подсветку монитора для усиления эффекта присутствия</translation>
-    </message>
-    <message>
-        <location filename="../../src/SettingsWindow.ui" line="2510"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;software &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Софт версии &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревизия &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), прошивка &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>This program is distributed &amp;laquo;as is&amp;raquo;. It source code is under &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL license&lt;/a&gt;. No warranty of any kind is expressed or implied. The authors will not be liable for data loss, damages, loss of profits or any other kind of loss while using or misusing this software. All content, such as icons, plugins, bitmaps etc. is under &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA&lt;/a&gt; if otherwise is not noticed. &lt;br /&gt;&lt;br /&gt;This software build with &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; cross-platform framework, use &lt;a href=&quot;http://python.org/&quot;&gt;Python 2.7&lt;/a&gt;, &lt;a href=&quot;http://pythonqt.sourceforge.net/&quot;&gt;PythonQt&lt;/a&gt; and &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; icon set by P.J. Onori as a third-party licensed products.</source>
@@ -489,18 +476,17 @@ p, li { white-space: pre-wrap; }
         <translation>Автор:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="361"/>
         <source>Dev tab</source>
-        <translation>Отладка</translation>
+        <translation type="obsolete">Отладка</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.ui" line="210"/>
-        <location filename="../../src/SettingsWindow.ui" line="2374"/>
+        <location filename="../../src/SettingsWindow.ui" line="2378"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2168"/>
+        <location filename="../../src/SettingsWindow.ui" line="2172"/>
         <source>Key (authorization disabled if empty):</source>
         <translation>Ключ авторизации (авторизация отключена если в поле пусто):</translation>
     </message>
@@ -511,12 +497,12 @@ p, li { white-space: pre-wrap; }
         <translation>Лаборатория</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2149"/>
+        <location filename="../../src/SettingsWindow.ui" line="2153"/>
         <source>Copy and paste this key into the application using the API, for authorization on the server</source>
         <translation>Скопируйте и вставьте этот ключ в приложение, использующее API, для авторизации на сервере</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2130"/>
+        <location filename="../../src/SettingsWindow.ui" line="2134"/>
         <source>Generate</source>
         <translation>Сгенерировать</translation>
     </message>
@@ -591,12 +577,17 @@ p, li { white-space: pre-wrap; }
         <translation>Оставить подсветку включённой после выхода</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2609"/>
+        <location filename="../../src/SettingsWindow.ui" line="2104"/>
+        <source>Listen only on local interface (127.0.0.1)</source>
+        <translation>Использовать только локальный интерфейс (127.0.0.1)</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.ui" line="2606"/>
         <source>This program is distributed &amp;laquo;as is&amp;raquo;. It source code is under &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL license&lt;/a&gt;. No warranty of any kind is expressed or implied. The authors will not be liable for data loss, damages, loss of profits or any other kind of loss while using or misusing this software. All content, such as icons, plugins, bitmaps etc. is under &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA&lt;/a&gt; if otherwise is not noticed. &lt;br /&gt;&lt;br /&gt;This software build with &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; cross-platform framework and &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; icon set by P.J. Onori as a third-party licensed products.</source>
         <translation type="unfinished">Это программное обеспечение распространяется &amp;laquo;как есть&amp;raquo; под открытой лицензией &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;GPL&lt;/a&gt;. Авторы не несут отвественности за утерянные вами данные, нанесённый ущёрб или недополученную выгоду в результате использования этого ПО. Весь контент не являющийся частью исходного кода (иконки, битмапы, плагины и т.д.) покрываются лицензией &lt;a href=&quot;http://creativecommons.org/licenses/by-sa/3.0/deed.ru&quot;&gt;CC-BY-SA&lt;/a&gt;, если не указано иного.&lt;br /&gt;&lt;br /&gt;Это ПО построено на базе фреймворка &lt;a href=&quot;http://qt-project.org/&quot;&gt;Qt&lt;/a&gt; и использует, набор иконок &lt;a href=&quot;http://somerandomdude.com/work/iconic/&quot;&gt;&amp;laquo;Iconic&amp;raquo;&lt;/a&gt; в качестве лицензируемых продуктов третих лиц.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2635"/>
+        <location filename="../../src/SettingsWindow.ui" line="2632"/>
         <source>qrc:/text/cast.html</source>
         <translation type="unfinished"></translation>
     </message>
@@ -665,22 +656,22 @@ p, li { white-space: pre-wrap; }
         <translation>Включить сервер (API через сокеты)</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2120"/>
+        <location filename="../../src/SettingsWindow.ui" line="2124"/>
         <source>Port:</source>
         <translation>Порт:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2187"/>
+        <location filename="../../src/SettingsWindow.ui" line="2191"/>
         <source>Capture source</source>
         <translation>Источник захвата</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2334"/>
+        <location filename="../../src/SettingsWindow.ui" line="2338"/>
         <source>Ping Lightpack device every second</source>
         <translation>Проверять доступность Лайтпака каждую секунду</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.ui" line="2341"/>
+        <location filename="../../src/SettingsWindow.ui" line="2345"/>
         <source>Send data only if colors changes</source>
         <translation>Посылать данные только при изменении</translation>
     </message>
@@ -717,13 +708,13 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Проблемы с подключением, подробности в логах</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="307"/>
+        <location filename="../../src/SettingsWindow.cpp" line="303"/>
         <location filename="../../src/SettingsWindow.cpp" line="1426"/>
         <source>System default</source>
         <translation>По умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="378"/>
+        <location filename="../../src/SettingsWindow.cpp" line="372"/>
         <source>FPS: %1</source>
         <translation>Кадр/c: %1</translation>
     </message>
@@ -732,6 +723,15 @@ p, li { white-space: pre-wrap; }
         <location filename="../../src/SettingsWindow.cpp" line="740"/>
         <source>Turn lights OFF</source>
         <translation>Выключить подсветку</translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsWindow.cpp" line="1698"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt; &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt; p, li { white-space: pre-wrap; } &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt; &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;software &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Софт версии &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревизия &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), прошивка &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Device locked via Plugin</source>
@@ -747,19 +747,19 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Приложение уже запущено</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="376"/>
+        <location filename="../../src/SettingsWindow.cpp" line="370"/>
         <location filename="../../src/SettingsWindow.cpp" line="1302"/>
         <source>Profile: %1</source>
         <translation>Профиль: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="299"/>
+        <location filename="../../src/SettingsWindow.cpp" line="295"/>
         <location filename="../../src/SettingsWindow.cpp" line="1390"/>
         <source>Prismatik: %1</source>
         <translation type="unfinished">Призматик: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="377"/>
+        <location filename="../../src/SettingsWindow.cpp" line="371"/>
         <source>Device: %1</source>
         <translation>Устройство: %1</translation>
     </message>
