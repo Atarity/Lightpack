@@ -28,8 +28,6 @@
 #ifndef LEDS_COUNT_H_INCLUDED
 #define LEDS_COUNT_H_INCLUDED
 
-#include "LIGHTPACK_HW.h"
-
 #if (LIGHTPACK_HW == 6 || LIGHTPACK_HW == 7 )
 
 #	define LEDS_COUNT  10
@@ -43,7 +41,7 @@
 #	define LEDS_COUNT  8
 
 #else
-#   error "LIGHTPACK_HW must be defined in 'CommonHeaders/LIGHTPACK_HW.h' to major number of the hardware revision"
+#   error "LIGHTPACK_HW must be passed thru command line as major number of the hardware revision"
 #endif
 
 #endif /* LEDS_COUNT_H_INCLUDED */
