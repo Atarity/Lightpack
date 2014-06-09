@@ -56,7 +56,7 @@ LIBS    += -L../lib -lgrab -lprismatik-math
 CONFIG(gcc):QMAKE_CXXFLAGS += -std=c++11
 
 unix:!macx{
-    CONFIG    += link_pkgconfig
+    CONFIG    += link_pkgconfig debug
     PKGCONFIG += libusb-1.0
 
     DESKTOP = $$(XDG_CURRENT_DESKTOP)
@@ -85,7 +85,7 @@ win32 {
     #DX9 grab
     LIBS    += -lgdi32 -ld3d9
 
-    QMAKE_CFLAGS += -O2
+    QMAKE_CFLAGS += -O2 -ggdb
     # Windows version using WinAPI + GDI + DirectX for grab colors
 
     LIBS    += -lwsock32 -lshlwapi -lole32
@@ -219,7 +219,6 @@ HEADERS += \
     ../common/defs.h \
     enums.hpp         ApiServer.hpp     ApiServerSetColorTask.hpp \
     hidapi/hidapi.h \
-    ../../CommonHeaders/LIGHTPACK_HW.h \
     ../../CommonHeaders/COMMANDS.h \
     ../../CommonHeaders/USB_ID.h \
     MoodLampManager.hpp \

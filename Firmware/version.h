@@ -27,8 +27,9 @@
 #ifndef VERSION_H_INCLUDED
 #define VERSION_H_INCLUDED
 
-// Firmware version:
-#include "../CommonHeaders/LIGHTPACK_HW.h"
+#ifndef LIGHTPACK_HW
+#error LIGHTPACK_HW should be passed as argument to make
+#endif
 
 #if(LIGHTPACK_HW == 7)
 #define VERSION_OF_FIRMWARE              (0x0706UL)
@@ -38,6 +39,8 @@
 #define VERSION_OF_FIRMWARE              (0x0505UL)
 #elif (LIGHTPACK_HW == 4)
 #define VERSION_OF_FIRMWARE              (0x0405UL)
+#else
+#error Unknown Lightpach HW version, check LIGHTPACK_HW value
 #endif
 
 #define VERSION_OF_FIRMWARE_MAJOR        ((VERSION_OF_FIRMWARE & 0xff00) >> 8)

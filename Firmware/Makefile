@@ -11,7 +11,7 @@
 
 # Run "make help" for target help.
 
-include ../CommonHeaders/LIGHTPACK_HW.h
+LIGHTPACK_HW?=7
 
 MCU          = at90usb162
 ARCH         = AVR8
@@ -30,7 +30,7 @@ SRC          = $(LUFA_SRC_USB) \
 
 OBJDIR       = obj
 LUFA_PATH    = ./LUFA
-CC_FLAGS     = -DUSE_LUFA_CONFIG_HEADER
+CC_FLAGS     = -DUSE_LUFA_CONFIG_HEADER -DLIGHTPACK_HW=$(LIGHTPACK_HW)
 LD_FLAGS     =
 
 # Default target
