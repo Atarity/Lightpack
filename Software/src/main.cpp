@@ -220,13 +220,6 @@ int main(int argc, char **argv)
 
     LightpackApplication lightpackApp(argc, argv);
 
-    if (lightpackApp.isRunning())
-    {        
-        lightpackApp.sendMessage("Application already running");
-
-        qWarning() << "Application already running";
-        exit(0);
-    }
 
     QStringList paths = QStringList() << getApplicationDirectoryPath(argv[0]) + "/plugins";
     lightpackApp.setLibraryPaths(paths);
@@ -236,6 +229,14 @@ int main(int argc, char **argv)
     qInstallMessageHandler(messageHandler);
 
     lightpackApp.initializeAll(appDirPath);
+
+    if (lightpackApp.isRunning())
+    {
+        lightpackApp.sendMessage("Application already running");
+
+        qWarning() << "Application already running";
+        exit(0);
+    }
 
     Q_INIT_RESOURCE(LightpackResources);
 

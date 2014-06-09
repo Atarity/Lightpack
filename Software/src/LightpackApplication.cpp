@@ -310,9 +310,18 @@ void LightpackApplication::processCommandLineArguments()
         }
         else if (arguments().at(i) == "--off")
         {
-            LedDeviceLightpack lightpackDevice;
-            lightpackDevice.switchOffLeds();
-            exit(OK_ErrorCode);
+            if (!isRunning()) {
+                LedDeviceLightpack lightpackDevice;
+                lightpackDevice.switchOffLeds();
+            }
+            else
+                sendMessage("off");
+            ::exit(0);
+        }
+        else if (arguments().at(i) =="--on") {
+            if (isRunning())
+                sendMessage("on");
+            ::exit(0);
         }
         else if (arguments().at(i) =="--debug-high")
         {
@@ -338,7 +347,7 @@ void LightpackApplication::processCommandLineArguments()
         } else {
             qDebug() << "Wrong argument:" << arguments().at(i);
             printHelpMessage();
-            exit(WrongCommandLineArgument_ErrorCode);
+            ::exit(WrongCommandLineArgument_ErrorCode);
         }
     }
 
@@ -357,14 +366,15 @@ void LightpackApplication::printHelpMessage() const
 #ifdef GIT_REVISION
     fprintf(stderr, "Revision : %s\n", GIT_REVISION);
 #endif
-    fprintf(stderr, "Site     : lightpack.googlecode.com \n");
+    fprintf(stderr, "Site     : http://lightpack.tv\n");
     fprintf(stderr, "\n");
     fprintf(stderr, "Build with Qt version %s\n", QT_VERSION_STR);
     fprintf(stderr, "\n");
     fprintf(stderr, "Options: \n");
     fprintf(stderr, "  --nogui       - no GUI (console mode) \n");
     fprintf(stderr, "  --wizard      - run settings wizard first \n");
-    fprintf(stderr, "  --off         - send 'off leds' cmd to device \n");
+    fprintf(stderr, "  --on          - send 'on leds' cmd to running instance, if any\n");
+    fprintf(stderr, "  --off         - send 'off leds' cmd to the device or running instance\n");
     fprintf(stderr, "  --help        - show this help \n");
     fprintf(stderr, "  --debug-high  - maximum verbose level of debug output\n");
     fprintf(stderr, "  --debug-mid   - middle debug level\n");

@@ -876,8 +876,13 @@ void SettingsWindow::processMessage(const QString &message)
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << message;
 
-    if (m_trayIcon==NULL) return;
-    m_trayIcon->showMessage(SysTrayIcon::MessageAnotherInstance);
+    if ("on" == message)
+        setBacklightStatus(Backlight::StatusOn);
+    else if ("off" == message)
+        setBacklightStatus(Backlight::StatusOff);
+    else if (m_trayIcon != NULL) {
+        m_trayIcon->showMessage(SysTrayIcon::MessageAnotherInstance);
+    }
 }
 
 // ----------------------------------------------------------------------------
