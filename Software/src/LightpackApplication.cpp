@@ -67,7 +67,9 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     processCommandLineArguments();
 
-	printVersionsSoftwareQtOS();
+    printVersionsSoftwareQtOS();
+    if (isRunning())
+        return;
 
     if (!Settings::Initialize(m_applicationDirPath, m_isDebugLevelObtainedFromCmdArgs)
             && !m_noGui) {
