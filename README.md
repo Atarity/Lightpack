@@ -82,13 +82,10 @@ to run Prismatik please make sure PythonQt libs are available for load at runtim
 ###Fimware build instructions
 1. Install [AVR GCC Toolchain] (http://avr-eclipse.sourceforge.net/wiki/index.php/The_AVR_GCC_Toolchain)
 2. Install **dfu-programmer** for firmware upload with `$ sudo apt-get install dfu-programmer`
-3. Install [Eclipse IDE] (http://www.eclipse.org/downloads/) for C/C++ Developers
-4. Install [AVR Eclipse Plugin] (http://avr-eclipse.sourceforge.net/wiki/index.php/Plugin_Download)
-5. Create new "Makefile project from existing code"
- * Set "Existing Code Location" to "Lightpack/Firmware/"
- * Set "Project Name" to "Lightpack"
- * Choose AVR-GCC Toolchain and press "finish"
-6. Reboot device to bootloader and type `$ cd Lightpack/Firmware/`, then `$ make dfu`
+3. Compile Prismatik using command line:
+    * cd $Lightpack/Firmware
+    * make LIGHTPACK_HW=7
+4. Reboot device to bootloader and type `make dfu`
 
 ---
 
