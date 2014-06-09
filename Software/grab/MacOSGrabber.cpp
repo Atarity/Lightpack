@@ -23,6 +23,7 @@
  *
  */
 
+#include <QGuiApplication>
 #include"MacOSGrabber.hpp"
 
 #ifdef MAC_OS_CG_GRAB_SUPPORT
@@ -127,10 +128,11 @@ bool MacOSGrabber::reallocate(const QList<ScreenInfo> &screens)
 
         int screenid = reinterpret_cast<intptr_t>(screens[i].handle);
 
-        long width = CGDisplayPixelsWide(screenid);
-        long height = CGDisplayPixelsHigh(screenid);
+        qreal pixelRatio = ((QGuiApplication*)QCoreApplication::instance())->devicePixelRatio();
+        long width = CGDisplayPixelsWide(screenid) * pixelRatio;
+        long height = CGDisplayPixelsHigh(screenid) * pixelRatio;
 
-        DEBUG_HIGH_LEVEL << "dimensions " << width << "x" << height << screens[i].handle;
+        DEBUG_HIGH_LEVEL << "dimensions " << width << "x" << height << pixelRatio << screens[i].handle;
 
         size_t imgSize = height * width * kBytesPerPixel;
         unsigned char *buf = reinterpret_cast<unsigned char*>(calloc(imgSize, sizeof(unsigned char)));
