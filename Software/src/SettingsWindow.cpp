@@ -916,6 +916,7 @@ void SettingsWindow::showSettings()
     DEBUG_LOW_LEVEL << Q_FUNC_INFO;
 
     this->show();
+    raise();
     this->activateWindow();
 }
 
