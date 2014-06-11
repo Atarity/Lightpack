@@ -128,5 +128,6 @@ private:
     bool m_isSettingsWindowActive;
     Backlight::Status m_backlightStatus;
 
-	std::vector<std::unique_ptr<QAbstractNativeEventFilter>> m_EventFilters;
+    typedef std::vector<QSharedPointer<QAbstractNativeEventFilter> > EventFilters;
+    EventFilters m_EventFilters;
 };

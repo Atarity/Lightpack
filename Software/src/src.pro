@@ -53,7 +53,6 @@ RC_FILE      = ../res/Lightpack.rc
 include(../build-config.prf)
 
 LIBS    += -L../lib -lgrab -lprismatik-math
-CONFIG(gcc):QMAKE_CXXFLAGS += -std=c++11
 
 unix:!macx{
     CONFIG    += link_pkgconfig debug
@@ -153,8 +152,7 @@ macx{
     QMAKE_MAC_SDK = macosx10.9
 
     CONFIG(clang) {
-        QMAKE_CXXFLAGS += -mmacosx-version-min=10.9 -stdlib=libc+ -x objective-c++
-        CONFIG +=c++11
+        QMAKE_CXXFLAGS += -mmacosx-version-min=10.6 -stdlib=libstdc++ -x objective-c++
     }
 }
 

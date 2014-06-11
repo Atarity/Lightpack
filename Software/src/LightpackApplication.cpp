@@ -131,10 +131,10 @@ void LightpackApplication::initializeAll(const QString & appDirPath)
 
     startPluginManager();
 
-	m_EventFilters.push_back(std::unique_ptr<QAbstractNativeEventFilter>(new EndSessionDetector()));
+    m_EventFilters.push_back(QSharedPointer<QAbstractNativeEventFilter>(new EndSessionDetector()));
 
-	for (std::unique_ptr<QAbstractNativeEventFilter>& iter : m_EventFilters)
-		this->installNativeEventFilter(iter.get());
+    for (EventFilters::const_iterator it = m_EventFilters.begin(); it != m_EventFilters.end(); ++it)
+        this->installNativeEventFilter(it->data());
 
     emit postInitialization();
 }

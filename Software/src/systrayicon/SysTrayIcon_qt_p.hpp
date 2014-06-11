@@ -217,7 +217,7 @@ public:
     {
         fillProfilesFromSettings();
         if (_status == SysTrayIcon::StatusOn) {
-            auto profileName = SettingsScope::Settings::getCurrentProfileName();
+            QString profileName = SettingsScope::Settings::getCurrentProfileName();
             setStatus(_status, &profileName);
         }
 

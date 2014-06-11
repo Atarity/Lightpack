@@ -45,15 +45,15 @@ public:
     {}
 
     AppVersion(const char *version)
-        : AppVersion()
     {
+        AppVersion();
         QString str(version);
         initWith(QStringRef(&str));
     }
 
     AppVersion(const QStringRef &ver)
-        : AppVersion()
     {
+       AppVersion();
        initWith(ver);
     }
 
