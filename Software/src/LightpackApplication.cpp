@@ -361,28 +361,29 @@ void LightpackApplication::processCommandLineArguments()
 
 void LightpackApplication::printHelpMessage() const
 {
-    fprintf(stderr, "\n");
-    fprintf(stderr, "Project  : Prismatik \n");
-    fprintf(stderr, "Author   : Mike Shatohin \n");
-    fprintf(stderr, "Version  : %s\n", VERSION_STR);
+    QString m = "\n"
+            "Version: " + QString(VERSION_STR) + "\n"
 #ifdef GIT_REVISION
-    fprintf(stderr, "Revision : %s\n", GIT_REVISION);
+            "Revision: " + QString(GIT_REVISION) + "\n"
 #endif
-    fprintf(stderr, "Site     : http://lightpack.tv\n");
-    fprintf(stderr, "\n");
-    fprintf(stderr, "Build with Qt version %s\n", QT_VERSION_STR);
-    fprintf(stderr, "\n");
-    fprintf(stderr, "Options: \n");
-    fprintf(stderr, "  --nogui       - no GUI (console mode) \n");
-    fprintf(stderr, "  --wizard      - run settings wizard first \n");
-    fprintf(stderr, "  --on          - send 'on leds' cmd to running instance, if any\n");
-    fprintf(stderr, "  --off         - send 'off leds' cmd to the device or running instance\n");
-    fprintf(stderr, "  --help        - show this help \n");
-    fprintf(stderr, "  --debug-high  - maximum verbose level of debug output\n");
-    fprintf(stderr, "  --debug-mid   - middle debug level\n");
-    fprintf(stderr, "  --debug-low   - low debug level, DEFAULT\n");
-    fprintf(stderr, "  --debug-zero  - minimum debug output\n");
-    fprintf(stderr, "\n");
+            "Build with Qt version " + QString(QT_VERSION_STR) + "\n"
+            "\n"
+            "Options: \n"
+            "  --nogui       - no GUI (console mode) \n"
+            "  --wizard      - run settings wizard first \n"
+            "  --on          - send 'on leds' cmd to running instance, if any\n"
+            "  --off         - send 'off leds' cmd to the device or running instance\n"
+            "  --help        - show this help \n"
+            "  --debug-high  - maximum verbose level of debug output\n"
+            "  --debug-mid   - middle debug level\n"
+            "  --debug-low   - low debug level, DEFAULT\n"
+            "  --debug-zero  - minimum debug output\n";
+
+#ifdef Q_OS_WIN
+    QMessageBox::information(NULL, "Prismatik", m, QMessageBox::Ok);
+#else
+    fprintf(stderr, "%s\n", m.toStdString().c_str());
+#endif
 }
 
 #ifdef Q_OS_LINUX
