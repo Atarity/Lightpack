@@ -31,14 +31,16 @@
 #error LIGHTPACK_HW should be passed as argument to make
 #endif
 
+#define SOFTWARE_VERSION 0x06UL
+
 #if(LIGHTPACK_HW == 7)
-#define VERSION_OF_FIRMWARE              (0x0706UL)
+#define VERSION_OF_FIRMWARE              (0x0700UL + SOFTWARE_VERSION)
 #elif(LIGHTPACK_HW == 6)
-#define VERSION_OF_FIRMWARE              (0x0605UL)
+#define VERSION_OF_FIRMWARE              (0x0600UL + SOFTWARE_VERSION)
 #elif (LIGHTPACK_HW == 5)
-#define VERSION_OF_FIRMWARE              (0x0505UL)
+#define VERSION_OF_FIRMWARE              (0x0500UL + SOFTWARE_VERSION)
 #elif (LIGHTPACK_HW == 4)
-#define VERSION_OF_FIRMWARE              (0x0405UL)
+#define VERSION_OF_FIRMWARE              (0x0400UL + SOFTWARE_VERSION)
 #else
 #error Unknown Lightpach HW version, check LIGHTPACK_HW value
 #endif
