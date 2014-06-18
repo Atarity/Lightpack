@@ -2548,7 +2548,7 @@
            </size>
           </property>
           <property name="text">
-           <string notr="true">&lt;a href=&quot;http://lightpack.googlecode.com/&quot;&gt;lightpack.googlecode.com&lt;/a&gt;</string>
+           <string notr="true">&lt;a href=&quot;http://lightpack.tv/&quot;&gt;lightpack.tv&lt;/a&gt;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>

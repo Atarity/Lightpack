@@ -57,7 +57,7 @@ LightpackApplication::LightpackApplication(int &argc, char **argv)
 void LightpackApplication::initializeAll(const QString & appDirPath)
 {
     setApplicationName("Prismatik");
-    setOrganizationName("Pixelkit LLC");
+    setOrganizationName("Woodenshark LLC");
     setApplicationVersion(VERSION_STR);
     setQuitOnLastWindowClosed(false);
 

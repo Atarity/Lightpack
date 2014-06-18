@@ -2,7 +2,7 @@
 # src.pro
 #
 # Copyright (c) 2010,2011 Mike Shatohin, mikeshatohin [at] gmail.com
-# http://lightpack.googlecode.com
+# http://lightpack.tv https://github.com/woodenshark/Lightpack
 # Project created by QtCreator 2010-04-28T19:08:13
 # -------------------------------------------------
 

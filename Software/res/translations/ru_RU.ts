@@ -709,36 +709,36 @@ You still will be able to place capturing zones manually.</source>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="303"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1426"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1431"/>
         <source>System default</source>
         <translation>По умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="372"/>
+        <location filename="../../src/SettingsWindow.cpp" line="371"/>
         <source>FPS: %1</source>
         <translation>Кадр/c: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="709"/>
-        <location filename="../../src/SettingsWindow.cpp" line="740"/>
+        <location filename="../../src/SettingsWindow.cpp" line="708"/>
+        <location filename="../../src/SettingsWindow.cpp" line="739"/>
         <source>Turn lights OFF</source>
         <translation>Выключить подсветку</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1698"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt; &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt; p, li { white-space: pre-wrap; } &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt; &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;software &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <location filename="../../src/SettingsWindow.cpp" line="1703"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt; &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt; p, li { white-space: pre-wrap; } &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt; &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;software &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;https://github.com/woodenshark/Lightpack/commit/%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Софт версии &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревизия &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), прошивка &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Софт версии &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревизия &lt;/span&gt;&lt;a href=&quot;https://github.com/woodenshark/Lightpack/commit/%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), прошивка &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Device locked via Plugin</source>
         <translation type="obsolete">Устройство находится под управлением плагина</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="732"/>
+        <location filename="../../src/SettingsWindow.cpp" line="731"/>
         <source>Turn lights ON</source>
         <translation>Включить подсветку</translation>
     </message>
@@ -747,19 +747,19 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Приложение уже запущено</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="370"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1302"/>
+        <location filename="../../src/SettingsWindow.cpp" line="369"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1307"/>
         <source>Profile: %1</source>
         <translation>Профиль: %1</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="295"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1390"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1395"/>
         <source>Prismatik: %1</source>
         <translation type="unfinished">Призматик: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="371"/>
+        <location filename="../../src/SettingsWindow.cpp" line="370"/>
         <source>Device: %1</source>
         <translation>Устройство: %1</translation>
     </message>
@@ -813,7 +813,7 @@ p, li { white-space: pre-wrap; }
         <translation>Лайтпак</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="993"/>
+        <location filename="../../src/SettingsWindow.cpp" line="998"/>
         <source>update firmware</source>
         <translation>обновить прошивку</translation>
     </message>
@@ -826,7 +826,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Нажмите на это сообщение чтобы перейти на страницу скачивания прошивок</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1023"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1028"/>
         <source>FPS: </source>
         <translation>Кадр/с: </translation>
     </message>
@@ -835,7 +835,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Устройство:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1323"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1328"/>
         <source>New profile</source>
         <translation>Новый профиль</translation>
     </message>

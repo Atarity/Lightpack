@@ -710,13 +710,13 @@ You still will be able to place capturing zones manually.</source>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="295"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1390"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1395"/>
         <source>Prismatik: %1</source>
         <translation>Prismatik: %1</translation>
     </message>
     <message>
         <location filename="../../src/SettingsWindow.cpp" line="303"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1426"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1431"/>
         <source>System default</source>
         <translation>Типова для системи</translation>
     </message>
@@ -725,35 +725,35 @@ You still will be able to place capturing zones manually.</source>
         <translation type="obsolete">Вкладка розробника</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="370"/>
-        <location filename="../../src/SettingsWindow.cpp" line="1302"/>
+        <location filename="../../src/SettingsWindow.cpp" line="369"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1307"/>
         <source>Profile: %1</source>
         <translation>Профіль: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="371"/>
+        <location filename="../../src/SettingsWindow.cpp" line="370"/>
         <source>Device: %1</source>
         <translation>Пристрій: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="372"/>
+        <location filename="../../src/SettingsWindow.cpp" line="371"/>
         <source>FPS: %1</source>
         <translation>FPS: %1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="709"/>
-        <location filename="../../src/SettingsWindow.cpp" line="740"/>
+        <location filename="../../src/SettingsWindow.cpp" line="708"/>
+        <location filename="../../src/SettingsWindow.cpp" line="739"/>
         <source>Turn lights OFF</source>
         <translation>Вимкнути лампи</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1698"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt; &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt; p, li { white-space: pre-wrap; } &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt; &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;software &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <location filename="../../src/SettingsWindow.cpp" line="1703"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt; &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt; p, li { white-space: pre-wrap; } &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt; &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;software &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (revision &lt;/span&gt;&lt;a href=&quot;https://github.com/woodenshark/Lightpack/commit/%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), firmware &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;програмне забезпечення &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревізія &lt;/span&gt;&lt;a href=&quot;http://code.google.com/p/lightpack/source/detail?r=%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), мікропрограма &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;програмне забезпечення &lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;%1&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; (ревізія &lt;/span&gt;&lt;a href=&quot;https://github.com/woodenshark/Lightpack/commit/%2&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;%2 &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;), мікропрограма &lt;b&gt;%3&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Device locked via API</source>
@@ -764,7 +764,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Пристрій заблоковано через додаток</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="732"/>
+        <location filename="../../src/SettingsWindow.cpp" line="731"/>
         <source>Turn lights ON</source>
         <translation>Увімкнути лампи</translation>
     </message>
@@ -777,7 +777,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Програма вже завантажена</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="993"/>
+        <location filename="../../src/SettingsWindow.cpp" line="998"/>
         <source>update firmware</source>
         <translation>оновити мікропрограму</translation>
     </message>
@@ -790,12 +790,12 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Для відкриття сторінки завантаження lightpack натисніть це повідомлення.</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1023"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1028"/>
         <source>FPS: </source>
         <translation>FPS: </translation>
     </message>
     <message>
-        <location filename="../../src/SettingsWindow.cpp" line="1323"/>
+        <location filename="../../src/SettingsWindow.cpp" line="1328"/>
         <source>New profile</source>
         <translation>Новий профіль</translation>
     </message>
