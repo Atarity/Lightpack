@@ -1521,7 +1521,7 @@ void Settings::setNewOptionMain(const QString & name, const QVariant & value, bo
 
 void Settings::setValueMain(const QString & key, const QVariant & value)
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << key << value;
 
     QMutexLocker locker(&m_mutex);
 
@@ -1535,21 +1535,24 @@ void Settings::setValueMain(const QString & key, const QVariant & value)
 
 QVariant Settings::valueMain(const QString & key)
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
-
-    QMutexLocker locker(&m_mutex);
-
-    if (m_mainConfig == NULL)
+    QVariant value;
     {
-        qWarning() << Q_FUNC_INFO << "m_mainConfig == NULL";
-        return QVariant();
+        QMutexLocker locker(&m_mutex);
+
+        if (m_mainConfig == NULL) {
+            qWarning() << Q_FUNC_INFO << "m_mainConfig == NULL";
+            return QVariant();
+        }
+
+        value = m_mainConfig->value(key);
     }
-    return m_mainConfig->value(key);
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << key << "= " << value;
+    return value;
 }
 
 void Settings::setValue(const QString & key, const QVariant & value)
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << key << "= " << value;
 
     QMutexLocker locker(&m_mutex);
 
@@ -1563,16 +1566,19 @@ void Settings::setValue(const QString & key, const QVariant & value)
 
 QVariant Settings::value(const QString & key)
 {
-    DEBUG_MID_LEVEL << Q_FUNC_INFO << key;
-
-    QMutexLocker locker(&m_mutex);
-
-    if (m_currentProfile == NULL)
+    QVariant value;
     {
-        qWarning() << Q_FUNC_INFO << "m_currentProfile == NULL";
-        return QVariant();
+        QMutexLocker locker(&m_mutex);
+
+        if (m_currentProfile == NULL) {
+            qWarning() << Q_FUNC_INFO << "m_currentProfile == NULL";
+            return QVariant();
+        }
+
+        value = m_currentProfile->value(key);
     }
-    return m_currentProfile->value(key);
+    DEBUG_MID_LEVEL << Q_FUNC_INFO << key << "= " << value;
+    return value;
 }
 
 void Settings::initDevicesMap()
