@@ -64,7 +64,7 @@ QList<UpdateInfo> UpdatesProcessor::readUpdates(uint lastReadId)
             QList<UpdateInfo>::iterator it = updates.begin();
             while (it != updates.end()) {
                 UpdateInfo updateInfo = *it;
-                if (!updateInfo.softwareVersion.isEmpty() && !isVersionMatches(updateInfo.softwareVersion, &kCurVersion)) {
+                if (!updateInfo.softwareVersion.isEmpty() && !isVersionMatches(updateInfo.softwareVersion, kCurVersion)) {
                     updates.removeAll(updateInfo);
                 } else if (updateInfo.id <= lastReadId) {
                     updates.removeAll(updateInfo);
@@ -78,7 +78,7 @@ QList<UpdateInfo> UpdatesProcessor::readUpdates(uint lastReadId)
     return updates;
 }
 
-bool UpdatesProcessor::isVersionMatches(const QString &predicate, const AppVersion *version)
+bool UpdatesProcessor::isVersionMatches(const QString &predicate, const AppVersion &version)
 {
     enum Condition {
         LT,
@@ -110,26 +110,26 @@ bool UpdatesProcessor::isVersionMatches(const QString &predicate, const AppVersi
         predicateVerStr = predicateRef.trimmed();
     }
 
-    AppVersion predicateVer(predicateVerStr);
+    AppVersion predicateVer(predicateVerStr.toString());
 
-    if (!version->isValid() || !predicateVer.isValid())
+    if (!version.isValid() || !predicateVer.isValid())
         return false;
 
     switch (cond) {
     case LT:
-        return *version < predicateVer;
+        return version < predicateVer;
         break;
     case GT:
-        return *version > predicateVer;
+        return version > predicateVer;
         break;
     case EQ:
-        return *version == predicateVer;
+        return version == predicateVer;
         break;
     case LE:
-        return *version <= predicateVer;
+        return version <= predicateVer;
         break;
     case GE:
-        return *version >= predicateVer;
+        return version >= predicateVer;
         break;
     }
 
