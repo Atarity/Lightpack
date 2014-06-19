@@ -290,8 +290,6 @@ void SettingsWindow::changeEvent(QEvent *e)
         if (m_trayIcon)
             m_trayIcon->retranslateUi();
 
-        ui->comboBox_LightpackModes->setCurrentIndex(Settings::getLightpackMode() == Lightpack::MoodLampMode ? MoodLampModeIndex : GrabModeIndex);
-
         setWindowTitle(tr("Prismatik: %1").arg(ui->comboBox_Profiles->lineEdit()->text()));
 
         ui->listWidget->addItem("dirty hack");
@@ -1119,8 +1117,23 @@ void SettingsWindow::onLightpackModes_currentIndexChanged(int index)
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << index << sender();
 
     using namespace Lightpack;
-    if (index >= 0)
-        Settings::setLightpackMode(index == GrabModeIndex ? AmbilightMode : MoodLampMode);
+
+
+    // Dirty hack to ignore index change when combobox is re-populated by Qt framework
+    // TODO: get rid of combobox for Mode UI component
+    static int hack = -1;
+    if (index >= 0) {
+        if (-1 == hack)
+            Settings::setLightpackMode(index == GrabModeIndex ? AmbilightMode : MoodLampMode);
+        else {
+            ui->comboBox_LightpackModes->setCurrentIndex(hack);
+            hack = -1;
+        }
+    }
+    else {
+        hack = Settings::getLightpackMode() == MoodLampMode ? MoodLampModeIndex : GrabModeIndex;
+        DEBUG_MID_LEVEL << "Mode combo hack: " << hack;
+    }
 }
 
 void SettingsWindow::onLightpackModeChanged(Lightpack::Mode mode)
