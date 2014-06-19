@@ -93,7 +93,8 @@ void MoodLampManager::setLiquidMode(bool state)
         m_timer.start();
     else {
         m_timer.stop();
-        updateColors();
+        if (m_isMoodLampEnabled)
+            updateColors();
     }
 }
 
