@@ -255,13 +255,7 @@ void LightpackApplication::startBacklight()
 
     switch (m_backlightStatus)
     {
-    case Backlight::StatusOn:
-    case Backlight::StatusDeviceError:
-        connectApiServerAndLedDeviceSignalsSlots();
-        break;
-
     case Backlight::StatusOff:
-        disconnectApiServerAndLedDeviceSignalsSlots();
         emit clearColorBuffers();
         break;
 
@@ -467,8 +461,6 @@ void LightpackApplication::startApiServer()
 {
     DEBUG_LOW_LEVEL << Q_FUNC_INFO << "Start API server";
 
-    m_isApiServerConnectedToLedDeviceSignalsSlots = false;
-
     m_apiServer = new ApiServer();
     m_apiServer->setInterface(m_pluginInterface);
     m_apiServerThread = new QThread();
@@ -489,11 +481,6 @@ void LightpackApplication::startApiServer()
     }
 
     connect(m_ledDeviceManager, SIGNAL(setColors_VirtualDeviceCallback(QList<QRgb>)), m_pluginInterface,    SLOT(updateColors(QList<QRgb>)), Qt::QueuedConnection);
-
-    if (Settings::isBacklightEnabled())
-    {
-        connectApiServerAndLedDeviceSignalsSlots();
-    }
 
     m_apiServer->firstStart();
 
@@ -629,22 +616,6 @@ void LightpackApplication::initGrabManager()
     connect(m_grabManager, SIGNAL(ambilightTimeOfUpdatingColors(double)), m_pluginInterface, SLOT(refreshAmbilightEvaluated(double)));
     connect(m_grabManager,SIGNAL(changeScreen(QRect)),m_pluginInterface,SLOT(refreshScreenRect(QRect)));
 
-}
-
-void LightpackApplication::connectApiServerAndLedDeviceSignalsSlots()
-{
-    if (m_isApiServerConnectedToLedDeviceSignalsSlots == false)
-    {
-        m_isApiServerConnectedToLedDeviceSignalsSlots = true;
-    }
-}
-
-void LightpackApplication::disconnectApiServerAndLedDeviceSignalsSlots()
-{
-    if (m_isApiServerConnectedToLedDeviceSignalsSlots == true)
-    {
-        m_isApiServerConnectedToLedDeviceSignalsSlots = false;
-    }
 }
 
 void LightpackApplication::commitData(QSessionManager &sessionManager)

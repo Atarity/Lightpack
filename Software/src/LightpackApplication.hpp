@@ -94,8 +94,6 @@ private:
     void initGrabManager();
     void startPluginManager();
     void startBacklight();
-    void connectApiServerAndLedDeviceSignalsSlots();
-    void disconnectApiServerAndLedDeviceSignalsSlots();
 
     void runWizardLoop(bool isInitFromSettings);
 
@@ -122,7 +120,6 @@ private:
 
     QString m_applicationDirPath;
     bool m_isDebugLevelObtainedFromCmdArgs;
-    bool m_isApiServerConnectedToLedDeviceSignalsSlots;
     bool m_noGui;
     DeviceLocked::DeviceLockStatus m_deviceLockStatus;
     bool m_isSettingsWindowActive;
