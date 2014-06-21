@@ -156,7 +156,7 @@ macx{
     QMAKE_INFO_PLIST = ./Info.plist
 
     # For build universal binaries (native on Intel and PowerPC)
-    QMAKE_MAC_SDK = macosx10.9
+    QMAKE_MAC_SDK = macosx10.8
 
     CONFIG(clang) {
         QMAKE_CXXFLAGS += -mmacosx-version-min=10.6 -stdlib=libstdc++ -x objective-c++

@@ -46,7 +46,7 @@ protected:
     void initializePage();
     void cleanupPage();
     bool validatePage();
-    int nextId();
+    int nextId() const;
 
 private:
     Ui::ConfigureDevicePage *ui;
