@@ -63,7 +63,7 @@ You will need the following packages, usually all of them are in distro's reposi
 ###Build instructions for OS X
 ####Prerequisites:
 * Qt SDK (5.0+)
-* MacOSX 10.7.sdk
+* MacOSX 10.9.sdk
 
 ###### Whole dependencies list for Prismatik 5.10.1:
 * QtCore.framework
