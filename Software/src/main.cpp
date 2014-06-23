@@ -250,7 +250,7 @@ QString getApplicationDirectoryPath(const char * firstCmdArgument)
 int main(int argc, char **argv)
 {
 
-#if defined Q_OS_MACX && MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
+#if defined Q_OS_MACX && __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_9
     id activity;
     SInt32 version = 0;
     Gestalt( gestaltSystemVersion, &version );
@@ -297,7 +297,7 @@ int main(int argc, char **argv)
 
     int returnCode = lightpackApp.exec();
 
-#if defined Q_OS_MACX && MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
+#if defined Q_OS_MACX && __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_9
     if (endActivityRequired)
       [[NSProcessInfo processInfo] endActivity: activity];
 #elif defined Q_OS_WIN
