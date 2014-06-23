@@ -103,10 +103,8 @@ public:
         Q_STATIC_ASSERT(sizeof(s_logLevelNames)/sizeof(s_logLevelNames[0]) == LevelCount);
 
         const QString timeMark = QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz");
-        std::ostream& stdOut = (level == Debug) ? cout : cerr;
-
         QMutexLocker locker(&m_mutex);
-        stdOut << timeMark.toStdString() << s_logLevelNames[level] << ':' << msg.toStdString() << endl;
+        cerr << timeMark.toStdString() << s_logLevelNames[level] << ':' << msg.toStdString() << endl;
         m_logStream << timeMark << s_logLevelNames[level] << ':' << msg << endl;
         m_logStream.flush();
     }
@@ -142,7 +140,7 @@ private:
             g_logWriter->writeMessage(msg, s_msgType2Loglevel[type]);
 
         if (type == QtFatalMsg) {
-            QApplication::exit(LightpackApplication::QFatalMessageHandler_ErrorCode);
+            exit(LightpackApplication::QFatalMessageHandler_ErrorCode);
         }
     }
 
@@ -266,7 +264,7 @@ int main(int argc, char **argv)
     LogWriter logWriter;
     const int logInitResult = logWriter.initWith(appDirPath + "/Logs");
     if (logInitResult != LightpackApplication::OK_ErrorCode) {
-        QApplication::exit(logInitResult);
+        exit(logInitResult);
     }
 
     LogWriter::ScopedMessageHandler messageHandlerGuard(&logWriter);
