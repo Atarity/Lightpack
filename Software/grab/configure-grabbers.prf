@@ -1,0 +1,21 @@
+# Grabber types detection
+# Linux/UNIX platform
+unix:!macx {
+    SUPPORTED_GRABBERS += X11_GRAB_SUPPORT
+}
+
+# Mac platform
+macx {
+    SUPPORTED_GRABBERS += MAC_OS_CG_GRAB_SUPPORT
+}
+
+# Windows platform
+win32 {
+    # SUPPORTED_GRABBERS += WINAPI_EACH_GRAB_SUPPORT
+    # SUPPORTED_GRABBERS += D3D9_GRAB_SUPPORT
+    SUPPORTED_GRABBERS += WINAPI_GRAB_SUPPORT
+    SUPPORTED_GRABBERS += D3D10_GRAB_SUPPORT
+}
+
+# Disabled for now
+# SUPPORTED_GRABBERS += QT_GRAB_SUPPORT
