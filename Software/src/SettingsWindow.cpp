@@ -55,8 +55,8 @@ const QString SettingsWindow::DeviceFirmvareVersionUndef = "undef";
 const QString SettingsWindow::LightpackDownloadsPageUrl = "http://code.google.com/p/lightpack/downloads/list";
 
 // Indexes of supported modes listed in ui->comboBox_Modes and ui->stackedWidget_Modes
-const unsigned SettingsWindow::GrabModeIndex = 0;
-const unsigned SettingsWindow::MoodLampModeIndex  = 1;
+const int SettingsWindow::GrabModeIndex = 0;
+const int SettingsWindow::MoodLampModeIndex  = 1;
 
 SettingsWindow::SettingsWindow(QWidget *parent) :
     QMainWindow(parent),

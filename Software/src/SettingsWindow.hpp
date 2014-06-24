@@ -262,8 +262,8 @@ private:
     QString m_deviceFirmwareVersion;
     static const QString DeviceFirmvareVersionUndef;
     static const QString LightpackDownloadsPageUrl;
-    static const unsigned GrabModeIndex;
-    static const unsigned MoodLampModeIndex;
+    static const int GrabModeIndex;
+    static const int MoodLampModeIndex;
 
     QString fimwareVersion;
 
