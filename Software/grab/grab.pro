@@ -13,26 +13,78 @@ CONFIG += staticlib
 
 include(../build-config.prf)
 
+# Grabber types configuration
+include(configure-grabbers.prf)
+
 LIBS += -lprismatik-math
 
 INCLUDEPATH += ./include ../src ../math/include
 
+DEFINES += $${SUPPORTED_GRABBERS}
+# Linux/UNIX platform
+unix:!macx {
+    contains(DEFINES, X11_GRAB_SUPPORT) {
+        GRABBERS_HEADERS += include/X11Grabber.hpp
+        GRABBERS_SOURCES += X11Grabber.cpp
+    }
+}
+
+# Mac platform
+macx {
+    contains(DEFINES, MAC_OS_CG_GRAB_SUPPORT) {
+        GRABBERS_HEADERS += include/MacOSGrabber.hpp
+        GRABBERS_SOURCES += MacOSGrabber.cpp
+    }
+}
+
+# Windows platform
+win32 {
+    contains(DEFINES, WINAPI_GRAB_SUPPORT) {
+        GRABBERS_HEADERS += include/WinAPIGrabber.hpp
+        GRABBERS_SOURCES += WinAPIGrabber.cpp
+    }
+
+    contains(DEFINES, WINAPI_EACH_GRAB_SUPPORT) {
+        GRABBERS_HEADERS += include/WinAPIGrabberEachWidget.hpp
+        GRABBERS_SOURCES += WinAPIGrabberEachWidget.cpp
+    }
+
+    contains(DEFINES, D3D9_GRAB_SUPPORT) {
+        GRABBERS_HEADERS += include/D3D9Grabber.hpp
+        GRABBERS_SOURCES += D3D9Grabber.cpp
+    }
+
+    contains(DEFINES, D3D10_GRAB_SUPPORT) {
+        GRABBERS_HEADERS += include/D3D10Grabber.hpp
+        GRABBERS_SOURCES += D3D10Grabber.cpp
+    }
+}
+
+# Common Qt grabbers
+contains(DEFINES, QT_GRAB_SUPPORT) {
+    GRABBERS_HEADERS += \
+        include/QtGrabberEachWidget.hpp \
+        include/QtGrabber.hpp
+
+    GRABBERS_SOURCES += \
+        QtGrabberEachWidget.cpp \
+        QtGrabber.cpp
+}
+
 HEADERS += \
     include/calculations.hpp \
     include/TimeredGrabber.hpp \
-    include/QtGrabberEachWidget.hpp \
-    include/QtGrabber.hpp \
     include/GrabberBase.hpp \
     include/ColorProvider.hpp \
-    include/GrabberContext.hpp
+    include/GrabberContext.hpp \
+    $${GRABBERS_HEADERS}
 
 SOURCES += \
     calculations.cpp \
     TimeredGrabber.cpp \
-    QtGrabberEachWidget.cpp \
-    QtGrabber.cpp \
     GrabberBase.cpp \
-    include/ColorProvider.cpp
+    include/ColorProvider.cpp \
+    $${GRABBERS_SOURCES}
 
 win32 {
     !isEmpty( DIRECTX_SDK_DIR ) {
@@ -51,17 +103,9 @@ win32 {
 
     HEADERS += \
             ../common/msvcstub.h \
-            include/D3D9Grabber.hpp \
-            include/D3D10Grabber.hpp \
-            include/WinAPIGrabberEachWidget.hpp \
-            include/WinAPIGrabber.hpp \
             include/WinUtils.hpp \
             include/WinDXUtils.hpp
     SOURCES += \
-            D3D9Grabber.cpp \
-            D3D10Grabber.cpp \
-            WinAPIGrabberEachWidget.cpp \
-            WinAPIGrabber.cpp \
             WinUtils.cpp \
             WinDXUtils.cpp
 }
@@ -74,20 +118,8 @@ macx {
     #LIBS += \
     #        -framework CoreGraphics
     #        -framework CoreFoundation
-
-    HEADERS += \
-            include/MacOSGrabber.hpp
-
-    SOURCES += \
-            MacOSGrabber.cpp
-
     #QMAKE_MAC_SDK = macosx10.8
 }
 
-unix:!macx {
-    HEADERS += \
-            include/X11Grabber.hpp
-
-    SOURCES += \
-            X11Grabber.cpp
-}
+OTHER_FILES += \
+    configure-grabbers.prf

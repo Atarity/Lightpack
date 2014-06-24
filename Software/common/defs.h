@@ -28,23 +28,6 @@
 
 #include <qglobal.h>
 
-//#define QT_GRAB_SUPPORT
-#ifdef Q_OS_WIN
-//#   define ALIEN_FX_SUPPORTED
-#   define WINAPI_GRAB_SUPPORT
-//#   define WINAPI_EACH_GRAB_SUPPORT
-//#   define D3D9_GRAB_SUPPORT
-#   define D3D10_GRAB_SUPPORT
-#elif defined(Q_OS_UNIX)
-#   define X11_GRAB_SUPPORT
-#endif
-
-#if defined(Q_OS_DARWIN) || defined(Q_OS_DARWIN64) || defined(Q_OS_MAC) || defined(Q_OS_MACX) || defined(Q_OS_MAC64)
-#   define MAC_OS
-#   define MAC_OS_CG_GRAB_SUPPORT
-#   undef X11_GRAB_SUPPORT
-#endif
-
 #define DEBUG_OUT_RGB( RGB_VALUE ) \
     qDebug() << #RGB_VALUE << "=" << qRed(RGB_VALUE) << qGreen(RGB_VALUE) << qBlue(RGB_VALUE)
 
