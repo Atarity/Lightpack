@@ -24,15 +24,16 @@
  *
  */
 
+#include <QDesktopWidget>
+#include <QMessageBox>
+
 #include "ConfigureDevicePage.hpp"
 #include "ui_ConfigureDevicePage.h"
 #include "Settings.hpp"
 #include "LedDeviceArdulight.hpp"
 #include "LedDeviceAdalight.hpp"
 #include "LedDeviceVirtual.hpp"
-#include "QMessageBox"
 #include "Wizard.hpp"
-#include "QDesktopWidget"
 
 using namespace SettingsScope;
 
@@ -83,7 +84,7 @@ bool ConfigureDevicePage::validatePage()
     return true;
 }
 
-int ConfigureDevicePage::nextId() {
+int ConfigureDevicePage::nextId() const {
     if (QApplication::desktop()->screenCount() == 1) {
         return reinterpret_cast<Wizard *>(wizard())->skipMonitorConfigurationPage();
     } else {

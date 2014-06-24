@@ -8,3 +8,8 @@
         # If you have WinSDK 8.1 installed then you should use this instead of DIRECTX_SDK_DIR
         # WIN81_SDK_DIR = "c:/Program Files (x86)/Windows Kits/8.1"
     }
+
+    # You can override QMAKE_MAC_SDK value by setting this variable.
+    # macx {
+    #     QMAKE_MAC_SDK_OVERRIDE = macosx10.8
+    # }

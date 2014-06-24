@@ -36,6 +36,7 @@ bool EndSessionDetector::nativeEventFilter(const QByteArray& eventType, void* me
 {
 	Q_UNUSED(result);
 	Q_UNUSED(eventType);
+	Q_UNUSED(message);
 
 	bool isSessionEnding = false;
 	bool isSessionResuming = false;
