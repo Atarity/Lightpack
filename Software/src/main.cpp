@@ -48,11 +48,148 @@
 
 using namespace std;
 
-static const int StoreLogsLaunches = 5;
-
 unsigned g_debugLevel = SettingsScope::Main::DebugLevelDefault;
-QTextStream m_logStream;
-QMutex m_mutex;
+
+class LogWriter {
+public:
+    enum Level { Debug, Warn, Critical, Fatal, LevelCount };
+
+    LogWriter() { Q_ASSERT(g_logWriter == NULL); }
+    ~LogWriter() { Q_ASSERT(g_logWriter == NULL); }
+
+    int initWith(const QString& logsDirPath)
+    {
+        // Using locale codec for console output in messageHandler(..) function ( cout << qstring.toStdString() )
+        QTextCodec::setCodecForLocale(QTextCodec::codecForLocale());
+
+        QDir logsDir(logsDirPath);
+        if (logsDir.exists() == false)
+        {
+            cout << "mkdir " << logsDirPath.toStdString() << endl;
+            if (logsDir.mkdir(logsDirPath) == false)
+            {
+                cerr << "Failed mkdir '" << logsDirPath.toStdString() << "' for logs. Exit." << endl;
+                return LightpackApplication::LogsDirecroryCreationFail_ErrorCode;
+            }
+        }
+
+        if (rotateLogFiles(logsDir) == false)
+            cerr << "Failed to rotate old log files." << endl;
+
+        const QString logFilePath = logsDirPath + "/Prismatik.0.log";
+        QScopedPointer<QFile> logFile(new QFile(logFilePath));
+        if (logFile->open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+        {
+            m_logStream.setDevice(logFile.take());
+            m_logStream << endl;
+
+            const QDateTime currentDateTime(QDateTime::currentDateTime());
+            m_logStream << currentDateTime.date().toString("yyyy_MM_dd") << " ";
+            m_logStream << currentDateTime.time().toString("hh:mm:ss:zzz") << " Prismatik " << VERSION_STR << endl;
+        } else {
+            cerr << "Failed to open logs file: '" << logFilePath.toStdString() << "'. Exit." << endl;
+            return LightpackApplication::OpenLogsFail_ErrorCode;
+        }
+
+        qDebug() << "Logs file:" << logFilePath;
+
+        return LightpackApplication::OK_ErrorCode;
+    }
+
+    void writeMessage(const QString& msg, Level level = Debug)
+    {
+        static const char* s_logLevelNames[] = { "Debug", "Warning", "Critical", "Fatal" };
+        Q_ASSERT(level >= Debug && level < LevelCount);
+        Q_STATIC_ASSERT(sizeof(s_logLevelNames)/sizeof(s_logLevelNames[0]) == LevelCount);
+
+        const QString timeMark = QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz");
+        QMutexLocker locker(&m_mutex);
+        cerr << timeMark.toStdString() << s_logLevelNames[level] << ':' << msg.toStdString() << endl;
+        m_logStream << timeMark << s_logLevelNames[level] << ':' << msg << endl;
+        m_logStream.flush();
+    }
+
+    struct ScopedMessageHandler {
+        QtMessageHandler m_oldHandler;
+
+        ScopedMessageHandler(LogWriter* logWriter)
+            : m_oldHandler(qInstallMessageHandler(&LogWriter::messageHandler))
+        {
+            LogWriter::g_logWriter = logWriter;
+        }
+
+        ~ScopedMessageHandler()
+        {
+            qInstallMessageHandler(m_oldHandler);
+            LogWriter::g_logWriter = NULL;
+        }
+    };
+
+private:
+    static const int StoreLogsLaunches = 5;
+    static LogWriter* g_logWriter;
+
+    static void messageHandler(QtMsgType type, const QMessageLogContext &ctx, const QString &msg)
+    {
+        static const LogWriter::Level s_msgType2Loglevel[] = {
+            LogWriter::Debug, LogWriter::Warn, LogWriter::Critical, LogWriter::Fatal, LogWriter::Debug
+        };
+        Q_ASSERT(type >= 0 && type < sizeof(s_msgType2Loglevel)/sizeof(s_msgType2Loglevel[0]));
+        Q_UNUSED(ctx);
+        if (g_logWriter)
+            g_logWriter->writeMessage(msg, s_msgType2Loglevel[type]);
+
+        if (type == QtFatalMsg) {
+            exit(LightpackApplication::QFatalMessageHandler_ErrorCode);
+        }
+    }
+
+    static bool rotateLogFiles(const QDir& logsDir) {
+        if (!logsDir.exists())
+            return false;
+
+        QStringList logFiles = logsDir.entryList(QStringList("Prismatik.?.log"), QDir::Files, QDir::Name);
+        // Delete all old files except last |StoreLogsLaunches| files.
+        for (int i = logFiles.count() - 1; i >= StoreLogsLaunches - 1; i--)
+        {
+            if (!QFile::remove(logsDir.absoluteFilePath(logFiles.at(i)))) {
+                qCritical() << "Failed to remove log: " << logFiles.at(i);
+                return false;
+            }
+        }
+
+        logFiles = logsDir.entryList(QStringList("Prismatik.?.log"), QDir::Files, QDir::Name);
+        Q_ASSERT(logFiles.count() <= StoreLogsLaunches);
+        // Move Prismatik.[N].log file to Prismatik.[N+1].log
+        for (int i = logFiles.count() - 1; i >= 0; i--)
+        {
+            const QStringList& splitted = logFiles[i].split('.');
+            Q_ASSERT(splitted.length() == 3);
+
+            const int num = splitted.at(1).toInt();
+            const QString from = logsDir.absoluteFilePath(logFiles.at(i));
+            const QString to = logsDir.absoluteFilePath(QString("Prismatik.") + QString::number(num + 1) + ".log");
+
+            if (QFile::exists(to))
+                QFile::remove(to);
+
+            qDebug() << "Rename log: " << from << " to " << to;
+
+            if (!QFile::rename(from, to)) {
+                qCritical() << "Failed to rename log: " << from << " to " << to;
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    QTextStream m_logStream;
+    QMutex m_mutex;
+};
+
+// static
+LogWriter* LogWriter::g_logWriter = NULL;
 
 QString getApplicationDirectoryPath(const char * firstCmdArgument)
 {    
@@ -103,102 +240,10 @@ QString getApplicationDirectoryPath(const char * firstCmdArgument)
     return appDirPath;
 }
 
-void openLogsFile(const QString & appDirPath)
-{
-    QString logsDirPath = appDirPath + "/Logs";
-
-    QDir logsDir(logsDirPath);
-    if (logsDir.exists() == false)
-    {
-        cout << "mkdir " << logsDirPath.toStdString() << endl;
-        if (logsDir.mkdir(logsDirPath) == false)
-        {
-            cerr << "Failed mkdir '" << logsDirPath.toStdString() << "' for logs. Exit." << endl;
-            exit(LightpackApplication::LogsDirecroryCreationFail_ErrorCode);
-        }
-    }
-
-    QString logFilePath = logsDirPath + "/Prismatik.0.log";
-
-    QStringList logFiles = logsDir.entryList(QStringList("Prismatik.?.log"), QDir::Files, QDir::Name);
-
-    for (int i = logFiles.count() - 1; i >= 0; i--)
-    {
-        QString num = logFiles[i].split('.').at(1);
-        QString from = logsDirPath + "/" + QString("Prismatik.") + num + ".log";
-        QString to = logsDirPath + "/" + QString("Prismatik.") + QString::number(num.toInt() + 1) + ".log";
-
-        if (i >= StoreLogsLaunches - 1)
-        {
-            QFile::remove(from);
-            continue;
-        }
-
-        if (QFile::exists(to))
-            QFile::remove(to);
-
-        qDebug() << "Rename log:" << from << "to" << to;
-
-        bool ok = QFile::rename(from, to);
-        if (!ok)
-            qCritical() << "Fail rename log:" << from << "to" << to;
-    }
-
-    QFile *logFile = new QFile(logFilePath);
-
-    if (logFile->open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
-    {
-        m_logStream.setDevice(logFile);
-        m_logStream << endl;
-        m_logStream << QDateTime::currentDateTime().date().toString("yyyy_MM_dd") << " ";
-        m_logStream << QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") << " Prismatik " << VERSION_STR << endl;
-    } else {
-        cerr << "Failed to open logs file: '" << logFilePath.toStdString() << "'. Exit." << endl;
-        exit(LightpackApplication::OpenLogsFail_ErrorCode);
-    }
-
-    qDebug() << "Logs file:" << logFilePath;
-}
-
-void messageHandler(QtMsgType type, const QMessageLogContext &ctx, const QString &msg)
-{
-    Q_UNUSED(ctx);
-    QMutexLocker locker(&m_mutex);
-
-    QString out = QDateTime::currentDateTime().time().toString("hh:mm:ss:zzz") + " ";
-    switch (type) {
-    case QtDebugMsg:
-        out.append("Debug: " + msg);
-        cout << out.toStdString() << endl;
-        break;
-    case QtWarningMsg:
-        out.append("Warning: " + msg);
-        cerr << out.toStdString() << endl;
-        break;
-    case QtCriticalMsg:
-        out.append("Critical: " + msg);
-        cerr << out.toStdString() << endl;
-        break;
-    case QtFatalMsg:
-        cerr << "Fatal: " << msg.toStdString() << endl;
-        cerr.flush();
-
-        m_logStream << "Fatal: " << msg << endl;
-        m_logStream.flush();
-
-        QApplication::exit(LightpackApplication::QFatalMessageHandler_ErrorCode);
-    }
-
-    m_logStream << out << endl;
-    m_logStream.flush();
-    cerr.flush();
-    cout.flush();
-}
-
 int main(int argc, char **argv)
 {
 
-#ifdef Q_OS_MACX
+#if defined Q_OS_MACX
     id activity;
     SInt32 version = 0;
     Gestalt( gestaltSystemVersion, &version );
@@ -208,26 +253,25 @@ int main(int argc, char **argv)
       endActivityRequired = true;
       DEBUG_LOW_LEVEL << "Latency critical activity is started";
     }
+#elif defined Q_OS_WIN
+    // Mutex used by InnoSetup to detect that app is runnning.
+    // http://www.jrsoftware.org/ishelp/index.php?topic=setup_appmutex
+    HANDLE appMutex = CreateMutexW(NULL, FALSE, L"LightpackAppMutex");
 #endif
 
-#   ifdef Q_OS_WIN
-    CreateMutex(NULL, FALSE, L"LightpackAppMutex");
-#   endif
-    // Using locale codec for console output in messageHandler(..) function ( cout << qstring.toStdString() )
-    QTextCodec::setCodecForLocale(QTextCodec::codecForLocale());
+    const QString appDirPath = getApplicationDirectoryPath(argv[0]);
 
-    QString appDirPath = getApplicationDirectoryPath(argv[0]);
+    LogWriter logWriter;
+    const int logInitResult = logWriter.initWith(appDirPath + "/Logs");
+    if (logInitResult != LightpackApplication::OK_ErrorCode) {
+        exit(logInitResult);
+    }
+
+    LogWriter::ScopedMessageHandler messageHandlerGuard(&logWriter);
+    Q_UNUSED(messageHandlerGuard);
 
     LightpackApplication lightpackApp(argc, argv);
-
-
-    QStringList paths = QStringList() << getApplicationDirectoryPath(argv[0]) + "/plugins";
-    lightpackApp.setLibraryPaths(paths);
-
-    openLogsFile(appDirPath);
-
-    qInstallMessageHandler(messageHandler);
-
+    lightpackApp.setLibraryPaths(QStringList(appDirPath + "/plugins"));
     lightpackApp.initializeAll(appDirPath);
 
     if (lightpackApp.isRunning())
@@ -246,9 +290,11 @@ int main(int argc, char **argv)
 
     int returnCode = lightpackApp.exec();
 
-#ifdef Q_OS_MACX
+#if defined Q_OS_MACX
     if (endActivityRequired)
       [[NSProcessInfo processInfo] endActivity: activity];
+#elif defined Q_OS_WIN
+    CloseHandle(appMutex);
 #endif
 
     return returnCode;
