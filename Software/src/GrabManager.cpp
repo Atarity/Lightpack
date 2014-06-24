@@ -34,10 +34,6 @@
 #include "GrabberContext.hpp"
 using namespace SettingsScope;
 
-#if defined _MSC_VER
-using PrismatikMath::round;
-#endif
-
 #ifdef D3D10_GRAB_SUPPORT
 void *GetMainWindowHandle()
 {
@@ -432,8 +428,8 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
         if (!lastScreenGeometry.contains(m_ledWidgets[i]->geometry().center()))
             continue;
 
-        int width  = round(scaleX * m_ledWidgets[i]->width());
-        int height = round(scaleY * m_ledWidgets[i]->height());
+        int width  = PrismatikMath::round(scaleX * m_ledWidgets[i]->width());
+        int height = PrismatikMath::round(scaleY * m_ledWidgets[i]->height());
 
         int x = m_ledWidgets[i]->x();
         int y = m_ledWidgets[i]->y();
@@ -441,8 +437,8 @@ void GrabManager::scaleLedWidgets(int screenIndexResized)
         x -= screenGeometry.x();
         y -= screenGeometry.y();
 
-        x = round(scaleX * x);
-        y = round(scaleY * y);
+        x = PrismatikMath::round(scaleX * x);
+        y = PrismatikMath::round(scaleY * y);
 
         x += screenGeometry.x();
         y += screenGeometry.y();

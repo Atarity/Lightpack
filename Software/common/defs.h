@@ -47,3 +47,9 @@
 
 #define DEBUG_OUT_RGB( RGB_VALUE ) \
     qDebug() << #RGB_VALUE << "=" << qRed(RGB_VALUE) << qGreen(RGB_VALUE) << qBlue(RGB_VALUE)
+
+// http://msdn.microsoft.com/ru-ru/library/b0084kay.aspx
+// In MSVS2013 round() function was added to CRT.
+#if !defined _MSC_VER || _MSC_VER >= 1700
+#define HAVE_PLATFORM_ROUND_FUNC 1
+#endif

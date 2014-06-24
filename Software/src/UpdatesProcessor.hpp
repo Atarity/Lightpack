@@ -44,22 +44,14 @@ public:
         , _build(0)
     {}
 
-    AppVersion(const char *version)
+    AppVersion(const QString &version)
     {
-        AppVersion();
-        QString str(version);
-        initWith(QStringRef(&str));
+       initWith(version);
     }
 
-    AppVersion(const QStringRef &ver)
+    void initWith(const QString &version)
     {
-       AppVersion();
-       initWith(ver);
-    }
-
-    void initWith(const QStringRef &version)
-    {
-        QStringList splittedVer = version.toString().split(".");
+        QStringList splittedVer = version.split(".");
         if (splittedVer.size() > 4 || splittedVer.size() < 1)
         {
             return;
@@ -158,7 +150,7 @@ signals:
 
 private:
     QList<UpdateInfo> * readUpdates(QList<UpdateInfo> * readUpdates, QXmlStreamReader * xmlReader);
-    bool isVersionMatches(const QString &predicate, const AppVersion *version);
+    bool isVersionMatches(const QString &predicate, const AppVersion &version);
 
     QNetworkAccessManager _networkMan;
     QNetworkReply * _reply;

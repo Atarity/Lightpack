@@ -28,6 +28,14 @@
 
 #ifdef Q_OS_WIN
 
+#if !defined NOMINMAX
+#define NOMINMAX
+#endif
+
+#if !defined WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include "LedDeviceAlienFx.hpp"
 #include "Settings.hpp"
 #include <QtDebug>

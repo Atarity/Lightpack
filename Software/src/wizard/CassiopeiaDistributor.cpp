@@ -25,12 +25,7 @@
  */
 
 #include "CassiopeiaDistributor.hpp"
-
-#if defined _MSC_VER
 #include "PrismatikMath.hpp"
-
-using PrismatikMath::round;
-#endif
 
 CassiopeiaDistributor::~CassiopeiaDistributor() {
     if (_currentArea)
@@ -97,6 +92,6 @@ size_t CassiopeiaDistributor::areaCountOnBottomEdge() const
 size_t CassiopeiaDistributor::areaCountOnSideEdge() const
 {
     double a = aspect();
-    size_t roundDistrib = round(_areaCount /(2 + a));
+    size_t roundDistrib = PrismatikMath::round(_areaCount /(2 + a));
     return roundDistrib;
 }

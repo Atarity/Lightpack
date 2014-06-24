@@ -6,8 +6,8 @@ include( build-vars.prf )
         isEmpty( QTDIR ) {
             error("QTDIR is empty, please make sure you have correctly defined QTDIR in your build-vars.prf")
         }
-        isEmpty( DIRECTX_SDK_DIR ) {
-            error("please make sure you have defined DIRECTX_SDK_DIR in your build-vars.prf file")
+        isEmpty( DIRECTX_SDK_DIR ):isEmpty( WIN81_SDK_DIR ) {
+            error("please make sure you have defined DIRECTX_SDK_DIR or WIN81_SDK_DIR in your build-vars.prf file")
         }
         CONFIG(debug, debug|release) {
             DEBUG_EXT = d

@@ -25,12 +25,7 @@
  */
 
 #include "AndromedaDistributor.hpp"
-
-#if defined _MSC_VER
 #include "PrismatikMath.hpp"
-
-using PrismatikMath::round;
-#endif
 
 #define STAND_WIDTH 0.3333 //33%
 
@@ -109,7 +104,7 @@ size_t AndromedaDistributor::areaCountOnTopEdge() const
 size_t AndromedaDistributor::areaCountOnBottomEdge() const
 {
     size_t baseCount = (_areaCount - 2 * areaCountOnSideEdge()) / 2;
-    size_t rawCount = _isStandPresent ? round(baseCount * (1 - STAND_WIDTH )) : baseCount;
+    size_t rawCount = _isStandPresent ? PrismatikMath::round(baseCount * (1 - STAND_WIDTH )) : baseCount;
     // we need symmetric bottom
     return rawCount + rawCount % 2;
 }
@@ -117,6 +112,6 @@ size_t AndromedaDistributor::areaCountOnBottomEdge() const
 size_t AndromedaDistributor::areaCountOnSideEdge() const
 {
     double a = aspect();
-    size_t roundDistrib = round(_areaCount /(2 + 2*a));
+    size_t roundDistrib = PrismatikMath::round(_areaCount /(2 + 2*a));
     return roundDistrib;
 }

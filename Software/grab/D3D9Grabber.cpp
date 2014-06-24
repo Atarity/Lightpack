@@ -29,15 +29,11 @@
 
 #include <QApplication>
 #include <qdesktopwidget.h>
+#include <cmath>
 #include "../src/debug.h"
-#include "cmath"
-#define BYTES_PER_PIXEL 4
-
-#if defined _MSC_VER
 #include "PrismatikMath.hpp"
 
-using PrismatikMath::round;
-#endif // _MSC_VER
+#define BYTES_PER_PIXEL 4
 
 namespace
 {
@@ -261,9 +257,9 @@ QRgb D3D9Grabber::getColor(int x, int y, int width, int height)
     }
 
     if( count != 0 ){
-        r = (unsigned)round((double) r / count) & 0xff;
-        g = (unsigned)round((double) g / count) & 0xff;
-        b = (unsigned)round((double) b / count) & 0xff;
+        r = (unsigned)PrismatikMath::round((double) r / count) & 0xff;
+        g = (unsigned)PrismatikMath::round((double) g / count) & 0xff;
+        b = (unsigned)PrismatikMath::round((double) b / count) & 0xff;
     }
 
     QRgb result = qRgb(r, g, b);
