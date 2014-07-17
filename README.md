@@ -1,3 +1,5 @@
+**This repo is deprecated! Main development repository was moved to https://github.com/woodenshark/Lightpack**
+
 Lightpack project with Prismatik flavour
 ---------
 
