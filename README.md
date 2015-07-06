@@ -25,11 +25,9 @@ handle another devices with Prismatik such as Adalight, Ardulight or even Alienw
 * The device is simple to build (just Do-It-Yourself) 
 
 #####Useful URLs:
-* [Project mothership] (http://code.google.com/p/lightpack/)
-* [Binary downloads] (http://code.google.com/p/lightpack/downloads/list)
-* Wiki with DIY and documentation [ENG] (http://code.google.com/p/light-pack/w/list) / [RUS] (http://code.google.com/p/lightpack/w/list)
-* [Post new issue] (http://code.google.com/p/lightpack/issues/list)
-* [Team] (http://code.google.com/p/lightpack/people/list)
+* [Full description. Start here.](https://github.com/Atarity/Lightpack-docs)
+* [Downloads](http://lightpack.tv/downloads)
+* [Post new issue](https://github.com/woodenshark/Lightpack/issues)
 
 ---
 
