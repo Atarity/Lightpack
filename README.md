@@ -92,4 +92,4 @@ to run Prismatik please make sure PythonQt libs are available for load at runtim
 ---
 
 Please let us know if you find mistakes, bugs or errors.<br />
-Post new issue : http://code.google.com/p/lightpack/issues/list
+Post new issue: https://github.com/woodenshark/Lightpack/issues
