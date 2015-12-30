@@ -38,5 +38,9 @@
         <file>icons/Prismatik.png</file>
         <file>icons/Prismatik-pixmap.png</file>
         <file>text/cast.html</file>
+        <file>icons/error16.png</file>
+        <file>icons/lock16.png</file>
+        <file>icons/off16.png</file>
+        <file>icons/on16.png</file>
     </qresource>
 </RCC>

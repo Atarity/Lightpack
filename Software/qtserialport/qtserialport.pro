@@ -1,3 +1,5 @@
+CONFIG-=create_cmake
+
 lessThan(QT_MAJOR_VERSION, 5) {
     TEMPLATE = subdirs
     SUBDIRS = src

@@ -1,5 +1,7 @@
 QT = core
 
+CONFIG-=create_cmake
+
 QMAKE_DOCS = $$PWD/doc/qtserialport.qdocconf
 include($$PWD/serialport-lib.pri)
 

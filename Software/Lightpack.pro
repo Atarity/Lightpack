@@ -29,6 +29,18 @@
 # Project created by QtCreator 2010-04-28T19:08:13
 # -------------------------------------------------
 
+
+CONFIG-=create_cmake
+
+#linux-g++:QMAKE_TARGET.arch = $$QMAKE_HOST.arch
+#linux-g++-32:QMAKE_TARGET.arch = x86
+#linux-g++-64:QMAKE_TARGET.arch = x86_64
+
+#contains(QMAKE_TARGET.arch, x86_64):{
+#        unix:QMAKE_CXXFLAGS+=-m32
+#        unix:QMAKE_LFLAGS+=-m32 -L/usr/lib32 -L/usr/lib/i386-linux-gnu
+#    }
+
 TEMPLATE = subdirs
 CONFIG += ordered
 

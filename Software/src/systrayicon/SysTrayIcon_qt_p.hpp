@@ -54,8 +54,10 @@ public:
 
         fillProfilesFromSettings();
 
-        trayIconMenu->addAction(_switchOnBacklightAction);
-        trayIconMenu->addAction(_switchOffBacklightAction);
+        trayIconMenu->addAction(_switchBacklightAction);
+        trayIconMenu->addAction(_nextProfile);
+//        trayIconMenu->addAction(_switchOnBacklightAction);
+//        trayIconMenu->addAction(_switchOffBacklightAction);
         trayIconMenu->addSeparator();
         trayIconMenu->addMenu(_profilesMenu);
         trayIconMenu->addAction(_settingsAction);
@@ -83,10 +85,11 @@ public:
 
         connect(&_updatesProcessor, SIGNAL(readyRead()), this, SLOT(onCheckUpdate_Finished()));
 
-        _pixmapCache.insert("lock16", new QPixmap(QPixmap(":/icons/lock.png").scaledToWidth(16, Qt::SmoothTransformation)) );
-        _pixmapCache.insert("on16", new QPixmap(QPixmap(":/icons/on.png").scaledToWidth(16, Qt::SmoothTransformation)) );
-        _pixmapCache.insert("off16", new QPixmap(QPixmap(":/icons/off.png").scaledToWidth(16, Qt::SmoothTransformation)) );
-        _pixmapCache.insert("error16", new QPixmap(QPixmap(":/icons/error.png").scaledToWidth(16, Qt::SmoothTransformation)) );
+        const int icon_size = 16;
+        _pixmapCache.insert("on16", new QPixmap(QPixmap(":/icons/on.png").scaledToWidth(icon_size, Qt::SmoothTransformation)) );
+        _pixmapCache.insert("lock16", new QPixmap(QPixmap(":/icons/lock.png").scaledToWidth(icon_size, Qt::SmoothTransformation)) );
+        _pixmapCache.insert("off16", new QPixmap(QPixmap(":/icons/off.png").scaledToWidth(icon_size, Qt::SmoothTransformation)) );
+        _pixmapCache.insert("error16", new QPixmap(QPixmap(":/icons/error.png").scaledToWidth(icon_size, Qt::SmoothTransformation)) );
 
         setStatus(SysTrayIcon::StatusOn);
         _qsystray->show();
@@ -138,8 +141,10 @@ public:
     void retranslateUi()
     {
         DEBUG_LOW_LEVEL << Q_FUNC_INFO;
-        _switchOnBacklightAction->setText(tr("&Turn on"));
-        _switchOffBacklightAction->setText(tr("&Turn off"));
+        _switchBacklightAction->setText(tr("&Switch on/off"));
+//        _nextProfile->setText(tr("&Next profile"));
+//        _switchOnBacklightAction->setText(tr("&Turn on"));
+//        _switchOffBacklightAction->setText(tr("&Turn off"));
         _settingsAction->setText(tr("&Settings"));
         _quitAction->setText(tr("&Quit"));
         _profilesMenu->setTitle(tr("&Profiles"));
@@ -173,8 +178,9 @@ public:
         switch (status)
         {
         case SysTrayIcon::StatusOn:
-            _switchOnBacklightAction->setEnabled(false);
-            _switchOffBacklightAction->setEnabled(true);
+//            _switchOnBacklightAction->setEnabled(false);
+//            _switchOffBacklightAction->setEnabled(true);
+//            /mnt/workspace/source/Lightpack/Software/res/icons
             _qsystray->setIcon(QIcon(*_pixmapCache["on16"]));
 
             if(SettingsScope::Settings::isProfileLoaded())
@@ -182,8 +188,8 @@ public:
             break;
 
         case SysTrayIcon::StatusLockedByApi:
-            _switchOnBacklightAction->setEnabled(false);
-            _switchOffBacklightAction->setEnabled(true);
+//            _switchOnBacklightAction->setEnabled(false);
+//            _switchOffBacklightAction->setEnabled(true);
             _qsystray->setIcon(QIcon(*_pixmapCache["lock16"]));
             _qsystray->setToolTip(tr("Device locked via API"));
             break;
@@ -193,15 +199,15 @@ public:
             break;
 
         case SysTrayIcon::StatusOff:
-            _switchOnBacklightAction->setEnabled(true);
-            _switchOffBacklightAction->setEnabled(false);
+//            _switchOnBacklightAction->setEnabled(true);
+//            _switchOffBacklightAction->setEnabled(false);
             _qsystray->setIcon(QIcon(*_pixmapCache["off16"]));
             _qsystray->setToolTip(tr("Disabled"));
             break;
 
         case SysTrayIcon::StatusError:
-            _switchOnBacklightAction->setEnabled(false);
-            _switchOffBacklightAction->setEnabled(true);
+//            _switchOnBacklightAction->setEnabled(false);
+//            _switchOffBacklightAction->setEnabled(true);
             _qsystray->setIcon(QIcon(*_pixmapCache["error16"]));
             _qsystray->setToolTip(tr("Error with connection device, verbose in logs"));
             break;
@@ -225,6 +231,54 @@ public:
     }
 
 private slots:
+
+    void nextProfile()
+    {
+        using namespace SettingsScope;
+        QStringList profiles = Settings::findAllProfiles();
+        const QString curProfile = Settings::getCurrentProfileName();
+        int index = 0;
+        for (int i=0; i<profiles.count(); i++) {
+            if (profiles.at(i) == curProfile) {
+                index = i;
+                break;
+            }
+        }
+
+        index++;
+        if (index>=profiles.count())
+            index = 0;
+        const QString next = profiles.at(index);
+
+        Settings::loadOrCreateProfile(next);
+    }
+
+    void updateProfileNextText(const QString)
+    {
+        using namespace SettingsScope;
+        QStringList profiles = Settings::findAllProfiles();
+        const QString curProfile = Settings::getCurrentProfileName();
+        int index = 0;
+        for (int i=0; i<profiles.count(); i++) {
+            if (profiles.at(i) == curProfile) {
+                index = i;
+                break;
+            }
+        }
+
+        index++;
+        if (index>=profiles.count())
+            index = 0;
+        const QString next = profiles.at(index);
+
+        index++;
+        if (index>=profiles.count())
+            index = 0;
+        const QString nextAfterNext = profiles.at(index);
+
+        _nextProfile->setText(QString("%1 -> %2").arg(next).arg(nextAfterNext));
+        qDebug() << _nextProfile->text();
+    }
 
     void onCheckUpdate_Finished()
     {
@@ -329,15 +383,25 @@ private:
     {
         Q_Q(SysTrayIcon);
         DEBUG_LOW_LEVEL << Q_FUNC_INFO;
+        using namespace SettingsScope;
 
-        _switchOnBacklightAction = new QAction(QIcon(":/icons/on.png"), tr("&Turn on"), this);
-        _switchOnBacklightAction->setIconVisibleInMenu(true);
-        connect(_switchOnBacklightAction, SIGNAL(triggered()), q, SIGNAL(backlightOn()));
+//        _switchOnBacklightAction = new QAction(QIcon(":/icons/on.png"), tr("&Turn on"), this);
+//        _switchOnBacklightAction->setIconVisibleInMenu(true);
+//        connect(_switchOnBacklightAction, SIGNAL(triggered()), q, SIGNAL(backlightOn()));
 
-        _switchOffBacklightAction = new QAction(QIcon(":/icons/off.png"), tr("&Turn off"), this);
-        _switchOffBacklightAction->setIconVisibleInMenu(true);
-        connect(_switchOffBacklightAction, SIGNAL(triggered()), q, SIGNAL(backlightOff()));
+        _switchBacklightAction = new QAction(QIcon(":/icons/on.png"), tr("&Switch on/off"), this);
+        _switchBacklightAction->setIconVisibleInMenu(true);
+        _switchBacklightAction->setCheckable(true);
+        connect(_switchBacklightAction, SIGNAL(triggered(bool)), q, SLOT(switchBacklight(bool)));
 
+//        _switchOffBacklightAction = new QAction(QIcon(":/icons/off.png"), tr("&Turn off"), this);
+//        _switchOffBacklightAction->setIconVisibleInMenu(true);
+//        connect(_switchOffBacklightAction, SIGNAL(triggered()), q, SIGNAL(backlightOff()));
+
+        _nextProfile = new QAction(QIcon(":/icons/profiles.png"), ("&Next profile"), this);
+        _nextProfile->setIconVisibleInMenu(true);
+        connect(_nextProfile, SIGNAL(triggered()), this, SLOT(nextProfile()));
+        connect(SettingsScope::Settings::settingsSingleton(), SIGNAL(currentProfileInited(QString)), this, SLOT(updateProfileNextText(QString)));
 
         _profilesMenu = new QMenu(tr("&Profiles"));
         _profilesMenu->setIcon(QIcon(":/icons/profiles.png"));
@@ -373,8 +437,10 @@ private:
 
 private:
     QSystemTrayIcon * _qsystray;
-    QAction * _switchOnBacklightAction;
-    QAction * _switchOffBacklightAction;
+    QAction * _switchBacklightAction;
+    QAction * _nextProfile;
+//    QAction * _switchOnBacklightAction;
+//    QAction * _switchOffBacklightAction;
     QAction * _settingsAction;
     QAction * _quitAction;
     QMenu * _profilesMenu;
