@@ -15,6 +15,7 @@ CONFIG(msvc) {
 DESTDIR     = bin
 TEMPLATE    = app
 QT         += network widgets
+QT += gui-private
 win32 {
     QT += serialport
 }
