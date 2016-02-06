@@ -148,6 +148,7 @@ int main(void)
     enableWatchdog();
     SetupHardware();
     _WaveSwitchOnUsbLed(100, 100);
+
     // Led driver ports initialization
     LedDriver_Init();
 
@@ -158,6 +159,10 @@ int main(void)
     USB_Init();
 
     sei();
+
+#ifdef ENCLOSURE_LED_OFF
+    CLR(USBLED);
+#endif
 
     for (;;)
     {

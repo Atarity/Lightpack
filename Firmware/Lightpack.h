@@ -78,7 +78,7 @@ static inline void _BlinkUsbLed(const uint8_t times, const uint8_t ms)
 }
 
 static inline void _WaveSwitchOnUsbLed(const uint8_t num, const uint8_t target)
-{                                                                               
+{
     for (uint8_t pwm = 0; pwm < num; pwm++)
     {
         CLR(USBLED);
