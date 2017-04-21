@@ -44,6 +44,7 @@
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QDir>
+#include <QDataStream>
 
 #include "qtlockedfile.h"
 

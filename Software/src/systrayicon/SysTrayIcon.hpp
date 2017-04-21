@@ -81,6 +81,10 @@ signals:
 public slots:
     void retranslateUi();
     void checkUpdate();
+    void nextProfile();
+
+private slots:
+    void switchBacklight(const bool &power);
 
 private:
     SysTrayIconPrivate * const d_ptr;

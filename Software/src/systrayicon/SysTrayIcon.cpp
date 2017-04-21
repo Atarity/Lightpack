@@ -91,6 +91,20 @@ void SysTrayIcon::checkUpdate()
     d->checkUpdate();
 }
 
+void SysTrayIcon::switchBacklight(const bool &power)
+{
+    if (power)
+        emit backlightOn();
+    else
+        emit backlightOff();
+}
+
+void SysTrayIcon::nextProfile()
+{
+    using namespace SettingsScope;
+    QStringList profiles = Settings::findAllProfiles();
+}
+
 void SysTrayIcon::setStatus(const Status status, const QString *arg)
 {
     Q_D(SysTrayIcon);
